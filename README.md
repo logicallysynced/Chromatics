@@ -1,7 +1,7 @@
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
 
-Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fantasy XIV (and other ACT compatible games) with Razer Chroma & Logitech RGB devices. You can use this to make your keyboard, mouse, headset, etc. react to certain events, custom triggers, timers by creating visual alerts using the devices countless lighting options.
+Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fantasy XIV (and other ACT compatible games) with Razer Chroma & Logitech RGB devices. You can use this to make your keyboard, mouse, headset, etc. react to events, custom triggers, timers & other in-game functions by creating visual alerts using the devices' countless lighting options.
 
 
 [Download Latest Version](https://github.com/roxaskeyheart/Chromatics/releases)
