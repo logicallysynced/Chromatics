@@ -47,7 +47,7 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 * G13
 * G15
 
-**Please note: Logitech RGB devices are untested at this current point in time**
+*Please note: Logitech RGB devices are untested at this current point in time*
 
 
 ####Prerequisites
