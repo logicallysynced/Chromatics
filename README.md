@@ -2,8 +2,6 @@
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
-##About Chromatics
-
 Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fantasy XIV (FFXIV) with Razer Chroma & Logitech RGB devices to create visual alerts using the devices LED's for various FFXIV & ACT functions.
 
 [Download Latest Version](https://github.com/roxaskeyheart/Chromatics/releases)
