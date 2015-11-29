@@ -71,31 +71,38 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 
 ####FAQ
 
-Q: How do I find out if my device is compatible with Chromatics?
+**Q: How do I find out if my device is compatible with Chromatics?**
 
 A: You can find a list of currently supported devices above under Device Compatibility.
 
-Q: Do you plan to add support for other RGB devices outside of Razer Chroma and Logitech RGB?
+
+**Q: Do you plan to add support for other RGB devices outside of Razer Chroma and Logitech RGB?**
 
 A: I am currently planning on adding Corsair keyboards in a futre release and potentially more if demand is high.
 
-Q: Is there a 32-bit version of Chromatics available?
+
+**Q: Is there a 32-bit version of Chromatics available?**
 
 A: Unfortuantely there is not a 32-bit version available due to device limitations. I am currently investigating this further.
 
-Q: I added the plugin to ACT and it shows an error message or crashes ACT.
+
+**Q: I added the plugin to ACT and it shows an error message or crashes ACT.**
 
 A: Make sure you have the latest versions of Razer Synapse, ACT and the FFXIV ACT Plugin installed on your computer before running Chromatics. Also check that you are running a 64-bit Operating System. Restarting ACT has also been known to fix errors similar to this. If you continue to have problems, please submit a [bug report](https://github.com/roxaskeyheart/Chromatics/issues) with your ACT log.
 
-Q: When setting up chat notifications, I get notified when I send a message as well as when I recieve one. Can I set it to only notify me when I receive a message?
+
+**Q: When setting up chat notifications, I get notified when I send a message as well as when I recieve one. Can I set it to only notify me when I receive a message?**
 
 A: This is currently a limitation of the FFXIV Parsing plugin. I am currently investigating to add this functionality in a future release.
 
-Q: The Device controls don't work or only partially work correctly.
+
+**Q: The Device controls don't work or only partially work correctly.**
 
 A: The Device manager is only partially implemented as of 1.0.x. There will be bugs in using it which will be resolved in a future patch.
 
-Q: 
+
+
+**Q: **
 
 A:
 
