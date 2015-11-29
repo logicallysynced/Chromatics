@@ -1,12 +1,12 @@
 # Chromatics
 
-####About Chromatics
+####-About Chromatics-
 
 Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fantasy XIV (FFXIV) with Razer Chroma & Logitech RGB devices to create visual alerts using the devices LED's for various FFXIV & ACT functions.
 
 
 
-####Features
+####-Features-
 
 * Set a device default color universally while ACT is running.
 * Change color of devices when emnity is generated.
@@ -18,7 +18,7 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 * Device manager to enable/disable devices in ACT (partially implemented).
 
 
-####Device Compatibility
+####-Device Compatibility-
 
 **Razer Chroma**
 * BlackWidow Chroma
@@ -51,14 +51,14 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 *Please note: Logitech RGB devices are untested at this current point in time*
 
 
-####Prerequisites
+####-Prerequisites-
 
 * [Advance Combat Tracker](http://advancedcombattracker.com/) with FFXIV Plugin
 * [Razer SDK](http://www.razerzone.com/au-en/synapse) (Automatically installed with Razer Synapse)
 * .Net Framework 4.5 (Full)
 
 
-####Installation
+####-Installation-
 
 1. Download the [latest version](https://github.com/roxaskeyheart/Chromatics/releases) of Chromatics.
 2. Unzip and copy the folder to your ACT installation directory. (C:\Program Files (x86)\Advanced Combat Tracker)
@@ -70,7 +70,7 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 8. A new Chromatics tab will appear, select this to customize settings.
 
 
-####FAQ
+####-FAQ-
 
 **Q: How do I find out if my device is compatible with Chromatics?**
 
@@ -118,7 +118,7 @@ A: For sure! Please contact me on Github for more information. Chromatics is bui
 
 
 
-####Known Issues
+####-Known Issues-
 
 * Device selection only partially implemented.
 * An issue in which plugin may cause ACT to crash if plugin is removed and re-added to ACT without restarting ACT in-between.
