@@ -61,7 +61,7 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 ##Installation
 
 1. Download the [latest version](https://github.com/roxaskeyheart/Chromatics/releases) of Chromatics.
-2. Unzip and copy the folder to your ACT installation directory. (C:\Program Files (x86)\Advanced Combat Tracker)
+2. Unzip and copy the **Chromatics folder** to your ACT installation directory. (C:\Program Files (x86)\Advanced Combat Tracker)
 3. Turn on Chroma Apps in Razer Synapse (Synapse > Chroma Apps > Enable).
 4. Open Advance Combat Tracker.
 5. Open the Plugins tab.
