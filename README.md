@@ -96,7 +96,7 @@ A: Make sure you have the latest versions of Razer Synapse, ACT and the FFXIV AC
 A: Please reinstall or update [Razer Synapse](http://www.razerzone.com/au-en/synapse) (64-bit). This is also required if you are using Logitech RGB devices.
 
 
-**Q: I have everything setup but I can't see anything happening on my devices? **
+**Q: I have everything setup but I can't see anything happening on my devices?**
 
 A: Make sure Chroma Apps is turned on in Razer Synapse (Synapse > Chroma Apps > Enable) and that ACT is listed in the App List.
 
@@ -116,8 +116,6 @@ A: The Device manager is only partially implemented as of 1.0.x. There will be b
 A: For sure! Please contact me on Github for more information. Chromatics is built in C#.
 
 
-Q:
-A:
 
 ####Known Issues
 
