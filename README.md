@@ -131,5 +131,5 @@ A: For sure! Please contact me on Github for more information. Chromatics is bui
 ##Known Issues
 
 * Device selection only partially implemented.
-* An issue in which plugin may cause ACT to crash if plugin is removed and re-added to ACT without restarting ACT in-between.
+* An issue in which Chromatics may cause ACT to crash if the plugin is removed and re-added to ACT without restarting ACT in-between.
 * Untested on Logitech RGB devices.
