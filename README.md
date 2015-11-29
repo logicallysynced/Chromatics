@@ -54,7 +54,7 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 ##Prerequisites
 
 * [Advance Combat Tracker](http://advancedcombattracker.com/) with FFXIV Plugin
-* [Razer SDK](http://www.razerzone.com/au-en/synapse) (Automatically installed with Razer Synapse) - For Razer device support
+* [Razer SDK](http://www.razerzone.com/au-en/synapse) (Automatically installed with Razer Synapse) - *For Razer device support*
 * .Net Framework 4.5 (Full)
 
 
