@@ -8,7 +8,7 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 ##Features
 
 * Set a device default color universally while ACT is running.
-* Change color of devices when emnity is generated.
+* Change color of devices when enmity is generated.
 * Create alerts when Custom Triggers activate with adjustable rate & speed.
 * Create alerts when Timers are triggered.
 * Create alerts for recieving chat messages.
