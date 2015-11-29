@@ -4,6 +4,8 @@
 
 Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fantasy XIV (FFXIV) with Razer Chroma & Logitech RGB devices to create visual alerts using the devices LED's for various FFXIV & ACT functions.
 
+[Download Latest Version](https://github.com/roxaskeyheart/Chromatics/releases)
+
 
 
 ##Features
@@ -102,6 +104,11 @@ A: Please reinstall or update [Razer Synapse](http://www.razerzone.com/au-en/syn
 A: Make sure Chroma Apps is turned on in Razer Synapse (Synapse > Chroma Apps > Enable) and that ACT is listed in the App List.
 
 
+**Q: Will Chromatics work with other games and not just Final Fantasy XIV?**
+
+A: Yes and No. Some core features of Chromatics such as Emnity Change, Custom Triggers and Timers will work, but Chat and Special alerts are only designed to work with Final Fantasy XIV. Additionally other games are untested.
+
+
 **Q: When setting up chat notifications, I get notified when I send a message as well as when I recieve one. Can I set it to only notify me when I receive a message?**
 
 A: This is currently a limitation of the FFXIV Parsing plugin. I am currently investigating to add this functionality in a future release.
@@ -110,6 +117,11 @@ A: This is currently a limitation of the FFXIV Parsing plugin. I am currently in
 **Q: The device controls don't work or only partially work correctly.**
 
 A: The Device manager is only partially implemented as of 1.0.x. There will be bugs in using it which will be resolved in a future patch.
+
+
+**Q: I have an idea for Chromatics. Will you implement it?**
+
+A: Please submit a [feature request](https://github.com/roxaskeyheart/Chromatics/issues) and I'll see what I can do.
 
 
 **Q: I'm a developer too! Can I help you develop Chromatics?**
