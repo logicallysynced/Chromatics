@@ -18,7 +18,7 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 * Create alerts when Timers are triggered.
 * Create alerts for receiving chat messages.
 * Raid Mode for creating special effects when in Raiding instances.
-* Vegas Mode for Gold Saucer.
+* Vegas Mode for Gold Saucer. (Razer devices only at current release).
 * Device manager to enable/disable devices in ACT (partially implemented).
 
 
