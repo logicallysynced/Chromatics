@@ -1,4 +1,7 @@
 #Changelog
+**1.1.1**
+* Finalized updater.
+
 **1.1.0**
 
 * Published as full release.
