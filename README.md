@@ -22,6 +22,8 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 * Device manager to enable/disable devices in ACT (partially implemented).
 
 
+![Settings](http://thejourneynetwork.net/chromatics/chromatics_settings.png)
+
 
 
 ##Device Compatibility
