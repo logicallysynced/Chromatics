@@ -1,6 +1,7 @@
 #Changelog
-**1.1.1**
+**1.1.2**
 * Finalized updater.
+* Fixed lock-up which occurs when first adding the plugin.
 
 **1.1.0**
 
