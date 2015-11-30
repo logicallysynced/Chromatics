@@ -57,7 +57,14 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 * G15
 
 
-*Please note: Logitech RGB devices are untested at this current point in time*
+*Corsair CUE**
+* CGK65 RGB
+* K70 RGB
+* K95 RGB
+* STRAFE
+* STRAGE RGB
+
+*Please note: Logitech & Corsair RGB devices are untested at this current point in time*
 
 
 
@@ -98,10 +105,10 @@ A: You can find a list of currently supported devices above under Device Compati
 
 
 
-**Q: Do you plan to add support for other RGB devices outside of Razer Chroma and Logitech RGB?**
+**Q: Do you plan to add support for other RGB devices outside of Razer Chroma, Logitech RGB & Cosair?**
 
 
-A: I am currently planning on adding Corsair keyboards in a future release and potentially more if demand is high.
+A: I am currently working to finish implementing Corsair mouse and headset support. I will be looking at other devices later on if their is high demand.
 
 
 
@@ -157,7 +164,7 @@ A: This is currently a limitation of the FFXIV Parsing plugin. I am currently in
 **Q: The device controls don't work or only partially work correctly.**
 
 
-A: The Device manager is only partially implemented as of 1.0.x. There will be bugs in using it which will be resolved in a future patch.
+A: The Device manager is only partially implemented as of 1.1.x. There will be bugs in using it which will be resolved in a future patch.
 
 
 
@@ -186,3 +193,4 @@ A: For sure! Please contact me on Github for more information. Chromatics is bui
 * Device selection only partially implemented.
 * An issue in which Chromatics may cause ACT to crash if the plugin is removed and re-added to ACT without restarting ACT in-between.
 * Untested on Logitech RGB devices.
+* Untested on Corsair RGB devices.
