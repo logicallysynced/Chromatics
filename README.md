@@ -57,7 +57,7 @@ Chromatics is a plugin for Advance Combat Tracker (ACT) which connects Final Fan
 * G15
 
 
-*Corsair CUE**
+**Corsair CUE**
 * CGK65 RGB
 * K70 RGB
 * K95 RGB
