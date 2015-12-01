@@ -78,6 +78,7 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 * [Advance Combat Tracker](Advanced Combat Tracker -- An MMO Combat Log Parser) with FFXIV Plugin
 * [Razer SDK](http://www.razerzone.com/au-en/synapse) (Automatically installed with Razer Synapse) - *For Razer device support*
 * .Net Framework 4.5 (Full)
+* [Visual Studio 2015 C++ Redistributable](https://www.microsoft.com/en-au/download/details.aspx?id=48145)
 
 
 
@@ -86,13 +87,14 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 
 
 1. Download the [latest version](https://github.com/roxaskeyheart/Chromatics/releases) of Chromatics.
-2. Unzip the contents of Chromatics_x64 to your computer. (Recommend ACT Plugins folder)
-3. Turn on Chroma Apps in Razer Synapse (Synapse > Chroma Apps > Enable).
-4. Open Advance Combat Tracker.
-5. Browse to the extracted Chromatics_x64 directory and select the Chromatics.dll.
-6. Browse to your ACT installation directory and select the Chromatics.dll in the Chromatics folder.
-7. Select Add/Enable Plugin. 
-8. A new Chromatics tab will appear, select this to customize settings.
+2. **Before** extracting the zip file, Right-click it, Select Properties and Unblock the file.
+3. Unzip the contents of Chromatics_x64 to your computer. (Recommend ACT Plugins folder)
+4. Turn on Chroma Apps in Razer Synapse (Synapse > Chroma Apps > Enable).
+5. Open Advance Combat Tracker.
+6. Browse to the extracted Chromatics_x64 directory and select the Chromatics.dll.
+7. Browse to your ACT installation directory and select the Chromatics.dll in the Chromatics folder.
+8. Select Add/Enable Plugin. 
+9. A new Chromatics tab will appear, select this to customize settings.
 
 
 
