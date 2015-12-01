@@ -85,6 +85,7 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 
 ##Installation
 
+**It is recommended that you install Chromatics from ACT using the *Get Plugins* option under the Plugins tab. If you can't do this or ACT fails to install and load the plugin automatically you can manually install it using the instructions below.**
 
 1. Download the [latest version](https://github.com/roxaskeyheart/Chromatics/releases) of Chromatics.
 2. **Before** extracting the zip file, Right-click it, Select Properties and Unblock the file.
