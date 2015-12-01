@@ -22,7 +22,7 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 * Create alerts when Timers are triggered.
 * Create alerts for receiving chat messages.
 * Raid Mode for creating special effects when in Raiding instances.
-* Vegas Mode for Gold Saucer. (Razer devices only at current release).
+* Vegas Mode for Gold Saucer. (Razer & Logitech devices only at current release).
 * Device manager to enable/disable devices in ACT (partially implemented).
 
 
@@ -70,7 +70,7 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 * STRAFE
 * STRAGE RGB
 
-*Please note: Logitech & Corsair RGB devices are untested at this current point in time*
+*Please note: Corsair RGB devices are untested at this current point in time*
 
 
 
@@ -201,8 +201,7 @@ A: For sure! Please contact me on Github for more information. Chromatics is bui
 
 ##Known Issues
 
-
+* **Temporarily disabled Corsair devices due to large number of compatibility issues. Hoping to fix in upcoming release.**
 * Device selection only partially implemented.
-* An issue in which Chromatics may cause ACT to crash if the plugin is removed and re-added to ACT without restarting ACT in-between.
-* Untested on Logitech RGB devices.
-* Untested on Corsair RGB devices.
+* Untested on Corsair CUE devices.
+* An issue in where Vegas mode on Logitech devices might accelerate the longer the player remains zoned in. This can be temporarily resolved by toggling Vegas mode in options or re-zoning.
