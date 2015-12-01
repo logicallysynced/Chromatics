@@ -141,6 +141,12 @@ A: Please reinstall or update [Razer Synapse](http://www.razerzone.com/au-en/syn
 
 
 
+**Q: I'm getting a CUE.NET cannot be found or similar error when I try and attach the plugin**
+
+
+A: This happens if you didn't unblock the .zip file before extracting it. Right-click the Chromatics.zip before extracting, click properties and unblock the program before extracting and attaching Chromatics. Alternatively you can install Chromatics from ACT by selecting Get Plugins.
+
+
 
 **Q: I have everything setup but I can't see anything happening on my devices?**
 
@@ -165,17 +171,10 @@ A: This is currently a limitation of the FFXIV Parsing plugin. I am currently in
 
 
 
-
 **Q: The device controls don't work or only partially work correctly.**
 
 
 A: The Device manager is only partially implemented as of 1.1.x. There will be bugs in using it which will be resolved in a future patch.
-
-
-**Q: I'm getting a CUE.NET cannot be found or similar error when I try and attach the plugin**
-
-
-A: This happens if you didn't unblock the .zip file before extracting it. Right-click the Chromatics.zip before extracting, click properties and unblock the program before extracting and attaching Chromatics.
 
 
 **Q: I have an idea for Chromatics. Will you implement it?**
