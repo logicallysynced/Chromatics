@@ -1,4 +1,16 @@
 #Changelog
+**1.1.3**
+
+* Fixed issues with Logitech devices and TESTED! Now verified to work on Logitech RGB device.
+* Added Vegas mode and Raiding effects to Logitech devices.
+* Temporarily disabled Corsair devices due to large amounts of compatibility issues. (Hoping to fix in upcoming release).
+* Temporarily disabled device discovery on Razer devices due to large amounts of compatibility issues. Device toggling is still enabled.
+* Resolved an issue where a Native exception might occur if Razer Synapse isn't installed.
+* Resolved an issue where a Native exception might occur if CUE isn't installed.
+* Resolved an issue where if Raiding effects were enabled, Chromatics would active Raiding effects instead of returning to the default * state after loosing enmity.
+* Minor coding optimisations and improvements.
+* Support code for new upcoming features in 1.1.4.
+
 **1.1.2**
 * Finalized updater.
 * Fixed lock-up which occurs when first adding the plugin.
