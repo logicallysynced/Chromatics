@@ -159,7 +159,7 @@ A: This happens if you didn't unblock the .zip file before extracting it. Right-
 **Q: I have everything setup but I can't see anything happening on my devices?**
 
 
-A: Make sure Chroma Apps is turned on in Razer Synapse (Synapse > Chroma Apps > Enable) and that ACT is listed in the App List.
+A: Make sure Chroma Apps is turned on in Razer Synapse (Synapse > Chroma Apps > Enable) and that ACT is listed in the App List. If you use a logitech device, make sure Logitech Gaming Software is opened and 'Allow games to control illumination' is enabled in LGS settings. If you use a Corsair device, make sure the CUE software is opened and 'Enable SDK' is enabled in CUE settings.
 
 
 
@@ -201,11 +201,16 @@ A: For sure! Please contact me on Github for more information. Chromatics is bui
 
 
 
-
-
 ##Known Issues
 
 * **Temporarily disabled Corsair devices due to large number of compatibility issues. Hoping to fix in upcoming release.**
 * Device selection only partially implemented.
 * Untested on Corsair CUE devices.
 * An issue in where Vegas mode on Logitech devices might accelerate the longer the player remains zoned in. This can be temporarily resolved by toggling Vegas mode in options or re-zoning.
+
+
+
+##Credits
+
+* [Colore library for Razer device support](https://github.com/CoraleStudios/Colore)
+* [CUE.NET for Corsair device support](https://github.com/DarthAffe/CUE.NET)
