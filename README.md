@@ -215,3 +215,4 @@ A: For sure! Please contact me on Github for more information. Chromatics is bui
 
 * [Colore library for Razer device support](https://github.com/CoraleStudios/Colore)
 * [CUE.NET for Corsair device support](https://github.com/DarthAffe/CUE.NET)
+* [Elestriel for Corsair debug](https://github.com/Elestriel)
