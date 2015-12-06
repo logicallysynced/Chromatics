@@ -29,7 +29,8 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 * *Reactive Weather! Set your devices themed to the current in-game weather. (Coming in 1.1.4!)*
  
 
-![Settings](http://thejourneynetwork.net/chromatics/chromatics_settings.png)
+
+![Settings](http://thejourneynetwork.net/chromatics/chromatics_settingsA.png)
 
 
 
