@@ -30,7 +30,7 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
  
 
 
-![Settings](http://thejourneynetwork.net/chromatics/chromatics_settingsA.png)
+![Settings](http://thejourneynetwork.net/chromatics/chromatics_settingsB.png)
 
 
 
