@@ -24,9 +24,9 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 * Raid Mode for creating special effects when in Raiding instances.
 * Vegas Mode for Gold Saucer. (Razer & Logitech devices only at current release).
 * Device manager to enable/disable devices in ACT (partially implemented).
-* *Target DPS meter! Set a target DPS to aim for and have your devices change color when you pass that DPS number. (Coming in 1.1.4!)*
-* *Set a Notify DPS marker to know when approaching your DPS target. Your device will flash faster the closer you get. (Coming in 1.1.4!)*
-* *Reactive Weather! Set your devices themed to the current in-game weather. (Coming in 1.1.4!)*
+* **New!** Target DPS meter! Set a target DPS to aim for and have your devices change color when you pass that DPS number.
+* **New!** Set a Notify DPS marker to know when approaching your DPS target. Your device will flash faster the closer you get.
+* **New!** Reactive Weather! Set your devices themed to the current in-game weather.
  
 
 
@@ -48,6 +48,11 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 * Mamba TE Chroma
 * Orbweaver Chroma
 * Tartarus Chroma
+* Naga Epic Chroma **New!**
+* Mamba Chroma **New!**
+* Orochi **New!**
+* Naga Chroma **New!**
+* Overwatch Keyboard **New!**
 
 
 **Logitech RGB**
@@ -101,9 +106,8 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 4. Turn on Chroma Apps in Razer Synapse (Synapse > Chroma Apps > Enable).
 5. Open Advance Combat Tracker.
 6. Browse to the extracted Chromatics_x64 directory and select the Chromatics.dll.
-7. Browse to your ACT installation directory and select the Chromatics.dll in the Chromatics folder.
-8. Select Add/Enable Plugin. 
-9. A new Chromatics tab will appear, select this to customize settings.
+7. Select Add/Enable Plugin. 
+8. A new Chromatics tab will appear, select this to customize settings.
 
 
 
@@ -204,10 +208,7 @@ A: For sure! Please contact me on Github for more information. Chromatics is bui
 
 ##Known Issues
 
-* **Temporarily disabled Corsair devices due to large number of compatibility issues. Hoping to fix in upcoming release.**
-* Device selection only partially implemented.
-* Untested on Corsair CUE devices.
-* An issue in where Vegas mode on Logitech devices might accelerate the longer the player remains zoned in. This can be temporarily resolved by toggling Vegas mode in options or re-zoning.
+* An issue in where in some cases certain effects can cause ACT to crash from CPU over-utilization. A force restart of ACT is required to resolve the issue.
 
 
 
