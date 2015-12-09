@@ -6,8 +6,8 @@
 * Re-enabled Cosair device support
 * Added support for new Razer devices (see [Supported Devices](https://github.com/roxaskeyheart/Chromatics/blob/master/README.md))
 * Improved Multi-threading to prevent ACT lagging
-* Resolved an issue where Raid effects wouldn't start in Alexander, Void Ark and Crystal Tower
-* Resolved an issue in where Vegas mode on Logitech devices might accelerate the longer the player remains zoned in.
+* Resolved an issue in which Raid effects wouldn't start in Alexander, Void Ark and Crystal Tower
+* Resolved an issue in which Vegas mode on Logitech devices might accelerate the longer the player remains zoned in.
 
 **1.1.3**
 
