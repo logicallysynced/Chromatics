@@ -1,4 +1,13 @@
 #Changelog
+**1.1.4**
+* Added window scrolling
+* Added Reactive weather
+* Added DPS Threshold status and warning
+* Re-enabled Cosair device support
+* Improved Multi-threading to prevent ACT lagging
+* Resolved an issue where Raid effects wouldn't start in Alexander, Void Ark and Crystal Tower
+* Resolved an issue in where Vegas mode on Logitech devices might accelerate the longer the player remains zoned in.
+
 **1.1.3**
 
 * Fixed issues with Logitech devices and TESTED! Now verified to work on Logitech RGB device.
