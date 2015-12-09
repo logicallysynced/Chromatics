@@ -23,7 +23,7 @@ Chromatics is a plugin for Advanced Combat Tracker (ACT) which connects Final Fa
 * Create alerts for receiving chat messages.
 * Raid Mode for creating special effects when in Raiding instances.
 * Vegas Mode for Gold Saucer. (Razer & Logitech devices only at current release).
-* Device manager to enable/disable devices in ACT (partially implemented).
+* Device manager to enable/disable devices in ACT.
 * **New!** Target DPS meter! Set a target DPS to aim for and have your devices change color when you pass that DPS number.
 * **New!** Set a Notify DPS marker to know when approaching your DPS target. Your device will flash faster the closer you get.
 * **New!** Reactive Weather! Set your devices themed to the current in-game weather.
