@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chromatics", "Razer Chroma Plugin V1\Chromatics.csproj", "{0FBC8ED7-6D3A-43F6-9735-67C1801ABCF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chromatics", "Chromatics\Chromatics.csproj", "{0FBC8ED7-6D3A-43F6-9735-67C1801ABCF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chromatics Updater", "Chromatics Updater\Chromatics Updater.csproj", "{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}"
 EndProject
