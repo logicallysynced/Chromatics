@@ -3,7 +3,7 @@
 * Added window scrolling
 * Added Reactive weather
 * Added DPS Threshold status and warning
-* Re-enabled Cosair device support
+* Re-enabled Corsair device support
 * Added support for new Razer devices (see [Supported Devices](https://github.com/roxaskeyheart/Chromatics/blob/master/README.md))
 * Improved Multi-threading to prevent ACT lagging
 * Resolved an issue in which Raid effects wouldn't start in Alexander, Void Ark and Crystal Tower
