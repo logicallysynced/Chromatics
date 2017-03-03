@@ -3,6 +3,7 @@
 **Lighting Effects for Final Fantasy XIV**
 
 **NEW Chromatics V2 Released. Does not require ACT to function.**
+**Please remove the Chromatics plugin from ACT and install Version 2 BETA**
 
 Chromatics is a lightweight third-party companion app which connects FINAL FANTASY XIV with Razer Chroma, Logitech & Corsair RGB devices. Additionally it enables off-screen compatibility with the Logitech ARX mobile app.
 
