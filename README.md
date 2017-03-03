@@ -8,25 +8,18 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 
 
 [Download Latest Version](https://github.com/roxaskeyheart/Chromatics/releases)
-
+[Visit Website](https://chromaticsffxiv.com)
 
 
 ##Features
 
 
-* Set a device default color universally while ACT is running.
-* Change color of devices when enmity is generated.
-* Create alerts when Custom Triggers activate with adjustable rate & speed.
-* Create alerts when Timers are triggered.
-* Create alerts for receiving chat messages.
-* Raid Mode for creating special effects when in Raiding instances.
-* Vegas Mode for Gold Saucer. (Razer & Logitech devices only at current release).
-* Device manager to enable/disable devices in ACT.
-* **New!** Target DPS meter! Set a target DPS to aim for and have your devices change color when you pass that DPS number.
-* **New!** Set a Notify DPS marker to know when approaching your DPS target. Your device will flash faster the closer you get.
-* **New!** Reactive Weather! Set your devices themed to the current in-game weather.
- 
-
+* **NEW V2** Your RGB enabled keyboard will display your HP, MP, TP and other vital stats across easy to see keys so you always have a visual indication of your stats.
+* **NEW V2** Displays target HP and emnity data as various effects across your devices. See how hostile an enemy is before you engage it and keep track of your hate with various alerts.
+* **NEW V2** Animates your casting bar and displays animations when cast is successful across your devices.
+* **NEW V2** Logitech ARX Support. See essential stats as a second screen on your mobile or tablet device. Requires Logitech ARX application.
+* **NEW V2** Chromatics now supports a range of Smart LED lighting including LIFX and Philips HUE support on the way.
+* **NEW V2** Use HTML/JavaScript to create custom views within Logitech ARX and make your own plugins or browse other's creations.
 
 ##Prerequisites
 
@@ -40,16 +33,7 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 
 ##Installation
 
-**It is recommended that you install Chromatics from ACT using the *Get Plugins* option under the Plugins tab. If you can't do this or ACT fails to install and load the plugin automatically you can manually install it using the instructions below.**
-
-1. Download the [latest version](https://github.com/roxaskeyheart/Chromatics/releases) of Chromatics.
-2. **Before** extracting the zip file, Right-click it, Select Properties and Unblock the file.
-3. Unzip the contents of Chromatics_x64 to your computer. (Recommend ACT Plugins folder)
-4. Turn on Chroma Apps in Razer Synapse (Synapse > Chroma Apps > Enable).
-5. Open Advance Combat Tracker.
-6. Browse to the extracted Chromatics_x64 directory and select the Chromatics.dll.
-7. Select Add/Enable Plugin. 
-8. A new Chromatics tab will appear, select this to customize settings.
+Please visit [this page](https://chromaticsffxiv.com/download.html) for installation instructions.
 
 
 ##Credits
