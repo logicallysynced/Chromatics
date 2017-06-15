@@ -1,4 +1,4 @@
-**IMPORTANT: ** With the release of Stormblood (4.0), Chromatics will be non-functional for an unknown amount of time. We will look into releasing a 4.x update as soon as possible.
+**IMPORTANT:** With the release of Stormblood (4.0), Chromatics will be non-functional for an unknown amount of time. We will look into releasing a 4.x update as soon as possible.
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
