@@ -1,5 +1,3 @@
-**IMPORTANT:** With the release of Stormblood (4.0), Chromatics will be non-functional for an unknown amount of time. We will look into releasing a 4.x update as soon as possible.
-
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
 **Lighting Effects for Final Fantasy XIV**
@@ -18,6 +16,7 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 
 ##Features
 
+* **DX11 & Final Fantasy XIV STORMBLOOD (4.0) Now Supported**
 
 * **NEW V2!** Your RGB enabled keyboard will display your HP, MP, TP and other vital stats across easy to see keys so you always have a visual indication of your stats.
 * **NEW V2!** Displays target HP and emnity data as various effects across your devices. See how hostile an enemy is before you engage it and keep track of your hate with various alerts.
