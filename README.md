@@ -16,7 +16,7 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 [Visit Website](https://chromaticsffxiv.com)
 
 
-##Features
+# Features
 
 * **DX11 & Final Fantasy XIV STORMBLOOD (4.0) Now Supported**
 
@@ -27,7 +27,7 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 * **NEW V2!** Chromatics now supports a range of Smart LED lighting including LIFX and Philips HUE support on the way.
 * **NEW V2!** Use HTML/JavaScript to create custom views within Logitech ARX and make your own plugins or browse other's creations.
 
-##Prerequisites
+# Prerequisites
 
 * [.Net Framework 4.6 (Full)](https://www.microsoft.com/en-au/download/details.aspx?id=49981)
 * [Visual Studio 2015 C++ Redistributable](https://www.microsoft.com/en-au/download/details.aspx?id=48145)
@@ -37,12 +37,12 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 
 
 
-##Installation
+# Installation
 
 Please visit [this page](https://chromaticsffxiv.com/download.html) for installation instructions.
 
 
-##Credits
+# Credits
 
 * [Colore library for Razer device support](https://github.com/CoraleStudios/Colore)
 * [CUE.NET for Corsair device support](https://github.com/DarthAffe/CUE.NET)
