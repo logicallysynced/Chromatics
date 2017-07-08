@@ -1,4 +1,4 @@
-**Important:** Logitech device support is currently not working due to FFXIV implementing native support inside the game. Until they add an in-game switch to disable this functionality, Logitech devices will not work with Chromatics. We will keep you posted on the status of this issue.
+**Important:** We are currently experiencing issues with the DX9 implementation. Please use DX11 in the mean time.
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
