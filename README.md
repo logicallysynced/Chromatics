@@ -1,4 +1,4 @@
-**Important:** We are currently experiencing issues with the DX9 implementation. Please use DX11 in the mean time.
+**Important:** We are now discontinuing support for DX9. Please use DX11 instead.
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
