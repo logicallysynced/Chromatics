@@ -28,7 +28,7 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 * **NEW V2!** Use HTML/JavaScript to create custom views within Logitech ARX and make your own plugins or browse other's creations.
 
 # Prerequisites
-
+ 
 * [.Net Framework 4.6 (Full)](https://www.microsoft.com/en-au/download/details.aspx?id=49981)
 * [Visual Studio 2015 C++ Redistributable](https://www.microsoft.com/en-au/download/details.aspx?id=48145)
 * [Razer SDK](http://www.razerzone.com/au-en/synapse) (Automatically installed with Razer Synapse) - *For Razer device support*
