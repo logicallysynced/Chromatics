@@ -1,6 +1,6 @@
 **Important:** We are now discontinuing support for DX9. Please use DX11 instead.
 
-**We now have a support Discord: ** [Join Support Discord](https://discord.gg/sK47yFE)
+**We now have a support Discord:** [Join Support Discord](https://discord.gg/sK47yFE)
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
