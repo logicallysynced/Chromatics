@@ -1,5 +1,7 @@
 **Important:** We are now discontinuing support for DX9. Please use DX11 instead.
 
+**We now have a support Discord: ** [Join Support Discord](https://discord.gg/sK47yFE)
+
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
 **Lighting Effects for Final Fantasy XIV**
@@ -14,6 +16,8 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 [Download Latest Version](https://github.com/roxaskeyheart/Chromatics/releases)
 
 [Visit Website](https://chromaticsffxiv.com)
+
+[Join Support Discord](https://discord.gg/sK47yFE)
 
 
 # Features
