@@ -6,7 +6,7 @@
 
 [![Github All Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/total.svg)]()
 [![Github Latest Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/latest/total.svg)]()
-[![Latest Release](https://img.shields.io/github/release/Chromatics/rubidium.svg)]()
+[![Latest Release](https://img.shields.io/github/release/roxaskeyheart/Chromatics.svg)]()
 
 **Lighting Effects for Final Fantasy XIV**
 
