@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chromatics", "Chromatics\Chromatics.csproj", "{518379CB-894E-4305-BE47-2C2715508E5D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3B183F2C-C9A3-4BA7-9929-4642676DD66A}"
+	ProjectSection(SolutionItems) = preProject
+		packages\ffxivapp-memory-master\.nuget\NuGet.Config = packages\ffxivapp-memory-master\.nuget\NuGet.Config
+		packages\ffxivapp-memory-master\.nuget\NuGet.exe = packages\ffxivapp-memory-master\.nuget\NuGet.exe
+		packages\ffxivapp-memory-master\.nuget\NuGet.targets = packages\ffxivapp-memory-master\.nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chromatics Updater", "Chromatics Updater\Chromatics Updater.csproj", "{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Chromatics|Any CPU = Chromatics|Any CPU
+		Chromatics|x64 = Chromatics|x64
+		Chromatics|x86 = Chromatics|x86
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Chromatics|Any CPU.ActiveCfg = Chromatics|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Chromatics|Any CPU.Build.0 = Chromatics|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Chromatics|x64.ActiveCfg = Chromatics|x64
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Chromatics|x64.Build.0 = Chromatics|x64
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Chromatics|x86.ActiveCfg = Chromatics|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Chromatics|x86.Build.0 = Chromatics|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Debug|x64.Build.0 = Debug|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Debug|x86.Build.0 = Debug|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Release|x64.ActiveCfg = Release|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Release|x64.Build.0 = Release|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Release|x86.ActiveCfg = Release|Any CPU
+		{518379CB-894E-4305-BE47-2C2715508E5D}.Release|x86.Build.0 = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Chromatics|Any CPU.ActiveCfg = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Chromatics|Any CPU.Build.0 = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Chromatics|x64.ActiveCfg = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Chromatics|x64.Build.0 = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Chromatics|x86.ActiveCfg = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Chromatics|x86.Build.0 = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Debug|x64.Build.0 = Debug|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Debug|x86.Build.0 = Debug|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|x64.ActiveCfg = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|x64.Build.0 = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://roxaskeyheart.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Chromatics\\Chromatics.csproj
+		SccProjectName1 = Chromatics
+		SccLocalPath1 = Chromatics
+		SccProjectUniqueName2 = Chromatics\u0020Updater\\Chromatics\u0020Updater.csproj
+		SccProjectName2 = Chromatics\u0020Updater
+		SccLocalPath2 = Chromatics\u0020Updater
+	EndGlobalSection
+EndGlobal
