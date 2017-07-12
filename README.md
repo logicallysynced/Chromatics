@@ -4,6 +4,8 @@
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
+[![Github All Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/total.svg)]()
+
 **Lighting Effects for Final Fantasy XIV**
 
 **NEW Chromatics V2 Released!** Does not require ACT to function.
