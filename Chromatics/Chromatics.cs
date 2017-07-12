@@ -32,7 +32,7 @@ namespace Chromatics
         //Setup Variables
         public int attatched;
         public bool init = false;
-        public bool startup = false;
+        public bool startup = false; 
 
         public FFXIVColorMappings ColorMappings = new FFXIVColorMappings();
         public ChromaticsSettings ChromaticsSettings = new ChromaticsSettings();
