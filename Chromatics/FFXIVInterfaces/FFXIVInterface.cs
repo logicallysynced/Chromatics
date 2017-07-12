@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 
 /* Contains the code to read the FFXIV Memory Stream, parse the data and convert to lighting commands
- * FFXIVAPP-Memory.dll is used to access Actor and target information.
+ * Sharylan is used to access Actor and target information.
  * https://github.com/Icehunter/ffxivapp-memory
  */
 
@@ -37,35 +37,12 @@ namespace Chromatics
         private bool successcast;
 
         /* Attatch to FFXIV process after determining if running DX9 or DX11.
-         * DX11 is currently not supported by SharlayanReader however support is being built currently,
-         * Therefore I have implemented code to setup DX11 when it becomes available shortly.
+         * DX9 is not supported by Sharlayan anymore.
         */
 
         public bool InitiateMemory()
         {
             var _initiated = false;
-
-            /*
-            string currentVersion = ChromaticsSettings.FinalFantasyXIVVersion.Replace(".", string.Empty);
-            string newVersion = currentVersion;
-            var webRequest = WebRequest.Create(@"https://chromaticsffxiv.com/chromatics2/update/patch.txt");
-
-            using (var response = webRequest.GetResponse())
-            using (var content = response.GetResponseStream())
-            using (var reader = new StreamReader(content))
-            {
-                string newVersionA = reader.ReadToEnd();
-                newVersion = newVersionA.Replace(".", string.Empty);
-            }
-
-            int cV = int.Parse(currentVersion);
-            int nV = int.Parse(newVersion);
-
-            if (nV > cV)
-            {
-                //
-            }
-            */
 
             try
             {
@@ -134,12 +111,7 @@ namespace Chromatics
                     isDX11 = true;
 
                     WriteConsole(ConsoleTypes.FFXIV, "DX11 Initiated");
-
-
-                    //WriteConsole(ConsoleTypes.ERROR, "DX11 Currently not Supported. Please use DX9.");
-                    //notify_master.Text = @"DX11 is currently not Supported. Please use DX9.";
-                    //_initiated = false; //DX11 Not Supported
-                    //init = false;
+                    
                 }
             }
             catch (Exception ex)
