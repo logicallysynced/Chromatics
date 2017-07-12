@@ -5,7 +5,7 @@
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
 [![Github All Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/total.svg)]()
-[![Github Latest Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/latest/total.svg]()
+[![Github Latest Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/latest/total.svg)]()
 
 **Lighting Effects for Final Fantasy XIV**
 
