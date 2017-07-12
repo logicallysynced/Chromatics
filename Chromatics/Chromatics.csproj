@@ -222,14 +222,8 @@
     <Compile Include="Controllers\Locator.cs" />
     <Compile Include="Controllers\Logger.cs" />
     <Compile Include="Controllers\MemoryTasks.cs" />
-    <None Include="DeviceInterfaces\Depreciated\CorsairInterface %28Old%29.cs.old">
-      <SubType>Form</SubType>
-    </None>
     <Compile Include="DeviceInterfaces\CorsairInterface.cs" />
     <Compile Include="DeviceInterfaces\CorsairLibs\CorsairLibs.cs" />
-    <None Include="DeviceInterfaces\Depreciated\LifxInterface %28Old%29.cs.old">
-      <SubType>Form</SubType>
-    </None>
     <Compile Include="DeviceInterfaces\EffectLibrary\DeviceEffects.cs" />
     <Compile Include="DeviceInterfaces\GlobalInterface.cs">
       <SubType>Form</SubType>
@@ -237,9 +231,6 @@
     <Compile Include="DeviceInterfaces\HueInterface.cs" />
     <Compile Include="DeviceInterfaces\LIFXInterface.cs" />
     <Compile Include="DeviceInterfaces\LogitechInterface.cs" />
-    <None Include="DeviceInterfaces\Depreciated\RazerInterface %28Old%29.cs.old">
-      <SubType>Form</SubType>
-    </None>
     <Compile Include="DeviceInterfaces\SteelSeriesInterface.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVCooldowns.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVInterface.cs">
