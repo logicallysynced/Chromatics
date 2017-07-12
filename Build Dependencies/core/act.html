@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Chromatics - Loading</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Flatkit">
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <!-- style -->
+  <link rel="stylesheet" href="assets/animate.css/animate.min.css" type="text/css" />
+  <link rel="stylesheet" href="assets/glyphicons/glyphicons.css" type="text/css" />
+  <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="assets/material-design-icons/material-design-icons.css" type="text/css" />
+
+  <link rel="stylesheet" href="assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+  <!-- build:css assets/styles/app.min.css -->
+  <link rel="stylesheet" href="assets/styles/app.css" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" href="assets/styles/font.css" type="text/css" />
+  
+  <style>
+		.divcenter {
+			height: 100%;
+		}
+		
+		.datavar {
+			display: none;
+		}
+		
+		.progress-override {
+			margin-bottom: 0 !important;
+		}
+		
+		.unit_int {
+			margin-top: 2px;
+			float: right !important;
+		}
+		
+		.unit_stats {
+			display: flex;
+		}
+		
+		.unit_item {
+			width: 33%;
+			padding-left: 10px;
+			padding-right: 10px;
+			align-items: center;
+		}
+	</style>
+</head>
+<body class="dark">
+  <div class="app" id="app">
+
+<!-- ############ LAYOUT START-->
+  
+  <!-- content -->
+  <div id="content" class="app-content box-shadow-z0" role="main">
+  
+  <!-- Variables -->
+  
+  <div id="theme" class="datavar">light</div>
+  <div id="chromatics_info" class="datavar">Starting Chromatics</div>
+	<div id="actipaddress" class="datavar">127.0.0.1</div>
+  <div id="actport" class="datavar">8085</div>
+
+  <div ui-view class="app-body" id="view">
+
+	<!-- ############ PAGE START-->
+<div class="padding">
+      <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12" align="center">
+            
+              <div id="actbod">
+								<iframe id="framesrc" src="http://127.0.0.1:8085/current.body" frameborder="0" width="100%" height="500" allowtransparency="1"></iframe>
+							</div>
+              
+              
+            </div>
+      
+      
+      </div>
+    </div>
+		    
+		
+
+	<!-- ############ PAGE END-->
+
+    </div>
+  </div>
+  <!-- / -->
+
+
+<!-- ############ LAYOUT END-->
+
+  </div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+  <script src="libs/jquery/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+  <script src="libs/jquery/tether/dist/js/tether.min.js"></script>
+  <script src="libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
+<!-- core -->
+  <script src="libs/jquery/underscore/underscore-min.js"></script>
+  <script src="libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js"></script>
+  <script src="libs/jquery/PACE/pace.min.js"></script>
+  <script src="scripts/ui-form.js"></script>
+  
+  
+  <script type="text/javascript">
+		
+		window.setInterval(updateStats, 10000);
+				
+		var _ip = "";
+		updateStats();
+		
+		function updateStats() {
+			//Info Status
+			var ip = $("#actipaddress").text();
+			var port = $("#actport").text();
+			
+			if (ip !== _ip)
+			{
+				var request = ip + "/current.body";
+				$('#framesrc').attr("src", request);
+				_ip = ip;
+			}
+		}
+		
+		
+	</script>
+<!-- endbuild -->
+</body>
+</html>

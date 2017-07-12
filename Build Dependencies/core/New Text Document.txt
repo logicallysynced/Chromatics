@@ -1,0 +1,5 @@
+view-source:http://127.0.0.1:8085/current.body
+
+
+-> ACT integration
+-> Plugin variables from FFXIV

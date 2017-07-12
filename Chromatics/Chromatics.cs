@@ -28,7 +28,7 @@ namespace Chromatics
         //Setup Threading/Tasks
         private readonly CancellationTokenSource MemoryTask = new CancellationTokenSource();
         public int _PaletteMappingCurrentSelect = 1;
-
+         
         //Setup Variables
         public int attatched;
         public bool init = false;

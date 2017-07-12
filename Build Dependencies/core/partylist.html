@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Chromatics - Party List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Flatkit">
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <!-- style -->
+  <link rel="stylesheet" href="assets/animate.css/animate.min.css" type="text/css" />
+  <link rel="stylesheet" href="assets/glyphicons/glyphicons.css" type="text/css" />
+  <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="assets/material-design-icons/material-design-icons.css" type="text/css" />
+
+  <link rel="stylesheet" href="assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+  <!-- build:css assets/styles/app.min.css -->
+  <link rel="stylesheet" href="assets/styles/app.css" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" href="assets/styles/font.css" type="text/css" />
+  
+  <style>
+		.divcenter {
+			height: 100%;
+		}
+		
+		.datavar {
+			display: none;
+		}
+		
+		.progress-override {
+			margin-bottom: 0 !important;
+		}
+		
+		.unit_int {
+			margin-top: -9px;
+			float: right !important;
+		}
+		
+		.unit_stats {
+			display: flex;
+		}
+		
+		.unit_item {
+			width: 33%;
+			padding-left: 10px;
+			padding-right: 10px;
+			align-items: center;
+		}
+		
+		.jobicon {
+			width: 50px;
+			height: 50px;
+			float: left;
+			z-index: 50;
+		}
+		
+		.jobholder {
+			float: left;
+			width: 10% !important;
+			padding-top: 5px !important;
+			padding-right: 5px !important;
+			z-index: 50;
+		}
+		
+		.hudholder {
+			width: 100% !important;
+			margin: auto !important;
+			overflow:hidden;
+		}
+		
+		.statholder {
+			width: 90% !important;
+			overflow:hidden;
+			float:right;
+			z-index: 10;
+		}
+		
+		.shiftleft {
+			float: left;
+			
+		}
+		
+		.playername {
+			vertical-align: top !important;
+  		text-align: left !important;
+			padding:0 !important;
+		}
+		
+		.hpbar {
+			width: 125px !important;
+			padding-left: 0px;
+			padding-right: 5px;
+			align-items: center;
+			z-index: 50;
+		}
+		
+		.mpbar {
+			width: 125px !important;
+			padding-left: 5px;
+			padding-right: 5px;
+			align-items: center;
+			z-index: 50;
+		}
+		
+		.unit_container {
+			display: flex;
+			padding-top: 5px !important;
+			padding-bottom: 0px !important;
+			margin-bottom: 0px !important;
+		}
+		
+		.padadj {
+			padding-top: 2px !important;
+			padding-bottom: 5px !important;
+			padding-left: 20px !important;
+			padding-right: 20px !important;
+		}
+		
+		.hplabel {
+			z-index: 60;
+			font-weight:bold !important;
+			-webkit-text-stroke: 0.5px #0059C3;
+			padding-bottom: 0px !important;
+			margin-bottom: 0px !important;
+		}
+		
+		.hud_container {
+			/*padding-top: 20px !important;*/
+		}
+		
+		.classlabel {
+			position: relative;
+			top: 2px;
+		}
+		
+		.emnity {
+			position: relative;
+			bottom: 18px;
+			left: 5px;
+			z-index: 60;
+		}
+	</style>
+</head>
+<body class="dark">
+  <div class="app" id="app">
+
+<!-- ############ LAYOUT START-->
+  
+  <!-- content -->
+  <div id="content" class="app-content box-shadow-z0" role="main">
+  
+  <!-- Variables -->
+  
+  <div id="theme" class="datavar">light</div>
+  <div id="p1_data" class="datavar">1,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="p2_data" class="datavar">1,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="p3_data" class="datavar">0,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="p4_data" class="datavar">0,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="p5_data" class="datavar">0,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="p6_data" class="datavar">0,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="p7_data" class="datavar">0,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="p8_data" class="datavar">0,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="p9_data" class="datavar">0,player,Roxas Keyheart,100%,20000,100%,10000,100%,1000,1,Bard</div>
+  <div id="debugY" class="datavar">debugX</div>
+
+
+    <div ui-view class="app-body" id="view">
+
+			<!-- ############ PAGE START-->
+      <div class="padding">
+      
+      		<!-- 1 -->
+          <div id="row1" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="1_job" class="jobicon" src="img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="1_em" class="label blue-A400 emnity">1</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">1</span>
+                        <span id="1_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="1u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="1i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="1u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="1i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="1u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="1i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+          
+          <!-- 2 -->
+          <div id="row2" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="2_job" class="jobicon" src="img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="2_em" class="label blue-A400 emnity">1</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">2</span>
+                        <span id="2_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="2u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="2i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="2u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="2i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="2u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="2i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+          
+          
+          <!-- 3 -->
+          <div id="row3" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="3_job" class="jobicon" src="img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="3_em" class="label blue-A400 emnity">1</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">3</span>
+                        <span id="3_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="3u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="3i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="3u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="3i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="3u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="3i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+          
+          
+          <!-- 4 -->
+          <div id="row4" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="4_job" class="jobicon" src="img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="4_em" class="label blue-A400 emnity">1</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">4</span>
+                        <span id="4_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="4u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="4i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="4u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="4i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="4u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="4i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+          
+          <!-- 5 -->
+          <div id="row5" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="5_job" class="jobicon" src="img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="5_em" class="label blue-A400 emnity">1</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">5</span>
+                        <span id="5_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="5u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="5i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="5u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="5i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="5u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="5i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+          
+          <!-- 6 -->
+          <div id="row6" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="6_job" class="jobicon" src="img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="6_em" class="label blue-A400 emnity">1</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">6</span>
+                        <span id="6_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="6u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="6i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="6u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="6i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="6u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="6i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+          
+          <!-- 7 -->
+          <div id="row7" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="7_job" class="jobicon" src="img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="7_em" class="label blue-A400 emnity">1</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">7</span>
+                        <span id="7_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="7u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="7i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="7u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="7i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="7u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="7i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+          
+          
+          <!-- 8 -->
+          <div id="row8" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="8_job" class="jobicon" src="img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="8_em" class="label blue-A400 emnity">8</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">8</span>
+                        <span id="8_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="8u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="8i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="8u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="8i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="8u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="8i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+          
+          
+          <!-- Pet -->
+          <div id="row9" class="row">        
+              <div class="col-xs-12 col-sm-12 col-md-12 hudholder">
+              	
+                <div class="hud_container">
+                
+                  <div class="col-xs-4 col-sm-4 jobholder">
+                    <img id="9_job" class="jobicon" src="img/class/img/class/Bard_Icon_3.png" alt="Bard" />
+                    <span id="9_em" class="label blue-A400 emnity">1</span>
+                  </div>
+                  
+                  <div class="col-xs-8 col-sm-8 statholder">
+                    <div class="box p-a padadj">
+                      <div class="playername" style="padding-top: 5px !important;">
+                        <span class="label blue-A400">9</span>
+                        <span id="9_nm" class="classlabel">Roxas Keyheart</span>
+                      </div>
+                      
+                      <div class="unit_container">
+                      
+                        <div class="hpbar">
+                          <div class="progress progress-override">
+                            <div id="9u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+                          </div>
+                          <span id="9i_hp" class="m-x-xs unit_int hplabel">20000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="9u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+                          </div>
+                          <span id="9i_mp" class="m-x-xs unit_int hplabel">10000</span>
+                        </div>
+                        
+                        <div class="mpbar">
+                          <div class="progress progress-override">
+                            <div id="9u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+                          </div>
+                          <span id="9i_tp" class="m-x-xs unit_int hplabel">1000</span>
+                        </div>
+                      
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+          </div>
+        
+      </div>
+		    
+	<!-- ############ PAGE END-->
+
+    </div>
+  </div>
+  <!-- / -->
+
+
+<!-- ############ LAYOUT END-->
+
+  </div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+  <script src="libs/jquery/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+  <script src="libs/jquery/tether/dist/js/tether.min.js"></script>
+  <script src="libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
+<!-- core -->
+  <script src="libs/jquery/underscore/underscore-min.js"></script>
+  <script src="libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js"></script>
+  <script src="libs/jquery/PACE/pace.min.js"></script>
+  <script src="scripts/ui-form.js"></script>
+  <script src="scripts/chromatics.js"></script>
+  
+  <script type="text/javascript">
+
+		window.setInterval(updateStats, 300);
+		
+		updateStats();
+		
+		function updateStats() {
+			//<div id="p1_data" class="datavar">Active,Player,Name,hppercent,hpcurrent,mpcurrent,tpcurrent,emnityno,job</div>
+			
+			var datastream = new Array(10);
+			
+			
+			
+			for (i = 0; i < 9; i++) { 
+					datastream[i] = $("#p" + (i+1) + "_data").text();
+					var datasplit = datastream[i].split(",");
+					
+					var active = datasplit[0];
+					var type = datasplit[1];
+					
+					//$("#debugY").text("Hello");
+					//$("#debugY").text("#" + (i+1) + "_em");
+					
+					
+					if (active === "1" && (type === "player" || type === "pet"))
+					{
+						var name = datasplit[2];
+						var hppercent = datasplit[3];
+						var hpcurrent = datasplit[4];
+						var mppercent = datasplit[5];
+						var mpcurrent = datasplit[6];
+						var tppercent = datasplit[7];
+						var tpcurrent = datasplit[8];
+						var emnityno = datasplit[9];
+						var job = datasplit[10];
+						
+						
+						
+						if (type === "pet")
+						{
+							tpcurrent = "1000";
+							tppercent = "100%";
+							mpcurrent = "1000";
+							mppercent = "100%";
+						}
+						
+						if (emnityno === "0")
+						{
+							$("#" + (i+1) + "_em").addClass('datavar');
+						}
+						else
+						{
+							$("#" + (i+1) + "_em").removeClass('datavar');
+						}
+						
+						$("#" + (i+1) + "_nm").text(name);
+						$("#" + (i+1) + "_em").text(emnityno);
+						$("#" + (i+1) + "_job").attr("src", "img/class/" + job + "_Icon_3.png");
+						$("#" + (i+1) + "u_hp").css({"width": hppercent});
+						$("#" + (i+1) + "i_hp").text(hpcurrent);
+						$("#" + (i+1) + "u_mp").css({"width": mppercent});
+						$("#" + (i+1) + "i_mp").text(mpcurrent);
+						
+						if (i === 0)
+						{
+							$("#" + (i+1) + "u_tp").css({"width": tppercent});
+							$("#" + (i+1) + "i_tp").text(tpcurrent);
+							$("#" + (i+1) + "u_tp").removeClass('datavar');
+							$("#" + (i+1) + "i_tp").removeClass('datavar');
+						}
+						else
+						{
+							$("#" + (i+1) + "u_tp").addClass('datavar');
+							$("#" + (i+1) + "i_tp").addClass('datavar');
+						}
+						
+						$("#row" + (i+1)).removeClass('datavar');
+						
+					}
+					else
+					{
+						$("#row" + (i+1)).addClass('datavar');
+					}
+					
+					//$("#e-info").text(s_info);
+			}
+			
+		}
+				
+		
+	</script>
+<!-- endbuild -->
+</body>
+</html>

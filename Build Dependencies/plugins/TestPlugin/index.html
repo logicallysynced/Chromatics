@@ -1,0 +1,22 @@
+<html>
+<head>
+<script src="ffxivsetup.js" type="text/javascript"></script>
+</head>
+<body>
+<h1 id="test" style="color:#fff;">Hello World</h1>
+<h1 id="debug1" style="color:#fff;">Increment</h1>
+
+<script src="js/jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+	updateStatsX();
+	window.setInterval(updateStatsX, 300);
+	
+	function updateStatsX() {
+		var t = $("#playername").text();
+ 		$("#test").text("Test: " + t);
+	}
+</script>
+
+
+</body>
+</html>

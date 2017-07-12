@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Chromatics - Player HUD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Flatkit">
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <!-- style -->
+  <link rel="stylesheet" href="assets/animate.css/animate.min.css" type="text/css" />
+  <link rel="stylesheet" href="assets/glyphicons/glyphicons.css" type="text/css" />
+  <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="assets/material-design-icons/material-design-icons.css" type="text/css" />
+
+  <link rel="stylesheet" href="assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+  <!-- build:css assets/styles/app.min.css -->
+  <link rel="stylesheet" href="assets/styles/app.css" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" href="assets/styles/font.css" type="text/css" />
+  
+  <style>
+		.divcenter {
+			height: 100%;
+		}
+		
+		.datavar {
+			display: none;
+		}
+		
+		.progress-override {
+			margin-bottom: 0 !important;
+		}
+		
+		.unit_int {
+			margin-top: 2px;
+			float: right !important;
+		}
+		
+		.unit_stats {
+			display: flex;
+		}
+		
+		.hudhide {
+			display: none;
+		}
+		
+		.textwhite {
+			color: #fff !important;
+		}
+		
+		.unit_item {
+			width: 33%;
+			padding-left: 10px;
+			padding-right: 10px;
+			align-items: center;
+		}
+	</style>
+</head>
+<body class="dark">
+  <div class="app" id="app">
+
+<!-- ############ LAYOUT START-->
+  
+  <!-- content -->
+  <div id="content" class="app-content box-shadow-z0" role="main">
+  
+  <!-- Variables -->
+  
+  <div id="theme" class="datavar">light</div>
+  <div id="hud_type" class="datavar">battle</div>
+  <div id="hud_mode" class="datavar">normal</div>
+  <div id="current_location" class="datavar">Limsa Lominsa Upper Decks</div>
+  <div id="hp_percent" class="datavar">100%</div>
+  <div id="mp_percent" class="datavar">100%</div>
+  <div id="tp_percent" class="datavar">100%</div>
+  <div id="hp_current" class="datavar">20000</div>
+  <div id="mp_current" class="datavar">10000</div>
+  <div id="tp_current" class="datavar">1000</div>
+  <div id="target_hppercent" class="datavar">100%</div>
+  <div id="target_hpcurrent" class="datavar">0</div>
+  <div id="target_hpmax" class="datavar">0</div>
+  <div id="target_name" class="datavar">Target</div>
+  <div id="target_engaged" class="datavar">0</div>
+  
+	<div id="debugX" class="datavar">debug</div>
+
+    <div ui-view class="app-body" id="view">
+
+	<!-- ############ PAGE START-->
+<div class="padding">
+      <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12" align="center">
+            
+              <div class="box text-center">
+                
+                <div id="hm_normal" class="">
+                  <div class="p-a-md">
+                  <h1 id="e-time">12:00 AM</h1>
+                  <p><small>Eorzea Time</small></p>
+                  <h3 id="location"></h3>
+                	</div>
+                </div>
+                
+                <div id="hm_target" class="hudhide">
+                  <div class="p-a-md">
+                  <h3 id="t_name">Target</h3>
+                  <h5 id="s_targethp"><span id="t_hpc">0</span>/<span id="t_hpm">0</span></h5>
+                    <div id="t_hppX" class="progress">
+                      <div id="t_hpp" class="progress-bar red-500" style="width: 100%">100%</div>
+                    </div>
+                	</div>
+                </div>
+                
+                <div class="row no-gutter b-t">
+                <div class="col-xs-3 b-r">
+                  <a class="p-a block text-center" ui-toggle-class>
+                      <span class="block"><small id="node_8am_1_time">8 AM</small></span>
+                    <img id="node_8am_1_img" src="img/weather/Clear_icon.png" alt="Clear" />
+                    <span id="node_8am_1_desc" class="block">Clear</span>
+                  
+                  </a>
+                </div>
+                <div class="col-xs-3 b-r bg-info">
+                  <a class="p-a block text-center" ui-toggle-class>
+                      <span class="block"><small id="node_4pm_2_time">4 PM</small></span>
+                    <img id="node_4pm_2_img" src="img/weather/Clear_icon.png" alt="Clear" />
+                    <span id="node_4pm_2_desc" class="block">Clear</span>
+                  </a>
+                </div>
+                <div class="col-xs-3">
+                  <a class="p-a block text-center" ui-toggle-class>
+                      <span class="block"><small id="node_12am_3_time">12 AM</small></span>
+                    <img id="node_12am_3_img" src="img/weather/Clear_icon.png" alt="Clear" />
+                    <span id="node_12am_3_desc" class="block">Clear</span>
+                  </a>
+                </div>
+                <div class="col-xs-3">
+                  <a class="p-a block text-center" ui-toggle-class>
+                      <span class="block"><small id="node_8am_4_time">8 AM</small></span>
+                    <img id="node_8am_4_img" src="img/weather/Clear_icon.png" alt="Clear" />
+                    <span id="node_8am_4_desc" class="block">Clear</span>
+                  </a>
+                </div>
+               </div>
+              </div>
+              
+              
+            </div>
+      
+      
+      </div>
+      <div class="row">
+      	<div class="unit_stats">
+        	<!-- HP -->
+        	<div class="unit_item">
+            <div class="progress progress-override">
+              <div id="u_hp" class="progress-bar green-A400" style="width: 100%"></div>
+            </div>
+            <span id="i_hp" class="label green-A400 unit_int">20000</span>
+          </div>
+          
+          <!-- MP -->
+        	<div class="unit_item">
+            <div class="progress progress-override">
+              <div id="u_mp" class="progress-bar pink-A200" style="width: 100%"></div>
+            </div>
+            <span id="i_mp" class="label pink-A200 unit_int">20000</span>
+          </div>
+          
+          <!-- TP -->
+        	<div class="unit_item">
+            <div class="progress progress-override">
+              <div id="u_tp" class="progress-bar amber-500" style="width: 100%"></div>
+            </div>
+            <span id="i_tp" class="label amber-500 unit_int">1000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+		    
+		
+
+	<!-- ############ PAGE END-->
+
+    </div>
+  </div>
+  <!-- / -->
+
+
+<!-- ############ LAYOUT END-->
+
+  </div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+  <script src="libs/jquery/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+  <script src="libs/jquery/tether/dist/js/tether.min.js"></script>
+  <script src="libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
+<!-- core -->
+  <script src="libs/jquery/underscore/underscore-min.js"></script>
+  <script src="libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js"></script>
+  <script src="libs/jquery/PACE/pace.min.js"></script>
+  <script src="scripts/ui-form.js"></script>
+  <script src="scripts/ffxivdata.js"></script>
+  <script src="scripts/chromatics.js"></script>
+  
+  <script type="text/javascript">
+		
+		window.setInterval(TestWeather, 1000);
+		window.setInterval(updateStats, 300);
+		
+		TestWeather();
+		
+		function updateStats() {
+			//HUD Mode
+			var s_hudmode = $("#hud_mode").html();
+			//$("#debugX").html(s_hudmode);
+			
+			if (s_hudmode === "normal")
+			{
+				$('#hm_normal').removeClass('hudhide');
+				$('#hm_target').addClass('hudhide');
+				
+			} else if (s_hudmode === "target")
+			{
+				$('#hm_target').removeClass('hudhide');
+				$('#hm_normal').addClass('hudhide');
+				
+				var t_e = $("#target_engaged").text();
+				if (t_e === "0")
+				{
+					$("#t_hpp").removeClass('red-500 amber-500').addClass('amber-500');
+					$("#t_hppX").removeClass('progress-striped active');
+				}
+				else
+				{
+					$("#t_hpp").removeClass('red-500 amber-500').addClass('red-500');
+					$("#t_hppX").addClass('progress-striped active');
+				}
+				
+				var t_hpp = $("#target_hppercent").text();
+				$("#t_hpp").css({"width": t_hpp});
+				$("#t_hpp").text(t_hpp);
+				
+				var t_hpc = $("#target_hpcurrent").text();
+				$("#t_hpc").text(t_hpc);
+				
+				var t_hpm = $("#target_hpmax").text();
+				$("#t_hpm").text(t_hpm);
+				
+				var t_name = $("#target_name").text();
+				$("#t_name").text(t_name);
+			}
+			
+			//u_hp
+			var u_hp = $("#hp_percent").html();
+			$("#u_hp").css({"width": u_hp});
+			
+			var u_mp = $("#mp_percent").html();
+			$("#u_mp").css({"width": u_mp});
+			
+			var u_tp = $("#tp_percent").html();
+			$("#u_tp").css({"width": u_tp});
+			
+			//$("#debugZ").html(u_tp);
+			
+			var i_hp = $("#hp_current").text();
+			$("#i_hp").text(i_hp);
+			
+			var i_mp = $("#mp_current").text();
+			$("#i_mp").text(i_mp);
+			
+			var i_tp = $("#tp_current").text();
+			$("#i_tp").text(i_tp);
+			
+			var c_hud = $("#hud_type").html();
+			if (c_hud === "battle")
+			{
+				$("#u_mp").removeClass('pink-A200 purple-500 light-blue-A400').addClass('pink-A200');
+				$("#i_mp").removeClass('pink-A200 purple-500 light-blue-A400').addClass('pink-A200');
+			} else if (c_hud === "craft")
+			{
+				$("#u_mp").removeClass('pink-A200 purple-500 light-blue-A400').addClass('purple-500');
+				$("#i_mp").removeClass('pink-A200 purple-500 light-blue-A400').addClass('purple-500');
+			} else if (c_hud === "gather")
+			{
+				$("#u_mp").removeClass('pink-A200 purple-500 light-blue-A400').addClass('light-blue-A400');
+				$("#i_mp").removeClass('pink-A200 purple-500 light-blue-A400').addClass('light-blue-A400');
+			}
+		}
+		
+		var _weather;
+		var _weatherY;
+		
+		function TestWeather() {
+			//var test = FetchWeather("Limsa Lominsa Lower Decks");
+			//console.log(test[0]);
+			
+			var loc = $("#current_location").text();
+			
+			if (loc == "Wolves' Den Peer")
+			{
+				$("#location").text(loc);
+				loc = "Limsa Lominsa Upper Decks";
+			} else if (loc == "The Gold Saucer")
+			{
+				$("#location").text(loc);
+				loc = "Ul'dah";
+			} else if (loc == "Ishgard - Foundation")
+			{
+				$("#location").text(loc);
+				loc = "Ishgard";
+			} else if (loc == "Ishgard - The Pillars")
+			{
+				$("#location").text(loc);
+				loc = "Ishgard";
+			} else {
+				$("#location").text(loc);
+			}
+						
+			//$("#location").html(loc);
+						
+			
+			var d = new Date();
+			d.setTime(global.eorzeaTime);
+			var hours = d.getUTCHours();			
+			var time1, time2, time3, time4;
+			
+			if (hours >= 0 && hours < 8)
+			{
+				time1 = "4 PM";
+				time2 = "12 AM"; //
+				time3 = "8 AM";
+				time4 = "4 PM";
+			} else if (hours >= 8 && hours < 16)
+			{
+				time1 = "12 AM";
+				time2 = "8 AM"; //
+				time3 = "4 PM";
+				time4 = "12 AM";
+			} else if (hours >= 16 && hours < 24)
+			{
+				time1 = "8 AM";
+				time2 = "4 PM";
+				time3 = "12 AM";
+				time4 = "8 AM";
+			}
+								
+			//var weatherX = time1;
+			//var weatherY = loc;					
+								
+			if (loc !== "" && (time1 !== _weather || loc !== _weatherY))
+			{
+				$("#node_8am_1_time").html(time1);
+				$('#node_8am_1_img').attr("src", calculateWeather(loc, 1)[3]);
+				$('#node_8am_1_img').attr("alt", calculateWeather(loc, 1)[0]);
+				$('#node_8am_1_desc').html(calculateWeather(loc, 1)[0]);
+				
+				$('#node_4pm_2_time').html(time2);
+				$('#node_4pm_2_img').attr("src", calculateWeather(loc, 2)[3]);
+				$('#node_4pm_2_img').attr("alt", calculateWeather(loc, 2)[0]);
+				$('#node_4pm_2_desc').html(calculateWeather(loc, 2)[0]);
+				
+				$('#node_12am_3_time').html(time3);
+				$('#node_12am_3_img').attr("src", calculateWeather(loc, 3)[3]);
+				$('#node_12am_3_img').attr("alt", calculateWeather(loc, 3)[0]);
+				$('#node_12am_3_desc').html(calculateWeather(loc, 3)[0]);
+				
+				$('#node_8am_4_time').html(time4);
+				$('#node_8am_4_img').attr("src", calculateWeather(loc, 4)[3]);
+				$('#node_8am_4_img').attr("alt", calculateWeather(loc, 4)[0]);
+				$('#node_8am_4_desc').html(calculateWeather(loc, 4)[0]);
+				
+				_weather = time1;
+				_weatherY = loc;
+			}
+		}
+		
+		
+		function calculateWeather(loc, Var) {
+			
+			var weatherStartTime = WeatherFinder.getWeatherTimeFloor(new Date()).getTime();
+   					
+			if (Var === 1) {
+				weatherStartTime -= 8 * 175 * 1000;
+			} else if (Var === 2) { 
+				//
+			} else if (Var === 3) { 
+				weatherStartTime += 8 * 175 * 1000;
+			} else if (Var === 4) { 
+				weatherStartTime += 16 * 175 * 1000;
+			}
+			
+			 // Increment by 8 Eorzean hours
+			var weather = WeatherFinder.getWeather(weatherStartTime, loc);
+						
+			var ret = new Array(4);
+			
+			switch(weather) {
+					case "Clouds":
+							ret[0] = "Clouds";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Overcast_icon.png"
+							break;
+					case "Clear Skies":
+							ret[0] = "Clear Skies";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Clear_icon.png"
+							break;
+					case "Fair Skies":
+							ret[0] = "Fair Skies";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Fair_icon.png"
+							break;
+					case "Fog":
+							ret[0] = "Fog";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Fog_icon.png"
+							break;
+					case "Rain":
+							ret[0] = "Rain";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Rain_icon.png"
+							break;
+					case "Wind":
+							ret[0] = "Wind";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Wind_icon.png"
+							break;
+					case "Showers":
+							ret[0] = "Showers";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Shower_icon.png"
+							break;
+					case "Gales":
+							ret[0] = "Gales";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Gale_icon.png"
+							break;
+					case "Thunder":
+							ret[0] = "Thunder";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Thunder_icon.png"
+							break;
+					case "Thunderstorms":
+							ret[0] = "Thunderstorms";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Thunderstorm_icon.png"
+							break;
+					case "Blizzards":
+							ret[0] = "Blizzards";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Blizzard_icon.png"
+							break;
+					case "Snow":
+							ret[0] = "Snow";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Snow_icon.png"
+							break;
+					case "Dust Storms":
+							ret[0] = "Dust Storms";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Dust_Storm_icon.png"
+							break;
+					case "Umbral Wind":
+							ret[0] = "Umbral Wind";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Umbral_Wind_icon.png"
+							break;
+					case "Umbral Static":
+							ret[0] = "Umbral Static";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Umbral_Static_icon.png"
+							break;
+					case "Heat Waves":
+							ret[0] = "Heat Waves";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Heat_Waves_icon.png"
+							break;
+					case "Gloom":
+							ret[0] = "Gloom";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Gloom_icon.png"
+							break;
+					default:
+							ret[0] = "Clear Skies";
+							ret[1] = loc;
+							ret[2] = "";
+							ret[3] = "img/weather/Clear_icon.png"
+			}
+			
+			return ret;
+		}
+		
+	</script>
+<!-- endbuild -->
+</body>
+</html>
