@@ -21,7 +21,7 @@ namespace Chromatics
 {
     public partial class Chromatics : Form, ILogWrite
     {
-        string currentVersionX = "2.2.7";
+        string currentVersionX = "2.2.6";
 
         private CancellationTokenSource Attachcts = new CancellationTokenSource();
         private CancellationTokenSource FFXIVcts = new CancellationTokenSource();

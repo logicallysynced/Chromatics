@@ -2306,7 +2306,7 @@ namespace Chromatics
 
                                 foreach (var action in hotbar.Actions)
                                 {
-                                    if (!action.IsKeyBindAssigned) continue;
+                                    if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) || string.IsNullOrEmpty(action.KeyBinds) || string.IsNullOrEmpty(action.ActionKey)) continue;
 
                                     //Collect Modifier Info
                                     var modsactive = action.Modifiers.Count;
@@ -2365,9 +2365,9 @@ namespace Chromatics
 
                                         }
                                     }
-                                    
-                                    //Assign Lighting
 
+                                    //Assign Lighting
+                                    
                                     if (FFXIVInterfaces.FFXIVHotbar.keybindtranslation.ContainsKey(action.ActionKey))
                                     {
                                         var keyid = FFXIVInterfaces.FFXIVHotbar.keybindtranslation[action.ActionKey];
@@ -2384,7 +2384,6 @@ namespace Chromatics
                                                         //Action Proc'd
                                                         GlobalApplyMapKeyLighting(keyid, ColorTranslator.FromHtml(ColorMappings.ColorMapping_HotbarProc), false, true);
                                                     }
-
                                                     else
                                                     {
                                                         if (action.CoolDownPercent > 0)
