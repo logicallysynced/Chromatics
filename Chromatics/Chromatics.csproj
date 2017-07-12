@@ -65,11 +65,11 @@
   <ItemGroup>
     <Reference Include="Corale.Colore, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\Corale.Colore.dll</HintPath>
+      <HintPath>..\packages\Colore.5.1.0\lib\net35\Corale.Colore.dll</HintPath>
     </Reference>
     <Reference Include="Corale.Colore.WinForms, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\Corale.Colore.WinForms.dll</HintPath>
+      <HintPath>..\packages\Colore.WinForms.5.1.0\lib\net35\Corale.Colore.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="CUE.NET, Version=1.1.3.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CUE.NET.1.1.3.1\lib\net45\CUE.NET.dll</HintPath>
