@@ -299,7 +299,7 @@ namespace Chromatics.DeviceInterfaces
         private static readonly object _CorsairFlash1 = new object();
         private static readonly object _CorsairFlash2 = new object();
         private static readonly object _CorsairtransitionConst = new object();
-        private ListLedGroup _CorsairAllHeadsetLED;
+        private ListLedGroup _CorsairAllHeadsetLED; 
 
         //Define Corsair LED Groups
         private ListLedGroup _CorsairAllKeyboardLED;
