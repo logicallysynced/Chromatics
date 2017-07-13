@@ -17,6 +17,7 @@ namespace Chromatics
         HUE,
         ARX,
         STEEL,
+        COOLERMASTER,
         ERROR
     };
     
