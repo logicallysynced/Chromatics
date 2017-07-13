@@ -18,6 +18,7 @@ namespace Chromatics
         ARX,
         STEEL,
         COOLERMASTER,
+        ROCCAT,
         ERROR
     };
     

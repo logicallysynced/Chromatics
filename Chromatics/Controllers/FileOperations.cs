@@ -30,6 +30,11 @@ namespace Chromatics
             dr.DeviceOperation_CorsairKeypad = CorsairDeviceKeypad; //Not Implemented
             dr.DeviceOperation_CorsairHeadset = CorsairDeviceHeadset;
 
+            dr.DeviceOperation_CoolermasterKeyboard = CoolermasterDeviceKeyboard;
+            dr.DeviceOperation_CoolermasterMouse = CoolermasterDeviceMouse;
+            dr.DeviceOperation_RoccatKeyboard = RoccatDeviceKeyboard;
+            dr.DeviceOperation_RoccatMouse = RoccatDeviceMouse;
+
             dr.DeviceOperation_MouseToggle = MouseToggle;
             
             dr.DeviceOperation_LogitechKeyboard = LogitechDeviceKeyboard;
@@ -117,6 +122,11 @@ namespace Chromatics
                         CorsairDeviceMousepad = dr.DeviceOperation_CorsairMousepad;
                         CorsairDeviceKeypad = dr.DeviceOperation_CorsairKeypad; //Not Implemented
                         CorsairDeviceHeadset = dr.DeviceOperation_CorsairHeadset;
+
+                        CoolermasterDeviceKeyboard = dr.DeviceOperation_CoolermasterKeyboard;
+                        CoolermasterDeviceMouse = dr.DeviceOperation_CoolermasterMouse;
+                        RoccatDeviceKeyboard = dr.DeviceOperation_RoccatKeyboard;
+                        RoccatDeviceMouse = dr.DeviceOperation_RoccatMouse;
 
                         MouseToggle = dr.DeviceOperation_MouseToggle;
                         

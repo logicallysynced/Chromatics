@@ -40,6 +40,10 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSDK = false;
         public int CorsairSDKCalled = 0;
+        public bool CoolermasterSDK = false;
+        public int CoolermasterSDKCalled = 0;
+        public bool RoccatSDK = false;
+        public int RoccatSDKCalled = 0;
         public bool DeviceGridStartup = false;
         public bool HoldReader = false;
         public bool HueRescan = false;
@@ -77,7 +81,12 @@ namespace Chromatics
         private bool CorsairDeviceKeypad = true;
         private bool CorsairDeviceMouse = true;
         private bool CorsairDeviceMousepad = true;
-        
+
+        private bool CoolermasterDeviceKeyboard = true;
+        private bool CoolermasterDeviceMouse = true;
+        private bool RoccatDeviceKeyboard = true;
+        private bool RoccatDeviceMouse = true;
+
         private bool LogitechDeviceKeyboard = true;
 
         private string HUEDefault = "";
@@ -136,6 +145,8 @@ namespace Chromatics
                     else if (type == ConsoleTypes.HUE) rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Orange; });
                     else if (type == ConsoleTypes.ARX) rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Aqua; });
                     else if (type == ConsoleTypes.STEEL) rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.HotPink; });
+                    else if (type == ConsoleTypes.COOLERMASTER) rtb_debug.Invoke((Action)delegate { rtb_debug.SelectionColor = Color.DarkBlue; });
+                    else if (type == ConsoleTypes.ROCCAT) rtb_debug.Invoke((Action)delegate { rtb_debug.SelectionColor = Color.RosyBrown; });
                     else if (type == ConsoleTypes.ERROR) rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Red; });
                     else rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Black; });
 
@@ -152,6 +163,8 @@ namespace Chromatics
                     else if (type == ConsoleTypes.HUE) rtb_debug.SelectionColor = Color.Orange;
                     else if (type == ConsoleTypes.ARX) rtb_debug.SelectionColor = Color.Aqua;
                     else if (type == ConsoleTypes.STEEL) rtb_debug.SelectionColor = Color.HotPink;
+                    else if (type == ConsoleTypes.COOLERMASTER) rtb_debug.SelectionColor = Color.DarkBlue;
+                    else if (type == ConsoleTypes.ROCCAT) rtb_debug.SelectionColor = Color.RosyBrown;
                     else if (type == ConsoleTypes.ERROR) rtb_debug.SelectionColor = Color.Red;
                     else rtb_debug.SelectionColor = Color.Black;
                     

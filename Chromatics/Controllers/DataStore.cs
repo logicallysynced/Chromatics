@@ -23,6 +23,10 @@ namespace Chromatics.Datastore
         public bool DeviceOperation_RazerKeypad = true;
         public bool DeviceOperation_RazerMouse = true;
         public bool DeviceOperation_RazerMousepad = true;
+        public bool DeviceOperation_CoolermasterKeyboard = true;
+        public bool DeviceOperation_CoolermasterMouse = true;
+        public bool DeviceOperation_RoccatKeyboard = true;
+        public bool DeviceOperation_RoccatMouse = true;
         public string DeviceOperation_HUEDefault = "";
     }
 

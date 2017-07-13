@@ -493,6 +493,33 @@ namespace Chromatics
                     _logitech.ResetLogitechDevices(LogitechDeviceKeyboard, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                 }
 
+                if (CoolermasterSDKCalled == 1)
+                {
+                    var _CoolermasterDgDevices = (DataGridViewRow)dG_devices.Rows[0].Clone();
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Coolermaster Devices";
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value = CoolermasterDeviceKeyboard
+                        ? "Enabled"
+                        : "Disabled";
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_state"].Index].Value = CoolermasterDeviceKeyboard;
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CoolermasterDevice";
+
+                    var _CoolermasterDgDevices_dgc = new DataGridViewComboBoxCell();
+                    foreach (var d in DeviceModes)
+                        _CoolermasterDgDevices_dgc.Items.Add(d.Value);
+
+                    _CoolermasterDgDevices_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
+                    _CoolermasterDgDevices_dgc.DisplayStyleForCurrentCellOnly = true;
+                    _CoolermasterDgDevices_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_mode"].Index] = _CoolermasterDgDevices_dgc;
+
+                    dG_devices.Rows.Add(_CoolermasterDgDevices);
+                    _CoolermasterDgDevices_dgc.ReadOnly = true;
+
+                    _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                }
+
                 if (LifxSDKCalled == 1)
                     if (_lifx.LifxBulbs > 0)
                     {
@@ -826,6 +853,23 @@ namespace Chromatics
                         if (LogitechSDKCalled == 1)
                         {
                             _logitech.ResetLogitechDevices(LogitechDeviceKeyboard, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        }
+                    }
+                    else if (_dattype == "CoolermasterDevice")
+                    {
+                        if (_switch)
+                            CoolermasterDeviceKeyboard = true;
+                        else
+                            CoolermasterDeviceKeyboard = false;
+
+                        change[dG_devices.Columns["col_status"].Index].Value = CoolermasterDeviceKeyboard
+                            ? "Enabled"
+                            : "Disabled";
+                        change[dG_devices.Columns["col_state"].Index].Value = CoolermasterDeviceKeyboard;
+
+                        if (CoolermasterSDKCalled == 1)
+                        {
+                            _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                         }
                     }
                     else if (_dattype == "LIFX")

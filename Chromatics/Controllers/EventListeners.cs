@@ -81,6 +81,7 @@ namespace Chromatics
             HoldReader = true;
             FFXIVcts.Cancel();
             Attachcts.Cancel();
+            ShutDownDevices();
 
             if (LifxSDKCalled == 1)
             {

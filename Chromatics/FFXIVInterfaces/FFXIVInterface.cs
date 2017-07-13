@@ -2338,7 +2338,7 @@ namespace Chromatics
                                     if (_hp != 0 && current_HP < _hp)
                                     {
                                         _RzFl1CTS.Cancel();
-                                        _CorsairF12CTS.Cancel();
+                                        _CorsairF1CTS.Cancel();
                                         GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPLoss), 100, DeviceInterfaces.EffectLibrary.DeviceEffects._GlobalKeys3);
                                     }
                                 }
