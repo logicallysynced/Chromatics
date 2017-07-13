@@ -35,18 +35,18 @@ namespace Chromatics.DeviceInterfaces
     {
         bool InitializeSDK();
         void LIFXRestoreState();
-        void LIFXUpdateState(int mode, Color col, int transition);
-        void LIFXUpdateStateBrightness(int mode, Color col, ushort brightness, int transition);
+        void LIFXUpdateState(DeviceModeTypes mode, Color col, int transition);
+        void LIFXUpdateStateBrightness(DeviceModeTypes mode, Color col, ushort brightness, int transition);
         int LifxBulbs { get; set; }
         Task<LightStateResponse> GetLightStateAsync(LightBulb id);
         Task<StateVersionResponse> GetDeviceVersionAsync(LightBulb id);
         void SetColorAsync(LightBulb id, ushort Hue, ushort Saturation, ushort Brightness, ushort Kelvin, TimeSpan ts);
 
         Dictionary<string, int> LifxStateMemory { get; }
-        Dictionary<string, int> LifxModeMemory { get; }
+        Dictionary<string, DeviceModeTypes> LifxModeMemory { get; }
         Dictionary<uint, string> LIFXproductids { get; }
         Dictionary<string, LightBulb> LifxDevices { get; }
-        Dictionary<LightBulb, int> LifxBulbsDat { get; }
+        Dictionary<LightBulb, DeviceModeTypes> LifxBulbsDat { get; }
         Dictionary<LightBulb, LightStateResponse> LifxBulbsRestore { get; }
     }
 
@@ -65,13 +65,13 @@ namespace Chromatics.DeviceInterfaces
         private Task _LIFXpendingUpdateColorBright;
         private LifxClient _client;
 
-        private static readonly Dictionary<LightBulb, int> _LifxBulbsDat = new Dictionary<LightBulb, int>();
+        private static readonly Dictionary<LightBulb, DeviceModeTypes> _LifxBulbsDat = new Dictionary<LightBulb, DeviceModeTypes>();
 
         private static readonly Dictionary<LightBulb, LightStateResponse> _LifxBulbsRestore =
             new Dictionary<LightBulb, LightStateResponse>();
 
         private static readonly Dictionary<string, LightBulb> _LifxDevices = new Dictionary<string, LightBulb>();
-        private static readonly Dictionary<string, int> _LifxModeMemory = new Dictionary<string, int>();
+        private static readonly Dictionary<string, DeviceModeTypes> _LifxModeMemory = new Dictionary<string, DeviceModeTypes>();
 
         private static readonly Dictionary<uint, string> _LIFXproductids = new Dictionary<uint, string>
         {
@@ -112,7 +112,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public Dictionary<string, int> LifxModeMemory
+        public Dictionary<string, DeviceModeTypes> LifxModeMemory
         {
             get
             {
@@ -136,7 +136,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public Dictionary<LightBulb, int> LifxBulbsDat
+        public Dictionary<LightBulb, DeviceModeTypes> LifxBulbsDat
         {
             get
             {
@@ -199,7 +199,7 @@ namespace Chromatics.DeviceInterfaces
         {
             var version = await _client.GetDeviceVersionAsync(e.Device);
             var state = await _client.GetLightStateAsync(e.Device as LightBulb);
-            var defaultmode = 1;
+            var defaultmode = DeviceModeTypes.STANDBY;
 
             if (!_LifxModeMemory.ContainsKey(e.Device.MacAddressName))
             {
@@ -245,7 +245,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public async void LIFXUpdateState(int mode, Color col, int transition)
+        public async void LIFXUpdateState(DeviceModeTypes mode, Color col, int transition)
         {
             if (LifxSDK && _LifxBulbs > 0)
             {
@@ -267,7 +267,7 @@ namespace Chromatics.DeviceInterfaces
                 ushort _kelvin = 2700;
 
                 foreach (var d in _LifxBulbsDat)
-                    if (d.Value == mode || mode == 100)
+                    if (d.Value == mode || mode == DeviceModeTypes.UNKNOWN) //100
                     {
                         if (_LifxStateMemory[d.Key.MacAddressName] == 0) { return; }
                         var state = await _client.GetLightStateAsync(d.Key);
@@ -287,7 +287,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public async void LIFXUpdateStateBrightness(int mode, Color col, ushort brightness, int transition)
+        public async void LIFXUpdateStateBrightness(DeviceModeTypes mode, Color col, ushort brightness, int transition)
         {
             if (LifxSDK && _LifxBulbs > 0)
             {
@@ -313,10 +313,10 @@ namespace Chromatics.DeviceInterfaces
 
                 ushort _kelvin = 2700;
 
-                if (mode == 10) _kelvin = 6000;
+                if (mode == DeviceModeTypes.CASTBAR) _kelvin = 6000;
 
                 foreach (var d in _LifxBulbsDat)
-                    if (d.Value == mode || mode == 100)
+                    if (d.Value == mode || mode == DeviceModeTypes.UNKNOWN) //100
                     {
                         if (_LifxStateMemory[d.Key.MacAddressName] == 0) { return; }
                         var state = await _client.GetLightStateAsync(d.Key);

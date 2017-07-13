@@ -6,19 +6,6 @@ using System.Threading.Tasks;
 
 namespace Chromatics
 {
-    /*
-        0 - System
-        1 - FFXIV
-        2 - Razer
-        3 - Corsair
-        4 - Logitech
-        5 - LIFX
-        6 - HUE
-        7 - Logitech ARX
-        8 - Steel Series
-        20 - Error
-    */
-
     public enum ConsoleTypes
     {
         SYSTEM,
@@ -32,4 +19,21 @@ namespace Chromatics
         STEEL,
         ERROR
     };
+    
+    public enum DeviceModeTypes
+    {
+        DISABLED,
+        STANDBY,
+        DEFAULT_COLOR,
+        HIGHLIGHT_COLOR,
+        ENMITY_TRACKER,
+        TARGET_HP,
+        STATUS_EFFECTS,
+        HP_TRACKER,
+        MP_TRACKER,
+        TP_TRACKER,
+        CASTBAR,
+        CHROMATICS_DEFAULT,
+        UNKNOWN
+    }
 }

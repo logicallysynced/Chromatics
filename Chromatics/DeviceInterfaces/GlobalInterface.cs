@@ -163,13 +163,13 @@ namespace Chromatics
          * 10 - Castbar
          * 100 - All/System
         */
-        public void GlobalUpdateBulbState(int mode, System.Drawing.Color col, int transition)
+        public void GlobalUpdateBulbState(DeviceModeTypes mode, System.Drawing.Color col, int transition)
         {
             if (LifxSDKCalled == 1)
             {
-                if (mode > 0)
+                if (mode != DeviceModeTypes.DISABLED)
                 {
-                    if (mode == 1)
+                    if (mode == DeviceModeTypes.STANDBY)
                     {
                         _lifx.LIFXUpdateState(mode, System.Drawing.Color.Black, transition);
                     }
@@ -182,9 +182,9 @@ namespace Chromatics
 
             if (HueSDKCalled == 1)
             {
-                if (mode > 0)
+                if (mode != DeviceModeTypes.DISABLED)
                 {
-                    if (mode == 1)
+                    if (mode == DeviceModeTypes.STANDBY)
                     {
                         _hue.HUEUpdateState(mode, System.Drawing.Color.Black, transition);
                     }
@@ -196,13 +196,13 @@ namespace Chromatics
             }
         }
 
-        public void GlobalUpdateBulbStateBrightness(int mode, System.Drawing.Color col, ushort brightness, int transition)
+        public void GlobalUpdateBulbStateBrightness(DeviceModeTypes mode, System.Drawing.Color col, ushort brightness, int transition)
         {
             if (LifxSDKCalled == 1)
             {
-                if (mode > 0)
+                if (mode != DeviceModeTypes.DISABLED)
                 {
-                    if (mode == 1)
+                    if (mode == DeviceModeTypes.STANDBY)
                     {
                         _lifx.LIFXUpdateStateBrightness(mode, System.Drawing.Color.Black, brightness, transition);
                     }
@@ -215,9 +215,9 @@ namespace Chromatics
 
             if (HueSDKCalled == 1)
             {
-                if (mode > 0)
+                if (mode != DeviceModeTypes.DISABLED)
                 {
-                    if (mode == 1)
+                    if (mode == DeviceModeTypes.STANDBY)
                     {
                         _hue.HUEUpdateStateBrightness(mode, System.Drawing.Color.Black, brightness, transition);
                     }
@@ -228,6 +228,8 @@ namespace Chromatics
                 }
             }
         }
+
+        //_lifx.LIFXUpdateStateBrightness(9, col_tpfull, (ushort) pol_TPZ, 250);
 
         public void GlobalKeyboardUpdate()
         {

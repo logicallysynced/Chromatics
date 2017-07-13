@@ -18,24 +18,24 @@ namespace Chromatics
     partial class Chromatics : ILogWrite
     {
         private readonly DataGridViewComboBoxColumn _dGmode = new DataGridViewComboBoxColumn();
-
-        private readonly Dictionary<int, string> DeviceModes = new Dictionary<int, string>
+                
+        private readonly Dictionary<DeviceModeTypes, string> DeviceModes = new Dictionary<DeviceModeTypes, string>
         {
             //Keys
-            {0, "Disabled"},
-            {1, "Standby"},
-            {2, "Default Color"},
-            {3, "Highlight Colour"},
-            {4, "Enmity Tracker"},
-            {5, "Target HP"},
-            {6, "Status Effects"},
-            {7, "HP Tracker"},
-            {8, "MP Tracker"},
-            {9, "TP Tracker"},
-            {10, "Castbar"},
-            {11, "Chromatics Default"}
+            {DeviceModeTypes.DISABLED, "Disabled"},
+            {DeviceModeTypes.STANDBY, "Standby"},
+            {DeviceModeTypes.DEFAULT_COLOR, "Default Color"},
+            {DeviceModeTypes.HIGHLIGHT_COLOR, "Highlight Colour"},
+            {DeviceModeTypes.ENMITY_TRACKER, "Enmity Tracker"},
+            {DeviceModeTypes.TARGET_HP, "Target HP"},
+            {DeviceModeTypes.STATUS_EFFECTS, "Status Effects"},
+            {DeviceModeTypes.HP_TRACKER, "HP Tracker"},
+            {DeviceModeTypes.MP_TRACKER, "MP Tracker"},
+            {DeviceModeTypes.TP_TRACKER, "TP Tracker"},
+            {DeviceModeTypes.CASTBAR, "Castbar"},
+            {DeviceModeTypes.CHROMATICS_DEFAULT, "Chromatics Default"}
         };
-
+                
         private readonly Dictionary<string, string[]> MappingPalette = new Dictionary<string, string[]>
         {
             //Keys
@@ -263,7 +263,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _RzDgKeyboard_dgc.Items.Add(d.Value);
 
-                    _RzDgKeyboard_dgc.Value = DeviceModes[11];
+                    _RzDgKeyboard_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _RzDgKeyboard_dgc.DisplayStyleForCurrentCellOnly = true;
                     _RzDgKeyboard_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
                     _RzDgKeyboard.Cells[dG_devices.Columns["col_mode"].Index] = _RzDgKeyboard_dgc;
@@ -285,7 +285,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _RzDgMouse_dgc.Items.Add(d.Value);
 
-                    _RzDgMouse_dgc.Value = DeviceModes[11];
+                    _RzDgMouse_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _RzDgMouse_dgc.DisplayStyleForCurrentCellOnly = true;
                     _RzDgMouse_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -308,7 +308,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _RzDgHeadset_dgc.Items.Add(d.Value);
 
-                    _RzDgHeadset_dgc.Value = DeviceModes[11];
+                    _RzDgHeadset_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _RzDgHeadset_dgc.DisplayStyleForCurrentCellOnly = true;
                     _RzDgHeadset_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -331,7 +331,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _RzDgMousepad_dgc.Items.Add(d.Value);
 
-                    _RzDgMousepad_dgc.Value = DeviceModes[11];
+                    _RzDgMousepad_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _RzDgMousepad_dgc.DisplayStyleForCurrentCellOnly = true;
                     _RzDgMousepad_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -354,7 +354,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _RzDgKeypad_dgc.Items.Add(d.Value);
 
-                    _RzDgKeypad_dgc.Value = DeviceModes[11];
+                    _RzDgKeypad_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _RzDgKeypad_dgc.DisplayStyleForCurrentCellOnly = true;
                     _RzDgKeypad_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -382,7 +382,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _CorsairDgKeyboard_dgc.Items.Add(d.Value);
 
-                    _CorsairDgKeyboard_dgc.Value = DeviceModes[11];
+                    _CorsairDgKeyboard_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _CorsairDgKeyboard_dgc.DisplayStyleForCurrentCellOnly = true;
                     _CorsairDgKeyboard_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -405,7 +405,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _CorsairDgMouse_dgc.Items.Add(d.Value);
 
-                    _CorsairDgMouse_dgc.Value = DeviceModes[11];
+                    _CorsairDgMouse_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _CorsairDgMouse_dgc.DisplayStyleForCurrentCellOnly = true;
                     _CorsairDgMouse_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -428,7 +428,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _CorsairDgHeadset_dgc.Items.Add(d.Value);
 
-                    _CorsairDgHeadset_dgc.Value = DeviceModes[11];
+                    _CorsairDgHeadset_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _CorsairDgHeadset_dgc.DisplayStyleForCurrentCellOnly = true;
                     _CorsairDgHeadset_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -451,7 +451,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _CorsairDgMousepad_dgc.Items.Add(d.Value);
 
-                    _CorsairDgMousepad_dgc.Value = DeviceModes[11];
+                    _CorsairDgMousepad_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _CorsairDgMousepad_dgc.DisplayStyleForCurrentCellOnly = true;
                     _CorsairDgMousepad_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -478,7 +478,7 @@ namespace Chromatics
                     foreach (var d in DeviceModes)
                         _LogitechDgDevices_dgc.Items.Add(d.Value);
 
-                    _LogitechDgDevices_dgc.Value = DeviceModes[11];
+                    _LogitechDgDevices_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
                     _LogitechDgDevices_dgc.DisplayStyleForCurrentCellOnly = true;
                     _LogitechDgDevices_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -524,12 +524,12 @@ namespace Chromatics
 
                             foreach (var x in DeviceModes.ToList())
                             {
-                                if (d.Value != 0 && x.Key == 0) continue;
-                                if (x.Key == 11) continue;
+                                if (d.Value != 0 && x.Key == DeviceModeTypes.DISABLED) continue;
+                                if (x.Key == DeviceModeTypes.CHROMATICS_DEFAULT) continue;
                                 _LIFXdGDevice_dgc.Items.Add(x.Value);
                             }
 
-                            _LIFXdGDevice_dgc.Value = d.Value == 11 ? DeviceModes[1] : DeviceModes[d.Value];
+                            _LIFXdGDevice_dgc.Value = d.Value == DeviceModeTypes.CHROMATICS_DEFAULT ? DeviceModes[DeviceModeTypes.STANDBY] : DeviceModes[d.Value];
                             _LIFXdGDevice_dgc.DisplayStyleForCurrentCellOnly = true;
                             _LIFXdGDevice_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 
@@ -596,12 +596,12 @@ namespace Chromatics
 
                             foreach (var x in DeviceModes.ToList())
                             {
-                                if (d.Value != 0 && x.Key == 0) continue;
-                                if (x.Key == 11) continue;
+                                if (d.Value != 0 && x.Key == DeviceModeTypes.DISABLED) continue;
+                                if (x.Key == DeviceModeTypes.CHROMATICS_DEFAULT) continue;
                                 _HUEdGDevice_dgc.Items.Add(x.Value);
                             }
 
-                            _HUEdGDevice_dgc.Value = d.Value == 11 ? DeviceModes[1] : DeviceModes[d.Value];
+                            _HUEdGDevice_dgc.Value = d.Value == DeviceModeTypes.CHROMATICS_DEFAULT ? DeviceModes[DeviceModeTypes.STANDBY] : DeviceModes[d.Value];
                             _HUEdGDevice_dgc.DisplayStyleForCurrentCellOnly = true;
                             _HUEdGDevice_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 

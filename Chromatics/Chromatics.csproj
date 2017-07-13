@@ -220,7 +220,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Controllers\Locator.cs" />
-    <Compile Include="Controllers\Logger.cs" />
+    <Compile Include="Controllers\Enums.cs" />
     <Compile Include="Controllers\MemoryTasks.cs" />
     <Compile Include="DeviceInterfaces\CorsairInterface.cs" />
     <Compile Include="DeviceInterfaces\CorsairLibs\CorsairLibs.cs" />

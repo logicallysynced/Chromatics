@@ -54,7 +54,7 @@ namespace Chromatics
             if (HueSDK && _hue.HueModeMemory.Count() > 0)
             {
                 List<string> _HueList = new List<string>();
-                foreach (KeyValuePair<string, int> _HP in _hue.HueModeMemory)
+                foreach (KeyValuePair<string, DeviceModeTypes> _HP in _hue.HueModeMemory)
                 {
                     string _HA = _HP.Key + "|" + _HP.Value + "|" + _hue.HueStateMemory[_HP.Key];
                     _HueList.Add(_HA);
@@ -130,8 +130,12 @@ namespace Chromatics
                             foreach (var _LD in _LifxDevices)
                             {
                                 var LState = _LD.Split('|');
-                                var LMode = 0;
-                                int.TryParse(LState[1], out LMode);
+
+                                //DeviceModeTypes LMode = DeviceModeTypes.DISABLED;
+                                //LMode = LState[1].ToString();
+                                //int.TryParse(LState[1], out LMode);
+                                DeviceModeTypes LMode = (DeviceModeTypes)Enum.Parse(typeof(DeviceModeTypes), LState[1]);
+
                                 var LEnabled = 0;
                                 int.TryParse(LState[2], out LEnabled);
                                 _lifx.LifxModeMemory.Add(LState[0], LMode);
@@ -146,8 +150,9 @@ namespace Chromatics
                             foreach (var _HD in _HueDevices)
                             {
                                 var HState = _HD.Split('|');
-                                var HMode = 0;
-                                int.TryParse(HState[1], out HMode);
+                                //var HMode = 0;
+                                //int.TryParse(HState[1], out HMode);
+                                DeviceModeTypes HMode = (DeviceModeTypes)Enum.Parse(typeof(DeviceModeTypes), HState[1]);
                                 var HEnabled = 0;
                                 int.TryParse(HState[2], out HEnabled);
                                 _hue.HueModeMemory.Add(HState[0], HMode);

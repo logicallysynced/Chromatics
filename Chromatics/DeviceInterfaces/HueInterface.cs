@@ -46,13 +46,13 @@ namespace Chromatics.DeviceInterfaces
         Task<State> GetLightStateAsync(Light light);
         Task<string> GetDeviceVersionAsync(Light light);
         void SetColorAsync(Light light, int? Hue, int? Saturation, int Brightness, int? ColorTemperature, TimeSpan ts);
-        void HUEUpdateState(int mode, System.Drawing.Color col, int transition);
-        void HUEUpdateStateBrightness(int mode, System.Drawing.Color col, int? brightness, int transition);
+        void HUEUpdateState(DeviceModeTypes mode, System.Drawing.Color col, int transition);
+        void HUEUpdateStateBrightness(DeviceModeTypes mode, System.Drawing.Color col, int? brightness, int transition);
 
         int HueBulbs { get; set; }
-        Dictionary<string, int> HueModeMemory { get; }
+        Dictionary<string, DeviceModeTypes> HueModeMemory { get; }
         Dictionary<string, Light> HueDevices { get; }
-        Dictionary<Light, int> HueBulbsDat { get; }
+        Dictionary<Light, DeviceModeTypes> HueBulbsDat { get; }
         Dictionary<Light, State> HueBulbsRestore { get; }
         Dictionary<string, int> HueStateMemory { get; }
     }
@@ -63,10 +63,10 @@ namespace Chromatics.DeviceInterfaces
 
         private ILocalHueClient client;
         private static int _HueBulbs;
-        private static readonly Dictionary<string, int> _HueModeMemory = new Dictionary<string, int>();
+        private static readonly Dictionary<string, DeviceModeTypes> _HueModeMemory = new Dictionary<string, DeviceModeTypes>();
         private static readonly Dictionary<string, Light> _HueDevices = new Dictionary<string, Light>();
         private static readonly Dictionary<string, int> _HueStateMemory = new Dictionary<string, int>();
-        private static readonly Dictionary<Light, int> _HueBulbsDat = new Dictionary<Light, int>();
+        private static readonly Dictionary<Light, DeviceModeTypes> _HueBulbsDat = new Dictionary<Light, DeviceModeTypes>();
         private static readonly Dictionary<Light, State> _HueBulbsRestore =
             new Dictionary<Light, State>();
 
@@ -133,7 +133,7 @@ namespace Chromatics.DeviceInterfaces
 
                     foreach (var light in _lights)
                     {
-                        var defaultmode = 1;
+                        var defaultmode = DeviceModeTypes.STANDBY;
 
                         if (!_HueModeMemory.ContainsKey(light.UniqueId))
                         {
@@ -212,7 +212,7 @@ namespace Chromatics.DeviceInterfaces
 
         }
 
-        public async void HUEUpdateState(int mode, System.Drawing.Color col, int transition)
+        public async void HUEUpdateState(DeviceModeTypes mode, System.Drawing.Color col, int transition)
         {
             var connect = await client.CheckConnection();
 
@@ -234,7 +234,7 @@ namespace Chromatics.DeviceInterfaces
 
                 foreach (var d in _HueBulbsDat)
                 {
-                    if (d.Value == mode || mode == 100)
+                    if (d.Value == mode || mode == DeviceModeTypes.UNKNOWN)
                     {
                         if (_HueStateMemory[d.Key.UniqueId] == 0) { return; }
                         var state = await client.GetLightAsync(d.Key.Id); //Unsure if Id or UniqueId should be used
@@ -261,7 +261,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public async void HUEUpdateStateBrightness(int mode, System.Drawing.Color col, int? brightness, int transition)
+        public async void HUEUpdateStateBrightness(DeviceModeTypes mode, System.Drawing.Color col, int? brightness, int transition)
         {
             var connect = await client.CheckConnection();
 
@@ -284,7 +284,7 @@ namespace Chromatics.DeviceInterfaces
                 //if (mode == 10) _kelvin = 6000;
 
                 foreach (var d in _HueBulbsDat)
-                    if (d.Value == mode || mode == 100)
+                    if (d.Value == mode || mode == DeviceModeTypes.UNKNOWN)
                     {
                         if (_HueStateMemory[d.Key.Id] == 0) { return; } //Unsure if Id or UniqueId should be used
 
@@ -370,7 +370,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public Dictionary<string, int> HueModeMemory
+        public Dictionary<string, DeviceModeTypes> HueModeMemory
         {
             get
             {
@@ -386,7 +386,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public Dictionary<Light, int> HueBulbsDat
+        public Dictionary<Light, DeviceModeTypes> HueBulbsDat
         {
             get
             {
