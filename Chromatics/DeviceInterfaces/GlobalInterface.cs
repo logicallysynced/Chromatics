@@ -443,13 +443,20 @@ namespace Chromatics
         private CancellationTokenSource _RzFl1CTS = new CancellationTokenSource();
         private CancellationTokenSource _CorsairF12CTS = new CancellationTokenSource();
         private CancellationTokenSource _LogitechFl1CTS = new CancellationTokenSource();
+        private Task RzFlash;
+        private Task logFlash;
+        private Task CorsairFlash;
+
         public void GlobalFlash1(System.Drawing.Color burstcol, int speed)
         {
             MemoryTasks.Cleanup();
 
             if (RazerSDKCalled == 1)
             {
-                Task RzFlash = new Task(() =>
+                RzFlash = null;
+                _RzFl1CTS = new CancellationTokenSource();
+
+                RzFlash = new Task(() =>
                 {
                     HoldReader = true;
                     _razer.Flash1(burstcol, speed);
@@ -461,7 +468,10 @@ namespace Chromatics
 
             if (LogitechSDKCalled == 1)
             {
-                Task logFlash = new Task(() =>
+                logFlash = null;
+                _LogitechFl1CTS = new CancellationTokenSource();
+
+                logFlash = new Task(() =>
                 {
                     HoldReader = true;
                     _logitech.Flash1(burstcol, speed);
@@ -473,7 +483,10 @@ namespace Chromatics
 
             if (CorsairSDKCalled == 1)
             {
-                Task CorsairFlash = new Task(() =>
+                CorsairFlash = null;
+                _CorsairF12CTS = new CancellationTokenSource();
+
+                CorsairFlash = new Task(() =>
                 {
                     HoldReader = true;
                     _corsair.Flash1(burstcol, speed);
