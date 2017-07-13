@@ -3341,6 +3341,11 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("Num0", _BaseColor, false);
                             GlobalApplyMapKeyLighting("NumDecimal", _BaseColor, false);
                         }
+
+                        //Duty Finder Bell
+
+                        FFXIVInterfaces.FFXIVDutyFinder.RefreshData();
+                        Debug.WriteLine(FFXIVInterfaces.FFXIVDutyFinder.isPopped() + "//" + FFXIVInterfaces.FFXIVDutyFinder.Countdown());
                     }
 
                     if (CorsairSDKCalled == 1)

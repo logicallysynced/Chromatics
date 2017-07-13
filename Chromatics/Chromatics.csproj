@@ -233,6 +233,7 @@
     <Compile Include="DeviceInterfaces\LogitechInterface.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesInterface.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVCooldowns.cs" />
+    <Compile Include="FFXIVInterfaces\FFXIVDutyFinder.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVInterface.cs">
       <SubType>Form</SubType>
     </Compile>

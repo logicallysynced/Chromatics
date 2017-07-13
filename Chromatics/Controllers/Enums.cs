@@ -34,6 +34,7 @@ namespace Chromatics
         TP_TRACKER,
         CASTBAR,
         CHROMATICS_DEFAULT,
+        DUTY_FINDER,
         UNKNOWN
     }
 }

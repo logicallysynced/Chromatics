@@ -45,6 +45,8 @@
             this.col_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
+            this.chk_dfbelltoggle = new System.Windows.Forms.CheckBox();
+            this.chk_impactflashtog = new System.Windows.Forms.CheckBox();
             this.chk_keybindtoggle = new System.Windows.Forms.CheckBox();
             this.chk_jobgaugetoggle = new System.Windows.Forms.CheckBox();
             this.chk_highlighttoggle = new System.Windows.Forms.CheckBox();
@@ -99,7 +101,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_impactflashtog = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -265,6 +266,7 @@
             // 
             // gB_effects
             // 
+            this.gB_effects.Controls.Add(this.chk_dfbelltoggle);
             this.gB_effects.Controls.Add(this.chk_impactflashtog);
             this.gB_effects.Controls.Add(this.chk_keybindtoggle);
             this.gB_effects.Controls.Add(this.chk_jobgaugetoggle);
@@ -278,6 +280,30 @@
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
+            // 
+            // chk_dfbelltoggle
+            // 
+            this.chk_dfbelltoggle.AutoSize = true;
+            this.chk_dfbelltoggle.Location = new System.Drawing.Point(272, 75);
+            this.chk_dfbelltoggle.Name = "chk_dfbelltoggle";
+            this.chk_dfbelltoggle.Size = new System.Drawing.Size(178, 21);
+            this.chk_dfbelltoggle.TabIndex = 7;
+            this.chk_dfbelltoggle.Text = "Enable Duty Finder Bell";
+            this.tooltip_main.SetToolTip(this.chk_dfbelltoggle, "Flashes your devices when Duty Finder pops.\r\nDefault: ON");
+            this.chk_dfbelltoggle.UseVisualStyleBackColor = true;
+            this.chk_dfbelltoggle.CheckedChanged += new System.EventHandler(this.chk_dfbelltoggle_CheckedChanged);
+            // 
+            // chk_impactflashtog
+            // 
+            this.chk_impactflashtog.AutoSize = true;
+            this.chk_impactflashtog.Location = new System.Drawing.Point(272, 39);
+            this.chk_impactflashtog.Name = "chk_impactflashtog";
+            this.chk_impactflashtog.Size = new System.Drawing.Size(184, 21);
+            this.chk_impactflashtog.TabIndex = 6;
+            this.chk_impactflashtog.Text = "Flash on impact/damage";
+            this.tooltip_main.SetToolTip(this.chk_impactflashtog, "Flashes keyboard when damage is taken.\r\nDefault: OFF");
+            this.chk_impactflashtog.UseVisualStyleBackColor = true;
+            this.chk_impactflashtog.CheckedChanged += new System.EventHandler(this.chk_impactflashtog_CheckedChanged);
             // 
             // chk_keybindtoggle
             // 
@@ -846,18 +872,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_impactflashtog
-            // 
-            this.chk_impactflashtog.AutoSize = true;
-            this.chk_impactflashtog.Location = new System.Drawing.Point(272, 39);
-            this.chk_impactflashtog.Name = "chk_impactflashtog";
-            this.chk_impactflashtog.Size = new System.Drawing.Size(184, 21);
-            this.chk_impactflashtog.TabIndex = 6;
-            this.chk_impactflashtog.Text = "Flash on impact/damage";
-            this.tooltip_main.SetToolTip(this.chk_impactflashtog, "Flashes keyboard when damage is taken.\r\nDefault: OFF");
-            this.chk_impactflashtog.UseVisualStyleBackColor = true;
-            this.chk_impactflashtog.CheckedChanged += new System.EventHandler(this.chk_impactflashtog_CheckedChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -962,6 +976,7 @@
         private System.Windows.Forms.CheckBox chk_jobgaugetoggle;
         private System.Windows.Forms.CheckBox chk_keybindtoggle;
         private System.Windows.Forms.CheckBox chk_impactflashtog;
+        private System.Windows.Forms.CheckBox chk_dfbelltoggle;
     }
 }
 

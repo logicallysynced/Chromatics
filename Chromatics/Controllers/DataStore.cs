@@ -45,6 +45,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettings_JobGaugeToggle = true;
         public bool ChromaticsSettings_KeybindToggle = true;
         public bool ChromaticsSettings_ImpactToggle = false;
+        public bool ChromaticsSettings_DFBellToggle = false;
     }
 
     //Color Mapping

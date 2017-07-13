@@ -33,6 +33,7 @@ namespace Chromatics
             {DeviceModeTypes.MP_TRACKER, "MP Tracker"},
             {DeviceModeTypes.TP_TRACKER, "TP Tracker"},
             {DeviceModeTypes.CASTBAR, "Castbar"},
+            {DeviceModeTypes.DUTY_FINDER, "Duty Finder Bell" },
             {DeviceModeTypes.CHROMATICS_DEFAULT, "Chromatics Default"}
         };
                 
@@ -537,6 +538,7 @@ namespace Chromatics
 
                             //Check for duplicates
                             
+                            /*
                             var duplicate = false;
 
                             if (DeviceGridStartup)
@@ -553,7 +555,7 @@ namespace Chromatics
                             }
 
                             if (duplicate) continue;
-                            
+                            */
 
                             dG_devices.Rows.Add(_LIFXdGDevice);
                             _LIFXdGDevice_dgc.ReadOnly = d.Value == 0 ? true : false;
@@ -608,7 +610,7 @@ namespace Chromatics
                             _HUEdGDevice.Cells[dG_devices.Columns["col_mode"].Index] = _HUEdGDevice_dgc;
 
                             //Check for duplicates
-
+                            /*
                             var duplicate = false;
 
                             if (DeviceGridStartup)
@@ -625,7 +627,7 @@ namespace Chromatics
                             }
 
                             if (duplicate) continue;
-
+                            */
                             dG_devices.Rows.Add(_HUEdGDevice);
                             _HUEdGDevice_dgc.ReadOnly = d.Value == 0 ? true : false;
                         }
@@ -974,6 +976,8 @@ namespace Chromatics
                     mapping_colorEditorManager.Color;
                 _PMCS.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.SelectionBackColor =
                     mapping_colorEditorManager.Color;
+
+                Setbase = false;
                 SaveColorMappings(0);
             }
         }
@@ -1092,6 +1096,7 @@ namespace Chromatics
             chk_jobgaugetoggle.Checked = ChromaticsSettings.ChromaticsSettings_JobGaugeToggle;
             chk_highlighttoggle.Checked = ChromaticsSettings.ChromaticsSettings_KeyHighlights;
             chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettings_ImpactToggle;
+            chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettings_DFBellToggle;
         }
 
         private void InitSettingsArxGUI()
@@ -1624,6 +1629,14 @@ namespace Chromatics
             if (startup == false) return;
 
             ChromaticsSettings.ChromaticsSettings_ImpactToggle = chk_impactflashtog.Checked;
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_dfbelltoggle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettings_DFBellToggle = chk_dfbelltoggle.Checked;
             SaveChromaticsSettings(1);
         }
 
