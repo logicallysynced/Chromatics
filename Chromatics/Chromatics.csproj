@@ -222,6 +222,7 @@
     <Compile Include="Controllers\Locator.cs" />
     <Compile Include="Controllers\Enums.cs" />
     <Compile Include="Controllers\MemoryTasks.cs" />
+    <Compile Include="DeviceInterfaces\CoolermasterInterface.cs" />
     <Compile Include="DeviceInterfaces\CorsairInterface.cs" />
     <Compile Include="DeviceInterfaces\CorsairLibs\CorsairLibs.cs" />
     <Compile Include="DeviceInterfaces\EffectLibrary\DeviceEffects.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="DeviceInterfaces\HueInterface.cs" />
     <Compile Include="DeviceInterfaces\LIFXInterface.cs" />
     <Compile Include="DeviceInterfaces\LogitechInterface.cs" />
+    <Compile Include="DeviceInterfaces\RoccatInterface.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesInterface.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVCooldowns.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVDutyFinder.cs" />
