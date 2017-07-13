@@ -19,7 +19,9 @@ namespace Chromatics
         private ILogitechSdk _logitech;
         private IRazerSdk _razer;
         private ICorsairSdk _corsair;
-        
+        private ILIFXSdk _lifx;
+        private IHueSdk _hue;
+
         public void InitializeSDK()
         {
             WriteConsole(ConsoleTypes.RAZER, "Attempting to load Razer SDK..");
@@ -61,7 +63,37 @@ namespace Chromatics
             {
                 WriteConsole(ConsoleTypes.CORSAIR, "CUE SDK failed to load.");
             }
-                        
+
+            //Load LIFX SDK
+            _lifx = DeviceInterfaces.LIFXInterface.InitializeLIFXSDK();
+            if (_lifx != null)
+            {
+                LifxSDK = true;
+                LifxSDKCalled = 1;
+                //WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Loaded");
+            }
+            else
+            {
+                WriteConsole(ConsoleTypes.LIFX, "LIFX SDK failed to load.");
+            }
+
+
+            //Load HUE SDK - ENABLE THIS TO TEST
+
+            /*
+            _hue = DeviceInterfaces.HueInterface.InitializeHueSDK(HUEDefault);
+            if (_hue != null)
+            {
+                HueSDK = true;
+                HueSDKCalled = 1;
+                WriteConsole(ConsoleTypes.HUE, "HUE SDK Loaded");
+            }
+            else
+            {
+                WriteConsole(ConsoleTypes.HUE, "HUE SDK failed to load.");
+            }
+            */
+
 
             //InitializeLIFXSDK();
             ResetDeviceDataGrid();

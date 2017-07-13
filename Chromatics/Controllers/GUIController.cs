@@ -500,7 +500,7 @@ namespace Chromatics
                             //LIFX Device
                             var state = await _lifx.GetLightStateAsync(d.Key);
                             var device = await _lifx.GetDeviceVersionAsync(d.Key);
-
+                             
                             _dGmode.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
                             var LState = _lifx.LifxStateMemory[d.Key.MacAddressName];
@@ -535,8 +535,29 @@ namespace Chromatics
 
                             _LIFXdGDevice.Cells[dG_devices.Columns["col_mode"].Index] = _LIFXdGDevice_dgc;
 
+                            //Check for duplicates
+                            
+                            var duplicate = false;
+
+                            if (DeviceGridStartup)
+                            {
+                                foreach (DataGridViewRow row in dG_devices.Rows)
+                                {
+                                    if (row.Cells[dG_devices.Columns["col_ID"].Index].Value.ToString().Contains(d.Key.MacAddressName))
+                                    {
+                                        duplicate = true;
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+
+                            if (duplicate) continue;
+                            
+
                             dG_devices.Rows.Add(_LIFXdGDevice);
                             _LIFXdGDevice_dgc.ReadOnly = d.Value == 0 ? true : false;
+                            
                         }
                     }
 
@@ -586,6 +607,25 @@ namespace Chromatics
 
                             _HUEdGDevice.Cells[dG_devices.Columns["col_mode"].Index] = _HUEdGDevice_dgc;
 
+                            //Check for duplicates
+
+                            var duplicate = false;
+
+                            if (DeviceGridStartup)
+                            {
+                                foreach (DataGridViewRow row in dG_devices.Rows)
+                                {
+                                    if (row.Cells[dG_devices.Columns["col_ID"].Index].Value.ToString().Contains(d.Key.UniqueId))
+                                    {
+                                        duplicate = true;
+                                        break;
+                                    }
+
+                                }
+                            }
+
+                            if (duplicate) continue;
+
                             dG_devices.Rows.Add(_HUEdGDevice);
                             _HUEdGDevice_dgc.ReadOnly = d.Value == 0 ? true : false;
                         }
@@ -598,6 +638,7 @@ namespace Chromatics
             catch (Exception ex)
             {
                 WriteConsole(ConsoleTypes.ERROR, "EX: " + ex.Message);
+                WriteConsole(ConsoleTypes.ERROR, "EX: " + ex.StackTrace);
             }
         }
 

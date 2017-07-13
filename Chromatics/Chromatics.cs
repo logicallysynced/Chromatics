@@ -99,10 +99,7 @@ namespace Chromatics
         private bool KeyCtrl = false;
         private bool KeyShift = false;
         private bool KeyAlt = false;
-
-        private DeviceInterfaces.ILIFXSdk _lifx;
-        private DeviceInterfaces.IHueSdk _hue;
-
+        
         //Main Thread
         public Chromatics()
         {
@@ -208,39 +205,8 @@ namespace Chromatics
 
             //Bind
             WriteConsole(ConsoleTypes.SYSTEM, "Starting Chromatics Version " + currentVersionX + " (Beta)");
-
-
-            //Load LIFX SDK
-            _lifx = DeviceInterfaces.LIFXInterface.InitializeLIFXSDK();
-            if (_lifx != null)
-            {
-                LifxSDK = true;
-                LifxSDKCalled = 1;
-                //WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Loaded");
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.LIFX, "LIFX SDK failed to load.");
-            }
-
-
-            //Load HUE SDK - ENABLE THIS TO TEST
-
-            /*
-            _hue = DeviceInterfaces.HueInterface.InitializeHueSDK(HUEDefault);
-            if (_hue != null)
-            {
-                HueSDK = true;
-                HueSDKCalled = 1;
-                WriteConsole(ConsoleTypes.HUE, "HUE SDK Loaded");
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.HUE, "HUE SDK failed to load.");
-            }
-            */
-
-
+                     
+            
             //Load Functions
             LoadDevices();
             LoadChromaticsSettings();
