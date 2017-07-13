@@ -200,8 +200,8 @@ namespace Chromatics.DeviceInterfaces
 
         Task Ripple2(Color burstcol, int speed);
 
-        void Flash1(Color burstcol, int speed);
-
+        void Flash1(Color burstcol, int speed, string[] regions);
+        void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
     }
 
@@ -725,7 +725,7 @@ namespace Chromatics.DeviceInterfaces
             });
         }
 
-        public void Flash1(Color burstcol, int speed)
+        public void Flash1(Color burstcol, int speed, string[] regions)
         {
             if (!LogitechDeviceKeyboard)
                 return;
@@ -735,7 +735,7 @@ namespace Chromatics.DeviceInterfaces
                 if (i == 0)
                 {
                     //Setup
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         LogitechSdkWrapper.LogiLedSaveLightingForKey(ToKeyboardNames(key));
                     }
@@ -743,7 +743,7 @@ namespace Chromatics.DeviceInterfaces
                 else if (i == 1)
                 {
                     //Step 0
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         ApplyMapKeyLighting(key, burstcol, false);
                     }
@@ -751,7 +751,7 @@ namespace Chromatics.DeviceInterfaces
                 else if (i == 2)
                 {
                     //Step 1
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
                     }
@@ -759,7 +759,7 @@ namespace Chromatics.DeviceInterfaces
                 else if (i == 3)
                 {
                     //Step 2
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         ApplyMapKeyLighting(key, burstcol, false);
                     }
@@ -767,7 +767,7 @@ namespace Chromatics.DeviceInterfaces
                 else if (i == 4)
                 {
                     //Step 3
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
                     }
@@ -775,7 +775,7 @@ namespace Chromatics.DeviceInterfaces
                 else if (i == 5)
                 {
                     //Step 4
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         ApplyMapKeyLighting(key, burstcol, false);
                     }
@@ -783,7 +783,7 @@ namespace Chromatics.DeviceInterfaces
                 else if (i == 6)
                 {
                     //Step 5
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
                     }
@@ -791,7 +791,7 @@ namespace Chromatics.DeviceInterfaces
                 else if (i == 7)
                 {
                     //Step 6
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         ApplyMapKeyLighting(key, burstcol, false);
                     }
@@ -799,7 +799,7 @@ namespace Chromatics.DeviceInterfaces
                 else if (i == 8)
                 {
                     //Step 7
-                    foreach (var key in DeviceEffects._GlobalKeys3)
+                    foreach (var key in regions)
                     {
                         LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
 
@@ -808,6 +808,71 @@ namespace Chromatics.DeviceInterfaces
 
                 if (i < 8)
                     Thread.Sleep(speed);
+            }
+        }
+
+        private int _LogiFlash2Step = 0;
+        private bool _LogiFlash2Running = false;
+        static readonly object _Flash2 = new object();
+        public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
+        {
+            if (!LogitechDeviceKeyboard)
+                return;
+
+            if (!_LogiFlash2Running)
+            {
+                foreach (var key in regions)
+                {
+                    LogitechSdkWrapper.LogiLedSaveLightingForKey(ToKeyboardNames(key));
+                }
+
+                _LogiFlash2Running = true;
+                _LogiFlash2Step = 0;
+            }
+
+            if (_LogiFlash2Running)
+            {
+                while (_LogiFlash2Running)
+                {
+                    if (cts.IsCancellationRequested)
+                    {
+                        foreach (var key in regions)
+                        {
+                            LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
+                        }
+                        break;
+                    }
+
+                    if (_LogiFlash2Step == 0)
+                    {
+                        if (LogitechDeviceKeyboard)
+                        {
+                            foreach (var key in regions)
+                            {
+                                ApplyMapKeyLighting(key, burstcol, false);
+                            }
+                        }
+                        
+                        _LogiFlash2Step = 1;
+
+                        Thread.Sleep(speed);
+                    }
+                    else if (_LogiFlash2Step == 1)
+                    {
+                        if (LogitechDeviceKeyboard)
+                        {
+                            foreach (var key in regions)
+                            {
+                                LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
+
+                            }
+                        }
+                        
+                        _LogiFlash2Step = 0;
+
+                        Thread.Sleep(speed);
+                    }
+                }
             }
         }
 
@@ -825,6 +890,7 @@ namespace Chromatics.DeviceInterfaces
                 {
                     var presets = new Dictionary<string, Color>();
                     _LogiFlash3Running = true;
+                    _LogiFlash3Step = 0;
 
                     if (_LogiFlash3Running == true)
                     {

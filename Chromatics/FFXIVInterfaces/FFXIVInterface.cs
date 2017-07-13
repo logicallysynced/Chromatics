@@ -156,7 +156,7 @@ namespace Chromatics
         private Sharlayan.Core.ActorEntity PlayerInfo = new Sharlayan.Core.ActorEntity();
         private ConcurrentDictionary<uint, Sharlayan.Core.ActorEntity> PlayerInfoX = new ConcurrentDictionary<uint, Sharlayan.Core.ActorEntity>();
         private bool MenuNotify = false;
-
+        
         public void ReadFFXIVMemory()
         {
             try
@@ -330,6 +330,8 @@ namespace Chromatics
         
         private FFXIVInterfaces.Cooldowns.CardTypes _CurrentCard;
         private bool playgroundonce = false;
+        private bool castalert = false;
+        private bool _targeted;
         private void ProcessFFXIVData()
         {
             MemoryTasks.Cleanup();
@@ -1070,6 +1072,13 @@ namespace Chromatics
                     {
                         if (TargetInfo.Type == Sharlayan.Core.Enums.Actor.Type.Monster)
                         {
+                            if (!_targeted)
+                            {
+                                _targeted = true;           
+                            }
+
+                            
+
                             //Debug.WriteLine("Claimed: " + TargetInfo.ClaimedByID);
                             //Debug.WriteLine("Claimed: " + TargetInfo.);
 
@@ -1254,15 +1263,19 @@ namespace Chromatics
                                                         
                             if (TargetInfo.IsCasting)
                             {
-                                GlobalApplyMapKeyLighting("PrintScreen",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
                                 GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER,
                                     ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting),
                                     0);
+
+                                /*
+                                GlobalApplyMapKeyLighting("PrintScreen",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
                                 GlobalApplyMapKeyLighting("Scroll",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
                                 GlobalApplyMapKeyLighting("Pause",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                */
+
                                 GlobalApplyMapKeyLighting("Macro16",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
                                 GlobalApplyMapKeyLighting("Macro17",
@@ -1274,15 +1287,22 @@ namespace Chromatics
                                 GlobalApplyMapLogoLighting("",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
 
-                                //ToggleGlobalFlash2(true);
-                                //GlobalFlash2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), 200);
+                                if (!castalert)
+                                {
+                                    ToggleGlobalFlash2(true);
+                                    GlobalFlash2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), 200, new string[] { "PrintScreen", "Scroll", "Pause" });
 
-                                //castalert = 1;
+                                    castalert = true;
+                                }
                             }
                             else
                             {
-                                //ToggleGlobalFlash2(false);
-                                
+                                if (castalert)
+                                {
+                                    ToggleGlobalFlash2(false);
+
+                                    castalert = false;
+                                }
 
                                 if (TargetInfo.IsClaimed)
                                 {
@@ -1309,84 +1329,119 @@ namespace Chromatics
                                     if (EmnityPosition == -1)
                                     {
                                         //Engaged/No Aggro
-                                        GlobalApplyMapKeyLighting("PrintScreen", col_em0, false);
                                         GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em0, 1000);
-                                        GlobalApplyMapKeyLighting("Scroll", col_em0, false);
-                                        GlobalApplyMapKeyLighting("Pause", col_em0, false);
+
+                                        if (!castalert)
+                                        {
+                                            GlobalApplyMapKeyLighting("PrintScreen", col_em0, false);
+                                            GlobalApplyMapKeyLighting("Scroll", col_em0, false);
+                                            GlobalApplyMapKeyLighting("Pause", col_em0, false);
+                                            GlobalApplyMapMouseLighting("Logo", col_em0, false);
+                                            GlobalApplyMapLogoLighting("", col_em0, false);
+                                        }
+
                                         GlobalApplyMapKeyLighting("Macro16", col_em0, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em0, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em0, false);
-                                        GlobalApplyMapMouseLighting("Logo", col_em0, false);
-                                        GlobalApplyMapLogoLighting("", col_em0, false);
+                                        
                                     }
                                     else if (EmnityPosition > 4 && EmnityPosition <= 8)
                                     {
                                         //Low Aggro
-                                        GlobalApplyMapKeyLighting("PrintScreen", col_em1, false);
                                         GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em1, 1000);
-                                        GlobalApplyMapKeyLighting("Scroll", col_em1, false);
-                                        GlobalApplyMapKeyLighting("Pause", col_em1, false);
+
+                                        if (!castalert)
+                                        {
+                                            GlobalApplyMapKeyLighting("PrintScreen", col_em1, false);
+                                            GlobalApplyMapKeyLighting("Scroll", col_em1, false);
+                                            GlobalApplyMapKeyLighting("Pause", col_em1, false);
+                                            GlobalApplyMapMouseLighting("Logo", col_em1, false);
+                                            GlobalApplyMapLogoLighting("", col_em1, false);
+                                        }
+
                                         GlobalApplyMapKeyLighting("Macro16", col_em1, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em1, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em1, false);
-                                        GlobalApplyMapMouseLighting("Logo", col_em1, false);
-                                        GlobalApplyMapLogoLighting("", col_em1, false);
+                                        
                                     }
                                     else if (EmnityPosition > 1 && EmnityPosition <= 4)
                                     {
                                         //Moderate Aggro
-                                        GlobalApplyMapKeyLighting("PrintScreen", col_em2, false);
                                         GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em2, 1000);
-                                        GlobalApplyMapKeyLighting("Scroll", col_em2, false);
-                                        GlobalApplyMapKeyLighting("Pause", col_em2, false);
+
+                                        if (!castalert)
+                                        {
+                                            GlobalApplyMapKeyLighting("PrintScreen", col_em2, false);
+                                            GlobalApplyMapKeyLighting("Scroll", col_em2, false);
+                                            GlobalApplyMapKeyLighting("Pause", col_em2, false);
+                                            GlobalApplyMapMouseLighting("Logo", col_em2, false);
+                                            GlobalApplyMapLogoLighting("", col_em2, false);
+                                        }
+
                                         GlobalApplyMapKeyLighting("Macro16", col_em2, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em2, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em2, false);
-                                        GlobalApplyMapMouseLighting("Logo", col_em2, false);
-                                        GlobalApplyMapLogoLighting("", col_em2, false);
+                                        
                                     }
                                     else if (EmnityPosition == 1)
                                     {
                                         //Partial Aggro
-                                        GlobalApplyMapKeyLighting("PrintScreen", col_em3, false);
                                         GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em3, 1000);
-                                        GlobalApplyMapKeyLighting("Scroll", col_em3, false);
-                                        GlobalApplyMapKeyLighting("Pause", col_em3, false);
+
+                                        if (!castalert)
+                                        {
+                                            GlobalApplyMapKeyLighting("PrintScreen", col_em3, false);
+                                            GlobalApplyMapKeyLighting("Scroll", col_em3, false);
+                                            GlobalApplyMapKeyLighting("Pause", col_em3, false);
+                                            GlobalApplyMapMouseLighting("Logo", col_em3, false);
+                                            GlobalApplyMapLogoLighting("", col_em3, false);
+                                        }
+
                                         GlobalApplyMapKeyLighting("Macro16", col_em3, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em3, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em3, false);
-                                        GlobalApplyMapMouseLighting("Logo", col_em3, false);
-                                        GlobalApplyMapLogoLighting("", col_em3, false);
+                                        
                                     }
                                     else if (EmnityPosition == 0)
                                     {
                                         //Full Aggro
-                                        GlobalApplyMapKeyLighting("PrintScreen", col_em4, false);
                                         GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em4, 1000);
-                                        GlobalApplyMapKeyLighting("Scroll", col_em4, false);
-                                        GlobalApplyMapKeyLighting("Pause", col_em4, false);
+
+                                        if (!castalert)
+                                        {
+                                            GlobalApplyMapKeyLighting("PrintScreen", col_em4, false);
+                                            GlobalApplyMapKeyLighting("Scroll", col_em4, false);
+                                            GlobalApplyMapKeyLighting("Pause", col_em4, false);
+                                            GlobalApplyMapMouseLighting("Logo", col_em4, false);
+                                            GlobalApplyMapLogoLighting("", col_em4, false);
+                                        }
+
                                         GlobalApplyMapKeyLighting("Macro16", col_em4, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em4, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em4, false);
-                                        GlobalApplyMapMouseLighting("Logo", col_em4, false);
-                                        GlobalApplyMapLogoLighting("", col_em4, false);
+                                        
                                     }
                                 }
                                 else
                                 {
                                     //Not Engaged/No aggro
-                                    GlobalApplyMapKeyLighting("PrintScreen", col_em0, false);
                                     GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em0, 1000);
-                                    GlobalApplyMapKeyLighting("Scroll", col_em0, false);
-                                    GlobalApplyMapKeyLighting("Pause", col_em0, false);
+
+                                    if (!castalert)
+                                    {
+                                        GlobalApplyMapKeyLighting("PrintScreen", col_em0, false);
+                                        GlobalApplyMapKeyLighting("Scroll", col_em0, false);
+                                        GlobalApplyMapKeyLighting("Pause", col_em0, false);
+                                        GlobalApplyMapMouseLighting("Logo", col_em0, false);
+                                        GlobalApplyMapLogoLighting("", col_em0, false);
+                                    }
+
                                     GlobalApplyMapKeyLighting("Macro16", col_em0, false);
                                     GlobalApplyMapKeyLighting("Macro17", col_em0, false);
                                     GlobalApplyMapKeyLighting("Macro18", col_em0, false);
-                                    GlobalApplyMapMouseLighting("Logo", col_em0, false);
-                                    GlobalApplyMapLogoLighting("", col_em0, false);
+                                    
                                 }
-
-                                //if (castalert == 1) { castalert = 0; }
+                                
                             }
                         }
                         else
@@ -1424,6 +1479,14 @@ namespace Chromatics
                         GlobalApplyMapKeyLighting("Macro4", _BaseColor, false);
                         GlobalApplyMapKeyLighting("Macro5", _BaseColor, false);
                         GlobalUpdateBulbState(DeviceModeTypes.TARGET_HP, _BaseColor, 1000);
+
+                        if (_targeted)
+                        {
+                            _targeted = false;
+                        }
+
+                        ToggleGlobalFlash2(false);
+                        castalert = false;
                     }
 
 
@@ -2274,7 +2337,7 @@ namespace Chromatics
                                     {
                                         _RzFl1CTS.Cancel();
                                         _CorsairF12CTS.Cancel();
-                                        GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPLoss), 100);
+                                        GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPLoss), 100, DeviceInterfaces.EffectLibrary.DeviceEffects._GlobalKeys3);
                                     }
                                 }
                             }
@@ -3345,7 +3408,7 @@ namespace Chromatics
                         //Duty Finder Bell
 
                         FFXIVInterfaces.FFXIVDutyFinder.RefreshData();
-                        Debug.WriteLine(FFXIVInterfaces.FFXIVDutyFinder.isPopped() + "//" + FFXIVInterfaces.FFXIVDutyFinder.Countdown());
+                        //Debug.WriteLine(FFXIVInterfaces.FFXIVDutyFinder.isPopped() + "//" + FFXIVInterfaces.FFXIVDutyFinder.Countdown());
                     }
 
                     if (CorsairSDKCalled == 1)

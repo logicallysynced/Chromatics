@@ -481,7 +481,7 @@ namespace Chromatics
         private Task logFlash;
         private Task CorsairFlash;
 
-        public void GlobalFlash1(System.Drawing.Color burstcol, int speed)
+        public void GlobalFlash1(System.Drawing.Color burstcol, int speed, string[] regions)
         {
             MemoryTasks.Cleanup();
 
@@ -493,7 +493,7 @@ namespace Chromatics
                 RzFlash = new Task(() =>
                 {
                     HoldReader = true;
-                    _razer.Flash1(burstcol, speed);
+                    _razer.Flash1(burstcol, speed, regions);
                     HoldReader = false;
                 }, _RzFl1CTS.Token);
                 MemoryTasks.Add(RzFlash);
@@ -508,7 +508,7 @@ namespace Chromatics
                 logFlash = new Task(() =>
                 {
                     HoldReader = true;
-                    _logitech.Flash1(burstcol, speed);
+                    _logitech.Flash1(burstcol, speed, regions);
                     HoldReader = false;
                 }, _LogitechFl1CTS.Token);
                 MemoryTasks.Add(logFlash);
@@ -523,7 +523,7 @@ namespace Chromatics
                 CorsairFlash = new Task(() =>
                 {
                     HoldReader = true;
-                    _corsair.Flash1(burstcol, speed);
+                    _corsair.Flash1(burstcol, speed, regions);
                     HoldReader = false;
                 }, _CorsairF12CTS.Token);
                 MemoryTasks.Add(CorsairFlash);
@@ -535,48 +535,75 @@ namespace Chromatics
         bool GlobalFlash2Running = false;
         private CancellationTokenSource _RzFl2CTS = new CancellationTokenSource();
         private CancellationTokenSource _CorsairFl2CTS = new CancellationTokenSource();
+        private CancellationTokenSource _LogiFl2CTS = new CancellationTokenSource();
+        Task _RzFl2;
+        Task _CorsairFl2;
+        Task _LogiFl2;
 
-        public void GlobalFlash2(System.Drawing.Color burstcol, int speed)
+        public void GlobalFlash2(System.Drawing.Color burstcol, int speed, string[] template)
         {
             MemoryTasks.Cleanup();
 
-            if (GlobalFlash2Running == true)
+            if (!GlobalFlash2Running)
             {
                 if (RazerSDKCalled == 1)
                 {
-                    //Task _RzFl2 = new Task(() => { RazerFlash2(burstcol, speed); }, _RzFl2CTS.Token);
-                    //MemoryTasks.Add(_RzFl2);
-                    //MemoryTasks.Run(_RzFl2);
+                    _RzFl2 = null;
+                    _RzFl2CTS = new CancellationTokenSource();
+                    _RzFl2 = new Task(() => { _razer.Flash2(burstcol, speed, _RzFl2CTS.Token, template); }, _RzFl2CTS.Token);
+                    MemoryTasks.Add(_RzFl2);
+                    MemoryTasks.Run(_RzFl2);
                 }
 
                 if (LogitechSDKCalled == 1)
                 {
-                    //
+                    _LogiFl2 = null;
+                    _LogiFl2CTS = new CancellationTokenSource();
+                    _LogiFl2 = new Task(() => { _logitech.Flash2(burstcol, speed, _LogiFl2CTS.Token, template); }, _LogiFl2CTS.Token);
+                    MemoryTasks.Add(_LogiFl2);
+                    MemoryTasks.Run(_LogiFl2);
                 }
 
                 if (CorsairSDKCalled == 1)
                 {
-                    //Task _CorsairFl2 = new Task(() => { CorsairFlash2(burstcol, speed); }, _CorsairFl2CTS.Token);
-                    //MemoryTasks.Add(_CorsairFl2);
-                    //MemoryTasks.Run(_CorsairFl2);
+                    _CorsairFl2 = null;
+                    _CorsairFl2CTS = new CancellationTokenSource();
+                    _CorsairFl2 = new Task(() => { _corsair.Flash2(burstcol, speed, _CorsairFl2CTS.Token, template); }, _CorsairFl2CTS.Token);
+                    MemoryTasks.Add(_CorsairFl2);
+                    MemoryTasks.Run(_CorsairFl2);
                 }
+
+                GlobalFlash2Running = true;
             }
         }
 
         public void ToggleGlobalFlash2(bool toggle)
         {
-            if (toggle == true)
-            {
-                GlobalFlash2Running = true;
-            }
-            else
+            if (!toggle && GlobalFlash2Running)
             {
                 GlobalFlash2Running = false;
-                //_RazerFlash2Running = false;
-                //_CorsairFlash2Running = false;
 
-                _RzFl2CTS.Cancel();
-                _CorsairFl2CTS.Cancel();
+                if (RazerSDKCalled == 1)
+                {
+                    _RzFl2CTS.Cancel();
+                    MemoryTasks.Remove(_RzFl2);
+                }
+
+                if (CorsairSDKCalled == 1)
+                {
+                    _CorsairFl2CTS.Cancel();
+                    MemoryTasks.Remove(_CorsairFl2);
+                }
+
+                if (LogitechSDKCalled == 1)
+                {
+                    _LogiFl2CTS.Cancel();
+                    MemoryTasks.Remove(_LogiFl2);
+                }
+
+                Debug.WriteLine("Stopping Flash 2");
+
+                MemoryTasks.Cleanup();
             }
 
             MemoryTasks.Cleanup();
@@ -654,7 +681,7 @@ namespace Chromatics
                     MemoryTasks.Remove(_LogiFl3);
                 }
                 
-                Debug.WriteLine("Stopping Flash 3");
+                //Debug.WriteLine("Stopping Flash 3");
 
                 MemoryTasks.Cleanup();
             }

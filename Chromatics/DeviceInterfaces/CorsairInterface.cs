@@ -53,8 +53,8 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapPadLighting(string region, Color col, bool clear);
         Task Ripple1(Color burstcol, int speed, Color _BaseColor);
         Task Ripple2(Color burstcol, int speed);
-        void Flash1(Color burstcol, int speed);
-        void Flash2(Color burstcol, int speed);
+        void Flash1(Color burstcol, int speed, string[] regions);
+        void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
     }
 
@@ -325,13 +325,6 @@ namespace Chromatics.DeviceInterfaces
 
         private Color CorsairLogo;
         private Color CorsairLogoConv;
-        private Color CorsairPauseBrk;
-        private Color CorsairPauseBrkConv;
-        private Color CorsairPrintScr;
-
-        private Color CorsairPrintScrConv;
-        private Color CorsairScrollLk;
-        private Color CorsairScrollLkConv;
         private Color CorsairScrollWheel;
         private Color CorsairScrollWheelConv;
         private Dictionary<string, Color> presets = new Dictionary<string, Color>();
@@ -1056,7 +1049,7 @@ namespace Chromatics.DeviceInterfaces
             });
         }
 
-        public void Flash1(Color burstcol, int speed)
+        public void Flash1(Color burstcol, int speed, string[] regions)
         {
             lock (_CorsairFlash1)
             {
@@ -1075,7 +1068,7 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Setup
                         if (CorsairDeviceKeyboard)
-                            foreach (var key in DeviceEffects._GlobalKeys3)
+                            foreach (var key in regions)
                             {
                                 if (Corsairkeyids.ContainsKey(key))
                                 {
@@ -1112,129 +1105,153 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 1)
                     {
                         //Step 0
-                        foreach (var key in DeviceEffects._GlobalKeys3)
+                        if (CorsairDeviceKeyboard)
                         {
-                            if (CorsairDeviceKeyboard)
+                            foreach (var key in regions)
+                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("ScrollWheel", burstcol, false);
-                                ApplyMapMouseLighting("Logo", burstcol, false);
-                                ApplyMapMouseLighting("Backlight", burstcol, false);
                             }
+                        }
+
+                        if (CorsairDeviceMouse)
+                        {
+                            ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                            ApplyMapMouseLighting("Logo", burstcol, false);
+                            ApplyMapMouseLighting("Backlight", burstcol, false);
                         }
                     }
                     else if (i == 2)
                     {
                         //Step 1
-                        foreach (var key in DeviceEffects._GlobalKeys3)
+                        if (CorsairDeviceKeyboard)
                         {
-                            if (CorsairDeviceKeyboard)
+                            foreach (var key in regions)
+                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("ScrollWheel", ScrollWheelConv, false);
-                                ApplyMapMouseLighting("Logo", LogoConv, false);
-                                ApplyMapMouseLighting("Backlight", BacklightConv, false);
                             }
+                        }
+
+                        if (CorsairDeviceMouse)
+                        {
+                            ApplyMapMouseLighting("ScrollWheel", ScrollWheelConv, false);
+                            ApplyMapMouseLighting("Logo", LogoConv, false);
+                            ApplyMapMouseLighting("Backlight", BacklightConv, false);
                         }
                     }
                     else if (i == 3)
                     {
                         //Step 2
-                        foreach (var key in DeviceEffects._GlobalKeys3)
+                        if (CorsairDeviceKeyboard)
                         {
-                            if (CorsairDeviceKeyboard)
+                            foreach (var key in regions)
+                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("ScrollWheel", burstcol, false);
-                                ApplyMapMouseLighting("Logo", burstcol, false);
-                                ApplyMapMouseLighting("Backlight", burstcol, false);
                             }
+                        }
+
+                        if (CorsairDeviceMouse)
+                        {
+                            ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                            ApplyMapMouseLighting("Logo", burstcol, false);
+                            ApplyMapMouseLighting("Backlight", burstcol, false);
                         }
                     }
                     else if (i == 4)
                     {
                         //Step 3
-                        foreach (var key in DeviceEffects._GlobalKeys3)
+                        if (CorsairDeviceKeyboard)
                         {
-                            if (CorsairDeviceKeyboard)
+                            foreach (var key in regions)
+                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("ScrollWheel", ScrollWheelConv, false);
-                                ApplyMapMouseLighting("Logo", LogoConv, false);
-                                ApplyMapMouseLighting("Backlight", BacklightConv, false);
                             }
+                        }
+
+                        if (CorsairDeviceMouse)
+                        {
+                            ApplyMapMouseLighting("ScrollWheel", ScrollWheelConv, false);
+                            ApplyMapMouseLighting("Logo", LogoConv, false);
+                            ApplyMapMouseLighting("Backlight", BacklightConv, false);
                         }
                     }
                     else if (i == 5)
                     {
                         //Step 4
-                        foreach (var key in DeviceEffects._GlobalKeys3)
+                        if (CorsairDeviceKeyboard)
                         {
-                            if (CorsairDeviceKeyboard)
+                            foreach (var key in regions)
+                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("ScrollWheel", burstcol, false);
-                                ApplyMapMouseLighting("Logo", burstcol, false);
-                                ApplyMapMouseLighting("Backlight", burstcol, false);
                             }
+                        }
+
+                        if (CorsairDeviceMouse)
+                        {
+                            ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                            ApplyMapMouseLighting("Logo", burstcol, false);
+                            ApplyMapMouseLighting("Backlight", burstcol, false);
                         }
                     }
                     else if (i == 6)
                     {
                         //Step 5
-                        foreach (var key in DeviceEffects._GlobalKeys3)
+                        if (CorsairDeviceKeyboard)
                         {
-                            if (CorsairDeviceKeyboard)
+                            foreach (var key in regions)
+                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("ScrollWheel", ScrollWheelConv, false);
-                                ApplyMapMouseLighting("Logo", LogoConv, false);
-                                ApplyMapMouseLighting("Backlight", BacklightConv, false);
                             }
+                        }
+
+                        if (CorsairDeviceMouse)
+                        {
+                            ApplyMapMouseLighting("ScrollWheel", ScrollWheelConv, false);
+                            ApplyMapMouseLighting("Logo", LogoConv, false);
+                            ApplyMapMouseLighting("Backlight", BacklightConv, false);
                         }
                     }
                     else if (i == 7)
                     {
                         //Step 6
-                        foreach (var key in DeviceEffects._GlobalKeys3)
+                        if (CorsairDeviceKeyboard)
                         {
-                            if (CorsairDeviceKeyboard)
+                            foreach (var key in regions)
+                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("ScrollWheel", burstcol, false);
-                                ApplyMapMouseLighting("Logo", burstcol, false);
-                                ApplyMapMouseLighting("Backlight", burstcol, false);
                             }
+                        }
+
+                        if (CorsairDeviceMouse)
+                        {
+                            ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                            ApplyMapMouseLighting("Logo", burstcol, false);
+                            ApplyMapMouseLighting("Backlight", burstcol, false);
                         }
                     }
                     else if (i == 8)
                     {
                         //Step 7
-                        foreach (var key in DeviceEffects._GlobalKeys3)
+                        if (CorsairDeviceKeyboard)
                         {
-                            if (CorsairDeviceKeyboard)
+                            foreach (var key in regions)
+                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("ScrollWheel", ScrollWheelConv, false);
-                                ApplyMapMouseLighting("Logo", LogoConv, false);
-                                ApplyMapMouseLighting("Backlight", BacklightConv, false);
                             }
+                        }
+
+                        if (CorsairDeviceMouse)
+                        {
+                            ApplyMapMouseLighting("ScrollWheel", ScrollWheelConv, false);
+                            ApplyMapMouseLighting("Logo", LogoConv, false);
+                            ApplyMapMouseLighting("Backlight", BacklightConv, false);
                         }
 
                         //HoldReader = false;
@@ -1246,11 +1263,13 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public void Flash2(Color burstcol, int speed)
+        public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
             lock (_CorsairFlash2)
             {
-                if (_CorsairFlash2Running == false)
+                var presets = new Dictionary<string, Color>();
+                
+                if (!_CorsairFlash2Running)
                 {
                     if (CorsairDeviceMouse)
                     {
@@ -1270,40 +1289,60 @@ namespace Chromatics.DeviceInterfaces
 
                     if (CorsairDeviceKeyboard)
                     {
-                        //CorsairPrintScr = CueSDK.KeyboardSDK[CorsairLedId.PrintScreen].Color;
-                        //CorsairScrollLk = CueSDK.KeyboardSDK[CorsairLedId.ScrollLock].Color;
-                        //CorsairPauseBrk = CueSDK.KeyboardSDK[CorsairLedId.PauseBreak].Color;
-                        if (CueSDK.KeyboardSDK[CorsairLedId.PrintScreen] != null)
+                        foreach (var key in regions)
                         {
-                            CorsairPrintScr = _CorsairKeyboardIndvBrush.CorsairGetColorReference(CorsairLedId.PrintScreen);
+                            if (Corsairkeyids.ContainsKey(key))
+                            {
+                                var _key = Corsairkeyids[key];
+                                if (CueSDK.KeyboardSDK[_key] != null)
+                                {
+                                    //Color ccX = CueSDK.KeyboardSDK[_key].Color;
+                                    Color ccX = _CorsairKeyboardIndvBrush.CorsairGetColorReference(_key);
+                                    presets.Add(key, ccX);
+                                }
+                            }
                         }
-                        if (CueSDK.KeyboardSDK[CorsairLedId.ScrollLock] != null)
-                        {
-                            CorsairScrollLk = _CorsairKeyboardIndvBrush.CorsairGetColorReference(CorsairLedId.ScrollLock);
-                        }
-                        if (CueSDK.KeyboardSDK[CorsairLedId.PauseBreak] != null)
-                        {
-                            CorsairPauseBrk = _CorsairKeyboardIndvBrush.CorsairGetColorReference(CorsairLedId.PauseBreak);
-                        }
-
-
-                        CorsairPrintScrConv = CorsairPrintScr;
-                        CorsairScrollLkConv = CorsairScrollLk;
-                        CorsairPauseBrkConv = CorsairPauseBrk;
                     }
 
                     _CorsairFlash2Running = true;
+                    _CorsairFlash2Step = 0;
                 }
-                else
+
+                if (_CorsairFlash2Running)
                 {
                     while (_CorsairFlash2Running)
+                    {
+                        if (cts.IsCancellationRequested)
+                        {
+                            if (CorsairDeviceKeyboard)
+                            {
+                                foreach (var key in regions)
+                                {
+                                    if (CorsairDeviceKeyboard)
+                                        if (Corsairkeyids.ContainsKey(key))
+                                            ApplyMapKeyLighting(key, presets[key], false);
+                                }
+                            }
+                            if (CorsairDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("CorsairScrollWheel", CorsairScrollWheelConv, false);
+                                ApplyMapMouseLighting("Logo", CorsairLogoConv, false);
+                            }
+
+                            presets.Clear();
+                            break;
+                        }
+
                         if (_CorsairFlash2Step == 0)
                         {
                             if (CorsairDeviceKeyboard)
                             {
-                                ApplyMapKeyLighting("PrintScreen", burstcol, false);
-                                ApplyMapKeyLighting("Scroll", burstcol, false);
-                                ApplyMapKeyLighting("Pause", burstcol, false);
+                                foreach (var key in regions)
+                                {
+                                    if (CorsairDeviceKeyboard)
+                                        if (Corsairkeyids.ContainsKey(key))
+                                            ApplyMapKeyLighting(key, burstcol, false);
+                                }
                             }
                             if (CorsairDeviceMouse)
                             {
@@ -1318,9 +1357,12 @@ namespace Chromatics.DeviceInterfaces
                         {
                             if (CorsairDeviceKeyboard)
                             {
-                                ApplyMapKeyLighting("PrintScreen", CorsairPrintScrConv, false);
-                                ApplyMapKeyLighting("Scroll", CorsairScrollLkConv, false);
-                                ApplyMapKeyLighting("Pause", CorsairPauseBrkConv, false);
+                                foreach (var key in regions)
+                                {
+                                    if (CorsairDeviceKeyboard)
+                                        if (Corsairkeyids.ContainsKey(key))
+                                            ApplyMapKeyLighting(key, presets[key], false);
+                                }
                             }
                             if (CorsairDeviceMouse)
                             {
@@ -1331,6 +1373,7 @@ namespace Chromatics.DeviceInterfaces
 
                             Thread.Sleep(speed);
                         }
+                    }
                 }
             }
         }
@@ -1349,6 +1392,7 @@ namespace Chromatics.DeviceInterfaces
                     {
                         var presets = new Dictionary<string, Color>();
                         _CorsairFlash3Running = true;
+                        _CorsairFlash3Step = 0;
 
                         if (_CorsairFlash3Running == false)
                         {

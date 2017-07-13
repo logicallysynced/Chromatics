@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.DeviceInterfaces.EffectLibrary
 {
-    class DeviceEffects
+    public class DeviceEffects
     {
         //Key Groups
 
