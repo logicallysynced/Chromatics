@@ -811,8 +811,8 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        private int _LogiFlash2Step = 0;
-        private bool _LogiFlash2Running = false;
+        private static int _LogiFlash2Step = 0;
+        private static bool _LogiFlash2Running = false;
         static readonly object _Flash2 = new object();
         public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
@@ -836,10 +836,6 @@ namespace Chromatics.DeviceInterfaces
                 {
                     if (cts.IsCancellationRequested)
                     {
-                        foreach (var key in regions)
-                        {
-                            LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
-                        }
                         break;
                     }
 
@@ -876,8 +872,8 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        private int _LogiFlash3Step = 0;
-        private bool _LogiFlash3Running = false;
+        private static int _LogiFlash3Step = 0;
+        private static bool _LogiFlash3Running = false;
         static readonly object _Flash3 = new object();
         public void Flash3(Color burstcol, int speed, CancellationToken cts)
         {

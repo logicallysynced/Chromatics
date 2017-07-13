@@ -1263,6 +1263,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        private static Dictionary<string, Color> _presets = new Dictionary<string, Color>();
         public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
             lock (_CorsairFlash2)
@@ -1306,6 +1307,7 @@ namespace Chromatics.DeviceInterfaces
 
                     _CorsairFlash2Running = true;
                     _CorsairFlash2Step = 0;
+                    _presets = presets;
                 }
 
                 if (_CorsairFlash2Running)
@@ -1314,22 +1316,6 @@ namespace Chromatics.DeviceInterfaces
                     {
                         if (cts.IsCancellationRequested)
                         {
-                            if (CorsairDeviceKeyboard)
-                            {
-                                foreach (var key in regions)
-                                {
-                                    if (CorsairDeviceKeyboard)
-                                        if (Corsairkeyids.ContainsKey(key))
-                                            ApplyMapKeyLighting(key, presets[key], false);
-                                }
-                            }
-                            if (CorsairDeviceMouse)
-                            {
-                                ApplyMapMouseLighting("CorsairScrollWheel", CorsairScrollWheelConv, false);
-                                ApplyMapMouseLighting("Logo", CorsairLogoConv, false);
-                            }
-
-                            presets.Clear();
                             break;
                         }
 
@@ -1361,7 +1347,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     if (CorsairDeviceKeyboard)
                                         if (Corsairkeyids.ContainsKey(key))
-                                            ApplyMapKeyLighting(key, presets[key], false);
+                                            ApplyMapKeyLighting(key, _presets[key], false);
                                 }
                             }
                             if (CorsairDeviceMouse)
@@ -1378,8 +1364,8 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        private int _CorsairFlash3Step = 0;
-        private bool _CorsairFlash3Running = false;
+        private static int _CorsairFlash3Step = 0;
+        private static bool _CorsairFlash3Running = false;
         static readonly object _Flash3 = new object();
         public void Flash3(System.Drawing.Color burstcol, int speed, CancellationToken cts)
         {
