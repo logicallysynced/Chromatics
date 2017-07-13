@@ -45,6 +45,8 @@
             this.col_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
+            this.chk_keybindtoggle = new System.Windows.Forms.CheckBox();
+            this.chk_jobgaugetoggle = new System.Windows.Forms.CheckBox();
             this.chk_highlighttoggle = new System.Windows.Forms.CheckBox();
             this.chk_gcdcounttoggle = new System.Windows.Forms.CheckBox();
             this.chk_castanimatetoggle = new System.Windows.Forms.CheckBox();
@@ -97,8 +99,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_jobgaugetoggle = new System.Windows.Forms.CheckBox();
-            this.chk_keybindtoggle = new System.Windows.Forms.CheckBox();
+            this.chk_impactflashtog = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -264,6 +265,7 @@
             // 
             // gB_effects
             // 
+            this.gB_effects.Controls.Add(this.chk_impactflashtog);
             this.gB_effects.Controls.Add(this.chk_keybindtoggle);
             this.gB_effects.Controls.Add(this.chk_jobgaugetoggle);
             this.gB_effects.Controls.Add(this.chk_highlighttoggle);
@@ -276,6 +278,30 @@
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
+            // 
+            // chk_keybindtoggle
+            // 
+            this.chk_keybindtoggle.AutoSize = true;
+            this.chk_keybindtoggle.Location = new System.Drawing.Point(23, 218);
+            this.chk_keybindtoggle.Name = "chk_keybindtoggle";
+            this.chk_keybindtoggle.Size = new System.Drawing.Size(176, 21);
+            this.chk_keybindtoggle.TabIndex = 5;
+            this.chk_keybindtoggle.Text = "Enable Keybind Effects";
+            this.tooltip_main.SetToolTip(this.chk_keybindtoggle, "Displays Cooldown status on all hotbar keybinds.\r\nDefault: ON");
+            this.chk_keybindtoggle.UseVisualStyleBackColor = true;
+            this.chk_keybindtoggle.CheckedChanged += new System.EventHandler(this.chk_keybindtoggle_CheckedChanged);
+            // 
+            // chk_jobgaugetoggle
+            // 
+            this.chk_jobgaugetoggle.AutoSize = true;
+            this.chk_jobgaugetoggle.Location = new System.Drawing.Point(23, 181);
+            this.chk_jobgaugetoggle.Name = "chk_jobgaugetoggle";
+            this.chk_jobgaugetoggle.Size = new System.Drawing.Size(195, 21);
+            this.chk_jobgaugetoggle.TabIndex = 4;
+            this.chk_jobgaugetoggle.Text = "Enable Job Gauge Effects";
+            this.tooltip_main.SetToolTip(this.chk_jobgaugetoggle, "Displays Job Gauge effects on NumPad.\r\nDefault: ON");
+            this.chk_jobgaugetoggle.UseVisualStyleBackColor = true;
+            this.chk_jobgaugetoggle.CheckedChanged += new System.EventHandler(this.chk_jobgaugetoggle_CheckedChanged);
             // 
             // chk_highlighttoggle
             // 
@@ -820,29 +846,17 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_jobgaugetoggle
+            // chk_impactflashtog
             // 
-            this.chk_jobgaugetoggle.AutoSize = true;
-            this.chk_jobgaugetoggle.Location = new System.Drawing.Point(23, 181);
-            this.chk_jobgaugetoggle.Name = "chk_jobgaugetoggle";
-            this.chk_jobgaugetoggle.Size = new System.Drawing.Size(195, 21);
-            this.chk_jobgaugetoggle.TabIndex = 4;
-            this.chk_jobgaugetoggle.Text = "Enable Job Gauge Effects";
-            this.tooltip_main.SetToolTip(this.chk_jobgaugetoggle, "Displays Job Gauge effects on NumPad.\r\nDefault: ON");
-            this.chk_jobgaugetoggle.UseVisualStyleBackColor = true;
-            this.chk_jobgaugetoggle.CheckedChanged += new System.EventHandler(this.chk_jobgaugetoggle_CheckedChanged);
-            // 
-            // chk_keybindtoggle
-            // 
-            this.chk_keybindtoggle.AutoSize = true;
-            this.chk_keybindtoggle.Location = new System.Drawing.Point(23, 218);
-            this.chk_keybindtoggle.Name = "chk_keybindtoggle";
-            this.chk_keybindtoggle.Size = new System.Drawing.Size(176, 21);
-            this.chk_keybindtoggle.TabIndex = 5;
-            this.chk_keybindtoggle.Text = "Enable Keybind Effects";
-            this.tooltip_main.SetToolTip(this.chk_keybindtoggle, "Displays Cooldown status on all hotbar keybinds.\r\nDefault: ON");
-            this.chk_keybindtoggle.UseVisualStyleBackColor = true;
-            this.chk_keybindtoggle.CheckedChanged += new System.EventHandler(this.chk_keybindtoggle_CheckedChanged);
+            this.chk_impactflashtog.AutoSize = true;
+            this.chk_impactflashtog.Location = new System.Drawing.Point(272, 39);
+            this.chk_impactflashtog.Name = "chk_impactflashtog";
+            this.chk_impactflashtog.Size = new System.Drawing.Size(184, 21);
+            this.chk_impactflashtog.TabIndex = 6;
+            this.chk_impactflashtog.Text = "Flash on impact/damage";
+            this.tooltip_main.SetToolTip(this.chk_impactflashtog, "Flashes keyboard when damage is taken.\r\nDefault: OFF");
+            this.chk_impactflashtog.UseVisualStyleBackColor = true;
+            this.chk_impactflashtog.CheckedChanged += new System.EventHandler(this.chk_impactflashtog_CheckedChanged);
             // 
             // Chromatics
             // 
@@ -947,6 +961,7 @@
         private System.Windows.Forms.CheckBox chk_highlighttoggle;
         private System.Windows.Forms.CheckBox chk_jobgaugetoggle;
         private System.Windows.Forms.CheckBox chk_keybindtoggle;
+        private System.Windows.Forms.CheckBox chk_impactflashtog;
     }
 }
 

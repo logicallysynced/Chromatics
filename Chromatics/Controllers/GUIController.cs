@@ -1050,6 +1050,7 @@ namespace Chromatics
             chk_keybindtoggle.Checked = ChromaticsSettings.ChromaticsSettings_KeybindToggle;
             chk_jobgaugetoggle.Checked = ChromaticsSettings.ChromaticsSettings_JobGaugeToggle;
             chk_highlighttoggle.Checked = ChromaticsSettings.ChromaticsSettings_KeyHighlights;
+            chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettings_ImpactToggle;
         }
 
         private void InitSettingsArxGUI()
@@ -1574,6 +1575,14 @@ namespace Chromatics
             if (startup == false) return;
 
             ChromaticsSettings.ChromaticsSettings_KeybindToggle = chk_keybindtoggle.Checked;
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_impactflashtog_CheckedChanged(object sender, EventArgs e)
+        {
+            if (startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettings_ImpactToggle = chk_impactflashtog.Checked;
             SaveChromaticsSettings(1);
         }
 

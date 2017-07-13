@@ -2263,20 +2263,24 @@ namespace Chromatics
                             }
 
                         //Action Alerts
-                        if (TargetInfo != null && TargetInfo.Type == Sharlayan.Core.Enums.Actor.Type.Monster)
+
+                        if (ChromaticsSettings.ChromaticsSettings_ImpactToggle)
                         {
-                            if (TargetInfo.IsClaimed)
+                            if (TargetInfo != null && TargetInfo.Type == Sharlayan.Core.Enums.Actor.Type.Monster)
                             {
-                                if (_hp != 0 && current_HP < _hp)
+                                if (TargetInfo.IsClaimed)
                                 {
-                                    _RzFl1CTS.Cancel();
-                                    _CorsairF12CTS.Cancel();
-                                    GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPLoss), 100);
+                                    if (_hp != 0 && current_HP < _hp)
+                                    {
+                                        _RzFl1CTS.Cancel();
+                                        _CorsairF12CTS.Cancel();
+                                        GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPLoss), 100);
+                                    }
                                 }
                             }
-                        }
 
-                        _hp = current_HP;
+                            _hp = current_HP;
+                        }
 
                     }
 
