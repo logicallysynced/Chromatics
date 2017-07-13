@@ -688,5 +688,123 @@ namespace Chromatics
 
             MemoryTasks.Cleanup();
         }
+
+        //Flash 4
+        bool GlobalFlash4Running = false;
+        private CancellationTokenSource _RzFl4CTS = new CancellationTokenSource();
+        private CancellationTokenSource _CorsairFl4CTS = new CancellationTokenSource();
+        private CancellationTokenSource _LogiFl4CTS = new CancellationTokenSource();
+        private CancellationTokenSource _Lifx4CTS = new CancellationTokenSource();
+        private CancellationTokenSource _Hue4CTS = new CancellationTokenSource();
+        Task _RzFl4;
+        Task _CorsairFl4;
+        Task _LogiFl4;
+        Task _LifxFl4;
+        Task _HueFl4;
+
+        public void GlobalFlash4(System.Drawing.Color basecol, System.Drawing.Color burstcol, int speed, string[] template)
+        {
+            MemoryTasks.Cleanup();
+
+            if (!GlobalFlash4Running)
+            {
+                if (ChromaticsSettings.ChromaticsSettings_DFBellToggle)
+                {
+                    if (RazerSDKCalled == 1)
+                    {
+                        _RzFl4 = null;
+                        _RzFl4CTS = new CancellationTokenSource();
+                        _RzFl4 = new Task(() => { _razer.Flash4(burstcol, speed, _RzFl4CTS.Token, template); }, _RzFl4CTS.Token);
+                        MemoryTasks.Add(_RzFl4);
+                        MemoryTasks.Run(_RzFl4);
+                    }
+
+                    if (LogitechSDKCalled == 1)
+                    {
+                        _LogiFl4 = null;
+                        _LogiFl4CTS = new CancellationTokenSource();
+                        _LogiFl4 = new Task(() => { _logitech.Flash4(burstcol, speed, _LogiFl4CTS.Token, template); }, _LogiFl4CTS.Token);
+                        MemoryTasks.Add(_LogiFl4);
+                        MemoryTasks.Run(_LogiFl4);
+                    }
+
+                    if (CorsairSDKCalled == 1)
+                    {
+                        _CorsairFl4 = null;
+                        _CorsairFl4CTS = new CancellationTokenSource();
+                        _CorsairFl4 = new Task(() => { _corsair.Flash4(burstcol, speed, _CorsairFl4CTS.Token, template); }, _CorsairFl4CTS.Token);
+                        MemoryTasks.Add(_CorsairFl4);
+                        MemoryTasks.Run(_CorsairFl4);
+                    }
+                }
+
+                if (LifxSDKCalled == 1)
+                {
+                    _LifxFl4 = null;
+                    _Lifx4CTS = new CancellationTokenSource();
+                    _LifxFl4 = new Task(() => { _lifx.Flash4(basecol, burstcol, speed*2, _Lifx4CTS.Token); }, _Lifx4CTS.Token);
+                    MemoryTasks.Add(_LifxFl4);
+                    MemoryTasks.Run(_LifxFl4);
+                }
+
+                if (HueSDKCalled == 1)
+                {
+                    _HueFl4 = null;
+                    _Hue4CTS = new CancellationTokenSource();
+                    _HueFl4 = new Task(() => { _hue.Flash4(basecol, burstcol, speed*2, _Hue4CTS.Token); }, _Hue4CTS.Token);
+                    MemoryTasks.Add(_HueFl4);
+                    MemoryTasks.Run(_HueFl4);
+                }
+
+                GlobalFlash4Running = true;
+            }
+        }
+
+        public void ToggleGlobalFlash4(bool toggle)
+        {
+            if (!toggle && GlobalFlash4Running)
+            {
+                GlobalFlash4Running = false;
+
+                if (ChromaticsSettings.ChromaticsSettings_DFBellToggle)
+                {
+                    if (RazerSDKCalled == 1)
+                    {
+                        _RzFl4CTS.Cancel();
+                        MemoryTasks.Remove(_RzFl4);
+                    }
+
+                    if (CorsairSDKCalled == 1)
+                    {
+                        _CorsairFl4CTS.Cancel();
+                        MemoryTasks.Remove(_CorsairFl4);
+                    }
+
+                    if (LogitechSDKCalled == 1)
+                    {
+                        _LogiFl4CTS.Cancel();
+                        MemoryTasks.Remove(_LogiFl4);
+                    }
+                }
+
+                if (LifxSDKCalled == 1)
+                {
+                    _Lifx4CTS.Cancel();
+                    MemoryTasks.Remove(_LifxFl4);
+                }
+
+                if (HueSDKCalled == 1)
+                {
+                    _Hue4CTS.Cancel();
+                    MemoryTasks.Remove(_HueFl4);
+                }
+
+                Debug.WriteLine("Stopping Flash 4");
+
+                MemoryTasks.Cleanup();
+            }
+
+            MemoryTasks.Cleanup();
+        }
     }
 }

@@ -332,6 +332,8 @@ namespace Chromatics
         private bool playgroundonce = false;
         private bool castalert = false;
         private bool _targeted;
+        private bool _dfpop;
+        private bool _dfcount;
         private void ProcessFFXIVData()
         {
             MemoryTasks.Cleanup();
@@ -3409,6 +3411,35 @@ namespace Chromatics
 
                         FFXIVInterfaces.FFXIVDutyFinder.RefreshData();
                         //Debug.WriteLine(FFXIVInterfaces.FFXIVDutyFinder.isPopped() + "//" + FFXIVInterfaces.FFXIVDutyFinder.Countdown());
+
+                        if (FFXIVInterfaces.FFXIVDutyFinder.isPopped())
+                        {
+                            if (!_dfpop)
+                            {
+                                ToggleGlobalFlash4(true);
+                                GlobalFlash4(_BaseColor, ColorTranslator.FromHtml(ColorMappings.ColorMapping_DutyFinderBell), 500, DeviceInterfaces.EffectLibrary.DeviceEffects._GlobalKeys);
+                                _dfpop = true;
+                            }
+                            else
+                            {
+                                if (FFXIVInterfaces.FFXIVDutyFinder.Countdown() < 10 && !_dfcount)
+                                {
+                                    ToggleGlobalFlash4(false);
+                                    GlobalFlash4(_BaseColor, ColorTranslator.FromHtml(ColorMappings.ColorMapping_DutyFinderBell), 200, DeviceInterfaces.EffectLibrary.DeviceEffects._GlobalKeys);
+                                    _dfcount = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (_dfpop)
+                            {
+                                ToggleGlobalFlash4(false);
+                                _dfpop = false;
+                                _dfcount = false;
+                                Setbase = false;
+                            }
+                        }
                     }
 
                     if (CorsairSDKCalled == 1)

@@ -56,6 +56,7 @@ namespace Chromatics.DeviceInterfaces
         void Flash1(Color burstcol, int speed, string[] regions);
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
+        void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
     }
 
     public class CorsairLib : ICorsairSdk
@@ -63,72 +64,6 @@ namespace Chromatics.DeviceInterfaces
         private static ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
 
         #region Effect Steps
-        /*
-        private readonly string[] DeviceEffects._GlobalKeys =
-        {
-            "Y", "D5", "D6", "D7", "T", "U", "G", "H", "J", "F3", "F4", "F5", "F6",
-            "F7", "D4", "D8", "R", "F", "C", "V", "B", "N", "M", "K", "I", "F2", "F8", "D3", "E", "D", "X", "Space",
-            "OemComma", "L", "O", "D9", "F1", "F9", "D2", "D0", "W", "S", "Z", "LeftAlt", "P", "OemSemicolon",
-            "OemPeriod", "RightAlt", "D1", "Q", "A", "LeftWindows", "F10", "OemMinus", "OemLeftBracket", "OemApostrophe",
-            "OemSlash", "Function", "Escape", "OemTilde", "Tab", "CapsLock", "LeftShift", "LeftControl", "F11",
-            "OemEquals", "RightMenu", "OemRightBracket", "Macro1", "Macro2", "Macro3", "Macro4", "Macro5", "F12",
-            "Backspace", "OemBackslash", "Enter", "RightShift", "RightControl"
-        };
-
-        private string[] DeviceEffects._GlobalKeys2 =
-        {
-            "Y", "D5", "D6", "D7", "T", "U", "G", "H", "J", "D4", "D8", "R", "F", "C", "V",
-            "B", "N", "M", "K", "I", "D3", "E", "D", "X", "Space", "OemComma", "L", "O", "D9", "D2", "D0", "W", "S", "Z",
-            "LeftAlt", "P", "OemSemicolon", "OemPeriod", "RightAlt", "D1", "Q", "A", "LeftWindows", "OemMinus",
-            "OemLeftBracket", "OemApostrophe", "OemSlash", "Function", "Escape", "OemTilde", "Tab", "CapsLock",
-            "LeftShift", "LeftControl", "OemEquals", "RightMenu", "OemRightBracket", "Macro1", "Macro2", "Macro3",
-            "Macro4", "Macro5", "Backspace", "OemBackslash", "Enter", "RightShift", "RightControl"
-        };
-
-        private readonly string[] DeviceEffects._GlobalKeys3 =
-        {
-            "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11",
-            "F12", "NumLock", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9",
-            "NumDivide", "NumMultiply", "NumSubtract", "NumAdd", "NumEnter", "NumDecimal"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep0 = { "Y" };
-        private readonly string[] DeviceEffects._PulseOutStep1 = { "D5", "D6", "D7", "T", "U", "G", "H", "J" };
-
-        private readonly string[] DeviceEffects._PulseOutStep2 =
-        {
-            "F3", "F4", "F5", "F6", "F7", "D4", "D8", "R", "F", "C", "V", "B",
-            "N", "M", "K", "I"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep3 = { "F2", "F8", "D3", "E", "D", "X", "Space", "OemComma", "L", "O", "D9" };
-
-        private readonly string[] DeviceEffects._PulseOutStep4 =
-        {
-            "F1", "F9", "D2", "D0", "W", "S", "Z", "LeftAlt", "P", "OemSemicolon",
-            "OemPeriod", "RightAlt"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep5 =
-        {
-            "D1", "Q", "A", "LeftWindows", "F10", "OemMinus", "OemLeftBracket",
-            "OemApostrophe", "OemSlash", "Function"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep6 =
-        {
-            "Escape", "OemTilde", "Tab", "CapsLock", "LeftShift", "LeftControl",
-            "F11", "OemEquals", "RightMenu", "OemRightBracket", "OemBackslash"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep7 =
-        {
-            "Macro1", "Macro2", "Macro3", "Macro4", "Macro5", "F12", "Backspace",
-            "Enter", "RightShift", "RightControl"
-        };
-
-        private readonly string[] DeviceEffects._NumFlash = { "NumLock", "NumDivide", "NumMultiply", "Num7", "Num8", "Num9", "Num4", "Num5", "Num6", "Num1", "Num2", "Num3" };
-        */
 
         private readonly Dictionary<string, CorsairLedId> Corsairkeyids = new Dictionary<string, CorsairLedId>
         {
@@ -298,6 +233,7 @@ namespace Chromatics.DeviceInterfaces
         private static readonly object _CorsairRipple2 = new object();
         private static readonly object _CorsairFlash1 = new object();
         private static readonly object _CorsairFlash2 = new object();
+        private static readonly object _CorsairFlash4 = new object();
         private static readonly object _CorsairtransitionConst = new object();
         private ListLedGroup _CorsairAllHeadsetLED; 
 
@@ -307,6 +243,8 @@ namespace Chromatics.DeviceInterfaces
         private ListLedGroup _CorsairAllMousepadLED;
         private bool _CorsairFlash2Running;
         private int _CorsairFlash2Step;
+        private bool _CorsairFlash4Running;
+        private int _CorsairFlash4Step;
 
         private KeyMapBrush _CorsairKeyboardIndvBrush;
         private ListLedGroup _CorsairKeyboardIndvLED;
@@ -1452,6 +1390,107 @@ namespace Chromatics.DeviceInterfaces
             catch
             {
                 //
+            }
+        }
+
+        private static Dictionary<string, Color> _presets4 = new Dictionary<string, Color>();
+        public void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
+        {
+            lock (_CorsairFlash4)
+            {
+                var presets = new Dictionary<string, Color>();
+
+                if (!_CorsairFlash4Running)
+                {
+                    if (CorsairDeviceMouse)
+                    {
+                        //CorsairScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
+                        if (CueSDK.MouseSDK[CorsairLedId.B3] != null)
+                        {
+                            CorsairScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
+                        }
+                        if (CueSDK.MouseSDK[CorsairLedId.B1] != null)
+                        {
+                            CorsairLogo = CueSDK.MouseSDK[CorsairLedId.B1].Color;
+                        }
+
+                        CorsairScrollWheelConv = CorsairScrollWheel;
+                        CorsairLogoConv = CorsairLogo;
+                    }
+
+                    if (CorsairDeviceKeyboard)
+                    {
+                        foreach (var key in regions)
+                        {
+                            if (Corsairkeyids.ContainsKey(key))
+                            {
+                                var _key = Corsairkeyids[key];
+                                if (CueSDK.KeyboardSDK[_key] != null)
+                                {
+                                    //Color ccX = CueSDK.KeyboardSDK[_key].Color;
+                                    Color ccX = _CorsairKeyboardIndvBrush.CorsairGetColorReference(_key);
+                                    presets.Add(key, ccX);
+                                }
+                            }
+                        }
+                    }
+
+                    _CorsairFlash4Running = true;
+                    _CorsairFlash4Step = 0;
+                    _presets4 = presets;
+                }
+
+                if (_CorsairFlash4Running)
+                {
+                    while (_CorsairFlash2Running)
+                    {
+                        if (cts.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        if (_CorsairFlash4Step == 0)
+                        {
+                            if (CorsairDeviceKeyboard)
+                            {
+                                foreach (var key in regions)
+                                {
+                                    if (CorsairDeviceKeyboard)
+                                        if (Corsairkeyids.ContainsKey(key))
+                                            ApplyMapKeyLighting(key, burstcol, false);
+                                }
+                            }
+                            if (CorsairDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("CorsairScrollWheel", burstcol, false);
+                                ApplyMapMouseLighting("Logo", burstcol, false);
+                            }
+                            _CorsairFlash4Step = 1;
+
+                            Thread.Sleep(speed);
+                        }
+                        else if (_CorsairFlash4Step == 1)
+                        {
+                            if (CorsairDeviceKeyboard)
+                            {
+                                foreach (var key in regions)
+                                {
+                                    if (CorsairDeviceKeyboard)
+                                        if (Corsairkeyids.ContainsKey(key))
+                                            ApplyMapKeyLighting(key, _presets4[key], false);
+                                }
+                            }
+                            if (CorsairDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("CorsairScrollWheel", CorsairScrollWheelConv, false);
+                                ApplyMapMouseLighting("Logo", CorsairLogoConv, false);
+                            }
+                            _CorsairFlash4Step = 0;
+
+                            Thread.Sleep(speed);
+                        }
+                    }
+                }
             }
         }
 

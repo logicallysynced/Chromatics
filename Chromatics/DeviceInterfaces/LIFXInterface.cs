@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LifxNet;
 using Color = System.Drawing.Color;
 using GalaSoft.MvvmLight.Ioc;
+using System.Threading;
 
 /* Contains all Lifx SDK code for detection, initilization, states and effects.
  */
@@ -41,6 +42,7 @@ namespace Chromatics.DeviceInterfaces
         Task<LightStateResponse> GetLightStateAsync(LightBulb id);
         Task<StateVersionResponse> GetDeviceVersionAsync(LightBulb id);
         void SetColorAsync(LightBulb id, ushort Hue, ushort Saturation, ushort Brightness, ushort Kelvin, TimeSpan ts);
+        void Flash4(Color basecol, Color burstcol, int speed, CancellationToken cts);
 
         Dictionary<string, int> LifxStateMemory { get; }
         Dictionary<string, DeviceModeTypes> LifxModeMemory { get; }
@@ -334,6 +336,53 @@ namespace Chromatics.DeviceInterfaces
                     _LIFXpendingUpdateColorActionBright = null;
                     a();
                 }
+            }
+        }
+
+        private static int Flash4Step = 0;
+        private static bool Flash4Running = false;
+        static readonly object _Flash4 = new object();
+        public void Flash4(Color basecol, Color burstcol, int speed, CancellationToken cts)
+        {
+            try
+            {
+                lock (_Flash4)
+                {
+                    if (!Flash4Running)
+                    {
+                        Flash4Running = true;
+                        Flash4Step = 0;
+                    }
+
+                    if (Flash4Running)
+                    {
+                        while (Flash4Running)
+                        {
+                            if (cts.IsCancellationRequested)
+                            {
+                                LIFXUpdateState(DeviceModeTypes.DUTY_FINDER, basecol, 1000);
+                                break;
+                            }
+
+                            if (Flash4Step == 0)
+                            {
+                                LIFXUpdateState(DeviceModeTypes.DUTY_FINDER, burstcol, 0);
+                                Flash4Step = 1;
+                            }
+                            else if (Flash4Step == 1)
+                            {
+                                LIFXUpdateState(DeviceModeTypes.DUTY_FINDER, basecol, 0);
+                                Flash4Step = 0;
+                            }
+
+                            Thread.Sleep(speed);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
             }
         }
 

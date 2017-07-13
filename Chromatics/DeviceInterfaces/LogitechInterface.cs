@@ -203,72 +203,14 @@ namespace Chromatics.DeviceInterfaces
         void Flash1(Color burstcol, int speed, string[] regions);
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
+        void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
     }
 
     public class Logitech : ILogitechSdk
     {
 
         private static ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
-
-        #region Effect Steps
-        /*
-        private readonly string[] DeviceEffects._GlobalKeys =
-        {
-            "Y", "D5", "D6", "D7", "T", "U", "G", "H", "J", "F3", "F4", "F5", "F6",
-            "F7", "D4", "D8", "R", "F", "C", "V", "B", "N", "M", "K", "I", "F2", "F8", "D3", "E", "D", "X", "Space",
-            "OemComma", "L", "O", "D9", "F1", "F9", "D2", "D0", "W", "S", "Z", "LeftAlt", "P", "OemSemicolon",
-            "OemPeriod", "RightAlt", "D1", "Q", "A", "LeftWindows", "F10", "OemMinus", "OemLeftBracket", "OemApostrophe",
-            "OemSlash", "Function", "Escape", "OemTilde", "Tab", "CapsLock", "LeftShift", "LeftControl", "F11",
-            "OemEquals", "RightMenu", "OemRightBracket", "Macro1", "Macro2", "Macro3", "Macro4", "Macro5", "F12",
-            "Backspace", "OemBackslash", "Enter", "RightShift", "RightControl"
-        };
-
-        private readonly string[] DeviceEffects._GlobalKeys3 =
-        {
-            "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11",
-            "F12", "NumLock", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9",
-            "NumDivide", "NumMultiply", "NumSubtract", "NumAdd", "NumEnter", "NumDecimal"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep0 = { "Y" };
-        private readonly string[] DeviceEffects._PulseOutStep1 = { "D5", "D6", "D7", "T", "U", "G", "H", "J" };
-
-        private readonly string[] DeviceEffects._PulseOutStep2 =
-        {
-            "F3", "F4", "F5", "F6", "F7", "D4", "D8", "R", "F", "C", "V", "B",
-            "N", "M", "K", "I"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep3 = { "F2", "F8", "D3", "E", "D", "X", "Space", "OemComma", "L", "O", "D9" };
-
-        private readonly string[] DeviceEffects._PulseOutStep4 =
-        {
-            "F1", "F9", "D2", "D0", "W", "S", "Z", "LeftAlt", "P", "OemSemicolon",
-            "OemPeriod", "RightAlt"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep5 =
-        {
-            "D1", "Q", "A", "LeftWindows", "F10", "OemMinus", "OemLeftBracket",
-            "OemApostrophe", "OemSlash", "Function"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep6 =
-        {
-            "Escape", "OemTilde", "Tab", "CapsLock", "LeftShift", "LeftControl",
-            "F11", "OemEquals", "RightMenu", "OemRightBracket", "OemBackslash"
-        };
-
-        private readonly string[] DeviceEffects._PulseOutStep7 =
-        {
-            "Macro1", "Macro2", "Macro3", "Macro4", "Macro5", "F12", "Backspace",
-            "Enter", "RightShift", "RightControl"
-        };
-
-        private readonly string[] _logitechflash3 = { "NumLock", "NumDivide", "NumMultiply", "Num7", "Num8", "Num9", "Num4", "Num5", "Num6", "Num1", "Num2", "Num3" };
-        */
-        #endregion
-
+        
         private bool LogitechDeviceKeyboard = true;
 
         public void ApplyMapKeyLighting(string key, System.Drawing.Color color, bool clear, [Optional] bool bypasswhitelist)
@@ -932,6 +874,67 @@ namespace Chromatics.DeviceInterfaces
             catch
             {
                 //
+            }
+        }
+
+        private static int _LogiFlash4Step = 0;
+        private static bool _LogiFlash4Running = false;
+        static readonly object _Flash4 = new object();
+        public void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
+        {
+            if (!LogitechDeviceKeyboard)
+                return;
+
+            if (!_LogiFlash4Running)
+            {
+                foreach (var key in regions)
+                {
+                    LogitechSdkWrapper.LogiLedSaveLightingForKey(ToKeyboardNames(key));
+                }
+
+                _LogiFlash4Running = true;
+                _LogiFlash4Step = 0;
+            }
+
+            if (_LogiFlash4Running)
+            {
+                while (_LogiFlash4Running)
+                {
+                    if (cts.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    if (_LogiFlash4Step == 0)
+                    {
+                        if (LogitechDeviceKeyboard)
+                        {
+                            foreach (var key in regions)
+                            {
+                                ApplyMapKeyLighting(key, burstcol, false);
+                            }
+                        }
+
+                        _LogiFlash4Step = 1;
+
+                        Thread.Sleep(speed);
+                    }
+                    else if (_LogiFlash4Step == 1)
+                    {
+                        if (LogitechDeviceKeyboard)
+                        {
+                            foreach (var key in regions)
+                            {
+                                LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
+
+                            }
+                        }
+
+                        _LogiFlash4Step = 0;
+
+                        Thread.Sleep(speed);
+                    }
+                }
             }
         }
 

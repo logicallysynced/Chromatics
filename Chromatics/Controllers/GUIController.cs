@@ -95,7 +95,8 @@ namespace Chromatics
             {"ColorMapping_HotbarCD", new[] {"Keybind Cooldown", "7", "Black", "White"}},
             {"ColorMapping_HotbarReady", new[] {"Keybind Ready", "7", "Black", "White"}},
             {"ColorMapping_HotbarOutRange", new[] {"Keybind Out of Range", "7", "Black", "White"}},
-            {"ColorMapping_HotbarNotAvailable", new[] {"Keybind Not Available", "7", "Black", "White"}}
+            {"ColorMapping_HotbarNotAvailable", new[] {"Keybind Not Available", "7", "Black", "White"}},
+            {"ColorMapping_DutyFinderBell" , new[] {"Duty Finder Bell", "8", "Black", "White"}}
         };
         
 
@@ -109,7 +110,8 @@ namespace Chromatics
             {4, "Enmity/Aggro"},
             {5, "Target/Enemy"},
             {6, "Status Effects"},
-            {7, "Cooldowns/Keybinds" }
+            {7, "Cooldowns/Keybinds" },
+            {8, "Notifications" }
         };
 
         public void ResetDeviceDataGrid()

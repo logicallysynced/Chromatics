@@ -108,6 +108,7 @@ namespace Chromatics.Datastore
         public string ColorMapping_HotbarReady = ColorTranslator.ToHtml(Color.DodgerBlue);
         public string ColorMapping_HotbarOutRange = ColorTranslator.ToHtml(Color.Red);
         public string ColorMapping_HotbarNotAvailable = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMapping_DutyFinderBell = ColorTranslator.ToHtml(Color.Red);
     }
 
     public static class DataStoreFunctions

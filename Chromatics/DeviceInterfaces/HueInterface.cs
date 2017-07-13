@@ -48,6 +48,7 @@ namespace Chromatics.DeviceInterfaces
         void SetColorAsync(Light light, int? Hue, int? Saturation, int Brightness, int? ColorTemperature, TimeSpan ts);
         void HUEUpdateState(DeviceModeTypes mode, System.Drawing.Color col, int transition);
         void HUEUpdateStateBrightness(DeviceModeTypes mode, System.Drawing.Color col, int? brightness, int transition);
+        void Flash4(System.Drawing.Color basecol, System.Drawing.Color burstcol, int speed, CancellationToken cts);
 
         int HueBulbs { get; set; }
         Dictionary<string, DeviceModeTypes> HueModeMemory { get; }
@@ -344,6 +345,53 @@ namespace Chromatics.DeviceInterfaces
             else
             {
                 write.WriteConsole(ConsoleTypes.HUE, "Unable to connect to HUE Hub.");
+            }
+        }
+
+        private static int Flash4Step = 0;
+        private static bool Flash4Running = false;
+        static readonly object _Flash4 = new object();
+        public void Flash4(System.Drawing.Color basecol, System.Drawing.Color burstcol, int speed, CancellationToken cts)
+        {
+            try
+            {
+                lock (_Flash4)
+                {
+                    if (!Flash4Running)
+                    {
+                        Flash4Running = true;
+                        Flash4Step = 0;
+                    }
+
+                    if (Flash4Running)
+                    {
+                        while (Flash4Running)
+                        {
+                            if (cts.IsCancellationRequested)
+                            {
+                                HUEUpdateState(DeviceModeTypes.DUTY_FINDER, basecol, 1000);
+                                break;
+                            }
+
+                            if (Flash4Step == 0)
+                            {
+                                HUEUpdateState(DeviceModeTypes.DUTY_FINDER, burstcol, 0);
+                                Flash4Step = 1;
+                            }
+                            else if (Flash4Step == 1)
+                            {
+                                HUEUpdateState(DeviceModeTypes.DUTY_FINDER, basecol, 0);
+                                Flash4Step = 0;
+                            }
+
+                            Thread.Sleep(speed);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                //
             }
         }
 

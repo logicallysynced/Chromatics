@@ -119,6 +119,7 @@ namespace Chromatics.DeviceInterfaces
         void Flash1(System.Drawing.Color burstcol, int speed, string[] regions);
         void Flash2(System.Drawing.Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(System.Drawing.Color burstcol, int speed, CancellationToken cts);
+        void Flash4(System.Drawing.Color burstcol, int speed, CancellationToken cts, string[] regions);
     }
 
     public class RazerLib : IRazerSdk
@@ -1370,12 +1371,10 @@ namespace Chromatics.DeviceInterfaces
                 lock (_RazerFlash2)
                 {
                     Dictionary<string, System.Drawing.Color> flashpresets = new Dictionary<string, System.Drawing.Color>();
-                                        
                     Corale.Colore.Core.Color RzScrollWheel = new Corale.Colore.Core.Color();
                     Corale.Colore.Core.Color RzLogo = new Corale.Colore.Core.Color();
                     System.Drawing.Color RzScrollWheelConv = new System.Drawing.Color();
                     System.Drawing.Color RzLogoConv = new System.Drawing.Color();
-
                     var refreshKeyGrid = Corale.Colore.Razer.Keyboard.Effects.Custom.Create();
                     refreshKeyGrid = keyboardGrid;
                     
@@ -1398,10 +1397,8 @@ namespace Chromatics.DeviceInterfaces
                                 Corale.Colore.Core.Color cc = keyboardGrid[fkey]; //Keyboard.Instance[fkey];
                                 System.Drawing.Color ccX = Corale.Colore.WinForms.Extensions.ToSystemColor(cc);
                                 flashpresets.Add(key, ccX);
-
                             }
                         }
-
 
                         _RazerFlash2Running = true;
                         _RazerFlash2Step = 0;
@@ -1423,10 +1420,6 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     foreach (string key in regions)
                                     {
-
-                                        //ApplyMapKeyLighting(key, burstcol, true);
-                                        //refreshKeyGrid
-                                        
                                         if (Enum.IsDefined(typeof(Corale.Colore.Razer.Keyboard.Key), key))
                                         {
                                             Corale.Colore.Razer.Keyboard.Key keyid = (Corale.Colore.Razer.Keyboard.Key)Enum.Parse(typeof(Corale.Colore.Razer.Keyboard.Key), key);
@@ -1455,9 +1448,6 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     foreach (string key in regions)
                                     {
-                                        
-                                        //ApplyMapKeyLighting(key, burstcol, true);
-                                        //refreshKeyGrid
                                         if (Enum.IsDefined(typeof(Corale.Colore.Razer.Keyboard.Key), key))
                                         {
                                             Corale.Colore.Razer.Keyboard.Key keyid = (Corale.Colore.Razer.Keyboard.Key)Enum.Parse(typeof(Corale.Colore.Razer.Keyboard.Key), key);
@@ -1574,6 +1564,129 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        private static int _RazerFlash4Step = 0;
+        private static bool _RazerFlash4Running = false;
+        private static Dictionary<string, System.Drawing.Color> _flashpresets4 = new Dictionary<string, System.Drawing.Color>();
+        //Corale.Colore.Core.Color Pad1 = new Corale.Colore.Core.Color();
+        static readonly object _RazerFlash4 = new object();
+        public void Flash4(System.Drawing.Color burstcol, int speed, CancellationToken cts, string[] regions)
+        {
+            try
+            {
+                lock (_RazerFlash4)
+                {
+                    Dictionary<string, System.Drawing.Color> flashpresets = new Dictionary<string, System.Drawing.Color>();
+                    Corale.Colore.Core.Color RzScrollWheel = new Corale.Colore.Core.Color();
+                    Corale.Colore.Core.Color RzLogo = new Corale.Colore.Core.Color();
+                    System.Drawing.Color RzScrollWheelConv = new System.Drawing.Color();
+                    System.Drawing.Color RzLogoConv = new System.Drawing.Color();
+                    var refreshKeyGrid = Corale.Colore.Razer.Keyboard.Effects.Custom.Create();
+                    refreshKeyGrid = keyboardGrid;
+
+
+                    if (!_RazerFlash4Running)
+                    {
+                        if (RazerDeviceMouse)
+                        {
+                            RzScrollWheel = Mouse.Instance[1];
+                            RzLogo = Mouse.Instance[2];
+                            RzScrollWheelConv = System.Drawing.Color.FromArgb(RzScrollWheel.R, RzScrollWheel.G, RzScrollWheel.B);
+                            RzLogoConv = System.Drawing.Color.FromArgb(RzLogo.R, RzLogo.G, RzLogo.B);
+                        }
+
+                        if (RazerDeviceKeyboard)
+                        {
+                            foreach (string key in regions)
+                            {
+                                Corale.Colore.Razer.Keyboard.Key fkey = (Corale.Colore.Razer.Keyboard.Key)Enum.Parse(typeof(Corale.Colore.Razer.Keyboard.Key), key);
+                                Corale.Colore.Core.Color cc = keyboardGrid[fkey]; //Keyboard.Instance[fkey];
+                                System.Drawing.Color ccX = Corale.Colore.WinForms.Extensions.ToSystemColor(cc);
+                                flashpresets.Add(key, ccX);
+                            }
+                        }
+
+                        _RazerFlash4Running = true;
+                        _RazerFlash4Step = 0;
+                        _flashpresets4 = flashpresets;
+                    }
+
+                    if (_RazerFlash4Running)
+                    {
+                        while (_RazerFlash4Running)
+                        {
+                            if (cts.IsCancellationRequested)
+                            {
+                                break;
+                            }
+
+                            if (_RazerFlash4Step == 0)
+                            {
+                                if (RazerDeviceKeyboard)
+                                {
+                                    foreach (string key in regions)
+                                    {
+                                        if (Enum.IsDefined(typeof(Corale.Colore.Razer.Keyboard.Key), key))
+                                        {
+                                            Corale.Colore.Razer.Keyboard.Key keyid = (Corale.Colore.Razer.Keyboard.Key)Enum.Parse(typeof(Corale.Colore.Razer.Keyboard.Key), key);
+
+                                            refreshKeyGrid[keyid] = Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol);
+                                        }
+                                    }
+
+                                    Chroma.Instance.Keyboard.SetCustom(refreshKeyGrid);
+                                }
+
+                                if (RazerDeviceMouse)
+                                {
+                                    ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                                    ApplyMapMouseLighting("Logo", burstcol, false);
+                                }
+
+                                //if (RazerDeviceHeadset) { Headset.Instance.SetAll(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
+
+                                _RazerFlash4Step = 1;
+
+                            }
+                            else if (_RazerFlash4Step == 1)
+                            {
+                                if (RazerDeviceKeyboard)
+                                {
+                                    foreach (string key in regions)
+                                    {
+                                        if (Enum.IsDefined(typeof(Corale.Colore.Razer.Keyboard.Key), key))
+                                        {
+                                            Corale.Colore.Razer.Keyboard.Key keyid = (Corale.Colore.Razer.Keyboard.Key)Enum.Parse(typeof(Corale.Colore.Razer.Keyboard.Key), key);
+
+                                            refreshKeyGrid[keyid] = Corale.Colore.WinForms.Extensions.ToColoreColor(_flashpresets4[key]);
+                                        }
+                                    }
+
+                                    Chroma.Instance.Keyboard.SetCustom(refreshKeyGrid);
+                                }
+
+                                if (RazerDeviceMouse)
+                                {
+                                    ApplyMapMouseLighting("ScrollWheel", RzScrollWheelConv, false);
+                                    ApplyMapMouseLighting("Logo", RzLogoConv, false);
+                                }
+
+                                //if (RazerDeviceHeadset) { Headset.Instance.SetAll(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
+
+                                _RazerFlash4Step = 0;
+
+
+                            }
+
+                            Thread.Sleep(speed);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                //
+            }
+        }
 
         static readonly object _RazertransitionConst = new object();
         private void RazertransitionConst(System.Drawing.Color col1, System.Drawing.Color col2, bool forward, int speed)
