@@ -62,11 +62,11 @@ namespace Chromatics.DeviceInterfaces
 
                 if (Environment.Is64BitOperatingSystem == true)
                 {
-                    write.WriteConsole(ConsoleTypes.RAZER, "The Razer SDK (RzChromaSDK64.dll) Could not be found on this computer. Please install Synapse and restart ACT if you wish to use Chromatics with Razer devices.");
+                    write.WriteConsole(ConsoleTypes.RAZER, "The Razer SDK (RzChromaSDK64.dll) Could not be found on this computer. Uninstall any previous versions of Razer SDK & Synapse and then reinstall Razer Synapse.");
                 }
                 else
                 {
-                    write.WriteConsole(ConsoleTypes.RAZER, "The Razer SDK (RzChromaSDK.dll) Could not be found on this computer. Please install Synapse and restart ACT if you wish to use Chromatics with Razer devices.");
+                    write.WriteConsole(ConsoleTypes.RAZER, "The Razer SDK (RzChromaSDK.dll) Could not be found on this computer. Uninstall any previous versions of Razer SDK & Synapse and then reinstall Razer Synapse.");
                 }
 
                 return null;
