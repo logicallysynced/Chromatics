@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 
 /* Contains the code to read the FFXIV Memory Stream, parse the data and convert to lighting commands
- * Sharylan is used to access Actor and target information.
+ * Sharlayan is used to access Actor and target information.
  * https://github.com/Icehunter/ffxivapp-memory
  */
 
