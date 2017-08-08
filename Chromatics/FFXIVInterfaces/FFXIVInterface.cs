@@ -150,6 +150,8 @@ namespace Chromatics
             ArxState = 0;
 
             HoldReader = false;
+
+            FFXIVcts.Cancel();
         }
 
         //private static readonly object _ReadFFXIVMemory = new object();
@@ -167,6 +169,15 @@ namespace Chromatics
                     *2 - Game in Menu
                     *3 - Game Running
                 */
+
+                var processes9 = Process.GetProcessesByName("ffxiv");
+                var processes11 = Process.GetProcessesByName("ffxiv_dx11");
+
+                if (processes11.Length == 0)
+                {
+                    FFXIVGameStop();
+                }
+
 
                 if (attatched > 0)
                 {
