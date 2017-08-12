@@ -98,6 +98,7 @@ namespace Chromatics
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             allowClose = true;
+            notify_master.Dispose();
             Application.Exit();
         }
 
@@ -111,7 +112,7 @@ namespace Chromatics
                 }
             }
 
-            notify_master.Dispose();
+            
         }
 
         private void ChromaticsForm_Resize(object sender, EventArgs e)

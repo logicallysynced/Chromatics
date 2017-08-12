@@ -1471,7 +1471,7 @@ namespace Chromatics
             if (LogitechSDKCalled == 0)
                 return;
 
-            DialogResult lccrestore_check = MessageBox.Show("Are you sure you wish to restore LGS to its default settings. This should only be done as a last resort.", "Restore LGS Settings to Default", MessageBoxButtons.OKCancel);
+            DialogResult lccrestore_check = MessageBox.Show("Are you sure you wish to restore LGS to its default settings? This should only be done as a last resort.", "Restore LGS Settings to Default", MessageBoxButtons.OKCancel);
             if (lccrestore_check == DialogResult.OK)
             {
                 try
