@@ -12,31 +12,31 @@ namespace Chromatics
     public static class Watchdog
     {
         //private Timer Timer;
-        private static Timer Timer;
+        private static Timer _timer;
 
-        private static readonly ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
+        private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
 
         public static void WatchdogGo()
         {
-            write.WriteConsole(ConsoleTypes.SYSTEM, "Watchdog Started");
-            Timer.Start();
+            Write.WriteConsole(ConsoleTypes.System, "Watchdog Started");
+            _timer.Start();
         }
 
         public static void WatchdogStop()
         {
-            if (Timer.Enabled)
+            if (_timer.Enabled)
             {
-                write.WriteConsole(ConsoleTypes.SYSTEM, "Watchdog Stopped");
-                Timer.Stop();
+                Write.WriteConsole(ConsoleTypes.System, "Watchdog Stopped");
+                _timer.Stop();
             }
         }
 
         public static void WatchdogReset()
         {
-            if (Timer.Enabled)
+            if (_timer.Enabled)
             {
-                Timer.Stop();
-                Timer.Start();
+                _timer.Stop();
+                _timer.Start();
             }
 
             /*
@@ -58,10 +58,10 @@ namespace Chromatics
 
         private static void WatchdogOnTimerExpired()
         {
-            write.WriteConsole(ConsoleTypes.ERROR, "Watchdog Triggered");
-            Timer.Stop();
+            Write.WriteConsole(ConsoleTypes.Error, "Watchdog Triggered");
+            _timer.Stop();
             //RestartServices();
-            write.FFXIVGameStop();
+            Write.FfxivGameStop();
 
             /*
             if (InvokeRequired)
@@ -81,10 +81,10 @@ namespace Chromatics
 
         public static void WatchdogStartup()
         {
-            Timer = new Timer();
-            Timer.Elapsed += (source, e) => { WatchdogOnTimerExpired(); };
-            Timer.AutoReset = false;
-            Timer.Interval = 6000;
+            _timer = new Timer();
+            _timer.Elapsed += (source, e) => { WatchdogOnTimerExpired(); };
+            _timer.AutoReset = false;
+            _timer.Interval = 6000;
         }
 
         private delegate void ResetDelegate();

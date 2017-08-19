@@ -20,12 +20,12 @@ namespace Chromatics.DeviceInterfaces
 {
     public class HueInterface
     {
-        public static HueLib InitializeHueSDK(string HUEDefault)
+        public static HueLib InitializeHueSdk(string hueDefault)
         {
             HueLib hue = null;
             hue = new HueLib();
 
-            var hueinit = hue.InitializeSDK(HUEDefault);
+            var hueinit = hue.InitializeSdk(hueDefault);
             hueinit.Wait();
             var huestat = hueinit.Result;
 
@@ -49,20 +49,20 @@ namespace Chromatics.DeviceInterfaces
         Dictionary<Light, DeviceModeTypes> HueBulbsDat { get; }
         Dictionary<Light, State> HueBulbsRestore { get; }
         Dictionary<string, int> HueStateMemory { get; }
-        Task<bool> InitializeSDK(string HUEDefault);
+        Task<bool> InitializeSdk(string hueDefault);
         void HueRestoreState();
         Task<State> GetLightStateAsync(Light light);
         Task<string> GetDeviceVersionAsync(Light light);
-        void SetColorAsync(Light light, int? Hue, int? Saturation, int Brightness, int? ColorTemperature, TimeSpan ts);
-        void HUEUpdateState(DeviceModeTypes mode, Color col, int transition);
-        void HUEUpdateStateBrightness(DeviceModeTypes mode, Color col, int? brightness, int transition);
+        void SetColorAsync(Light light, int? hue, int? saturation, int brightness, int? colorTemperature, TimeSpan ts);
+        void HueUpdateState(DeviceModeTypes mode, Color col, int transition);
+        void HueUpdateStateBrightness(DeviceModeTypes mode, Color col, int? brightness, int transition);
         void Flash4(Color basecol, Color burstcol, int speed, CancellationToken cts);
     }
 
     public class HueLib : IHueSdk
     {
-        private static readonly ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
-        private static int _HueBulbs;
+        private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
+        private static int _hueBulbs;
 
         private static readonly Dictionary<string, DeviceModeTypes> _HueModeMemory =
             new Dictionary<string, DeviceModeTypes>();
@@ -76,83 +76,83 @@ namespace Chromatics.DeviceInterfaces
         private static readonly Dictionary<Light, State> _HueBulbsRestore =
             new Dictionary<Light, State>();
 
-        private static Task _HUEpendingUpdateColor;
+        private static Task _huEpendingUpdateColor;
 
-        private static int Flash4Step;
-        private static bool Flash4Running;
+        private static int _flash4Step;
+        private static bool _flash4Running;
         private static readonly object _Flash4 = new object();
-        private Action _HUEpendingUpdateColorAction;
-        private Action _HUEpendingUpdateColorActionBright;
-        private Task _HUEpendingUpdateColorBright;
+        private Action _huEpendingUpdateColorAction;
+        private Action _huEpendingUpdateColorActionBright;
+        private Task _huEpendingUpdateColorBright;
 
-        private ILocalHueClient client;
+        private ILocalHueClient _client;
 
-        public async Task<bool> InitializeSDK(string HUEDefault)
+        public async Task<bool> InitializeSdk(string hueDefault)
         {
-            write.WriteConsole(ConsoleTypes.HUE, "Attempting to load HUE SDK..");
+            Write.WriteConsole(ConsoleTypes.Hue, "Attempting to load HUE SDK..");
 
             try
             {
                 IBridgeLocator locator = new HttpBridgeLocator();
-                var _devices = new Dictionary<string, LocatedBridge>();
+                var devices = new Dictionary<string, LocatedBridge>();
 
                 var bridgeIPs = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
                 foreach (var bridge in bridgeIPs)
                 {
-                    write.WriteConsole(ConsoleTypes.HUE,
+                    Write.WriteConsole(ConsoleTypes.Hue,
                         "Found HUE Bridge (" + bridge.BridgeId + ") at " + bridge.IpAddress);
-                    _devices.Add(bridge.BridgeId, bridge);
+                    devices.Add(bridge.BridgeId, bridge);
                 }
 
-                var _selectdevice = "";
+                var selectdevice = "";
 
-                if (_devices.Count > 0)
+                if (devices.Count > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(HUEDefault))
+                    if (!string.IsNullOrWhiteSpace(hueDefault))
                     {
-                        if (_devices.ContainsKey(HUEDefault))
+                        if (devices.ContainsKey(hueDefault))
                         {
-                            _selectdevice = _devices[HUEDefault].BridgeId;
-                            write.WriteConsole(ConsoleTypes.HUE,
-                                "Connected to preferred HUE Bridge (" + _devices[HUEDefault].BridgeId + ") at " +
-                                _devices[HUEDefault].IpAddress);
+                            selectdevice = devices[hueDefault].BridgeId;
+                            Write.WriteConsole(ConsoleTypes.Hue,
+                                "Connected to preferred HUE Bridge (" + devices[hueDefault].BridgeId + ") at " +
+                                devices[hueDefault].IpAddress);
                         }
                         else
                         {
-                            _selectdevice = _devices.FirstOrDefault().Key;
-                            write.WriteConsole(ConsoleTypes.HUE, "Unable to find your preferred HUE Bridge.");
-                            write.WriteConsole(ConsoleTypes.HUE,
-                                "Connected to HUE Bridge (" + _devices.FirstOrDefault().Value.BridgeId + ") at " +
-                                _devices.FirstOrDefault().Value.IpAddress);
+                            selectdevice = devices.FirstOrDefault().Key;
+                            Write.WriteConsole(ConsoleTypes.Hue, "Unable to find your preferred HUE Bridge.");
+                            Write.WriteConsole(ConsoleTypes.Hue,
+                                "Connected to HUE Bridge (" + devices.FirstOrDefault().Value.BridgeId + ") at " +
+                                devices.FirstOrDefault().Value.IpAddress);
                         }
                     }
                     else
                     {
-                        _selectdevice = _devices.FirstOrDefault().Key;
-                        write.WriteConsole(ConsoleTypes.HUE,
-                            "Connected to HUE Bridge (" + _devices.FirstOrDefault().Value.BridgeId + ") at " +
-                            _devices.FirstOrDefault().Value.IpAddress);
+                        selectdevice = devices.FirstOrDefault().Key;
+                        Write.WriteConsole(ConsoleTypes.Hue,
+                            "Connected to HUE Bridge (" + devices.FirstOrDefault().Value.BridgeId + ") at " +
+                            devices.FirstOrDefault().Value.IpAddress);
                     }
                 }
                 else
                 {
-                    write.WriteConsole(ConsoleTypes.HUE, "Unable to find any HUE Bridges.");
+                    Write.WriteConsole(ConsoleTypes.Hue, "Unable to find any HUE Bridges.");
                     return false;
                 }
 
-                if (!string.IsNullOrWhiteSpace(_selectdevice))
+                if (!string.IsNullOrWhiteSpace(selectdevice))
                 {
-                    client = new LocalHueClient(_devices[_selectdevice].IpAddress);
-                    var appKey = await client.RegisterAsync("Chromatics", "Chromatics_Bridge");
+                    _client = new LocalHueClient(devices[selectdevice].IpAddress);
+                    var appKey = await _client.RegisterAsync("Chromatics", "Chromatics_Bridge");
 
-                    client.Initialize("Chromatics");
+                    _client.Initialize("Chromatics");
 
                     //Get lights
-                    var _lights = await client.GetLightsAsync();
+                    var lights = await _client.GetLightsAsync();
 
-                    foreach (var light in _lights)
+                    foreach (var light in lights)
                     {
-                        var defaultmode = DeviceModeTypes.STANDBY;
+                        var defaultmode = DeviceModeTypes.Standby;
 
                         if (!_HueModeMemory.ContainsKey(light.UniqueId))
                         {
@@ -160,7 +160,7 @@ namespace Chromatics.DeviceInterfaces
                             _HueModeMemory.Add(light.UniqueId, defaultmode);
                             _HueStateMemory.Add(light.UniqueId, 1);
 
-                            write.SaveDevices();
+                            Write.SaveDevices();
                         }
                         else
                         {
@@ -172,28 +172,28 @@ namespace Chromatics.DeviceInterfaces
                         _HueBulbsDat.Add(light, defaultmode);
                         _HueBulbsRestore.Add(light, light.State);
 
-                        _HueBulbs++;
+                        _hueBulbs++;
 
-                        write.WriteConsole(ConsoleTypes.HUE, "HUE Bulb Found: " + light.Name + " (" + light.Id + ").");
+                        Write.WriteConsole(ConsoleTypes.Hue, "HUE Bulb Found: " + light.Name + " (" + light.Id + ").");
 
-                        write.ResetDeviceDataGrid();
+                        Write.ResetDeviceDataGrid();
                     }
 
                     return true;
                 }
-                write.WriteConsole(ConsoleTypes.HUE, "HUE SDK Failed to Load. Error: Bridge Scan Error");
+                Write.WriteConsole(ConsoleTypes.Hue, "HUE SDK Failed to Load. Error: Bridge Scan Error");
                 return false;
             }
             catch (Exception ex)
             {
-                write.WriteConsole(ConsoleTypes.HUE, "HUE SDK Failed to Load. Error: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Hue, "HUE SDK Failed to Load. Error: " + ex.Message);
                 return false;
             }
         }
 
         public async void HueRestoreState()
         {
-            var connect = await client.CheckConnection();
+            var connect = await _client.CheckConnection();
 
             if (connect)
                 foreach (var d in _HueBulbsRestore)
@@ -208,30 +208,30 @@ namespace Chromatics.DeviceInterfaces
                         command.On = state.On;
                         command.Saturation = state.Saturation;
 
-                        await client.SendCommandAsync(command,
+                        await _client.SendCommandAsync(command,
                             new List<string> {d.Key.Id}); //Unsure if Id or UniqueId should be used
 
-                        write.WriteConsole(ConsoleTypes.HUE, "Restoring HUE Bulb " + d.Key.Name);
+                        Write.WriteConsole(ConsoleTypes.Hue, "Restoring HUE Bulb " + d.Key.Name);
                         //Thread.Sleep(500);
                     }
                     catch (Exception ex)
                     {
-                        write.WriteConsole(ConsoleTypes.HUE,
+                        Write.WriteConsole(ConsoleTypes.Hue,
                             "An Error occurred while restoring HUE Bulb " + d.Key.Name + ". Error: " + ex.Message);
                     }
             else
-                write.WriteConsole(ConsoleTypes.HUE, "Unable to connect to HUE Hub.");
+                Write.WriteConsole(ConsoleTypes.Hue, "Unable to connect to HUE Hub.");
         }
 
-        public async void HUEUpdateState(DeviceModeTypes mode, Color col, int transition)
+        public async void HueUpdateState(DeviceModeTypes mode, Color col, int transition)
         {
-            var connect = await client.CheckConnection();
+            var connect = await _client.CheckConnection();
 
-            if (connect && _HueBulbs > 0)
+            if (connect && _hueBulbs > 0)
             {
-                if (_HUEpendingUpdateColor != null)
+                if (_huEpendingUpdateColor != null)
                 {
-                    _HUEpendingUpdateColorAction = () => HUEUpdateState(mode, col, transition);
+                    _huEpendingUpdateColorAction = () => HueUpdateState(mode, col, transition);
                     return;
                 }
 
@@ -244,84 +244,84 @@ namespace Chromatics.DeviceInterfaces
                 //ushort _kelvin = 2700;
 
                 foreach (var d in _HueBulbsDat)
-                    if (d.Value == mode || mode == DeviceModeTypes.UNKNOWN)
+                    if (d.Value == mode || mode == DeviceModeTypes.Unknown)
                     {
                         if (_HueStateMemory[d.Key.UniqueId] == 0) return;
-                        var state = await client.GetLightAsync(d.Key.Id); //Unsure if Id or UniqueId should be used
+                        var state = await _client.GetLightAsync(d.Key.Id); //Unsure if Id or UniqueId should be used
 
                         var command = new LightCommand();
                         command.On = true;
                         command.SetColor(_col, d.Key.ModelId);
 
                         var setColorTask =
-                            client.SendCommandAsync(command,
+                            _client.SendCommandAsync(command,
                                 new List<string> {d.Key.Id}); //Unsure if Id or UniqueId should be used
 
                         var throttleTask = Task.Delay(50);
                         //Ensure task takes minimum 50 ms (no more than 20 messages per second)
-                        _HUEpendingUpdateColor = Task.WhenAll(setColorTask, throttleTask);
+                        _huEpendingUpdateColor = Task.WhenAll(setColorTask, throttleTask);
                     }
 
-                _HUEpendingUpdateColor = null;
-                if (_HUEpendingUpdateColorAction != null)
+                _huEpendingUpdateColor = null;
+                if (_huEpendingUpdateColorAction != null)
                 {
-                    var a = _HUEpendingUpdateColorAction;
-                    _HUEpendingUpdateColorAction = null;
+                    var a = _huEpendingUpdateColorAction;
+                    _huEpendingUpdateColorAction = null;
                     a();
                 }
             }
         }
 
-        public async void HUEUpdateStateBrightness(DeviceModeTypes mode, Color col, int? brightness, int transition)
+        public async void HueUpdateStateBrightness(DeviceModeTypes mode, Color col, int? brightness, int transition)
         {
-            var connect = await client.CheckConnection();
+            var connect = await _client.CheckConnection();
 
-            if (connect && _HueBulbs > 0)
+            if (connect && _hueBulbs > 0)
             {
-                if (_HUEpendingUpdateColorBright != null)
+                if (_huEpendingUpdateColorBright != null)
                 {
-                    _HUEpendingUpdateColorActionBright =
-                        () => HUEUpdateStateBrightness(mode, col, brightness, transition);
+                    _huEpendingUpdateColorActionBright =
+                        () => HueUpdateStateBrightness(mode, col, brightness, transition);
                     return;
                 }
 
                 var _transition = TimeSpan.FromMilliseconds(transition);
                 var _col = new RGBColor(col.R, col.G, col.B);
 
-                var _hue = (int?) col.GetHue();
-                var _sat = (int?) col.GetSaturation();
-                var _bright = (int?) col.GetBrightness();
+                var hue = (int?) col.GetHue();
+                var sat = (int?) col.GetSaturation();
+                var bright = (int?) col.GetBrightness();
 
                 //if (mode == 10) _kelvin = 6000;
 
                 foreach (var d in _HueBulbsDat)
-                    if (d.Value == mode || mode == DeviceModeTypes.UNKNOWN)
+                    if (d.Value == mode || mode == DeviceModeTypes.Unknown)
                     {
                         if (_HueStateMemory[d.Key.Id] == 0) return;
 
-                        var state = await client.GetLightAsync(d.Key.Id); //Unsure if Id or UniqueId should be used
+                        var state = await _client.GetLightAsync(d.Key.Id); //Unsure if Id or UniqueId should be used
 
                         var command = new LightCommand();
-                        command.Hue = _hue;
-                        command.Saturation = _sat;
+                        command.Hue = hue;
+                        command.Saturation = sat;
                         command.Brightness = (byte) brightness;
                         command.On = true;
                         command.SetColor(_col, d.Key.ModelId);
 
                         var setColorTask =
-                            client.SendCommandAsync(command,
+                            _client.SendCommandAsync(command,
                                 new List<string> {d.Key.Id}); //Unsure if Id or UniqueId should be used
 
                         var throttleTask = Task.Delay(50);
                         //Ensure task takes minimum 50 ms (no more than 20 messages per second)
-                        _HUEpendingUpdateColorBright = Task.WhenAll(setColorTask, throttleTask);
+                        _huEpendingUpdateColorBright = Task.WhenAll(setColorTask, throttleTask);
                     }
 
-                _HUEpendingUpdateColorBright = null;
-                if (_HUEpendingUpdateColorActionBright != null)
+                _huEpendingUpdateColorBright = null;
+                if (_huEpendingUpdateColorActionBright != null)
                 {
-                    var a = _HUEpendingUpdateColorActionBright;
-                    _HUEpendingUpdateColorActionBright = null;
+                    var a = _huEpendingUpdateColorActionBright;
+                    _huEpendingUpdateColorActionBright = null;
                     a();
                 }
             }
@@ -329,36 +329,36 @@ namespace Chromatics.DeviceInterfaces
 
         public async Task<State> GetLightStateAsync(Light light)
         {
-            var result = await client.GetLightAsync(light.Id);
+            var result = await _client.GetLightAsync(light.Id);
             return result.State;
         }
 
         public async Task<string> GetDeviceVersionAsync(Light light)
         {
-            var result = await client.GetLightAsync(light.Id);
+            var result = await _client.GetLightAsync(light.Id);
             return result.SoftwareVersion;
         }
 
-        public async void SetColorAsync(Light light, int? Hue, int? Saturation, int Brightness, int? ColorTemperature,
+        public async void SetColorAsync(Light light, int? hue, int? saturation, int brightness, int? colorTemperature,
             TimeSpan ts)
         {
-            var connect = await client.CheckConnection();
+            var connect = await _client.CheckConnection();
 
             if (connect)
             {
                 var command = new LightCommand();
-                command.Brightness = (byte) Brightness;
-                command.ColorTemperature = ColorTemperature;
-                command.Hue = Hue;
+                command.Brightness = (byte) brightness;
+                command.ColorTemperature = colorTemperature;
+                command.Hue = hue;
                 command.On = true;
-                command.Saturation = Saturation;
+                command.Saturation = saturation;
 
-                await client.SendCommandAsync(command,
+                await _client.SendCommandAsync(command,
                     new List<string> {light.Id}); //Unsure if Id or UniqueId should be used
             }
             else
             {
-                write.WriteConsole(ConsoleTypes.HUE, "Unable to connect to HUE Hub.");
+                Write.WriteConsole(ConsoleTypes.Hue, "Unable to connect to HUE Hub.");
             }
         }
 
@@ -368,30 +368,30 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (_Flash4)
                 {
-                    if (!Flash4Running)
+                    if (!_flash4Running)
                     {
-                        Flash4Running = true;
-                        Flash4Step = 0;
+                        _flash4Running = true;
+                        _flash4Step = 0;
                     }
 
-                    if (Flash4Running)
-                        while (Flash4Running)
+                    if (_flash4Running)
+                        while (_flash4Running)
                         {
                             if (cts.IsCancellationRequested)
                             {
-                                HUEUpdateState(DeviceModeTypes.DUTY_FINDER, basecol, 1000);
+                                HueUpdateState(DeviceModeTypes.DutyFinder, basecol, 1000);
                                 break;
                             }
 
-                            if (Flash4Step == 0)
+                            if (_flash4Step == 0)
                             {
-                                HUEUpdateState(DeviceModeTypes.DUTY_FINDER, burstcol, 0);
-                                Flash4Step = 1;
+                                HueUpdateState(DeviceModeTypes.DutyFinder, burstcol, 0);
+                                _flash4Step = 1;
                             }
-                            else if (Flash4Step == 1)
+                            else if (_flash4Step == 1)
                             {
-                                HUEUpdateState(DeviceModeTypes.DUTY_FINDER, basecol, 0);
-                                Flash4Step = 0;
+                                HueUpdateState(DeviceModeTypes.DutyFinder, basecol, 0);
+                                _flash4Step = 0;
                             }
 
                             Thread.Sleep(speed);
@@ -409,8 +409,8 @@ namespace Chromatics.DeviceInterfaces
 
         public int HueBulbs
         {
-            get => _HueBulbs;
-            set => _HueBulbs = value;
+            get => _hueBulbs;
+            set => _hueBulbs = value;
         }
 
         public Dictionary<string, int> HueStateMemory => _HueStateMemory;

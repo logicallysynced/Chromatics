@@ -8,7 +8,7 @@ namespace Chromatics
     {
         protected override void SetVisibleCore(bool value)
         {
-            if (!allowVisible)
+            if (!_allowVisible)
             {
                 value = false;
                 if (!IsHandleCreated) CreateHandle();
@@ -19,30 +19,30 @@ namespace Chromatics
         private void Kh_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
-                KeyCtrl = true;
+                _keyCtrl = true;
 
             if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
-                KeyShift = true;
+                _keyShift = true;
 
             if (e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
-                KeyAlt = true;
+                _keyAlt = true;
         }
 
         private void Kh_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
-                KeyCtrl = false;
+                _keyCtrl = false;
 
             if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
-                KeyShift = false;
+                _keyShift = false;
 
             if (e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
-                KeyAlt = false;
+                _keyAlt = false;
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!allowClose)
+            if (!_allowClose)
             {
                 Hide();
                 e.Cancel = true;
@@ -56,16 +56,16 @@ namespace Chromatics
         private void FinalFormClosing(object sender)
         {
             HoldReader = true;
-            FFXIVcts.Cancel();
-            Attachcts.Cancel();
+            _ffxiVcts.Cancel();
+            _attachcts.Cancel();
             ShutDownDevices();
 
-            if (LifxSDKCalled == 1)
+            if (LifxSdkCalled == 1)
             {
                 //{ new Task(() => { AttachFFXIV(); }).Start(); };
-                var _LIFXRestore = new Task(() => { _lifx.LIFXRestoreState(); });
-                CriticalTasks.Add(_LIFXRestore);
-                CriticalTasks.Run(_LIFXRestore);
+                var lifxRestore = new Task(() => { _lifx.LifxRestoreState(); });
+                CriticalTasks.Add(lifxRestore);
+                CriticalTasks.Run(lifxRestore);
                 CriticalTasks.WaitOnExit();
             }
 
@@ -74,7 +74,7 @@ namespace Chromatics
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            allowClose = true;
+            _allowClose = true;
             notify_master.Dispose();
             Application.Exit();
         }
@@ -82,8 +82,8 @@ namespace Chromatics
         private void OnApplicationExit(object sender, EventArgs e)
         {
             if (chk_lccauto.Checked)
-                if (LogitechSDKCalled == 1)
-                    ToggleLCCMode(false, true);
+                if (LogitechSdkCalled == 1)
+                    ToggleLccMode(false, true);
         }
 
         private void ChromaticsForm_Resize(object sender, EventArgs e)
@@ -93,7 +93,7 @@ namespace Chromatics
             if (FormWindowState.Minimized == WindowState)
             {
                 notify_master.Visible = true;
-                allowVisible = false;
+                _allowVisible = false;
                 Hide();
             }
         }

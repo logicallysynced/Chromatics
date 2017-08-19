@@ -19,25 +19,25 @@ namespace Chromatics
     {
         private readonly DataGridViewComboBoxColumn _dGmode = new DataGridViewComboBoxColumn();
 
-        private readonly Dictionary<DeviceModeTypes, string> DeviceModes = new Dictionary<DeviceModeTypes, string>
+        private readonly Dictionary<DeviceModeTypes, string> _deviceModes = new Dictionary<DeviceModeTypes, string>
         {
             //Keys
-            {DeviceModeTypes.DISABLED, "Disabled"},
-            {DeviceModeTypes.STANDBY, "Standby"},
-            {DeviceModeTypes.DEFAULT_COLOR, "Default Color"},
-            {DeviceModeTypes.HIGHLIGHT_COLOR, "Highlight Colour"},
-            {DeviceModeTypes.ENMITY_TRACKER, "Enmity Tracker"},
-            {DeviceModeTypes.TARGET_HP, "Target HP"},
-            {DeviceModeTypes.STATUS_EFFECTS, "Status Effects"},
-            {DeviceModeTypes.HP_TRACKER, "HP Tracker"},
-            {DeviceModeTypes.MP_TRACKER, "MP Tracker"},
-            {DeviceModeTypes.TP_TRACKER, "TP Tracker"},
-            {DeviceModeTypes.CASTBAR, "Castbar"},
-            {DeviceModeTypes.DUTY_FINDER, "Duty Finder Bell"},
-            {DeviceModeTypes.CHROMATICS_DEFAULT, "Chromatics Default"}
+            {DeviceModeTypes.Disabled, "Disabled"},
+            {DeviceModeTypes.Standby, "Standby"},
+            {DeviceModeTypes.DefaultColor, "Default Color"},
+            {DeviceModeTypes.HighlightColor, "Highlight Colour"},
+            {DeviceModeTypes.EnmityTracker, "Enmity Tracker"},
+            {DeviceModeTypes.TargetHp, "Target HP"},
+            {DeviceModeTypes.StatusEffects, "Status Effects"},
+            {DeviceModeTypes.HpTracker, "HP Tracker"},
+            {DeviceModeTypes.MpTracker, "MP Tracker"},
+            {DeviceModeTypes.TpTracker, "TP Tracker"},
+            {DeviceModeTypes.Castbar, "Castbar"},
+            {DeviceModeTypes.DutyFinder, "Duty Finder Bell"},
+            {DeviceModeTypes.ChromaticsDefault, "Chromatics Default"}
         };
 
-        private readonly Dictionary<string, string[]> MappingPalette = new Dictionary<string, string[]>
+        private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
         {
             //Keys
             {"ColorMapping_BaseColor", new[] {"Base Color", "1", "Black", "White"}},
@@ -100,7 +100,7 @@ namespace Chromatics
         };
 
 
-        private readonly Dictionary<int, string> PaletteCategories = new Dictionary<int, string>
+        private readonly Dictionary<int, string> _paletteCategories = new Dictionary<int, string>
         {
             //Keys
             {0, "All"},
@@ -142,7 +142,7 @@ namespace Chromatics
 
         private void InitColorMappingGrid()
         {
-            foreach (var c in PaletteCategories)
+            foreach (var c in _paletteCategories)
                 cb_palette_categories.Items.Add(c.Value);
 
             cb_palette_categories.SelectedIndex = 0;
@@ -199,21 +199,21 @@ namespace Chromatics
 
             DrawMappingsDict();
 
-            foreach (var palette in MappingPalette)
+            foreach (var palette in _mappingPalette)
             {
-                var _PaletteItem = (DataGridViewRow) dG_mappings.Rows[0].Clone();
-                _PaletteItem.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value = palette.Key;
-                _PaletteItem.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value = palette.Value[1];
-                _PaletteItem.Cells[dG_mappings.Columns["mappings_col_type"].Index].Value = palette.Value[0];
+                var paletteItem = (DataGridViewRow) dG_mappings.Rows[0].Clone();
+                paletteItem.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value = palette.Key;
+                paletteItem.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value = palette.Value[1];
+                paletteItem.Cells[dG_mappings.Columns["mappings_col_type"].Index].Value = palette.Value[0];
 
-                var _PaletteBtn = new DataGridViewTextBoxCell();
-                _PaletteBtn.Style.BackColor = ColorTranslator.FromHtml(palette.Value[2]);
-                _PaletteBtn.Style.SelectionBackColor = ColorTranslator.FromHtml(palette.Value[2]);
+                var paletteBtn = new DataGridViewTextBoxCell();
+                paletteBtn.Style.BackColor = ColorTranslator.FromHtml(palette.Value[2]);
+                paletteBtn.Style.SelectionBackColor = ColorTranslator.FromHtml(palette.Value[2]);
 
-                _PaletteBtn.Value = "";
-                _PaletteItem.Cells[dG_mappings.Columns["mappings_col_color"].Index] = _PaletteBtn;
-                dG_mappings.Rows.Add(_PaletteItem);
-                _PaletteBtn.ReadOnly = true;
+                paletteBtn.Value = "";
+                paletteItem.Cells[dG_mappings.Columns["mappings_col_color"].Index] = paletteBtn;
+                dG_mappings.Rows.Add(paletteItem);
+                paletteBtn.ReadOnly = true;
             }
 
             dG_mappings.AllowUserToAddRows = false;
@@ -225,13 +225,13 @@ namespace Chromatics
             //PropertyInfo[] _FFXIVColorMappings = typeof(FFXIVColorMappings).GetProperties();
 
             //ColorMappings
-            foreach (var p in typeof(FFXIVColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var p in typeof(FfxivColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
-                var _var = p.Name;
-                var _color = (string) p.GetValue(ColorMappings);
-                var _data = MappingPalette[_var];
-                string[] data = {_data[0], _data[1], _color, _data[3]};
-                MappingPalette[_var] = data;
+                var var = p.Name;
+                var color = (string) p.GetValue(ColorMappings);
+                var _data = _mappingPalette[var];
+                string[] data = {_data[0], _data[1], color, _data[3]};
+                _mappingPalette[var] = data;
             }
         }
 
@@ -249,287 +249,287 @@ namespace Chromatics
                 dG_devices.Rows.Clear();
 
 
-                if (RazerSDKCalled == 1)
+                if (RazerSdkCalled == 1)
                 {
                     //Keyboard
-                    var _RzDgKeyboard = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var rzDgKeyboard = (DataGridViewRow) dG_devices.Rows[0].Clone();
                     //DataGridViewRow _RzDgKeyboard = new DataGridViewRow();
-                    _RzDgKeyboard.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Keyboard";
-                    _RzDgKeyboard.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keyboard";
-                    _RzDgKeyboard.Cells[dG_devices.Columns["col_status"].Index].Value = RazerDeviceKeyboard
+                    rzDgKeyboard.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Keyboard";
+                    rzDgKeyboard.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keyboard";
+                    rzDgKeyboard.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceKeyboard
                         ? "Enabled"
                         : "Disabled";
-                    _RzDgKeyboard.Cells[dG_devices.Columns["col_state"].Index].Value = RazerDeviceKeyboard;
-                    _RzDgKeyboard.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceKeyboard";
+                    rzDgKeyboard.Cells[dG_devices.Columns["col_state"].Index].Value = _razerDeviceKeyboard;
+                    rzDgKeyboard.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceKeyboard";
 
-                    var _RzDgKeyboard_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _RzDgKeyboard_dgc.Items.Add(d.Value);
+                    var rzDgKeyboardDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        rzDgKeyboardDgc.Items.Add(d.Value);
 
-                    _RzDgKeyboard_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _RzDgKeyboard_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _RzDgKeyboard_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-                    _RzDgKeyboard.Cells[dG_devices.Columns["col_mode"].Index] = _RzDgKeyboard_dgc;
+                    rzDgKeyboardDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgKeyboardDgc.DisplayStyleForCurrentCellOnly = true;
+                    rzDgKeyboardDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    rzDgKeyboard.Cells[dG_devices.Columns["col_mode"].Index] = rzDgKeyboardDgc;
 
-                    dG_devices.Rows.Add(_RzDgKeyboard);
-                    _RzDgKeyboard_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(rzDgKeyboard);
+                    rzDgKeyboardDgc.ReadOnly = true;
 
                     //Mouse
-                    var _RzDgMouse = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _RzDgMouse.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Mouse";
-                    _RzDgMouse.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mouse";
-                    _RzDgMouse.Cells[dG_devices.Columns["col_status"].Index].Value = RazerDeviceMouse
+                    var rzDgMouse = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    rzDgMouse.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Mouse";
+                    rzDgMouse.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mouse";
+                    rzDgMouse.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceMouse
                         ? "Enabled"
                         : "Disabled";
-                    _RzDgMouse.Cells[dG_devices.Columns["col_state"].Index].Value = RazerDeviceMouse;
-                    _RzDgMouse.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceMouse";
+                    rzDgMouse.Cells[dG_devices.Columns["col_state"].Index].Value = _razerDeviceMouse;
+                    rzDgMouse.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceMouse";
 
-                    var _RzDgMouse_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _RzDgMouse_dgc.Items.Add(d.Value);
+                    var rzDgMouseDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        rzDgMouseDgc.Items.Add(d.Value);
 
-                    _RzDgMouse_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _RzDgMouse_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _RzDgMouse_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    rzDgMouseDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgMouseDgc.DisplayStyleForCurrentCellOnly = true;
+                    rzDgMouseDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _RzDgMouse.Cells[dG_devices.Columns["col_mode"].Index] = _RzDgMouse_dgc;
+                    rzDgMouse.Cells[dG_devices.Columns["col_mode"].Index] = rzDgMouseDgc;
 
-                    dG_devices.Rows.Add(_RzDgMouse);
-                    _RzDgMouse_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(rzDgMouse);
+                    rzDgMouseDgc.ReadOnly = true;
 
                     //Headset
-                    var _RzDgHeadset = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _RzDgHeadset.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Headset";
-                    _RzDgHeadset.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Headset";
-                    _RzDgHeadset.Cells[dG_devices.Columns["col_status"].Index].Value = RazerDeviceHeadset
+                    var rzDgHeadset = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    rzDgHeadset.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Headset";
+                    rzDgHeadset.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Headset";
+                    rzDgHeadset.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceHeadset
                         ? "Enabled"
                         : "Disabled";
-                    _RzDgHeadset.Cells[dG_devices.Columns["col_state"].Index].Value = RazerDeviceHeadset;
-                    _RzDgHeadset.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceHeadset";
+                    rzDgHeadset.Cells[dG_devices.Columns["col_state"].Index].Value = _razerDeviceHeadset;
+                    rzDgHeadset.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceHeadset";
 
-                    var _RzDgHeadset_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _RzDgHeadset_dgc.Items.Add(d.Value);
+                    var rzDgHeadsetDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        rzDgHeadsetDgc.Items.Add(d.Value);
 
-                    _RzDgHeadset_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _RzDgHeadset_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _RzDgHeadset_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    rzDgHeadsetDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgHeadsetDgc.DisplayStyleForCurrentCellOnly = true;
+                    rzDgHeadsetDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _RzDgHeadset.Cells[dG_devices.Columns["col_mode"].Index] = _RzDgHeadset_dgc;
+                    rzDgHeadset.Cells[dG_devices.Columns["col_mode"].Index] = rzDgHeadsetDgc;
 
-                    dG_devices.Rows.Add(_RzDgHeadset);
-                    _RzDgHeadset_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(rzDgHeadset);
+                    rzDgHeadsetDgc.ReadOnly = true;
 
                     //Mousepad
-                    var _RzDgMousepad = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _RzDgMousepad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Mousepad";
-                    _RzDgMousepad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mousepad";
-                    _RzDgMousepad.Cells[dG_devices.Columns["col_status"].Index].Value = RazerDeviceMousepad
+                    var rzDgMousepad = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    rzDgMousepad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Mousepad";
+                    rzDgMousepad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mousepad";
+                    rzDgMousepad.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceMousepad
                         ? "Enabled"
                         : "Disabled";
-                    _RzDgMousepad.Cells[dG_devices.Columns["col_state"].Index].Value = RazerDeviceMousepad;
-                    _RzDgMousepad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceMousepad";
+                    rzDgMousepad.Cells[dG_devices.Columns["col_state"].Index].Value = _razerDeviceMousepad;
+                    rzDgMousepad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceMousepad";
 
-                    var _RzDgMousepad_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _RzDgMousepad_dgc.Items.Add(d.Value);
+                    var rzDgMousepadDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        rzDgMousepadDgc.Items.Add(d.Value);
 
-                    _RzDgMousepad_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _RzDgMousepad_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _RzDgMousepad_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    rzDgMousepadDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgMousepadDgc.DisplayStyleForCurrentCellOnly = true;
+                    rzDgMousepadDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _RzDgMousepad.Cells[dG_devices.Columns["col_mode"].Index] = _RzDgMousepad_dgc;
+                    rzDgMousepad.Cells[dG_devices.Columns["col_mode"].Index] = rzDgMousepadDgc;
 
-                    dG_devices.Rows.Add(_RzDgMousepad);
-                    _RzDgMousepad_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(rzDgMousepad);
+                    rzDgMousepadDgc.ReadOnly = true;
 
                     //Keypad
-                    var _RzDgKeypad = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _RzDgKeypad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Keypad";
-                    _RzDgKeypad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keypad";
-                    _RzDgKeypad.Cells[dG_devices.Columns["col_status"].Index].Value = RazerDeviceKeypad
+                    var rzDgKeypad = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    rzDgKeypad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Keypad";
+                    rzDgKeypad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keypad";
+                    rzDgKeypad.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceKeypad
                         ? "Enabled"
                         : "Disabled";
-                    _RzDgKeypad.Cells[dG_devices.Columns["col_state"].Index].Value = RazerDeviceKeypad;
-                    _RzDgKeypad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceKeypad";
+                    rzDgKeypad.Cells[dG_devices.Columns["col_state"].Index].Value = _razerDeviceKeypad;
+                    rzDgKeypad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceKeypad";
 
-                    var _RzDgKeypad_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _RzDgKeypad_dgc.Items.Add(d.Value);
+                    var rzDgKeypadDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        rzDgKeypadDgc.Items.Add(d.Value);
 
-                    _RzDgKeypad_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _RzDgKeypad_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _RzDgKeypad_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    rzDgKeypadDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgKeypadDgc.DisplayStyleForCurrentCellOnly = true;
+                    rzDgKeypadDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _RzDgKeypad.Cells[dG_devices.Columns["col_mode"].Index] = _RzDgKeypad_dgc;
+                    rzDgKeypad.Cells[dG_devices.Columns["col_mode"].Index] = rzDgKeypadDgc;
 
-                    dG_devices.Rows.Add(_RzDgKeypad);
-                    _RzDgKeypad_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(rzDgKeypad);
+                    rzDgKeypadDgc.ReadOnly = true;
 
-                    _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
-                        RazerDeviceMousepad, RazerDeviceHeadset,
-                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
-                if (CorsairSDKCalled == 1)
+                if (CorsairSdkCalled == 1)
                 {
                     //Keyboard
-                    var _CorsairDgKeyboard = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _CorsairDgKeyboard.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Keyboard";
-                    _CorsairDgKeyboard.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keyboard";
-                    _CorsairDgKeyboard.Cells[dG_devices.Columns["col_status"].Index].Value = CorsairDeviceKeyboard
+                    var corsairDgKeyboard = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    corsairDgKeyboard.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Keyboard";
+                    corsairDgKeyboard.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keyboard";
+                    corsairDgKeyboard.Cells[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceKeyboard
                         ? "Enabled"
                         : "Disabled";
-                    _CorsairDgKeyboard.Cells[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceKeyboard;
-                    _CorsairDgKeyboard.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceKeyboard";
+                    corsairDgKeyboard.Cells[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceKeyboard;
+                    corsairDgKeyboard.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceKeyboard";
 
-                    var _CorsairDgKeyboard_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _CorsairDgKeyboard_dgc.Items.Add(d.Value);
+                    var corsairDgKeyboardDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        corsairDgKeyboardDgc.Items.Add(d.Value);
 
-                    _CorsairDgKeyboard_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _CorsairDgKeyboard_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _CorsairDgKeyboard_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    corsairDgKeyboardDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    corsairDgKeyboardDgc.DisplayStyleForCurrentCellOnly = true;
+                    corsairDgKeyboardDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _CorsairDgKeyboard.Cells[dG_devices.Columns["col_mode"].Index] = _CorsairDgKeyboard_dgc;
+                    corsairDgKeyboard.Cells[dG_devices.Columns["col_mode"].Index] = corsairDgKeyboardDgc;
 
-                    dG_devices.Rows.Add(_CorsairDgKeyboard);
-                    _CorsairDgKeyboard_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(corsairDgKeyboard);
+                    corsairDgKeyboardDgc.ReadOnly = true;
 
                     //Mouse
-                    var _CorsairDgMouse = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _CorsairDgMouse.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Mouse";
-                    _CorsairDgMouse.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mouse";
-                    _CorsairDgMouse.Cells[dG_devices.Columns["col_status"].Index].Value = CorsairDeviceMouse
+                    var corsairDgMouse = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    corsairDgMouse.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Mouse";
+                    corsairDgMouse.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mouse";
+                    corsairDgMouse.Cells[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceMouse
                         ? "Enabled"
                         : "Disabled";
-                    _CorsairDgMouse.Cells[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceMouse;
-                    _CorsairDgMouse.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceMouse";
+                    corsairDgMouse.Cells[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceMouse;
+                    corsairDgMouse.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceMouse";
 
-                    var _CorsairDgMouse_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _CorsairDgMouse_dgc.Items.Add(d.Value);
+                    var corsairDgMouseDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        corsairDgMouseDgc.Items.Add(d.Value);
 
-                    _CorsairDgMouse_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _CorsairDgMouse_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _CorsairDgMouse_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    corsairDgMouseDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    corsairDgMouseDgc.DisplayStyleForCurrentCellOnly = true;
+                    corsairDgMouseDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _CorsairDgMouse.Cells[dG_devices.Columns["col_mode"].Index] = _CorsairDgMouse_dgc;
+                    corsairDgMouse.Cells[dG_devices.Columns["col_mode"].Index] = corsairDgMouseDgc;
 
-                    dG_devices.Rows.Add(_CorsairDgMouse);
-                    _CorsairDgMouse_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(corsairDgMouse);
+                    corsairDgMouseDgc.ReadOnly = true;
 
                     //Headset
-                    var _CorsairDgHeadset = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _CorsairDgHeadset.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Headset";
-                    _CorsairDgHeadset.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Headset";
-                    _CorsairDgHeadset.Cells[dG_devices.Columns["col_status"].Index].Value = CorsairDeviceHeadset
+                    var corsairDgHeadset = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    corsairDgHeadset.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Headset";
+                    corsairDgHeadset.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Headset";
+                    corsairDgHeadset.Cells[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceHeadset
                         ? "Enabled"
                         : "Disabled";
-                    _CorsairDgHeadset.Cells[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceHeadset;
-                    _CorsairDgHeadset.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceHeadset";
+                    corsairDgHeadset.Cells[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceHeadset;
+                    corsairDgHeadset.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceHeadset";
 
-                    var _CorsairDgHeadset_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _CorsairDgHeadset_dgc.Items.Add(d.Value);
+                    var corsairDgHeadsetDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        corsairDgHeadsetDgc.Items.Add(d.Value);
 
-                    _CorsairDgHeadset_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _CorsairDgHeadset_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _CorsairDgHeadset_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    corsairDgHeadsetDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    corsairDgHeadsetDgc.DisplayStyleForCurrentCellOnly = true;
+                    corsairDgHeadsetDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _CorsairDgHeadset.Cells[dG_devices.Columns["col_mode"].Index] = _CorsairDgHeadset_dgc;
+                    corsairDgHeadset.Cells[dG_devices.Columns["col_mode"].Index] = corsairDgHeadsetDgc;
 
-                    dG_devices.Rows.Add(_CorsairDgHeadset);
-                    _CorsairDgHeadset_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(corsairDgHeadset);
+                    corsairDgHeadsetDgc.ReadOnly = true;
 
                     //Mousepad
-                    var _CorsairDgMousepad = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _CorsairDgMousepad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Mousepad";
-                    _CorsairDgMousepad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mousepad";
-                    _CorsairDgMousepad.Cells[dG_devices.Columns["col_status"].Index].Value = CorsairDeviceMousepad
+                    var corsairDgMousepad = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    corsairDgMousepad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Mousepad";
+                    corsairDgMousepad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mousepad";
+                    corsairDgMousepad.Cells[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceMousepad
                         ? "Enabled"
                         : "Disabled";
-                    _CorsairDgMousepad.Cells[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceMousepad;
-                    _CorsairDgMousepad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceMousepad";
+                    corsairDgMousepad.Cells[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceMousepad;
+                    corsairDgMousepad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceMousepad";
 
-                    var _CorsairDgMousepad_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _CorsairDgMousepad_dgc.Items.Add(d.Value);
+                    var corsairDgMousepadDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        corsairDgMousepadDgc.Items.Add(d.Value);
 
-                    _CorsairDgMousepad_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _CorsairDgMousepad_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _CorsairDgMousepad_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    corsairDgMousepadDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    corsairDgMousepadDgc.DisplayStyleForCurrentCellOnly = true;
+                    corsairDgMousepadDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _CorsairDgMousepad.Cells[dG_devices.Columns["col_mode"].Index] = _CorsairDgMousepad_dgc;
+                    corsairDgMousepad.Cells[dG_devices.Columns["col_mode"].Index] = corsairDgMousepadDgc;
 
-                    dG_devices.Rows.Add(_CorsairDgMousepad);
-                    _CorsairDgMousepad_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(corsairDgMousepad);
+                    corsairDgMousepadDgc.ReadOnly = true;
 
-                    _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
-                        CorsairDeviceMousepad, CorsairDeviceHeadset,
-                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                    _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
+                        _corsairDeviceMousepad, _corsairDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
-                if (LogitechSDKCalled == 1)
+                if (LogitechSdkCalled == 1)
                 {
-                    var _LogitechDgDevices = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _LogitechDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Logitech Devices";
-                    _LogitechDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
-                    _LogitechDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value = LogitechDeviceKeyboard
+                    var logitechDgDevices = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    logitechDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Logitech Devices";
+                    logitechDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
+                    logitechDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value = _logitechDeviceKeyboard
                         ? "Enabled"
                         : "Disabled";
-                    _LogitechDgDevices.Cells[dG_devices.Columns["col_state"].Index].Value = LogitechDeviceKeyboard;
-                    _LogitechDgDevices.Cells[dG_devices.Columns["col_dattype"].Index].Value = "LogitechDevice";
+                    logitechDgDevices.Cells[dG_devices.Columns["col_state"].Index].Value = _logitechDeviceKeyboard;
+                    logitechDgDevices.Cells[dG_devices.Columns["col_dattype"].Index].Value = "LogitechDevice";
 
-                    var _LogitechDgDevices_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _LogitechDgDevices_dgc.Items.Add(d.Value);
+                    var logitechDgDevicesDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        logitechDgDevicesDgc.Items.Add(d.Value);
 
-                    _LogitechDgDevices_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _LogitechDgDevices_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _LogitechDgDevices_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    logitechDgDevicesDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    logitechDgDevicesDgc.DisplayStyleForCurrentCellOnly = true;
+                    logitechDgDevicesDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _LogitechDgDevices.Cells[dG_devices.Columns["col_mode"].Index] = _LogitechDgDevices_dgc;
+                    logitechDgDevices.Cells[dG_devices.Columns["col_mode"].Index] = logitechDgDevicesDgc;
 
-                    dG_devices.Rows.Add(_LogitechDgDevices);
-                    _LogitechDgDevices_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(logitechDgDevices);
+                    logitechDgDevicesDgc.ReadOnly = true;
 
-                    _logitech.ResetLogitechDevices(LogitechDeviceKeyboard,
-                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                    _logitech.ResetLogitechDevices(_logitechDeviceKeyboard,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
-                if (CoolermasterSDKCalled == 1)
+                if (CoolermasterSdkCalled == 1)
                 {
-                    var _CoolermasterDgDevices = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value =
+                    var coolermasterDgDevices = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    coolermasterDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value =
                         "Coolermaster Devices";
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value =
-                        CoolermasterDeviceKeyboard
+                    coolermasterDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
+                    coolermasterDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value =
+                        _coolermasterDeviceKeyboard
                             ? "Enabled"
                             : "Disabled";
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_state"].Index].Value =
-                        CoolermasterDeviceKeyboard;
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CoolermasterDevice";
+                    coolermasterDgDevices.Cells[dG_devices.Columns["col_state"].Index].Value =
+                        _coolermasterDeviceKeyboard;
+                    coolermasterDgDevices.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CoolermasterDevice";
 
-                    var _CoolermasterDgDevices_dgc = new DataGridViewComboBoxCell();
-                    foreach (var d in DeviceModes)
-                        _CoolermasterDgDevices_dgc.Items.Add(d.Value);
+                    var coolermasterDgDevicesDgc = new DataGridViewComboBoxCell();
+                    foreach (var d in _deviceModes)
+                        coolermasterDgDevicesDgc.Items.Add(d.Value);
 
-                    _CoolermasterDgDevices_dgc.Value = DeviceModes[DeviceModeTypes.CHROMATICS_DEFAULT];
-                    _CoolermasterDgDevices_dgc.DisplayStyleForCurrentCellOnly = true;
-                    _CoolermasterDgDevices_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+                    coolermasterDgDevicesDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    coolermasterDgDevicesDgc.DisplayStyleForCurrentCellOnly = true;
+                    coolermasterDgDevicesDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_mode"].Index] = _CoolermasterDgDevices_dgc;
+                    coolermasterDgDevices.Cells[dG_devices.Columns["col_mode"].Index] = coolermasterDgDevicesDgc;
 
-                    dG_devices.Rows.Add(_CoolermasterDgDevices);
-                    _CoolermasterDgDevices_dgc.ReadOnly = true;
+                    dG_devices.Rows.Add(coolermasterDgDevices);
+                    coolermasterDgDevicesDgc.ReadOnly = true;
 
-                    _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse,
-                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                    _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
-                if (LifxSDKCalled == 1)
+                if (LifxSdkCalled == 1)
                     if (_lifx.LifxBulbs > 0)
                         foreach (var d in _lifx.LifxBulbsDat.ToList())
                         {
@@ -541,40 +541,40 @@ namespace Chromatics
 
                             _dGmode.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
-                            var LState = _lifx.LifxStateMemory[d.Key.MacAddressName];
+                            var lState = _lifx.LifxStateMemory[d.Key.MacAddressName];
 
-                            var _LIFXdGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                            _LIFXdGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = state.Label + " (" +
+                            var lifxdGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                            lifxdGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = state.Label + " (" +
                                                                                                     d.Key
                                                                                                         .MacAddressName +
                                                                                                     ")";
-                            _LIFXdGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
-                                _lifx.LIFXproductids[device.Product] + " (Version " + device.Version + ")";
-                            _LIFXdGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = LState == 0
+                            lifxdGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
+                                _lifx.LifXproductids[device.Product] + " (Version " + device.Version + ")";
+                            lifxdGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = lState == 0
                                 ? "Disabled"
                                 : "Enabled";
-                            _LIFXdGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = LState == 0
+                            lifxdGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = lState == 0
                                 ? false
                                 : true;
-                            _LIFXdGDevice.Cells[dG_devices.Columns["col_dattype"].Index].Value = "LIFX";
-                            _LIFXdGDevice.Cells[dG_devices.Columns["col_ID"].Index].Value = d.Key.MacAddressName;
+                            lifxdGDevice.Cells[dG_devices.Columns["col_dattype"].Index].Value = "LIFX";
+                            lifxdGDevice.Cells[dG_devices.Columns["col_ID"].Index].Value = d.Key.MacAddressName;
 
-                            var _LIFXdGDevice_dgc = new DataGridViewComboBoxCell();
+                            var lifxdGDeviceDgc = new DataGridViewComboBoxCell();
 
-                            foreach (var x in DeviceModes.ToList())
+                            foreach (var x in _deviceModes.ToList())
                             {
-                                if (d.Value != 0 && x.Key == DeviceModeTypes.DISABLED) continue;
-                                if (x.Key == DeviceModeTypes.CHROMATICS_DEFAULT) continue;
-                                _LIFXdGDevice_dgc.Items.Add(x.Value);
+                                if (d.Value != 0 && x.Key == DeviceModeTypes.Disabled) continue;
+                                if (x.Key == DeviceModeTypes.ChromaticsDefault) continue;
+                                lifxdGDeviceDgc.Items.Add(x.Value);
                             }
 
-                            _LIFXdGDevice_dgc.Value = d.Value == DeviceModeTypes.CHROMATICS_DEFAULT
-                                ? DeviceModes[DeviceModeTypes.STANDBY]
-                                : DeviceModes[d.Value];
-                            _LIFXdGDevice_dgc.DisplayStyleForCurrentCellOnly = true;
-                            _LIFXdGDevice_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
+                            lifxdGDeviceDgc.Value = d.Value == DeviceModeTypes.ChromaticsDefault
+                                ? _deviceModes[DeviceModeTypes.Standby]
+                                : _deviceModes[d.Value];
+                            lifxdGDeviceDgc.DisplayStyleForCurrentCellOnly = true;
+                            lifxdGDeviceDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 
-                            _LIFXdGDevice.Cells[dG_devices.Columns["col_mode"].Index] = _LIFXdGDevice_dgc;
+                            lifxdGDevice.Cells[dG_devices.Columns["col_mode"].Index] = lifxdGDeviceDgc;
 
                             //Check for duplicates
 
@@ -597,11 +597,11 @@ namespace Chromatics
                             if (duplicate) continue;
                             */
 
-                            dG_devices.Rows.Add(_LIFXdGDevice);
-                            _LIFXdGDevice_dgc.ReadOnly = d.Value == 0 ? true : false;
+                            dG_devices.Rows.Add(lifxdGDevice);
+                            lifxdGDeviceDgc.ReadOnly = d.Value == 0 ? true : false;
                         }
 
-                if (HueSDKCalled == 1)
+                if (HueSdkCalled == 1)
                     if (_hue.HueBulbs > 0)
                         foreach (var d in _hue.HueBulbsDat.ToList())
                         {
@@ -613,39 +613,39 @@ namespace Chromatics
 
                             _dGmode.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
-                            var LState = _hue.HueStateMemory[d.Key.UniqueId];
+                            var lState = _hue.HueStateMemory[d.Key.UniqueId];
 
-                            var _HUEdGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                            _HUEdGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = d.Key.Name + " (" +
+                            var huedGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                            huedGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = d.Key.Name + " (" +
                                                                                                    d.Key.UniqueId +
                                                                                                    ")";
-                            _HUEdGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
+                            huedGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
                                 d.Key.ModelId + " (Version " + device + ")";
-                            _HUEdGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = LState == 0
+                            huedGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = lState == 0
                                 ? "Disabled"
                                 : "Enabled";
-                            _HUEdGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = LState == 0
+                            huedGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = lState == 0
                                 ? false
                                 : true;
-                            _HUEdGDevice.Cells[dG_devices.Columns["col_dattype"].Index].Value = "HUE";
-                            _HUEdGDevice.Cells[dG_devices.Columns["col_ID"].Index].Value = d.Key.UniqueId;
+                            huedGDevice.Cells[dG_devices.Columns["col_dattype"].Index].Value = "HUE";
+                            huedGDevice.Cells[dG_devices.Columns["col_ID"].Index].Value = d.Key.UniqueId;
 
-                            var _HUEdGDevice_dgc = new DataGridViewComboBoxCell();
+                            var huedGDeviceDgc = new DataGridViewComboBoxCell();
 
-                            foreach (var x in DeviceModes.ToList())
+                            foreach (var x in _deviceModes.ToList())
                             {
-                                if (d.Value != 0 && x.Key == DeviceModeTypes.DISABLED) continue;
-                                if (x.Key == DeviceModeTypes.CHROMATICS_DEFAULT) continue;
-                                _HUEdGDevice_dgc.Items.Add(x.Value);
+                                if (d.Value != 0 && x.Key == DeviceModeTypes.Disabled) continue;
+                                if (x.Key == DeviceModeTypes.ChromaticsDefault) continue;
+                                huedGDeviceDgc.Items.Add(x.Value);
                             }
 
-                            _HUEdGDevice_dgc.Value = d.Value == DeviceModeTypes.CHROMATICS_DEFAULT
-                                ? DeviceModes[DeviceModeTypes.STANDBY]
-                                : DeviceModes[d.Value];
-                            _HUEdGDevice_dgc.DisplayStyleForCurrentCellOnly = true;
-                            _HUEdGDevice_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
+                            huedGDeviceDgc.Value = d.Value == DeviceModeTypes.ChromaticsDefault
+                                ? _deviceModes[DeviceModeTypes.Standby]
+                                : _deviceModes[d.Value];
+                            huedGDeviceDgc.DisplayStyleForCurrentCellOnly = true;
+                            huedGDeviceDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 
-                            _HUEdGDevice.Cells[dG_devices.Columns["col_mode"].Index] = _HUEdGDevice_dgc;
+                            huedGDevice.Cells[dG_devices.Columns["col_mode"].Index] = huedGDeviceDgc;
 
                             //Check for duplicates
                             /*
@@ -666,8 +666,8 @@ namespace Chromatics
 
                             if (duplicate) continue;
                             */
-                            dG_devices.Rows.Add(_HUEdGDevice);
-                            _HUEdGDevice_dgc.ReadOnly = d.Value == 0 ? true : false;
+                            dG_devices.Rows.Add(huedGDevice);
+                            huedGDeviceDgc.ReadOnly = d.Value == 0 ? true : false;
                         }
 
                 DeviceGridStartup = true;
@@ -675,8 +675,8 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.ERROR, "EX: " + ex.Message);
-                WriteConsole(ConsoleTypes.ERROR, "EX: " + ex.StackTrace);
+                WriteConsole(ConsoleTypes.Error, "EX: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, "EX: " + ex.StackTrace);
             }
         }
 
@@ -685,254 +685,254 @@ namespace Chromatics
             if (DeviceGridStartup)
             {
                 var editedCell = dG_devices.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                var _dattype = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_dattype"].Index]
+                var dattype = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_dattype"].Index]
                     .Value;
 
                 if (dG_devices.Columns[e.ColumnIndex].Name == "col_state")
                 {
                     var _switch = (bool) editedCell.Value;
-                    var _modeX = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_mode"].Index].Value;
-                    var _key = DeviceModes.FirstOrDefault(x => x.Value == _modeX).Key;
+                    var modeX = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_mode"].Index].Value;
+                    var key = _deviceModes.FirstOrDefault(x => x.Value == modeX).Key;
                     var change = dG_devices.CurrentRow.Cells;
 
-                    if (_dattype == "RazerDeviceKeyboard")
+                    if (dattype == "RazerDeviceKeyboard")
                     {
                         if (_switch)
-                            RazerDeviceKeyboard = true;
+                            _razerDeviceKeyboard = true;
                         else
-                            RazerDeviceKeyboard = false;
+                            _razerDeviceKeyboard = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = RazerDeviceKeyboard
+                        change[dG_devices.Columns["col_status"].Index].Value = _razerDeviceKeyboard
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceKeyboard;
+                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceKeyboard;
 
-                        if (RazerSDKCalled == 1)
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
-                                RazerDeviceMousepad, RazerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (RazerSdkCalled == 1)
+                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                                _razerDeviceMousepad, _razerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "RazerDeviceMouse")
+                    else if (dattype == "RazerDeviceMouse")
                     {
                         if (_switch)
-                            RazerDeviceMouse = true;
+                            _razerDeviceMouse = true;
                         else
-                            RazerDeviceMouse = false;
+                            _razerDeviceMouse = false;
 
                         change[dG_devices.Columns["col_status"].Index].Value =
-                            RazerDeviceMouse ? "Enabled" : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceMouse;
+                            _razerDeviceMouse ? "Enabled" : "Disabled";
+                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceMouse;
 
-                        if (RazerSDKCalled == 1)
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
-                                RazerDeviceMousepad, RazerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (RazerSdkCalled == 1)
+                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                                _razerDeviceMousepad, _razerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "RazerDeviceHeadset")
+                    else if (dattype == "RazerDeviceHeadset")
                     {
                         if (_switch)
-                            RazerDeviceHeadset = true;
+                            _razerDeviceHeadset = true;
                         else
-                            RazerDeviceHeadset = false;
+                            _razerDeviceHeadset = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = RazerDeviceHeadset
+                        change[dG_devices.Columns["col_status"].Index].Value = _razerDeviceHeadset
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceHeadset;
+                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceHeadset;
 
-                        if (RazerSDKCalled == 1)
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
-                                RazerDeviceMousepad, RazerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (RazerSdkCalled == 1)
+                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                                _razerDeviceMousepad, _razerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "RazerDeviceMousepad")
+                    else if (dattype == "RazerDeviceMousepad")
                     {
                         if (_switch)
-                            RazerDeviceMousepad = true;
+                            _razerDeviceMousepad = true;
                         else
-                            RazerDeviceMousepad = false;
+                            _razerDeviceMousepad = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = RazerDeviceMousepad
+                        change[dG_devices.Columns["col_status"].Index].Value = _razerDeviceMousepad
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceMousepad;
+                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceMousepad;
 
-                        if (RazerSDKCalled == 1)
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
-                                RazerDeviceMousepad, RazerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (RazerSdkCalled == 1)
+                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                                _razerDeviceMousepad, _razerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "RazerDeviceKeypad")
+                    else if (dattype == "RazerDeviceKeypad")
                     {
                         if (_switch)
-                            RazerDeviceKeypad = true;
+                            _razerDeviceKeypad = true;
                         else
-                            RazerDeviceKeypad = false;
+                            _razerDeviceKeypad = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = RazerDeviceKeypad
+                        change[dG_devices.Columns["col_status"].Index].Value = _razerDeviceKeypad
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceKeypad;
+                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceKeypad;
 
-                        if (RazerSDKCalled == 1)
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
-                                RazerDeviceMousepad, RazerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (RazerSdkCalled == 1)
+                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                                _razerDeviceMousepad, _razerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "CorsairDeviceKeyboard")
+                    else if (dattype == "CorsairDeviceKeyboard")
                     {
                         if (_switch)
-                            CorsairDeviceKeyboard = true;
+                            _corsairDeviceKeyboard = true;
                         else
-                            CorsairDeviceKeyboard = false;
+                            _corsairDeviceKeyboard = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = CorsairDeviceKeyboard
+                        change[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceKeyboard
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceKeyboard;
+                        change[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceKeyboard;
 
-                        if (CorsairSDKCalled == 1)
-                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
-                                CorsairDeviceMousepad, CorsairDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (CorsairSdkCalled == 1)
+                            _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
+                                _corsairDeviceMousepad, _corsairDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "CorsairDeviceMouse")
+                    else if (dattype == "CorsairDeviceMouse")
                     {
                         if (_switch)
-                            CorsairDeviceMouse = true;
+                            _corsairDeviceMouse = true;
                         else
-                            CorsairDeviceMouse = false;
+                            _corsairDeviceMouse = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = CorsairDeviceMouse
+                        change[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceMouse
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceMouse;
+                        change[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceMouse;
 
-                        if (CorsairSDKCalled == 1)
-                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
-                                CorsairDeviceMousepad, CorsairDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (CorsairSdkCalled == 1)
+                            _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
+                                _corsairDeviceMousepad, _corsairDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "CorsairDeviceHeadset")
+                    else if (dattype == "CorsairDeviceHeadset")
                     {
                         if (_switch)
-                            CorsairDeviceHeadset = true;
+                            _corsairDeviceHeadset = true;
                         else
-                            CorsairDeviceHeadset = false;
+                            _corsairDeviceHeadset = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = CorsairDeviceHeadset
+                        change[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceHeadset
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceHeadset;
+                        change[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceHeadset;
 
-                        if (CorsairSDKCalled == 1)
-                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
-                                CorsairDeviceMousepad, CorsairDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (CorsairSdkCalled == 1)
+                            _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
+                                _corsairDeviceMousepad, _corsairDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "CorsairDeviceMousepad")
+                    else if (dattype == "CorsairDeviceMousepad")
                     {
                         if (_switch)
-                            CorsairDeviceMousepad = true;
+                            _corsairDeviceMousepad = true;
                         else
-                            CorsairDeviceMousepad = false;
+                            _corsairDeviceMousepad = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = CorsairDeviceMousepad
+                        change[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceMousepad
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceMousepad;
+                        change[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceMousepad;
 
-                        if (CorsairSDKCalled == 1)
-                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
-                                CorsairDeviceMousepad, CorsairDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (CorsairSdkCalled == 1)
+                            _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
+                                _corsairDeviceMousepad, _corsairDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "LogitechDevice")
+                    else if (dattype == "LogitechDevice")
                     {
                         if (_switch)
-                            LogitechDeviceKeyboard = true;
+                            _logitechDeviceKeyboard = true;
                         else
-                            LogitechDeviceKeyboard = false;
+                            _logitechDeviceKeyboard = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = LogitechDeviceKeyboard
+                        change[dG_devices.Columns["col_status"].Index].Value = _logitechDeviceKeyboard
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = LogitechDeviceKeyboard;
+                        change[dG_devices.Columns["col_state"].Index].Value = _logitechDeviceKeyboard;
 
-                        if (LogitechSDKCalled == 1)
-                            _logitech.ResetLogitechDevices(LogitechDeviceKeyboard,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (LogitechSdkCalled == 1)
+                            _logitech.ResetLogitechDevices(_logitechDeviceKeyboard,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "CoolermasterDevice")
+                    else if (dattype == "CoolermasterDevice")
                     {
                         if (_switch)
-                            CoolermasterDeviceKeyboard = true;
+                            _coolermasterDeviceKeyboard = true;
                         else
-                            CoolermasterDeviceKeyboard = false;
+                            _coolermasterDeviceKeyboard = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = CoolermasterDeviceKeyboard
+                        change[dG_devices.Columns["col_status"].Index].Value = _coolermasterDeviceKeyboard
                             ? "Enabled"
                             : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = CoolermasterDeviceKeyboard;
+                        change[dG_devices.Columns["col_state"].Index].Value = _coolermasterDeviceKeyboard;
 
-                        if (CoolermasterSDKCalled == 1)
-                            _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                        if (CoolermasterSdkCalled == 1)
+                            _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (_dattype == "LIFX")
+                    else if (dattype == "LIFX")
                     {
-                        var _id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
-                        if (LifxSDKCalled == 1 && _id != null)
+                        var id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
+                        if (LifxSdkCalled == 1 && id != null)
                         {
-                            var _bulb = _lifx.LifxDevices[_id];
+                            var bulb = _lifx.LifxDevices[id];
 
                             if (_switch)
                             {
-                                _lifx.LifxBulbsDat[_bulb] = _lifx.LifxModeMemory[_id];
-                                _lifx.LifxStateMemory[_bulb.MacAddressName] = 1;
-                                WriteConsole(ConsoleTypes.LIFX, "Enabled LIFX Bulb " + _id);
+                                _lifx.LifxBulbsDat[bulb] = _lifx.LifxModeMemory[id];
+                                _lifx.LifxStateMemory[bulb.MacAddressName] = 1;
+                                WriteConsole(ConsoleTypes.Lifx, "Enabled LIFX Bulb " + id);
                             }
                             else
                             {
-                                _lifx.LifxModeMemory[_id] = _key;
-                                _lifx.LifxStateMemory[_bulb.MacAddressName] = 0;
-                                _lifx.LifxBulbsDat[_bulb] = 0;
-                                var state = _lifx.LifxBulbsRestore[_bulb];
-                                WriteConsole(ConsoleTypes.LIFX, "Disabled LIFX Bulb " + _id);
-                                _lifx.SetColorAsync(_bulb, state.Hue, state.Saturation, state.Brightness, state.Kelvin,
+                                _lifx.LifxModeMemory[id] = key;
+                                _lifx.LifxStateMemory[bulb.MacAddressName] = 0;
+                                _lifx.LifxBulbsDat[bulb] = 0;
+                                var state = _lifx.LifxBulbsRestore[bulb];
+                                WriteConsole(ConsoleTypes.Lifx, "Disabled LIFX Bulb " + id);
+                                _lifx.SetColorAsync(bulb, state.Hue, state.Saturation, state.Brightness, state.Kelvin,
                                     TimeSpan.FromMilliseconds(1000));
-                                WriteConsole(ConsoleTypes.LIFX, "Restoring LIFX Bulb " + state.Label);
+                                WriteConsole(ConsoleTypes.Lifx, "Restoring LIFX Bulb " + state.Label);
                             }
 
                             change[dG_devices.Columns["col_status"].Index].Value = _switch ? "Enabled" : "Disabled";
                         }
                     }
-                    else if (_dattype == "HUE")
+                    else if (dattype == "HUE")
                     {
-                        var _id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
-                        if (HueSDKCalled == 1 && _id != null)
+                        var id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
+                        if (HueSdkCalled == 1 && id != null)
                         {
-                            var _bulb = _hue.HueDevices[_id];
+                            var bulb = _hue.HueDevices[id];
 
                             if (_switch)
                             {
-                                _hue.HueBulbsDat[_bulb] = _hue.HueModeMemory[_id];
-                                _hue.HueStateMemory[_bulb.UniqueId] = 1;
-                                WriteConsole(ConsoleTypes.HUE, "Enabled HUE Bulb " + _id);
+                                _hue.HueBulbsDat[bulb] = _hue.HueModeMemory[id];
+                                _hue.HueStateMemory[bulb.UniqueId] = 1;
+                                WriteConsole(ConsoleTypes.Hue, "Enabled HUE Bulb " + id);
                             }
                             else
                             {
-                                _hue.HueModeMemory[_id] = _key;
-                                _hue.HueStateMemory[_bulb.UniqueId] = 0;
-                                _hue.HueBulbsDat[_bulb] = 0;
-                                var state = _hue.HueBulbsRestore[_bulb];
-                                WriteConsole(ConsoleTypes.HUE, "Disabled HUE Bulb " + _id);
+                                _hue.HueModeMemory[id] = key;
+                                _hue.HueStateMemory[bulb.UniqueId] = 0;
+                                _hue.HueBulbsDat[bulb] = 0;
+                                var state = _hue.HueBulbsRestore[bulb];
+                                WriteConsole(ConsoleTypes.Hue, "Disabled HUE Bulb " + id);
 
-                                _hue.SetColorAsync(_bulb, state.Hue, state.Saturation, state.Brightness,
+                                _hue.SetColorAsync(bulb, state.Hue, state.Saturation, state.Brightness,
                                     state.ColorTemperature,
                                     TimeSpan.FromMilliseconds(1000));
 
-                                WriteConsole(ConsoleTypes.HUE, "Restoring HUE Bulb " + _bulb.Name);
+                                WriteConsole(ConsoleTypes.Hue, "Restoring HUE Bulb " + bulb.Name);
                             }
 
                             change[dG_devices.Columns["col_status"].Index].Value = _switch ? "Enabled" : "Disabled";
@@ -942,37 +942,37 @@ namespace Chromatics
 
                 if (dG_devices.Columns[e.ColumnIndex].Name == "col_mode")
                 {
-                    var _mode = (string) editedCell.Value;
-                    var _id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
+                    var mode = (string) editedCell.Value;
+                    var id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
 
-                    if (LifxSDKCalled == 1 && _id != null && _dattype == "LIFX")
-                        if (DeviceModes.ContainsValue(_mode))
+                    if (LifxSdkCalled == 1 && id != null && dattype == "LIFX")
+                        if (_deviceModes.ContainsValue(mode))
                         {
-                            var _key = DeviceModes.FirstOrDefault(x => x.Value == _mode).Key;
-                            var _bulb = _lifx.LifxDevices[_id];
-                            _lifx.LifxBulbsDat[_bulb] = _key;
-                            _lifx.LifxModeMemory[_bulb.MacAddressName] = _key;
-                            WriteConsole(ConsoleTypes.LIFX, "Updated Mode of LIFX Bulb " + _id + " to " + _key);
+                            var key = _deviceModes.FirstOrDefault(x => x.Value == mode).Key;
+                            var bulb = _lifx.LifxDevices[id];
+                            _lifx.LifxBulbsDat[bulb] = key;
+                            _lifx.LifxModeMemory[bulb.MacAddressName] = key;
+                            WriteConsole(ConsoleTypes.Lifx, "Updated Mode of LIFX Bulb " + id + " to " + key);
                         }
 
-                    if (HueSDKCalled == 1 && _id != null && _dattype == "HUE")
-                        if (DeviceModes.ContainsValue(_mode))
+                    if (HueSdkCalled == 1 && id != null && dattype == "HUE")
+                        if (_deviceModes.ContainsValue(mode))
                         {
-                            var _key = DeviceModes.FirstOrDefault(x => x.Value == _mode).Key;
-                            var _bulb = _hue.HueDevices[_id];
-                            _hue.HueBulbsDat[_bulb] = _key;
-                            _hue.HueModeMemory[_bulb.UniqueId] = _key;
-                            WriteConsole(ConsoleTypes.LIFX, "Updated Mode of HUE Bulb " + _id + " to " + _key);
+                            var key = _deviceModes.FirstOrDefault(x => x.Value == mode).Key;
+                            var bulb = _hue.HueDevices[id];
+                            _hue.HueBulbsDat[bulb] = key;
+                            _hue.HueModeMemory[bulb.UniqueId] = key;
+                            WriteConsole(ConsoleTypes.Lifx, "Updated Mode of HUE Bulb " + id + " to " + key);
                         }
                 }
 
                 SaveDevices();
                 //ResetDeviceDataGrid();
 
-                if (RazerSDKCalled == 1)
-                    _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
-                        RazerDeviceMousepad, RazerDeviceHeadset,
-                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                if (RazerSdkCalled == 1)
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
             }
         }
 
@@ -984,17 +984,17 @@ namespace Chromatics
                                         (picBox.Parent.ClientSize.Height / 2) - (picImage.Height / 2));
             picBox.Refresh();
             */
-            var Xpos = picBox.Parent.Width / 2 - picImage.Width / 2;
+            var xpos = picBox.Parent.Width / 2 - picImage.Width / 2;
             var ypos = picBox.Parent.Height / 2 - picImage.Height / 2;
-            picBox.Location = new Point(Xpos, ypos);
+            picBox.Location = new Point(xpos, ypos);
         }
 
         private void dG_mappings_SelectionChanged(object sender, EventArgs e)
         {
-            var _color = dG_mappings.CurrentRow.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor;
+            var color = dG_mappings.CurrentRow.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor;
             ToggleMappingControls(true);
-            mapping_colorEditorManager.Color = _color;
-            previewPanel.BackColor = _color;
+            mapping_colorEditorManager.Color = color;
+            previewPanel.BackColor = color;
             //PaletteMappingCurrentSelect = dG_mappings.CurrentRow.Index;
         }
 
@@ -1005,26 +1005,26 @@ namespace Chromatics
 
         private void mapping_colorEditorManager_ColorChanged(object sender, EventArgs e)
         {
-            var _PMCS = dG_mappings.CurrentRow;
-            var _PCMSID = (string) _PMCS.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
-            var _PCMSColor = _PMCS.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor;
+            var pmcs = dG_mappings.CurrentRow;
+            var pcmsid = (string) pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
+            var pcmsColor = pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor;
 
             previewPanel.BackColor = mapping_colorEditorManager.Color;
 
-            if (_PCMSColor != mapping_colorEditorManager.Color)
+            if (pcmsColor != mapping_colorEditorManager.Color)
             {
-                var _data = MappingPalette[_PCMSID];
-                string[] data = {_data[0], _data[1], _data[2], ColorTranslator.ToHtml(_PCMSColor)};
-                MappingPalette[_PCMSID] = data;
+                var _data = _mappingPalette[pcmsid];
+                string[] data = {_data[0], _data[1], _data[2], ColorTranslator.ToHtml(pcmsColor)};
+                _mappingPalette[pcmsid] = data;
 
-                foreach (var p in typeof(FFXIVColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
-                    if (p.Name == _PCMSID)
+                foreach (var p in typeof(FfxivColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                    if (p.Name == pcmsid)
                         p.SetValue(ColorMappings, ColorTranslator.ToHtml(mapping_colorEditorManager.Color));
 
                 DrawMappingsDict();
-                _PMCS.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor =
+                pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor =
                     mapping_colorEditorManager.Color;
-                _PMCS.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.SelectionBackColor =
+                pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.SelectionBackColor =
                     mapping_colorEditorManager.Color;
 
                 Setbase = false;
@@ -1034,15 +1034,15 @@ namespace Chromatics
 
         private void btn_palette_undo_Click(object sender, EventArgs e)
         {
-            var _PMCS = dG_mappings.CurrentRow;
-            var _PCMSID = (string) _PMCS.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
+            var pmcs = dG_mappings.CurrentRow;
+            var pcmsid = (string) pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
 
-            var _CM = new FFXIVColorMappings();
+            var cm = new FfxivColorMappings();
             var _restore = ColorTranslator.ToHtml(Color.Black);
 
-            foreach (var p in typeof(FFXIVColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
-                if (p.Name == _PCMSID)
-                    _restore = (string) p.GetValue(_CM);
+            foreach (var p in typeof(FfxivColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                if (p.Name == pcmsid)
+                    _restore = (string) p.GetValue(cm);
 
             var restore = ColorTranslator.FromHtml(_restore);
             mapping_colorEditorManager.Color = restore;
@@ -1116,59 +1116,59 @@ namespace Chromatics
 
         private void SetupTooltips()
         {
-            var TT_btn_import = new ToolTip();
-            TT_btn_import.SetToolTip(btn_importChromatics, "Import Chromatics Color Palette");
+            var ttBtnImport = new ToolTip();
+            ttBtnImport.SetToolTip(btn_importChromatics, "Import Chromatics Color Palette");
 
-            var TT_btn_export = new ToolTip();
-            TT_btn_export.SetToolTip(btn_exportChromatics, "Export Chromatics Color Palette");
+            var ttBtnExport = new ToolTip();
+            ttBtnExport.SetToolTip(btn_exportChromatics, "Export Chromatics Color Palette");
 
-            var TT_btn_loadpalette = new ToolTip();
-            TT_btn_loadpalette.SetToolTip(loadPaletteButton, "Import External Color Swatches");
+            var ttBtnLoadpalette = new ToolTip();
+            ttBtnLoadpalette.SetToolTip(loadPaletteButton, "Import External Color Swatches");
 
-            var TT_btn_palette_undo = new ToolTip();
-            TT_btn_palette_undo.SetToolTip(btn_palette_undo, "Restore to Default");
+            var ttBtnPaletteUndo = new ToolTip();
+            ttBtnPaletteUndo.SetToolTip(btn_palette_undo, "Restore to Default");
         }
 
-        private void InitSettingsGUI()
+        private void InitSettingsGui()
         {
-            chk_arxtoggle.Checked = ChromaticsSettings.ChromaticsSettings_ARXToggle;
-            cb_arx_theme.SelectedIndex = ChromaticsSettings.ChromaticsSettings_ARXTheme;
-            mi_arxenable.Checked = ChromaticsSettings.ChromaticsSettings_ARXToggle;
-            chk_lccauto.Checked = ChromaticsSettings.ChromaticsSettings_LCCAuto;
-            chk_memorycache.Checked = ChromaticsSettings.ChromaticsSettings_MemoryCache;
-            chk_azertymode.Checked = ChromaticsSettings.ChromaticsSettings_AZERTYMode;
+            chk_arxtoggle.Checked = ChromaticsSettings.ChromaticsSettingsArxToggle;
+            cb_arx_theme.SelectedIndex = ChromaticsSettings.ChromaticsSettingsArxTheme;
+            mi_arxenable.Checked = ChromaticsSettings.ChromaticsSettingsArxToggle;
+            chk_lccauto.Checked = ChromaticsSettings.ChromaticsSettingsLccAuto;
+            chk_memorycache.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCache;
+            chk_azertymode.Checked = ChromaticsSettings.ChromaticsSettingsAzertyMode;
 
-            chk_castanimatetoggle.Checked = ChromaticsSettings.ChromaticsSettings_CastAnimate;
-            chk_castchargetoggle.Checked = ChromaticsSettings.ChromaticsSettings_CastToggle;
-            chk_gcdcounttoggle.Checked = ChromaticsSettings.ChromaticsSettings_GCDCountdown;
+            chk_castanimatetoggle.Checked = ChromaticsSettings.ChromaticsSettingsCastAnimate;
+            chk_castchargetoggle.Checked = ChromaticsSettings.ChromaticsSettingsCastToggle;
+            chk_gcdcounttoggle.Checked = ChromaticsSettings.ChromaticsSettingsGcdCountdown;
 
-            chk_keybindtoggle.Checked = ChromaticsSettings.ChromaticsSettings_KeybindToggle;
-            chk_jobgaugetoggle.Checked = ChromaticsSettings.ChromaticsSettings_JobGaugeToggle;
-            chk_highlighttoggle.Checked = ChromaticsSettings.ChromaticsSettings_KeyHighlights;
-            chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettings_ImpactToggle;
-            chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettings_DFBellToggle;
+            chk_keybindtoggle.Checked = ChromaticsSettings.ChromaticsSettingsKeybindToggle;
+            chk_jobgaugetoggle.Checked = ChromaticsSettings.ChromaticsSettingsJobGaugeToggle;
+            chk_highlighttoggle.Checked = ChromaticsSettings.ChromaticsSettingsKeyHighlights;
+            chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettingsImpactToggle;
+            chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettingsDfBellToggle;
         }
 
-        private void InitSettingsArxGUI()
+        private void InitSettingsArxGui()
         {
-            if (cb_arx_mode.Items.Contains(ChromaticsSettings.ChromaticsSettings_ARXMode))
+            if (cb_arx_mode.Items.Contains(ChromaticsSettings.ChromaticsSettingsArxMode))
             {
-                cb_arx_mode.SelectedItem = ChromaticsSettings.ChromaticsSettings_ARXMode;
+                cb_arx_mode.SelectedItem = ChromaticsSettings.ChromaticsSettingsArxMode;
             }
             else
             {
-                var _ChromaticsSettings = new ChromaticsSettings();
-                cb_arx_mode.SelectedItem = _ChromaticsSettings.ChromaticsSettings_ARXMode;
+                var chromaticsSettings = new ChromaticsSettings();
+                cb_arx_mode.SelectedItem = chromaticsSettings.ChromaticsSettingsArxMode;
             }
 
-            txt_arx_actip.Text = ChromaticsSettings.ChromaticsSettings_ARXACTIP;
+            txt_arx_actip.Text = ChromaticsSettings.ChromaticsSettingsArxactip;
         }
 
         private void chk_arxtoggle_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_ARXToggle = chk_arxtoggle.Checked;
+            ChromaticsSettings.ChromaticsSettingsArxToggle = chk_arxtoggle.Checked;
             SaveChromaticsSettings(1);
 
             if (chk_arxtoggle.Checked)
@@ -1177,16 +1177,16 @@ namespace Chromatics
                 cb_arx_theme.Enabled = true;
                 cb_arx_mode.Enabled = true;
 
-                if (ArxSDKCalled == 0)
+                if (ArxSdkCalled == 0)
                 {
-                    _arx = LogitechArxInterface.InitializeArxSDK();
+                    _arx = LogitechArxInterface.InitializeArxSdk();
                     if (_arx != null)
                     {
-                        ArxSDK = true;
-                        ArxSDKCalled = 1;
+                        ArxSdk = true;
+                        ArxSdkCalled = 1;
                         ArxState = 0;
 
-                        WriteConsole(ConsoleTypes.ARX, "ARX SDK Enabled");
+                        WriteConsole(ConsoleTypes.Arx, "ARX SDK Enabled");
 
                         LoadArxPlugins();
 
@@ -1222,27 +1222,27 @@ namespace Chromatics
                 cb_arx_theme.Enabled = false;
                 cb_arx_mode.Enabled = false;
 
-                if (plugs.Count > 0)
-                    foreach (var plugin in plugs)
+                if (Plugs.Count > 0)
+                    foreach (var plugin in Plugs)
                         if (cb_arx_mode.Items.Contains(plugin))
                             cb_arx_mode.Items.Remove(plugin);
 
-                if (ArxSDKCalled == 1)
+                if (ArxSdkCalled == 1)
                 {
                     _arx.ShutdownArx();
-                    ArxSDKCalled = 0;
-                    WriteConsole(ConsoleTypes.ARX, "ARX SDK Disabled");
+                    ArxSdkCalled = 0;
+                    WriteConsole(ConsoleTypes.Arx, "ARX SDK Disabled");
                 }
             }
         }
 
         private void cb_arx_theme_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ArxSDKCalled != 1) return;
-            if (startup == false) return;
+            if (ArxSdkCalled != 1) return;
+            if (Startup == false) return;
             var theme = "light";
             var themeid = cb_arx_theme.SelectedIndex;
-            ChromaticsSettings.ChromaticsSettings_ARXTheme = cb_arx_theme.SelectedIndex;
+            ChromaticsSettings.ChromaticsSettingsArxTheme = cb_arx_theme.SelectedIndex;
             SaveChromaticsSettings(1);
 
             switch (themeid)
@@ -1269,9 +1269,9 @@ namespace Chromatics
 
         private void cb_arx_mode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ArxSDKCalled != 1) return;
-            if (startup == false) return;
-            ChromaticsSettings.ChromaticsSettings_ARXMode = cb_arx_mode.SelectedItem.ToString();
+            if (ArxSdkCalled != 1) return;
+            if (Startup == false) return;
+            ChromaticsSettings.ChromaticsSettingsArxMode = cb_arx_mode.SelectedItem.ToString();
             SaveChromaticsSettings(1);
 
             if (cb_arx_mode.SelectedIndex < 4)
@@ -1296,7 +1296,7 @@ namespace Chromatics
                         if (changed.EndsWith("/"))
                             changed = changed.Substring(0, changed.Length - 1);
 
-                        _arx.ArxSendACTInfo(changed, 8085);
+                        _arx.ArxSendActInfo(changed, 8085);
                         break;
                 }
             }
@@ -1307,7 +1307,7 @@ namespace Chromatics
                 _arx.ArxSetIndex(getPlugin);
             }
 
-            WriteConsole(ConsoleTypes.ARX, "ARX Template Changed: " + cb_arx_mode.SelectedItem);
+            WriteConsole(ConsoleTypes.Arx, "ARX Template Changed: " + cb_arx_mode.SelectedItem);
         }
 
         private void rtb_debug_TextChanged(object sender, EventArgs e)
@@ -1318,9 +1318,9 @@ namespace Chromatics
 
         private void showwindow_Click(object sender, EventArgs e)
         {
-            if (!allowVisible)
+            if (!_allowVisible)
             {
-                allowVisible = true;
+                _allowVisible = true;
                 Show();
                 WindowState = FormWindowState.Normal;
             }
@@ -1334,9 +1334,9 @@ namespace Chromatics
         private void mi_winstart_Click(object sender, EventArgs e)
         {
             if (mi_winstart.Checked)
-                rkApp.SetValue("Chromatics", Application.ExecutablePath);
+                _rkApp.SetValue("Chromatics", Application.ExecutablePath);
             else
-                rkApp.DeleteValue("Chromatics", false);
+                _rkApp.DeleteValue("Chromatics", false);
 
             chk_startupenable.Checked = mi_winstart.Checked;
         }
@@ -1346,29 +1346,29 @@ namespace Chromatics
             //Enable effects
             if (!mi_effectsenable.Checked)
             {
-                if (RazerSDK)
-                    RazerSDKCalled = 0;
-                if (LogitechSDK)
-                    LogitechSDKCalled = 0;
-                if (CorsairSDK)
-                    CorsairSDKCalled = 0;
-                if (LifxSDK)
-                    LifxSDKCalled = 0;
-                if (HueSDK)
-                    HueSDKCalled = 0;
+                if (RazerSdk)
+                    RazerSdkCalled = 0;
+                if (LogitechSdk)
+                    LogitechSdkCalled = 0;
+                if (CorsairSdk)
+                    CorsairSdkCalled = 0;
+                if (LifxSdk)
+                    LifxSdkCalled = 0;
+                if (HueSdk)
+                    HueSdkCalled = 0;
             }
             else
             {
-                if (RazerSDK)
-                    RazerSDKCalled = 1;
-                if (LogitechSDK)
-                    LogitechSDKCalled = 1;
-                if (CorsairSDK)
-                    CorsairSDKCalled = 1;
-                if (LifxSDK)
-                    LifxSDKCalled = 1;
-                if (HueSDK)
-                    HueSDKCalled = 1;
+                if (RazerSdk)
+                    RazerSdkCalled = 1;
+                if (LogitechSdk)
+                    LogitechSdkCalled = 1;
+                if (CorsairSdk)
+                    CorsairSdkCalled = 1;
+                if (LifxSdk)
+                    LifxSdkCalled = 1;
+                if (HueSdk)
+                    HueSdkCalled = 1;
             }
 
             ResetDeviceDataGrid();
@@ -1384,9 +1384,9 @@ namespace Chromatics
 
         private void notify_master_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (!allowVisible)
+            if (!_allowVisible)
             {
-                allowVisible = true;
+                _allowVisible = true;
                 Show();
                 WindowState = FormWindowState.Normal;
             }
@@ -1394,70 +1394,70 @@ namespace Chromatics
 
         private void txt_arx_actip_TextChanged(object sender, EventArgs e)
         {
-            if (startup)
+            if (Startup)
             {
                 var changed = txt_arx_actip.Text;
                 if (changed.EndsWith("/"))
                     changed = changed.Substring(0, changed.Length - 1);
 
                 txt_arx_actip.Text = changed;
-                _arx.ArxSendACTInfo(changed, 8085);
+                _arx.ArxSendActInfo(changed, 8085);
 
-                ChromaticsSettings.ChromaticsSettings_ARXACTIP = txt_arx_actip.Text;
+                ChromaticsSettings.ChromaticsSettingsArxactip = txt_arx_actip.Text;
                 SaveChromaticsSettings(1);
             }
         }
 
         private void chk_lccenable_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
             if (chk_lccenable.Checked)
-                ToggleLCCMode(true);
+                ToggleLccMode(true);
             else
-                ToggleLCCMode(false);
+                ToggleLccMode(false);
         }
 
         private void chk_lccauto_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_LCCAuto = chk_lccauto.Checked;
+            ChromaticsSettings.ChromaticsSettingsLccAuto = chk_lccauto.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void btn_lccrestore_Click(object sender, EventArgs e)
         {
-            if (LogitechSDKCalled == 0)
+            if (LogitechSdkCalled == 0)
                 return;
 
-            var lccrestore_check =
+            var lccrestoreCheck =
                 MessageBox.Show(
                     "Are you sure you wish to restore LGS to its default settings? This should only be done as a last resort.",
                     "Restore LGS Settings to Default", MessageBoxButtons.OKCancel);
-            if (lccrestore_check == DialogResult.OK)
+            if (lccrestoreCheck == DialogResult.OK)
                 try
                 {
                     while (Process.GetProcessesByName("ffxiv_dx11").Length > 0)
                     {
-                        var lccrestore_warning =
+                        var lccrestoreWarning =
                             MessageBox.Show("You must close Final Fantasy XIV before using restore.",
                                 "Please close Final Fantasy XIV", MessageBoxButtons.RetryCancel);
-                        if (lccrestore_warning == DialogResult.Cancel)
+                        if (lccrestoreWarning == DialogResult.Cancel)
                             return;
                     }
 
-                    if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
-                        File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll");
+                    if (File.Exists(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
+                        File.Delete(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll");
 
-                    if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled"))
-                        File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled");
+                    if (File.Exists(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled"))
+                        File.Delete(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled");
 
                     var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
                     var path = enviroment + @"/LogitechLed.dll";
 
-                    File.Copy(path, LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", true);
-                    WriteConsole(ConsoleTypes.LOGITECH, "LGS has been restored to its default settings.");
+                    File.Copy(path, _lgsInstall + @"\SDK\LED\x64\LogitechLed.dll", true);
+                    WriteConsole(ConsoleTypes.Logitech, "LGS has been restored to its default settings.");
 
                     chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
                     chk_lccenable.Checked = false;
@@ -1465,16 +1465,16 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.ERROR,
+                    WriteConsole(ConsoleTypes.Error,
                         "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
                 }
-            else if (lccrestore_check == DialogResult.Cancel)
+            else if (lccrestoreCheck == DialogResult.Cancel)
                 return;
         }
 
-        private void ToggleLCCMode([Optional] bool force, [Optional] bool antilog)
+        private void ToggleLccMode([Optional] bool force, [Optional] bool antilog)
         {
-            if (LogitechSDKCalled == 0)
+            if (LogitechSdkCalled == 0)
                 return;
 
             var _force = false;
@@ -1487,58 +1487,58 @@ namespace Chromatics
             {
                 //Enable LCC
 
-                if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
+                if (File.Exists(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
                 {
                     try
                     {
                         //File.Copy(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", true);
                         //File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll");
-                        FileSystem.RenameFile(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", "LogitechLed.dll.disabled");
+                        FileSystem.RenameFile(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll", "LogitechLed.dll.disabled");
                     }
                     catch (Exception ex)
                     {
                         if (!antilog)
-                            WriteConsole(ConsoleTypes.ERROR,
+                            WriteConsole(ConsoleTypes.Error,
                                 "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
                         return;
                     }
 
                     if (!antilog)
-                        WriteConsole(ConsoleTypes.LOGITECH, "Logitech Conflict Mode Enabled.");
+                        WriteConsole(ConsoleTypes.Logitech, "Logitech Conflict Mode Enabled.");
                 }
                 else
                 {
                     if (!antilog)
-                        WriteConsole(ConsoleTypes.ERROR,
+                        WriteConsole(ConsoleTypes.Error,
                             "An Error occurred trying to enable Logitech Conflict Mode. Error: LGS SDK Library not found (A).");
                 }
             }
             else
             {
                 //Disable LCC
-                if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled"))
+                if (File.Exists(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled"))
                 {
                     try
                     {
                         //File.Copy(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", true);
                         //File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled");
-                        FileSystem.RenameFile(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", "LogitechLed.dll");
+                        FileSystem.RenameFile(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", "LogitechLed.dll");
                     }
                     catch (Exception ex)
                     {
                         if (!antilog)
-                            WriteConsole(ConsoleTypes.ERROR,
+                            WriteConsole(ConsoleTypes.Error,
                                 "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
                         return;
                     }
 
                     if (!antilog)
-                        WriteConsole(ConsoleTypes.LOGITECH, "Logitech Conflict Mode Disabled.");
+                        WriteConsole(ConsoleTypes.Logitech, "Logitech Conflict Mode Disabled.");
                 }
                 else
                 {
                     if (!antilog)
-                        WriteConsole(ConsoleTypes.ERROR,
+                        WriteConsole(ConsoleTypes.Error,
                             "An Error occurred trying to disable Logitech Conflict Mode. Error: LGS SDK Library not found (B).");
                 }
             }
@@ -1546,91 +1546,91 @@ namespace Chromatics
 
         private void chk_memorycache_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_MemoryCache = chk_memorycache.Checked;
+            ChromaticsSettings.ChromaticsSettingsMemoryCache = chk_memorycache.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_azertymode_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_AZERTYMode = chk_azertymode.Checked;
+            ChromaticsSettings.ChromaticsSettingsAzertyMode = chk_azertymode.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_startupenable_CheckedChanged(object sender, EventArgs e)
         {
             if (chk_startupenable.Checked)
-                rkApp.SetValue("Chromatics", Application.ExecutablePath);
+                _rkApp.SetValue("Chromatics", Application.ExecutablePath);
             else
-                rkApp.DeleteValue("Chromatics", false);
+                _rkApp.DeleteValue("Chromatics", false);
 
             mi_winstart.Checked = chk_startupenable.Checked;
         }
 
         private void chk_castchargetoggle_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_CastToggle = chk_castchargetoggle.Checked;
+            ChromaticsSettings.ChromaticsSettingsCastToggle = chk_castchargetoggle.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_castanimatetoggle_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_CastAnimate = chk_castanimatetoggle.Checked;
+            ChromaticsSettings.ChromaticsSettingsCastAnimate = chk_castanimatetoggle.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_gcdcounttoggle_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_GCDCountdown = chk_gcdcounttoggle.Checked;
+            ChromaticsSettings.ChromaticsSettingsGcdCountdown = chk_gcdcounttoggle.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_highlighttoggle_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_KeyHighlights = chk_highlighttoggle.Checked;
+            ChromaticsSettings.ChromaticsSettingsKeyHighlights = chk_highlighttoggle.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_jobgaugetoggle_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_JobGaugeToggle = chk_jobgaugetoggle.Checked;
+            ChromaticsSettings.ChromaticsSettingsJobGaugeToggle = chk_jobgaugetoggle.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_keybindtoggle_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_KeybindToggle = chk_keybindtoggle.Checked;
+            ChromaticsSettings.ChromaticsSettingsKeybindToggle = chk_keybindtoggle.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_impactflashtog_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_ImpactToggle = chk_impactflashtog.Checked;
+            ChromaticsSettings.ChromaticsSettingsImpactToggle = chk_impactflashtog.Checked;
             SaveChromaticsSettings(1);
         }
 
         private void chk_dfbelltoggle_CheckedChanged(object sender, EventArgs e)
         {
-            if (startup == false) return;
+            if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettings_DFBellToggle = chk_dfbelltoggle.Checked;
+            ChromaticsSettings.ChromaticsSettingsDfBellToggle = chk_dfbelltoggle.Checked;
             SaveChromaticsSettings(1);
         }
 

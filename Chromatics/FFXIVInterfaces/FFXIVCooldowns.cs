@@ -38,28 +38,28 @@ namespace Chromatics.FFXIVInterfaces
         }
 
         private static CooldownRawData _rawData;
-        public static DateTime lastUpdated = DateTime.MinValue;
-        private static readonly TimeSpan updateInterval = TimeSpan.FromSeconds(0.05);
+        public static DateTime LastUpdated = DateTime.MinValue;
+        private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(0.05);
 
-        public static byte[] _rawResourceData;
+        public static byte[] RawResourceData;
 
 
-        public static bool initialized;
-        public static bool cooldownsInitialized;
-        public static bool resourcesInitialized;
-        public static bool initializedActor = false;
-        private static List<Signature> sList;
-        private static readonly object refreshLock = new object();
+        public static bool Initialized;
+        public static bool CooldownsInitialized;
+        public static bool ResourcesInitialized;
+        public static bool InitializedActor = false;
+        private static List<Signature> _sList;
+        private static readonly object RefreshLock = new object();
 
-        private static IntPtr characterAddress = IntPtr.Zero;
+        private static IntPtr _characterAddress = IntPtr.Zero;
 
-        private static readonly object cacheLock = new object();
+        private static readonly object CacheLock = new object();
 
 
         /**/
         // the autoAttackCount data no longer seems to exist in memory...
         //private static int cachedAutoAttackCount = 0;
-        private static int cachedActionCount;
+        private static int _cachedActionCount;
 
 
         /** /
@@ -122,71 +122,71 @@ namespace Chromatics.FFXIVInterfaces
         /**/
 
 
-        private static float previousAfterSkillLockTime;
-        private static DateTime previousAfterSkillLockTimeTimestamp = DateTime.MinValue;
+        private static float _previousAfterSkillLockTime;
+        private static DateTime _previousAfterSkillLockTimeTimestamp = DateTime.MinValue;
 
-        private static float previousCastTimeRemaining;
-        private static DateTime previousCastTimeRemainingTimestamp = DateTime.MinValue;
+        private static float _previousCastTimeRemaining;
+        private static DateTime _previousCastTimeRemainingTimestamp = DateTime.MinValue;
 
-        private static float previousGlobalCooldownRemaining;
-        private static DateTime previousGlobalCooldownRemainingTimestamp = DateTime.MinValue;
+        private static float _previousGlobalCooldownRemaining;
+        private static DateTime _previousGlobalCooldownRemainingTimestamp = DateTime.MinValue;
 
-        private static DateTime predictGCDUntil = DateTime.Now;
-        private static DateTime predictGCDDone = DateTime.Now;
+        private static DateTime _predictGcdUntil = DateTime.Now;
+        private static DateTime _predictGcdDone = DateTime.Now;
 
-        private static DateTime predictCastUntil = DateTime.Now;
-        private static DateTime predictCastDone = DateTime.Now;
+        private static DateTime _predictCastUntil = DateTime.Now;
+        private static DateTime _predictCastDone = DateTime.Now;
 
-        public static float globalCooldown = 2.5f;
-        public static float baseGlobalCooldown = 2.5f;
+        public static float GlobalCooldown = 2.5f;
+        public static float BaseGlobalCooldown = 2.5f;
 
-        public static float currentTimeshift { get; set; } = 0;
+        public static float CurrentTimeshift { get; set; } = 0;
 
-        public static int actionCount
+        public static int ActionCount
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
 
-                checkCache();
+                CheckCache();
 
                 if (_rawData.actionCount != 0)
-                    cachedActionCount = _rawData.actionCount;
+                    _cachedActionCount = _rawData.actionCount;
 
-                return cachedActionCount; // -cachedAutoAttackCount;
+                return _cachedActionCount; // -cachedAutoAttackCount;
             }
         }
 
-        public static float afterSkillLockTime
+        public static float AfterSkillLockTime
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
 
-                checkCache();
+                CheckCache();
                 if (_rawData.afterSkillLockTime > 10 || _rawData.castTimeTotal < 0)
                 {
-                    initialized = false;
-                    refreshData();
+                    Initialized = false;
+                    RefreshData();
                 }
                 var newVal = _rawData.afterSkillLockTime;
 
                 if (newVal != 0)
-                    if (previousAfterSkillLockTimeTimestamp + TimeSpan.FromSeconds(0.1) > DateTime.Now)
+                    if (_previousAfterSkillLockTimeTimestamp + TimeSpan.FromSeconds(0.1) > DateTime.Now)
                     {
-                        if (previousAfterSkillLockTime == newVal)
+                        if (_previousAfterSkillLockTime == newVal)
                         {
-                            initialized = false;
-                            refreshData();
+                            Initialized = false;
+                            RefreshData();
                         }
 
-                        previousAfterSkillLockTime = newVal;
-                        previousAfterSkillLockTimeTimestamp = DateTime.Now;
+                        _previousAfterSkillLockTime = newVal;
+                        _previousAfterSkillLockTimeTimestamp = DateTime.Now;
                     }
 
-                newVal -= currentTimeshift;
+                newVal -= CurrentTimeshift;
 
                 if (newVal < 0)
                     newVal = 0;
@@ -195,67 +195,67 @@ namespace Chromatics.FFXIVInterfaces
             }
         }
 
-        public static bool currentlyCasting
+        public static bool CurrentlyCasting
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return false;
-                checkCache();
+                CheckCache();
 
-                if (currentTimeshift > 0 && castTimeElapsed <= 0)
+                if (CurrentTimeshift > 0 && CastTimeElapsed <= 0)
                     return false;
 
                 return _rawData.currentlyCasting;
             }
         }
 
-        public static float castTimeElapsed
+        public static float CastTimeElapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                if (_rawData.castTimeTotal - _rawData.castTimeElapsed < currentTimeshift)
+                if (_rawData.castTimeTotal - _rawData.castTimeElapsed < CurrentTimeshift)
                     return 0;
 
-                return _rawData.castTimeElapsed + currentTimeshift;
+                return _rawData.castTimeElapsed + CurrentTimeshift;
             }
         }
 
-        public static float castTimeTotal
+        public static float CastTimeTotal
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                if (_rawData.castTimeTotal - _rawData.castTimeElapsed <= currentTimeshift)
+                if (_rawData.castTimeTotal - _rawData.castTimeElapsed <= CurrentTimeshift)
                     return 0;
 
                 return _rawData.castTimeTotal;
             }
         }
 
-        public static float castTimeRemaining
+        public static float CastTimeRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
 
-                checkCache();
+                CheckCache();
 
 
-                if (predictCastUntil > DateTime.Now)
+                if (_predictCastUntil > DateTime.Now)
                 {
-                    if ((float) (predictCastDone - DateTime.Now).TotalSeconds < currentTimeshift)
+                    if ((float) (_predictCastDone - DateTime.Now).TotalSeconds < CurrentTimeshift)
                         return 0;
 
-                    return (float) (predictCastDone - DateTime.Now).TotalSeconds;
+                    return (float) (_predictCastDone - DateTime.Now).TotalSeconds;
                 }
 
 
@@ -264,1504 +264,1504 @@ namespace Chromatics.FFXIVInterfaces
                 if (_rawData.castTimeTotal > 10 || _rawData.castTimeTotal < 0 || _rawData.castTimeElapsed > 10 ||
                     _rawData.castTimeElapsed < 0)
                 {
-                    initialized = false;
-                    refreshData();
+                    Initialized = false;
+                    RefreshData();
                 }
                 var newVal = _rawData.castTimeTotal - _rawData.castTimeElapsed;
 
                 if (newVal > 0)
-                    if (previousCastTimeRemainingTimestamp + TimeSpan.FromSeconds(0.1) > DateTime.Now)
+                    if (_previousCastTimeRemainingTimestamp + TimeSpan.FromSeconds(0.1) > DateTime.Now)
                     {
-                        if (previousCastTimeRemaining == newVal)
+                        if (_previousCastTimeRemaining == newVal)
                         {
-                            initialized = false;
-                            refreshData();
+                            Initialized = false;
+                            RefreshData();
                         }
 
-                        previousCastTimeRemaining = newVal;
-                        previousCastTimeRemainingTimestamp = DateTime.Now;
+                        _previousCastTimeRemaining = newVal;
+                        _previousCastTimeRemainingTimestamp = DateTime.Now;
                     }
 
-                return Math.Max(newVal - currentTimeshift, 0);
+                return Math.Max(newVal - CurrentTimeshift, 0);
             }
         }
 
 
-        public static float comboTimeRemaining
+        public static float ComboTimeRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return Math.Max(_rawData.comboTimeRemaining - currentTimeshift, 0);
+                return Math.Max(_rawData.comboTimeRemaining - CurrentTimeshift, 0);
             }
         }
 
 
-        public static float cooldownType99Elapsed
+        public static float CooldownType99Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return _rawData.cooldownType99Elapsed + currentTimeshift;
+                return _rawData.cooldownType99Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType99Total
+        public static float CooldownType99Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType99Total;
             }
         }
 
-        public static float cooldownType99Remaining
+        public static float CooldownType99Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType99Total - cooldownType99Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType99Total - CooldownType99Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType0Elapsed
+        public static float CooldownType0Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType0Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType0Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType0Total
+        public static float CooldownType0Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType0Total;
             }
         }
 
-        public static float cooldownType0Remaining
+        public static float CooldownType0Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType0Total - cooldownType0Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType0Total - CooldownType0Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType1Elapsed
+        public static float CooldownType1Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType1Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType1Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType1Total
+        public static float CooldownType1Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType1Total;
             }
         }
 
-        public static float cooldownType1Remaining
+        public static float CooldownType1Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType1Total - cooldownType1Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType1Total - CooldownType1Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType2Elapsed
+        public static float CooldownType2Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType2Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType2Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType2Total
+        public static float CooldownType2Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType2Total;
             }
         }
 
-        public static float cooldownType2Remaining
+        public static float CooldownType2Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType2Total - cooldownType2Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType2Total - CooldownType2Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType3Elapsed
+        public static float CooldownType3Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType3Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType3Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType3Total
+        public static float CooldownType3Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType3Total;
             }
         }
 
-        public static float cooldownType3Remaining
+        public static float CooldownType3Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType3Total - cooldownType3Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType3Total - CooldownType3Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType4Elapsed
+        public static float CooldownType4Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType4Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType4Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType4Total
+        public static float CooldownType4Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType4Total;
             }
         }
 
-        public static float cooldownType4Remaining
+        public static float CooldownType4Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType4Total - cooldownType4Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType4Total - CooldownType4Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType5Elapsed
+        public static float CooldownType5Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType5Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType5Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType5Total
+        public static float CooldownType5Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType5Total;
             }
         }
 
-        public static float cooldownType5Remaining
+        public static float CooldownType5Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType5Total - cooldownType5Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType5Total - CooldownType5Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType6Elapsed
+        public static float CooldownType6Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType6Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType6Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType6Total
+        public static float CooldownType6Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType6Total;
             }
         }
 
-        public static float cooldownType6Remaining
+        public static float CooldownType6Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType6Total - cooldownType6Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType6Total - CooldownType6Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType7Elapsed
+        public static float CooldownType7Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType7Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType7Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType7Total
+        public static float CooldownType7Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType7Total;
             }
         }
 
-        public static float cooldownType7Remaining
+        public static float CooldownType7Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType7Total - cooldownType7Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType7Total - CooldownType7Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType8Elapsed
+        public static float CooldownType8Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType8Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType8Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType8Total
+        public static float CooldownType8Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType8Total;
             }
         }
 
-        public static float cooldownType8Remaining
+        public static float CooldownType8Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType8Total - cooldownType8Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType8Total - CooldownType8Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType9Elapsed
+        public static float CooldownType9Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType9Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType9Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType9Total
+        public static float CooldownType9Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType9Total;
             }
         }
 
-        public static float cooldownType9Remaining
+        public static float CooldownType9Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType9Total - cooldownType9Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType9Total - CooldownType9Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType10Elapsed
+        public static float CooldownType10Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType10Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType10Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType10Total
+        public static float CooldownType10Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType10Total;
             }
         }
 
-        public static float cooldownType10Remaining
+        public static float CooldownType10Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType10Total - cooldownType10Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType10Total - CooldownType10Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType11Elapsed
+        public static float CooldownType11Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType11Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType11Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType11Total
+        public static float CooldownType11Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType11Total;
             }
         }
 
-        public static float cooldownType11Remaining
+        public static float CooldownType11Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType11Total - cooldownType11Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType11Total - CooldownType11Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType12Elapsed
+        public static float CooldownType12Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType12Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType12Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType12Total
+        public static float CooldownType12Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType12Total;
             }
         }
 
-        public static float cooldownType12Remaining
+        public static float CooldownType12Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType12Total - cooldownType12Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType12Total - CooldownType12Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType13Elapsed
+        public static float CooldownType13Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType13Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType13Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType13Total
+        public static float CooldownType13Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType13Total;
             }
         }
 
-        public static float cooldownType13Remaining
+        public static float CooldownType13Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType13Total - cooldownType13Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType13Total - CooldownType13Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType14Elapsed
+        public static float CooldownType14Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType14Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType14Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType14Total
+        public static float CooldownType14Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType14Total;
             }
         }
 
-        public static float cooldownType14Remaining
+        public static float CooldownType14Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType14Total - cooldownType14Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType14Total - CooldownType14Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType15Elapsed
+        public static float CooldownType15Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType15Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType15Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType15Total
+        public static float CooldownType15Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType15Total;
             }
         }
 
-        public static float cooldownType15Remaining
+        public static float CooldownType15Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType15Total - cooldownType15Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType15Total - CooldownType15Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType16Elapsed
+        public static float CooldownType16Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType16Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType16Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType16Total
+        public static float CooldownType16Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType16Total;
             }
         }
 
-        public static float cooldownType16Remaining
+        public static float CooldownType16Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType16Total - cooldownType16Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType16Total - CooldownType16Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType17Elapsed
+        public static float CooldownType17Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType17Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType17Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType17Total
+        public static float CooldownType17Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType17Total;
             }
         }
 
-        public static float cooldownType17Remaining
+        public static float CooldownType17Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType17Total - cooldownType17Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType17Total - CooldownType17Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType18Elapsed
+        public static float CooldownType18Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType18Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType18Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType18Total
+        public static float CooldownType18Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType18Total;
             }
         }
 
-        public static float cooldownType18Remaining
+        public static float CooldownType18Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType18Total - cooldownType18Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType18Total - CooldownType18Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType19Elapsed
+        public static float CooldownType19Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType19Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType19Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType19Total
+        public static float CooldownType19Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType19Total;
             }
         }
 
-        public static float cooldownType19Remaining
+        public static float CooldownType19Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType19Total - cooldownType19Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType19Total - CooldownType19Elapsed, 0);
             }
         }
 
 
-        public static float cooldownType20Elapsed
+        public static float CooldownType20Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownType20Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownType20Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownType20Total
+        public static float CooldownType20Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownType20Total;
             }
         }
 
-        public static float cooldownType20Remaining
+        public static float CooldownType20Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownType20Total - cooldownType20Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownType20Total - CooldownType20Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot1Elapsed
+        public static float CooldownCrossClassSlot1Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot1Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot1Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot1Total
+        public static float CooldownCrossClassSlot1Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot1Total;
             }
         }
 
-        public static float cooldownCrossClassSlot1Remaining
+        public static float CooldownCrossClassSlot1Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot1Total - cooldownCrossClassSlot1Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot1Total - CooldownCrossClassSlot1Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot2Elapsed
+        public static float CooldownCrossClassSlot2Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot2Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot2Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot2Total
+        public static float CooldownCrossClassSlot2Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot2Total;
             }
         }
 
-        public static float cooldownCrossClassSlot2Remaining
+        public static float CooldownCrossClassSlot2Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot2Total - cooldownCrossClassSlot2Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot2Total - CooldownCrossClassSlot2Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot3Elapsed
+        public static float CooldownCrossClassSlot3Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot3Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot3Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot3Total
+        public static float CooldownCrossClassSlot3Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot3Total;
             }
         }
 
-        public static float cooldownCrossClassSlot3Remaining
+        public static float CooldownCrossClassSlot3Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot3Total - cooldownCrossClassSlot3Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot3Total - CooldownCrossClassSlot3Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot4Elapsed
+        public static float CooldownCrossClassSlot4Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot4Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot4Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot4Total
+        public static float CooldownCrossClassSlot4Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot4Total;
             }
         }
 
-        public static float cooldownCrossClassSlot4Remaining
+        public static float CooldownCrossClassSlot4Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot4Total - cooldownCrossClassSlot4Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot4Total - CooldownCrossClassSlot4Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot5Elapsed
+        public static float CooldownCrossClassSlot5Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot5Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot5Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot5Total
+        public static float CooldownCrossClassSlot5Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot5Total;
             }
         }
 
-        public static float cooldownCrossClassSlot5Remaining
+        public static float CooldownCrossClassSlot5Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot5Total - cooldownCrossClassSlot5Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot5Total - CooldownCrossClassSlot5Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot6Elapsed
+        public static float CooldownCrossClassSlot6Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot6Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot6Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot6Total
+        public static float CooldownCrossClassSlot6Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot6Total;
             }
         }
 
-        public static float cooldownCrossClassSlot6Remaining
+        public static float CooldownCrossClassSlot6Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot6Total - cooldownCrossClassSlot6Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot6Total - CooldownCrossClassSlot6Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot7Elapsed
+        public static float CooldownCrossClassSlot7Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot7Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot7Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot7Total
+        public static float CooldownCrossClassSlot7Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot7Total;
             }
         }
 
-        public static float cooldownCrossClassSlot7Remaining
+        public static float CooldownCrossClassSlot7Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot7Total - cooldownCrossClassSlot7Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot7Total - CooldownCrossClassSlot7Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot8Elapsed
+        public static float CooldownCrossClassSlot8Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot8Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot8Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot8Total
+        public static float CooldownCrossClassSlot8Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot8Total;
             }
         }
 
-        public static float cooldownCrossClassSlot8Remaining
+        public static float CooldownCrossClassSlot8Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot8Total - cooldownCrossClassSlot8Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot8Total - CooldownCrossClassSlot8Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot9Elapsed
+        public static float CooldownCrossClassSlot9Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot9Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot9Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot9Total
+        public static float CooldownCrossClassSlot9Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot9Total;
             }
         }
 
-        public static float cooldownCrossClassSlot9Remaining
+        public static float CooldownCrossClassSlot9Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot9Total - cooldownCrossClassSlot9Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot9Total - CooldownCrossClassSlot9Elapsed, 0);
             }
         }
 
 
-        public static float cooldownCrossClassSlot10Elapsed
+        public static float CooldownCrossClassSlot10Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownCrossClassSlot10Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownCrossClassSlot10Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownCrossClassSlot10Total
+        public static float CooldownCrossClassSlot10Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownCrossClassSlot10Total;
             }
         }
 
-        public static float cooldownCrossClassSlot10Remaining
+        public static float CooldownCrossClassSlot10Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownCrossClassSlot10Total - cooldownCrossClassSlot10Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownCrossClassSlot10Total - CooldownCrossClassSlot10Elapsed, 0);
             }
         }
 
 
-        public static float cooldownSprintElapsed
+        public static float CooldownSprintElapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownSprintElapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownSprintElapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownSprintTotal
+        public static float CooldownSprintTotal
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownSprintTotal;
             }
         }
 
-        public static float cooldownSprintRemaining
+        public static float CooldownSprintRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownSprintTotal - cooldownSprintElapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownSprintTotal - CooldownSprintElapsed, 0);
             }
         }
 
 
-        public static float globalCooldownElapsed
+        public static float GlobalCooldownElapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.globalCooldownElapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.globalCooldownElapsed + CurrentTimeshift;
             }
         }
 
-        public static float globalCooldownTotal
+        public static float GlobalCooldownTotal
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.globalCooldownTotal;
             }
         }
 
-        public static bool globalCooldownReady
+        public static bool GlobalCooldownReady
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return false;
-                checkCache();
+                CheckCache();
 
-                if (currentTimeshift > 0 && globalCooldownRemaining <= 0)
+                if (CurrentTimeshift > 0 && GlobalCooldownRemaining <= 0)
                     return true;
 
                 return !_rawData.globalCooldownInUse;
             }
         }
 
-        public static float globalCooldownRemaining
+        public static float GlobalCooldownRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
 
-                checkCache();
-                if (globalCooldownTotal > 30 || castTimeElapsed < 0 || globalCooldownElapsed > 30 ||
-                    globalCooldownElapsed < 0)
+                CheckCache();
+                if (GlobalCooldownTotal > 30 || CastTimeElapsed < 0 || GlobalCooldownElapsed > 30 ||
+                    GlobalCooldownElapsed < 0)
                 {
-                    initialized = false;
-                    refreshData();
+                    Initialized = false;
+                    RefreshData();
                 }
 
-                if (predictGCDUntil > DateTime.Now)
-                    return (float) (predictGCDDone - DateTime.Now).TotalSeconds;
+                if (_predictGcdUntil > DateTime.Now)
+                    return (float) (_predictGcdDone - DateTime.Now).TotalSeconds;
 
-                if (globalCooldownElapsed == 0 || !_rawData.globalCooldownInUse)
+                if (GlobalCooldownElapsed == 0 || !_rawData.globalCooldownInUse)
                     return 0;
 
-                var newVal = globalCooldownTotal - globalCooldownElapsed;
+                var newVal = GlobalCooldownTotal - GlobalCooldownElapsed;
 
                 if (newVal != 0)
-                    if (previousGlobalCooldownRemainingTimestamp + TimeSpan.FromSeconds(0.1) > DateTime.Now)
+                    if (_previousGlobalCooldownRemainingTimestamp + TimeSpan.FromSeconds(0.1) > DateTime.Now)
                     {
-                        if (previousGlobalCooldownRemaining == newVal)
+                        if (_previousGlobalCooldownRemaining == newVal)
                         {
-                            initialized = false;
-                            refreshData();
+                            Initialized = false;
+                            RefreshData();
                         }
 
-                        previousGlobalCooldownRemaining = newVal;
-                        previousGlobalCooldownRemainingTimestamp = DateTime.Now;
+                        _previousGlobalCooldownRemaining = newVal;
+                        _previousGlobalCooldownRemainingTimestamp = DateTime.Now;
                     }
 
-                return Math.Max(newVal - currentTimeshift, 0);
+                return Math.Max(newVal - CurrentTimeshift, 0);
             }
         }
 
 
-        public static float cooldownPotionElapsed
+        public static float CooldownPotionElapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownPotionElapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownPotionElapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownPotionTotal
+        public static float CooldownPotionTotal
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownPotionTotal;
             }
         }
 
-        public static float cooldownPotionRemaining
+        public static float CooldownPotionRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownPotionTotal - cooldownPotionElapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownPotionTotal - CooldownPotionElapsed, 0);
             }
         }
 
 
-        public static float cooldownPetAbility1Elapsed
+        public static float CooldownPetAbility1Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownPetAbility1Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownPetAbility1Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownPetAbility1Total
+        public static float CooldownPetAbility1Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownPetAbility1Total;
             }
         }
 
-        public static float cooldownPetAbility1Remaining
+        public static float CooldownPetAbility1Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownPetAbility1Total - cooldownPetAbility1Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownPetAbility1Total - CooldownPetAbility1Elapsed, 0);
             }
         }
 
 
-        public static float cooldownPetAbility2Elapsed
+        public static float CooldownPetAbility2Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownPetAbility2Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownPetAbility2Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownPetAbility2Total
+        public static float CooldownPetAbility2Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownPetAbility2Total;
             }
         }
 
-        public static float cooldownPetAbility2Remaining
+        public static float CooldownPetAbility2Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownPetAbility2Total - cooldownPetAbility2Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownPetAbility2Total - CooldownPetAbility2Elapsed, 0);
             }
         }
 
 
-        public static float cooldownPetAbility3Elapsed
+        public static float CooldownPetAbility3Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownPetAbility3Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownPetAbility3Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownPetAbility3Total
+        public static float CooldownPetAbility3Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownPetAbility3Total;
             }
         }
 
-        public static float cooldownPetAbility3Remaining
+        public static float CooldownPetAbility3Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownPetAbility3Total - cooldownPetAbility3Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownPetAbility3Total - CooldownPetAbility3Elapsed, 0);
             }
         }
 
 
-        public static float cooldownPetAbility4Elapsed
+        public static float CooldownPetAbility4Elapsed
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return _rawData.cooldownPetAbility4Elapsed + currentTimeshift;
+                CheckCache();
+                return _rawData.cooldownPetAbility4Elapsed + CurrentTimeshift;
             }
         }
 
-        public static float cooldownPetAbility4Total
+        public static float CooldownPetAbility4Total
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
                 return _rawData.cooldownPetAbility4Total;
             }
         }
 
-        public static float cooldownPetAbility4Remaining
+        public static float CooldownPetAbility4Remaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
-                return Math.Max(_rawData.cooldownPetAbility4Total - cooldownPetAbility4Elapsed, 0);
+                CheckCache();
+                return Math.Max(_rawData.cooldownPetAbility4Total - CooldownPetAbility4Elapsed, 0);
             }
         }
 
 
         // Paladin
-        public static float CircleOfScorn => cooldownType0Remaining;
+        public static float CircleOfScorn => CooldownType0Remaining;
 
-        public static float SpiritsWithin => cooldownType1Remaining;
+        public static float SpiritsWithin => CooldownType1Remaining;
 
-        public static float Provoke => cooldownType2Remaining;
+        public static float Provoke => CooldownType2Remaining;
 
-        public static float Rampart => cooldownType4Remaining;
+        public static float Rampart => CooldownType4Remaining;
 
-        public static float FightOrFlight => cooldownType5Remaining;
+        public static float FightOrFlight => CooldownType5Remaining;
 
-        public static float Convalescence => cooldownType6Remaining;
+        public static float Convalescence => CooldownType6Remaining;
 
-        public static float Awareness => cooldownType7Remaining;
+        public static float Awareness => CooldownType7Remaining;
 
-        public static float Cover => cooldownType8Remaining;
+        public static float Cover => CooldownType8Remaining;
 
-        public static float Sentinel => cooldownType9Remaining;
+        public static float Sentinel => CooldownType9Remaining;
 
-        public static float TemperedWill => cooldownType10Remaining;
+        public static float TemperedWill => CooldownType10Remaining;
 
-        public static float Bulwark => cooldownType11Remaining;
+        public static float Bulwark => CooldownType11Remaining;
 
-        public static float HallowedGround => cooldownType13Remaining;
+        public static float HallowedGround => CooldownType13Remaining;
 
 
         // Warrior
-        public static float Defiance => cooldownType0Remaining;
+        public static float Defiance => CooldownType0Remaining;
 
-        public static float BrutalSwing => cooldownType1Remaining;
+        public static float BrutalSwing => CooldownType1Remaining;
 
-        public static float Infuriate => cooldownType3Remaining;
+        public static float Infuriate => CooldownType3Remaining;
 
-        public static float Bloodbath => cooldownType4Remaining;
+        public static float Bloodbath => CooldownType4Remaining;
 
-        public static float MercyStroke => cooldownType5Remaining;
+        public static float MercyStroke => CooldownType5Remaining;
 
-        public static float Berserk => cooldownType6Remaining;
+        public static float Berserk => CooldownType6Remaining;
 
-        public static float Foresight => cooldownType7Remaining;
+        public static float Foresight => CooldownType7Remaining;
 
-        public static float ThrillOfBattle => cooldownType8Remaining;
+        public static float ThrillOfBattle => CooldownType8Remaining;
 
-        public static float Vengeance => cooldownType9Remaining;
+        public static float Vengeance => CooldownType9Remaining;
 
-        public static float Unchained => cooldownType10Remaining;
+        public static float Unchained => CooldownType10Remaining;
 
-        public static float Holmgang => cooldownType11Remaining;
+        public static float Holmgang => CooldownType11Remaining;
 
         public static int Wrath
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[6];
+                return RawResourceData[6];
             }
         }
 
 
         // Monk
-        public static float FistsOfEarthFireWind => cooldownType0Remaining;
+        public static float FistsOfEarthFireWind => CooldownType0Remaining;
 
-        public static float ShoulderTackle => cooldownType2Remaining;
+        public static float ShoulderTackle => CooldownType2Remaining;
 
-        public static float InternalRelease => cooldownType3Remaining;
+        public static float InternalRelease => CooldownType3Remaining;
 
-        public static float SteelPeak => cooldownType4Remaining;
+        public static float SteelPeak => CooldownType4Remaining;
 
-        public static float HowlingFist => cooldownType5Remaining;
+        public static float HowlingFist => CooldownType5Remaining;
 
-        public static float Featherfoot => cooldownType7Remaining;
+        public static float Featherfoot => CooldownType7Remaining;
 
-        public static float SecondWind => cooldownType8Remaining;
+        public static float SecondWind => CooldownType8Remaining;
 
-        public static float Mantra => cooldownType9Remaining;
+        public static float Mantra => CooldownType9Remaining;
 
-        public static float PerfectBalance => cooldownType10Remaining;
+        public static float PerfectBalance => CooldownType10Remaining;
 
 
         public static float GreasedLightningTimeRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return getTimer(6);
+                return GetTimer(6);
             }
         }
 
@@ -1769,141 +1769,141 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[8];
+                return RawResourceData[8];
             }
         }
 
 
         // Dragoon
-        public static float Geirskogul => cooldownType0Remaining;
+        public static float Geirskogul => CooldownType0Remaining;
 
-        public static float LegSweep => cooldownType1Remaining;
+        public static float LegSweep => CooldownType1Remaining;
 
-        public static float Jump => cooldownType2Remaining;
+        public static float Jump => CooldownType2Remaining;
 
-        public static float PowerSurge => cooldownType3Remaining;
+        public static float PowerSurge => CooldownType3Remaining;
 
-        public static float SpineshatterDive => cooldownType4Remaining;
+        public static float SpineshatterDive => CooldownType4Remaining;
 
-        public static float BloodForBlood => cooldownType5Remaining;
+        public static float BloodForBlood => CooldownType5Remaining;
 
-        public static float KeenFlurry => cooldownType6Remaining;
+        public static float KeenFlurry => CooldownType6Remaining;
 
-        public static float LifeSurge => cooldownType7Remaining;
+        public static float LifeSurge => CooldownType7Remaining;
 
-        public static float Invigorate => cooldownType8Remaining;
+        public static float Invigorate => CooldownType8Remaining;
 
-        public static float DragonfireDive => cooldownType9Remaining;
+        public static float DragonfireDive => CooldownType9Remaining;
 
-        public static float ElusiveJump => cooldownType10Remaining;
+        public static float ElusiveJump => CooldownType10Remaining;
 
-        public static float BattleLitany => cooldownType11Remaining;
+        public static float BattleLitany => CooldownType11Remaining;
 
-        public static float BloodOfTheDragon => cooldownType15Remaining;
+        public static float BloodOfTheDragon => CooldownType15Remaining;
 
 
         public static float BloodOfTheDragonTimeRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return getTimer(6);
+                return GetTimer(6);
             }
         }
 
 
         // Ninja
-        public static float KissOfTheWaspViper => cooldownType0Remaining;
+        public static float KissOfTheWaspViper => CooldownType0Remaining;
 
-        public static float Hide => cooldownType1Remaining;
+        public static float Hide => CooldownType1Remaining;
 
-        public static float Jugulate => cooldownType2Remaining;
+        public static float Jugulate => CooldownType2Remaining;
 
-        public static float Assassinate => cooldownType3Remaining;
+        public static float Assassinate => CooldownType3Remaining;
 
-        public static float Shukuchi => cooldownType4Remaining;
+        public static float Shukuchi => CooldownType4Remaining;
 
-        public static float SneakAttack => cooldownType5Remaining;
+        public static float SneakAttack => CooldownType5Remaining;
 
-        public static float TrickAttack => cooldownType5Remaining;
+        public static float TrickAttack => CooldownType5Remaining;
 
-        public static float Ninjitsu => cooldownType6Remaining;
+        public static float Ninjitsu => CooldownType6Remaining;
 
-        public static float Mug => cooldownType7Remaining;
+        public static float Mug => CooldownType7Remaining;
 
-        public static float Kassatsu => cooldownType9Remaining;
+        public static float Kassatsu => CooldownType9Remaining;
 
-        public static float Goad => cooldownType10Remaining;
+        public static float Goad => CooldownType10Remaining;
 
-        public static float DreamWithinADream => cooldownType15Remaining;
+        public static float DreamWithinADream => CooldownType15Remaining;
 
-        public static float Duality => cooldownType16Remaining;
+        public static float Duality => CooldownType16Remaining;
 
-        public static float ShadeShift => cooldownType8Remaining;
+        public static float ShadeShift => CooldownType8Remaining;
 
-        public static float SmokeScreen => cooldownType11Remaining;
+        public static float SmokeScreen => CooldownType11Remaining;
 
-        public static float Shadewalker => cooldownType12Remaining;
+        public static float Shadewalker => CooldownType12Remaining;
 
         public static float HutonTimeRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return getTimer(6);
+                return GetTimer(6);
             }
         }
 
 
         // Bard
-        public static float MiserysEnd => cooldownType0Remaining;
+        public static float MiserysEnd => CooldownType0Remaining;
 
-        public static float Bloodletter => cooldownType1Remaining;
+        public static float Bloodletter => CooldownType1Remaining;
 
-        public static float RepellingShot => cooldownType3Remaining;
+        public static float RepellingShot => CooldownType3Remaining;
 
-        public static float MagesBallad => cooldownType5Remaining;
+        public static float MagesBallad => CooldownType5Remaining;
 
-        public static float RagingStrikes => cooldownType6Remaining;
+        public static float RagingStrikes => CooldownType6Remaining;
 
-        public static float Barrage => cooldownType7Remaining;
+        public static float Barrage => CooldownType7Remaining;
 
-        public static float BattleVoice => cooldownType12Remaining;
+        public static float BattleVoice => CooldownType12Remaining;
 
-        public static float EmpyrealArrow => cooldownType14Remaining;
+        public static float EmpyrealArrow => CooldownType14Remaining;
 
-        public static float Sidewinder => cooldownType15Remaining;
+        public static float Sidewinder => CooldownType15Remaining;
 
-        public static float ArmysPaeon => cooldownType16Remaining;
+        public static float ArmysPaeon => CooldownType16Remaining;
 
-        public static float WanderersMinuet => cooldownType17Remaining;
+        public static float WanderersMinuet => CooldownType17Remaining;
 
-        public static float PitchPerfect => cooldownType19Remaining;
+        public static float PitchPerfect => CooldownType19Remaining;
 
 
         public static BardSongs Song
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                if (_rawResourceData[9] == 5)
+                if (RawResourceData[9] == 5)
                     return BardSongs.MagesBallad;
-                if (_rawResourceData[9] == 10)
+                if (RawResourceData[9] == 10)
                     return BardSongs.ArmysPaeon;
-                if (_rawResourceData[9] == 15)
+                if (RawResourceData[9] == 15)
                     return BardSongs.WanderersMinuet;
 
                 return BardSongs.None;
@@ -1914,11 +1914,11 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return getTimer(6);
+                return GetTimer(6);
             }
         }
 
@@ -1926,49 +1926,49 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[8];
+                return RawResourceData[8];
             }
         }
 
 
         // Black mage
-        public static float Transpose => cooldownType0Remaining;
+        public static float Transpose => CooldownType0Remaining;
 
-        public static float Surecast => cooldownType1Remaining;
+        public static float Surecast => CooldownType1Remaining;
 
-        public static float Lethargy => cooldownType2Remaining;
+        public static float Lethargy => CooldownType2Remaining;
 
-        public static float AetherialManipulation => cooldownType3Remaining;
+        public static float AetherialManipulation => CooldownType3Remaining;
 
-        public static float Swiftcast => cooldownType5Remaining;
+        public static float Swiftcast => CooldownType5Remaining;
 
-        public static float Manaward => cooldownType7Remaining;
+        public static float Manaward => CooldownType7Remaining;
 
-        public static float Manawall => cooldownType8Remaining;
+        public static float Manawall => CooldownType8Remaining;
 
-        public static float Convert => cooldownType10Remaining;
+        public static float Convert => CooldownType10Remaining;
 
-        public static float Apocatastasis => cooldownType11Remaining;
+        public static float Apocatastasis => CooldownType11Remaining;
 
-        public static float LeyLines => cooldownType6Remaining;
+        public static float LeyLines => CooldownType6Remaining;
 
-        public static float Sharpcast => cooldownType4Remaining;
+        public static float Sharpcast => CooldownType4Remaining;
 
-        public static float Enochian => cooldownType15Remaining;
+        public static float Enochian => CooldownType15Remaining;
 
         public static float EnochianTimeRemaining
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return getTimer(8);
+                return GetTimer(8);
             }
         }
 
@@ -1977,15 +1977,15 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                if (_rawResourceData[10] == 255)
+                if (RawResourceData[10] == 255)
                     return 1;
-                if (_rawResourceData[10] == 254)
+                if (RawResourceData[10] == 254)
                     return 2;
-                if (_rawResourceData[10] == 253)
+                if (RawResourceData[10] == 253)
                     return 3;
 
                 return 0;
@@ -1996,14 +1996,14 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                if (_rawResourceData[10] > 3)
+                if (RawResourceData[10] > 3)
                     return 0;
 
-                return _rawResourceData[10];
+                return RawResourceData[10];
             }
         }
 
@@ -2011,11 +2011,11 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[11];
+                return RawResourceData[11];
             }
         }
 
@@ -2023,105 +2023,105 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return false;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[12] == 1;
+                return RawResourceData[12] == 1;
             }
         }
 
 
         // Arcanist
-        public static float EnergyDrain => cooldownType1Remaining;
+        public static float EnergyDrain => CooldownType1Remaining;
 
-        public static float Bane => cooldownType2Remaining;
+        public static float Bane => CooldownType2Remaining;
 
-        public static float Aetherflow => cooldownType5Remaining;
+        public static float Aetherflow => CooldownType5Remaining;
 
-        public static float Virus => cooldownType6Remaining;
+        public static float Virus => CooldownType6Remaining;
 
-        public static float Rouse => cooldownType7Remaining;
+        public static float Rouse => CooldownType7Remaining;
 
-        public static float EyeForAnEye => cooldownType10Remaining;
+        public static float EyeForAnEye => CooldownType10Remaining;
 
         public static int AetherflowCount
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
                 // Only the 4 low bits hold the aetherflow count. Higher holds aethertrail attunement.
-                return _rawResourceData[10] & 0xf;
+                return RawResourceData[10] & 0xf;
             }
         }
 
 
         // Summoner
-        public static float Fester => cooldownType3Remaining;
+        public static float Fester => CooldownType3Remaining;
 
-        public static float Spur => cooldownType8Remaining;
+        public static float Spur => CooldownType8Remaining;
 
-        public static float Enkindle => cooldownType12Remaining;
+        public static float Enkindle => CooldownType12Remaining;
 
-        public static float Painflare => cooldownType0Remaining;
+        public static float Painflare => CooldownType0Remaining;
 
-        public static float TriDisaster => cooldownType4Remaining;
+        public static float TriDisaster => CooldownType4Remaining;
 
-        public static float DreadwyrmTrance => cooldownType14Remaining;
+        public static float DreadwyrmTrance => CooldownType14Remaining;
 
-        public static float Deathflare => cooldownType15Remaining;
+        public static float Deathflare => CooldownType15Remaining;
 
         public static int AethertrailCount
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
                 // Only the 4 high bits hold the aethertrail count. Lower holds aetherflow stacks.
-                return _rawResourceData[10] >> 4;
+                return RawResourceData[10] >> 4;
             }
         }
 
 
         // Scholar
-        public static float Lustrate => cooldownType0Remaining;
+        public static float Lustrate => CooldownType0Remaining;
 
-        public static float SacredSoil => cooldownType4Remaining;
+        public static float SacredSoil => CooldownType4Remaining;
 
-        public static float Dissipation => cooldownType11Remaining;
+        public static float Dissipation => CooldownType11Remaining;
 
 
         // White Mage
-        public static float ClericStance => cooldownType0Remaining;
+        public static float ClericStance => CooldownType0Remaining;
 
-        public static float ShroudOfSaints => cooldownType7Remaining;
+        public static float ShroudOfSaints => CooldownType7Remaining;
 
-        public static float FluidAura => cooldownType2Remaining;
+        public static float FluidAura => CooldownType2Remaining;
 
-        public static float PresenceOfMind => cooldownType10Remaining;
+        public static float PresenceOfMind => CooldownType10Remaining;
 
-        public static float DivineSeal => cooldownType5Remaining;
+        public static float DivineSeal => CooldownType5Remaining;
 
-        public static float Benediction => cooldownType12Remaining;
+        public static float Benediction => CooldownType12Remaining;
 
 
         // Astrologian
-        public static float LuminiferousAether => cooldownType9Remaining;
+        public static float LuminiferousAether => CooldownType9Remaining;
 
         public static float CurrentCardRemainingTime
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return getTimer(6);
+                return GetTimer(6);
             }
         }
 
@@ -2129,12 +2129,12 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
                 // Chop off the high order bits containing the held card
-                var card = _rawResourceData[10] & 0xf;
+                var card = RawResourceData[10] & 0xf;
 
                 if (card > 6 || card < 1)
                     return CardTypes.None;
@@ -2147,12 +2147,12 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
                 // Chop off the low order bits containing the current card
-                var card = _rawResourceData[10] >> 4;
+                var card = RawResourceData[10] >> 4;
 
                 if (card > 6 || card < 1)
                     return CardTypes.None;
@@ -2165,12 +2165,12 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
                 // Chop off the low order bits containing the current card
-                var card = _rawResourceData[11] >> 4;
+                var card = RawResourceData[11] >> 4;
 
                 if (card > 3 || card < 1)
                     return RoyalRoadTypes.None;
@@ -2181,36 +2181,36 @@ namespace Chromatics.FFXIVInterfaces
 
 
         // Machinist
-        public static float RapidFire => cooldownType11Remaining;
+        public static float RapidFire => CooldownType11Remaining;
 
-        public static float Wildfire => cooldownType10Remaining;
+        public static float Wildfire => CooldownType10Remaining;
 
-        public static float Reload => cooldownType7Remaining;
+        public static float Reload => CooldownType7Remaining;
 
-        public static float QuickReload => cooldownType6Remaining;
+        public static float QuickReload => CooldownType6Remaining;
 
-        public static float Reassemble => cooldownType17Remaining;
+        public static float Reassemble => CooldownType17Remaining;
 
-        public static float Heartbreak => cooldownType4Remaining;
+        public static float Heartbreak => CooldownType4Remaining;
 
-        public static float Blank => cooldownType5Remaining;
+        public static float Blank => CooldownType5Remaining;
 
-        public static float Autoturret => cooldownType3Remaining;
+        public static float Autoturret => CooldownType3Remaining;
 
         public static int HeatGauge
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
                 // if we don't have gauss barrel on, we don't have any heat 
                 // (although sometimes the data in memory says we do, it'll be reset to 0 next time gauss barrel is turned on)
-                if (_rawResourceData[10] == 0)
+                if (RawResourceData[10] == 0)
                     return 0;
 
-                return _rawResourceData[8];
+                return RawResourceData[8];
             }
         }
 
@@ -2218,11 +2218,11 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[9];
+                return RawResourceData[9];
             }
         }
 
@@ -2230,13 +2230,13 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
                 // if we have gauss barrel on, return the actual cooldown timer
-                if (_rawResourceData[10] > 0)
-                    return getTimer(6);
+                if (RawResourceData[10] > 0)
+                    return GetTimer(6);
 
                 // Otherwise, return whichever has more time
                 return 0;
@@ -2247,16 +2247,16 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
                 // if we have gauss barrel on, return the actual cooldown timer
-                if (_rawResourceData[10] > 0)
-                    return cooldownType0Remaining;
+                if (RawResourceData[10] > 0)
+                    return CooldownType0Remaining;
 
                 // Otherwise, return whichever has more time
-                return Math.Max(cooldownType0Remaining, getTimer(6));
+                return Math.Max(CooldownType0Remaining, GetTimer(6));
             }
         }
 
@@ -2264,52 +2264,52 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return false;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[10] > 0;
+                return RawResourceData[10] > 0;
             }
         }
 
 
-        public static float GaussRound => cooldownType14Remaining;
+        public static float GaussRound => CooldownType14Remaining;
 
-        public static float Hypercharge => cooldownType13Remaining;
+        public static float Hypercharge => CooldownType13Remaining;
 
-        public static float Ricochet => cooldownType8Remaining;
+        public static float Ricochet => CooldownType8Remaining;
 
-        public static float BarrelStabilizer => cooldownType9Remaining;
+        public static float BarrelStabilizer => CooldownType9Remaining;
 
-        public static float Flamethrower => cooldownType15Remaining;
+        public static float Flamethrower => CooldownType15Remaining;
 
 
         // Red Mage
 
-        public static float CorpsACorps => cooldownType0Remaining;
+        public static float CorpsACorps => CooldownType0Remaining;
 
-        public static float Displacement => cooldownType1Remaining;
+        public static float Displacement => CooldownType1Remaining;
 
-        public static float Fleche => cooldownType2Remaining;
+        public static float Fleche => CooldownType2Remaining;
 
-        public static float Acceleration => cooldownType3Remaining;
+        public static float Acceleration => CooldownType3Remaining;
 
-        public static float ContreSixte => cooldownType4Remaining;
+        public static float ContreSixte => CooldownType4Remaining;
 
-        public static float Embolden => cooldownType5Remaining;
+        public static float Embolden => CooldownType5Remaining;
 
-        public static float Manafication => cooldownType6Remaining;
+        public static float Manafication => CooldownType6Remaining;
 
 
         public static int WhiteMana
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[6];
+                return RawResourceData[6];
             }
         }
 
@@ -2317,28 +2317,28 @@ namespace Chromatics.FFXIVInterfaces
         {
             get
             {
-                if (!initialized)
+                if (!Initialized)
                     return 0;
-                checkCache();
+                CheckCache();
 
-                return _rawResourceData[7];
+                return RawResourceData[7];
             }
         }
 
 
-        public static void refreshData()
+        public static void RefreshData()
         {
-            lock (refreshLock)
+            lock (RefreshLock)
             {
                 try
                 {
-                    if (!initialized)
+                    if (!Initialized)
                     {
-                        if (!Scanner.Instance.Locations.ContainsKey("COOLDOWNS") || !cooldownsInitialized)
+                        if (!Scanner.Instance.Locations.ContainsKey("COOLDOWNS") || !CooldownsInitialized)
                         {
                             //PluginController.debug("Initializing cooldowns...");
 
-                            sList = new List<Signature>();
+                            _sList = new List<Signature>();
 
                             // 021386E4
                             // 021388A4
@@ -2366,7 +2366,7 @@ namespace Chromatics.FFXIVInterfaces
                             // 01360ED4
                             // 001F0000
 
-                            sList.Add(new Signature
+                            _sList.Add(new Signature
                             {
                                 Key = "COOLDOWNS",
                                 PointerPath = new List<long>
@@ -2386,7 +2386,7 @@ namespace Chromatics.FFXIVInterfaces
                                     0x173F518
                                 }
                             });
-                            Scanner.Instance.LoadOffsets(sList);
+                            Scanner.Instance.LoadOffsets(_sList);
 
                             Thread.Sleep(100);
 
@@ -2396,18 +2396,18 @@ namespace Chromatics.FFXIVInterfaces
                                                 Scanner.Instance.Locations["COOLDOWNS"].GetAddress().ToInt64()
                                                     .ToString("X"));
 
-                                cooldownsInitialized = true;
+                                CooldownsInitialized = true;
                             }
                         }
 
 
-                        if (!Scanner.Instance.Locations.ContainsKey("CLASSRESOURCES") || !resourcesInitialized)
+                        if (!Scanner.Instance.Locations.ContainsKey("CLASSRESOURCES") || !ResourcesInitialized)
                         {
                             //PluginController.debug("Initializing cooldowns...");
 
-                            sList = new List<Signature>();
+                            _sList = new List<Signature>();
 
-                            sList.Add(new Signature
+                            _sList.Add(new Signature
                             {
                                 Key = "CLASSRESOURCES",
                                 PointerPath = new List<long>
@@ -2415,7 +2415,7 @@ namespace Chromatics.FFXIVInterfaces
                                     0x178ADAA
                                 }
                             });
-                            Scanner.Instance.LoadOffsets(sList);
+                            Scanner.Instance.LoadOffsets(_sList);
 
                             Thread.Sleep(100);
 
@@ -2425,12 +2425,12 @@ namespace Chromatics.FFXIVInterfaces
                                                 Scanner.Instance.Locations["CLASSRESOURCES"].GetAddress().ToInt64()
                                                     .ToString("X"));
 
-                                resourcesInitialized = true;
+                                ResourcesInitialized = true;
                             }
                         }
 
-                        if (cooldownsInitialized && resourcesInitialized)
-                            initialized = true;
+                        if (CooldownsInitialized && ResourcesInitialized)
+                            Initialized = true;
                     }
 
                     /*
@@ -2450,7 +2450,7 @@ namespace Chromatics.FFXIVInterfaces
                     }
                     */
 
-                    if (initialized)
+                    if (Initialized)
                     {
                         if (Scanner.Instance.Locations.ContainsKey("COOLDOWNS"))
                         {
@@ -2466,26 +2466,26 @@ namespace Chromatics.FFXIVInterfaces
                             var address = Scanner.Instance.Locations["CLASSRESOURCES"];
 
                             //PluginController.debug(" " + address.ToString("X8"));
-                            _rawResourceData = MemoryHandler.Instance.GetByteArray(address.GetAddress(), 20);
+                            RawResourceData = MemoryHandler.Instance.GetByteArray(address.GetAddress(), 20);
                         }
 
 
-                        lastUpdated = DateTime.Now;
+                        LastUpdated = DateTime.Now;
                     }
                 }
                 catch
                 {
-                    initialized = false;
+                    Initialized = false;
                 }
             }
         }
 
-        public static void checkCache()
+        public static void CheckCache()
         {
-            lock (cacheLock)
+            lock (CacheLock)
             {
-                if (lastUpdated + updateInterval <= DateTime.Now)
-                    refreshData();
+                if (LastUpdated + UpdateInterval <= DateTime.Now)
+                    RefreshData();
                 /*
                 if (initializedActor)
                 {
@@ -2495,36 +2495,36 @@ namespace Chromatics.FFXIVInterfaces
             }
         }
 
-        public static float getTimer(int i)
+        public static float GetTimer(int i)
         {
-            if (!initialized)
+            if (!Initialized)
                 return 0;
 
-            checkCache();
+            CheckCache();
 
-            return Math.Max(BitConverter.ToUInt16(_rawResourceData, i) / 1000f - currentTimeshift, 0);
+            return Math.Max(BitConverter.ToUInt16(RawResourceData, i) / 1000f - CurrentTimeshift, 0);
         }
 
-        public static byte getRaw(int i)
+        public static byte GetRaw(int i)
         {
-            if (!initialized)
+            if (!Initialized)
                 return 0;
 
-            checkCache();
+            CheckCache();
 
-            return _rawResourceData[i];
+            return RawResourceData[i];
         }
 
-        public static void startGCDPredict()
+        public static void StartGcdPredict()
         {
-            predictGCDUntil = DateTime.Now + TimeSpan.FromSeconds(0.5);
-            predictGCDDone = DateTime.Now + TimeSpan.FromSeconds(2.5);
+            _predictGcdUntil = DateTime.Now + TimeSpan.FromSeconds(0.5);
+            _predictGcdDone = DateTime.Now + TimeSpan.FromSeconds(2.5);
         }
 
-        public static void startCastPredict()
+        public static void StartCastPredict()
         {
-            predictCastUntil = DateTime.Now + TimeSpan.FromSeconds(0.5);
-            predictCastDone = DateTime.Now + TimeSpan.FromSeconds(2.5);
+            _predictCastUntil = DateTime.Now + TimeSpan.FromSeconds(0.5);
+            _predictCastDone = DateTime.Now + TimeSpan.FromSeconds(2.5);
         }
 
         [StructLayout(LayoutKind.Explicit, Pack = 1)]
@@ -2952,18 +2952,18 @@ namespace Chromatics.FFXIVInterfaces
                 _totalTime = TimeSpan.FromSeconds(totalTime);
             }
 
-            public float timeElapsed => (float) (DateTime.Now - _started).TotalSeconds + currentTimeshift;
+            public float TimeElapsed => (float) (DateTime.Now - _started).TotalSeconds + CurrentTimeshift;
 
-            public float timeTotal
+            public float TimeTotal
             {
                 get => (float) _totalTime.TotalSeconds;
                 set => _totalTime = TimeSpan.FromSeconds(value);
             }
 
-            public float timeRemaining => (float) Math.Max(
-                (_started + _totalTime - DateTime.Now).TotalSeconds - currentTimeshift, 0);
+            public float TimeRemaining => (float) Math.Max(
+                (_started + _totalTime - DateTime.Now).TotalSeconds - CurrentTimeshift, 0);
 
-            public void start(bool irrelivent = false)
+            public void Start(bool irrelivent = false)
             {
                 _started = DateTime.Now;
             }

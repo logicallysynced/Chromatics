@@ -23,48 +23,62 @@ namespace Chromatics
 {
     partial class Chromatics
     {
-        private Color _BaseColor = Color.Black;
+        private Color _baseColor = Color.Black;
 
-        private Cooldowns.CardTypes _CurrentCard;
-        private string _CurrentStatus = "";
+        private Cooldowns.CardTypes _currentCard;
+        private string _currentStatus = "";
         private bool _dfcount;
         private bool _dfpop;
         private int _hp;
         private bool _targeted;
-        private bool castalert;
+        private bool _castalert;
 
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
          */
 
-        private bool lastcast;
-        private bool MenuNotify;
+        private bool _lastcast;
+        private bool _menuNotify;
 
         //private static readonly object _ReadFFXIVMemory = new object();
-        private ActorEntity PlayerInfo = new ActorEntity();
+        private ActorEntity _playerInfo = new ActorEntity();
 
-        private ConcurrentDictionary<uint, ActorEntity> PlayerInfoX = new ConcurrentDictionary<uint, ActorEntity>();
-        private bool playgroundonce;
-        private bool successcast;
+        private ConcurrentDictionary<uint, ActorEntity> _playerInfoX = new ConcurrentDictionary<uint, ActorEntity>();
+        private bool _playgroundonce;
+        private bool _successcast;
 
-        public void FFXIVGameStop()
+        public void FfxivGameStop()
         {
-            if (attatched == 0) return;
+            if (Attatched == 0) return;
 
-            //Console.WriteLine("Debug trip");
+            //Debug.WriteLine("Debug trip");
 
             HoldReader = true;
 
+            if (ArxSdkCalled == 1 && ArxState == 0)
+                _arx.ArxSetIndex("info.html");
+
             MemoryTasks.Cleanup();
-            Watchdog.WatchdogStop();
-            GameResetCatch.Enabled = false;
-            WriteConsole(ConsoleTypes.FFXIV, "Game stopped");
-            attatched = 0;
+
+            //Watchdog.WatchdogStop();
+            _gameResetCatch.Enabled = false;
+            WriteConsole(ConsoleTypes.Ffxiv, "Game stopped");
+
+
+            Attatched = 0;
             ArxState = 0;
+            Init = true;
+            _gameNotify = false;
+            //MemoryHandler.Instance.ProcessModel = null;
+            _call = null;
 
-            HoldReader = false;
+            _playerInfo = null;
+            _playerInfoX = null;
 
-            FFXIVcts.Cancel();
+
+            //HoldReader = false;
+            _ffxiVcts.Cancel();
+            GlobalUpdateState("static", Color.DeepSkyBlue, false);
         }
 
         /* Attatch to FFXIV process after determining if running DX9 or DX11.
@@ -73,7 +87,7 @@ namespace Chromatics
 
         public bool InitiateMemory()
         {
-            var _initiated = false;
+            var initiated = false;
 
             try
             {
@@ -83,18 +97,18 @@ namespace Chromatics
                 // DX9
                 if (processes9.Length > 0)
                 {
-                    WriteConsole(ConsoleTypes.FFXIV, "Attempting Attach..");
+                    WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
 
-                    if (init)
+                    if (Init)
                     {
-                        WriteConsole(ConsoleTypes.FFXIV, "Chromatics already attached.");
+                        WriteConsole(ConsoleTypes.Ffxiv, "Chromatics already attached.");
                         return true;
                     }
 
-                    init = false;
+                    Init = false;
                     // supported: English, Chinese, Japanese, French, German, Korean
                     var gameLanguage = "English";
-                    var ignoreJSONCache = ChromaticsSettings.ChromaticsSettings_MemoryCache ? false : true;
+                    var ignoreJsonCache = ChromaticsSettings.ChromaticsSettingsMemoryCache ? false : true;
                     // patchVersion of game, or latest
                     var patchVersion = "latest";
                     var process = processes9[0];
@@ -103,29 +117,29 @@ namespace Chromatics
                         Process = process,
                         IsWin64 = true
                     };
-                    MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJSONCache);
-                    _initiated = true;
-                    init = true;
-                    isDX11 = false;
+                    MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJsonCache);
+                    initiated = true;
+                    Init = true;
+                    IsDx11 = false;
 
-                    WriteConsole(ConsoleTypes.FFXIV, "DX9 Initiated");
-                    WriteConsole(ConsoleTypes.ERROR,
+                    WriteConsole(ConsoleTypes.Ffxiv, "DX9 Initiated");
+                    WriteConsole(ConsoleTypes.Error,
                         "DX9 support has been phased out from Chromatics. Please use DX11 when using Chromatics.");
                 }
 
                 // DX11
                 else if (processes11.Length > 0)
                 {
-                    WriteConsole(ConsoleTypes.FFXIV, "Attempting Attach..");
+                    WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
 
-                    if (init)
+                    if (Init)
                         return true;
 
 
-                    init = false;
+                    Init = false;
                     // supported: English, Chinese, Japanese, French, German, Korean
                     var gameLanguage = "English";
-                    var ignoreJSONCache = ChromaticsSettings.ChromaticsSettings_MemoryCache ? false : true;
+                    var ignoreJsonCache = ChromaticsSettings.ChromaticsSettingsMemoryCache ? false : true;
                     // patchVersion of game, or latest
                     var patchVersion = "latest";
                     var process = processes11[0];
@@ -134,35 +148,35 @@ namespace Chromatics
                         Process = process,
                         IsWin64 = true
                     };
-                    MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJSONCache);
-                    _initiated = true;
-                    init = true;
-                    isDX11 = true;
+                    MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJsonCache);
+                    initiated = true;
+                    Init = true;
+                    IsDx11 = true;
 
-                    WriteConsole(ConsoleTypes.FFXIV, "DX11 Initiated");
+                    WriteConsole(ConsoleTypes.Ffxiv, "DX11 Initiated");
                 }
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.ERROR, "Error: " + ex.Message);
-                WriteConsole(ConsoleTypes.ERROR, "Internal Error: " + ex.StackTrace);
+                WriteConsole(ConsoleTypes.Error, "Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, "Internal Error: " + ex.StackTrace);
             }
 
-            return _initiated;
+            return initiated;
         }
 
         /* Memory Loop */
 
-        private async Task CallFFXIVMemory(CancellationToken ct)
+        private async Task CallFfxivMemory(CancellationToken ct)
         {
             while (!ct.IsCancellationRequested)
             {
                 await Task.Delay(300);
-                ReadFFXIVMemory();
+                ReadFfxivMemory();
             }
         }
 
-        public void ReadFFXIVMemory()
+        public void ReadFfxivMemory()
         {
             try
             {
@@ -177,73 +191,77 @@ namespace Chromatics
                 var processes11 = Process.GetProcessesByName("ffxiv_dx11");
 
                 if (processes11.Length == 0)
-                    FFXIVGameStop();
+                    FfxivGameStop();
 
 
-                if (attatched > 0)
+                if (Attatched > 0)
                 {
                     //Get Data
 
-                    PlayerInfoX = Reader.GetActors()?.PCEntities;
-                    PlayerInfo = ActorEntity.CurrentUser;
+                    _playerInfoX = Reader.GetActors()?.PCEntities;
+                    _playerInfo = ActorEntity.CurrentUser;
 
                     //Console.WriteLine(PlayerInfo.Name);
                     //Action
-                    if (attatched == 3)
+                    if (Attatched == 3)
                     {
                         //Game is Running
                         //Check if game has stopped by checking Character data for a null value.
 
-                        if (PlayerInfo != null && PlayerInfo.Name == "")
+                        if (_playerInfo != null && _playerInfo.Name == "")
                         {
                             //End Game Running if timed out
-                            if (!GameResetCatch.Enabled)
+                            if (!_gameResetCatch.Enabled)
                             {
                                 //Console.WriteLine("Debug on");
-                                GameResetCatch.Enabled = true;
-                                GameResetCatch.AutoReset = false;
+                                _gameResetCatch.Enabled = true;
+                                _gameResetCatch.AutoReset = false;
                             }
                         }
                         else
                         {
-                            GameResetCatch.Enabled = false;
+                            _gameResetCatch.Enabled = false;
                         }
 
 
                         //Call function to parse FFXIV data
                         if (HoldReader == false)
-                            ProcessFFXIVData();
+                            ProcessFfxivData();
                     }
                     else
                     {
                         //Game Not Running
-                        if (attatched == 1)
+                        if (Attatched == 1)
                         {
-                            state = 6;
+                            State = 6;
                             GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
-                            attatched = 2;
+
+                            _playerInfo = null;
+                            _playerInfoX = null;
+
+                            Attatched = 2;
                         }
 
                         //Game in Menu
-                        else if (attatched == 2)
+                        else if (Attatched == 2)
                         {
-                            if (PlayerInfo != null && PlayerInfo.Name != "")
+                            if (_playerInfo != null && _playerInfo.Name != "")
                             {
                                 //Set Game Active
-                                WriteConsole(ConsoleTypes.FFXIV, "Game Running (" + PlayerInfo.Name + ")");
+                                WriteConsole(ConsoleTypes.Ffxiv, "Game Running (" + _playerInfo.Name + ")");
 
 
-                                if (ArxSDKCalled == 1 && ArxState == 0)
-                                    _arx.ArxUpdateInfo("Game Running (" + PlayerInfo.Name + ")");
+                                if (ArxSdkCalled == 1 && ArxState == 0)
+                                    _arx.ArxUpdateInfo("Game Running (" + _playerInfo.Name + ")");
 
-                                MenuNotify = false;
+                                _menuNotify = false;
                                 Setbase = false;
                                 //GlobalUpdateState("static", Color.Red, false);
                                 //GlobalUpdateBulbState(100, System.Drawing.Color.Red, 100);
-                                Watchdog.WatchdogGo();
-                                attatched = 3;
+                                //Watchdog.WatchdogGo();
+                                Attatched = 3;
 
-                                if (ArxSDKCalled == 1)
+                                if (ArxSdkCalled == 1)
                                 {
                                     if (ArxState != 0) return;
                                     if (cb_arx_mode.SelectedIndex < 4)
@@ -267,7 +285,7 @@ namespace Chromatics
                                                 if (changed.EndsWith("/"))
                                                     changed = changed.Substring(0, changed.Length - 1);
 
-                                                _arx.ArxSendACTInfo(changed, 8085);
+                                                _arx.ArxSendActInfo(changed, 8085);
                                                 break;
                                         }
                                     }
@@ -279,19 +297,19 @@ namespace Chromatics
                                     }
                                 }
 
-                                state = 0;
+                                State = 0;
                             }
                             else
                             {
                                 //Main Menu Still Active
-                                if (!MenuNotify)
+                                if (!_menuNotify)
                                 {
-                                    WriteConsole(ConsoleTypes.FFXIV, "Main Menu is still active.");
+                                    WriteConsole(ConsoleTypes.Ffxiv, "Main Menu is still active.");
 
-                                    if (ArxSDKCalled == 1 && ArxState == 0)
+                                    if (ArxSdkCalled == 1 && ArxState == 0)
                                         _arx.ArxUpdateInfo("Main Menu is still active");
 
-                                    MenuNotify = true;
+                                    _menuNotify = true;
                                 }
                             }
                         }
@@ -300,2374 +318,2426 @@ namespace Chromatics
                 else
                 {
                     //Not Attached
-                    attatched = 0;
+                    Attatched = 0;
                     ArxState = 0;
 
-                    if (ArxSDKCalled == 1 && ArxState == 0)
+                    if (ArxSdkCalled == 1 && ArxState == 0)
                         _arx.ArxSetIndex("info.html");
 
                     GlobalUpdateState("static", Color.DeepSkyBlue, false);
                     //GlobalApplyMapMouseLighting("All", Color.DeepSkyBlue, false);
-                    GlobalUpdateBulbState(DeviceModeTypes.STANDBY, Color.DeepSkyBlue, 0);
+                    //GlobalUpdateBulbState(DeviceModeTypes.STANDBY, Color.DeepSkyBlue, 0);
 
                     //Console.WriteLine("Debug C");
 
-                    Attachcts = new CancellationTokenSource();
+                    MemoryTasks.Remove(_MemoryTask);
 
-                    var _MemoryTask = new Task(() =>
-                    {
-                        var _call = CallFFXIVAttach(Attachcts.Token);
-                    }, MemoryTask.Token);
+                    _MemoryTask = null;
+                    _call = null;
+                    _attachcts = new CancellationTokenSource();
+                    _ffxiVcts.Cancel();
+
+                    _MemoryTask = new Task(() => { _call = CallFfxivAttach(_attachcts.Token); }, _memoryTask.Token);
 
                     MemoryTasks.Add(_MemoryTask);
                     MemoryTasks.Run(_MemoryTask);
-                    FFXIVcts.Cancel();
                 }
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.ERROR, "Init Error: " + ex.Message);
-                WriteConsole(ConsoleTypes.ERROR, "Internal Error: " + ex.StackTrace);
+                WriteConsole(ConsoleTypes.Error, "Init Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, "Internal Error: " + ex.StackTrace);
             }
         }
 
-        private void ProcessFFXIVData()
+        private void ProcessFfxivData()
         {
             MemoryTasks.Cleanup();
 
             try
             {
                 //Get Data
-                var TargetInfo = new ActorEntity();
-                var TargetEmnityInfo = new List<EnmityEntry>();
-                var PartyInfo = new ConcurrentDictionary<uint, PartyEntity>();
-                var PartyListNew = new List<uint>();
-                var PartyListOld = new Dictionary<uint, uint>();
+                var targetInfo = new ActorEntity();
+                var targetEmnityInfo = new List<EnmityEntry>();
+                var partyInfo = new ConcurrentDictionary<uint, PartyEntity>();
+                var partyListNew = new List<uint>();
+                var partyListOld = new Dictionary<uint, uint>();
 
 
-                PlayerInfoX = Reader.GetActors()?.PCEntities;
-                PlayerInfo = ActorEntity.CurrentUser;
+                _playerInfoX = Reader.GetActors()?.PCEntities;
+                _playerInfo = ActorEntity.CurrentUser;
 
                 try
                 {
-                    if (PlayerInfo.Name != "" && PlayerInfo.TargetID > 0)
+                    if (_playerInfo.Name != "" && _playerInfo.TargetID > 0)
                     {
-                        TargetInfo = Reader.GetTargetInfo()?.TargetEntity?.CurrentTarget;
-                        TargetEmnityInfo = Reader.GetTargetInfo()?.TargetEntity?.EnmityEntries;
+                        targetInfo = Reader.GetTargetInfo()?.TargetEntity?.CurrentTarget;
+                        targetEmnityInfo = Reader.GetTargetInfo()?.TargetEntity?.EnmityEntries;
                     }
 
-                    PartyInfo = Reader.GetPartyMembers()?.PartyEntities;
+                    partyInfo = Reader.GetPartyMembers()?.PartyEntities;
 
-                    PartyListNew = Reader.GetPartyMembers()?.NewParty;
-                    PartyListOld = Reader.GetPartyMembers()?.RemovedParty;
+                    partyListNew = Reader.GetPartyMembers()?.NewParty;
+                    partyListOld = Reader.GetPartyMembers()?.RemovedParty;
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.ERROR, "Parser B: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, "Parser B: " + ex.Message);
                 }
 
 
-                if (PlayerInfo != null && PlayerInfo.Name != "")
-                    Watchdog.WatchdogReset();
+                if (_playerInfo != null && _playerInfo.Name != "")
+                    //Watchdog.WatchdogReset();
 
 
-                if (PlayerInfo != null)
-                {
-                    if (!playgroundonce)
-                        playgroundonce = true;
-
-                    /*
-                    var mapname = Sharlayan.Helpers.ZoneHelper.MapInfo(PlayerInfo.MapID).Name;
-                    Debug.WriteLine(mapname.English);
-                    */
-
-                    //End Playground
-
-                    var max_HP = 0;
-                    var current_HP = 0;
-                    var max_MP = 0;
-                    var current_MP = 0;
-                    var max_TP = 0;
-                    var current_TP = 0;
-                    var hp_perc = PlayerInfo.HPPercent;
-                    var mp_perc = PlayerInfo.MPPercent;
-                    var tp_perc = PlayerInfo.TPPercent;
-                    var c_class = "battle";
-
-                    //Set colour variables
-
-                    var BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor);
-                    var HighlightColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_HighlightColor);
-
-                    var col_hpfull = ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPFull);
-                    var col_hpempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPEmpty);
-                    var col_hpcritical = ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPCritical);
-                    var col_mpfull = ColorTranslator.FromHtml(ColorMappings.ColorMapping_MPFull);
-                    var col_mpempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_MPEmpty);
-                    var col_tpfull = ColorTranslator.FromHtml(ColorMappings.ColorMapping_TPFull);
-                    var col_tpempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_TPEmpty);
-                    var col_castcharge = ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeFull);
-                    var col_castempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty);
-
-                    var col_em0 = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Emnity0);
-                    var col_em1 = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Emnity1);
-                    var col_em2 = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Emnity2);
-                    var col_em3 = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Emnity3);
-                    var col_em4 = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Emnity4);
-
-                    Console.WriteLine(PlayerInfo.Job);
-
-                    //Get Battle, Crafting or Gathering Data
-
-                    if (PlayerInfo.Job == Actor.Job.ALC || PlayerInfo.Job == Actor.Job.ARM ||
-                        PlayerInfo.Job == Actor.Job.BSM ||
-                        PlayerInfo.Job == Actor.Job.CPT || PlayerInfo.Job == Actor.Job.CUL ||
-                        PlayerInfo.Job == Actor.Job.GSM ||
-                        PlayerInfo.Job == Actor.Job.LTW || PlayerInfo.Job == Actor.Job.WVR)
+                    if (_playerInfo != null)
                     {
-                        max_HP = PlayerInfo.HPMax;
-                        current_HP = PlayerInfo.HPCurrent;
-                        max_MP = PlayerInfo.CPMax;
-                        current_MP = PlayerInfo.CPCurrent;
-                        max_TP = PlayerInfo.TPMax;
-                        current_TP = PlayerInfo.TPCurrent;
-                        mp_perc = PlayerInfo.CPPercent;
-                        c_class = "craft";
+                        if (!_playgroundonce)
+                            _playgroundonce = true;
 
-                        col_mpfull = ColorTranslator.FromHtml(ColorMappings.ColorMapping_CPFull);
-                        col_mpempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_CPEmpty);
-                    }
-                    else if (PlayerInfo.Job == Actor.Job.FSH || PlayerInfo.Job == Actor.Job.BTN ||
-                             PlayerInfo.Job == Actor.Job.MIN)
-                    {
-                        max_HP = PlayerInfo.HPMax;
-                        current_HP = PlayerInfo.HPCurrent;
-                        max_MP = PlayerInfo.GPMax;
-                        current_MP = PlayerInfo.GPCurrent;
-                        max_TP = PlayerInfo.TPMax;
-                        current_TP = PlayerInfo.TPCurrent;
-                        mp_perc = PlayerInfo.GPPercent;
-                        c_class = "gather";
+                        /*
+                        var mapname = Sharlayan.Helpers.ZoneHelper.MapInfo(PlayerInfo.MapID).Name;
+                        Debug.WriteLine(mapname.English);
+                        */
 
-                        col_mpfull = ColorTranslator.FromHtml(ColorMappings.ColorMapping_GPFull);
-                        col_mpempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_GPEmpty);
-                    }
-                    else
-                    {
-                        max_HP = PlayerInfo.HPMax;
-                        current_HP = PlayerInfo.HPCurrent;
-                        max_MP = PlayerInfo.MPMax;
-                        current_MP = PlayerInfo.MPCurrent;
-                        max_TP = PlayerInfo.TPMax;
-                        current_TP = PlayerInfo.TPCurrent;
-                        mp_perc = PlayerInfo.MPPercent;
-                        c_class = "battle";
+                        //End Playground
 
-                        col_mpfull = ColorTranslator.FromHtml(ColorMappings.ColorMapping_MPFull);
-                        col_mpempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_MPEmpty);
-                    }
+                        var maxHp = 0;
+                        var currentHp = 0;
+                        var maxMp = 0;
+                        var currentMp = 0;
+                        var maxTp = 0;
+                        var currentTp = 0;
+                        var hpPerc = _playerInfo.HPPercent;
+                        var mpPerc = _playerInfo.MPPercent;
+                        var tpPerc = _playerInfo.TPPercent;
+                        var cClass = "battle";
 
-                    //Update ARX
-                    if (PartyInfo != null)
-                    {
-                        //Console.WriteLine(PartyInfo[0]);
-                        //var partyx = PartyList[1];
-                        //Console.WriteLine(PartyListNew.Count);
-                    }
+                        //Set colour variables
 
-                    if (ArxSDKCalled == 1)
-                        if (ArxState == 1)
+                        var baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
+                        var highlightColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                        var colHpfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingHpFull);
+                        var colHpempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingHpEmpty);
+                        var colHpcritical = ColorTranslator.FromHtml(ColorMappings.ColorMappingHpCritical);
+                        var colMpfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingMpFull);
+                        var colMpempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingMpEmpty);
+                        var colTpfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingTpFull);
+                        var colTpempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingTpEmpty);
+                        var colCastcharge = ColorTranslator.FromHtml(ColorMappings.ColorMappingCastChargeFull);
+                        var colCastempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingCastChargeEmpty);
+
+                        var colEm0 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity0);
+                        var colEm1 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity1);
+                        var colEm2 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity2);
+                        var colEm3 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity3);
+                        var colEm4 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity4);
+
+                        Console.WriteLine(_playerInfo.Job);
+
+                        //Get Battle, Crafting or Gathering Data
+
+                        if (_playerInfo.Job == Actor.Job.ALC || _playerInfo.Job == Actor.Job.ARM ||
+                            _playerInfo.Job == Actor.Job.BSM ||
+                            _playerInfo.Job == Actor.Job.CPT || _playerInfo.Job == Actor.Job.CUL ||
+                            _playerInfo.Job == Actor.Job.GSM ||
+                            _playerInfo.Job == Actor.Job.LTW || _playerInfo.Job == Actor.Job.WVR)
                         {
-                            hp_perc = PlayerInfo.HPPercent;
-                            tp_perc = PlayerInfo.TPPercent;
+                            maxHp = _playerInfo.HPMax;
+                            currentHp = _playerInfo.HPCurrent;
+                            maxMp = _playerInfo.CPMax;
+                            currentMp = _playerInfo.CPCurrent;
+                            maxTp = _playerInfo.TPMax;
+                            currentTp = _playerInfo.TPCurrent;
+                            mpPerc = _playerInfo.CPPercent;
+                            cClass = "craft";
 
-                            var arx_hudmd = "normal";
-                            double target_percent = 0;
-                            var target_hpcurrent = 0;
-                            var target_hpmax = 0;
-                            var target_name = "target";
-                            var target_engaged = 0;
+                            colMpfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingCpFull);
+                            colMpempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingCpEmpty);
+                        }
+                        else if (_playerInfo.Job == Actor.Job.FSH || _playerInfo.Job == Actor.Job.BTN ||
+                                 _playerInfo.Job == Actor.Job.MIN)
+                        {
+                            maxHp = _playerInfo.HPMax;
+                            currentHp = _playerInfo.HPCurrent;
+                            maxMp = _playerInfo.GPMax;
+                            currentMp = _playerInfo.GPCurrent;
+                            maxTp = _playerInfo.TPMax;
+                            currentTp = _playerInfo.TPCurrent;
+                            mpPerc = _playerInfo.GPPercent;
+                            cClass = "gather";
 
-                            if (TargetInfo != null && TargetInfo.Type == Actor.Type.Monster)
+                            colMpfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingGpFull);
+                            colMpempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingGpEmpty);
+                        }
+                        else
+                        {
+                            maxHp = _playerInfo.HPMax;
+                            currentHp = _playerInfo.HPCurrent;
+                            maxMp = _playerInfo.MPMax;
+                            currentMp = _playerInfo.MPCurrent;
+                            maxTp = _playerInfo.TPMax;
+                            currentTp = _playerInfo.TPCurrent;
+                            mpPerc = _playerInfo.MPPercent;
+                            cClass = "battle";
+
+                            colMpfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingMpFull);
+                            colMpempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingMpEmpty);
+                        }
+
+                        //Update ARX
+                        if (partyInfo != null)
+                        {
+                            //Console.WriteLine(PartyInfo[0]);
+                            //var partyx = PartyList[1];
+                            //Console.WriteLine(PartyListNew.Count);
+                        }
+
+                        if (ArxSdkCalled == 1)
+                            if (ArxState == 1)
                             {
-                                arx_hudmd = "target";
-                                target_percent = TargetInfo.HPPercent;
-                                target_hpcurrent = TargetInfo.HPCurrent;
-                                target_hpmax = TargetInfo.HPMax;
-                                target_name = TargetInfo.Name + " (Lv. " + TargetInfo.Level + ")";
-                                target_engaged = 0;
+                                hpPerc = _playerInfo.HPPercent;
+                                tpPerc = _playerInfo.TPPercent;
 
-                                if (TargetInfo.IsClaimed)
-                                    target_engaged = 1;
+                                var arxHudmd = "normal";
+                                double targetPercent = 0;
+                                var targetHpcurrent = 0;
+                                var targetHpmax = 0;
+                                var targetName = "target";
+                                var targetEngaged = 0;
+
+                                if (targetInfo != null && targetInfo.Type == Actor.Type.Monster)
+                                {
+                                    arxHudmd = "target";
+                                    targetPercent = targetInfo.HPPercent;
+                                    targetHpcurrent = targetInfo.HPCurrent;
+                                    targetHpmax = targetInfo.HPMax;
+                                    targetName = targetInfo.Name + " (Lv. " + targetInfo.Level + ")";
+                                    targetEngaged = 0;
+
+                                    if (targetInfo.IsClaimed)
+                                        targetEngaged = 1;
+                                }
+
+                                _arx.ArxUpdateFfxivStats(hpPerc, mpPerc, tpPerc, currentHp, currentMp, currentTp,
+                                    _playerInfo.MapID, cClass, arxHudmd, targetPercent, targetHpcurrent,
+                                    targetHpmax,
+                                    targetName, targetEngaged);
+                            }
+                            else if (ArxState == 2)
+                            {
+                                Console.WriteLine(partyInfo.Count);
+                                var datastring = new string[10];
+                                for (uint i = 0; i < 10; i++)
+                                    //Console.WriteLine(i);
+                                    //PlayerInfo.Job == "ALC" || PlayerInfo.Job == "ARM" || PlayerInfo.Job == "BSM" || PlayerInfo.Job == "CPT" || PlayerInfo.Job == "CUL" || PlayerInfo.Job == "GSM" || PlayerInfo.Job == "LTW" || PlayerInfo.Job == "WVR")
+                                    if (partyInfo != null && i < partyInfo.Count)
+                                    {
+                                        //Console.WriteLine(i);
+                                        var pid = partyListNew[Convert.ToInt32(i)];
+                                        var ptType = "";
+                                        var ptTpcurrent = "";
+                                        var ptTppercent = "";
+                                        var ptEmnityno = "";
+                                        var ptJob = "";
+
+                                        if (targetInfo != null && targetInfo.Type == Actor.Type.Monster &&
+                                            targetInfo.IsClaimed)
+                                        {
+                                            //Collect Emnity Table
+                                            //var TargetEmnity = TargetEmnityInfo.Count;
+                                            var emnitytableX = new List<KeyValuePair<uint, uint>>();
+
+
+                                            for (var g = 0; g < targetEmnityInfo.Count; g++)
+                                                emnitytableX.Add(new KeyValuePair<uint, uint>(targetEmnityInfo[g].ID,
+                                                    targetEmnityInfo[g].Enmity));
+
+                                            //Sort emnity by highest holder
+                                            emnitytableX.OrderBy(kvp => kvp.Value);
+
+                                            //Get your index in the list
+                                            ptEmnityno = emnitytableX.FindIndex(a => a.Key == partyInfo[pid].ID)
+                                                .ToString();
+                                        }
+                                        else
+                                        {
+                                            ptEmnityno = "0";
+                                        }
+
+                                        switch (partyInfo[pid].Job)
+                                        {
+                                            case Actor.Job.FSH:
+                                                ptType = "player";
+                                                ptJob = "Fisher";
+                                                break;
+                                            case Actor.Job.BTN:
+                                                ptType = "player";
+                                                ptJob = "Botanist";
+                                                break;
+                                            case Actor.Job.MIN:
+                                                ptType = "player";
+                                                ptJob = "Miner";
+                                                break;
+                                            case Actor.Job.ALC:
+                                                ptType = "player";
+                                                ptJob = "Alchemist";
+                                                break;
+                                            case Actor.Job.ARM:
+                                                ptType = "player";
+                                                ptJob = "Armorer";
+                                                break;
+                                            case Actor.Job.BSM:
+                                                ptType = "player";
+                                                ptJob = "Blacksmith";
+                                                break;
+                                            case Actor.Job.CPT:
+                                                ptType = "player";
+                                                ptJob = "Carpenter";
+                                                break;
+                                            case Actor.Job.CUL:
+                                                ptType = "player";
+                                                ptJob = "Culinarian";
+                                                break;
+                                            case Actor.Job.GSM:
+                                                ptType = "player";
+                                                ptJob = "Goldsmith";
+                                                break;
+                                            case Actor.Job.LTW:
+                                                ptType = "player";
+                                                ptJob = "Leatherworker";
+                                                break;
+                                            case Actor.Job.WVR:
+                                                ptType = "player";
+                                                ptJob = "Weaver";
+                                                break;
+                                            case Actor.Job.ARC:
+                                                ptType = "player";
+                                                ptJob = "Archer";
+                                                break;
+                                            case Actor.Job.LNC:
+                                                ptType = "player";
+                                                ptJob = "Lancer";
+                                                break;
+                                            case Actor.Job.CNJ:
+                                                ptType = "player";
+                                                ptJob = "Conjurer";
+                                                break;
+                                            case Actor.Job.GLD:
+                                                ptType = "player";
+                                                ptJob = "Gladiator";
+                                                break;
+                                            case Actor.Job.MRD:
+                                                ptType = "player";
+                                                ptJob = "Marauder";
+                                                break;
+                                            case Actor.Job.PGL:
+                                                ptType = "player";
+                                                ptJob = "Pugilist";
+                                                break;
+                                            case Actor.Job.ROG:
+                                                ptType = "player";
+                                                ptJob = "Rouge";
+                                                break;
+                                            case Actor.Job.THM:
+                                                ptType = "player";
+                                                ptJob = "Thaumaturge";
+                                                break;
+                                            case Actor.Job.ACN:
+                                                ptType = "player";
+                                                ptJob = "Arcanist";
+                                                break;
+                                            case Actor.Job.AST:
+                                                ptType = "player";
+                                                ptJob = "Astrologian";
+                                                break;
+                                            case Actor.Job.BRD:
+                                                ptType = "player";
+                                                ptJob = "Bard";
+                                                break;
+                                            case Actor.Job.BLM:
+                                                ptType = "player";
+                                                ptJob = "Black_Mage";
+                                                break;
+                                            case Actor.Job.DRK:
+                                                ptType = "player";
+                                                ptJob = "Dark_Knight";
+                                                break;
+                                            case Actor.Job.DRG:
+                                                ptType = "player";
+                                                ptJob = "Dragoon";
+                                                break;
+                                            case Actor.Job.MCH:
+                                                ptType = "player";
+                                                ptJob = "Machinist";
+                                                break;
+                                            case Actor.Job.MNK:
+                                                ptType = "player";
+                                                ptJob = "Monk";
+                                                break;
+                                            case Actor.Job.NIN:
+                                                ptType = "player";
+                                                ptJob = "Ninja";
+                                                break;
+                                            case Actor.Job.PLD:
+                                                ptType = "player";
+                                                ptJob = "Paladin";
+                                                break;
+                                            case Actor.Job.SCH:
+                                                ptType = "player";
+                                                ptJob = "Scholar";
+                                                break;
+                                            case Actor.Job.SMN:
+                                                ptType = "player";
+                                                ptJob = "Summoner";
+                                                break;
+                                            case Actor.Job.WHM:
+                                                ptType = "player";
+                                                ptJob = "White_Mage";
+                                                break;
+                                            case Actor.Job.WAR:
+                                                ptType = "player";
+                                                ptJob = "Warrior";
+                                                break;
+                                            case Actor.Job.SAM:
+                                                ptType = "player";
+                                                ptJob = "Samurai";
+                                                break;
+                                            case Actor.Job.RDM:
+                                                ptType = "player";
+                                                ptJob = "Red_Mage";
+                                                break;
+                                            default:
+                                                ptType = "unknown";
+                                                ptJob = "Chocobo";
+                                                break;
+                                        }
+
+                                        if (i == 0)
+                                        {
+                                            ptTppercent = tpPerc.ToString("#0%");
+                                            ptTpcurrent = currentTp.ToString();
+                                        }
+                                        else
+                                        {
+                                            ptTppercent = "100%";
+                                            ptTpcurrent = "1000";
+                                        }
+
+                                        datastring[i] = "1," + ptType + "," + partyInfo[pid].Name + "," +
+                                                        partyInfo[pid].HPPercent.ToString("#0%") + "," +
+                                                        partyInfo[pid].HPCurrent + "," +
+                                                        partyInfo[pid].MPPercent.ToString("#0%") + "," +
+                                                        partyInfo[pid].MPCurrent + "," + ptTppercent + "," +
+                                                        ptTpcurrent +
+                                                        "," + ptEmnityno + "," + ptJob;
+                                        Console.WriteLine(i + @": " + datastring[i]);
+                                    }
+                                    else
+                                    {
+                                        datastring[i] = "0,0,0,0,0,0,0,0,0";
+                                        //Console.WriteLine(i + @": " + datastring[i]);
+                                    }
+
+                                _arx.ArxUpdateFfxivParty(datastring[1], datastring[2], datastring[3], datastring[4],
+                                    datastring[5], datastring[6], datastring[7], datastring[8], datastring[9]);
+                            }
+                            else if (ArxState == 100)
+                            {
+                                hpPerc = _playerInfo.HPPercent;
+                                tpPerc = _playerInfo.TPPercent;
+
+                                var hpMax = _playerInfo.HPMax;
+                                var mpMax = _playerInfo.MPMax;
+                                var playerposX = _playerInfo.X;
+                                var playerposY = _playerInfo.Y;
+                                var playerposZ = _playerInfo.Z;
+                                var actionstatus = _playerInfo.ActionStatus;
+                                var castperc = _playerInfo.CastingPercentage;
+                                var castprogress = _playerInfo.CastingProgress;
+                                var casttime = _playerInfo.CastingTime;
+                                var castingtoggle = _playerInfo.IsCasting;
+                                var hitboxrad = _playerInfo.HitBoxRadius;
+                                var playerclaimed = _playerInfo.IsClaimed;
+                                var playerjob = _playerInfo.Job;
+                                var mapid = _playerInfo.MapID;
+                                var mapindex = _playerInfo.MapIndex;
+                                var mapterritory = _playerInfo.MapTerritory;
+                                var playername = _playerInfo.Name;
+                                var targettype = _playerInfo.TargetType;
+
+                                var arxHudmd = "normal";
+                                double targetPercent = 0;
+                                var targetHpcurrent = 0;
+                                var targetHpmax = 0;
+                                var targetName = "target";
+                                var targetEngaged = 0;
+
+                                if (targetInfo != null && targetInfo.Type == Actor.Type.Monster)
+                                {
+                                    arxHudmd = "target";
+                                    targetPercent = targetInfo.HPPercent;
+                                    targetHpcurrent = targetInfo.HPCurrent;
+                                    targetHpmax = targetInfo.HPMax;
+                                    targetName = targetInfo.Name + " (Lv. " + targetInfo.Level + ")";
+                                    targetEngaged = 0;
+
+                                    if (targetInfo.IsClaimed)
+                                        targetEngaged = 1;
+                                }
+
+                                _arx.ArxUpdateFfxivPlugin(hpPerc, mpPerc, tpPerc, currentHp, currentMp, currentTp,
+                                    _playerInfo.MapID, cClass, arxHudmd, targetPercent, targetHpcurrent,
+                                    targetHpmax,
+                                    targetName, targetEngaged, hpMax, mpMax, playerposX, playerposY, playerposZ,
+                                    actionstatus, castperc, castprogress, casttime, castingtoggle, hitboxrad,
+                                    playerclaimed,
+                                    playerjob, mapid, mapindex, mapterritory, playername, targettype);
+                            }
+                            else if (ArxState == 0)
+                            {
+                                if (Attatched == 3)
+                                {
+                                    ArxState = 1;
+                                    Thread.Sleep(100);
+                                    _arx.ArxSetIndex("playerhud.html");
+                                }
                             }
 
-                            _arx.ArxUpdateFfxivStats(hp_perc, mp_perc, tp_perc, current_HP, current_MP, current_TP,
-                                PlayerInfo.MapID, c_class, arx_hudmd, target_percent, target_hpcurrent, target_hpmax,
-                                target_name, target_engaged);
-                        }
-                        else if (ArxState == 2)
-                        {
-                            Console.WriteLine(PartyInfo.Count);
-                            var datastring = new string[10];
-                            for (uint i = 0; i < 10; i++)
-                                //Console.WriteLine(i);
-                                //PlayerInfo.Job == "ALC" || PlayerInfo.Job == "ARM" || PlayerInfo.Job == "BSM" || PlayerInfo.Job == "CPT" || PlayerInfo.Job == "CUL" || PlayerInfo.Job == "GSM" || PlayerInfo.Job == "LTW" || PlayerInfo.Job == "WVR")
-                                if (PartyInfo != null && i < PartyInfo.Count)
-                                {
-                                    //Console.WriteLine(i);
-                                    var pid = PartyListNew[Convert.ToInt32(i)];
-                                    var pt_type = "";
-                                    var pt_tpcurrent = "";
-                                    var pt_tppercent = "";
-                                    var pt_emnityno = "";
-                                    var pt_job = "";
+                        //Console.WriteLine("Map ID: " + PlayerInfo.MapID);
 
-                                    if (TargetInfo != null && TargetInfo.Type == Actor.Type.Monster &&
-                                        TargetInfo.IsClaimed)
+                        //Parse Data
+
+                        //Set Base Keyboard lighting. 
+                        //Other LED's are built above this base layer.
+                        if (Setbase == false)
+                        {
+                            _baseColor = baseColor;
+                            GlobalUpdateState("static", _baseColor, false);
+                            GlobalUpdateBulbState(DeviceModeTypes.DefaultColor, _baseColor, 500);
+                            GlobalUpdateBulbState(DeviceModeTypes.TargetHp, _baseColor, 500);
+                            GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 500);
+                            GlobalUpdateBulbState(DeviceModeTypes.Castbar, _baseColor, 500);
+                            Setbase = true;
+                        }
+
+                        //Highlight critical FFXIV keybinds
+
+                        if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
+                        {
+                            if (ChromaticsSettings.ChromaticsSettingsAzertyMode)
+                            {
+                                GlobalApplyMapKeyLighting("Z", highlightColor, false);
+                                GlobalApplyMapKeyLighting("Q", highlightColor, false);
+                                GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
+                                GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
+                                GlobalApplyMapKeyLighting("Space", highlightColor, false);
+
+                                GlobalApplyMapKeyLighting("W", _baseColor, false);
+                                GlobalApplyMapKeyLighting("A", _baseColor, false);
+                            }
+                            else
+                            {
+                                GlobalApplyMapKeyLighting("W", highlightColor, false);
+                                GlobalApplyMapKeyLighting("A", highlightColor, false);
+                                GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
+                                GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
+                                GlobalApplyMapKeyLighting("Space", highlightColor, false);
+
+                                GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                            }
+
+                            GlobalUpdateBulbState(DeviceModeTypes.HighlightColor, highlightColor, 100);
+                        }
+                        else
+                        {
+                            GlobalApplyMapKeyLighting("W", _baseColor, false);
+                            GlobalApplyMapKeyLighting("A", _baseColor, false);
+                            GlobalApplyMapKeyLighting("S", _baseColor, false);
+                            GlobalApplyMapKeyLighting("D", _baseColor, false);
+                            GlobalApplyMapKeyLighting("LeftShift", _baseColor, false);
+                            GlobalApplyMapKeyLighting("LeftControl", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Space", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                        }
+
+                        if (targetInfo == null)
+                        {
+                            GlobalApplyMapKeyLighting("PrintScreen",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), 250);
+                            GlobalApplyMapKeyLighting("Scroll",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                false);
+                            GlobalApplyMapKeyLighting("Pause",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                false);
+                            GlobalApplyMapKeyLighting("Macro16",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                false);
+                            GlobalApplyMapKeyLighting("Macro17",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                false);
+                            GlobalApplyMapKeyLighting("Macro18",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                false);
+
+                            GlobalApplyMapLogoLighting("", highlightColor, false);
+                            GlobalApplyMapMouseLighting("Logo", highlightColor, false);
+                        }
+
+
+                        //Debuff Status Effects
+
+                        //if (PlayerInfo.IsClaimed)
+                        //{
+                        var statEffects = _playerInfo.StatusEntries;
+
+                        if (statEffects.Count > 0)
+                        {
+                            var status = statEffects.Last();
+                            if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name)
+                                if (_currentStatus != status.StatusName)
+                                {
+                                    if (status.StatusName == "Bind")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBind);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Petrification")
+                                    {
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPetrification);
+                                        GlobalUpdateState("static", _baseColor, false);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 250);
+                                    }
+                                    else if (status.StatusName == "Old")
+                                    {
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
+                                        GlobalUpdateState("static", _baseColor, false);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 250);
+                                    }
+                                    else if (status.StatusName == "Slow")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Stun")
+                                    {
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingStun);
+                                        GlobalUpdateState("static", _baseColor, false);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 250);
+                                    }
+                                    else if (status.StatusName == "Silence")
+                                    {
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSilence);
+                                        GlobalUpdateState("static", _baseColor, false);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 250);
+                                    }
+                                    else if (status.StatusName == "Poison")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Pollen")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Pox")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPox), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPox);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Paralysis")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis),
+                                            100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Leaden")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Incapacitation")
+                                    {
+                                        GlobalRipple2(
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation),
+                                            100);
+                                        _baseColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Dropsy")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Amnesia")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia),
+                                            100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Bleed")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Misery")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Sleep")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Daze")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Heavy")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Infirmary")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary),
+                                            100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Burns")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns), 100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Deep Freeze")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze),
+                                            100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else if (status.StatusName == "Damage Down")
+                                    {
+                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown),
+                                            100);
+                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                    }
+                                    else
+                                    {
+                                        _baseColor = baseColor;
+                                        GlobalUpdateState("static", _baseColor, false);
+                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 500);
+
+                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("Space", highlightColor, false);
+
+                                        if (targetInfo == null)
+                                        {
+                                            GlobalApplyMapKeyLighting("PrintScreen",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyMapKeyLighting("Scroll",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyMapKeyLighting("Pause",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                250);
+                                            GlobalApplyMapKeyLighting("Macro16",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyMapKeyLighting("Macro17",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyMapKeyLighting("Macro18",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+
+                                            GlobalApplyMapLogoLighting("", highlightColor, false);
+                                            GlobalApplyMapMouseLighting("Logo", highlightColor, false);
+                                        }
+                                    }
+
+                                    _currentStatus = status.StatusName;
+                                }
+                            //}
+                        }
+
+
+                        //Target
+                        if (targetInfo != null)
+                        {
+                            if (targetInfo.Type == Actor.Type.Monster)
+                            {
+                                if (!_targeted)
+                                    _targeted = true;
+
+
+                                //Debug.WriteLine("Claimed: " + TargetInfo.ClaimedByID);
+                                //Debug.WriteLine("Claimed: " + TargetInfo.);
+
+                                //Debug.WriteLine(TargetInfo.IsClaimed);
+
+                                //Target HP
+                                var currentThp = targetInfo.HPCurrent;
+                                var maxThp = targetInfo.HPMax;
+                                var polTargetHp = (currentThp - 0) * (5 - 0) / (maxThp - 0) + 0;
+                                var polTargetHpx = (currentThp - 0) * (65535 - 0) / (maxThp - 0) + 0;
+
+                                if (targetInfo.IsClaimed)
+                                    GlobalUpdateBulbStateBrightness(DeviceModeTypes.TargetHp,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                        (ushort) polTargetHpx, 250);
+                                else
+                                    GlobalUpdateBulbStateBrightness(DeviceModeTypes.TargetHp,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
+                                        (ushort) polTargetHpx, 250);
+
+                                if (polTargetHp == 0)
+                                {
+                                    GlobalApplyMapKeyLighting("Macro1",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyMapKeyLighting("Macro2",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyMapKeyLighting("Macro3",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyMapKeyLighting("Macro4",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyMapKeyLighting("Macro5",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                }
+                                else if (polTargetHp == 1)
+                                {
+                                    if (targetInfo.IsClaimed)
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                    }
+                                    else
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                    }
+                                }
+                                else if (polTargetHp == 2)
+                                {
+                                    if (targetInfo.IsClaimed)
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                    }
+                                    else
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                    }
+                                }
+                                else if (polTargetHp == 3)
+                                {
+                                    if (targetInfo.IsClaimed)
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                    }
+                                    else
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                    }
+                                }
+                                else if (polTargetHp == 4)
+                                {
+                                    if (targetInfo.IsClaimed)
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                    }
+                                    else
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                    }
+                                }
+                                else if (polTargetHp == 5)
+                                {
+                                    if (targetInfo.IsClaimed)
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
+                                            false);
+                                    }
+                                    else
+                                    {
+                                        GlobalApplyMapKeyLighting("Macro1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyMapKeyLighting("Macro5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                    }
+                                }
+
+
+                                //Emnity/Casting
+
+                                if (targetInfo.IsCasting)
+                                {
+                                    GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                        0);
+
+                                    /*
+                                    GlobalApplyMapKeyLighting("PrintScreen",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                    GlobalApplyMapKeyLighting("Scroll",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                    GlobalApplyMapKeyLighting("Pause",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                    */
+
+                                    GlobalApplyMapKeyLighting("Macro16",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapKeyLighting("Macro17",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapKeyLighting("Macro18",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapMouseLighting("Logo",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapLogoLighting("",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+
+                                    if (!_castalert)
+                                    {
+                                        ToggleGlobalFlash2(true);
+                                        GlobalFlash2(ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                            200, new[] {"PrintScreen", "Scroll", "Pause"});
+
+                                        _castalert = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (_castalert)
+                                    {
+                                        ToggleGlobalFlash2(false);
+
+                                        _castalert = false;
+                                    }
+
+                                    if (targetInfo.IsClaimed)
                                     {
                                         //Collect Emnity Table
                                         //var TargetEmnity = TargetEmnityInfo.Count;
-                                        var _emnitytableX = new List<KeyValuePair<uint, uint>>();
+                                        var emnitytable = new List<KeyValuePair<uint, uint>>();
 
 
-                                        for (var g = 0; g < TargetEmnityInfo.Count; g++)
-                                            _emnitytableX.Add(new KeyValuePair<uint, uint>(TargetEmnityInfo[g].ID,
-                                                TargetEmnityInfo[g].Enmity));
+                                        for (var i = 0; i < targetEmnityInfo.Count; i++)
+                                            emnitytable.Add(new KeyValuePair<uint, uint>(targetEmnityInfo[i].ID,
+                                                targetEmnityInfo[i].Enmity));
 
                                         //Sort emnity by highest holder
-                                        _emnitytableX.OrderBy(kvp => kvp.Value);
+                                        emnitytable.OrderBy(kvp => kvp.Value);
 
                                         //Get your index in the list
-                                        pt_emnityno = _emnitytableX.FindIndex(a => a.Key == PartyInfo[pid].ID)
-                                            .ToString();
+                                        var personalId = _playerInfo.ID;
+                                        var emnityPosition = emnitytable.FindIndex(a => a.Key == personalId);
+
+                                        //Debug.WriteLine("Em Position: " + EmnityPosition);
+
+                                        //_emnitytable.Clear();
+
+                                        if (emnityPosition == -1)
+                                        {
+                                            //Engaged/No Aggro
+                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm0, 1000);
+
+                                            if (!_castalert)
+                                            {
+                                                GlobalApplyMapKeyLighting("PrintScreen", colEm0, false);
+                                                GlobalApplyMapKeyLighting("Scroll", colEm0, false);
+                                                GlobalApplyMapKeyLighting("Pause", colEm0, false);
+                                                GlobalApplyMapMouseLighting("Logo", colEm0, false);
+                                                GlobalApplyMapLogoLighting("", colEm0, false);
+                                            }
+
+                                            GlobalApplyMapKeyLighting("Macro16", colEm0, false);
+                                            GlobalApplyMapKeyLighting("Macro17", colEm0, false);
+                                            GlobalApplyMapKeyLighting("Macro18", colEm0, false);
+                                        }
+                                        else if (emnityPosition > 4 && emnityPosition <= 8)
+                                        {
+                                            //Low Aggro
+                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm1, 1000);
+
+                                            if (!_castalert)
+                                            {
+                                                GlobalApplyMapKeyLighting("PrintScreen", colEm1, false);
+                                                GlobalApplyMapKeyLighting("Scroll", colEm1, false);
+                                                GlobalApplyMapKeyLighting("Pause", colEm1, false);
+                                                GlobalApplyMapMouseLighting("Logo", colEm1, false);
+                                                GlobalApplyMapLogoLighting("", colEm1, false);
+                                            }
+
+                                            GlobalApplyMapKeyLighting("Macro16", colEm1, false);
+                                            GlobalApplyMapKeyLighting("Macro17", colEm1, false);
+                                            GlobalApplyMapKeyLighting("Macro18", colEm1, false);
+                                        }
+                                        else if (emnityPosition > 1 && emnityPosition <= 4)
+                                        {
+                                            //Moderate Aggro
+                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm2, 1000);
+
+                                            if (!_castalert)
+                                            {
+                                                GlobalApplyMapKeyLighting("PrintScreen", colEm2, false);
+                                                GlobalApplyMapKeyLighting("Scroll", colEm2, false);
+                                                GlobalApplyMapKeyLighting("Pause", colEm2, false);
+                                                GlobalApplyMapMouseLighting("Logo", colEm2, false);
+                                                GlobalApplyMapLogoLighting("", colEm2, false);
+                                            }
+
+                                            GlobalApplyMapKeyLighting("Macro16", colEm2, false);
+                                            GlobalApplyMapKeyLighting("Macro17", colEm2, false);
+                                            GlobalApplyMapKeyLighting("Macro18", colEm2, false);
+                                        }
+                                        else if (emnityPosition == 1)
+                                        {
+                                            //Partial Aggro
+                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm3, 1000);
+
+                                            if (!_castalert)
+                                            {
+                                                GlobalApplyMapKeyLighting("PrintScreen", colEm3, false);
+                                                GlobalApplyMapKeyLighting("Scroll", colEm3, false);
+                                                GlobalApplyMapKeyLighting("Pause", colEm3, false);
+                                                GlobalApplyMapMouseLighting("Logo", colEm3, false);
+                                                GlobalApplyMapLogoLighting("", colEm3, false);
+                                            }
+
+                                            GlobalApplyMapKeyLighting("Macro16", colEm3, false);
+                                            GlobalApplyMapKeyLighting("Macro17", colEm3, false);
+                                            GlobalApplyMapKeyLighting("Macro18", colEm3, false);
+                                        }
+                                        else if (emnityPosition == 0)
+                                        {
+                                            //Full Aggro
+                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm4, 1000);
+
+                                            if (!_castalert)
+                                            {
+                                                GlobalApplyMapKeyLighting("PrintScreen", colEm4, false);
+                                                GlobalApplyMapKeyLighting("Scroll", colEm4, false);
+                                                GlobalApplyMapKeyLighting("Pause", colEm4, false);
+                                                GlobalApplyMapMouseLighting("Logo", colEm4, false);
+                                                GlobalApplyMapLogoLighting("", colEm4, false);
+                                            }
+
+                                            GlobalApplyMapKeyLighting("Macro16", colEm4, false);
+                                            GlobalApplyMapKeyLighting("Macro17", colEm4, false);
+                                            GlobalApplyMapKeyLighting("Macro18", colEm4, false);
+                                        }
                                     }
                                     else
                                     {
-                                        pt_emnityno = "0";
-                                    }
+                                        //Not Engaged/No aggro
+                                        GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm0, 1000);
 
-                                    switch (PartyInfo[pid].Job)
-                                    {
-                                        case Actor.Job.FSH:
-                                            pt_type = "player";
-                                            pt_job = "Fisher";
-                                            break;
-                                        case Actor.Job.BTN:
-                                            pt_type = "player";
-                                            pt_job = "Botanist";
-                                            break;
-                                        case Actor.Job.MIN:
-                                            pt_type = "player";
-                                            pt_job = "Miner";
-                                            break;
-                                        case Actor.Job.ALC:
-                                            pt_type = "player";
-                                            pt_job = "Alchemist";
-                                            break;
-                                        case Actor.Job.ARM:
-                                            pt_type = "player";
-                                            pt_job = "Armorer";
-                                            break;
-                                        case Actor.Job.BSM:
-                                            pt_type = "player";
-                                            pt_job = "Blacksmith";
-                                            break;
-                                        case Actor.Job.CPT:
-                                            pt_type = "player";
-                                            pt_job = "Carpenter";
-                                            break;
-                                        case Actor.Job.CUL:
-                                            pt_type = "player";
-                                            pt_job = "Culinarian";
-                                            break;
-                                        case Actor.Job.GSM:
-                                            pt_type = "player";
-                                            pt_job = "Goldsmith";
-                                            break;
-                                        case Actor.Job.LTW:
-                                            pt_type = "player";
-                                            pt_job = "Leatherworker";
-                                            break;
-                                        case Actor.Job.WVR:
-                                            pt_type = "player";
-                                            pt_job = "Weaver";
-                                            break;
-                                        case Actor.Job.ARC:
-                                            pt_type = "player";
-                                            pt_job = "Archer";
-                                            break;
-                                        case Actor.Job.LNC:
-                                            pt_type = "player";
-                                            pt_job = "Lancer";
-                                            break;
-                                        case Actor.Job.CNJ:
-                                            pt_type = "player";
-                                            pt_job = "Conjurer";
-                                            break;
-                                        case Actor.Job.GLD:
-                                            pt_type = "player";
-                                            pt_job = "Gladiator";
-                                            break;
-                                        case Actor.Job.MRD:
-                                            pt_type = "player";
-                                            pt_job = "Marauder";
-                                            break;
-                                        case Actor.Job.PGL:
-                                            pt_type = "player";
-                                            pt_job = "Pugilist";
-                                            break;
-                                        case Actor.Job.ROG:
-                                            pt_type = "player";
-                                            pt_job = "Rouge";
-                                            break;
-                                        case Actor.Job.THM:
-                                            pt_type = "player";
-                                            pt_job = "Thaumaturge";
-                                            break;
-                                        case Actor.Job.ACN:
-                                            pt_type = "player";
-                                            pt_job = "Arcanist";
-                                            break;
-                                        case Actor.Job.AST:
-                                            pt_type = "player";
-                                            pt_job = "Astrologian";
-                                            break;
-                                        case Actor.Job.BRD:
-                                            pt_type = "player";
-                                            pt_job = "Bard";
-                                            break;
-                                        case Actor.Job.BLM:
-                                            pt_type = "player";
-                                            pt_job = "Black_Mage";
-                                            break;
-                                        case Actor.Job.DRK:
-                                            pt_type = "player";
-                                            pt_job = "Dark_Knight";
-                                            break;
-                                        case Actor.Job.DRG:
-                                            pt_type = "player";
-                                            pt_job = "Dragoon";
-                                            break;
-                                        case Actor.Job.MCH:
-                                            pt_type = "player";
-                                            pt_job = "Machinist";
-                                            break;
-                                        case Actor.Job.MNK:
-                                            pt_type = "player";
-                                            pt_job = "Monk";
-                                            break;
-                                        case Actor.Job.NIN:
-                                            pt_type = "player";
-                                            pt_job = "Ninja";
-                                            break;
-                                        case Actor.Job.PLD:
-                                            pt_type = "player";
-                                            pt_job = "Paladin";
-                                            break;
-                                        case Actor.Job.SCH:
-                                            pt_type = "player";
-                                            pt_job = "Scholar";
-                                            break;
-                                        case Actor.Job.SMN:
-                                            pt_type = "player";
-                                            pt_job = "Summoner";
-                                            break;
-                                        case Actor.Job.WHM:
-                                            pt_type = "player";
-                                            pt_job = "White_Mage";
-                                            break;
-                                        case Actor.Job.WAR:
-                                            pt_type = "player";
-                                            pt_job = "Warrior";
-                                            break;
-                                        case Actor.Job.SAM:
-                                            pt_type = "player";
-                                            pt_job = "Samurai";
-                                            break;
-                                        case Actor.Job.RDM:
-                                            pt_type = "player";
-                                            pt_job = "Red_Mage";
-                                            break;
-                                        default:
-                                            pt_type = "unknown";
-                                            pt_job = "Chocobo";
-                                            break;
-                                    }
+                                        if (!_castalert)
+                                        {
+                                            GlobalApplyMapKeyLighting("PrintScreen", colEm0, false);
+                                            GlobalApplyMapKeyLighting("Scroll", colEm0, false);
+                                            GlobalApplyMapKeyLighting("Pause", colEm0, false);
+                                            GlobalApplyMapMouseLighting("Logo", colEm0, false);
+                                            GlobalApplyMapLogoLighting("", colEm0, false);
+                                        }
 
-                                    if (i == 0)
-                                    {
-                                        pt_tppercent = tp_perc.ToString("#0%");
-                                        pt_tpcurrent = current_TP.ToString();
+                                        GlobalApplyMapKeyLighting("Macro16", colEm0, false);
+                                        GlobalApplyMapKeyLighting("Macro17", colEm0, false);
+                                        GlobalApplyMapKeyLighting("Macro18", colEm0, false);
                                     }
-                                    else
-                                    {
-                                        pt_tppercent = "100%";
-                                        pt_tpcurrent = "1000";
-                                    }
-
-                                    datastring[i] = "1," + pt_type + "," + PartyInfo[pid].Name + "," +
-                                                    PartyInfo[pid].HPPercent.ToString("#0%") + "," +
-                                                    PartyInfo[pid].HPCurrent + "," +
-                                                    PartyInfo[pid].MPPercent.ToString("#0%") + "," +
-                                                    PartyInfo[pid].MPCurrent + "," + pt_tppercent + "," + pt_tpcurrent +
-                                                    "," + pt_emnityno + "," + pt_job;
-                                    Console.WriteLine(i + @": " + datastring[i]);
                                 }
-                                else
-                                {
-                                    datastring[i] = "0,0,0,0,0,0,0,0,0";
-                                    //Console.WriteLine(i + @": " + datastring[i]);
-                                }
-
-                            _arx.ArxUpdateFfxivParty(datastring[1], datastring[2], datastring[3], datastring[4],
-                                datastring[5], datastring[6], datastring[7], datastring[8], datastring[9]);
-                        }
-                        else if (ArxState == 100)
-                        {
-                            hp_perc = PlayerInfo.HPPercent;
-                            tp_perc = PlayerInfo.TPPercent;
-
-                            var hp_max = PlayerInfo.HPMax;
-                            var mp_max = PlayerInfo.MPMax;
-                            var playerposX = PlayerInfo.X;
-                            var playerposY = PlayerInfo.Y;
-                            var playerposZ = PlayerInfo.Z;
-                            var actionstatus = PlayerInfo.ActionStatus;
-                            var castperc = PlayerInfo.CastingPercentage;
-                            var castprogress = PlayerInfo.CastingProgress;
-                            var casttime = PlayerInfo.CastingTime;
-                            var castingtoggle = PlayerInfo.IsCasting;
-                            var hitboxrad = PlayerInfo.HitBoxRadius;
-                            var playerclaimed = PlayerInfo.IsClaimed;
-                            var playerjob = PlayerInfo.Job;
-                            var mapid = PlayerInfo.MapID;
-                            var mapindex = PlayerInfo.MapIndex;
-                            var mapterritory = PlayerInfo.MapTerritory;
-                            var playername = PlayerInfo.Name;
-                            var targettype = PlayerInfo.TargetType;
-
-                            var arx_hudmd = "normal";
-                            double target_percent = 0;
-                            var target_hpcurrent = 0;
-                            var target_hpmax = 0;
-                            var target_name = "target";
-                            var target_engaged = 0;
-
-                            if (TargetInfo != null && TargetInfo.Type == Actor.Type.Monster)
-                            {
-                                arx_hudmd = "target";
-                                target_percent = TargetInfo.HPPercent;
-                                target_hpcurrent = TargetInfo.HPCurrent;
-                                target_hpmax = TargetInfo.HPMax;
-                                target_name = TargetInfo.Name + " (Lv. " + TargetInfo.Level + ")";
-                                target_engaged = 0;
-
-                                if (TargetInfo.IsClaimed)
-                                    target_engaged = 1;
                             }
-
-                            _arx.ArxUpdateFfxivPlugin(hp_perc, mp_perc, tp_perc, current_HP, current_MP, current_TP,
-                                PlayerInfo.MapID, c_class, arx_hudmd, target_percent, target_hpcurrent, target_hpmax,
-                                target_name, target_engaged, hp_max, mp_max, playerposX, playerposY, playerposZ,
-                                actionstatus, castperc, castprogress, casttime, castingtoggle, hitboxrad, playerclaimed,
-                                playerjob, mapid, mapindex, mapterritory, playername, targettype);
-                        }
-                        else if (ArxState == 0)
-                        {
-                            if (attatched == 3)
-                            {
-                                ArxState = 1;
-                                Thread.Sleep(100);
-                                _arx.ArxSetIndex("playerhud.html");
-                            }
-                        }
-
-                    //Console.WriteLine("Map ID: " + PlayerInfo.MapID);
-
-                    //Parse Data
-
-                    //Set Base Keyboard lighting. 
-                    //Other LED's are built above this base layer.
-                    if (Setbase == false)
-                    {
-                        _BaseColor = BaseColor;
-                        GlobalUpdateState("static", _BaseColor, false);
-                        GlobalUpdateBulbState(DeviceModeTypes.DEFAULT_COLOR, _BaseColor, 500);
-                        GlobalUpdateBulbState(DeviceModeTypes.TARGET_HP, _BaseColor, 500);
-                        GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 500);
-                        GlobalUpdateBulbState(DeviceModeTypes.CASTBAR, _BaseColor, 500);
-                        Setbase = true;
-                    }
-
-                    //Highlight critical FFXIV keybinds
-
-                    if (ChromaticsSettings.ChromaticsSettings_KeyHighlights)
-                    {
-                        if (ChromaticsSettings.ChromaticsSettings_AZERTYMode)
-                        {
-                            GlobalApplyMapKeyLighting("Z", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("Q", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("S", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("D", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("LeftShift", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("LeftControl", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("Space", HighlightColor, false);
-
-                            GlobalApplyMapKeyLighting("W", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("A", _BaseColor, false);
-                        }
-                        else
-                        {
-                            GlobalApplyMapKeyLighting("W", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("A", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("S", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("D", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("LeftShift", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("LeftControl", HighlightColor, false);
-                            GlobalApplyMapKeyLighting("Space", HighlightColor, false);
-
-                            GlobalApplyMapKeyLighting("Z", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Q", _BaseColor, false);
-                        }
-
-                        GlobalUpdateBulbState(DeviceModeTypes.HIGHLIGHT_COLOR, HighlightColor, 100);
-                    }
-                    else
-                    {
-                        GlobalApplyMapKeyLighting("W", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("A", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("S", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("D", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("LeftShift", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("LeftControl", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("Space", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("Z", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("Q", _BaseColor, false);
-                    }
-
-                    if (TargetInfo == null)
-                    {
-                        GlobalApplyMapKeyLighting("PrintScreen",
-                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER,
-                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), 250);
-                        GlobalApplyMapKeyLighting("Scroll",
-                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
-                            false);
-                        GlobalApplyMapKeyLighting("Pause",
-                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
-                            false);
-                        GlobalApplyMapKeyLighting("Macro16",
-                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
-                            false);
-                        GlobalApplyMapKeyLighting("Macro17",
-                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
-                            false);
-                        GlobalApplyMapKeyLighting("Macro18",
-                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
-                            false);
-
-                        GlobalApplyMapLogoLighting("", HighlightColor, false);
-                        GlobalApplyMapMouseLighting("Logo", HighlightColor, false);
-                    }
-
-
-                    //Debuff Status Effects
-
-                    //if (PlayerInfo.IsClaimed)
-                    //{
-                    var stat_effects = PlayerInfo.StatusEntries;
-
-                    if (stat_effects.Count > 0)
-                    {
-                        var Status = stat_effects.Last();
-                        if (Status.IsCompanyAction == false && Status.TargetName == PlayerInfo.Name)
-                            if (_CurrentStatus != Status.StatusName)
-                            {
-                                if (Status.StatusName == "Bind")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Bind), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Bind);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Petrification")
-                                {
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Petrification);
-                                    GlobalUpdateState("static", _BaseColor, false);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 250);
-                                }
-                                else if (Status.StatusName == "Old")
-                                {
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Slow);
-                                    GlobalUpdateState("static", _BaseColor, false);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 250);
-                                }
-                                else if (Status.StatusName == "Slow")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Slow), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Slow);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Stun")
-                                {
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Stun);
-                                    GlobalUpdateState("static", _BaseColor, false);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 250);
-                                }
-                                else if (Status.StatusName == "Silence")
-                                {
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Silence);
-                                    GlobalUpdateState("static", _BaseColor, false);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 250);
-                                }
-                                else if (Status.StatusName == "Poison")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Poison), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Poison);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Pollen")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Pollen), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Pollen);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Pox")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Pox), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Pox);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Paralysis")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Paralysis), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Paralysis);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Leaden")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Leaden), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Leaden);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Incapacitation")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Incapacitation),
-                                        100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Incapacitation);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Dropsy")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Dropsy), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Dropsy);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Amnesia")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Amnesia), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Amnesia);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Bleed")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Bleed), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Bleed);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Misery")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Misery), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Misery);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Sleep")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Sleep), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Sleep);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Daze")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Daze), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Daze);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Heavy")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Heavy), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Heavy);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Infirmary")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Infirmary), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Infirmary);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Burns")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Burns), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Burns);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Deep Freeze")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_DeepFreeze), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_DeepFreeze);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else if (Status.StatusName == "Damage Down")
-                                {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_DamageDown), 100);
-                                    _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_DamageDown);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
-                                }
-                                else
-                                {
-                                    _BaseColor = BaseColor;
-                                    GlobalUpdateState("static", _BaseColor, false);
-                                    GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 500);
-
-                                    GlobalApplyMapKeyLighting("W", HighlightColor, false);
-                                    GlobalApplyMapKeyLighting("A", HighlightColor, false);
-                                    GlobalApplyMapKeyLighting("S", HighlightColor, false);
-                                    GlobalApplyMapKeyLighting("D", HighlightColor, false);
-                                    GlobalApplyMapKeyLighting("LeftShift", HighlightColor, false);
-                                    GlobalApplyMapKeyLighting("LeftControl", HighlightColor, false);
-                                    GlobalApplyMapKeyLighting("Space", HighlightColor, false);
-
-                                    if (TargetInfo == null)
-                                    {
-                                        GlobalApplyMapKeyLighting("PrintScreen",
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                                        GlobalApplyMapKeyLighting("Scroll",
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                                        GlobalApplyMapKeyLighting("Pause",
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER,
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
-                                            250);
-                                        GlobalApplyMapKeyLighting("Macro16",
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                                        GlobalApplyMapKeyLighting("Macro17",
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                                        GlobalApplyMapKeyLighting("Macro18",
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-
-                                        GlobalApplyMapLogoLighting("", HighlightColor, false);
-                                        GlobalApplyMapMouseLighting("Logo", HighlightColor, false);
-                                    }
-                                }
-
-                                _CurrentStatus = Status.StatusName;
-                            }
-                        //}
-                    }
-
-
-                    //Target
-                    if (TargetInfo != null)
-                    {
-                        if (TargetInfo.Type == Actor.Type.Monster)
-                        {
-                            if (!_targeted)
-                                _targeted = true;
-
-
-                            //Debug.WriteLine("Claimed: " + TargetInfo.ClaimedByID);
-                            //Debug.WriteLine("Claimed: " + TargetInfo.);
-
-                            //Debug.WriteLine(TargetInfo.IsClaimed);
-
-                            //Target HP
-                            var current_THP = TargetInfo.HPCurrent;
-                            var max_THP = TargetInfo.HPMax;
-                            var pol_TargetHP = (current_THP - 0) * (5 - 0) / (max_THP - 0) + 0;
-                            var pol_TargetHPX = (current_THP - 0) * (65535 - 0) / (max_THP - 0) + 0;
-
-                            if (TargetInfo.IsClaimed)
-                                GlobalUpdateBulbStateBrightness(DeviceModeTypes.TARGET_HP,
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed),
-                                    (ushort) pol_TargetHPX, 250);
                             else
-                                GlobalUpdateBulbStateBrightness(DeviceModeTypes.TARGET_HP,
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle),
-                                    (ushort) pol_TargetHPX, 250);
-
-                            if (pol_TargetHP == 0)
                             {
-                                GlobalApplyMapKeyLighting("Macro1",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                GlobalApplyMapKeyLighting("Macro2",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                GlobalApplyMapKeyLighting("Macro3",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                GlobalApplyMapKeyLighting("Macro4",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                GlobalApplyMapKeyLighting("Macro5",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                            }
-                            else if (pol_TargetHP == 1)
-                            {
-                                if (TargetInfo.IsClaimed)
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                }
-                                else
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                }
-                            }
-                            else if (pol_TargetHP == 2)
-                            {
-                                if (TargetInfo.IsClaimed)
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                }
-                                else
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                }
-                            }
-                            else if (pol_TargetHP == 3)
-                            {
-                                if (TargetInfo.IsClaimed)
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                }
-                                else
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                }
-                            }
-                            else if (pol_TargetHP == 4)
-                            {
-                                if (TargetInfo.IsClaimed)
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                }
-                                else
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPEmpty), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                }
-                            }
-                            else if (pol_TargetHP == 5)
-                            {
-                                if (TargetInfo.IsClaimed)
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPClaimed), false);
-                                }
-                                else
-                                {
-                                    GlobalApplyMapKeyLighting("Macro1",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro2",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro3",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro4",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                    GlobalApplyMapKeyLighting("Macro5",
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetHPIdle), false);
-                                }
-                            }
-
-
-                            //Emnity/Casting
-
-                            if (TargetInfo.IsCasting)
-                            {
-                                GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER,
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting),
-                                    0);
-
-                                /*
                                 GlobalApplyMapKeyLighting("PrintScreen",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), 250);
                                 GlobalApplyMapKeyLighting("Scroll",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyMapKeyLighting("Pause",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
-                                */
-
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                    false);
                                 GlobalApplyMapKeyLighting("Macro16",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyMapKeyLighting("Macro17",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyMapKeyLighting("Macro18",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
-                                GlobalApplyMapMouseLighting("Logo",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
-                                GlobalApplyMapLogoLighting("",
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), false);
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapMouseLighting("Logo", highlightColor, false);
+                                GlobalApplyMapLogoLighting("", highlightColor, false);
 
-                                if (!castalert)
-                                {
-                                    ToggleGlobalFlash2(true);
-                                    GlobalFlash2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting),
-                                        200, new[] {"PrintScreen", "Scroll", "Pause"});
-
-                                    castalert = true;
-                                }
-                            }
-                            else
-                            {
-                                if (castalert)
-                                {
-                                    ToggleGlobalFlash2(false);
-
-                                    castalert = false;
-                                }
-
-                                if (TargetInfo.IsClaimed)
-                                {
-                                    //Collect Emnity Table
-                                    //var TargetEmnity = TargetEmnityInfo.Count;
-                                    var _emnitytable = new List<KeyValuePair<uint, uint>>();
-
-
-                                    for (var i = 0; i < TargetEmnityInfo.Count; i++)
-                                        _emnitytable.Add(new KeyValuePair<uint, uint>(TargetEmnityInfo[i].ID,
-                                            TargetEmnityInfo[i].Enmity));
-
-                                    //Sort emnity by highest holder
-                                    _emnitytable.OrderBy(kvp => kvp.Value);
-
-                                    //Get your index in the list
-                                    var PersonalID = PlayerInfo.ID;
-                                    var EmnityPosition = _emnitytable.FindIndex(a => a.Key == PersonalID);
-
-                                    //Debug.WriteLine("Em Position: " + EmnityPosition);
-
-                                    //_emnitytable.Clear();
-
-                                    if (EmnityPosition == -1)
-                                    {
-                                        //Engaged/No Aggro
-                                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em0, 1000);
-
-                                        if (!castalert)
-                                        {
-                                            GlobalApplyMapKeyLighting("PrintScreen", col_em0, false);
-                                            GlobalApplyMapKeyLighting("Scroll", col_em0, false);
-                                            GlobalApplyMapKeyLighting("Pause", col_em0, false);
-                                            GlobalApplyMapMouseLighting("Logo", col_em0, false);
-                                            GlobalApplyMapLogoLighting("", col_em0, false);
-                                        }
-
-                                        GlobalApplyMapKeyLighting("Macro16", col_em0, false);
-                                        GlobalApplyMapKeyLighting("Macro17", col_em0, false);
-                                        GlobalApplyMapKeyLighting("Macro18", col_em0, false);
-                                    }
-                                    else if (EmnityPosition > 4 && EmnityPosition <= 8)
-                                    {
-                                        //Low Aggro
-                                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em1, 1000);
-
-                                        if (!castalert)
-                                        {
-                                            GlobalApplyMapKeyLighting("PrintScreen", col_em1, false);
-                                            GlobalApplyMapKeyLighting("Scroll", col_em1, false);
-                                            GlobalApplyMapKeyLighting("Pause", col_em1, false);
-                                            GlobalApplyMapMouseLighting("Logo", col_em1, false);
-                                            GlobalApplyMapLogoLighting("", col_em1, false);
-                                        }
-
-                                        GlobalApplyMapKeyLighting("Macro16", col_em1, false);
-                                        GlobalApplyMapKeyLighting("Macro17", col_em1, false);
-                                        GlobalApplyMapKeyLighting("Macro18", col_em1, false);
-                                    }
-                                    else if (EmnityPosition > 1 && EmnityPosition <= 4)
-                                    {
-                                        //Moderate Aggro
-                                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em2, 1000);
-
-                                        if (!castalert)
-                                        {
-                                            GlobalApplyMapKeyLighting("PrintScreen", col_em2, false);
-                                            GlobalApplyMapKeyLighting("Scroll", col_em2, false);
-                                            GlobalApplyMapKeyLighting("Pause", col_em2, false);
-                                            GlobalApplyMapMouseLighting("Logo", col_em2, false);
-                                            GlobalApplyMapLogoLighting("", col_em2, false);
-                                        }
-
-                                        GlobalApplyMapKeyLighting("Macro16", col_em2, false);
-                                        GlobalApplyMapKeyLighting("Macro17", col_em2, false);
-                                        GlobalApplyMapKeyLighting("Macro18", col_em2, false);
-                                    }
-                                    else if (EmnityPosition == 1)
-                                    {
-                                        //Partial Aggro
-                                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em3, 1000);
-
-                                        if (!castalert)
-                                        {
-                                            GlobalApplyMapKeyLighting("PrintScreen", col_em3, false);
-                                            GlobalApplyMapKeyLighting("Scroll", col_em3, false);
-                                            GlobalApplyMapKeyLighting("Pause", col_em3, false);
-                                            GlobalApplyMapMouseLighting("Logo", col_em3, false);
-                                            GlobalApplyMapLogoLighting("", col_em3, false);
-                                        }
-
-                                        GlobalApplyMapKeyLighting("Macro16", col_em3, false);
-                                        GlobalApplyMapKeyLighting("Macro17", col_em3, false);
-                                        GlobalApplyMapKeyLighting("Macro18", col_em3, false);
-                                    }
-                                    else if (EmnityPosition == 0)
-                                    {
-                                        //Full Aggro
-                                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em4, 1000);
-
-                                        if (!castalert)
-                                        {
-                                            GlobalApplyMapKeyLighting("PrintScreen", col_em4, false);
-                                            GlobalApplyMapKeyLighting("Scroll", col_em4, false);
-                                            GlobalApplyMapKeyLighting("Pause", col_em4, false);
-                                            GlobalApplyMapMouseLighting("Logo", col_em4, false);
-                                            GlobalApplyMapLogoLighting("", col_em4, false);
-                                        }
-
-                                        GlobalApplyMapKeyLighting("Macro16", col_em4, false);
-                                        GlobalApplyMapKeyLighting("Macro17", col_em4, false);
-                                        GlobalApplyMapKeyLighting("Macro18", col_em4, false);
-                                    }
-                                }
-                                else
-                                {
-                                    //Not Engaged/No aggro
-                                    GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, col_em0, 1000);
-
-                                    if (!castalert)
-                                    {
-                                        GlobalApplyMapKeyLighting("PrintScreen", col_em0, false);
-                                        GlobalApplyMapKeyLighting("Scroll", col_em0, false);
-                                        GlobalApplyMapKeyLighting("Pause", col_em0, false);
-                                        GlobalApplyMapMouseLighting("Logo", col_em0, false);
-                                        GlobalApplyMapLogoLighting("", col_em0, false);
-                                    }
-
-                                    GlobalApplyMapKeyLighting("Macro16", col_em0, false);
-                                    GlobalApplyMapKeyLighting("Macro17", col_em0, false);
-                                    GlobalApplyMapKeyLighting("Macro18", col_em0, false);
-                                }
+                                GlobalApplyMapKeyLighting("Macro1", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro2", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro4", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro5", _baseColor, false);
+                                GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, _baseColor, 1000);
                             }
                         }
                         else
                         {
-                            GlobalApplyMapKeyLighting("PrintScreen",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                            GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), 250);
-                            GlobalApplyMapKeyLighting("Scroll",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                            GlobalApplyMapKeyLighting("Pause",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
-                                false);
-                            GlobalApplyMapKeyLighting("Macro16",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                            GlobalApplyMapKeyLighting("Macro17",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                            GlobalApplyMapKeyLighting("Macro18",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                            GlobalApplyMapMouseLighting("Logo", HighlightColor, false);
-                            GlobalApplyMapLogoLighting("", HighlightColor, false);
+                            GlobalApplyMapKeyLighting("Macro1", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro2", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro4", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro5", _baseColor, false);
+                            GlobalUpdateBulbState(DeviceModeTypes.TargetHp, _baseColor, 1000);
 
-                            GlobalApplyMapKeyLighting("Macro1", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Macro2", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Macro3", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Macro4", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Macro5", _BaseColor, false);
-                            GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, _BaseColor, 1000);
+                            if (_targeted)
+                                _targeted = false;
+
+                            ToggleGlobalFlash2(false);
+                            _castalert = false;
                         }
-                    }
-                    else
-                    {
-                        GlobalApplyMapKeyLighting("Macro1", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("Macro2", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("Macro3", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("Macro4", _BaseColor, false);
-                        GlobalApplyMapKeyLighting("Macro5", _BaseColor, false);
-                        GlobalUpdateBulbState(DeviceModeTypes.TARGET_HP, _BaseColor, 1000);
-
-                        if (_targeted)
-                            _targeted = false;
-
-                        ToggleGlobalFlash2(false);
-                        castalert = false;
-                    }
 
 
-                    //Castbar
-                    var CastPercentage = PlayerInfo.CastingPercentage;
-                    var pol_CastX = (CastPercentage - 0) * (12 - 0) / (1.0 - 0.0) + 0;
-                    var pol_Cast = Convert.ToInt32(pol_CastX);
-                    var _pol_CastZ = (CastPercentage - 0) * (65535 - 0) / (1.0 - 0.0) + 0;
-                    var pol_CastZ = Convert.ToInt32(_pol_CastZ);
+                        //Castbar
+                        var castPercentage = _playerInfo.CastingPercentage;
+                        var polCastX = (castPercentage - 0) * (12 - 0) / (1.0 - 0.0) + 0;
+                        var polCast = Convert.ToInt32(polCastX);
+                        var polCastZ = Convert.ToInt32((castPercentage - 0) * (65535 - 0) / (1.0 - 0.0) + 0);
 
 
-                    if (PlayerInfo.IsCasting)
-                    {
-                        //Console.WriteLine(CastPercentage);
-                        lastcast = true;
+                        if (_playerInfo.IsCasting)
+                        {
+                            //Console.WriteLine(CastPercentage);
+                            _lastcast = true;
 
-                        GlobalUpdateBulbStateBrightness(DeviceModeTypes.CASTBAR, col_castcharge, (ushort) pol_CastZ,
-                            250);
+                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.Castbar, colCastcharge, (ushort) polCastZ,
+                                250);
 
-                        if (pol_Cast <= 1 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F2",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F3",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F4",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F5",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F6",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F7",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F8",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F9",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 2 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F3",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F4",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F5",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F6",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F7",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F8",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F9",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 3 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F4",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F5",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F6",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F7",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F8",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F9",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 4 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F5",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F6",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F7",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F8",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F9",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 5 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F5", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F6",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F7",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F8",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F9",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 6 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F5", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F6", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F7",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F8",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F9",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 7 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F5", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F6", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F7", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F8",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F9",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 8 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F5", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F6", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F7", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F8", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F9",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 9 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F5", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F6", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F7", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F8", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F9", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F10",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 10 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F5", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F6", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F7", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F8", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F9", col_castcharge, false);
-                            GlobalApplyMapKeyLighting("F10", col_castcharge, false);
-                            /*
-                            GlobalApplyMapKeyLighting("F11",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                            GlobalApplyMapKeyLighting("F12",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
-                                */
-                        }
-                        else if (pol_Cast == 11 && ChromaticsSettings.ChromaticsSettings_CastToggle)
-                        {
-                            if (ChromaticsSettings.ChromaticsSettings_CastToggle)
+                            if (polCast <= 1 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F5", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F6", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F7", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F8", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F9", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F10", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F11", col_castcharge, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
                                 /*
+                                GlobalApplyMapKeyLighting("F2",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F3",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F4",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F5",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F6",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F7",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F8",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F9",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
                                 GlobalApplyMapKeyLighting("F12",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
                                     */
                             }
-                            successcast = true;
-                        }
-                        else if (pol_Cast >= 12)
-                        {
-                            if (ChromaticsSettings.ChromaticsSettings_CastToggle)
+                            else if (polCast == 2 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F1", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F2", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F3", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F4", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F5", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F6", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F7", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F8", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F9", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F10", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F11", col_castcharge, false);
-                                GlobalApplyMapKeyLighting("F12", col_castcharge, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F3",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F4",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F5",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F6",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F7",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F8",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F9",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-                            successcast = true;
-                        }
-                    }
-                    else
-                    {
-                        if (lastcast)
-                        {
-                            if (ChromaticsSettings.ChromaticsSettings_CastToggle)
+                            else if (polCast == 3 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F1", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F2", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F3", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F4", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F5", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F6", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F7", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F8", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F9", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F10", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F11", _BaseColor, false);
-                                GlobalApplyMapKeyLighting("F12", _BaseColor, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F4",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F5",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F6",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F7",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F8",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F9",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-
-                            var _cBulbRip1 = new Task(() =>
+                            else if (polCast == 4 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalUpdateBulbState(DeviceModeTypes.CASTBAR, _BaseColor, 500);
-                            });
-                            MemoryTasks.Add(_cBulbRip1);
-                            MemoryTasks.Run(_cBulbRip1);
-
-
-                            if (successcast && ChromaticsSettings.ChromaticsSettings_CastAnimate)
-                                GlobalRipple1(col_castcharge, 80, _BaseColor);
-
-                            lastcast = false;
-                            successcast = false;
-                        }
-                    }
-
-                    //HP
-                    if (max_HP != 0)
-                    {
-                        var pol_HP = (current_HP - 0) * (40 - 0) / (max_HP - 0) + 0;
-                        var pol_HPX = (current_HP - 0) * (70 - 0) / (max_HP - 0) + 0;
-                        var pol_HPZ = (current_HP - 0) * (65535 - 0) / (max_HP - 0) + 0;
-
-                        if (pol_HP <= 10)
-                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.HP_TRACKER, col_hpempty, (ushort) pol_HPZ,
-                                250);
-                        else
-                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.HP_TRACKER, col_hpfull, (ushort) pol_HPZ,
-                                250);
-
-                        if (pol_HP <= 40 && pol_HP > 30)
-                        {
-                            if (!PlayerInfo.IsCasting)
-                            {
-                                GlobalApplyMapKeyLighting("F1", col_hpfull, false);
-                                GlobalApplyMapKeyLighting("F2", col_hpfull, false);
-                                GlobalApplyMapKeyLighting("F3", col_hpfull, false);
-                                GlobalApplyMapKeyLighting("F4", col_hpfull, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F5",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F6",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F7",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F8",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F9",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-                            GlobalApplyMapPadLighting(14, col_hpfull, false);
-                            GlobalApplyMapPadLighting(13, col_hpfull, false);
-                            GlobalApplyMapPadLighting(12, col_hpfull, false);
-                            GlobalApplyMapPadLighting(11, col_hpfull, false);
-                            GlobalApplyMapPadLighting(10, col_hpfull, false);
-                        }
-                        else if (pol_HP <= 30 && pol_HP > 20)
-                        {
-                            if (!PlayerInfo.IsCasting)
+                            else if (polCast == 5 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F1", col_hpfull, false);
-                                GlobalApplyMapKeyLighting("F2", col_hpfull, false);
-                                GlobalApplyMapKeyLighting("F3", col_hpfull, false);
-                                GlobalApplyMapKeyLighting("F4", col_hpempty, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F5", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F6",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F7",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F8",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F9",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-                            GlobalApplyMapPadLighting(14, col_hpempty, false);
-                            GlobalApplyMapPadLighting(13, col_hpempty, false);
-                            GlobalApplyMapPadLighting(12, col_hpfull, false);
-                            GlobalApplyMapPadLighting(11, col_hpfull, false);
-                            GlobalApplyMapPadLighting(10, col_hpfull, false);
-                        }
-                        else if (pol_HP <= 20 && pol_HP > 10)
-                        {
-                            if (!PlayerInfo.IsCasting)
+                            else if (polCast == 6 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F1", col_hpfull, false);
-                                GlobalApplyMapKeyLighting("F2", col_hpfull, false);
-                                GlobalApplyMapKeyLighting("F3", col_hpempty, false);
-                                GlobalApplyMapKeyLighting("F4", col_hpempty, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F5", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F6", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F7",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F8",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F9",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-                            GlobalApplyMapPadLighting(14, col_hpempty, false);
-                            GlobalApplyMapPadLighting(13, col_hpempty, false);
-                            GlobalApplyMapPadLighting(12, col_hpempty, false);
-                            GlobalApplyMapPadLighting(11, col_hpfull, false);
-                            GlobalApplyMapPadLighting(10, col_hpfull, false);
-                        }
-                        else if (pol_HP <= 10 && pol_HP > 0)
-                        {
-                            if (!PlayerInfo.IsCasting)
+                            else if (polCast == 7 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F1", col_hpcritical, false);
-                                GlobalApplyMapKeyLighting("F2", col_hpempty, false);
-                                GlobalApplyMapKeyLighting("F3", col_hpempty, false);
-                                GlobalApplyMapKeyLighting("F4", col_hpempty, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F5", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F6", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F7", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F8",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F9",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-                            GlobalApplyMapPadLighting(14, col_hpempty, false);
-                            GlobalApplyMapPadLighting(13, col_hpempty, false);
-                            GlobalApplyMapPadLighting(12, col_hpempty, false);
-                            GlobalApplyMapPadLighting(11, col_hpempty, false);
-                            GlobalApplyMapPadLighting(10, col_hpcritical, false);
-                        }
-                        else if (pol_HP == 0)
-                        {
-                            if (!PlayerInfo.IsCasting)
+                            else if (polCast == 8 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F1", col_hpcritical, false);
-                                GlobalApplyMapKeyLighting("F2", col_hpcritical, false);
-                                GlobalApplyMapKeyLighting("F3", col_hpcritical, false);
-                                GlobalApplyMapKeyLighting("F4", col_hpcritical, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F5", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F6", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F7", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F8", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F9",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-
-                            GlobalApplyMapPadLighting(14, col_hpcritical, false);
-                            GlobalApplyMapPadLighting(13, col_hpcritical, false);
-                            GlobalApplyMapPadLighting(12, col_hpcritical, false);
-                            GlobalApplyMapPadLighting(11, col_hpcritical, false);
-                            GlobalApplyMapPadLighting(10, col_hpcritical, false);
-                        }
-
-                        //Mouse
-                        if (pol_HPX <= 70 && pol_HPX > 60)
-                        {
-                            GlobalApplyMapMouseLighting("Strip7", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip6", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip5", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip4", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip3", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip2", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip1", col_hpfull, false);
-                        }
-                        else if (pol_HPX <= 60 && pol_HPX > 50)
-                        {
-                            GlobalApplyMapMouseLighting("Strip7", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip6", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip5", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip4", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip3", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip2", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip1", col_hpempty, false);
-                        }
-                        else if (pol_HPX <= 50 && pol_HPX > 40)
-                        {
-                            GlobalApplyMapMouseLighting("Strip7", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip6", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip5", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip4", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip3", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip2", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip1", col_hpempty, false);
-                        }
-                        else if (pol_HPX <= 40 && pol_HPX > 30)
-                        {
-                            GlobalApplyMapMouseLighting("Strip7", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip6", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip5", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip4", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip3", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip2", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip1", col_hpempty, false);
-                        }
-                        else if (pol_HPX <= 30 && pol_HPX > 20)
-                        {
-                            GlobalApplyMapMouseLighting("Strip7", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip6", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip5", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip4", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip3", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip2", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip1", col_hpempty, false);
-                        }
-                        else if (pol_HPX <= 20 && pol_HPX > 10)
-                        {
-                            GlobalApplyMapMouseLighting("Strip7", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip6", col_hpfull, false);
-                            GlobalApplyMapMouseLighting("Strip5", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip4", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip3", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip2", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip1", col_hpempty, false);
-                        }
-                        else if (pol_HPX <= 10 && pol_HPX > 0)
-                        {
-                            GlobalApplyMapMouseLighting("Strip7", col_hpcritical, false);
-                            GlobalApplyMapMouseLighting("Strip6", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip5", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip4", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip3", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip2", col_hpempty, false);
-                            GlobalApplyMapMouseLighting("Strip1", col_hpempty, false);
-                        }
-                        else if (pol_HPX == 0)
-                        {
-                            GlobalApplyMapMouseLighting("Strip7", col_hpcritical, false);
-                            GlobalApplyMapMouseLighting("Strip6", col_hpcritical, false);
-                            GlobalApplyMapMouseLighting("Strip5", col_hpcritical, false);
-                            GlobalApplyMapMouseLighting("Strip4", col_hpcritical, false);
-                            GlobalApplyMapMouseLighting("Strip3", col_hpcritical, false);
-                            GlobalApplyMapMouseLighting("Strip2", col_hpcritical, false);
-                            GlobalApplyMapMouseLighting("Strip1", col_hpcritical, false);
-                        }
-                    }
-
-                    //MP
-                    if (max_MP != 0)
-                    {
-                        var pol_MP = (current_MP - 0) * (40 - 0) / (max_MP - 0) + 0;
-                        var pol_MPX = (current_MP - 0) * (70 - 0) / (max_MP - 0) + 0;
-                        var pol_MPZ = (current_MP - 0) * (65535 - 0) / (max_MP - 0) + 0;
-
-                        GlobalUpdateBulbStateBrightness(DeviceModeTypes.MP_TRACKER, col_mpfull, (ushort) pol_MPZ, 250);
-
-                        if (pol_MP <= 40 && pol_MP > 30)
-                        {
-                            if (!PlayerInfo.IsCasting)
+                            else if (polCast == 9 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F5", col_mpfull, false);
-                                GlobalApplyMapKeyLighting("F6", col_mpfull, false);
-                                GlobalApplyMapKeyLighting("F7", col_mpfull, false);
-                                GlobalApplyMapKeyLighting("F8", col_mpfull, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F5", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F6", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F7", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F8", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F9", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F10",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-                            GlobalApplyMapPadLighting(5, col_mpfull, false);
-                            GlobalApplyMapPadLighting(6, col_mpfull, false);
-                            GlobalApplyMapPadLighting(7, col_mpfull, false);
-                            GlobalApplyMapPadLighting(8, col_mpfull, false);
-                            GlobalApplyMapPadLighting(9, col_mpfull, false);
-                        }
-                        else if (pol_MP <= 30 && pol_MP > 20)
-                        {
-                            if (!PlayerInfo.IsCasting)
+                            else if (polCast == 10 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F5", col_mpfull, false);
-                                GlobalApplyMapKeyLighting("F6", col_mpfull, false);
-                                GlobalApplyMapKeyLighting("F7", col_mpfull, false);
-                                GlobalApplyMapKeyLighting("F8", col_mpempty, false);
+                                GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F5", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F6", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F7", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F8", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F9", colCastcharge, false);
+                                GlobalApplyMapKeyLighting("F10", colCastcharge, false);
+                                /*
+                                GlobalApplyMapKeyLighting("F11",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                GlobalApplyMapKeyLighting("F12",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                    */
                             }
-                            GlobalApplyMapPadLighting(5, col_mpempty, false);
-                            GlobalApplyMapPadLighting(6, col_mpempty, false);
-                            GlobalApplyMapPadLighting(7, col_mpfull, false);
-                            GlobalApplyMapPadLighting(8, col_mpfull, false);
-                            GlobalApplyMapPadLighting(9, col_mpfull, false);
-                        }
-                        else if (pol_MP <= 20 && pol_MP > 10)
-                        {
-                            if (!PlayerInfo.IsCasting)
+                            else if (polCast == 11 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
-                                GlobalApplyMapKeyLighting("F5", col_mpfull, false);
-                                GlobalApplyMapKeyLighting("F6", col_mpfull, false);
-                                GlobalApplyMapKeyLighting("F7", col_mpempty, false);
-                                GlobalApplyMapKeyLighting("F8", col_mpempty, false);
-                            }
-                            GlobalApplyMapPadLighting(5, col_mpempty, false);
-                            GlobalApplyMapPadLighting(6, col_mpempty, false);
-                            GlobalApplyMapPadLighting(7, col_mpempty, false);
-                            GlobalApplyMapPadLighting(8, col_mpfull, false);
-                            GlobalApplyMapPadLighting(9, col_mpfull, false);
-                        }
-                        else if (pol_MP <= 10 && pol_MP > 0)
-                        {
-                            if (!PlayerInfo.IsCasting)
-                            {
-                                GlobalApplyMapKeyLighting("F5", col_mpempty, false);
-                                GlobalApplyMapKeyLighting("F6", col_mpempty, false);
-                                GlobalApplyMapKeyLighting("F7", col_mpempty, false);
-                                GlobalApplyMapKeyLighting("F8", col_mpempty, false);
-                            }
-                            GlobalApplyMapPadLighting(5, col_mpempty, false);
-                            GlobalApplyMapPadLighting(6, col_mpempty, false);
-                            GlobalApplyMapPadLighting(7, col_mpempty, false);
-                            GlobalApplyMapPadLighting(8, col_mpempty, false);
-                            GlobalApplyMapPadLighting(9, col_mpempty, false);
-                        }
-                        else if (pol_MP == 0)
-                        {
-                            if (!PlayerInfo.IsCasting)
-                            {
-                                GlobalApplyMapKeyLighting("F5", col_mpempty, false);
-                                GlobalApplyMapKeyLighting("F6", col_mpempty, false);
-                                GlobalApplyMapKeyLighting("F7", col_mpempty, false);
-                                GlobalApplyMapKeyLighting("F8", col_mpempty, false);
-                            }
-                            GlobalApplyMapPadLighting(5, col_mpempty, false);
-                            GlobalApplyMapPadLighting(6, col_mpempty, false);
-                            GlobalApplyMapPadLighting(7, col_mpempty, false);
-                            GlobalApplyMapPadLighting(8, col_mpempty, false);
-                            GlobalApplyMapPadLighting(9, col_mpempty, false);
-                        }
-
-                        //Mouse
-                        if (MouseToggle == 0)
-                            if (pol_MPX <= 70 && pol_MPX > 60)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_mpfull, false);
-                            }
-                            else if (pol_MPX <= 60 && pol_MPX > 50)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_mpempty, false);
-                            }
-                            else if (pol_MPX <= 50 && pol_MPX > 40)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_mpempty, false);
-                            }
-                            else if (pol_MPX <= 40 && pol_MPX > 30)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_mpempty, false);
-                            }
-                            else if (pol_MPX <= 30 && pol_MPX > 20)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_mpempty, false);
-                            }
-                            else if (pol_MPX <= 20 && pol_MPX > 10)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_mpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_mpempty, false);
-                            }
-                            else if (pol_MPX <= 10 && pol_MPX > 0)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_mpempty, false);
-                            }
-                            else if (pol_MPX == 0)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_mpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_mpempty, false);
-                            }
-                    }
-
-                    //TP
-                    if (max_TP != 0)
-                    {
-                        var pol_TP = (current_TP - 0) * (40 - 0) / (max_TP - 0) + 0;
-                        var pol_TPX = (current_TP - 0) * (70 - 0) / (max_TP - 0) + 0;
-                        var pol_TPZ = (current_TP - 0) * (65535 - 0) / (max_TP - 0) + 0;
-
-                        GlobalUpdateBulbStateBrightness(DeviceModeTypes.TP_TRACKER, col_tpfull, (ushort) pol_TPZ, 250);
-
-                        if (pol_TP <= 40 && pol_TP > 30)
-                        {
-                            if (!PlayerInfo.IsCasting)
-                            {
-                                GlobalApplyMapKeyLighting("F9", col_tpfull, false);
-                                GlobalApplyMapKeyLighting("F10", col_tpfull, false);
-                                GlobalApplyMapKeyLighting("F11", col_tpfull, false);
-                                GlobalApplyMapKeyLighting("F12", col_tpfull, false);
-                            }
-                            GlobalApplyMapPadLighting(0, col_tpfull, false);
-                            GlobalApplyMapPadLighting(1, col_tpfull, false);
-                            GlobalApplyMapPadLighting(2, col_tpfull, false);
-                            GlobalApplyMapPadLighting(3, col_tpfull, false);
-                            GlobalApplyMapPadLighting(4, col_tpfull, false);
-                        }
-                        else if (pol_TP <= 30 && pol_TP > 20)
-                        {
-                            if (!PlayerInfo.IsCasting)
-                            {
-                                GlobalApplyMapKeyLighting("F9", col_tpfull, false);
-                                GlobalApplyMapKeyLighting("F10", col_tpfull, false);
-                                GlobalApplyMapKeyLighting("F11", col_tpfull, false);
-                                GlobalApplyMapKeyLighting("F12", col_tpempty, false);
-                            }
-                            GlobalApplyMapPadLighting(0, col_tpempty, false);
-                            GlobalApplyMapPadLighting(1, col_tpempty, false);
-                            GlobalApplyMapPadLighting(2, col_tpfull, false);
-                            GlobalApplyMapPadLighting(3, col_tpfull, false);
-                            GlobalApplyMapPadLighting(4, col_tpfull, false);
-                        }
-                        else if (pol_TP <= 20 && pol_TP > 10)
-                        {
-                            if (!PlayerInfo.IsCasting)
-                            {
-                                GlobalApplyMapKeyLighting("F9", col_tpfull, false);
-                                GlobalApplyMapKeyLighting("F10", col_tpfull, false);
-                                GlobalApplyMapKeyLighting("F11", col_tpempty, false);
-                                GlobalApplyMapKeyLighting("F12", col_tpempty, false);
-                            }
-                            GlobalApplyMapPadLighting(0, col_tpempty, false);
-                            GlobalApplyMapPadLighting(1, col_tpempty, false);
-                            GlobalApplyMapPadLighting(2, col_tpempty, false);
-                            GlobalApplyMapPadLighting(3, col_tpfull, false);
-                            GlobalApplyMapPadLighting(4, col_tpfull, false);
-                        }
-                        else if (pol_TP <= 10 && pol_TP > 0)
-                        {
-                            if (!PlayerInfo.IsCasting)
-                            {
-                                GlobalApplyMapKeyLighting("F9", col_tpempty, false);
-                                GlobalApplyMapKeyLighting("F10", col_tpempty, false);
-                                GlobalApplyMapKeyLighting("F11", col_tpempty, false);
-                                GlobalApplyMapKeyLighting("F12", col_tpempty, false);
-                            }
-                            GlobalApplyMapPadLighting(0, col_tpempty, false);
-                            GlobalApplyMapPadLighting(1, col_tpempty, false);
-                            GlobalApplyMapPadLighting(2, col_tpempty, false);
-                            GlobalApplyMapPadLighting(3, col_tpempty, false);
-                            GlobalApplyMapPadLighting(4, col_tpempty, false);
-                        }
-                        else if (pol_TP == 0)
-                        {
-                            if (!PlayerInfo.IsCasting)
-                            {
-                                GlobalApplyMapKeyLighting("F9", col_tpempty, false);
-                                GlobalApplyMapKeyLighting("F10", col_tpempty, false);
-                                GlobalApplyMapKeyLighting("F11", col_tpempty, false);
-                                GlobalApplyMapKeyLighting("F12", col_tpempty, false);
-                            }
-                            GlobalApplyMapPadLighting(0, col_tpempty, false);
-                            GlobalApplyMapPadLighting(1, col_tpempty, false);
-                            GlobalApplyMapPadLighting(2, col_tpempty, false);
-                            GlobalApplyMapPadLighting(3, col_tpempty, false);
-                            GlobalApplyMapPadLighting(4, col_tpempty, false);
-                        }
-
-                        //Mouse
-                        if (MouseToggle == 1)
-                            if (pol_TPX <= 70 && pol_TPX > 60)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_tpfull, false);
-                            }
-                            else if (pol_TPX <= 60 && pol_TPX > 50)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_tpempty, false);
-                            }
-                            else if (pol_TPX <= 50 && pol_TPX > 40)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_tpempty, false);
-                            }
-                            else if (pol_TPX <= 40 && pol_TPX > 30)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_tpempty, false);
-                            }
-                            else if (pol_TPX <= 30 && pol_TPX > 20)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_tpempty, false);
-                            }
-                            else if (pol_TPX <= 20 && pol_TPX > 10)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_tpfull, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_tpempty, false);
-                            }
-                            else if (pol_TPX <= 10 && pol_TPX > 0)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_tpempty, false);
-                            }
-                            else if (pol_TPX == 0)
-                            {
-                                GlobalApplyMapMouseLighting("Strip14", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip13", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip12", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip11", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip10", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip9", col_tpempty, false);
-                                GlobalApplyMapMouseLighting("Strip8", col_tpempty, false);
-                            }
-
-                        //Action Alerts
-
-                        if (ChromaticsSettings.ChromaticsSettings_ImpactToggle)
-                        {
-                            if (TargetInfo != null && TargetInfo.Type == Actor.Type.Monster)
-                                if (TargetInfo.IsClaimed)
-                                    if (_hp != 0 && current_HP < _hp)
-                                    {
-                                        _RzFl1CTS.Cancel();
-                                        _CorsairF1CTS.Cancel();
-                                        GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPLoss), 100,
-                                            DeviceEffects._GlobalKeys3);
-                                    }
-
-                            _hp = current_HP;
-                        }
-                    }
-
-                    //DX11 Effects
-
-                    if (isDX11)
-                    {
-                        Cooldowns.refreshData();
-
-
-                        //Hotbars        
-
-                        var hotbars = new ActionReadResult();
-
-                        hotbars = Reader.GetActions();
-
-                        if (ChromaticsSettings.ChromaticsSettings_KeybindToggle)
-                        {
-                            FFXIVHotbar.keybindwhitelist.Clear();
-
-                            foreach (var hotbar in hotbars.ActionEntities)
-                            {
-                                if (hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_1 ||
-                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_2 ||
-                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_3 ||
-                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_4 ||
-                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_5 ||
-                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_6 ||
-                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_7 ||
-                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_8 ||
-                                    hotbar.Type == HotBarRecast.Container.PETBAR ||
-                                    hotbar.Type == HotBarRecast.Container.CROSS_PETBAR) continue;
-
-                                foreach (var action in hotbar.Actions)
+                                if (ChromaticsSettings.ChromaticsSettingsCastToggle)
                                 {
-                                    if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) ||
-                                        string.IsNullOrEmpty(action.KeyBinds) ||
-                                        string.IsNullOrEmpty(action.ActionKey)) continue;
+                                    GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F5", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F6", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F7", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F8", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F9", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F10", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F11", colCastcharge, false);
+                                    /*
+                                    GlobalApplyMapKeyLighting("F12",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty), false);
+                                        */
+                                }
+                                _successcast = true;
+                            }
+                            else if (polCast >= 12)
+                            {
+                                if (ChromaticsSettings.ChromaticsSettingsCastToggle)
+                                {
+                                    GlobalApplyMapKeyLighting("F1", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F2", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F3", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F4", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F5", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F6", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F7", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F8", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F9", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F10", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F11", colCastcharge, false);
+                                    GlobalApplyMapKeyLighting("F12", colCastcharge, false);
+                                }
+                                _successcast = true;
+                            }
+                        }
+                        else
+                        {
+                            if (_lastcast)
+                            {
+                                if (ChromaticsSettings.ChromaticsSettingsCastToggle)
+                                {
+                                    GlobalApplyMapKeyLighting("F1", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F2", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F3", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F4", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F5", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F6", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F7", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F8", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F9", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F10", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F11", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F12", _baseColor, false);
+                                }
 
-                                    //Collect Modifier Info
-                                    var modsactive = action.Modifiers.Count;
-                                    var _modsactive = modsactive;
+                                var cBulbRip1 = new Task(() =>
+                                {
+                                    GlobalUpdateBulbState(DeviceModeTypes.Castbar, _baseColor, 500);
+                                });
+                                MemoryTasks.Add(cBulbRip1);
+                                MemoryTasks.Run(cBulbRip1);
 
-                                    if (!FFXIVHotbar.keybindwhitelist.Contains(action.ActionKey))
-                                        FFXIVHotbar.keybindwhitelist.Add(action.ActionKey);
 
+                                if (_successcast && ChromaticsSettings.ChromaticsSettingsCastAnimate)
+                                    GlobalRipple1(colCastcharge, 80, _baseColor);
 
-                                    if (modsactive > 0)
-                                        foreach (var modifier in action.Modifiers)
+                                _lastcast = false;
+                                _successcast = false;
+                            }
+                        }
+
+                        //HP
+                        if (maxHp != 0)
+                        {
+                            var polHp = (currentHp - 0) * (40 - 0) / (maxHp - 0) + 0;
+                            var polHpx = (currentHp - 0) * (70 - 0) / (maxHp - 0) + 0;
+                            var polHpz = (currentHp - 0) * (65535 - 0) / (maxHp - 0) + 0;
+
+                            if (polHp <= 10)
+                                GlobalUpdateBulbStateBrightness(DeviceModeTypes.HpTracker, colHpempty,
+                                    (ushort) polHpz,
+                                    250);
+                            else
+                                GlobalUpdateBulbStateBrightness(DeviceModeTypes.HpTracker, colHpfull,
+                                    (ushort) polHpz,
+                                    250);
+
+                            if (polHp <= 40 && polHp > 30)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F1", colHpfull, false);
+                                    GlobalApplyMapKeyLighting("F2", colHpfull, false);
+                                    GlobalApplyMapKeyLighting("F3", colHpfull, false);
+                                    GlobalApplyMapKeyLighting("F4", colHpfull, false);
+                                }
+                                GlobalApplyMapPadLighting(14, colHpfull, false);
+                                GlobalApplyMapPadLighting(13, colHpfull, false);
+                                GlobalApplyMapPadLighting(12, colHpfull, false);
+                                GlobalApplyMapPadLighting(11, colHpfull, false);
+                                GlobalApplyMapPadLighting(10, colHpfull, false);
+                            }
+                            else if (polHp <= 30 && polHp > 20)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F1", colHpfull, false);
+                                    GlobalApplyMapKeyLighting("F2", colHpfull, false);
+                                    GlobalApplyMapKeyLighting("F3", colHpfull, false);
+                                    GlobalApplyMapKeyLighting("F4", colHpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(14, colHpempty, false);
+                                GlobalApplyMapPadLighting(13, colHpempty, false);
+                                GlobalApplyMapPadLighting(12, colHpfull, false);
+                                GlobalApplyMapPadLighting(11, colHpfull, false);
+                                GlobalApplyMapPadLighting(10, colHpfull, false);
+                            }
+                            else if (polHp <= 20 && polHp > 10)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F1", colHpfull, false);
+                                    GlobalApplyMapKeyLighting("F2", colHpfull, false);
+                                    GlobalApplyMapKeyLighting("F3", colHpempty, false);
+                                    GlobalApplyMapKeyLighting("F4", colHpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(14, colHpempty, false);
+                                GlobalApplyMapPadLighting(13, colHpempty, false);
+                                GlobalApplyMapPadLighting(12, colHpempty, false);
+                                GlobalApplyMapPadLighting(11, colHpfull, false);
+                                GlobalApplyMapPadLighting(10, colHpfull, false);
+                            }
+                            else if (polHp <= 10 && polHp > 0)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F1", colHpcritical, false);
+                                    GlobalApplyMapKeyLighting("F2", colHpempty, false);
+                                    GlobalApplyMapKeyLighting("F3", colHpempty, false);
+                                    GlobalApplyMapKeyLighting("F4", colHpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(14, colHpempty, false);
+                                GlobalApplyMapPadLighting(13, colHpempty, false);
+                                GlobalApplyMapPadLighting(12, colHpempty, false);
+                                GlobalApplyMapPadLighting(11, colHpempty, false);
+                                GlobalApplyMapPadLighting(10, colHpcritical, false);
+                            }
+                            else if (polHp == 0)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F1", colHpcritical, false);
+                                    GlobalApplyMapKeyLighting("F2", colHpcritical, false);
+                                    GlobalApplyMapKeyLighting("F3", colHpcritical, false);
+                                    GlobalApplyMapKeyLighting("F4", colHpcritical, false);
+                                }
+
+                                GlobalApplyMapPadLighting(14, colHpcritical, false);
+                                GlobalApplyMapPadLighting(13, colHpcritical, false);
+                                GlobalApplyMapPadLighting(12, colHpcritical, false);
+                                GlobalApplyMapPadLighting(11, colHpcritical, false);
+                                GlobalApplyMapPadLighting(10, colHpcritical, false);
+                            }
+
+                            //Mouse
+                            if (polHpx <= 70 && polHpx > 60)
+                            {
+                                GlobalApplyMapMouseLighting("Strip7", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip6", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip5", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip4", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip3", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip2", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip1", colHpfull, false);
+                            }
+                            else if (polHpx <= 60 && polHpx > 50)
+                            {
+                                GlobalApplyMapMouseLighting("Strip7", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip6", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip5", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip4", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip3", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip2", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip1", colHpempty, false);
+                            }
+                            else if (polHpx <= 50 && polHpx > 40)
+                            {
+                                GlobalApplyMapMouseLighting("Strip7", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip6", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip5", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip4", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip3", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip2", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip1", colHpempty, false);
+                            }
+                            else if (polHpx <= 40 && polHpx > 30)
+                            {
+                                GlobalApplyMapMouseLighting("Strip7", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip6", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip5", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip4", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip3", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip2", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip1", colHpempty, false);
+                            }
+                            else if (polHpx <= 30 && polHpx > 20)
+                            {
+                                GlobalApplyMapMouseLighting("Strip7", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip6", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip5", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip4", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip3", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip2", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip1", colHpempty, false);
+                            }
+                            else if (polHpx <= 20 && polHpx > 10)
+                            {
+                                GlobalApplyMapMouseLighting("Strip7", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip6", colHpfull, false);
+                                GlobalApplyMapMouseLighting("Strip5", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip4", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip3", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip2", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip1", colHpempty, false);
+                            }
+                            else if (polHpx <= 10 && polHpx > 0)
+                            {
+                                GlobalApplyMapMouseLighting("Strip7", colHpcritical, false);
+                                GlobalApplyMapMouseLighting("Strip6", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip5", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip4", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip3", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip2", colHpempty, false);
+                                GlobalApplyMapMouseLighting("Strip1", colHpempty, false);
+                            }
+                            else if (polHpx == 0)
+                            {
+                                GlobalApplyMapMouseLighting("Strip7", colHpcritical, false);
+                                GlobalApplyMapMouseLighting("Strip6", colHpcritical, false);
+                                GlobalApplyMapMouseLighting("Strip5", colHpcritical, false);
+                                GlobalApplyMapMouseLighting("Strip4", colHpcritical, false);
+                                GlobalApplyMapMouseLighting("Strip3", colHpcritical, false);
+                                GlobalApplyMapMouseLighting("Strip2", colHpcritical, false);
+                                GlobalApplyMapMouseLighting("Strip1", colHpcritical, false);
+                            }
+                        }
+
+                        //MP
+                        if (maxMp != 0)
+                        {
+                            var polMp = (currentMp - 0) * (40 - 0) / (maxMp - 0) + 0;
+                            var polMpx = (currentMp - 0) * (70 - 0) / (maxMp - 0) + 0;
+                            var polMpz = (currentMp - 0) * (65535 - 0) / (maxMp - 0) + 0;
+
+                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.MpTracker, colMpfull, (ushort) polMpz,
+                                250);
+
+                            if (polMp <= 40 && polMp > 30)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F5", colMpfull, false);
+                                    GlobalApplyMapKeyLighting("F6", colMpfull, false);
+                                    GlobalApplyMapKeyLighting("F7", colMpfull, false);
+                                    GlobalApplyMapKeyLighting("F8", colMpfull, false);
+                                }
+                                GlobalApplyMapPadLighting(5, colMpfull, false);
+                                GlobalApplyMapPadLighting(6, colMpfull, false);
+                                GlobalApplyMapPadLighting(7, colMpfull, false);
+                                GlobalApplyMapPadLighting(8, colMpfull, false);
+                                GlobalApplyMapPadLighting(9, colMpfull, false);
+                            }
+                            else if (polMp <= 30 && polMp > 20)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F5", colMpfull, false);
+                                    GlobalApplyMapKeyLighting("F6", colMpfull, false);
+                                    GlobalApplyMapKeyLighting("F7", colMpfull, false);
+                                    GlobalApplyMapKeyLighting("F8", colMpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(5, colMpempty, false);
+                                GlobalApplyMapPadLighting(6, colMpempty, false);
+                                GlobalApplyMapPadLighting(7, colMpfull, false);
+                                GlobalApplyMapPadLighting(8, colMpfull, false);
+                                GlobalApplyMapPadLighting(9, colMpfull, false);
+                            }
+                            else if (polMp <= 20 && polMp > 10)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F5", colMpfull, false);
+                                    GlobalApplyMapKeyLighting("F6", colMpfull, false);
+                                    GlobalApplyMapKeyLighting("F7", colMpempty, false);
+                                    GlobalApplyMapKeyLighting("F8", colMpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(5, colMpempty, false);
+                                GlobalApplyMapPadLighting(6, colMpempty, false);
+                                GlobalApplyMapPadLighting(7, colMpempty, false);
+                                GlobalApplyMapPadLighting(8, colMpfull, false);
+                                GlobalApplyMapPadLighting(9, colMpfull, false);
+                            }
+                            else if (polMp <= 10 && polMp > 0)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F5", colMpempty, false);
+                                    GlobalApplyMapKeyLighting("F6", colMpempty, false);
+                                    GlobalApplyMapKeyLighting("F7", colMpempty, false);
+                                    GlobalApplyMapKeyLighting("F8", colMpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(5, colMpempty, false);
+                                GlobalApplyMapPadLighting(6, colMpempty, false);
+                                GlobalApplyMapPadLighting(7, colMpempty, false);
+                                GlobalApplyMapPadLighting(8, colMpempty, false);
+                                GlobalApplyMapPadLighting(9, colMpempty, false);
+                            }
+                            else if (polMp == 0)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F5", colMpempty, false);
+                                    GlobalApplyMapKeyLighting("F6", colMpempty, false);
+                                    GlobalApplyMapKeyLighting("F7", colMpempty, false);
+                                    GlobalApplyMapKeyLighting("F8", colMpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(5, colMpempty, false);
+                                GlobalApplyMapPadLighting(6, colMpempty, false);
+                                GlobalApplyMapPadLighting(7, colMpempty, false);
+                                GlobalApplyMapPadLighting(8, colMpempty, false);
+                                GlobalApplyMapPadLighting(9, colMpempty, false);
+                            }
+
+                            //Mouse
+                            if (MouseToggle == 0)
+                                if (polMpx <= 70 && polMpx > 60)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colMpfull, false);
+                                }
+                                else if (polMpx <= 60 && polMpx > 50)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colMpempty, false);
+                                }
+                                else if (polMpx <= 50 && polMpx > 40)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colMpempty, false);
+                                }
+                                else if (polMpx <= 40 && polMpx > 30)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colMpempty, false);
+                                }
+                                else if (polMpx <= 30 && polMpx > 20)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colMpempty, false);
+                                }
+                                else if (polMpx <= 20 && polMpx > 10)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colMpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colMpempty, false);
+                                }
+                                else if (polMpx <= 10 && polMpx > 0)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colMpempty, false);
+                                }
+                                else if (polMpx == 0)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colMpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colMpempty, false);
+                                }
+                        }
+
+                        //TP
+                        if (maxTp != 0)
+                        {
+                            var polTp = (currentTp - 0) * (40 - 0) / (maxTp - 0) + 0;
+                            var polTpx = (currentTp - 0) * (70 - 0) / (maxTp - 0) + 0;
+                            var polTpz = (currentTp - 0) * (65535 - 0) / (maxTp - 0) + 0;
+
+                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.TpTracker, colTpfull, (ushort) polTpz,
+                                250);
+
+                            if (polTp <= 40 && polTp > 30)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F9", colTpfull, false);
+                                    GlobalApplyMapKeyLighting("F10", colTpfull, false);
+                                    GlobalApplyMapKeyLighting("F11", colTpfull, false);
+                                    GlobalApplyMapKeyLighting("F12", colTpfull, false);
+                                }
+                                GlobalApplyMapPadLighting(0, colTpfull, false);
+                                GlobalApplyMapPadLighting(1, colTpfull, false);
+                                GlobalApplyMapPadLighting(2, colTpfull, false);
+                                GlobalApplyMapPadLighting(3, colTpfull, false);
+                                GlobalApplyMapPadLighting(4, colTpfull, false);
+                            }
+                            else if (polTp <= 30 && polTp > 20)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F9", colTpfull, false);
+                                    GlobalApplyMapKeyLighting("F10", colTpfull, false);
+                                    GlobalApplyMapKeyLighting("F11", colTpfull, false);
+                                    GlobalApplyMapKeyLighting("F12", colTpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(0, colTpempty, false);
+                                GlobalApplyMapPadLighting(1, colTpempty, false);
+                                GlobalApplyMapPadLighting(2, colTpfull, false);
+                                GlobalApplyMapPadLighting(3, colTpfull, false);
+                                GlobalApplyMapPadLighting(4, colTpfull, false);
+                            }
+                            else if (polTp <= 20 && polTp > 10)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F9", colTpfull, false);
+                                    GlobalApplyMapKeyLighting("F10", colTpfull, false);
+                                    GlobalApplyMapKeyLighting("F11", colTpempty, false);
+                                    GlobalApplyMapKeyLighting("F12", colTpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(0, colTpempty, false);
+                                GlobalApplyMapPadLighting(1, colTpempty, false);
+                                GlobalApplyMapPadLighting(2, colTpempty, false);
+                                GlobalApplyMapPadLighting(3, colTpfull, false);
+                                GlobalApplyMapPadLighting(4, colTpfull, false);
+                            }
+                            else if (polTp <= 10 && polTp > 0)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F9", colTpempty, false);
+                                    GlobalApplyMapKeyLighting("F10", colTpempty, false);
+                                    GlobalApplyMapKeyLighting("F11", colTpempty, false);
+                                    GlobalApplyMapKeyLighting("F12", colTpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(0, colTpempty, false);
+                                GlobalApplyMapPadLighting(1, colTpempty, false);
+                                GlobalApplyMapPadLighting(2, colTpempty, false);
+                                GlobalApplyMapPadLighting(3, colTpempty, false);
+                                GlobalApplyMapPadLighting(4, colTpempty, false);
+                            }
+                            else if (polTp == 0)
+                            {
+                                if (!_playerInfo.IsCasting)
+                                {
+                                    GlobalApplyMapKeyLighting("F9", colTpempty, false);
+                                    GlobalApplyMapKeyLighting("F10", colTpempty, false);
+                                    GlobalApplyMapKeyLighting("F11", colTpempty, false);
+                                    GlobalApplyMapKeyLighting("F12", colTpempty, false);
+                                }
+                                GlobalApplyMapPadLighting(0, colTpempty, false);
+                                GlobalApplyMapPadLighting(1, colTpempty, false);
+                                GlobalApplyMapPadLighting(2, colTpempty, false);
+                                GlobalApplyMapPadLighting(3, colTpempty, false);
+                                GlobalApplyMapPadLighting(4, colTpempty, false);
+                            }
+
+                            //Mouse
+                            if (MouseToggle == 1)
+                                if (polTpx <= 70 && polTpx > 60)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colTpfull, false);
+                                }
+                                else if (polTpx <= 60 && polTpx > 50)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colTpempty, false);
+                                }
+                                else if (polTpx <= 50 && polTpx > 40)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colTpempty, false);
+                                }
+                                else if (polTpx <= 40 && polTpx > 30)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colTpempty, false);
+                                }
+                                else if (polTpx <= 30 && polTpx > 20)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colTpempty, false);
+                                }
+                                else if (polTpx <= 20 && polTpx > 10)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colTpfull, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colTpempty, false);
+                                }
+                                else if (polTpx <= 10 && polTpx > 0)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colTpempty, false);
+                                }
+                                else if (polTpx == 0)
+                                {
+                                    GlobalApplyMapMouseLighting("Strip14", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip13", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip12", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip11", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip10", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip9", colTpempty, false);
+                                    GlobalApplyMapMouseLighting("Strip8", colTpempty, false);
+                                }
+
+                            //Action Alerts
+
+                            if (ChromaticsSettings.ChromaticsSettingsImpactToggle)
+                            {
+                                if (targetInfo != null && targetInfo.Type == Actor.Type.Monster)
+                                    if (targetInfo.IsClaimed)
+                                        if (_hp != 0 && currentHp < _hp)
                                         {
-                                            if (modsactive == 0) break;
-
-                                            if (modifier == "Ctrl")
-                                                if (KeyCtrl)
-                                                {
-                                                    _modsactive--;
-                                                }
-                                                else
-                                                {
-                                                    if (_modsactive < modsactive)
-                                                        _modsactive++;
-                                                }
-
-                                            if (modifier == "Alt")
-                                                if (KeyAlt)
-                                                {
-                                                    _modsactive--;
-                                                }
-                                                else
-                                                {
-                                                    if (_modsactive < modsactive)
-                                                        _modsactive++;
-                                                }
-
-                                            if (modifier == "Shift")
-                                                if (KeyShift)
-                                                {
-                                                    _modsactive--;
-                                                }
-                                                else
-                                                {
-                                                    if (_modsactive < modsactive)
-                                                        _modsactive++;
-                                                }
+                                            _rzFl1Cts.Cancel();
+                                            _corsairF1Cts.Cancel();
+                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingHpLoss),
+                                                100,
+                                                DeviceEffects.GlobalKeys3);
                                         }
 
-                                    //Assign Lighting
+                                _hp = currentHp;
+                            }
+                        }
 
-                                    if (FFXIVHotbar.keybindtranslation.ContainsKey(action.ActionKey))
+                        //DX11 Effects
+
+                        if (IsDx11)
+                        {
+                            Cooldowns.RefreshData();
+
+
+                            //Hotbars        
+
+                            var hotbars = new ActionReadResult();
+
+                            hotbars = Reader.GetActions();
+
+                            if (ChromaticsSettings.ChromaticsSettingsKeybindToggle)
+                            {
+                                FfxivHotbar.Keybindwhitelist.Clear();
+
+                                foreach (var hotbar in hotbars.ActionEntities)
+                                {
+                                    if (hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_1 ||
+                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_2 ||
+                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_3 ||
+                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_4 ||
+                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_5 ||
+                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_6 ||
+                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_7 ||
+                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_8 ||
+                                        hotbar.Type == HotBarRecast.Container.PETBAR ||
+                                        hotbar.Type == HotBarRecast.Container.CROSS_PETBAR) continue;
+
+                                    foreach (var action in hotbar.Actions)
                                     {
-                                        var keyid = FFXIVHotbar.keybindtranslation[action.ActionKey];
+                                        if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) ||
+                                            string.IsNullOrEmpty(action.KeyBinds) ||
+                                            string.IsNullOrEmpty(action.ActionKey)) continue;
 
-                                        if (_modsactive == 0)
-                                            if (action.IsAvailable || PlayerInfo.IsCasting)
-                                                if (action.InRange)
-                                                    if (action.IsProcOrCombo)
+                                        //Collect Modifier Info
+                                        var modsactive = action.Modifiers.Count;
+                                        var _modsactive = modsactive;
+
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(action.ActionKey))
+                                            FfxivHotbar.Keybindwhitelist.Add(action.ActionKey);
+
+
+                                        if (modsactive > 0)
+                                            foreach (var modifier in action.Modifiers)
+                                            {
+                                                if (modsactive == 0) break;
+
+                                                if (modifier == "Ctrl")
+                                                    if (_keyCtrl)
                                                     {
-                                                        //Action Proc'd
-                                                        GlobalApplyMapKeyLighting(keyid,
-                                                            ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMapping_HotbarProc), false, true);
+                                                        _modsactive--;
                                                     }
                                                     else
                                                     {
-                                                        if (action.CoolDownPercent > 0)
-                                                            GlobalApplyMapKeyLighting(keyid,
-                                                                ColorTranslator.FromHtml(ColorMappings
-                                                                    .ColorMapping_HotbarCD), false, true);
-                                                        else
-                                                            GlobalApplyMapKeyLighting(keyid,
-                                                                ColorTranslator.FromHtml(ColorMappings
-                                                                    .ColorMapping_HotbarReady), false, true);
+                                                        if (_modsactive < modsactive)
+                                                            _modsactive++;
                                                     }
+
+                                                if (modifier == "Alt")
+                                                    if (_keyAlt)
+                                                    {
+                                                        _modsactive--;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (_modsactive < modsactive)
+                                                            _modsactive++;
+                                                    }
+
+                                                if (modifier == "Shift")
+                                                    if (_keyShift)
+                                                    {
+                                                        _modsactive--;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (_modsactive < modsactive)
+                                                            _modsactive++;
+                                                    }
+                                            }
+
+                                        //Assign Lighting
+
+                                        if (FfxivHotbar.Keybindtranslation.ContainsKey(action.ActionKey))
+                                        {
+                                            var keyid = FfxivHotbar.Keybindtranslation[action.ActionKey];
+
+                                            if (_modsactive == 0)
+                                                if (action.IsAvailable || _playerInfo.IsCasting)
+                                                    if (action.InRange)
+                                                        if (action.IsProcOrCombo)
+                                                        {
+                                                            //Action Proc'd
+                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingHotbarProc), false, true);
+                                                        }
+                                                        else
+                                                        {
+                                                            if (action.CoolDownPercent > 0)
+                                                                GlobalApplyMapKeyLighting(keyid,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarCd), false, true);
+                                                            else
+                                                                GlobalApplyMapKeyLighting(keyid,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarReady), false, true);
+                                                        }
+                                                    else
+                                                        GlobalApplyMapKeyLighting(keyid,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingHotbarOutRange), false, true);
                                                 else
                                                     GlobalApplyMapKeyLighting(keyid,
                                                         ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMapping_HotbarOutRange), false, true);
-                                            else
-                                                GlobalApplyMapKeyLighting(keyid,
-                                                    ColorTranslator.FromHtml(ColorMappings
-                                                        .ColorMapping_HotbarNotAvailable), false, true);
+                                                            .ColorMappingHotbarNotAvailable), false, true);
+                                        }
                                     }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            GlobalApplyMapKeyLighting("OemTilde", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D1", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D2", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D3", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D4", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D5", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D6", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D7", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D8", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D9", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("D0", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("OemMinus", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("OemEquals", _BaseColor, false);
-                        }
-
-
-                        //Cooldowns
-                        var gcd_hot = ColorTranslator.FromHtml(ColorMappings.ColorMapping_GCDHot);
-                        var gcd_ready = ColorTranslator.FromHtml(ColorMappings.ColorMapping_GCDReady);
-                        var gcd_empty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_GCDEmpty);
-
-                        var gcd_total = Cooldowns.globalCooldownTotal;
-                        var gcd_remain = Cooldowns.globalCooldownRemaining;
-                        var pol_gcd = (gcd_remain - 0) * (30 - 0) / (gcd_total - 0) + 0;
-
-                        if (ChromaticsSettings.ChromaticsSettings_GCDCountdown)
-                        {
-                            if (!Cooldowns.globalCooldownReady)
-                            {
-                                if (pol_gcd <= 30 && pol_gcd > 20)
-                                {
-                                    GlobalApplyMapKeyLighting("PageUp", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("PageDown", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("Home", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("End", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("Insert", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("Delete", gcd_hot, false);
-                                }
-                                else if (pol_gcd <= 20 && pol_gcd > 10)
-                                {
-                                    GlobalApplyMapKeyLighting("PageUp", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("PageDown", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("Home", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("End", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("Insert", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("Delete", gcd_hot, false);
-                                }
-                                else if (pol_gcd <= 10 && pol_gcd > 0)
-                                {
-                                    GlobalApplyMapKeyLighting("PageUp", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("PageDown", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("Home", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("End", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("Insert", gcd_hot, false);
-                                    GlobalApplyMapKeyLighting("Delete", gcd_hot, false);
-                                }
-                                else if (pol_gcd == 0)
-                                {
-                                    GlobalApplyMapKeyLighting("PageUp", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("PageDown", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("Home", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("End", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("Insert", gcd_empty, false);
-                                    GlobalApplyMapKeyLighting("Delete", gcd_empty, false);
                                 }
                             }
                             else
                             {
-                                GlobalApplyMapKeyLighting("PageUp", gcd_ready, false);
-                                GlobalApplyMapKeyLighting("PageDown", gcd_ready, false);
-                                GlobalApplyMapKeyLighting("Home", gcd_ready, false);
-                                GlobalApplyMapKeyLighting("End", gcd_ready, false);
-                                GlobalApplyMapKeyLighting("Insert", gcd_ready, false);
-                                GlobalApplyMapKeyLighting("Delete", gcd_ready, false);
+                                GlobalApplyMapKeyLighting("OemTilde", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D1", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D2", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D3", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D4", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D5", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D6", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D7", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D8", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D9", _baseColor, false);
+                                GlobalApplyMapKeyLighting("D0", _baseColor, false);
+                                GlobalApplyMapKeyLighting("OemMinus", _baseColor, false);
+                                GlobalApplyMapKeyLighting("OemEquals", _baseColor, false);
                             }
-                        }
-                        else
-                        {
-                            GlobalApplyMapKeyLighting("PageUp", gcd_ready, false);
-                            GlobalApplyMapKeyLighting("PageDown", gcd_ready, false);
-                            GlobalApplyMapKeyLighting("Home", gcd_ready, false);
-                            GlobalApplyMapKeyLighting("End", gcd_ready, false);
-                            GlobalApplyMapKeyLighting("Insert", gcd_ready, false);
-                            GlobalApplyMapKeyLighting("Delete", gcd_ready, false);
-                        }
 
-                        //Job Gauges
 
-                        if (ChromaticsSettings.ChromaticsSettings_JobGaugeToggle)
-                        {
-                            switch (PlayerInfo.Job)
+                            //Cooldowns
+                            var gcdHot = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdHot);
+                            var gcdReady = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdReady);
+                            var gcdEmpty = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdEmpty);
+
+                            var gcdTotal = Cooldowns.GlobalCooldownTotal;
+                            var gcdRemain = Cooldowns.GlobalCooldownRemaining;
+                            var polGcd = (gcdRemain - 0) * (30 - 0) / (gcdTotal - 0) + 0;
+
+                            if (ChromaticsSettings.ChromaticsSettingsGcdCountdown)
                             {
-                                case Actor.Job.WAR:
-                                    var burstwarcol = Color.Orange;
-                                    var maxwarcol = Color.Red;
-                                    var negwarcol = Color.Black;
-                                    var wrath = Cooldowns.Wrath;
-                                    var pol_wrath = (wrath - 0) * (50 - 0) / (100 - 0) + 0;
-
-                                    if (wrath > 0)
+                                if (!Cooldowns.GlobalCooldownReady)
+                                {
+                                    if (polGcd <= 30 && polGcd > 20)
                                     {
-                                        if (pol_wrath >= 50)
+                                        GlobalApplyMapKeyLighting("PageUp", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("PageDown", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("Home", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("End", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("Insert", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("Delete", gcdHot, false);
+                                    }
+                                    else if (polGcd <= 20 && polGcd > 10)
+                                    {
+                                        GlobalApplyMapKeyLighting("PageUp", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("PageDown", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("Home", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("End", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("Insert", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("Delete", gcdHot, false);
+                                    }
+                                    else if (polGcd <= 10 && polGcd > 0)
+                                    {
+                                        GlobalApplyMapKeyLighting("PageUp", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("PageDown", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("Home", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("End", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("Insert", gcdHot, false);
+                                        GlobalApplyMapKeyLighting("Delete", gcdHot, false);
+                                    }
+                                    else if (polGcd == 0)
+                                    {
+                                        GlobalApplyMapKeyLighting("PageUp", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("PageDown", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("Home", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("End", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("Insert", gcdEmpty, false);
+                                        GlobalApplyMapKeyLighting("Delete", gcdEmpty, false);
+                                    }
+                                }
+                                else
+                                {
+                                    GlobalApplyMapKeyLighting("PageUp", gcdReady, false);
+                                    GlobalApplyMapKeyLighting("PageDown", gcdReady, false);
+                                    GlobalApplyMapKeyLighting("Home", gcdReady, false);
+                                    GlobalApplyMapKeyLighting("End", gcdReady, false);
+                                    GlobalApplyMapKeyLighting("Insert", gcdReady, false);
+                                    GlobalApplyMapKeyLighting("Delete", gcdReady, false);
+                                }
+                            }
+                            else
+                            {
+                                GlobalApplyMapKeyLighting("PageUp", gcdReady, false);
+                                GlobalApplyMapKeyLighting("PageDown", gcdReady, false);
+                                GlobalApplyMapKeyLighting("Home", gcdReady, false);
+                                GlobalApplyMapKeyLighting("End", gcdReady, false);
+                                GlobalApplyMapKeyLighting("Insert", gcdReady, false);
+                                GlobalApplyMapKeyLighting("Delete", gcdReady, false);
+                            }
+
+                            //Job Gauges
+
+                            if (ChromaticsSettings.ChromaticsSettingsJobGaugeToggle)
+                            {
+                                switch (_playerInfo.Job)
+                                {
+                                    case Actor.Job.WAR:
+                                        var burstwarcol = Color.Orange;
+                                        var maxwarcol = Color.Red;
+                                        var negwarcol = Color.Black;
+                                        var wrath = Cooldowns.Wrath;
+                                        var polWrath = (wrath - 0) * (50 - 0) / (100 - 0) + 0;
+
+                                        if (wrath > 0)
                                         {
-                                            //Flash
-                                            ToggleGlobalFlash3(true);
-                                            GlobalFlash3(maxwarcol, 150);
+                                            if (polWrath >= 50)
+                                            {
+                                                //Flash
+                                                ToggleGlobalFlash3(true);
+                                                GlobalFlash3(maxwarcol, 150);
+                                            }
+                                            else if (polWrath < 50 && polWrath > 40)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", burstwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", burstwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+                                            }
+                                            else if (polWrath <= 40 && polWrath > 30)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", burstwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+                                            }
+                                            else if (polWrath <= 30 && polWrath > 20)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+                                            }
+                                            else if (polWrath <= 20 && polWrath > 10)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+                                            }
+                                            else if (polWrath <= 10 && polWrath > 0)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+                                            }
+                                            else if (polWrath == 0)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negwarcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negwarcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negwarcol, false);
+                                            }
                                         }
-                                        else if (pol_wrath < 50 && pol_wrath > 40)
+                                        else
                                         {
                                             ToggleGlobalFlash3(false);
 
-                                            GlobalApplyMapKeyLighting("NumLock", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", burstwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", burstwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
-                                        }
-                                        else if (pol_wrath <= 40 && pol_wrath > 30)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", burstwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
-                                        }
-                                        else if (pol_wrath <= 30 && pol_wrath > 20)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
-                                        }
-                                        else if (pol_wrath <= 20 && pol_wrath > 10)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
-                                        }
-                                        else if (pol_wrath <= 10 && pol_wrath > 0)
-                                        {
-                                            GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", negwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", negwarcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
-                                        }
-                                        else if (pol_wrath == 0)
-                                        {
                                             GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
                                             GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
                                             GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
@@ -2684,180 +2754,186 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num2", negwarcol, false);
                                             GlobalApplyMapKeyLighting("Num3", negwarcol, false);
                                         }
-                                    }
-                                    else
-                                    {
-                                        ToggleGlobalFlash3(false);
 
-                                        GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
-                                        GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
-                                        GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
+                                        break;
+                                    case Actor.Job.PLD:
+                                        break;
+                                    case Actor.Job.MNK:
+                                        var greased = Cooldowns.GreasedLightningStacks;
+                                        var greaseRemaining = Cooldowns.GreasedLightningTimeRemaining;
+                                        var burstmnkcol = Color.Aqua;
+                                        var burstmnkempty = Color.Black;
 
-                                        GlobalApplyMapKeyLighting("Num7", negwarcol, false);
-                                        GlobalApplyMapKeyLighting("Num8", negwarcol, false);
-                                        GlobalApplyMapKeyLighting("Num9", negwarcol, false);
-
-                                        GlobalApplyMapKeyLighting("Num4", negwarcol, false);
-                                        GlobalApplyMapKeyLighting("Num5", negwarcol, false);
-                                        GlobalApplyMapKeyLighting("Num6", negwarcol, false);
-
-                                        GlobalApplyMapKeyLighting("Num1", negwarcol, false);
-                                        GlobalApplyMapKeyLighting("Num2", negwarcol, false);
-                                        GlobalApplyMapKeyLighting("Num3", negwarcol, false);
-                                    }
-
-                                    break;
-                                case Actor.Job.PLD:
-                                    break;
-                                case Actor.Job.MNK:
-                                    var greased = Cooldowns.GreasedLightningStacks;
-                                    var grease_remaining = Cooldowns.GreasedLightningTimeRemaining;
-                                    var burstmnkcol = Color.Aqua;
-                                    var burstmnkempty = Color.Black;
-
-                                    if (greased > 0)
-                                    {
-                                        if (grease_remaining > 0 && grease_remaining <= 5)
+                                        if (greased > 0)
                                         {
-                                            ToggleGlobalFlash3(true);
-                                            GlobalFlash3(burstmnkcol, 150);
+                                            if (greaseRemaining > 0 && greaseRemaining <= 5)
+                                            {
+                                                ToggleGlobalFlash3(true);
+                                                GlobalFlash3(burstmnkcol, 150);
+                                            }
+                                            else
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                switch (greased)
+                                                {
+                                                    case 3:
+                                                        GlobalApplyMapKeyLighting("Num9", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num6", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num3", burstmnkcol, false);
+
+                                                        GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
+
+                                                        GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+                                                        break;
+                                                    case 2:
+                                                        GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
+                                                        GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
+                                                        GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
+
+                                                        GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
+
+                                                        GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+                                                        break;
+                                                    case 1:
+                                                        GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
+                                                        GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
+                                                        GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
+
+                                                        GlobalApplyMapKeyLighting("Num8", burstmnkempty, false);
+                                                        GlobalApplyMapKeyLighting("Num5", burstmnkempty, false);
+                                                        GlobalApplyMapKeyLighting("Num2", burstmnkempty, false);
+
+                                                        GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
+                                                        GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+                                                        break;
+                                                }
+                                            }
                                         }
                                         else
                                         {
                                             ToggleGlobalFlash3(false);
 
-                                            switch (greased)
+                                            GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
+                                            GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
+                                            GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
+
+                                            GlobalApplyMapKeyLighting("Num8", burstmnkempty, false);
+                                            GlobalApplyMapKeyLighting("Num5", burstmnkempty, false);
+                                            GlobalApplyMapKeyLighting("Num2", burstmnkempty, false);
+
+                                            GlobalApplyMapKeyLighting("Num7", burstmnkempty, false);
+                                            GlobalApplyMapKeyLighting("Num4", burstmnkempty, false);
+                                            GlobalApplyMapKeyLighting("Num1", burstmnkempty, false);
+                                        }
+
+                                        break;
+                                    case Actor.Job.DRG:
+
+                                        var burstdrgcol = Color.Red;
+                                        var negdrgcol = Color.Black;
+                                        var bloodremain = Cooldowns.BloodOfTheDragonTimeRemaining;
+                                        var polBlood = (bloodremain - 0) * (50 - 0) / (30 - 0) + 0;
+
+                                        if (bloodremain > 0)
+                                        {
+                                            if (polBlood <= 50 && polBlood > 40)
                                             {
-                                                case 3:
-                                                    GlobalApplyMapKeyLighting("Num9", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num6", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num3", burstmnkcol, false);
+                                                ToggleGlobalFlash3(false);
 
-                                                    GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
+                                                GlobalApplyMapKeyLighting("NumLock", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", burstdrgcol, false);
 
-                                                    GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
-                                                    break;
-                                                case 2:
-                                                    GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
-                                                    GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
-                                                    GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
+                                                GlobalApplyMapKeyLighting("Num7", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", burstdrgcol, false);
 
-                                                    GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
+                                                GlobalApplyMapKeyLighting("Num4", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstdrgcol, false);
 
-                                                    GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
-                                                    break;
-                                                case 1:
-                                                    GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
-                                                    GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
-                                                    GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
+                                                GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+                                            }
+                                            else if (polBlood <= 40 && polBlood > 30)
+                                            {
+                                                ToggleGlobalFlash3(false);
 
-                                                    GlobalApplyMapKeyLighting("Num8", burstmnkempty, false);
-                                                    GlobalApplyMapKeyLighting("Num5", burstmnkempty, false);
-                                                    GlobalApplyMapKeyLighting("Num2", burstmnkempty, false);
+                                                GlobalApplyMapKeyLighting("NumLock", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrgcol, false);
 
-                                                    GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
-                                                    GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
-                                                    break;
+                                                GlobalApplyMapKeyLighting("Num7", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", burstdrgcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstdrgcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+                                            }
+                                            else if (polBlood <= 30 && polBlood > 20)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrgcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negdrgcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstdrgcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+                                            }
+                                            else if (polBlood <= 20 && polBlood > 10)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrgcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negdrgcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negdrgcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+                                            }
+                                            else if (polBlood <= 10 && polBlood > 0)
+                                            {
+                                                //Flash
+                                                ToggleGlobalFlash3(true);
+                                                GlobalFlash3(burstdrgcol, 150);
                                             }
                                         }
-                                    }
-                                    else
-                                    {
-                                        ToggleGlobalFlash3(false);
-
-                                        GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
-
-                                        GlobalApplyMapKeyLighting("Num8", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num5", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num2", burstmnkempty, false);
-
-                                        GlobalApplyMapKeyLighting("Num7", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num4", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num1", burstmnkempty, false);
-                                    }
-
-                                    break;
-                                case Actor.Job.DRG:
-
-                                    var burstdrgcol = Color.Red;
-                                    var negdrgcol = Color.Black;
-                                    var bloodremain = Cooldowns.BloodOfTheDragonTimeRemaining;
-                                    var pol_blood = (bloodremain - 0) * (50 - 0) / (30 - 0) + 0;
-
-                                    if (bloodremain > 0)
-                                    {
-                                        if (pol_blood <= 50 && pol_blood > 40)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", burstdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", burstdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
-                                        }
-                                        else if (pol_blood <= 40 && pol_blood > 30)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", negdrgcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", negdrgcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", negdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", burstdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
-                                        }
-                                        else if (pol_blood <= 30 && pol_blood > 20)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", negdrgcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", negdrgcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", negdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", negdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", negdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", negdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstdrgcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
-                                        }
-                                        else if (pol_blood <= 20 && pol_blood > 10)
+                                        else
                                         {
                                             ToggleGlobalFlash3(false);
 
@@ -2873,125 +2949,125 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num5", negdrgcol, false);
                                             GlobalApplyMapKeyLighting("Num6", negdrgcol, false);
 
-                                            GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+                                            GlobalApplyMapKeyLighting("Num1", negdrgcol, false);
+                                            GlobalApplyMapKeyLighting("Num2", negdrgcol, false);
+                                            GlobalApplyMapKeyLighting("Num3", negdrgcol, false);
                                         }
-                                        else if (pol_blood <= 10 && pol_blood > 0)
+                                        break;
+                                    case Actor.Job.BRD:
+                                        //Bard Songs
+                                        var burstcol = Color.Black;
+                                        var negcol = Color.Black;
+
+                                        if (Cooldowns.Song != Cooldowns.BardSongs.None)
                                         {
-                                            //Flash
-                                            ToggleGlobalFlash3(true);
-                                            GlobalFlash3(burstdrgcol, 150);
+                                            var songremain = Cooldowns.SongTimeRemaining;
+                                            var polSong = (songremain - 0) * (50 - 0) / (30 - 0) + 0;
+
+                                            switch (Cooldowns.Song)
+                                            {
+                                                case Cooldowns.BardSongs.ArmysPaeon:
+                                                    burstcol = Color.Orange;
+                                                    negcol = Color.Black;
+                                                    break;
+                                                case Cooldowns.BardSongs.MagesBallad:
+                                                    burstcol = Color.MediumSlateBlue;
+                                                    negcol = Color.Black;
+                                                    break;
+                                                case Cooldowns.BardSongs.WanderersMinuet:
+                                                    burstcol = Color.MediumSpringGreen;
+                                                    negcol = Color.Black;
+                                                    break;
+                                            }
+
+                                            if (polSong <= 50 && polSong > 40)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", burstcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", burstcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", burstcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", burstcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstcol, false);
+                                            }
+                                            else if (polSong <= 40 && polSong > 30)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", negcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", burstcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstcol, false);
+                                            }
+                                            else if (polSong <= 30 && polSong > 20)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", negcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", burstcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstcol, false);
+                                            }
+                                            else if (polSong <= 20 && polSong > 10)
+                                            {
+                                                ToggleGlobalFlash3(false);
+
+                                                GlobalApplyMapKeyLighting("NumLock", negcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", burstcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", burstcol, false);
+                                            }
+                                            else if (polSong <= 10 && polSong > 0)
+                                            {
+                                                //Flash
+                                                ToggleGlobalFlash3(true);
+                                                GlobalFlash3(burstcol, 150);
+                                            }
                                         }
-                                    }
-                                    else
-                                    {
-                                        ToggleGlobalFlash3(false);
-
-                                        GlobalApplyMapKeyLighting("NumLock", negdrgcol, false);
-                                        GlobalApplyMapKeyLighting("NumDivide", negdrgcol, false);
-                                        GlobalApplyMapKeyLighting("NumMultiply", negdrgcol, false);
-
-                                        GlobalApplyMapKeyLighting("Num7", negdrgcol, false);
-                                        GlobalApplyMapKeyLighting("Num8", negdrgcol, false);
-                                        GlobalApplyMapKeyLighting("Num9", negdrgcol, false);
-
-                                        GlobalApplyMapKeyLighting("Num4", negdrgcol, false);
-                                        GlobalApplyMapKeyLighting("Num5", negdrgcol, false);
-                                        GlobalApplyMapKeyLighting("Num6", negdrgcol, false);
-
-                                        GlobalApplyMapKeyLighting("Num1", negdrgcol, false);
-                                        GlobalApplyMapKeyLighting("Num2", negdrgcol, false);
-                                        GlobalApplyMapKeyLighting("Num3", negdrgcol, false);
-                                    }
-                                    break;
-                                case Actor.Job.BRD:
-                                    //Bard Songs
-                                    var burstcol = Color.Black;
-                                    var negcol = Color.Black;
-
-                                    if (Cooldowns.Song != Cooldowns.BardSongs.None)
-                                    {
-                                        var songremain = Cooldowns.SongTimeRemaining;
-                                        var pol_song = (songremain - 0) * (50 - 0) / (30 - 0) + 0;
-
-                                        switch (Cooldowns.Song)
-                                        {
-                                            case Cooldowns.BardSongs.ArmysPaeon:
-                                                burstcol = Color.Orange;
-                                                negcol = Color.Black;
-                                                break;
-                                            case Cooldowns.BardSongs.MagesBallad:
-                                                burstcol = Color.MediumSlateBlue;
-                                                negcol = Color.Black;
-                                                break;
-                                            case Cooldowns.BardSongs.WanderersMinuet:
-                                                burstcol = Color.MediumSpringGreen;
-                                                negcol = Color.Black;
-                                                break;
-                                        }
-
-                                        if (pol_song <= 50 && pol_song > 40)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", burstcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", burstcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", burstcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", burstcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstcol, false);
-                                        }
-                                        else if (pol_song <= 40 && pol_song > 30)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", negcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", negcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", negcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", burstcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstcol, false);
-                                        }
-                                        else if (pol_song <= 30 && pol_song > 20)
-                                        {
-                                            ToggleGlobalFlash3(false);
-
-                                            GlobalApplyMapKeyLighting("NumLock", negcol, false);
-                                            GlobalApplyMapKeyLighting("NumDivide", negcol, false);
-                                            GlobalApplyMapKeyLighting("NumMultiply", negcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num7", negcol, false);
-                                            GlobalApplyMapKeyLighting("Num8", negcol, false);
-                                            GlobalApplyMapKeyLighting("Num9", negcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num4", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num5", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num6", burstcol, false);
-
-                                            GlobalApplyMapKeyLighting("Num1", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstcol, false);
-                                        }
-                                        else if (pol_song <= 20 && pol_song > 10)
+                                        else
                                         {
                                             ToggleGlobalFlash3(false);
 
@@ -3007,426 +3083,400 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num5", negcol, false);
                                             GlobalApplyMapKeyLighting("Num6", negcol, false);
 
-                                            GlobalApplyMapKeyLighting("Num1", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num2", burstcol, false);
-                                            GlobalApplyMapKeyLighting("Num3", burstcol, false);
+                                            GlobalApplyMapKeyLighting("Num1", negcol, false);
+                                            GlobalApplyMapKeyLighting("Num2", negcol, false);
+                                            GlobalApplyMapKeyLighting("Num3", negcol, false);
                                         }
-                                        else if (pol_song <= 10 && pol_song > 0)
+                                        break;
+                                    case Actor.Job.WHM:
+                                        break;
+                                    case Actor.Job.BLM:
+                                        break;
+                                    case Actor.Job.SMN:
+                                        var aetherflowsmn = Cooldowns.AetherflowCount;
+
+                                        var burstsmncol = Color.Orchid;
+                                        var burstsmnempty = Color.Black;
+
+                                        if (aetherflowsmn > 0)
                                         {
-                                            //Flash
-                                            ToggleGlobalFlash3(true);
-                                            GlobalFlash3(burstcol, 150);
+                                            switch (aetherflowsmn)
+                                            {
+                                                case 3:
+                                                    GlobalApplyMapKeyLighting("Num9", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", burstsmncol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num8", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", burstsmncol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
+                                                    break;
+                                                case 2:
+                                                    GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
+                                                    GlobalApplyMapKeyLighting("Num6", burstsmnempty, false);
+                                                    GlobalApplyMapKeyLighting("Num3", burstsmnempty, false);
+
+                                                    GlobalApplyMapKeyLighting("Num8", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", burstsmncol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
+                                                    break;
+                                                case 1:
+                                                    GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
+                                                    GlobalApplyMapKeyLighting("Num6", burstsmnempty, false);
+                                                    GlobalApplyMapKeyLighting("Num3", burstsmnempty, false);
+
+                                                    GlobalApplyMapKeyLighting("Num8", burstsmnempty, false);
+                                                    GlobalApplyMapKeyLighting("Num5", burstsmnempty, false);
+                                                    GlobalApplyMapKeyLighting("Num2", burstsmnempty, false);
+
+                                                    GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
+                                                    GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
+                                                    break;
+                                            }
                                         }
-                                    }
-                                    else
-                                    {
-                                        ToggleGlobalFlash3(false);
-
-                                        GlobalApplyMapKeyLighting("NumLock", negcol, false);
-                                        GlobalApplyMapKeyLighting("NumDivide", negcol, false);
-                                        GlobalApplyMapKeyLighting("NumMultiply", negcol, false);
-
-                                        GlobalApplyMapKeyLighting("Num7", negcol, false);
-                                        GlobalApplyMapKeyLighting("Num8", negcol, false);
-                                        GlobalApplyMapKeyLighting("Num9", negcol, false);
-
-                                        GlobalApplyMapKeyLighting("Num4", negcol, false);
-                                        GlobalApplyMapKeyLighting("Num5", negcol, false);
-                                        GlobalApplyMapKeyLighting("Num6", negcol, false);
-
-                                        GlobalApplyMapKeyLighting("Num1", negcol, false);
-                                        GlobalApplyMapKeyLighting("Num2", negcol, false);
-                                        GlobalApplyMapKeyLighting("Num3", negcol, false);
-                                    }
-                                    break;
-                                case Actor.Job.WHM:
-                                    break;
-                                case Actor.Job.BLM:
-                                    break;
-                                case Actor.Job.SMN:
-                                    var aetherflowsmn = Cooldowns.AetherflowCount;
-
-                                    var burstsmncol = Color.Orchid;
-                                    var burstsmnempty = Color.Black;
-
-                                    if (aetherflowsmn > 0)
-                                    {
-                                        switch (aetherflowsmn)
+                                        else
                                         {
-                                            case 3:
-                                                GlobalApplyMapKeyLighting("Num9", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num6", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num3", burstsmncol, false);
+                                            GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
+                                            GlobalApplyMapKeyLighting("Num6", burstsmnempty, false);
+                                            GlobalApplyMapKeyLighting("Num3", burstsmnempty, false);
 
-                                                GlobalApplyMapKeyLighting("Num8", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num5", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num2", burstsmncol, false);
+                                            GlobalApplyMapKeyLighting("Num8", burstsmnempty, false);
+                                            GlobalApplyMapKeyLighting("Num5", burstsmnempty, false);
+                                            GlobalApplyMapKeyLighting("Num2", burstsmnempty, false);
 
-                                                GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
-                                                break;
-                                            case 2:
-                                                GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
-                                                GlobalApplyMapKeyLighting("Num6", burstsmnempty, false);
-                                                GlobalApplyMapKeyLighting("Num3", burstsmnempty, false);
-
-                                                GlobalApplyMapKeyLighting("Num8", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num5", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num2", burstsmncol, false);
-
-                                                GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
-                                                break;
-                                            case 1:
-                                                GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
-                                                GlobalApplyMapKeyLighting("Num6", burstsmnempty, false);
-                                                GlobalApplyMapKeyLighting("Num3", burstsmnempty, false);
-
-                                                GlobalApplyMapKeyLighting("Num8", burstsmnempty, false);
-                                                GlobalApplyMapKeyLighting("Num5", burstsmnempty, false);
-                                                GlobalApplyMapKeyLighting("Num2", burstsmnempty, false);
-
-                                                GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
-                                                GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
-                                                break;
+                                            GlobalApplyMapKeyLighting("Num7", burstsmnempty, false);
+                                            GlobalApplyMapKeyLighting("Num4", burstsmnempty, false);
+                                            GlobalApplyMapKeyLighting("Num1", burstsmnempty, false);
                                         }
-                                    }
-                                    else
-                                    {
-                                        GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
-                                        GlobalApplyMapKeyLighting("Num6", burstsmnempty, false);
-                                        GlobalApplyMapKeyLighting("Num3", burstsmnempty, false);
 
-                                        GlobalApplyMapKeyLighting("Num8", burstsmnempty, false);
-                                        GlobalApplyMapKeyLighting("Num5", burstsmnempty, false);
-                                        GlobalApplyMapKeyLighting("Num2", burstsmnempty, false);
+                                        break;
+                                    case Actor.Job.SCH:
 
-                                        GlobalApplyMapKeyLighting("Num7", burstsmnempty, false);
-                                        GlobalApplyMapKeyLighting("Num4", burstsmnempty, false);
-                                        GlobalApplyMapKeyLighting("Num1", burstsmnempty, false);
-                                    }
+                                        var aetherflowsch = Cooldowns.AetherflowCount;
 
-                                    break;
-                                case Actor.Job.SCH:
+                                        var burstschcol = Color.Orchid;
+                                        var burstschempty = Color.Black;
 
-                                    var aetherflowsch = Cooldowns.AetherflowCount;
-
-                                    var burstschcol = Color.Orchid;
-                                    var burstschempty = Color.Black;
-
-                                    if (aetherflowsch > 0)
-                                    {
-                                        switch (aetherflowsch)
+                                        if (aetherflowsch > 0)
                                         {
-                                            case 3:
-                                                GlobalApplyMapKeyLighting("Num9", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num6", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num3", burstschcol, false);
+                                            switch (aetherflowsch)
+                                            {
+                                                case 3:
+                                                    GlobalApplyMapKeyLighting("Num9", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", burstschcol, false);
 
-                                                GlobalApplyMapKeyLighting("Num8", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num5", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num2", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", burstschcol, false);
 
-                                                GlobalApplyMapKeyLighting("Num7", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num4", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num1", burstschcol, false);
-                                                break;
-                                            case 2:
-                                                GlobalApplyMapKeyLighting("Num9", burstschempty, false);
-                                                GlobalApplyMapKeyLighting("Num6", burstschempty, false);
-                                                GlobalApplyMapKeyLighting("Num3", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num7", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num4", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num1", burstschcol, false);
+                                                    break;
+                                                case 2:
+                                                    GlobalApplyMapKeyLighting("Num9", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num6", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num3", burstschempty, false);
 
-                                                GlobalApplyMapKeyLighting("Num8", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num5", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num2", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", burstschcol, false);
 
-                                                GlobalApplyMapKeyLighting("Num7", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num4", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num1", burstschcol, false);
-                                                break;
-                                            case 1:
-                                                GlobalApplyMapKeyLighting("Num9", burstschempty, false);
-                                                GlobalApplyMapKeyLighting("Num6", burstschempty, false);
-                                                GlobalApplyMapKeyLighting("Num3", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num7", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num4", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num1", burstschcol, false);
+                                                    break;
+                                                case 1:
+                                                    GlobalApplyMapKeyLighting("Num9", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num6", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num3", burstschempty, false);
 
-                                                GlobalApplyMapKeyLighting("Num8", burstschempty, false);
-                                                GlobalApplyMapKeyLighting("Num5", burstschempty, false);
-                                                GlobalApplyMapKeyLighting("Num2", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num8", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num5", burstschempty, false);
+                                                    GlobalApplyMapKeyLighting("Num2", burstschempty, false);
 
-                                                GlobalApplyMapKeyLighting("Num7", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num4", burstschcol, false);
-                                                GlobalApplyMapKeyLighting("Num1", burstschcol, false);
-                                                break;
+                                                    GlobalApplyMapKeyLighting("Num7", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num4", burstschcol, false);
+                                                    GlobalApplyMapKeyLighting("Num1", burstschcol, false);
+                                                    break;
+                                            }
                                         }
-                                    }
-                                    else
-                                    {
-                                        GlobalApplyMapKeyLighting("Num9", burstschempty, false);
-                                        GlobalApplyMapKeyLighting("Num6", burstschempty, false);
-                                        GlobalApplyMapKeyLighting("Num3", burstschempty, false);
-
-                                        GlobalApplyMapKeyLighting("Num8", burstschempty, false);
-                                        GlobalApplyMapKeyLighting("Num5", burstschempty, false);
-                                        GlobalApplyMapKeyLighting("Num2", burstschempty, false);
-
-                                        GlobalApplyMapKeyLighting("Num7", burstschempty, false);
-                                        GlobalApplyMapKeyLighting("Num4", burstschempty, false);
-                                        GlobalApplyMapKeyLighting("Num1", burstschempty, false);
-                                    }
-
-                                    break;
-                                case Actor.Job.NIN:
-                                    break;
-                                case Actor.Job.DRK:
-                                    break;
-                                case Actor.Job.AST:
-                                    var burstastcol = Color.Black;
-
-                                    if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
-                                    {
-                                        switch (Cooldowns.CurrentCard)
+                                        else
                                         {
-                                            case Cooldowns.CardTypes.Arrow:
-                                                burstastcol = Color.Lime;
-                                                break;
-                                            case Cooldowns.CardTypes.Balance:
-                                                burstastcol = Color.Crimson;
-                                                break;
-                                            case Cooldowns.CardTypes.Bole:
-                                                burstastcol = Color.Orange;
-                                                break;
-                                            case Cooldowns.CardTypes.Ewer:
-                                                burstastcol = Color.MediumBlue;
-                                                break;
-                                            case Cooldowns.CardTypes.Spear:
-                                                burstastcol = Color.Turquoise;
-                                                break;
-                                            case Cooldowns.CardTypes.Spire:
-                                                burstastcol = Color.SlateBlue;
-                                                break;
+                                            GlobalApplyMapKeyLighting("Num9", burstschempty, false);
+                                            GlobalApplyMapKeyLighting("Num6", burstschempty, false);
+                                            GlobalApplyMapKeyLighting("Num3", burstschempty, false);
+
+                                            GlobalApplyMapKeyLighting("Num8", burstschempty, false);
+                                            GlobalApplyMapKeyLighting("Num5", burstschempty, false);
+                                            GlobalApplyMapKeyLighting("Num2", burstschempty, false);
+
+                                            GlobalApplyMapKeyLighting("Num7", burstschempty, false);
+                                            GlobalApplyMapKeyLighting("Num4", burstschempty, false);
+                                            GlobalApplyMapKeyLighting("Num1", burstschempty, false);
                                         }
 
-                                        if (Cooldowns.CurrentCard != _CurrentCard)
+                                        break;
+                                    case Actor.Job.NIN:
+                                        break;
+                                    case Actor.Job.DRK:
+                                        break;
+                                    case Actor.Job.AST:
+                                        var burstastcol = Color.Black;
+
+                                        if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
                                         {
-                                            if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
-                                                GlobalRipple1(burstastcol, 80, _BaseColor);
+                                            switch (Cooldowns.CurrentCard)
+                                            {
+                                                case Cooldowns.CardTypes.Arrow:
+                                                    burstastcol = Color.Lime;
+                                                    break;
+                                                case Cooldowns.CardTypes.Balance:
+                                                    burstastcol = Color.Crimson;
+                                                    break;
+                                                case Cooldowns.CardTypes.Bole:
+                                                    burstastcol = Color.Orange;
+                                                    break;
+                                                case Cooldowns.CardTypes.Ewer:
+                                                    burstastcol = Color.MediumBlue;
+                                                    break;
+                                                case Cooldowns.CardTypes.Spear:
+                                                    burstastcol = Color.Turquoise;
+                                                    break;
+                                                case Cooldowns.CardTypes.Spire:
+                                                    burstastcol = Color.SlateBlue;
+                                                    break;
+                                            }
 
-                                            _CurrentCard = Cooldowns.CurrentCard;
+                                            if (Cooldowns.CurrentCard != _currentCard)
+                                            {
+                                                if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
+                                                    GlobalRipple1(burstastcol, 80, _baseColor);
+
+                                                _currentCard = Cooldowns.CurrentCard;
+                                            }
+
+                                            GlobalApplyMapKeyLighting("NumLock", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumSubtract", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num7", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num8", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num9", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumPlus", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num4", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num5", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num6", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num1", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num2", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num3", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num0", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", burstastcol, false);
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumSubtract", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num7", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num8", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num9", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumPlus", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num4", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num5", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num6", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num1", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num2", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num3", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("Num0", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", burstastcol, false);
+                                        }
+                                        break;
+                                    case Actor.Job.MCH:
+                                        break;
+                                    case Actor.Job.SAM:
+                                        break;
+                                    case Actor.Job.RDM:
+                                        var blackmana = Cooldowns.BlackMana;
+                                        var whitemana = Cooldowns.WhiteMana;
+                                        var polBlack = (blackmana - 0) * (40 - 0) / (100 - 0) + 0;
+                                        var polWhite = (whitemana - 0) * (40 - 0) / (100 - 0) + 0;
+
+                                        var blackburst = Color.Red;
+                                        var whiteburst = Color.White;
+                                        var negburst = Color.Black;
+
+                                        GlobalApplyMapKeyLighting("NumDivide", Color.Black, false);
+                                        GlobalApplyMapKeyLighting("Num8", Color.Black, false);
+                                        GlobalApplyMapKeyLighting("Num5", Color.Black, false);
+                                        GlobalApplyMapKeyLighting("Num2", Color.Black, false);
+
+                                        if (polBlack <= 40 && polBlack > 30)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumMultiply", blackburst, false);
+                                            GlobalApplyMapKeyLighting("Num9", blackburst, false);
+                                            GlobalApplyMapKeyLighting("Num6", blackburst, false);
+                                            GlobalApplyMapKeyLighting("Num3", blackburst, false);
+                                        }
+                                        else if (polBlack <= 30 && polBlack > 20)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumMultiply", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num9", blackburst, false);
+                                            GlobalApplyMapKeyLighting("Num6", blackburst, false);
+                                            GlobalApplyMapKeyLighting("Num3", blackburst, false);
+                                        }
+                                        else if (polBlack <= 20 && polBlack > 10)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumMultiply", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num9", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num6", blackburst, false);
+                                            GlobalApplyMapKeyLighting("Num3", blackburst, false);
+                                        }
+                                        else if (polBlack <= 10 && polBlack > 0)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumMultiply", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num9", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num6", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num3", blackburst, false);
+                                        }
+                                        else if (polBlack == 0)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumMultiply", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num9", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num6", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num3", negburst, false);
                                         }
 
-                                        GlobalApplyMapKeyLighting("NumLock", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumDivide", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumMultiply", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumSubtract", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num7", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num8", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num9", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumPlus", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num4", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num5", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num6", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumEnter", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num1", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num2", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num3", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num0", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumDecimal", burstastcol, false);
-                                    }
-                                    else
-                                    {
-                                        GlobalApplyMapKeyLighting("NumLock", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumDivide", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumMultiply", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumSubtract", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num7", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num8", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num9", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumPlus", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num4", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num5", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num6", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumEnter", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num1", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num2", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num3", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("Num0", burstastcol, false);
-                                        GlobalApplyMapKeyLighting("NumDecimal", burstastcol, false);
-                                    }
-                                    break;
-                                case Actor.Job.MCH:
-                                    break;
-                                case Actor.Job.SAM:
-                                    break;
-                                case Actor.Job.RDM:
-                                    var blackmana = Cooldowns.BlackMana;
-                                    var whitemana = Cooldowns.WhiteMana;
-                                    var pol_black = (blackmana - 0) * (40 - 0) / (100 - 0) + 0;
-                                    var pol_white = (whitemana - 0) * (40 - 0) / (100 - 0) + 0;
 
-                                    var blackburst = Color.Red;
-                                    var whiteburst = Color.White;
-                                    var negburst = Color.Black;
+                                        if (polWhite <= 40 && polWhite > 30)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", whiteburst, false);
+                                            GlobalApplyMapKeyLighting("Num7", whiteburst, false);
+                                            GlobalApplyMapKeyLighting("Num4", whiteburst, false);
+                                            GlobalApplyMapKeyLighting("Num1", whiteburst, false);
+                                        }
+                                        else if (polWhite <= 30 && polWhite > 20)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num7", whiteburst, false);
+                                            GlobalApplyMapKeyLighting("Num4", whiteburst, false);
+                                            GlobalApplyMapKeyLighting("Num1", whiteburst, false);
+                                        }
+                                        else if (polWhite <= 20 && polWhite > 10)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num7", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num4", whiteburst, false);
+                                            GlobalApplyMapKeyLighting("Num1", whiteburst, false);
+                                        }
+                                        else if (polWhite <= 10 && polWhite > 0)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num7", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num4", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num1", whiteburst, false);
+                                        }
+                                        else if (polWhite == 0)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num7", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num4", negburst, false);
+                                            GlobalApplyMapKeyLighting("Num1", negburst, false);
+                                        }
 
-                                    GlobalApplyMapKeyLighting("NumDivide", Color.Black, false);
-                                    GlobalApplyMapKeyLighting("Num8", Color.Black, false);
-                                    GlobalApplyMapKeyLighting("Num5", Color.Black, false);
-                                    GlobalApplyMapKeyLighting("Num2", Color.Black, false);
-
-                                    if (pol_black <= 40 && pol_black > 30)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumMultiply", blackburst, false);
-                                        GlobalApplyMapKeyLighting("Num9", blackburst, false);
-                                        GlobalApplyMapKeyLighting("Num6", blackburst, false);
-                                        GlobalApplyMapKeyLighting("Num3", blackburst, false);
-                                    }
-                                    else if (pol_black <= 30 && pol_black > 20)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumMultiply", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num9", blackburst, false);
-                                        GlobalApplyMapKeyLighting("Num6", blackburst, false);
-                                        GlobalApplyMapKeyLighting("Num3", blackburst, false);
-                                    }
-                                    else if (pol_black <= 20 && pol_black > 10)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumMultiply", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num9", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num6", blackburst, false);
-                                        GlobalApplyMapKeyLighting("Num3", blackburst, false);
-                                    }
-                                    else if (pol_black <= 10 && pol_black > 0)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumMultiply", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num9", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num6", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num3", blackburst, false);
-                                    }
-                                    else if (pol_black == 0)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumMultiply", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num9", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num6", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num3", negburst, false);
-                                    }
-
-
-                                    if (pol_white <= 40 && pol_white > 30)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumLock", whiteburst, false);
-                                        GlobalApplyMapKeyLighting("Num7", whiteburst, false);
-                                        GlobalApplyMapKeyLighting("Num4", whiteburst, false);
-                                        GlobalApplyMapKeyLighting("Num1", whiteburst, false);
-                                    }
-                                    else if (pol_white <= 30 && pol_white > 20)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumLock", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num7", whiteburst, false);
-                                        GlobalApplyMapKeyLighting("Num4", whiteburst, false);
-                                        GlobalApplyMapKeyLighting("Num1", whiteburst, false);
-                                    }
-                                    else if (pol_white <= 20 && pol_white > 10)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumLock", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num7", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num4", whiteburst, false);
-                                        GlobalApplyMapKeyLighting("Num1", whiteburst, false);
-                                    }
-                                    else if (pol_white <= 10 && pol_white > 0)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumLock", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num7", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num4", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num1", whiteburst, false);
-                                    }
-                                    else if (pol_white == 0)
-                                    {
-                                        GlobalApplyMapKeyLighting("NumLock", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num7", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num4", negburst, false);
-                                        GlobalApplyMapKeyLighting("Num1", negburst, false);
-                                    }
-
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            ToggleGlobalFlash3(false);
-                            GlobalApplyMapKeyLighting("NumLock", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("NumDivide", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("NumMultiply", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("NumSubtract", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num7", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num8", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num9", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("NumPlus", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num4", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num5", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num6", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("NumEnter", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num1", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num2", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num3", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("Num0", _BaseColor, false);
-                            GlobalApplyMapKeyLighting("NumDecimal", _BaseColor, false);
-                        }
-
-                        //Duty Finder Bell
-
-                        FFXIVDutyFinder.RefreshData();
-                        //Debug.WriteLine(FFXIVInterfaces.FFXIVDutyFinder.isPopped() + "//" + FFXIVInterfaces.FFXIVDutyFinder.Countdown());
-
-                        if (FFXIVDutyFinder.isPopped())
-                        {
-                            if (!_dfpop)
-                            {
-                                ToggleGlobalFlash4(true);
-                                GlobalFlash4(_BaseColor,
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_DutyFinderBell), 500,
-                                    DeviceEffects._GlobalKeys);
-                                _dfpop = true;
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                             else
                             {
-                                if (FFXIVDutyFinder.Countdown() < 10 && !_dfcount)
+                                ToggleGlobalFlash3(false);
+                                GlobalApplyMapKeyLighting("NumLock", _baseColor, false);
+                                GlobalApplyMapKeyLighting("NumDivide", _baseColor, false);
+                                GlobalApplyMapKeyLighting("NumMultiply", _baseColor, false);
+                                GlobalApplyMapKeyLighting("NumSubtract", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num7", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num8", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num9", _baseColor, false);
+                                GlobalApplyMapKeyLighting("NumPlus", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num4", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num5", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num6", _baseColor, false);
+                                GlobalApplyMapKeyLighting("NumEnter", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num1", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num2", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num3", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Num0", _baseColor, false);
+                                GlobalApplyMapKeyLighting("NumDecimal", _baseColor, false);
+                            }
+
+                            //Duty Finder Bell
+
+                            FfxivDutyFinder.RefreshData();
+                            //Debug.WriteLine(FFXIVInterfaces.FFXIVDutyFinder.isPopped() + "//" + FFXIVInterfaces.FFXIVDutyFinder.Countdown());
+
+                            if (FfxivDutyFinder.IsPopped())
+                            {
+                                Debug.WriteLine("DF Pop");
+                                if (!_dfpop)
+                                {
+                                    ToggleGlobalFlash4(true);
+                                    GlobalFlash4(_baseColor,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), 500,
+                                        DeviceEffects.GlobalKeys);
+                                    _dfpop = true;
+                                }
+                                else
+                                {
+                                    if (FfxivDutyFinder.Countdown() < 10 && !_dfcount)
+                                    {
+                                        ToggleGlobalFlash4(false);
+                                        GlobalFlash4(_baseColor,
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), 200,
+                                            DeviceEffects.GlobalKeys);
+                                        _dfcount = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (_dfpop)
                                 {
                                     ToggleGlobalFlash4(false);
-                                    GlobalFlash4(_BaseColor,
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_DutyFinderBell), 200,
-                                        DeviceEffects._GlobalKeys);
-                                    _dfcount = true;
+                                    _dfpop = false;
+                                    _dfcount = false;
+                                    Setbase = false;
                                 }
                             }
                         }
-                        else
+
+                        if (CorsairSdkCalled == 1)
                         {
-                            if (_dfpop)
-                            {
-                                ToggleGlobalFlash4(false);
-                                _dfpop = false;
-                                _dfcount = false;
-                                Setbase = false;
-                            }
+                            //CorsairUpdateLED();
                         }
-                    }
 
-                    if (CorsairSDKCalled == 1)
-                    {
-                        //CorsairUpdateLED();
+                        GlobalKeyboardUpdate();
+                        MemoryTasks.Cleanup();
                     }
-
-                    GlobalKeyboardUpdate();
-                    MemoryTasks.Cleanup();
-                }
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.ERROR, "Parse Error: " + ex.Message);
-                WriteConsole(ConsoleTypes.ERROR, "Internal Error: " + ex.StackTrace);
+                WriteConsole(ConsoleTypes.Error, "Parse Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, "Internal Error: " + ex.StackTrace);
             }
         }
     }

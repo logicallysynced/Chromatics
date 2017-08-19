@@ -2,11 +2,11 @@
 
 namespace Chromatics.FFXIVInterfaces
 {
-    internal class FFXIVHotbar
+    internal class FfxivHotbar
     {
-        public static List<string> keybindwhitelist = new List<string>();
+        public static List<string> Keybindwhitelist = new List<string>();
 
-        public static readonly Dictionary<string, string> keybindtranslation = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> Keybindtranslation = new Dictionary<string, string>
         {
             //Keys
             {"1", "D1"},

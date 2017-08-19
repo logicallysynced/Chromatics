@@ -6,21 +6,21 @@ namespace Chromatics
 {
     internal static class CriticalTasks
     {
-        private static readonly HashSet<Task> tasks = new HashSet<Task>();
-        private static readonly object locker = new object();
+        private static readonly HashSet<Task> Tasks = new HashSet<Task>();
+        private static readonly object Locker = new object();
 
         // when starting a Task
         public static void Add(Task t)
         {
-            lock (locker)
+            lock (Locker)
             {
-                tasks.Add(t);
+                Tasks.Add(t);
             }
         }
 
         public static void Run(Task t)
         {
-            lock (locker)
+            lock (Locker)
             {
                 t.Start();
             }
@@ -29,9 +29,9 @@ namespace Chromatics
         // When a Tasks completes
         public static void Remove(Task t)
         {
-            lock (locker)
+            lock (Locker)
             {
-                tasks.Remove(t);
+                Tasks.Remove(t);
             }
         }
 
@@ -39,9 +39,9 @@ namespace Chromatics
         // call it regularly
         public static void Cleanup()
         {
-            lock (locker)
+            lock (Locker)
             {
-                tasks.RemoveWhere(t => t.Status != TaskStatus.Running);
+                Tasks.RemoveWhere(t => t.Status != TaskStatus.Running);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Chromatics
         public static void WaitOnExit()
         {
             // filter, I'm not sure if Wait() on a canceled|completed Task would be OK
-            var waitfor = tasks.Where(t => t.Status == TaskStatus.Running).ToArray();
+            var waitfor = Tasks.Where(t => t.Status == TaskStatus.Running).ToArray();
             Task.WaitAll(waitfor, 5000);
         }
     }

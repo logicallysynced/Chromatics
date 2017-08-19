@@ -2,35 +2,35 @@
 {
     public enum ConsoleTypes
     {
-        SYSTEM,
-        FFXIV,
-        RAZER,
-        CORSAIR,
-        LOGITECH,
-        LIFX,
-        HUE,
-        ARX,
-        STEEL,
-        COOLERMASTER,
-        ROCCAT,
-        ERROR
+        System,
+        Ffxiv,
+        Razer,
+        Corsair,
+        Logitech,
+        Lifx,
+        Hue,
+        Arx,
+        Steel,
+        Coolermaster,
+        Roccat,
+        Error
     }
 
     public enum DeviceModeTypes
     {
-        DISABLED,
-        STANDBY,
-        DEFAULT_COLOR,
-        HIGHLIGHT_COLOR,
-        ENMITY_TRACKER,
-        TARGET_HP,
-        STATUS_EFFECTS,
-        HP_TRACKER,
-        MP_TRACKER,
-        TP_TRACKER,
-        CASTBAR,
-        CHROMATICS_DEFAULT,
-        DUTY_FINDER,
-        UNKNOWN
+        Disabled,
+        Standby,
+        DefaultColor,
+        HighlightColor,
+        EnmityTracker,
+        TargetHp,
+        StatusEffects,
+        HpTracker,
+        MpTracker,
+        TpTracker,
+        Castbar,
+        ChromaticsDefault,
+        DutyFinder,
+        Unknown
     }
 }

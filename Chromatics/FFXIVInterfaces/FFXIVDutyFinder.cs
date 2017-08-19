@@ -7,32 +7,32 @@ using Sharlayan.Models;
 
 namespace Chromatics.FFXIVInterfaces
 {
-    internal class FFXIVDutyFinder
+    internal class FfxivDutyFinder
     {
-        public static DateTime lastUpdated = DateTime.MinValue;
+        public static DateTime LastUpdated = DateTime.MinValue;
 
-        private static readonly TimeSpan updateInterval = TimeSpan.FromSeconds(0.05);
+        private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(0.05);
         private static bool _siginit;
         private static bool _memoryready;
-        private static List<Signature> sList;
+        private static List<Signature> _sList;
         private static bool _isPopped;
         private static int _countdown;
-        private static bool initialized;
+        private static bool _initialized;
 
-        private static readonly object refreshLock = new object();
+        private static readonly object RefreshLock = new object();
 
-        private static readonly object cacheLock = new object();
+        private static readonly object CacheLock = new object();
 
         public static void RefreshData()
         {
-            lock (refreshLock)
+            lock (RefreshLock)
             {
                 if (!_memoryready)
                     if (!Scanner.Instance.Locations.ContainsKey("COOLDOWNS") || !_siginit)
                     {
-                        sList = new List<Signature>();
+                        _sList = new List<Signature>();
 
-                        sList.Add(new Signature
+                        _sList.Add(new Signature
                         {
                             Key = "DUTYFINDER",
                             PointerPath = new List<long>
@@ -44,7 +44,7 @@ namespace Chromatics.FFXIVInterfaces
                             }
                         });
 
-                        Scanner.Instance.LoadOffsets(sList);
+                        Scanner.Instance.LoadOffsets(_sList);
 
                         Thread.Sleep(100);
 
@@ -72,28 +72,28 @@ namespace Chromatics.FFXIVInterfaces
                         _isPopped = isPopped == 0 ? false : true;
 
                         _countdown = MemoryHandler.Instance.GetInt32(address.GetAddress(), 4);
-                        initialized = true;
-                        //Debug.WriteLine(isPopped + "/" + countdown);
+                        _initialized = true;
+                        //Debug.WriteLine(isPopped + "/" + _countdown);
                     }
 
 
-                    lastUpdated = DateTime.Now;
+                    LastUpdated = DateTime.Now;
                 }
             }
         }
 
         public static void CheckCache()
         {
-            lock (cacheLock)
+            lock (CacheLock)
             {
-                if (lastUpdated + updateInterval <= DateTime.Now)
+                if (LastUpdated + UpdateInterval <= DateTime.Now)
                     RefreshData();
             }
         }
 
-        public static bool isPopped()
+        public static bool IsPopped()
         {
-            if (!initialized)
+            if (!_initialized)
                 return false;
 
             CheckCache();
@@ -103,7 +103,7 @@ namespace Chromatics.FFXIVInterfaces
 
         public static int Countdown()
         {
-            if (!initialized)
+            if (!_initialized)
                 return 0;
 
             CheckCache();

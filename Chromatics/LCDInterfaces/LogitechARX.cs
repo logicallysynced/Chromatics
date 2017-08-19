@@ -11,7 +11,7 @@ namespace Chromatics.LCDInterfaces
 {
     public class LogitechArxInterface
     {
-        public static LogitechArx InitializeArxSDK()
+        public static LogitechArx InitializeArxSdk()
         {
             LogitechArx arx = null;
             if (Process.GetProcessesByName("LCore").Length > 0)
@@ -32,21 +32,21 @@ namespace Chromatics.LCDInterfaces
             IntPtr context);
 
         //LED SDK
-        public const int LOGI_ARX_ORIENTATION_PORTRAIT = 0x01;
+        public const int LogiArxOrientationPortrait = 0x01;
 
-        public const int LOGI_ARX_ORIENTATION_LANDSCAPE = 0x10;
-        public const int LOGI_ARX_EVENT_FOCUS_ACTIVE = 0x01;
-        public const int LOGI_ARX_EVENT_FOCUS_INACTIVE = 0x02;
-        public const int LOGI_ARX_EVENT_TAP_ON_TAG = 0x04;
-        public const int LOGI_ARX_EVENT_MOBILEDEVICE_ARRIVAL = 0x08;
-        public const int LOGI_ARX_EVENT_MOBILEDEVICE_REMOVAL = 0x10;
-        public const int LOGI_ARX_DEVICETYPE_IPHONE = 0x01;
-        public const int LOGI_ARX_DEVICETYPE_IPAD = 0x02;
-        public const int LOGI_ARX_DEVICETYPE_ANDROID_SMALL = 0x03;
-        public const int LOGI_ARX_DEVICETYPE_ANDROID_NORMAL = 0x04;
-        public const int LOGI_ARX_DEVICETYPE_ANDROID_LARGE = 0x05;
-        public const int LOGI_ARX_DEVICETYPE_ANDROID_XLARGE = 0x06;
-        public const int LOGI_ARX_DEVICETYPE_ANDROID_OTHER = 0x07;
+        public const int LogiArxOrientationLandscape = 0x10;
+        public const int LogiArxEventFocusActive = 0x01;
+        public const int LogiArxEventFocusInactive = 0x02;
+        public const int LogiArxEventTapOnTag = 0x04;
+        public const int LogiArxEventMobiledeviceArrival = 0x08;
+        public const int LogiArxEventMobiledeviceRemoval = 0x10;
+        public const int LogiArxDevicetypeIphone = 0x01;
+        public const int LogiArxDevicetypeIpad = 0x02;
+        public const int LogiArxDevicetypeAndroidSmall = 0x03;
+        public const int LogiArxDevicetypeAndroidNormal = 0x04;
+        public const int LogiArxDevicetypeAndroidLarge = 0x05;
+        public const int LogiArxDevicetypeAndroidXlarge = 0x06;
+        public const int LogiArxDevicetypeAndroidOther = 0x07;
 
         [DllImport("LogitechGArxControlEnginesWrapper.dll", CharSet = CharSet.Unicode,
             CallingConvention = CallingConvention.Cdecl)]
@@ -113,27 +113,27 @@ namespace Chromatics.LCDInterfaces
         bool InitializeArx();
         List<string> LoadPlugins();
 
-        void ArxUpdateFfxivStats(double hp_percent, double mp_percent, double tp_percent, int hp_current,
-            int mp_current,
-            int tp_current, uint zone, string job, string hudmode, double target_percent, int target_hpcurrent,
-            int target_hpmax, string target_name, int target_engaged);
+        void ArxUpdateFfxivStats(double hpPercent, double mpPercent, double tpPercent, int hpCurrent,
+            int mpCurrent,
+            int tpCurrent, uint zone, string job, string hudmode, double targetPercent, int targetHpcurrent,
+            int targetHpmax, string targetName, int targetEngaged);
 
-        void ArxUpdateFfxivPlugin(double hp_percent, double mp_percent, double tp_percent, int hp_current,
-            int mp_current,
-            int tp_current, uint zone, string job, string hudmode, double target_percent, int target_hpcurrent,
-            int target_hpmax, string target_name, int target_engaged, int hp_max, int mp_max, double playerposX,
+        void ArxUpdateFfxivPlugin(double hpPercent, double mpPercent, double tpPercent, int hpCurrent,
+            int mpCurrent,
+            int tpCurrent, uint zone, string job, string hudmode, double targetPercent, int targetHpcurrent,
+            int targetHpmax, string targetName, int targetEngaged, int hpMax, int mpMax, double playerposX,
             double playerposY, double playerposZ, Actor.ActionStatus actionstatus, double castperc, float castprogress,
             float casttime, bool castingtoggle, float hitboxrad, bool playerclaimed, Actor.Job playerjob, uint mapid,
             uint mapindex, uint mapterritory, string playername, Actor.TargetType targettype);
 
-        void ArxUpdateFfxivParty(string p1data, string p2data, string p3data, string p4data, string p5data,
-            string p6data, string p7data, string p8data, string p9data);
+        void ArxUpdateFfxivParty(string p1Data, string p2Data, string p3Data, string p4Data, string p5Data,
+            string p6Data, string p7Data, string p8Data, string p9Data);
 
         void ShutdownArx();
         void ArxSetIndex(string file);
         void ArxUpdateTheme(string theme);
         void ArxUpdateInfo(string info);
-        void ArxSendACTInfo(string IP, int port);
+        void ArxSendActInfo(string ip, int port);
     }
 
     public class LogitechArx : ILogitechArx
@@ -256,50 +256,50 @@ namespace Chromatics.LCDInterfaces
                                 Directory.GetFiles(resourcedir + @"\css\", "*.css", SearchOption.AllDirectories);
                             var pluginjs =
                                 Directory.GetFiles(resourcedir + @"\js\", "*.js", SearchOption.AllDirectories);
-                            var pluginimgPNG =
+                            var pluginimgPng =
                                 Directory.GetFiles(resourcedir + @"\img\", "*.png", SearchOption.AllDirectories);
-                            var pluginimgJPG =
+                            var pluginimgJpg =
                                 Directory.GetFiles(resourcedir + @"\img\", "*.jpg", SearchOption.AllDirectories);
-                            var pluginimgGIF =
+                            var pluginimgGif =
                                 Directory.GetFiles(resourcedir + @"\img\", "*.gif", SearchOption.AllDirectories);
 
                             if (plugincss.Length > 0)
-                                foreach (var _css in plugincss)
+                                foreach (var css in plugincss)
                                 {
-                                    var reduced = _css.Replace(@"\", "/").Replace(plugdir, "");
-                                    var output = _css.Replace(@"\", "/");
+                                    var reduced = css.Replace(@"\", "/").Replace(plugdir, "");
+                                    var output = css.Replace(@"\", "/");
                                     LogitechArxWrapper.LogiArxAddFileAs(output, reduced, "text/css");
                                 }
 
                             if (pluginjs.Length > 0)
-                                foreach (var _js in pluginjs)
+                                foreach (var js in pluginjs)
                                 {
-                                    var reduced = _js.Replace(@"\", "/").Replace(plugdir, "");
-                                    var output = _js.Replace(@"\", "/");
+                                    var reduced = js.Replace(@"\", "/").Replace(plugdir, "");
+                                    var output = js.Replace(@"\", "/");
                                     LogitechArxWrapper.LogiArxAddFileAs(output, reduced, "text/javascript");
                                 }
 
-                            if (pluginimgPNG.Length > 0)
-                                foreach (var _png in pluginimgPNG)
+                            if (pluginimgPng.Length > 0)
+                                foreach (var png in pluginimgPng)
                                 {
-                                    var reduced = _png.Replace(@"\", "/").Replace(plugdir, "");
-                                    var output = _png.Replace(@"\", "/");
+                                    var reduced = png.Replace(@"\", "/").Replace(plugdir, "");
+                                    var output = png.Replace(@"\", "/");
                                     LogitechArxWrapper.LogiArxAddFileAs(output, reduced, "image/png");
                                 }
 
-                            if (pluginimgJPG.Length > 0)
-                                foreach (var _jpg in pluginimgJPG)
+                            if (pluginimgJpg.Length > 0)
+                                foreach (var jpg in pluginimgJpg)
                                 {
-                                    var reduced = _jpg.Replace(@"\", "/").Replace(plugdir, "");
-                                    var output = _jpg.Replace(@"\", "/");
+                                    var reduced = jpg.Replace(@"\", "/").Replace(plugdir, "");
+                                    var output = jpg.Replace(@"\", "/");
                                     LogitechArxWrapper.LogiArxAddFileAs(output, reduced, "image/jpeg");
                                 }
 
-                            if (pluginimgGIF.Length > 0)
-                                foreach (var _gif in pluginimgGIF)
+                            if (pluginimgGif.Length > 0)
+                                foreach (var gif in pluginimgGif)
                                 {
-                                    var reduced = _gif.Replace(@"\", "/").Replace(plugdir, "");
-                                    var output = _gif.Replace(@"\", "/");
+                                    var reduced = gif.Replace(@"\", "/").Replace(plugdir, "");
+                                    var output = gif.Replace(@"\", "/");
                                     LogitechArxWrapper.LogiArxAddFileAs(output, reduced, "image/gif");
                                 }
 
@@ -323,58 +323,58 @@ namespace Chromatics.LCDInterfaces
             return pluginsdata;
         }
 
-        public void ArxUpdateFfxivStats(double hp_percent, double mp_percent, double tp_percent, int hp_current,
-            int mp_current,
-            int tp_current, uint zone, string job, string hudmode, double target_percent, int target_hpcurrent,
-            int target_hpmax, string target_name, int target_engaged)
+        public void ArxUpdateFfxivStats(double hpPercent, double mpPercent, double tpPercent, int hpCurrent,
+            int mpCurrent,
+            int tpCurrent, uint zone, string job, string hudmode, double targetPercent, int targetHpcurrent,
+            int targetHpmax, string targetName, int targetEngaged)
         {
-            LogitechArxWrapper.LogiArxSetTagContentById("hp_percent", hp_percent.ToString("#0%"));
-            LogitechArxWrapper.LogiArxSetTagContentById("mp_percent", mp_percent.ToString("#0%"));
-            LogitechArxWrapper.LogiArxSetTagContentById("tp_percent", tp_percent.ToString("#0%"));
-            LogitechArxWrapper.LogiArxSetTagContentById("hp_current", hp_current.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("mp_current", mp_current.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("tp_current", tp_current.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("hp_percent", hpPercent.ToString("#0%"));
+            LogitechArxWrapper.LogiArxSetTagContentById("mp_percent", mpPercent.ToString("#0%"));
+            LogitechArxWrapper.LogiArxSetTagContentById("tp_percent", tpPercent.ToString("#0%"));
+            LogitechArxWrapper.LogiArxSetTagContentById("hp_current", hpCurrent.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("mp_current", mpCurrent.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("tp_current", tpCurrent.ToString());
 
             LogitechArxWrapper.LogiArxSetTagContentById("hud_type", job);
             LogitechArxWrapper.LogiArxSetTagContentById("current_location",
                 _ffxivMapIds.ContainsKey(zone) ? _ffxivMapIds[zone] : "");
 
             LogitechArxWrapper.LogiArxSetTagContentById("hud_mode", hudmode);
-            LogitechArxWrapper.LogiArxSetTagContentById("target_hppercent", target_percent.ToString("#0%"));
-            LogitechArxWrapper.LogiArxSetTagContentById("target_hpcurrent", target_hpcurrent.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("target_hpmax", target_hpmax.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("target_name", target_name);
-            LogitechArxWrapper.LogiArxSetTagContentById("target_engaged", target_engaged.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("target_hppercent", targetPercent.ToString("#0%"));
+            LogitechArxWrapper.LogiArxSetTagContentById("target_hpcurrent", targetHpcurrent.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("target_hpmax", targetHpmax.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("target_name", targetName);
+            LogitechArxWrapper.LogiArxSetTagContentById("target_engaged", targetEngaged.ToString());
         }
 
-        public void ArxUpdateFfxivPlugin(double hp_percent, double mp_percent, double tp_percent, int hp_current,
-            int mp_current,
-            int tp_current, uint zone, string job, string hudmode, double target_percent, int target_hpcurrent,
-            int target_hpmax, string target_name, int target_engaged, int hp_max, int mp_max, double playerposX,
+        public void ArxUpdateFfxivPlugin(double hpPercent, double mpPercent, double tpPercent, int hpCurrent,
+            int mpCurrent,
+            int tpCurrent, uint zone, string job, string hudmode, double targetPercent, int targetHpcurrent,
+            int targetHpmax, string targetName, int targetEngaged, int hpMax, int mpMax, double playerposX,
             double playerposY, double playerposZ, Actor.ActionStatus actionstatus, double castperc, float castprogress,
             float casttime, bool castingtoggle, float hitboxrad, bool playerclaimed, Actor.Job playerjob, uint mapid,
             uint mapindex, uint mapterritory, string playername, Actor.TargetType targettype)
         {
-            LogitechArxWrapper.LogiArxSetTagContentById("hp_percent", hp_percent.ToString("#0%"));
-            LogitechArxWrapper.LogiArxSetTagContentById("mp_percent", mp_percent.ToString("#0%"));
-            LogitechArxWrapper.LogiArxSetTagContentById("tp_percent", tp_percent.ToString("#0%"));
-            LogitechArxWrapper.LogiArxSetTagContentById("hp_current", hp_current.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("mp_current", mp_current.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("tp_current", tp_current.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("hp_percent", hpPercent.ToString("#0%"));
+            LogitechArxWrapper.LogiArxSetTagContentById("mp_percent", mpPercent.ToString("#0%"));
+            LogitechArxWrapper.LogiArxSetTagContentById("tp_percent", tpPercent.ToString("#0%"));
+            LogitechArxWrapper.LogiArxSetTagContentById("hp_current", hpCurrent.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("mp_current", mpCurrent.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("tp_current", tpCurrent.ToString());
 
             LogitechArxWrapper.LogiArxSetTagContentById("hud_type", job);
             LogitechArxWrapper.LogiArxSetTagContentById("current_location",
                 _ffxivMapIds.ContainsKey(zone) ? _ffxivMapIds[zone] : "");
 
             LogitechArxWrapper.LogiArxSetTagContentById("hud_mode", hudmode);
-            LogitechArxWrapper.LogiArxSetTagContentById("target_hppercent", target_percent.ToString("#0%"));
-            LogitechArxWrapper.LogiArxSetTagContentById("target_hpcurrent", target_hpcurrent.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("target_hpmax", target_hpmax.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("target_name", target_name);
-            LogitechArxWrapper.LogiArxSetTagContentById("target_engaged", target_engaged.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("target_hppercent", targetPercent.ToString("#0%"));
+            LogitechArxWrapper.LogiArxSetTagContentById("target_hpcurrent", targetHpcurrent.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("target_hpmax", targetHpmax.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("target_name", targetName);
+            LogitechArxWrapper.LogiArxSetTagContentById("target_engaged", targetEngaged.ToString());
 
-            LogitechArxWrapper.LogiArxSetTagContentById("hp_max", hp_max.ToString());
-            LogitechArxWrapper.LogiArxSetTagContentById("mp_max", mp_max.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("hp_max", hpMax.ToString());
+            LogitechArxWrapper.LogiArxSetTagContentById("mp_max", mpMax.ToString());
             LogitechArxWrapper.LogiArxSetTagContentById("playerposX", playerposX.ToString());
             LogitechArxWrapper.LogiArxSetTagContentById("playerposY", playerposY.ToString());
             LogitechArxWrapper.LogiArxSetTagContentById("playerposZ", playerposZ.ToString());
@@ -393,23 +393,23 @@ namespace Chromatics.LCDInterfaces
             LogitechArxWrapper.LogiArxSetTagContentById("targettype", targettype.ToString());
         }
 
-        public void ArxUpdateFfxivParty(string p1data, string p2data, string p3data, string p4data, string p5data,
-            string p6data, string p7data, string p8data, string p9data)
+        public void ArxUpdateFfxivParty(string p1Data, string p2Data, string p3Data, string p4Data, string p5Data,
+            string p6Data, string p7Data, string p8Data, string p9Data)
         {
-            LogitechArxWrapper.LogiArxSetTagContentById("p1_data", p1data);
-            LogitechArxWrapper.LogiArxSetTagContentById("p2_data", p2data);
-            LogitechArxWrapper.LogiArxSetTagContentById("p3_data", p3data);
-            LogitechArxWrapper.LogiArxSetTagContentById("p4_data", p4data);
-            LogitechArxWrapper.LogiArxSetTagContentById("p5_data", p5data);
-            LogitechArxWrapper.LogiArxSetTagContentById("p6_data", p6data);
-            LogitechArxWrapper.LogiArxSetTagContentById("p7_data", p7data);
-            LogitechArxWrapper.LogiArxSetTagContentById("p8_data", p8data);
-            LogitechArxWrapper.LogiArxSetTagContentById("p9_data", p9data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p1_data", p1Data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p2_data", p2Data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p3_data", p3Data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p4_data", p4Data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p5_data", p5Data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p6_data", p6Data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p7_data", p7Data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p8_data", p8Data);
+            LogitechArxWrapper.LogiArxSetTagContentById("p9_data", p9Data);
         }
 
-        public void ArxSendACTInfo(string IP, int port)
+        public void ArxSendActInfo(string ip, int port)
         {
-            LogitechArxWrapper.LogiArxSetTagContentById("actipaddress", IP);
+            LogitechArxWrapper.LogiArxSetTagContentById("actipaddress", ip);
             LogitechArxWrapper.LogiArxSetTagContentById("actport", port.ToString());
         }
 
@@ -451,7 +451,7 @@ namespace Chromatics.LCDInterfaces
         {
             switch (eventType)
             {
-                case LogitechArxWrapper.LOGI_ARX_EVENT_MOBILEDEVICE_ARRIVAL:
+                case LogitechArxWrapper.LogiArxEventMobiledeviceArrival:
                     //Send your files here
                     //public static extern bool LogiArxAddFileAs(string filePath, string fileName, string mimeType = "");
 
@@ -501,8 +501,8 @@ namespace Chromatics.LCDInterfaces
 
                     //Load Images
 
-                    var core_images = Directory.GetFiles(webdir + @"\img", "*.png", SearchOption.AllDirectories);
-                    foreach (var coreimage in core_images)
+                    var coreImages = Directory.GetFiles(webdir + @"\img", "*.png", SearchOption.AllDirectories);
+                    foreach (var coreimage in coreImages)
                     {
                         var reduced = coreimage.Replace(@"\", "/").Replace(webdir + "/", "");
                         var output = coreimage.Replace(@"\", "/");
@@ -522,10 +522,10 @@ namespace Chromatics.LCDInterfaces
                     Console.WriteLine(@"Switching to info.html");
 
                     break;
-                case LogitechArxWrapper.LOGI_ARX_EVENT_MOBILEDEVICE_REMOVAL:
+                case LogitechArxWrapper.LogiArxEventMobiledeviceRemoval:
                     //Device disconnected
                     break;
-                case LogitechArxWrapper.LOGI_ARX_EVENT_TAP_ON_TAG:
+                case LogitechArxWrapper.LogiArxEventTapOnTag:
                     if (eventArg == "myBtn")
                     {
                         //Do something on this input

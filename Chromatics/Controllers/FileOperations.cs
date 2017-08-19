@@ -18,61 +18,61 @@ namespace Chromatics
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/devices.chromatics";
 
-            dr.DeviceOperation_RazerKeyboard = RazerDeviceKeyboard;
-            dr.DeviceOperation_RazerMouse = RazerDeviceMouse;
-            dr.DeviceOperation_RazerMousepad = RazerDeviceMousepad;
-            dr.DeviceOperation_RazerKeypad = RazerDeviceKeypad;
-            dr.DeviceOperation_RazerHeadset = RazerDeviceHeadset;
+            dr.DeviceOperationRazerKeyboard = _razerDeviceKeyboard;
+            dr.DeviceOperationRazerMouse = _razerDeviceMouse;
+            dr.DeviceOperationRazerMousepad = _razerDeviceMousepad;
+            dr.DeviceOperationRazerKeypad = _razerDeviceKeypad;
+            dr.DeviceOperationRazerHeadset = _razerDeviceHeadset;
 
-            dr.DeviceOperation_CorsairKeyboard = CorsairDeviceKeyboard;
-            dr.DeviceOperation_CorsairMouse = CorsairDeviceMouse;
-            dr.DeviceOperation_CorsairMousepad = CorsairDeviceMousepad;
-            dr.DeviceOperation_CorsairKeypad = CorsairDeviceKeypad; //Not Implemented
-            dr.DeviceOperation_CorsairHeadset = CorsairDeviceHeadset;
+            dr.DeviceOperationCorsairKeyboard = _corsairDeviceKeyboard;
+            dr.DeviceOperationCorsairMouse = _corsairDeviceMouse;
+            dr.DeviceOperationCorsairMousepad = _corsairDeviceMousepad;
+            dr.DeviceOperationCorsairKeypad = _corsairDeviceKeypad; //Not Implemented
+            dr.DeviceOperationCorsairHeadset = _corsairDeviceHeadset;
 
-            dr.DeviceOperation_CoolermasterKeyboard = CoolermasterDeviceKeyboard;
-            dr.DeviceOperation_CoolermasterMouse = CoolermasterDeviceMouse;
-            dr.DeviceOperation_RoccatKeyboard = RoccatDeviceKeyboard;
-            dr.DeviceOperation_RoccatMouse = RoccatDeviceMouse;
+            dr.DeviceOperationCoolermasterKeyboard = _coolermasterDeviceKeyboard;
+            dr.DeviceOperationCoolermasterMouse = _coolermasterDeviceMouse;
+            dr.DeviceOperationRoccatKeyboard = _roccatDeviceKeyboard;
+            dr.DeviceOperationRoccatMouse = _roccatDeviceMouse;
 
-            dr.DeviceOperation_MouseToggle = MouseToggle;
+            dr.DeviceOperationMouseToggle = MouseToggle;
 
-            dr.DeviceOperation_LogitechKeyboard = LogitechDeviceKeyboard;
+            dr.DeviceOperationLogitechKeyboard = _logitechDeviceKeyboard;
 
-            var _LifxLoad = "";
-            var _HueLoad = "";
+            var lifxLoad = "";
+            var hueLoad = "";
 
-            if (LifxSDK && _lifx.LifxModeMemory.Count() > 0)
+            if (LifxSdk && _lifx.LifxModeMemory.Count() > 0)
             {
-                var _LifxList = new List<string>();
-                foreach (var _LP in _lifx.LifxModeMemory)
+                var lifxList = new List<string>();
+                foreach (var lp in _lifx.LifxModeMemory)
                 {
-                    var _LA = _LP.Key + "|" + _LP.Value + "|" + _lifx.LifxStateMemory[_LP.Key];
-                    _LifxList.Add(_LA);
+                    var la = lp.Key + "|" + lp.Value + "|" + _lifx.LifxStateMemory[lp.Key];
+                    lifxList.Add(la);
                 }
 
-                var _lifxEx = _LifxList.ToArray();
-                _LifxLoad = string.Join(",", _lifxEx);
+                var lifxEx = lifxList.ToArray();
+                lifxLoad = string.Join(",", lifxEx);
             }
 
 
-            if (HueSDK && _hue.HueModeMemory.Count() > 0)
+            if (HueSdk && _hue.HueModeMemory.Count() > 0)
             {
-                var _HueList = new List<string>();
-                foreach (var _HP in _hue.HueModeMemory)
+                var hueList = new List<string>();
+                foreach (var hp in _hue.HueModeMemory)
                 {
-                    var _HA = _HP.Key + "|" + _HP.Value + "|" + _hue.HueStateMemory[_HP.Key];
-                    _HueList.Add(_HA);
+                    var ha = hp.Key + "|" + hp.Value + "|" + _hue.HueStateMemory[hp.Key];
+                    hueList.Add(ha);
                 }
 
-                var _HueEx = _HueList.ToArray();
-                _HueLoad = string.Join(",", _HueEx);
+                var hueEx = hueList.ToArray();
+                hueLoad = string.Join(",", hueEx);
             }
 
 
-            dr.DeviceOperation_HUEDefault = HUEDefault;
-            dr.DeviceOperation_LifxDevices = _LifxLoad;
-            dr.DeviceOperation_HueDevices = _HueLoad;
+            dr.DeviceOperationHueDefault = _hueDefault;
+            dr.DeviceOperationLifxDevices = lifxLoad;
+            dr.DeviceOperationHueDevices = hueLoad;
 
             try
             {
@@ -88,13 +88,13 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.ERROR, "Error saving states to devices.chromatics. Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, "Error saving states to devices.chromatics. Error: " + ex.Message);
             }
         }
 
         private void LoadDevices()
         {
-            WriteConsole(ConsoleTypes.SYSTEM, "Searching for devices.chromatics..");
+            WriteConsole(ConsoleTypes.System, "Searching for devices.chromatics..");
             var ds = new DeviceDataStore();
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/devices.chromatics";
@@ -102,7 +102,7 @@ namespace Chromatics
             if (File.Exists(path))
             {
                 //Read Device Save
-                WriteConsole(ConsoleTypes.SYSTEM, "Attempting to load devices.chromatics..");
+                WriteConsole(ConsoleTypes.System, "Attempting to load devices.chromatics..");
                 using (var sr = new StreamReader(path))
                 {
                     try
@@ -111,78 +111,78 @@ namespace Chromatics
                         var dr = (DeviceDataStore) reader.Deserialize(sr);
                         sr.Close();
 
-                        RazerDeviceKeyboard = dr.DeviceOperation_RazerKeyboard;
-                        RazerDeviceMouse = dr.DeviceOperation_RazerMouse;
-                        RazerDeviceMousepad = dr.DeviceOperation_RazerMousepad;
-                        RazerDeviceKeypad = dr.DeviceOperation_RazerKeypad;
-                        RazerDeviceHeadset = dr.DeviceOperation_RazerHeadset;
+                        _razerDeviceKeyboard = dr.DeviceOperationRazerKeyboard;
+                        _razerDeviceMouse = dr.DeviceOperationRazerMouse;
+                        _razerDeviceMousepad = dr.DeviceOperationRazerMousepad;
+                        _razerDeviceKeypad = dr.DeviceOperationRazerKeypad;
+                        _razerDeviceHeadset = dr.DeviceOperationRazerHeadset;
 
-                        CorsairDeviceKeyboard = dr.DeviceOperation_CorsairKeyboard;
-                        CorsairDeviceMouse = dr.DeviceOperation_CorsairMouse;
-                        CorsairDeviceMousepad = dr.DeviceOperation_CorsairMousepad;
-                        CorsairDeviceKeypad = dr.DeviceOperation_CorsairKeypad; //Not Implemented
-                        CorsairDeviceHeadset = dr.DeviceOperation_CorsairHeadset;
+                        _corsairDeviceKeyboard = dr.DeviceOperationCorsairKeyboard;
+                        _corsairDeviceMouse = dr.DeviceOperationCorsairMouse;
+                        _corsairDeviceMousepad = dr.DeviceOperationCorsairMousepad;
+                        _corsairDeviceKeypad = dr.DeviceOperationCorsairKeypad; //Not Implemented
+                        _corsairDeviceHeadset = dr.DeviceOperationCorsairHeadset;
 
-                        CoolermasterDeviceKeyboard = dr.DeviceOperation_CoolermasterKeyboard;
-                        CoolermasterDeviceMouse = dr.DeviceOperation_CoolermasterMouse;
-                        RoccatDeviceKeyboard = dr.DeviceOperation_RoccatKeyboard;
-                        RoccatDeviceMouse = dr.DeviceOperation_RoccatMouse;
+                        _coolermasterDeviceKeyboard = dr.DeviceOperationCoolermasterKeyboard;
+                        _coolermasterDeviceMouse = dr.DeviceOperationCoolermasterMouse;
+                        _roccatDeviceKeyboard = dr.DeviceOperationRoccatKeyboard;
+                        _roccatDeviceMouse = dr.DeviceOperationRoccatMouse;
 
-                        MouseToggle = dr.DeviceOperation_MouseToggle;
+                        MouseToggle = dr.DeviceOperationMouseToggle;
 
-                        LogitechDeviceKeyboard = dr.DeviceOperation_LogitechKeyboard;
-                        HUEDefault = dr.DeviceOperation_HUEDefault;
+                        _logitechDeviceKeyboard = dr.DeviceOperationLogitechKeyboard;
+                        _hueDefault = dr.DeviceOperationHueDefault;
 
-                        var _LifxLoad = dr.DeviceOperation_LifxDevices;
-                        if (_LifxLoad != "")
+                        var lifxLoad = dr.DeviceOperationLifxDevices;
+                        if (lifxLoad != "")
                         {
-                            var _LifxDevices = _LifxLoad.Split(',');
-                            foreach (var _LD in _LifxDevices)
+                            var lifxDevices = lifxLoad.Split(',');
+                            foreach (var ld in lifxDevices)
                             {
-                                var LState = _LD.Split('|');
+                                var lState = ld.Split('|');
 
                                 //DeviceModeTypes LMode = DeviceModeTypes.DISABLED;
                                 //LMode = LState[1].ToString();
                                 //int.TryParse(LState[1], out LMode);
-                                var LMode = (DeviceModeTypes) Enum.Parse(typeof(DeviceModeTypes), LState[1]);
+                                var lMode = (DeviceModeTypes) Enum.Parse(typeof(DeviceModeTypes), lState[1]);
 
-                                var LEnabled = 0;
-                                int.TryParse(LState[2], out LEnabled);
-                                _lifx.LifxModeMemory.Add(LState[0], LMode);
-                                _lifx.LifxStateMemory.Add(LState[0], LEnabled);
+                                var lEnabled = 0;
+                                int.TryParse(lState[2], out lEnabled);
+                                _lifx.LifxModeMemory.Add(lState[0], lMode);
+                                _lifx.LifxStateMemory.Add(lState[0], lEnabled);
                             }
                         }
 
-                        var _HueLoad = dr.DeviceOperation_HueDevices;
-                        if (_HueLoad != "")
+                        var hueLoad = dr.DeviceOperationHueDevices;
+                        if (hueLoad != "")
                         {
-                            var _HueDevices = _HueLoad.Split(',');
-                            foreach (var _HD in _HueDevices)
+                            var hueDevices = hueLoad.Split(',');
+                            foreach (var hd in hueDevices)
                             {
-                                var HState = _HD.Split('|');
+                                var hState = hd.Split('|');
                                 //var HMode = 0;
                                 //int.TryParse(HState[1], out HMode);
-                                var HMode = (DeviceModeTypes) Enum.Parse(typeof(DeviceModeTypes), HState[1]);
-                                var HEnabled = 0;
-                                int.TryParse(HState[2], out HEnabled);
-                                _hue.HueModeMemory.Add(HState[0], HMode);
-                                _hue.HueStateMemory.Add(HState[0], HEnabled);
+                                var hMode = (DeviceModeTypes) Enum.Parse(typeof(DeviceModeTypes), hState[1]);
+                                var hEnabled = 0;
+                                int.TryParse(hState[2], out hEnabled);
+                                _hue.HueModeMemory.Add(hState[0], hMode);
+                                _hue.HueStateMemory.Add(hState[0], hEnabled);
                                 //HueModeMemory.Add(HState[0], HMode, HEnabled);
                             }
                         }
 
-                        WriteConsole(ConsoleTypes.SYSTEM, "devices.chromatics loaded.");
+                        WriteConsole(ConsoleTypes.System, "devices.chromatics loaded.");
                     }
                     catch (Exception ex)
                     {
-                        WriteConsole(ConsoleTypes.ERROR, "Error loading devices.chromatics. Error: " + ex.Message);
+                        WriteConsole(ConsoleTypes.Error, "Error loading devices.chromatics. Error: " + ex.Message);
                     }
                 }
             }
             else
             {
                 //Create Device Save
-                WriteConsole(ConsoleTypes.SYSTEM, "devices.chromatics not found. Creating one..");
+                WriteConsole(ConsoleTypes.System, "devices.chromatics not found. Creating one..");
                 try
                 {
                     using (var sw = new StreamWriter(path))
@@ -195,7 +195,7 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.ERROR, "Error creating devices.chromatics. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, "Error creating devices.chromatics. Error: " + ex.Message);
                 }
             }
         }
@@ -204,18 +204,18 @@ namespace Chromatics
         {
             //if (report == 1)
             //    WriteConsole(ConsoleTypes.SYSTEM, "Saving states to mappings.chromatics..");
-            var _ColorMappings = new FFXIVColorMappings();
+            var colorMappings = new FfxivColorMappings();
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/mappings.chromatics";
 
-            _ColorMappings = ColorMappings;
+            colorMappings = ColorMappings;
 
             try
             {
                 using (var sw = new StreamWriter(path, false))
                 {
-                    var x = new XmlSerializer(_ColorMappings.GetType());
-                    x.Serialize(sw, _ColorMappings);
+                    var x = new XmlSerializer(colorMappings.GetType());
+                    x.Serialize(sw, colorMappings);
                     sw.WriteLine();
                     sw.Close();
                 }
@@ -225,42 +225,42 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.ERROR, "Error saving states to mappings.chromatics. Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, "Error saving states to mappings.chromatics. Error: " + ex.Message);
             }
         }
 
         private void LoadColorMappings()
         {
-            WriteConsole(ConsoleTypes.SYSTEM, "Searching for mappings.chromatics..");
+            WriteConsole(ConsoleTypes.System, "Searching for mappings.chromatics..");
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/mappings.chromatics";
 
             if (File.Exists(path))
             {
                 //Read Device Save
-                WriteConsole(ConsoleTypes.SYSTEM, "Attempting to load mappings.chromatics..");
+                WriteConsole(ConsoleTypes.System, "Attempting to load mappings.chromatics..");
                 using (var sr = new StreamReader(path))
                 {
                     try
                     {
                         var reader = new XmlSerializer(ColorMappings.GetType());
-                        var _ColorMappings = (FFXIVColorMappings) reader.Deserialize(sr);
+                        var colorMappings = (FfxivColorMappings) reader.Deserialize(sr);
                         sr.Close();
 
-                        ColorMappings = _ColorMappings;
+                        ColorMappings = colorMappings;
 
-                        WriteConsole(ConsoleTypes.SYSTEM, "mappings.chromatics loaded.");
+                        WriteConsole(ConsoleTypes.System, "mappings.chromatics loaded.");
                     }
                     catch (Exception ex)
                     {
-                        WriteConsole(ConsoleTypes.ERROR, "Error loading mappings.chromatics. Error: " + ex.Message);
+                        WriteConsole(ConsoleTypes.Error, "Error loading mappings.chromatics. Error: " + ex.Message);
                     }
                 }
             }
             else
             {
                 //Create Device Save
-                WriteConsole(ConsoleTypes.SYSTEM, "mappings.chromatics not found. Creating one..");
+                WriteConsole(ConsoleTypes.System, "mappings.chromatics not found. Creating one..");
                 try
                 {
                     using (var sw = new StreamWriter(path))
@@ -273,7 +273,7 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.ERROR, "Error creating mappings.chromatics. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, "Error creating mappings.chromatics. Error: " + ex.Message);
                 }
             }
         }
@@ -282,18 +282,18 @@ namespace Chromatics
         {
             //if (report == 1)
             //    WriteConsole(ConsoleTypes.SYSTEM, "Saving states to settings.chromatics..");
-            var _ChromaticsSettings = new ChromaticsSettings();
+            var chromaticsSettings = new ChromaticsSettings();
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/settings.chromatics";
 
-            _ChromaticsSettings = ChromaticsSettings;
+            chromaticsSettings = ChromaticsSettings;
 
             try
             {
                 using (var sw = new StreamWriter(path, false))
                 {
-                    var x = new XmlSerializer(_ChromaticsSettings.GetType());
-                    x.Serialize(sw, _ChromaticsSettings);
+                    var x = new XmlSerializer(chromaticsSettings.GetType());
+                    x.Serialize(sw, chromaticsSettings);
                     sw.WriteLine();
                     sw.Close();
                 }
@@ -303,42 +303,42 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.ERROR, "Error saving states to settings.chromatics. Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, "Error saving states to settings.chromatics. Error: " + ex.Message);
             }
         }
 
         private void LoadChromaticsSettings()
         {
-            WriteConsole(ConsoleTypes.SYSTEM, "Searching for settings.chromatics..");
+            WriteConsole(ConsoleTypes.System, "Searching for settings.chromatics..");
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/settings.chromatics";
 
             if (File.Exists(path))
             {
                 //Read Device Save
-                WriteConsole(ConsoleTypes.SYSTEM, "Attempting to load settings.chromatics..");
+                WriteConsole(ConsoleTypes.System, "Attempting to load settings.chromatics..");
                 using (var sr = new StreamReader(path))
                 {
                     try
                     {
                         var reader = new XmlSerializer(ChromaticsSettings.GetType());
-                        var _ChromaticsSettings = (ChromaticsSettings) reader.Deserialize(sr);
+                        var chromaticsSettings = (ChromaticsSettings) reader.Deserialize(sr);
                         sr.Close();
 
-                        ChromaticsSettings = _ChromaticsSettings;
+                        ChromaticsSettings = chromaticsSettings;
 
-                        WriteConsole(ConsoleTypes.SYSTEM, "settings.chromatics loaded.");
+                        WriteConsole(ConsoleTypes.System, "settings.chromatics loaded.");
                     }
                     catch (Exception ex)
                     {
-                        WriteConsole(ConsoleTypes.ERROR, "Error loading settings.chromatics. Error: " + ex.Message);
+                        WriteConsole(ConsoleTypes.Error, "Error loading settings.chromatics. Error: " + ex.Message);
                     }
                 }
             }
             else
             {
                 //Create Device Save
-                WriteConsole(ConsoleTypes.SYSTEM, "settings.chromatics not found. Creating one..");
+                WriteConsole(ConsoleTypes.System, "settings.chromatics not found. Creating one..");
                 try
                 {
                     using (var sw = new StreamWriter(path))
@@ -351,106 +351,106 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.ERROR, "Error creating settings.chromatics. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, "Error creating settings.chromatics. Error: " + ex.Message);
                 }
             }
         }
 
         private void ImportColorMappings()
         {
-            var _open = new OpenFileDialog();
-            _open.Filter = "Chromatics Palette Files|*.chromatics";
-            _open.Title = "Import Color Palette";
-            _open.AddExtension = true;
-            _open.AutoUpgradeEnabled = true;
-            _open.CheckFileExists = true;
-            _open.CheckPathExists = true;
-            _open.DefaultExt = "chromatics";
-            _open.DereferenceLinks = true;
-            _open.FileName = "mypalette";
-            _open.FilterIndex = 1;
-            _open.Multiselect = false;
-            _open.ReadOnlyChecked = false;
-            _open.RestoreDirectory = false;
-            _open.ShowHelp = false;
-            _open.ShowReadOnly = false;
-            _open.SupportMultiDottedExtensions = false;
-            _open.ValidateNames = true;
+            var open = new OpenFileDialog();
+            open.Filter = "Chromatics Palette Files|*.chromatics";
+            open.Title = "Import Color Palette";
+            open.AddExtension = true;
+            open.AutoUpgradeEnabled = true;
+            open.CheckFileExists = true;
+            open.CheckPathExists = true;
+            open.DefaultExt = "chromatics";
+            open.DereferenceLinks = true;
+            open.FileName = "mypalette";
+            open.FilterIndex = 1;
+            open.Multiselect = false;
+            open.ReadOnlyChecked = false;
+            open.RestoreDirectory = false;
+            open.ShowHelp = false;
+            open.ShowReadOnly = false;
+            open.SupportMultiDottedExtensions = false;
+            open.ValidateNames = true;
 
-            if (_open.ShowDialog() == DialogResult.OK)
+            if (open.ShowDialog() == DialogResult.OK)
             {
-                WriteConsole(ConsoleTypes.SYSTEM, "Importing Color Palette..");
+                WriteConsole(ConsoleTypes.System, "Importing Color Palette..");
 
                 try
                 {
-                    using (var sr = new StreamReader(_open.FileName))
+                    using (var sr = new StreamReader(open.FileName))
                     {
                         var reader = new XmlSerializer(ColorMappings.GetType());
-                        var _ColorMappings = (FFXIVColorMappings) reader.Deserialize(sr);
+                        var colorMappings = (FfxivColorMappings) reader.Deserialize(sr);
                         sr.Close();
 
-                        ColorMappings = _ColorMappings;
+                        ColorMappings = colorMappings;
 
-                        WriteConsole(ConsoleTypes.SYSTEM,
-                            "Success. Imported Color Palette from " + _open.FileName + ".");
-                        _open.Dispose();
+                        WriteConsole(ConsoleTypes.System,
+                            "Success. Imported Color Palette from " + open.FileName + ".");
+                        open.Dispose();
                     }
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.ERROR, "Error importing Color Palette. Error: " + ex.Message);
-                    _open.Dispose();
+                    WriteConsole(ConsoleTypes.Error, "Error importing Color Palette. Error: " + ex.Message);
+                    open.Dispose();
                 }
             }
         }
 
         private void ExportColorMappings()
         {
-            var _save = new SaveFileDialog();
-            _save.AddExtension = true;
-            _save.AutoUpgradeEnabled = true;
-            _save.CheckFileExists = false;
-            _save.CheckPathExists = true;
-            _save.CreatePrompt = false;
-            _save.DefaultExt = "chromatics";
-            _save.DereferenceLinks = true;
-            _save.FileName = "mypalette";
-            _save.Filter = "Chromatics Palette Files|*.chromatics";
-            _save.FilterIndex = 1;
-            _save.InitialDirectory = "";
-            _save.OverwritePrompt = true;
-            _save.RestoreDirectory = false;
-            _save.ShowHelp = false;
-            _save.SupportMultiDottedExtensions = false;
-            _save.Title = "Export Color Palette";
-            _save.ValidateNames = true;
+            var save = new SaveFileDialog();
+            save.AddExtension = true;
+            save.AutoUpgradeEnabled = true;
+            save.CheckFileExists = false;
+            save.CheckPathExists = true;
+            save.CreatePrompt = false;
+            save.DefaultExt = "chromatics";
+            save.DereferenceLinks = true;
+            save.FileName = "mypalette";
+            save.Filter = "Chromatics Palette Files|*.chromatics";
+            save.FilterIndex = 1;
+            save.InitialDirectory = "";
+            save.OverwritePrompt = true;
+            save.RestoreDirectory = false;
+            save.ShowHelp = false;
+            save.SupportMultiDottedExtensions = false;
+            save.Title = "Export Color Palette";
+            save.ValidateNames = true;
 
 
-            if (_save.ShowDialog() == DialogResult.OK)
+            if (save.ShowDialog() == DialogResult.OK)
             {
                 SaveColorMappings(0);
 
-                WriteConsole(ConsoleTypes.SYSTEM, "Exporting Color Palette..");
+                WriteConsole(ConsoleTypes.System, "Exporting Color Palette..");
 
-                var _ColorMappings = new FFXIVColorMappings();
-                _ColorMappings = ColorMappings;
+                var colorMappings = new FfxivColorMappings();
+                colorMappings = ColorMappings;
 
                 try
                 {
-                    using (var sw = new StreamWriter(_save.FileName, false))
+                    using (var sw = new StreamWriter(save.FileName, false))
                     {
-                        var x = new XmlSerializer(_ColorMappings.GetType());
-                        x.Serialize(sw, _ColorMappings);
+                        var x = new XmlSerializer(colorMappings.GetType());
+                        x.Serialize(sw, colorMappings);
                         sw.WriteLine();
                         sw.Close();
                     }
 
-                    WriteConsole(ConsoleTypes.SYSTEM, "Success. Exported Color Palette to " + _save.FileName + ".");
-                    _save.Dispose();
+                    WriteConsole(ConsoleTypes.System, "Success. Exported Color Palette to " + save.FileName + ".");
+                    save.Dispose();
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.ERROR, "Error exporting Color Palette. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, "Error exporting Color Palette. Error: " + ex.Message);
                 }
             }
         }

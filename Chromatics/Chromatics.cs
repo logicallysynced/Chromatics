@@ -21,98 +21,98 @@ namespace Chromatics
     public partial class Chromatics : Form, ILogWrite
     {
         //Setup Threading/Tasks
-        private readonly CancellationTokenSource MemoryTask = new CancellationTokenSource();
+        private readonly CancellationTokenSource _memoryTask = new CancellationTokenSource();
 
         private ILogitechArx _arx;
         private Task _call;
         private Task _MemoryTask;
         public int _PaletteMappingCurrentSelect = 1;
-        private bool allowClose;
-        private bool allowVisible = true;
+        private bool _allowClose;
+        private bool _allowVisible = true;
 
-        public bool ArxSDK;
-        public int ArxSDKCalled;
+        public bool ArxSdk;
+        public int ArxSdkCalled;
         public int ArxState;
         public bool ArxToggle = true;
 
-        private CancellationTokenSource Attachcts = new CancellationTokenSource();
+        private CancellationTokenSource _attachcts = new CancellationTokenSource();
 
         //Setup Variables
-        public int attatched;
+        public int Attatched;
 
         public ChromaticsSettings ChromaticsSettings = new ChromaticsSettings();
 
-        public FFXIVColorMappings ColorMappings = new FFXIVColorMappings();
+        public FfxivColorMappings ColorMappings = new FfxivColorMappings();
 
-        private bool CoolermasterDeviceKeyboard = true;
-        private bool CoolermasterDeviceMouse = true;
-        public bool CoolermasterSDK = false;
-        public int CoolermasterSDKCalled = 0;
+        private bool _coolermasterDeviceKeyboard = true;
+        private bool _coolermasterDeviceMouse = true;
+        public bool CoolermasterSdk = false;
+        public int CoolermasterSdkCalled = 0;
 
-        private bool CorsairDeviceHeadset = true;
-        private bool CorsairDeviceKeyboard = true;
-        private bool CorsairDeviceKeypad = true;
-        private bool CorsairDeviceMouse = true;
-        private bool CorsairDeviceMousepad = true;
+        private bool _corsairDeviceHeadset = true;
+        private bool _corsairDeviceKeyboard = true;
+        private bool _corsairDeviceKeypad = true;
+        private bool _corsairDeviceMouse = true;
+        private bool _corsairDeviceMousepad = true;
 
         public bool CorsairRescan = false;
-        public bool CorsairSDK = false;
-        public int CorsairSDKCalled = 0;
-        private readonly string currentVersionX = "2.2.7";
+        public bool CorsairSdk = false;
+        public int CorsairSdkCalled = 0;
+        private readonly string _currentVersionX = "2.2.8";
         public bool DeviceGridStartup = false;
 
-        public bool effectRunning = false;
-        private CancellationTokenSource FFXIVcts = new CancellationTokenSource();
+        public bool EffectRunning = false;
+        private CancellationTokenSource _ffxiVcts = new CancellationTokenSource();
 
-        private bool GameNotify;
-        private Timer GameResetCatch;
+        private bool _gameNotify;
+        private Timer _gameResetCatch;
         public bool HoldReader = false;
 
-        private string HUEDefault = "";
+        private string _hueDefault = "";
         public bool HueRescan = false;
-        public bool HueSDK = false;
-        public int HueSDKCalled = 0;
-        public bool init = false;
-        public bool isDX11 = false;
-        private bool KeyAlt;
+        public bool HueSdk = false;
+        public int HueSdkCalled = 0;
+        public bool Init = false;
+        public bool IsDx11 = false;
+        private bool _keyAlt;
 
-        private bool KeyCtrl;
-        private bool KeyShift;
-        private string LgsInstall = "";
+        private bool _keyCtrl;
+        private bool _keyShift;
+        private string _lgsInstall = "";
         public bool LifxRescan = false;
-        public bool LifxSDK = false;
-        public int LifxSDKCalled = 0;
+        public bool LifxSdk = false;
+        public int LifxSdkCalled = 0;
 
-        private bool LogitechDeviceKeyboard = true;
+        private bool _logitechDeviceKeyboard = true;
         public bool LogitechRescan = false;
-        public bool LogitechSDK = false;
-        public int LogitechSDKCalled = 0;
-        private IKeyboardMouseEvents m_GlobalHook;
+        public bool LogitechSdk = false;
+        public int LogitechSdkCalled = 0;
+        private IKeyboardMouseEvents _mGlobalHook;
         public bool MappingGridStartup = false;
         public int MouseToggle = 0;
         public int PaletteMappingCurrentSelect = 0;
 
-        public List<string> plugs = new List<string>();
-        private bool RazerDeviceHeadset = true;
+        public List<string> Plugs = new List<string>();
+        private bool _razerDeviceHeadset = true;
 
-        private bool RazerDeviceKeyboard = true;
-        private bool RazerDeviceKeypad = true;
-        private bool RazerDeviceMouse = true;
-        private bool RazerDeviceMousepad = true;
+        private bool _razerDeviceKeyboard = true;
+        private bool _razerDeviceKeypad = true;
+        private bool _razerDeviceMouse = true;
+        private bool _razerDeviceMousepad = true;
         public bool RazerRescan = false;
-        public bool RazerSDK = false;
-        public int RazerSDKCalled = 0;
+        public bool RazerSdk = false;
+        public int RazerSdkCalled = 0;
 
-        private readonly RegistryKey rkApp =
+        private readonly RegistryKey _rkApp =
             Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
-        private bool RoccatDeviceKeyboard = true;
-        private bool RoccatDeviceMouse = true;
-        public bool RoccatSDK = false;
-        public int RoccatSDKCalled = 0;
+        private bool _roccatDeviceKeyboard = true;
+        private bool _roccatDeviceMouse = true;
+        public bool RoccatSdk = false;
+        public int RoccatSdkCalled = 0;
         public bool Setbase;
-        public bool startup;
-        public int state = 0;
+        public bool Startup;
+        public int State = 0;
 
         //Main Thread
         public Chromatics()
@@ -128,29 +128,29 @@ namespace Chromatics
 
                 if (InvokeRequired)
                 {
-                    if (type == ConsoleTypes.SYSTEM)
+                    if (type == ConsoleTypes.System)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Black; });
-                    else if (type == ConsoleTypes.FFXIV)
+                    else if (type == ConsoleTypes.Ffxiv)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.DarkCyan; });
-                    else if (type == ConsoleTypes.RAZER)
+                    else if (type == ConsoleTypes.Razer)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.LimeGreen; });
-                    else if (type == ConsoleTypes.CORSAIR)
+                    else if (type == ConsoleTypes.Corsair)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.MediumVioletRed; });
-                    else if (type == ConsoleTypes.LOGITECH)
+                    else if (type == ConsoleTypes.Logitech)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.DodgerBlue; });
-                    else if (type == ConsoleTypes.LIFX)
+                    else if (type == ConsoleTypes.Lifx)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.BlueViolet; });
-                    else if (type == ConsoleTypes.HUE)
+                    else if (type == ConsoleTypes.Hue)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Orange; });
-                    else if (type == ConsoleTypes.ARX)
+                    else if (type == ConsoleTypes.Arx)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Aqua; });
-                    else if (type == ConsoleTypes.STEEL)
+                    else if (type == ConsoleTypes.Steel)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.HotPink; });
-                    else if (type == ConsoleTypes.COOLERMASTER)
+                    else if (type == ConsoleTypes.Coolermaster)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.DarkBlue; });
-                    else if (type == ConsoleTypes.ROCCAT)
+                    else if (type == ConsoleTypes.Roccat)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.RosyBrown; });
-                    else if (type == ConsoleTypes.ERROR)
+                    else if (type == ConsoleTypes.Error)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Red; });
                     else rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Black; });
 
@@ -158,18 +158,18 @@ namespace Chromatics
                 }
                 else
                 {
-                    if (type == ConsoleTypes.SYSTEM) rtb_debug.SelectionColor = Color.Black;
-                    else if (type == ConsoleTypes.FFXIV) rtb_debug.SelectionColor = Color.DarkCyan;
-                    else if (type == ConsoleTypes.RAZER) rtb_debug.SelectionColor = Color.LimeGreen;
-                    else if (type == ConsoleTypes.CORSAIR) rtb_debug.SelectionColor = Color.MediumVioletRed;
-                    else if (type == ConsoleTypes.LOGITECH) rtb_debug.SelectionColor = Color.DodgerBlue;
-                    else if (type == ConsoleTypes.LIFX) rtb_debug.SelectionColor = Color.BlueViolet;
-                    else if (type == ConsoleTypes.HUE) rtb_debug.SelectionColor = Color.Orange;
-                    else if (type == ConsoleTypes.ARX) rtb_debug.SelectionColor = Color.Aqua;
-                    else if (type == ConsoleTypes.STEEL) rtb_debug.SelectionColor = Color.HotPink;
-                    else if (type == ConsoleTypes.COOLERMASTER) rtb_debug.SelectionColor = Color.DarkBlue;
-                    else if (type == ConsoleTypes.ROCCAT) rtb_debug.SelectionColor = Color.RosyBrown;
-                    else if (type == ConsoleTypes.ERROR) rtb_debug.SelectionColor = Color.Red;
+                    if (type == ConsoleTypes.System) rtb_debug.SelectionColor = Color.Black;
+                    else if (type == ConsoleTypes.Ffxiv) rtb_debug.SelectionColor = Color.DarkCyan;
+                    else if (type == ConsoleTypes.Razer) rtb_debug.SelectionColor = Color.LimeGreen;
+                    else if (type == ConsoleTypes.Corsair) rtb_debug.SelectionColor = Color.MediumVioletRed;
+                    else if (type == ConsoleTypes.Logitech) rtb_debug.SelectionColor = Color.DodgerBlue;
+                    else if (type == ConsoleTypes.Lifx) rtb_debug.SelectionColor = Color.BlueViolet;
+                    else if (type == ConsoleTypes.Hue) rtb_debug.SelectionColor = Color.Orange;
+                    else if (type == ConsoleTypes.Arx) rtb_debug.SelectionColor = Color.Aqua;
+                    else if (type == ConsoleTypes.Steel) rtb_debug.SelectionColor = Color.HotPink;
+                    else if (type == ConsoleTypes.Coolermaster) rtb_debug.SelectionColor = Color.DarkBlue;
+                    else if (type == ConsoleTypes.Roccat) rtb_debug.SelectionColor = Color.RosyBrown;
+                    else if (type == ConsoleTypes.Error) rtb_debug.SelectionColor = Color.Red;
                     else rtb_debug.SelectionColor = Color.Black;
 
                     rtb_debug.AppendText(line + Environment.NewLine);
@@ -199,8 +199,8 @@ namespace Chromatics
         private void MainThread()
         {
             //Setup References
-            Watchdog.WatchdogStartup();
-            Text = "Chromatics " + currentVersionX + " Beta";
+            //Watchdog.WatchdogStartup();
+            Text = "Chromatics " + _currentVersionX + " Beta";
 
             //Setup Event Listeners
             FormClosing += OnFormClosing;
@@ -213,20 +213,20 @@ namespace Chromatics
             mi_winstart.Click += mi_winstart_Click;
             mi_updatecheck.Click += mi_updatecheck_Click;
 
-            m_GlobalHook = Hook.GlobalEvents();
-            m_GlobalHook.KeyDown += Kh_KeyDown;
-            m_GlobalHook.KeyUp += Kh_KeyUp;
+            _mGlobalHook = Hook.GlobalEvents();
+            _mGlobalHook.KeyDown += Kh_KeyDown;
+            _mGlobalHook.KeyUp += Kh_KeyUp;
 
-            GameResetCatch = new Timer();
-            GameResetCatch.Elapsed += (source, e) => { FFXIVGameStop(); };
-            GameResetCatch.Interval = 12000;
-            GameResetCatch.AutoReset = false;
-            GameResetCatch.Enabled = false;
+            _gameResetCatch = new Timer();
+            _gameResetCatch.Elapsed += (source, e) => { FfxivGameStop(); };
+            _gameResetCatch.Interval = 12000;
+            _gameResetCatch.AutoReset = false;
+            _gameResetCatch.Enabled = false;
 
             try
             {
-                var LgsApp = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Logitech\\Logitech Gaming Software", false);
-                LgsInstall = LgsApp.GetValue("InstallDir").ToString();
+                var lgsApp = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Logitech\\Logitech Gaming Software", false);
+                _lgsInstall = lgsApp.GetValue("InstallDir").ToString();
             }
             catch (Exception ex)
             {
@@ -234,7 +234,7 @@ namespace Chromatics
             }
 
             //Bind
-            WriteConsole(ConsoleTypes.SYSTEM, "Starting Chromatics Version " + currentVersionX + " (Beta)");
+            WriteConsole(ConsoleTypes.System, "Starting Chromatics Version " + _currentVersionX + " (Beta)");
 
 
             //Load Functions
@@ -246,7 +246,7 @@ namespace Chromatics
             //Check Administrator permissions
             if (!IsAdministrator())
             {
-                WriteConsole(ConsoleTypes.ERROR,
+                WriteConsole(ConsoleTypes.Error,
                     "Chromatics is not running as Administrator. Please restart with administrative privileges.");
 
                 if (chk_lccauto.Checked)
@@ -265,7 +265,7 @@ namespace Chromatics
                     if (File.Exists(enviroment + @"/_updater.exe"))
                     {
                         FileSystem.RenameFile(enviroment + @"/_updater.exe", "updater.exe");
-                        WriteConsole(ConsoleTypes.SYSTEM, "Updated Chromatics Updater to latest version.");
+                        WriteConsole(ConsoleTypes.System, "Updated Chromatics Updater to latest version.");
                     }
                 }
                 else
@@ -274,7 +274,7 @@ namespace Chromatics
                     {
                         File.Delete(enviroment + @"/updater.exe");
                         FileSystem.RenameFile(enviroment + @"/_updater.exe", "updater.exe");
-                        WriteConsole(ConsoleTypes.SYSTEM, "Updated Chromatics Updater to latest version.");
+                        WriteConsole(ConsoleTypes.System, "Updated Chromatics Updater to latest version.");
                     }
                 }
             }
@@ -286,7 +286,7 @@ namespace Chromatics
             //Setup GUI
             InitDeviceDataGrid();
             InitColorMappingGrid();
-            InitSettingsGUI();
+            InitSettingsGui();
             SetupTooltips();
             CenterPictureBox(pB_logo1, pB_logo1.Image);
             notify_master.ContextMenuStrip = contextMenuStrip1;
@@ -298,20 +298,20 @@ namespace Chromatics
             new Task(() => { CheckUpdates(0); }).Start();
 
             //Setup Device Interfaces
-            InitializeSDK();
+            InitializeSdk();
 
-            if (LogitechSDKCalled == 1)
+            if (LogitechSdkCalled == 1)
             {
                 if (gB_lcc.Enabled)
                 {
                     //Check Logitech Enviroment
                     try
                     {
-                        if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
+                        if (File.Exists(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
                         {
                             if (chk_lccauto.Checked)
                             {
-                                ToggleLCCMode(true);
+                                ToggleLccMode(true);
 
                                 chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
                                 chk_lccenable.Checked = true;
@@ -319,13 +319,13 @@ namespace Chromatics
                             }
                             else
                             {
-                                WriteConsole(ConsoleTypes.ERROR,
+                                WriteConsole(ConsoleTypes.Error,
                                     "Logitech: Chromatics has detected that the LGS internal SDK library is causing a conflict between FFXIV and Chromatics. Please make sure to enable 'Logitech Conflict Mode' under the settings tab and check that 'LED Illumination' is disabled for 'ffxiv_dx11' within LGS.");
                             }
                         }
                         else
                         {
-                            WriteConsole(ConsoleTypes.LOGITECH, "Logitech Conflict Mode is already enabled.");
+                            WriteConsole(ConsoleTypes.Logitech, "Logitech Conflict Mode is already enabled.");
 
                             chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
                             chk_lccenable.Checked = true;
@@ -338,7 +338,7 @@ namespace Chromatics
 
                         if (chk_lccauto.Checked)
                         {
-                            WriteConsole(ConsoleTypes.ERROR,
+                            WriteConsole(ConsoleTypes.Error,
                                 "Logitech Conflict Mode failed to automatically start. Error: " + ex.Message);
 
                             chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
@@ -349,8 +349,8 @@ namespace Chromatics
                 }
                 else
                 {
-                    if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
-                        WriteConsole(ConsoleTypes.ERROR,
+                    if (File.Exists(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
+                        WriteConsole(ConsoleTypes.Error,
                             "Logitech: Chromatics has detected that the LGS internal SDK library is causing a conflict between FFXIV and Chromatics. Please make sure to enable 'Logitech Conflict Mode' under the settings tab and check that 'LED Illumination' is disabled for 'ffxiv_dx11' within LGS.");
                 }
             }
@@ -366,14 +366,14 @@ namespace Chromatics
 
             if (chk_arxtoggle.Checked)
             {
-                _arx = LogitechArxInterface.InitializeArxSDK();
+                _arx = LogitechArxInterface.InitializeArxSdk();
 
                 if (_arx != null)
                 {
-                    ArxSDK = true;
+                    ArxSdk = true;
                     ArxState = 0;
-                    ArxSDKCalled = 1;
-                    WriteConsole(ConsoleTypes.ARX, "ARX SDK Loaded");
+                    ArxSdkCalled = 1;
+                    WriteConsole(ConsoleTypes.Arx, "ARX SDK Loaded");
 
                     //Load Plugins
                     LoadArxPlugins();
@@ -381,14 +381,14 @@ namespace Chromatics
             }
 
             //Finish GUI Setup
-            InitSettingsArxGUI();
-            startup = true;
+            InitSettingsArxGui();
+            Startup = true;
 
             //Split off MemoryReader to a Task 
             _MemoryTask = new Task(() =>
             {
-                var _call = CallFFXIVAttach(Attachcts.Token);
-            }, MemoryTask.Token);
+                _call = CallFfxivAttach(_attachcts.Token);
+            }, _memoryTask.Token);
 
             MemoryTasks.Add(_MemoryTask);
             MemoryTasks.Run(_MemoryTask);
@@ -396,72 +396,74 @@ namespace Chromatics
 
         private void LoadArxPlugins()
         {
-            if (ArxSDK && ArxSDKCalled == 1)
+            if (ArxSdk && ArxSdkCalled == 1)
             {
                 //Load Plugins
-                if (plugs.Count > 0)
+                if (Plugs.Count > 0)
                 {
-                    foreach (var plugin in plugs)
+                    foreach (var plugin in Plugs)
                         if (cb_arx_mode.Items.Contains(plugin))
                             cb_arx_mode.Items.Remove(plugin);
 
-                    plugs.Clear();
+                    Plugs.Clear();
                 }
 
-                plugs = _arx.LoadPlugins();
-                if (plugs.Count > 0)
-                    foreach (var plug in plugs)
+                Plugs = _arx.LoadPlugins();
+                if (Plugs.Count > 0)
+                    foreach (var plug in Plugs)
                     {
                         cb_arx_mode.Items.Add(plug);
-                        WriteConsole(ConsoleTypes.ARX, plug + " Plugin Loaded.");
+                        WriteConsole(ConsoleTypes.Arx, plug + " Plugin Loaded.");
                     }
                 else
-                    WriteConsole(ConsoleTypes.ARX, "No Plugins Found.");
+                    WriteConsole(ConsoleTypes.Arx, "No Plugins Found.");
             }
         }
 
-        private async Task CallFFXIVAttach(CancellationToken ct)
+        private async Task CallFfxivAttach(CancellationToken ct)
         {
             while (!ct.IsCancellationRequested)
             {
                 //Console.Write("Debug E");
                 await Task.Delay(2500);
-                AttachFFXIV();
+                AttachFfxiv();
             }
         }
 
-        private void AttachFFXIV()
+        private void AttachFfxiv()
         {
+            //Debug.WriteLine("Debug trip B");
+
             if (InitiateMemory())
             {
                 //Console.WriteLine("Attached");
                 //rtb_debug.Invoke((Action)delegate { rtb_debug.AppendText("Attached" + Environment.NewLine); });
-                WriteConsole(ConsoleTypes.FFXIV, "Attached to FFXIV");
-                GameNotify = false;
+                WriteConsole(ConsoleTypes.Ffxiv, "Attached to FFXIV");
+                _gameNotify = false;
                 notify_master.Text = @"Attached to FFXIV";
                 notify_master.BalloonTipText = @"Attached to FFXIV";
                 notify_master.ShowBalloonTip(1500);
 
-                if (ArxSDKCalled == 1 && ArxState == 0)
+                if (ArxSdkCalled == 1 && ArxState == 0)
                     _arx.ArxUpdateInfo("Attached to FFXIV");
 
-                attatched = 1;
+                Attatched = 1;
 
-                FFXIVcts = new CancellationTokenSource();
+                _ffxiVcts = new CancellationTokenSource();
 
-                _call = CallFFXIVMemory(FFXIVcts.Token); //put into local variable so it doesn't complain, lol
-                Attachcts.Cancel();
+                _call = CallFfxivMemory(_ffxiVcts.Token); //put into local variable so it doesn't complain, lol
+                _attachcts.Cancel();
             }
             else
             {
-                if (!GameNotify)
+                if (!_gameNotify)
                 {
-                    WriteConsole(ConsoleTypes.SYSTEM, "Waiting for Game Launch..");
+                    WriteConsole(ConsoleTypes.System, "Waiting for Game Launch..");
                     notify_master.Text = @"Waiting for Game Launch..";
-                    if (ArxSDKCalled == 1 && ArxState == 0)
+                    if (ArxSdkCalled == 1 && ArxState == 0)
                         _arx.ArxUpdateInfo("Waiting for Game Launch..");
 
-                    GameNotify = true;
+                    _gameNotify = true;
                 }
             }
         }
@@ -475,8 +477,8 @@ namespace Chromatics
             }
             else
             {
-                Watchdog.WatchdogGo();
-                var _call = CallFFXIVMemory(FFXIVcts.Token);
+                //Watchdog.WatchdogGo();
+                _call = CallFfxivMemory(_ffxiVcts.Token);
             }
         }
 
@@ -484,7 +486,7 @@ namespace Chromatics
         {
             try
             {
-                var currentVersion = currentVersionX.Replace(".", string.Empty); //UPDATE ME
+                var currentVersion = _currentVersionX.Replace(".", string.Empty); //UPDATE ME
                 var newVersion = currentVersion;
                 var webRequest = WebRequest.Create(@"https://chromaticsffxiv.com/chromatics2/update/version.txt");
 
@@ -510,8 +512,8 @@ namespace Chromatics
                         startInfo.FileName = updatedFile + @"\updater.exe";
                         startInfo.Arguments = "\"" + updatedFile + "\"";
 
-                        if (LogitechSDKCalled == 1)
-                            ToggleLCCMode(false, true);
+                        if (LogitechSdkCalled == 1)
+                            ToggleLccMode(false, true);
 
                         Process.Start(startInfo);
                         Environment.Exit(1);
@@ -571,6 +573,6 @@ namespace Chromatics
         /// </summary>
         void ResetDeviceDataGrid();
 
-        void FFXIVGameStop();
+        void FfxivGameStop();
     }
 }

@@ -9,7 +9,7 @@ namespace Chromatics.DeviceInterfaces
 {
     public class SteelSeriesInterface
     {
-        public static SteelLib InitializeSteelSDK()
+        public static SteelLib InitializeSteelSdk()
         {
             SteelLib steel = null;
             steel = new SteelLib();
@@ -19,32 +19,32 @@ namespace Chromatics.DeviceInterfaces
 
     public class SteelSeriesSdkWrapper
     {
-        private const string DEFAULT_CONTENT = "application/json";
+        private const string DefaultContent = "application/json";
 
-        public const string GAME = "Final Fantasy XIV";
-        private static readonly Encoding DEFAULT_ENCODING = Encoding.UTF8;
+        public const string Game = "Final Fantasy XIV";
+        private static readonly Encoding DefaultEncoding = Encoding.UTF8;
 
         public static Dictionary<string, EventBind> GameEvents = new Dictionary<string, EventBind>();
 
-        public static string SendSDKPostResponse(string url, string json)
+        public static string SendSdkPostResponse(string url, string json)
         {
             var result = "";
             using (var client = new WebClient())
             {
-                client.Encoding = DEFAULT_ENCODING;
-                client.Headers[HttpRequestHeader.ContentType] = DEFAULT_CONTENT;
+                client.Encoding = DefaultEncoding;
+                client.Headers[HttpRequestHeader.ContentType] = DefaultContent;
                 result = client.UploadString(url, "POST", json);
             }
 
             return result;
         }
 
-        public static void SendSDKPost(string url, string json)
+        public static void SendSdkPost(string url, string json)
         {
             using (var client = new WebClient())
             {
-                client.Encoding = DEFAULT_ENCODING;
-                client.Headers[HttpRequestHeader.ContentType] = DEFAULT_CONTENT;
+                client.Encoding = DefaultEncoding;
+                client.Headers[HttpRequestHeader.ContentType] = DefaultContent;
                 client.UploadString(url, "POST", json);
             }
         }
@@ -96,68 +96,68 @@ namespace Chromatics.DeviceInterfaces
         public class Color
         {
             [JsonProperty(PropertyName = "red")]
-            public int red { get; set; }
+            public int Red { get; set; }
 
             [JsonProperty(PropertyName = "green")]
-            public int green { get; set; }
+            public int Green { get; set; }
 
             [JsonProperty(PropertyName = "blue")]
-            public int blue { get; set; }
+            public int Blue { get; set; }
         }
 
         public class Handler
         {
             [JsonProperty(PropertyName = "device-type")]
-            public string device { get; set; }
+            public string Device { get; set; }
 
             [JsonProperty(PropertyName = "zone")]
-            public string zone { get; set; }
+            public string Zone { get; set; }
 
             [JsonProperty(PropertyName = "color")]
-            public Color color { get; set; }
+            public Color Color { get; set; }
 
             [JsonProperty(PropertyName = "mode")]
-            public string mode { get; set; }
+            public string Mode { get; set; }
         }
 
         public class EventBind
         {
             [JsonProperty(PropertyName = "device-type")]
-            public string game { get; set; }
+            public string Game { get; set; }
 
             [JsonProperty(PropertyName = "event")]
-            public string name { get; set; }
+            public string Name { get; set; }
 
             [JsonProperty(PropertyName = "min_value")]
-            public int min_value { get; set; }
+            public int MinValue { get; set; }
 
             [JsonProperty(PropertyName = "max_value")]
-            public int max_value { get; set; }
+            public int MaxValue { get; set; }
 
             [JsonProperty(PropertyName = "icon_id")]
-            public EventIcons icon_id { get; set; }
+            public EventIcons IconId { get; set; }
 
             [JsonProperty(PropertyName = "handlers")]
-            public Handler handlers { get; set; }
+            public Handler Handlers { get; set; }
         }
 
 
         public class Data
         {
             [JsonProperty(PropertyName = "value")]
-            public int value { get; set; }
+            public int Value { get; set; }
         }
 
         public class EventSend
         {
             [JsonProperty(PropertyName = "game")]
-            public string game { get; set; }
+            public string Game { get; set; }
 
             [JsonProperty(PropertyName = "event")]
-            public string name { get; set; }
+            public string Name { get; set; }
 
             [JsonProperty(PropertyName = "data")]
-            public Data data { get; set; }
+            public Data Data { get; set; }
         }
 
         #endregion
@@ -195,31 +195,31 @@ namespace Chromatics.DeviceInterfaces
             //Single Key
             var guid = Guid.NewGuid().ToString();
 
-            var SetSingleKey = new SteelSeriesSdkWrapper.EventBind
+            var setSingleKey = new SteelSeriesSdkWrapper.EventBind
             {
-                game = SteelSeriesSdkWrapper.GAME,
-                name = guid,
-                handlers = new SteelSeriesSdkWrapper.Handler
+                Game = SteelSeriesSdkWrapper.Game,
+                Name = guid,
+                Handlers = new SteelSeriesSdkWrapper.Handler
                 {
-                    device = "rgb-per-key-zones",
-                    mode = "percent",
-                    zone = "logo",
-                    color = new SteelSeriesSdkWrapper.Color {red = 0, green = 0, blue = 0}
+                    Device = "rgb-per-key-zones",
+                    Mode = "percent",
+                    Zone = "logo",
+                    Color = new SteelSeriesSdkWrapper.Color {Red = 0, Green = 0, Blue = 0}
                 },
-                icon_id = SteelSeriesSdkWrapper.EventIcons.None,
-                min_value = 0,
-                max_value = 100
+                IconId = SteelSeriesSdkWrapper.EventIcons.None,
+                MinValue = 0,
+                MaxValue = 100
             };
 
             var json = new SteelSeriesSdkWrapper.EventSend
             {
-                game = SteelSeriesSdkWrapper.GAME,
-                name = guid,
-                data = new SteelSeriesSdkWrapper.Data {value = 100}
+                Game = SteelSeriesSdkWrapper.Game,
+                Name = guid,
+                Data = new SteelSeriesSdkWrapper.Data {Value = 100}
             };
 
-            SteelSeriesSdkWrapper.GameEvents.Add(guid, SetSingleKey);
-            SteelSeriesSdkWrapper.SendSDKPost("", json.ToString());
+            SteelSeriesSdkWrapper.GameEvents.Add(guid, setSingleKey);
+            SteelSeriesSdkWrapper.SendSdkPost("", json.ToString());
         }
     }
 }

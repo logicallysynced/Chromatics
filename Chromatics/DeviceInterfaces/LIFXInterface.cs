@@ -11,14 +11,14 @@ using Color = System.Drawing.Color;
 
 namespace Chromatics.DeviceInterfaces
 {
-    public class LIFXInterface
+    public class LifxInterface
     {
-        public static LIFXLib InitializeLIFXSDK()
+        public static LifxLib InitializeLifxsdk()
         {
-            LIFXLib lifx = null;
-            lifx = new LIFXLib();
+            LifxLib lifx = null;
+            lifx = new LifxLib();
 
-            var lifxstat = lifx.InitializeSDK();
+            var lifxstat = lifx.InitializeSdk();
 
             if (!lifxstat)
                 return null;
@@ -27,39 +27,39 @@ namespace Chromatics.DeviceInterfaces
         }
     }
 
-    public class LIFXSdkWrapper
+    public class LifxSdkWrapper
     {
         //
     }
 
-    public interface ILIFXSdk
+    public interface ILifxSdk
     {
         int LifxBulbs { get; set; }
 
         Dictionary<string, int> LifxStateMemory { get; }
         Dictionary<string, DeviceModeTypes> LifxModeMemory { get; }
-        Dictionary<uint, string> LIFXproductids { get; }
+        Dictionary<uint, string> LifXproductids { get; }
         Dictionary<string, LightBulb> LifxDevices { get; }
         Dictionary<LightBulb, DeviceModeTypes> LifxBulbsDat { get; }
         Dictionary<LightBulb, LightStateResponse> LifxBulbsRestore { get; }
-        bool InitializeSDK();
-        void LIFXRestoreState();
-        void LIFXUpdateState(DeviceModeTypes mode, Color col, int transition);
-        void LIFXUpdateStateBrightness(DeviceModeTypes mode, Color col, ushort brightness, int transition);
+        bool InitializeSdk();
+        void LifxRestoreState();
+        void LifxUpdateState(DeviceModeTypes mode, Color col, int transition);
+        void LifxUpdateStateBrightness(DeviceModeTypes mode, Color col, ushort brightness, int transition);
         Task<LightStateResponse> GetLightStateAsync(LightBulb id);
         Task<StateVersionResponse> GetDeviceVersionAsync(LightBulb id);
-        void SetColorAsync(LightBulb id, ushort Hue, ushort Saturation, ushort Brightness, ushort Kelvin, TimeSpan ts);
+        void SetColorAsync(LightBulb id, ushort hue, ushort saturation, ushort brightness, ushort kelvin, TimeSpan ts);
         void Flash4(Color basecol, Color burstcol, int speed, CancellationToken cts);
     }
 
-    public class LIFXLib : ILIFXSdk
+    public class LifxLib : ILifxSdk
     {
-        private static readonly ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
+        private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
 
-        private static int _LifxBulbs;
+        private static int _lifxBulbs;
 
-        private static Task _LIFXpendingUpdateColor;
-        private static bool LifxSDK;
+        private static Task _lifXpendingUpdateColor;
+        private static bool _lifxSdk;
 
         private static readonly Dictionary<LightBulb, DeviceModeTypes> _LifxBulbsDat =
             new Dictionary<LightBulb, DeviceModeTypes>();
@@ -91,27 +91,27 @@ namespace Chromatics.DeviceInterfaces
 
         private static readonly Dictionary<string, int> _LifxStateMemory = new Dictionary<string, int>();
 
-        private static int Flash4Step;
-        private static bool Flash4Running;
+        private static int _flash4Step;
+        private static bool _flash4Running;
         private static readonly object _Flash4 = new object();
         private LifxClient _client;
 
-        private Action _LIFXpendingUpdateColorAction;
+        private Action _lifXpendingUpdateColorAction;
 
-        private Action _LIFXpendingUpdateColorActionBright;
-        private Task _LIFXpendingUpdateColorBright;
+        private Action _lifXpendingUpdateColorActionBright;
+        private Task _lifXpendingUpdateColorBright;
 
         public int LifxBulbs
         {
-            get => _LifxBulbs;
-            set => _LifxBulbs = value;
+            get => _lifxBulbs;
+            set => _lifxBulbs = value;
         }
 
         public Dictionary<string, int> LifxStateMemory => _LifxStateMemory;
 
         public Dictionary<string, DeviceModeTypes> LifxModeMemory => _LifxModeMemory;
 
-        public Dictionary<uint, string> LIFXproductids => _LIFXproductids;
+        public Dictionary<uint, string> LifXproductids => _LIFXproductids;
 
         public Dictionary<string, LightBulb> LifxDevices => _LifxDevices;
 
@@ -119,9 +119,9 @@ namespace Chromatics.DeviceInterfaces
 
         public Dictionary<LightBulb, LightStateResponse> LifxBulbsRestore => _LifxBulbsRestore;
 
-        public bool InitializeSDK()
+        public bool InitializeSdk()
         {
-            write.WriteConsole(ConsoleTypes.LIFX, "Attempting to load LIFX SDK..");
+            Write.WriteConsole(ConsoleTypes.Lifx, "Attempting to load LIFX SDK..");
 
             try
             {
@@ -132,35 +132,35 @@ namespace Chromatics.DeviceInterfaces
                 _client.DeviceLost += LIFXClient_DeviceLost;
                 _client.StartDeviceDiscovery();
 
-                write.WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Loaded");
+                Write.WriteConsole(ConsoleTypes.Lifx, "LIFX SDK Loaded");
                 return true;
             }
             catch (Exception ex)
             {
-                write.WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Failed to Load. Error: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Lifx, "LIFX SDK Failed to Load. Error: " + ex.Message);
                 return false;
             }
         }
 
-        public async void LIFXRestoreState()
+        public async void LifxRestoreState()
         {
             foreach (var d in _LifxBulbsRestore)
             {
                 var state = d.Value;
                 await _client.SetColorAsync(d.Key, state.Hue, state.Saturation, state.Brightness, state.Kelvin,
                     TimeSpan.FromMilliseconds(1000));
-                write.WriteConsole(ConsoleTypes.LIFX, "Restoring LIFX Bulb " + state.Label);
+                Write.WriteConsole(ConsoleTypes.Lifx, "Restoring LIFX Bulb " + state.Label);
                 //Thread.Sleep(500);
             }
         }
 
-        public async void LIFXUpdateState(DeviceModeTypes mode, Color col, int transition)
+        public async void LifxUpdateState(DeviceModeTypes mode, Color col, int transition)
         {
-            if (LifxSDK && _LifxBulbs > 0)
+            if (_lifxSdk && _lifxBulbs > 0)
             {
-                if (_LIFXpendingUpdateColor != null)
+                if (_lifXpendingUpdateColor != null)
                 {
-                    _LIFXpendingUpdateColorAction = () => LIFXUpdateState(mode, col, transition);
+                    _lifXpendingUpdateColorAction = () => LifxUpdateState(mode, col, transition);
                     return;
                 }
 
@@ -173,37 +173,37 @@ namespace Chromatics.DeviceInterfaces
                 //ushort _hue = Convert.ToUInt16(col.GetHue());
                 //ushort _sat = Convert.ToUInt16(col.GetSaturation());
                 //ushort _bright = Convert.ToUInt16(col.GetBrightness());
-                ushort _kelvin = 2700;
+                ushort kelvin = 2700;
 
                 foreach (var d in _LifxBulbsDat)
-                    if (d.Value == mode || mode == DeviceModeTypes.UNKNOWN) //100
+                    if (d.Value == mode || mode == DeviceModeTypes.Unknown) //100
                     {
                         if (_LifxStateMemory[d.Key.MacAddressName] == 0) return;
                         var state = await _client.GetLightStateAsync(d.Key);
-                        var setColorTask = _client.SetColorAsync(d.Key, _col, _kelvin, _transition);
+                        var setColorTask = _client.SetColorAsync(d.Key, _col, kelvin, _transition);
                         var throttleTask = Task.Delay(50);
                         //Ensure task takes minimum 50 ms (no more than 20 messages per second)
-                        _LIFXpendingUpdateColor = Task.WhenAll(setColorTask, throttleTask);
+                        _lifXpendingUpdateColor = Task.WhenAll(setColorTask, throttleTask);
                     }
 
-                _LIFXpendingUpdateColor = null;
-                if (_LIFXpendingUpdateColorAction != null)
+                _lifXpendingUpdateColor = null;
+                if (_lifXpendingUpdateColorAction != null)
                 {
-                    var a = _LIFXpendingUpdateColorAction;
-                    _LIFXpendingUpdateColorAction = null;
+                    var a = _lifXpendingUpdateColorAction;
+                    _lifXpendingUpdateColorAction = null;
                     a();
                 }
             }
         }
 
-        public async void LIFXUpdateStateBrightness(DeviceModeTypes mode, Color col, ushort brightness, int transition)
+        public async void LifxUpdateStateBrightness(DeviceModeTypes mode, Color col, ushort brightness, int transition)
         {
-            if (LifxSDK && _LifxBulbs > 0)
+            if (_lifxSdk && _lifxBulbs > 0)
             {
-                if (_LIFXpendingUpdateColorBright != null)
+                if (_lifXpendingUpdateColorBright != null)
                 {
-                    _LIFXpendingUpdateColorActionBright =
-                        () => LIFXUpdateStateBrightness(mode, col, brightness, transition);
+                    _lifXpendingUpdateColorActionBright =
+                        () => LifxUpdateStateBrightness(mode, col, brightness, transition);
                     return;
                 }
 
@@ -221,27 +221,27 @@ namespace Chromatics.DeviceInterfaces
                 var bright = (_bright - Convert.ToUInt16(0f)) * (65535 - 0) /
                              (Convert.ToUInt16(1f) - Convert.ToUInt16(0f)) + 0;
 
-                ushort _kelvin = 2700;
+                ushort kelvin = 2700;
 
-                if (mode == DeviceModeTypes.CASTBAR) _kelvin = 6000;
+                if (mode == DeviceModeTypes.Castbar) kelvin = 6000;
 
                 foreach (var d in _LifxBulbsDat)
-                    if (d.Value == mode || mode == DeviceModeTypes.UNKNOWN) //100
+                    if (d.Value == mode || mode == DeviceModeTypes.Unknown) //100
                     {
                         if (_LifxStateMemory[d.Key.MacAddressName] == 0) return;
                         var state = await _client.GetLightStateAsync(d.Key);
-                        var setColorTask = _client.SetColorAsync(d.Key, (ushort) hue, (ushort) sat, brightness, _kelvin,
+                        var setColorTask = _client.SetColorAsync(d.Key, (ushort) hue, (ushort) sat, brightness, kelvin,
                             _transition);
                         var throttleTask = Task.Delay(50);
                         //Ensure task takes minimum 50 ms (no more than 20 messages per second)
-                        _LIFXpendingUpdateColorBright = Task.WhenAll(setColorTask, throttleTask);
+                        _lifXpendingUpdateColorBright = Task.WhenAll(setColorTask, throttleTask);
                     }
 
-                _LIFXpendingUpdateColorBright = null;
-                if (_LIFXpendingUpdateColorActionBright != null)
+                _lifXpendingUpdateColorBright = null;
+                if (_lifXpendingUpdateColorActionBright != null)
                 {
-                    var a = _LIFXpendingUpdateColorActionBright;
-                    _LIFXpendingUpdateColorActionBright = null;
+                    var a = _lifXpendingUpdateColorActionBright;
+                    _lifXpendingUpdateColorActionBright = null;
                     a();
                 }
             }
@@ -253,30 +253,30 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (_Flash4)
                 {
-                    if (!Flash4Running)
+                    if (!_flash4Running)
                     {
-                        Flash4Running = true;
-                        Flash4Step = 0;
+                        _flash4Running = true;
+                        _flash4Step = 0;
                     }
 
-                    if (Flash4Running)
-                        while (Flash4Running)
+                    if (_flash4Running)
+                        while (_flash4Running)
                         {
                             if (cts.IsCancellationRequested)
                             {
-                                LIFXUpdateState(DeviceModeTypes.DUTY_FINDER, basecol, 1000);
+                                LifxUpdateState(DeviceModeTypes.DutyFinder, basecol, 1000);
                                 break;
                             }
 
-                            if (Flash4Step == 0)
+                            if (_flash4Step == 0)
                             {
-                                LIFXUpdateState(DeviceModeTypes.DUTY_FINDER, burstcol, 0);
-                                Flash4Step = 1;
+                                LifxUpdateState(DeviceModeTypes.DutyFinder, burstcol, 0);
+                                _flash4Step = 1;
                             }
-                            else if (Flash4Step == 1)
+                            else if (_flash4Step == 1)
                             {
-                                LIFXUpdateState(DeviceModeTypes.DUTY_FINDER, basecol, 0);
-                                Flash4Step = 0;
+                                LifxUpdateState(DeviceModeTypes.DutyFinder, basecol, 0);
+                                _flash4Step = 0;
                             }
 
                             Thread.Sleep(speed);
@@ -298,45 +298,45 @@ namespace Chromatics.DeviceInterfaces
             return await _client.GetDeviceVersionAsync(id);
         }
 
-        public async void SetColorAsync(LightBulb id, ushort Hue, ushort Saturation, ushort Brightness, ushort Kelvin,
+        public async void SetColorAsync(LightBulb id, ushort hue, ushort saturation, ushort brightness, ushort kelvin,
             TimeSpan ts)
         {
-            await _client.SetColorAsync(id, Hue, Saturation, Brightness, Kelvin, ts);
+            await _client.SetColorAsync(id, hue, saturation, brightness, kelvin, ts);
         }
 
         private void LIFXClient_DeviceLost(object sender, LifxClient.DeviceDiscoveryEventArgs e)
         {
-            write.WriteConsole(ConsoleTypes.LIFX,
+            Write.WriteConsole(ConsoleTypes.Lifx,
                 "LIFX Device Lost: " + e.Device.HostName + " (" + e.Device.MacAddress + ")");
             _LifxBulbsDat.Remove(e.Device as LightBulb);
             _LifxBulbsRestore.Remove(e.Device as LightBulb);
             _LifxDevices.Remove(e.Device.MacAddressName);
 
-            if (_LifxBulbs > 0)
-                _LifxBulbs--;
+            if (_lifxBulbs > 0)
+                _lifxBulbs--;
 
-            if (_LifxBulbs == 0)
+            if (_lifxBulbs == 0)
             {
-                LifxSDK = false;
+                _lifxSdk = false;
                 //LifxSDKCalled = 0;
-                write.WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Disabled (No Devices Found)");
+                Write.WriteConsole(ConsoleTypes.Lifx, "LIFX SDK Disabled (No Devices Found)");
             }
 
-            write.ResetDeviceDataGrid();
+            Write.ResetDeviceDataGrid();
         }
 
         private async void LIFXClient_DeviceDiscovered(object sender, LifxClient.DeviceDiscoveryEventArgs e)
         {
             var version = await _client.GetDeviceVersionAsync(e.Device);
             var state = await _client.GetLightStateAsync(e.Device as LightBulb);
-            var defaultmode = DeviceModeTypes.STANDBY;
+            var defaultmode = DeviceModeTypes.Standby;
 
             if (!_LifxModeMemory.ContainsKey(e.Device.MacAddressName))
             {
                 //Save to devices.chromatics
                 _LifxModeMemory.Add(e.Device.MacAddressName, defaultmode);
                 _LifxStateMemory.Add(e.Device.MacAddressName, 1);
-                write.SaveDevices();
+                Write.SaveDevices();
             }
             else
             {
@@ -349,19 +349,19 @@ namespace Chromatics.DeviceInterfaces
             _LifxDevices.Add(e.Device.MacAddressName, e.Device as LightBulb);
 
 
-            _LifxBulbs++;
+            _lifxBulbs++;
 
-            if (LifxSDK == false && _LifxBulbs > 0)
+            if (_lifxSdk == false && _lifxBulbs > 0)
             {
-                LifxSDK = true;
+                _lifxSdk = true;
                 //LifxSDKCalled = 1;
-                write.WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Enabled");
+                Write.WriteConsole(ConsoleTypes.Lifx, "LIFX SDK Enabled");
             }
 
-            write.WriteConsole(ConsoleTypes.LIFX,
+            Write.WriteConsole(ConsoleTypes.Lifx,
                 "LIFX Bulb Found: " + state.Label + " (" + e.Device.MacAddressName + ")");
 
-            write.ResetDeviceDataGrid();
+            Write.ResetDeviceDataGrid();
         }
     }
 }

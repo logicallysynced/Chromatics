@@ -13,7 +13,7 @@ namespace Chromatics.DeviceInterfaces
 {
     internal class RoccatInterface
     {
-        public static RoccatLib InitializeRoccatSDK()
+        public static RoccatLib InitializeRoccatSdk()
         {
             RoccatLib roccat = null;
 
@@ -21,7 +21,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 roccat = new RoccatLib();
 
-                var roccatstat = roccat.InitializeSDK();
+                var roccatstat = roccat.InitializeSdk();
 
                 if (!roccatstat)
                     return null;
@@ -38,9 +38,9 @@ namespace Chromatics.DeviceInterfaces
 
     public interface IRoccatSdk
     {
-        bool InitializeSDK();
+        bool InitializeSdk();
         void Shutdown();
-        void ResetRoccatDevices(bool DeviceKeyboard, Color basecol);
+        void ResetRoccatDevices(bool deviceKeyboard, Color basecol);
 
         void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
             [Optional] bool direction, [Optional] int speed);
@@ -48,16 +48,16 @@ namespace Chromatics.DeviceInterfaces
 
     public class RoccatLib : IRoccatSdk
     {
-        private static readonly ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
-        private static RyosTalkFXConnection client;
+        private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
+        private static RyosTalkFXConnection _client;
 
         private static readonly KeyboardState MasterState = new KeyboardState();
 
-        private readonly CancellationTokenSource CCTS = new CancellationTokenSource();
+        private readonly CancellationTokenSource _ccts = new CancellationTokenSource();
 
         #region keytranslator
 
-        private readonly Dictionary<string, Key> KeyIDs = new Dictionary<string, Key>
+        private readonly Dictionary<string, Key> _keyIDs = new Dictionary<string, Key>
         {
             //Keys
             {"D1", KeyboardLayout_EN.ONE},
@@ -162,15 +162,15 @@ namespace Chromatics.DeviceInterfaces
         #endregion
 
         private bool _initialized;
-        private bool RoccatDeviceKeyboard = true;
+        private bool _roccatDeviceKeyboard = true;
 
-        public bool InitializeSDK()
+        public bool InitializeSdk()
         {
             try
             {
-                client = new RyosTalkFXConnection();
-                client.Initialize();
-                client.EnterSdkMode();
+                _client = new RyosTalkFXConnection();
+                _client.Initialize();
+                _client.EnterSdkMode();
                 _initialized = true;
 
                 //client.SetLedOn(KeyboardLayout_EN);
@@ -179,7 +179,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                write.WriteConsole(ConsoleTypes.ROCCAT, "Roccat SDK failed to load. Error: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Roccat, "Roccat SDK failed to load. Error: " + ex.Message);
                 return false;
             }
         }
@@ -188,17 +188,17 @@ namespace Chromatics.DeviceInterfaces
         {
             if (_initialized)
             {
-                client.ExitSdkMode();
+                _client.ExitSdkMode();
                 _initialized = false;
             }
         }
 
-        public void ResetRoccatDevices(bool DeviceKeyboard, Color basecol)
+        public void ResetRoccatDevices(bool deviceKeyboard, Color basecol)
         {
-            RoccatDeviceKeyboard = DeviceKeyboard;
+            _roccatDeviceKeyboard = deviceKeyboard;
 
             if (_initialized)
-                if (RoccatDeviceKeyboard)
+                if (_roccatDeviceKeyboard)
                     UpdateState("static", basecol, false);
                 else
                     Shutdown();
@@ -216,7 +216,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 try
                 {
-                    if (RoccatDeviceKeyboard && disablekeys != true)
+                    if (_roccatDeviceKeyboard && disablekeys != true)
                     {
                         //
                     }
@@ -230,68 +230,68 @@ namespace Chromatics.DeviceInterfaces
             {
                 try
                 {
-                    if (RoccatDeviceKeyboard && disablekeys != true)
+                    if (_roccatDeviceKeyboard && disablekeys != true)
                         UpdateRoccatStateAll(col);
                 }
                 catch (Exception ex)
                 {
-                    write.WriteConsole(ConsoleTypes.ERROR, "Corsair (Static)" + ex.Message);
+                    Write.WriteConsole(ConsoleTypes.Error, "Corsair (Static)" + ex.Message);
                 }
             }
             else if (type == "transition")
             {
-                var _CrSt = new Task(() =>
+                var crSt = new Task(() =>
                 {
-                    if (RoccatDeviceKeyboard && disablekeys != true)
+                    if (_roccatDeviceKeyboard && disablekeys != true)
                     {
                         //
                     }
                 });
-                MemoryTasks.Add(_CrSt);
-                MemoryTasks.Run(_CrSt);
+                MemoryTasks.Add(crSt);
+                MemoryTasks.Run(crSt);
             }
             else if (type == "wave")
             {
-                var _CrSt = new Task(() =>
+                var crSt = new Task(() =>
                 {
-                    if (RoccatDeviceKeyboard && disablekeys != true)
+                    if (_roccatDeviceKeyboard && disablekeys != true)
                     {
                         //
                     }
                 });
-                MemoryTasks.Add(_CrSt);
-                MemoryTasks.Run(_CrSt);
+                MemoryTasks.Add(crSt);
+                MemoryTasks.Run(crSt);
             }
             else if (type == "breath")
             {
-                var _CrSt = new Task(() =>
+                var crSt = new Task(() =>
                 {
                     try
                     {
-                        if (RoccatDeviceKeyboard && disablekeys != true)
+                        if (_roccatDeviceKeyboard && disablekeys != true)
                         {
                             //
                         }
                     }
                     catch (Exception ex)
                     {
-                        write.WriteConsole(ConsoleTypes.ERROR, "Coolermaster (Breath): " + ex.Message);
+                        Write.WriteConsole(ConsoleTypes.Error, "Coolermaster (Breath): " + ex.Message);
                     }
                 });
-                MemoryTasks.Add(_CrSt);
-                MemoryTasks.Run(_CrSt);
+                MemoryTasks.Add(crSt);
+                MemoryTasks.Run(crSt);
             }
             else if (type == "pulse")
             {
-                var _CrSt = new Task(() =>
+                var crSt = new Task(() =>
                 {
-                    if (RoccatDeviceKeyboard && disablekeys != true)
+                    if (_roccatDeviceKeyboard && disablekeys != true)
                     {
                         //
                     }
-                }, CCTS.Token);
-                MemoryTasks.Add(_CrSt);
-                MemoryTasks.Run(_CrSt);
+                }, _ccts.Token);
+                MemoryTasks.Add(crSt);
+                MemoryTasks.Run(crSt);
                 //RzPulse = true;
             }
 
@@ -304,10 +304,10 @@ namespace Chromatics.DeviceInterfaces
                 return;
 
 
-            if (RoccatDeviceKeyboard)
+            if (_roccatDeviceKeyboard)
             {
                 MasterState.AllLedsOn();
-                client.SetWholeKeyboardState(MasterState);
+                _client.SetWholeKeyboardState(MasterState);
             }
         }
 
@@ -316,16 +316,16 @@ namespace Chromatics.DeviceInterfaces
             if (!_initialized)
                 return;
 
-            if (RoccatDeviceKeyboard)
+            if (_roccatDeviceKeyboard)
             {
-                foreach (var key in KeyIDs)
+                foreach (var key in _keyIDs)
                 {
                     //
                 }
 
 
                 MasterState.AllLedsOn();
-                client.SetWholeKeyboardState(MasterState);
+                _client.SetWholeKeyboardState(MasterState);
             }
         }
     }

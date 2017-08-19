@@ -817,7 +817,7 @@
             this.mi_updatecheck,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(237, 166);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(231, 166);
             // 
             // mi_effectsenable
             // 
@@ -825,44 +825,44 @@
             this.mi_effectsenable.CheckOnClick = true;
             this.mi_effectsenable.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mi_effectsenable.Name = "mi_effectsenable";
-            this.mi_effectsenable.Size = new System.Drawing.Size(236, 26);
+            this.mi_effectsenable.Size = new System.Drawing.Size(230, 26);
             this.mi_effectsenable.Text = "Toggle Lighting Effects";
             // 
             // mi_arxenable
             // 
             this.mi_arxenable.CheckOnClick = true;
             this.mi_arxenable.Name = "mi_arxenable";
-            this.mi_arxenable.Size = new System.Drawing.Size(236, 26);
+            this.mi_arxenable.Size = new System.Drawing.Size(230, 26);
             this.mi_arxenable.Text = "Enable Arx";
             // 
             // mi_winstart
             // 
             this.mi_winstart.CheckOnClick = true;
             this.mi_winstart.Name = "mi_winstart";
-            this.mi_winstart.Size = new System.Drawing.Size(236, 26);
+            this.mi_winstart.Size = new System.Drawing.Size(230, 26);
             this.mi_winstart.Text = "Enable on Startup";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(233, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(227, 6);
             // 
             // mi_showwindow
             // 
             this.mi_showwindow.Name = "mi_showwindow";
-            this.mi_showwindow.Size = new System.Drawing.Size(236, 26);
+            this.mi_showwindow.Size = new System.Drawing.Size(230, 26);
             this.mi_showwindow.Text = "Show Window";
             // 
             // mi_updatecheck
             // 
             this.mi_updatecheck.Name = "mi_updatecheck";
-            this.mi_updatecheck.Size = new System.Drawing.Size(236, 26);
+            this.mi_updatecheck.Size = new System.Drawing.Size(230, 26);
             this.mi_updatecheck.Text = "Check for Updates";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(236, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(230, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // notify_master
@@ -880,7 +880,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.2.5 Beta";
+            this.Text = "Chromatics 2.2.8 Beta";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
