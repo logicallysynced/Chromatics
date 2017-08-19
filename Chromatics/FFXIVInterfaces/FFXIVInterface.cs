@@ -1,19 +1,17 @@
 ﻿using System;
-using System.CodeDom;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Interactivity;
+using Chromatics.DeviceInterfaces.EffectLibrary;
+using Chromatics.FFXIVInterfaces;
 using Sharlayan;
+using Sharlayan.Core;
+using Sharlayan.Core.Enums;
 using Sharlayan.Models;
-using Chromatics.LCDInterfaces;
-using System.Collections.Concurrent;
-using System.Net;
-using System.IO;
-using System.Windows.Forms;
 
 
 /* Contains the code to read the FFXIV Memory Stream, parse the data and convert to lighting commands
@@ -26,113 +24,28 @@ namespace Chromatics
     partial class Chromatics
     {
         private Color _BaseColor = Color.Black;
+
+        private Cooldowns.CardTypes _CurrentCard;
         private string _CurrentStatus = "";
+        private bool _dfcount;
+        private bool _dfpop;
         private int _hp;
+        private bool _targeted;
+        private bool castalert;
 
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
          */
 
         private bool lastcast;
+        private bool MenuNotify;
+
+        //private static readonly object _ReadFFXIVMemory = new object();
+        private ActorEntity PlayerInfo = new ActorEntity();
+
+        private ConcurrentDictionary<uint, ActorEntity> PlayerInfoX = new ConcurrentDictionary<uint, ActorEntity>();
+        private bool playgroundonce;
         private bool successcast;
-
-        /* Attatch to FFXIV process after determining if running DX9 or DX11.
-         * DX9 is not supported by Sharlayan anymore.
-        */
-
-        public bool InitiateMemory()
-        {
-            var _initiated = false;
-
-            try
-            {
-
-                var processes9 = Process.GetProcessesByName("ffxiv");
-                var processes11 = Process.GetProcessesByName("ffxiv_dx11");
-
-                // DX9
-                if (processes9.Length > 0)
-                {
-                    WriteConsole(ConsoleTypes.FFXIV, "Attempting Attach..");
-
-                    if (init)
-                    {
-                        WriteConsole(ConsoleTypes.FFXIV, "Chromatics already attached.");
-                        return true;
-                    }
-
-                    init = false;
-                    // supported: English, Chinese, Japanese, French, German, Korean
-                    var gameLanguage = "English";
-                    bool ignoreJSONCache = ChromaticsSettings.ChromaticsSettings_MemoryCache ? false : true;
-                    // patchVersion of game, or latest
-                    string patchVersion = "latest";
-                    var process = processes9[0];
-                    var processModel = new ProcessModel
-                    {
-                        Process = process,
-                        IsWin64 = true
-                    };
-                    Sharlayan.MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJSONCache);
-                    _initiated = true;
-                    init = true;
-                    isDX11 = false;
-
-                    WriteConsole(ConsoleTypes.FFXIV, "DX9 Initiated");
-                    WriteConsole(ConsoleTypes.ERROR, "DX9 support has been phased out from Chromatics. Please use DX11 when using Chromatics.");
-                }
-
-                // DX11
-                else if (processes11.Length > 0)
-                {
-                    WriteConsole(ConsoleTypes.FFXIV, "Attempting Attach..");
-
-                    if (init)
-                    {
-                        return true;
-                    }
-
-
-                    init = false;
-                    // supported: English, Chinese, Japanese, French, German, Korean
-                    var gameLanguage = "English";
-                    bool ignoreJSONCache = ChromaticsSettings.ChromaticsSettings_MemoryCache ? false : true;
-                    // patchVersion of game, or latest
-                    string patchVersion = "latest";
-                    var process = processes11[0];
-                    var processModel = new ProcessModel
-                    {
-                        Process = process,
-                        IsWin64 = true
-                    };
-                    Sharlayan.MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJSONCache);
-                    _initiated = true;
-                    init = true;
-                    isDX11 = true;
-
-                    WriteConsole(ConsoleTypes.FFXIV, "DX11 Initiated");
-                    
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteConsole(ConsoleTypes.ERROR, "Error: " + ex.Message);
-                WriteConsole(ConsoleTypes.ERROR, "Internal Error: " + ex.StackTrace);
-            }
-            
-            return _initiated;
-        }
-
-        /* Memory Loop */
-
-        private async Task CallFFXIVMemory(CancellationToken ct)
-        {
-            while (!ct.IsCancellationRequested)
-            {
-                await Task.Delay(300);
-                ReadFFXIVMemory();
-            }
-        }
 
         public void FFXIVGameStop()
         {
@@ -154,11 +67,101 @@ namespace Chromatics
             FFXIVcts.Cancel();
         }
 
-        //private static readonly object _ReadFFXIVMemory = new object();
-        private Sharlayan.Core.ActorEntity PlayerInfo = new Sharlayan.Core.ActorEntity();
-        private ConcurrentDictionary<uint, Sharlayan.Core.ActorEntity> PlayerInfoX = new ConcurrentDictionary<uint, Sharlayan.Core.ActorEntity>();
-        private bool MenuNotify = false;
-        
+        /* Attatch to FFXIV process after determining if running DX9 or DX11.
+         * DX9 is not supported by Sharlayan anymore.
+        */
+
+        public bool InitiateMemory()
+        {
+            var _initiated = false;
+
+            try
+            {
+                var processes9 = Process.GetProcessesByName("ffxiv");
+                var processes11 = Process.GetProcessesByName("ffxiv_dx11");
+
+                // DX9
+                if (processes9.Length > 0)
+                {
+                    WriteConsole(ConsoleTypes.FFXIV, "Attempting Attach..");
+
+                    if (init)
+                    {
+                        WriteConsole(ConsoleTypes.FFXIV, "Chromatics already attached.");
+                        return true;
+                    }
+
+                    init = false;
+                    // supported: English, Chinese, Japanese, French, German, Korean
+                    var gameLanguage = "English";
+                    var ignoreJSONCache = ChromaticsSettings.ChromaticsSettings_MemoryCache ? false : true;
+                    // patchVersion of game, or latest
+                    var patchVersion = "latest";
+                    var process = processes9[0];
+                    var processModel = new ProcessModel
+                    {
+                        Process = process,
+                        IsWin64 = true
+                    };
+                    MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJSONCache);
+                    _initiated = true;
+                    init = true;
+                    isDX11 = false;
+
+                    WriteConsole(ConsoleTypes.FFXIV, "DX9 Initiated");
+                    WriteConsole(ConsoleTypes.ERROR,
+                        "DX9 support has been phased out from Chromatics. Please use DX11 when using Chromatics.");
+                }
+
+                // DX11
+                else if (processes11.Length > 0)
+                {
+                    WriteConsole(ConsoleTypes.FFXIV, "Attempting Attach..");
+
+                    if (init)
+                        return true;
+
+
+                    init = false;
+                    // supported: English, Chinese, Japanese, French, German, Korean
+                    var gameLanguage = "English";
+                    var ignoreJSONCache = ChromaticsSettings.ChromaticsSettings_MemoryCache ? false : true;
+                    // patchVersion of game, or latest
+                    var patchVersion = "latest";
+                    var process = processes11[0];
+                    var processModel = new ProcessModel
+                    {
+                        Process = process,
+                        IsWin64 = true
+                    };
+                    MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJSONCache);
+                    _initiated = true;
+                    init = true;
+                    isDX11 = true;
+
+                    WriteConsole(ConsoleTypes.FFXIV, "DX11 Initiated");
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteConsole(ConsoleTypes.ERROR, "Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.ERROR, "Internal Error: " + ex.StackTrace);
+            }
+
+            return _initiated;
+        }
+
+        /* Memory Loop */
+
+        private async Task CallFFXIVMemory(CancellationToken ct)
+        {
+            while (!ct.IsCancellationRequested)
+            {
+                await Task.Delay(300);
+                ReadFFXIVMemory();
+            }
+        }
+
         public void ReadFFXIVMemory()
         {
             try
@@ -174,9 +177,7 @@ namespace Chromatics
                 var processes11 = Process.GetProcessesByName("ffxiv_dx11");
 
                 if (processes11.Length == 0)
-                {
                     FFXIVGameStop();
-                }
 
 
                 if (attatched > 0)
@@ -184,15 +185,15 @@ namespace Chromatics
                     //Get Data
 
                     PlayerInfoX = Reader.GetActors()?.PCEntities;
-                    PlayerInfo = Sharlayan.Core.ActorEntity.CurrentUser;
-                    
+                    PlayerInfo = ActorEntity.CurrentUser;
+
                     //Console.WriteLine(PlayerInfo.Name);
                     //Action
                     if (attatched == 3)
                     {
                         //Game is Running
                         //Check if game has stopped by checking Character data for a null value.
-                        
+
                         if (PlayerInfo != null && PlayerInfo.Name == "")
                         {
                             //End Game Running if timed out
@@ -207,7 +208,6 @@ namespace Chromatics
                         {
                             GameResetCatch.Enabled = false;
                         }
-                        
 
 
                         //Call function to parse FFXIV data
@@ -234,9 +234,7 @@ namespace Chromatics
 
 
                                 if (ArxSDKCalled == 1 && ArxState == 0)
-                                {
                                     _arx.ArxUpdateInfo("Game Running (" + PlayerInfo.Name + ")");
-                                }
 
                                 MenuNotify = false;
                                 Setbase = false;
@@ -267,9 +265,7 @@ namespace Chromatics
                                                 _arx.ArxSetIndex("act.html");
                                                 var changed = txt_arx_actip.Text;
                                                 if (changed.EndsWith("/"))
-                                                {
                                                     changed = changed.Substring(0, changed.Length - 1);
-                                                }
 
                                                 _arx.ArxSendACTInfo(changed, 8085);
                                                 break;
@@ -293,9 +289,7 @@ namespace Chromatics
                                     WriteConsole(ConsoleTypes.FFXIV, "Main Menu is still active.");
 
                                     if (ArxSDKCalled == 1 && ArxState == 0)
-                                    {
                                         _arx.ArxUpdateInfo("Main Menu is still active");
-                                    }
 
                                     MenuNotify = true;
                                 }
@@ -310,9 +304,7 @@ namespace Chromatics
                     ArxState = 0;
 
                     if (ArxSDKCalled == 1 && ArxState == 0)
-                    {
                         _arx.ArxSetIndex("info.html");
-                    }
 
                     GlobalUpdateState("static", Color.DeepSkyBlue, false);
                     //GlobalApplyMapMouseLighting("All", Color.DeepSkyBlue, false);
@@ -338,31 +330,24 @@ namespace Chromatics
                 WriteConsole(ConsoleTypes.ERROR, "Internal Error: " + ex.StackTrace);
             }
         }
-        
-        private FFXIVInterfaces.Cooldowns.CardTypes _CurrentCard;
-        private bool playgroundonce = false;
-        private bool castalert = false;
-        private bool _targeted;
-        private bool _dfpop;
-        private bool _dfcount;
+
         private void ProcessFFXIVData()
         {
             MemoryTasks.Cleanup();
 
             try
             {
-
                 //Get Data
-                Sharlayan.Core.ActorEntity TargetInfo = new Sharlayan.Core.ActorEntity();
-                List<Sharlayan.Core.EnmityEntry> TargetEmnityInfo = new List<Sharlayan.Core.EnmityEntry>();
-                ConcurrentDictionary<uint, Sharlayan.Core.PartyEntity> PartyInfo = new ConcurrentDictionary<uint, Sharlayan.Core.PartyEntity>();
-                List<uint> PartyListNew = new List<uint>();
-                Dictionary<uint, uint> PartyListOld = new Dictionary<uint, uint>();
-                
+                var TargetInfo = new ActorEntity();
+                var TargetEmnityInfo = new List<EnmityEntry>();
+                var PartyInfo = new ConcurrentDictionary<uint, PartyEntity>();
+                var PartyListNew = new List<uint>();
+                var PartyListOld = new Dictionary<uint, uint>();
+
 
                 PlayerInfoX = Reader.GetActors()?.PCEntities;
-                PlayerInfo = Sharlayan.Core.ActorEntity.CurrentUser;
-                
+                PlayerInfo = ActorEntity.CurrentUser;
+
                 try
                 {
                     if (PlayerInfo.Name != "" && PlayerInfo.TargetID > 0)
@@ -380,26 +365,16 @@ namespace Chromatics
                 {
                     WriteConsole(ConsoleTypes.ERROR, "Parser B: " + ex.Message);
                 }
-                
-                
+
+
                 if (PlayerInfo != null && PlayerInfo.Name != "")
-                {
-                    //Debug.WriteLine(PlayerInfo.Name);
                     Watchdog.WatchdogReset();
-                }
-                
+
 
                 if (PlayerInfo != null)
                 {
-                    
-                    
-
-
                     if (!playgroundonce)
-                    {
-                        
                         playgroundonce = true;
-                    }
 
                     /*
                     var mapname = Sharlayan.Helpers.ZoneHelper.MapInfo(PlayerInfo.MapID).Name;
@@ -432,6 +407,7 @@ namespace Chromatics
                     var col_tpfull = ColorTranslator.FromHtml(ColorMappings.ColorMapping_TPFull);
                     var col_tpempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_TPEmpty);
                     var col_castcharge = ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeFull);
+                    var col_castempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_CastChargeEmpty);
 
                     var col_em0 = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Emnity0);
                     var col_em1 = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Emnity1);
@@ -443,9 +419,11 @@ namespace Chromatics
 
                     //Get Battle, Crafting or Gathering Data
 
-                    if (PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.ALC || PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.ARM || PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.BSM ||
-                        PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.CPT || PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.CUL || PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.GSM ||
-                        PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.LTW || PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.WVR)
+                    if (PlayerInfo.Job == Actor.Job.ALC || PlayerInfo.Job == Actor.Job.ARM ||
+                        PlayerInfo.Job == Actor.Job.BSM ||
+                        PlayerInfo.Job == Actor.Job.CPT || PlayerInfo.Job == Actor.Job.CUL ||
+                        PlayerInfo.Job == Actor.Job.GSM ||
+                        PlayerInfo.Job == Actor.Job.LTW || PlayerInfo.Job == Actor.Job.WVR)
                     {
                         max_HP = PlayerInfo.HPMax;
                         current_HP = PlayerInfo.HPCurrent;
@@ -459,7 +437,8 @@ namespace Chromatics
                         col_mpfull = ColorTranslator.FromHtml(ColorMappings.ColorMapping_CPFull);
                         col_mpempty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_CPEmpty);
                     }
-                    else if (PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.FSH || PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.BTN || PlayerInfo.Job == Sharlayan.Core.Enums.Actor.Job.MIN)
+                    else if (PlayerInfo.Job == Actor.Job.FSH || PlayerInfo.Job == Actor.Job.BTN ||
+                             PlayerInfo.Job == Actor.Job.MIN)
                     {
                         max_HP = PlayerInfo.HPMax;
                         current_HP = PlayerInfo.HPCurrent;
@@ -489,7 +468,7 @@ namespace Chromatics
                     }
 
                     //Update ARX
-                    if (PartyInfo != null) 
+                    if (PartyInfo != null)
                     {
                         //Console.WriteLine(PartyInfo[0]);
                         //var partyx = PartyList[1];
@@ -497,7 +476,6 @@ namespace Chromatics
                     }
 
                     if (ArxSDKCalled == 1)
-                    {
                         if (ArxState == 1)
                         {
                             hp_perc = PlayerInfo.HPPercent;
@@ -505,12 +483,12 @@ namespace Chromatics
 
                             var arx_hudmd = "normal";
                             double target_percent = 0;
-                            int target_hpcurrent = 0;
-                            int target_hpmax = 0;
-                            string target_name = "target";
-                            int target_engaged = 0;
+                            var target_hpcurrent = 0;
+                            var target_hpmax = 0;
+                            var target_name = "target";
+                            var target_engaged = 0;
 
-                            if (TargetInfo != null && TargetInfo.Type == Sharlayan.Core.Enums.Actor.Type.Monster)
+                            if (TargetInfo != null && TargetInfo.Type == Actor.Type.Monster)
                             {
                                 arx_hudmd = "target";
                                 target_percent = TargetInfo.HPPercent;
@@ -520,19 +498,18 @@ namespace Chromatics
                                 target_engaged = 0;
 
                                 if (TargetInfo.IsClaimed)
-                                {
                                     target_engaged = 1;
-                                }
                             }
 
-                            _arx.ArxUpdateFfxivStats(hp_perc, mp_perc, tp_perc, current_HP, current_MP, current_TP, PlayerInfo.MapID, c_class, arx_hudmd, target_percent, target_hpcurrent, target_hpmax, target_name, target_engaged);
+                            _arx.ArxUpdateFfxivStats(hp_perc, mp_perc, tp_perc, current_HP, current_MP, current_TP,
+                                PlayerInfo.MapID, c_class, arx_hudmd, target_percent, target_hpcurrent, target_hpmax,
+                                target_name, target_engaged);
                         }
                         else if (ArxState == 2)
                         {
                             Console.WriteLine(PartyInfo.Count);
                             var datastring = new string[10];
                             for (uint i = 0; i < 10; i++)
-                            {
                                 //Console.WriteLine(i);
                                 //PlayerInfo.Job == "ALC" || PlayerInfo.Job == "ARM" || PlayerInfo.Job == "BSM" || PlayerInfo.Job == "CPT" || PlayerInfo.Job == "CUL" || PlayerInfo.Job == "GSM" || PlayerInfo.Job == "LTW" || PlayerInfo.Job == "WVR")
                                 if (PartyInfo != null && i < PartyInfo.Count)
@@ -545,7 +522,8 @@ namespace Chromatics
                                     var pt_emnityno = "";
                                     var pt_job = "";
 
-                                    if (TargetInfo != null && TargetInfo.Type == Sharlayan.Core.Enums.Actor.Type.Monster && TargetInfo.IsClaimed)
+                                    if (TargetInfo != null && TargetInfo.Type == Actor.Type.Monster &&
+                                        TargetInfo.IsClaimed)
                                     {
                                         //Collect Emnity Table
                                         //var TargetEmnity = TargetEmnityInfo.Count;
@@ -560,8 +538,8 @@ namespace Chromatics
                                         _emnitytableX.OrderBy(kvp => kvp.Value);
 
                                         //Get your index in the list
-                                        pt_emnityno = _emnitytableX.FindIndex(a => a.Key == PartyInfo[pid].ID).ToString();
-
+                                        pt_emnityno = _emnitytableX.FindIndex(a => a.Key == PartyInfo[pid].ID)
+                                            .ToString();
                                     }
                                     else
                                     {
@@ -570,143 +548,143 @@ namespace Chromatics
 
                                     switch (PartyInfo[pid].Job)
                                     {
-                                        case Sharlayan.Core.Enums.Actor.Job.FSH:
+                                        case Actor.Job.FSH:
                                             pt_type = "player";
                                             pt_job = "Fisher";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.BTN:
+                                        case Actor.Job.BTN:
                                             pt_type = "player";
                                             pt_job = "Botanist";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.MIN:
+                                        case Actor.Job.MIN:
                                             pt_type = "player";
                                             pt_job = "Miner";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.ALC:
+                                        case Actor.Job.ALC:
                                             pt_type = "player";
                                             pt_job = "Alchemist";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.ARM:
+                                        case Actor.Job.ARM:
                                             pt_type = "player";
                                             pt_job = "Armorer";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.BSM:
+                                        case Actor.Job.BSM:
                                             pt_type = "player";
                                             pt_job = "Blacksmith";
                                             break;
-                                            case Sharlayan.Core.Enums.Actor.Job.CPT:
+                                        case Actor.Job.CPT:
                                             pt_type = "player";
                                             pt_job = "Carpenter";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.CUL:
+                                        case Actor.Job.CUL:
                                             pt_type = "player";
                                             pt_job = "Culinarian";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.GSM:
+                                        case Actor.Job.GSM:
                                             pt_type = "player";
                                             pt_job = "Goldsmith";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.LTW:
+                                        case Actor.Job.LTW:
                                             pt_type = "player";
                                             pt_job = "Leatherworker";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.WVR:
+                                        case Actor.Job.WVR:
                                             pt_type = "player";
                                             pt_job = "Weaver";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.ARC:
+                                        case Actor.Job.ARC:
                                             pt_type = "player";
                                             pt_job = "Archer";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.LNC:
+                                        case Actor.Job.LNC:
                                             pt_type = "player";
                                             pt_job = "Lancer";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.CNJ:
+                                        case Actor.Job.CNJ:
                                             pt_type = "player";
                                             pt_job = "Conjurer";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.GLD:
+                                        case Actor.Job.GLD:
                                             pt_type = "player";
                                             pt_job = "Gladiator";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.MRD:
+                                        case Actor.Job.MRD:
                                             pt_type = "player";
                                             pt_job = "Marauder";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.PGL:
+                                        case Actor.Job.PGL:
                                             pt_type = "player";
                                             pt_job = "Pugilist";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.ROG:
+                                        case Actor.Job.ROG:
                                             pt_type = "player";
                                             pt_job = "Rouge";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.THM:
+                                        case Actor.Job.THM:
                                             pt_type = "player";
                                             pt_job = "Thaumaturge";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.ACN:
+                                        case Actor.Job.ACN:
                                             pt_type = "player";
                                             pt_job = "Arcanist";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.AST:
+                                        case Actor.Job.AST:
                                             pt_type = "player";
                                             pt_job = "Astrologian";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.BRD:
+                                        case Actor.Job.BRD:
                                             pt_type = "player";
                                             pt_job = "Bard";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.BLM:
+                                        case Actor.Job.BLM:
                                             pt_type = "player";
                                             pt_job = "Black_Mage";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.DRK:
+                                        case Actor.Job.DRK:
                                             pt_type = "player";
                                             pt_job = "Dark_Knight";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.DRG:
+                                        case Actor.Job.DRG:
                                             pt_type = "player";
                                             pt_job = "Dragoon";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.MCH:
+                                        case Actor.Job.MCH:
                                             pt_type = "player";
                                             pt_job = "Machinist";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.MNK:
+                                        case Actor.Job.MNK:
                                             pt_type = "player";
                                             pt_job = "Monk";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.NIN:
+                                        case Actor.Job.NIN:
                                             pt_type = "player";
                                             pt_job = "Ninja";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.PLD:
+                                        case Actor.Job.PLD:
                                             pt_type = "player";
                                             pt_job = "Paladin";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.SCH:
+                                        case Actor.Job.SCH:
                                             pt_type = "player";
                                             pt_job = "Scholar";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.SMN:
+                                        case Actor.Job.SMN:
                                             pt_type = "player";
                                             pt_job = "Summoner";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.WHM:
+                                        case Actor.Job.WHM:
                                             pt_type = "player";
                                             pt_job = "White_Mage";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.WAR:
+                                        case Actor.Job.WAR:
                                             pt_type = "player";
                                             pt_job = "Warrior";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.SAM:
+                                        case Actor.Job.SAM:
                                             pt_type = "player";
                                             pt_job = "Samurai";
                                             break;
-                                        case Sharlayan.Core.Enums.Actor.Job.RDM:
+                                        case Actor.Job.RDM:
                                             pt_type = "player";
                                             pt_job = "Red_Mage";
                                             break;
@@ -727,7 +705,12 @@ namespace Chromatics
                                         pt_tpcurrent = "1000";
                                     }
 
-                                    datastring[i] = "1," + pt_type + "," + PartyInfo[pid].Name + "," + PartyInfo[pid].HPPercent.ToString("#0%") + "," + PartyInfo[pid].HPCurrent + "," + PartyInfo[pid].MPPercent.ToString("#0%") + "," + PartyInfo[pid].MPCurrent + "," + pt_tppercent + "," + pt_tpcurrent + "," + pt_emnityno + "," + pt_job;
+                                    datastring[i] = "1," + pt_type + "," + PartyInfo[pid].Name + "," +
+                                                    PartyInfo[pid].HPPercent.ToString("#0%") + "," +
+                                                    PartyInfo[pid].HPCurrent + "," +
+                                                    PartyInfo[pid].MPPercent.ToString("#0%") + "," +
+                                                    PartyInfo[pid].MPCurrent + "," + pt_tppercent + "," + pt_tpcurrent +
+                                                    "," + pt_emnityno + "," + pt_job;
                                     Console.WriteLine(i + @": " + datastring[i]);
                                 }
                                 else
@@ -735,18 +718,17 @@ namespace Chromatics
                                     datastring[i] = "0,0,0,0,0,0,0,0,0";
                                     //Console.WriteLine(i + @": " + datastring[i]);
                                 }
-                            }
 
-                            _arx.ArxUpdateFfxivParty(datastring[1], datastring[2], datastring[3], datastring[4], datastring[5], datastring[6], datastring[7], datastring[8], datastring[9]);
-
+                            _arx.ArxUpdateFfxivParty(datastring[1], datastring[2], datastring[3], datastring[4],
+                                datastring[5], datastring[6], datastring[7], datastring[8], datastring[9]);
                         }
                         else if (ArxState == 100)
                         {
                             hp_perc = PlayerInfo.HPPercent;
                             tp_perc = PlayerInfo.TPPercent;
 
-                            int hp_max = PlayerInfo.HPMax;
-                            int mp_max = PlayerInfo.MPMax;
+                            var hp_max = PlayerInfo.HPMax;
+                            var mp_max = PlayerInfo.MPMax;
                             var playerposX = PlayerInfo.X;
                             var playerposY = PlayerInfo.Y;
                             var playerposZ = PlayerInfo.Z;
@@ -763,15 +745,15 @@ namespace Chromatics
                             var mapterritory = PlayerInfo.MapTerritory;
                             var playername = PlayerInfo.Name;
                             var targettype = PlayerInfo.TargetType;
-                            
+
                             var arx_hudmd = "normal";
                             double target_percent = 0;
-                            int target_hpcurrent = 0;
-                            int target_hpmax = 0;
-                            string target_name = "target";
-                            int target_engaged = 0;
+                            var target_hpcurrent = 0;
+                            var target_hpmax = 0;
+                            var target_name = "target";
+                            var target_engaged = 0;
 
-                            if (TargetInfo != null && TargetInfo.Type == Sharlayan.Core.Enums.Actor.Type.Monster)
+                            if (TargetInfo != null && TargetInfo.Type == Actor.Type.Monster)
                             {
                                 arx_hudmd = "target";
                                 target_percent = TargetInfo.HPPercent;
@@ -781,12 +763,14 @@ namespace Chromatics
                                 target_engaged = 0;
 
                                 if (TargetInfo.IsClaimed)
-                                {
                                     target_engaged = 1;
-                                }
                             }
 
-                            _arx.ArxUpdateFfxivPlugin(hp_perc, mp_perc, tp_perc, current_HP, current_MP, current_TP, PlayerInfo.MapID, c_class, arx_hudmd, target_percent, target_hpcurrent, target_hpmax, target_name, target_engaged, hp_max, mp_max, playerposX, playerposY, playerposZ, actionstatus, castperc, castprogress, casttime, castingtoggle, hitboxrad, playerclaimed, playerjob, mapid, mapindex, mapterritory, playername, targettype);
+                            _arx.ArxUpdateFfxivPlugin(hp_perc, mp_perc, tp_perc, current_HP, current_MP, current_TP,
+                                PlayerInfo.MapID, c_class, arx_hudmd, target_percent, target_hpcurrent, target_hpmax,
+                                target_name, target_engaged, hp_max, mp_max, playerposX, playerposY, playerposZ,
+                                actionstatus, castperc, castprogress, casttime, castingtoggle, hitboxrad, playerclaimed,
+                                playerjob, mapid, mapindex, mapterritory, playername, targettype);
                         }
                         else if (ArxState == 0)
                         {
@@ -797,7 +781,6 @@ namespace Chromatics
                                 _arx.ArxSetIndex("playerhud.html");
                             }
                         }
-                    }
 
                     //Console.WriteLine("Map ID: " + PlayerInfo.MapID);
 
@@ -866,11 +849,13 @@ namespace Chromatics
                     {
                         GlobalApplyMapKeyLighting("PrintScreen",
                             ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), 250);
+                        GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER,
+                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), 250);
                         GlobalApplyMapKeyLighting("Scroll",
                             ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
                             false);
-                        GlobalApplyMapKeyLighting("Pause", ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
+                        GlobalApplyMapKeyLighting("Pause",
+                            ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
                             false);
                         GlobalApplyMapKeyLighting("Macro16",
                             ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity),
@@ -967,7 +952,8 @@ namespace Chromatics
                                 }
                                 else if (Status.StatusName == "Incapacitation")
                                 {
-                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Incapacitation), 100);
+                                    GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_Incapacitation),
+                                        100);
                                     _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_Incapacitation);
                                     GlobalUpdateBulbState(DeviceModeTypes.STATUS_EFFECTS, _BaseColor, 1000);
                                 }
@@ -1083,14 +1069,11 @@ namespace Chromatics
                     //Target
                     if (TargetInfo != null)
                     {
-                        if (TargetInfo.Type == Sharlayan.Core.Enums.Actor.Type.Monster)
+                        if (TargetInfo.Type == Actor.Type.Monster)
                         {
                             if (!_targeted)
-                            {
-                                _targeted = true;           
-                            }
+                                _targeted = true;
 
-                            
 
                             //Debug.WriteLine("Claimed: " + TargetInfo.ClaimedByID);
                             //Debug.WriteLine("Claimed: " + TargetInfo.);
@@ -1273,7 +1256,7 @@ namespace Chromatics
 
 
                             //Emnity/Casting
-                                                        
+
                             if (TargetInfo.IsCasting)
                             {
                                 GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER,
@@ -1303,7 +1286,8 @@ namespace Chromatics
                                 if (!castalert)
                                 {
                                     ToggleGlobalFlash2(true);
-                                    GlobalFlash2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting), 200, new string[] { "PrintScreen", "Scroll", "Pause" });
+                                    GlobalFlash2(ColorTranslator.FromHtml(ColorMappings.ColorMapping_TargetCasting),
+                                        200, new[] {"PrintScreen", "Scroll", "Pause"});
 
                                     castalert = true;
                                 }
@@ -1356,7 +1340,6 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro16", col_em0, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em0, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em0, false);
-                                        
                                     }
                                     else if (EmnityPosition > 4 && EmnityPosition <= 8)
                                     {
@@ -1375,7 +1358,6 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro16", col_em1, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em1, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em1, false);
-                                        
                                     }
                                     else if (EmnityPosition > 1 && EmnityPosition <= 4)
                                     {
@@ -1394,7 +1376,6 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro16", col_em2, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em2, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em2, false);
-                                        
                                     }
                                     else if (EmnityPosition == 1)
                                     {
@@ -1413,7 +1394,6 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro16", col_em3, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em3, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em3, false);
-                                        
                                     }
                                     else if (EmnityPosition == 0)
                                     {
@@ -1432,7 +1412,6 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro16", col_em4, false);
                                         GlobalApplyMapKeyLighting("Macro17", col_em4, false);
                                         GlobalApplyMapKeyLighting("Macro18", col_em4, false);
-                                        
                                     }
                                 }
                                 else
@@ -1452,16 +1431,15 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("Macro16", col_em0, false);
                                     GlobalApplyMapKeyLighting("Macro17", col_em0, false);
                                     GlobalApplyMapKeyLighting("Macro18", col_em0, false);
-                                    
                                 }
-                                
                             }
                         }
                         else
                         {
                             GlobalApplyMapKeyLighting("PrintScreen",
                                 ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
-                            GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER, ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), 250);
+                            GlobalUpdateBulbState(DeviceModeTypes.ENMITY_TRACKER,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), 250);
                             GlobalApplyMapKeyLighting("Scroll",
                                 ColorTranslator.FromHtml(ColorMappings.ColorMapping_NoEmnity), false);
                             GlobalApplyMapKeyLighting("Pause",
@@ -1494,9 +1472,7 @@ namespace Chromatics
                         GlobalUpdateBulbState(DeviceModeTypes.TARGET_HP, _BaseColor, 1000);
 
                         if (_targeted)
-                        {
                             _targeted = false;
-                        }
 
                         ToggleGlobalFlash2(false);
                         castalert = false;
@@ -1516,7 +1492,8 @@ namespace Chromatics
                         //Console.WriteLine(CastPercentage);
                         lastcast = true;
 
-                        GlobalUpdateBulbStateBrightness(DeviceModeTypes.CASTBAR, col_castcharge, (ushort) pol_CastZ, 250);
+                        GlobalUpdateBulbStateBrightness(DeviceModeTypes.CASTBAR, col_castcharge, (ushort) pol_CastZ,
+                            250);
 
                         if (pol_Cast <= 1 && ChromaticsSettings.ChromaticsSettings_CastToggle)
                         {
@@ -1813,13 +1790,15 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F10", _BaseColor, false);
                                 GlobalApplyMapKeyLighting("F11", _BaseColor, false);
                                 GlobalApplyMapKeyLighting("F12", _BaseColor, false);
-
                             }
 
-                            var _cBulbRip1 = new Task(() => { GlobalUpdateBulbState(DeviceModeTypes.CASTBAR, _BaseColor, 500); });
+                            var _cBulbRip1 = new Task(() =>
+                            {
+                                GlobalUpdateBulbState(DeviceModeTypes.CASTBAR, _BaseColor, 500);
+                            });
                             MemoryTasks.Add(_cBulbRip1);
                             MemoryTasks.Run(_cBulbRip1);
-                            
+
 
                             if (successcast && ChromaticsSettings.ChromaticsSettings_CastAnimate)
                                 GlobalRipple1(col_castcharge, 80, _BaseColor);
@@ -1837,9 +1816,11 @@ namespace Chromatics
                         var pol_HPZ = (current_HP - 0) * (65535 - 0) / (max_HP - 0) + 0;
 
                         if (pol_HP <= 10)
-                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.HP_TRACKER, col_hpempty, (ushort) pol_HPZ, 250);
+                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.HP_TRACKER, col_hpempty, (ushort) pol_HPZ,
+                                250);
                         else
-                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.HP_TRACKER, col_hpfull, (ushort) pol_HPZ, 250);
+                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.HP_TRACKER, col_hpfull, (ushort) pol_HPZ,
+                                250);
 
                         if (pol_HP <= 40 && pol_HP > 30)
                         {
@@ -2342,70 +2323,70 @@ namespace Chromatics
 
                         if (ChromaticsSettings.ChromaticsSettings_ImpactToggle)
                         {
-                            if (TargetInfo != null && TargetInfo.Type == Sharlayan.Core.Enums.Actor.Type.Monster)
-                            {
+                            if (TargetInfo != null && TargetInfo.Type == Actor.Type.Monster)
                                 if (TargetInfo.IsClaimed)
-                                {
                                     if (_hp != 0 && current_HP < _hp)
                                     {
                                         _RzFl1CTS.Cancel();
                                         _CorsairF1CTS.Cancel();
-                                        GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPLoss), 100, DeviceInterfaces.EffectLibrary.DeviceEffects._GlobalKeys3);
+                                        GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMapping_HPLoss), 100,
+                                            DeviceEffects._GlobalKeys3);
                                     }
-                                }
-                            }
 
                             _hp = current_HP;
                         }
-
                     }
 
                     //DX11 Effects
 
                     if (isDX11)
                     {
-                        FFXIVInterfaces.Cooldowns.refreshData();
+                        Cooldowns.refreshData();
 
 
                         //Hotbars        
 
-                        ActionReadResult hotbars = new ActionReadResult();
+                        var hotbars = new ActionReadResult();
 
                         hotbars = Reader.GetActions();
 
                         if (ChromaticsSettings.ChromaticsSettings_KeybindToggle)
                         {
-                            FFXIVInterfaces.FFXIVHotbar.keybindwhitelist.Clear();
+                            FFXIVHotbar.keybindwhitelist.Clear();
 
                             foreach (var hotbar in hotbars.ActionEntities)
                             {
-                                if (hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_HOTBAR_1 || hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_HOTBAR_2 || hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_HOTBAR_3 ||
-                                    hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_HOTBAR_4 || hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_HOTBAR_5 || hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_HOTBAR_6 ||
-                                    hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_HOTBAR_7 || hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_HOTBAR_8 || hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.PETBAR ||
-                                    hotbar.Type == Sharlayan.Core.Enums.HotBarRecast.Container.CROSS_PETBAR) continue;
+                                if (hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_1 ||
+                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_2 ||
+                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_3 ||
+                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_4 ||
+                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_5 ||
+                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_6 ||
+                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_7 ||
+                                    hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_8 ||
+                                    hotbar.Type == HotBarRecast.Container.PETBAR ||
+                                    hotbar.Type == HotBarRecast.Container.CROSS_PETBAR) continue;
 
                                 foreach (var action in hotbar.Actions)
                                 {
-                                    if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) || string.IsNullOrEmpty(action.KeyBinds) || string.IsNullOrEmpty(action.ActionKey)) continue;
+                                    if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) ||
+                                        string.IsNullOrEmpty(action.KeyBinds) ||
+                                        string.IsNullOrEmpty(action.ActionKey)) continue;
 
                                     //Collect Modifier Info
                                     var modsactive = action.Modifiers.Count;
                                     var _modsactive = modsactive;
 
-                                    if (!FFXIVInterfaces.FFXIVHotbar.keybindwhitelist.Contains(action.ActionKey))
-                                    {
-                                        FFXIVInterfaces.FFXIVHotbar.keybindwhitelist.Add(action.ActionKey);
-                                    }
+                                    if (!FFXIVHotbar.keybindwhitelist.Contains(action.ActionKey))
+                                        FFXIVHotbar.keybindwhitelist.Add(action.ActionKey);
 
 
                                     if (modsactive > 0)
-                                    {
                                         foreach (var modifier in action.Modifiers)
                                         {
                                             if (modsactive == 0) break;
 
                                             if (modifier == "Ctrl")
-                                            {
                                                 if (KeyCtrl)
                                                 {
                                                     _modsactive--;
@@ -2415,10 +2396,8 @@ namespace Chromatics
                                                     if (_modsactive < modsactive)
                                                         _modsactive++;
                                                 }
-                                            }
 
                                             if (modifier == "Alt")
-                                            {
                                                 if (KeyAlt)
                                                 {
                                                     _modsactive--;
@@ -2428,10 +2407,8 @@ namespace Chromatics
                                                     if (_modsactive < modsactive)
                                                         _modsactive++;
                                                 }
-                                            }
 
                                             if (modifier == "Shift")
-                                            {
                                                 if (KeyShift)
                                                 {
                                                     _modsactive--;
@@ -2441,57 +2418,44 @@ namespace Chromatics
                                                     if (_modsactive < modsactive)
                                                         _modsactive++;
                                                 }
-                                            }
-
                                         }
-                                    }
 
                                     //Assign Lighting
-                                    
-                                    if (FFXIVInterfaces.FFXIVHotbar.keybindtranslation.ContainsKey(action.ActionKey))
+
+                                    if (FFXIVHotbar.keybindtranslation.ContainsKey(action.ActionKey))
                                     {
-                                        var keyid = FFXIVInterfaces.FFXIVHotbar.keybindtranslation[action.ActionKey];
+                                        var keyid = FFXIVHotbar.keybindtranslation[action.ActionKey];
 
                                         if (_modsactive == 0)
-                                        {
-
                                             if (action.IsAvailable || PlayerInfo.IsCasting)
-                                            {
                                                 if (action.InRange)
-                                                {
                                                     if (action.IsProcOrCombo)
                                                     {
                                                         //Action Proc'd
-                                                        GlobalApplyMapKeyLighting(keyid, ColorTranslator.FromHtml(ColorMappings.ColorMapping_HotbarProc), false, true);
+                                                        GlobalApplyMapKeyLighting(keyid,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMapping_HotbarProc), false, true);
                                                     }
                                                     else
                                                     {
                                                         if (action.CoolDownPercent > 0)
-                                                        {
-                                                            //Action Cooling Down
-                                                            GlobalApplyMapKeyLighting(keyid, ColorTranslator.FromHtml(ColorMappings.ColorMapping_HotbarCD), false, true);
-                                                        }
+                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMapping_HotbarCD), false, true);
                                                         else
-                                                        {
-                                                            //Action Ready
-                                                            GlobalApplyMapKeyLighting(keyid, ColorTranslator.FromHtml(ColorMappings.ColorMapping_HotbarReady), false, true);
-                                                        }
+                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMapping_HotbarReady), false, true);
                                                     }
-                                                }
                                                 else
-                                                {
-                                                    //Action Not In Range
-                                                    GlobalApplyMapKeyLighting(keyid, ColorTranslator.FromHtml(ColorMappings.ColorMapping_HotbarOutRange), false, true);
-                                                }
-                                            }
+                                                    GlobalApplyMapKeyLighting(keyid,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMapping_HotbarOutRange), false, true);
                                             else
-                                            {
-                                                //Action Not Available
-                                                GlobalApplyMapKeyLighting(keyid, ColorTranslator.FromHtml(ColorMappings.ColorMapping_HotbarNotAvailable), false, true);
-                                            }
-                                        }
+                                                GlobalApplyMapKeyLighting(keyid,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMapping_HotbarNotAvailable), false, true);
                                     }
-
                                 }
                             }
                         }
@@ -2511,20 +2475,20 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("OemMinus", _BaseColor, false);
                             GlobalApplyMapKeyLighting("OemEquals", _BaseColor, false);
                         }
-                        
+
 
                         //Cooldowns
                         var gcd_hot = ColorTranslator.FromHtml(ColorMappings.ColorMapping_GCDHot);
                         var gcd_ready = ColorTranslator.FromHtml(ColorMappings.ColorMapping_GCDReady);
                         var gcd_empty = ColorTranslator.FromHtml(ColorMappings.ColorMapping_GCDEmpty);
 
-                        var gcd_total = FFXIVInterfaces.Cooldowns.globalCooldownTotal;
-                        var gcd_remain = FFXIVInterfaces.Cooldowns.globalCooldownRemaining;
+                        var gcd_total = Cooldowns.globalCooldownTotal;
+                        var gcd_remain = Cooldowns.globalCooldownRemaining;
                         var pol_gcd = (gcd_remain - 0) * (30 - 0) / (gcd_total - 0) + 0;
 
                         if (ChromaticsSettings.ChromaticsSettings_GCDCountdown)
                         {
-                            if (!FFXIVInterfaces.Cooldowns.globalCooldownReady)
+                            if (!Cooldowns.globalCooldownReady)
                             {
                                 if (pol_gcd <= 30 && pol_gcd > 20)
                                 {
@@ -2587,14 +2551,13 @@ namespace Chromatics
 
                         if (ChromaticsSettings.ChromaticsSettings_JobGaugeToggle)
                         {
-
                             switch (PlayerInfo.Job)
                             {
-                                case Sharlayan.Core.Enums.Actor.Job.WAR:
+                                case Actor.Job.WAR:
                                     var burstwarcol = Color.Orange;
                                     var maxwarcol = Color.Red;
                                     var negwarcol = Color.Black;
-                                    var wrath = FFXIVInterfaces.Cooldowns.Wrath;
+                                    var wrath = Cooldowns.Wrath;
                                     var pol_wrath = (wrath - 0) * (50 - 0) / (100 - 0) + 0;
 
                                     if (wrath > 0)
@@ -2744,11 +2707,11 @@ namespace Chromatics
                                     }
 
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.PLD:
+                                case Actor.Job.PLD:
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.MNK:
-                                    var greased = FFXIVInterfaces.Cooldowns.GreasedLightningStacks;
-                                    var grease_remaining = FFXIVInterfaces.Cooldowns.GreasedLightningTimeRemaining;
+                                case Actor.Job.MNK:
+                                    var greased = Cooldowns.GreasedLightningStacks;
+                                    var grease_remaining = Cooldowns.GreasedLightningTimeRemaining;
                                     var burstmnkcol = Color.Aqua;
                                     var burstmnkempty = Color.Black;
 
@@ -2825,11 +2788,11 @@ namespace Chromatics
                                     }
 
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.DRG:
+                                case Actor.Job.DRG:
 
                                     var burstdrgcol = Color.Red;
                                     var negdrgcol = Color.Black;
-                                    var bloodremain = FFXIVInterfaces.Cooldowns.BloodOfTheDragonTimeRemaining;
+                                    var bloodremain = Cooldowns.BloodOfTheDragonTimeRemaining;
                                     var pol_blood = (bloodremain - 0) * (50 - 0) / (30 - 0) + 0;
 
                                     if (bloodremain > 0)
@@ -2942,27 +2905,27 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Num3", negdrgcol, false);
                                     }
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.BRD:
+                                case Actor.Job.BRD:
                                     //Bard Songs
                                     var burstcol = Color.Black;
                                     var negcol = Color.Black;
 
-                                    if (FFXIVInterfaces.Cooldowns.Song != FFXIVInterfaces.Cooldowns.BardSongs.None)
+                                    if (Cooldowns.Song != Cooldowns.BardSongs.None)
                                     {
-                                        var songremain = FFXIVInterfaces.Cooldowns.SongTimeRemaining;
+                                        var songremain = Cooldowns.SongTimeRemaining;
                                         var pol_song = (songremain - 0) * (50 - 0) / (30 - 0) + 0;
 
-                                        switch (FFXIVInterfaces.Cooldowns.Song)
+                                        switch (Cooldowns.Song)
                                         {
-                                            case FFXIVInterfaces.Cooldowns.BardSongs.ArmysPaeon:
+                                            case Cooldowns.BardSongs.ArmysPaeon:
                                                 burstcol = Color.Orange;
                                                 negcol = Color.Black;
                                                 break;
-                                            case FFXIVInterfaces.Cooldowns.BardSongs.MagesBallad:
+                                            case Cooldowns.BardSongs.MagesBallad:
                                                 burstcol = Color.MediumSlateBlue;
                                                 negcol = Color.Black;
                                                 break;
-                                            case FFXIVInterfaces.Cooldowns.BardSongs.WanderersMinuet:
+                                            case Cooldowns.BardSongs.WanderersMinuet:
                                                 burstcol = Color.MediumSpringGreen;
                                                 negcol = Color.Black;
                                                 break;
@@ -3076,12 +3039,12 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Num3", negcol, false);
                                     }
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.WHM:
+                                case Actor.Job.WHM:
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.BLM:
+                                case Actor.Job.BLM:
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.SMN:
-                                    var aetherflowsmn = FFXIVInterfaces.Cooldowns.AetherflowCount;
+                                case Actor.Job.SMN:
+                                    var aetherflowsmn = Cooldowns.AetherflowCount;
 
                                     var burstsmncol = Color.Orchid;
                                     var burstsmnempty = Color.Black;
@@ -3133,7 +3096,6 @@ namespace Chromatics
                                     }
                                     else
                                     {
-
                                         GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
                                         GlobalApplyMapKeyLighting("Num6", burstsmnempty, false);
                                         GlobalApplyMapKeyLighting("Num3", burstsmnempty, false);
@@ -3148,9 +3110,9 @@ namespace Chromatics
                                     }
 
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.SCH:
+                                case Actor.Job.SCH:
 
-                                    var aetherflowsch = FFXIVInterfaces.Cooldowns.AetherflowCount;
+                                    var aetherflowsch = Cooldowns.AetherflowCount;
 
                                     var burstschcol = Color.Orchid;
                                     var burstschempty = Color.Black;
@@ -3202,7 +3164,6 @@ namespace Chromatics
                                     }
                                     else
                                     {
-
                                         GlobalApplyMapKeyLighting("Num9", burstschempty, false);
                                         GlobalApplyMapKeyLighting("Num6", burstschempty, false);
                                         GlobalApplyMapKeyLighting("Num3", burstschempty, false);
@@ -3217,45 +3178,43 @@ namespace Chromatics
                                     }
 
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.NIN:
+                                case Actor.Job.NIN:
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.DRK:
+                                case Actor.Job.DRK:
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.AST:
+                                case Actor.Job.AST:
                                     var burstastcol = Color.Black;
 
-                                    if (FFXIVInterfaces.Cooldowns.CurrentCard != FFXIVInterfaces.Cooldowns.CardTypes.None)
+                                    if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
                                     {
-                                        switch (FFXIVInterfaces.Cooldowns.CurrentCard)
+                                        switch (Cooldowns.CurrentCard)
                                         {
-                                            case FFXIVInterfaces.Cooldowns.CardTypes.Arrow:
+                                            case Cooldowns.CardTypes.Arrow:
                                                 burstastcol = Color.Lime;
                                                 break;
-                                            case FFXIVInterfaces.Cooldowns.CardTypes.Balance:
+                                            case Cooldowns.CardTypes.Balance:
                                                 burstastcol = Color.Crimson;
                                                 break;
-                                            case FFXIVInterfaces.Cooldowns.CardTypes.Bole:
+                                            case Cooldowns.CardTypes.Bole:
                                                 burstastcol = Color.Orange;
                                                 break;
-                                            case FFXIVInterfaces.Cooldowns.CardTypes.Ewer:
+                                            case Cooldowns.CardTypes.Ewer:
                                                 burstastcol = Color.MediumBlue;
                                                 break;
-                                            case FFXIVInterfaces.Cooldowns.CardTypes.Spear:
+                                            case Cooldowns.CardTypes.Spear:
                                                 burstastcol = Color.Turquoise;
                                                 break;
-                                            case FFXIVInterfaces.Cooldowns.CardTypes.Spire:
+                                            case Cooldowns.CardTypes.Spire:
                                                 burstastcol = Color.SlateBlue;
                                                 break;
                                         }
 
-                                        if (FFXIVInterfaces.Cooldowns.CurrentCard != _CurrentCard)
+                                        if (Cooldowns.CurrentCard != _CurrentCard)
                                         {
-                                            if (FFXIVInterfaces.Cooldowns.CurrentCard != FFXIVInterfaces.Cooldowns.CardTypes.None)
-                                            {
+                                            if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
                                                 GlobalRipple1(burstastcol, 80, _BaseColor);
-                                            }
 
-                                            _CurrentCard = FFXIVInterfaces.Cooldowns.CurrentCard;
+                                            _CurrentCard = Cooldowns.CurrentCard;
                                         }
 
                                         GlobalApplyMapKeyLighting("NumLock", burstastcol, false);
@@ -3297,13 +3256,13 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("NumDecimal", burstastcol, false);
                                     }
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.MCH:
+                                case Actor.Job.MCH:
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.SAM:
+                                case Actor.Job.SAM:
                                     break;
-                                case Sharlayan.Core.Enums.Actor.Job.RDM:
-                                    var blackmana = FFXIVInterfaces.Cooldowns.BlackMana;
-                                    var whitemana = FFXIVInterfaces.Cooldowns.WhiteMana;
+                                case Actor.Job.RDM:
+                                    var blackmana = Cooldowns.BlackMana;
+                                    var whitemana = Cooldowns.WhiteMana;
                                     var pol_black = (blackmana - 0) * (40 - 0) / (100 - 0) + 0;
                                     var pol_white = (whitemana - 0) * (40 - 0) / (100 - 0) + 0;
 
@@ -3336,7 +3295,6 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Num9", negburst, false);
                                         GlobalApplyMapKeyLighting("Num6", blackburst, false);
                                         GlobalApplyMapKeyLighting("Num3", blackburst, false);
-
                                     }
                                     else if (pol_black <= 10 && pol_black > 0)
                                     {
@@ -3374,7 +3332,6 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Num7", negburst, false);
                                         GlobalApplyMapKeyLighting("Num4", whiteburst, false);
                                         GlobalApplyMapKeyLighting("Num1", whiteburst, false);
-
                                     }
                                     else if (pol_white <= 10 && pol_white > 0)
                                     {
@@ -3420,23 +3377,27 @@ namespace Chromatics
 
                         //Duty Finder Bell
 
-                        FFXIVInterfaces.FFXIVDutyFinder.RefreshData();
+                        FFXIVDutyFinder.RefreshData();
                         //Debug.WriteLine(FFXIVInterfaces.FFXIVDutyFinder.isPopped() + "//" + FFXIVInterfaces.FFXIVDutyFinder.Countdown());
 
-                        if (FFXIVInterfaces.FFXIVDutyFinder.isPopped())
+                        if (FFXIVDutyFinder.isPopped())
                         {
                             if (!_dfpop)
                             {
                                 ToggleGlobalFlash4(true);
-                                GlobalFlash4(_BaseColor, ColorTranslator.FromHtml(ColorMappings.ColorMapping_DutyFinderBell), 500, DeviceInterfaces.EffectLibrary.DeviceEffects._GlobalKeys);
+                                GlobalFlash4(_BaseColor,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMapping_DutyFinderBell), 500,
+                                    DeviceEffects._GlobalKeys);
                                 _dfpop = true;
                             }
                             else
                             {
-                                if (FFXIVInterfaces.FFXIVDutyFinder.Countdown() < 10 && !_dfcount)
+                                if (FFXIVDutyFinder.Countdown() < 10 && !_dfcount)
                                 {
                                     ToggleGlobalFlash4(false);
-                                    GlobalFlash4(_BaseColor, ColorTranslator.FromHtml(ColorMappings.ColorMapping_DutyFinderBell), 200, DeviceInterfaces.EffectLibrary.DeviceEffects._GlobalKeys);
+                                    GlobalFlash4(_BaseColor,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_DutyFinderBell), 200,
+                                        DeviceEffects._GlobalKeys);
                                     _dfcount = true;
                                 }
                             }
@@ -3460,13 +3421,6 @@ namespace Chromatics
 
                     GlobalKeyboardUpdate();
                     MemoryTasks.Cleanup();
-                }
-                else
-                {
-                    //Throw Main Menu
-                    //FFXIVGameStop();
-
-                    //Debug.WriteLine("Jump");
                 }
             }
             catch (Exception ex)

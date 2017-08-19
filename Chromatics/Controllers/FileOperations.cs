@@ -36,7 +36,7 @@ namespace Chromatics
             dr.DeviceOperation_RoccatMouse = RoccatDeviceMouse;
 
             dr.DeviceOperation_MouseToggle = MouseToggle;
-            
+
             dr.DeviceOperation_LogitechKeyboard = LogitechDeviceKeyboard;
 
             var _LifxLoad = "";
@@ -55,20 +55,20 @@ namespace Chromatics
                 _LifxLoad = string.Join(",", _lifxEx);
             }
 
-            
+
             if (HueSDK && _hue.HueModeMemory.Count() > 0)
             {
-                List<string> _HueList = new List<string>();
-                foreach (KeyValuePair<string, DeviceModeTypes> _HP in _hue.HueModeMemory)
+                var _HueList = new List<string>();
+                foreach (var _HP in _hue.HueModeMemory)
                 {
-                    string _HA = _HP.Key + "|" + _HP.Value + "|" + _hue.HueStateMemory[_HP.Key];
+                    var _HA = _HP.Key + "|" + _HP.Value + "|" + _hue.HueStateMemory[_HP.Key];
                     _HueList.Add(_HA);
                 }
 
-                string[] _HueEx = _HueList.ToArray();
+                var _HueEx = _HueList.ToArray();
                 _HueLoad = string.Join(",", _HueEx);
             }
-            
+
 
             dr.DeviceOperation_HUEDefault = HUEDefault;
             dr.DeviceOperation_LifxDevices = _LifxLoad;
@@ -129,7 +129,7 @@ namespace Chromatics
                         RoccatDeviceMouse = dr.DeviceOperation_RoccatMouse;
 
                         MouseToggle = dr.DeviceOperation_MouseToggle;
-                        
+
                         LogitechDeviceKeyboard = dr.DeviceOperation_LogitechKeyboard;
                         HUEDefault = dr.DeviceOperation_HUEDefault;
 
@@ -144,7 +144,7 @@ namespace Chromatics
                                 //DeviceModeTypes LMode = DeviceModeTypes.DISABLED;
                                 //LMode = LState[1].ToString();
                                 //int.TryParse(LState[1], out LMode);
-                                DeviceModeTypes LMode = (DeviceModeTypes)Enum.Parse(typeof(DeviceModeTypes), LState[1]);
+                                var LMode = (DeviceModeTypes) Enum.Parse(typeof(DeviceModeTypes), LState[1]);
 
                                 var LEnabled = 0;
                                 int.TryParse(LState[2], out LEnabled);
@@ -162,7 +162,7 @@ namespace Chromatics
                                 var HState = _HD.Split('|');
                                 //var HMode = 0;
                                 //int.TryParse(HState[1], out HMode);
-                                DeviceModeTypes HMode = (DeviceModeTypes)Enum.Parse(typeof(DeviceModeTypes), HState[1]);
+                                var HMode = (DeviceModeTypes) Enum.Parse(typeof(DeviceModeTypes), HState[1]);
                                 var HEnabled = 0;
                                 int.TryParse(HState[2], out HEnabled);
                                 _hue.HueModeMemory.Add(HState[0], HMode);
@@ -220,8 +220,8 @@ namespace Chromatics
                     sw.Close();
                 }
 
-               // if (report == 1)
-               //     WriteConsole(ConsoleTypes.SYSTEM, "Saved states to mappings.chromatics.");
+                // if (report == 1)
+                //     WriteConsole(ConsoleTypes.SYSTEM, "Saved states to mappings.chromatics.");
             }
             catch (Exception ex)
             {
@@ -287,7 +287,7 @@ namespace Chromatics
             var path = enviroment + @"/settings.chromatics";
 
             _ChromaticsSettings = ChromaticsSettings;
-            
+
             try
             {
                 using (var sw = new StreamWriter(path, false))
@@ -322,7 +322,7 @@ namespace Chromatics
                     try
                     {
                         var reader = new XmlSerializer(ChromaticsSettings.GetType());
-                        var _ChromaticsSettings = (ChromaticsSettings)reader.Deserialize(sr);
+                        var _ChromaticsSettings = (ChromaticsSettings) reader.Deserialize(sr);
                         sr.Close();
 
                         ChromaticsSettings = _ChromaticsSettings;
@@ -391,7 +391,8 @@ namespace Chromatics
 
                         ColorMappings = _ColorMappings;
 
-                        WriteConsole(ConsoleTypes.SYSTEM, "Success. Imported Color Palette from " + _open.FileName + ".");
+                        WriteConsole(ConsoleTypes.SYSTEM,
+                            "Success. Imported Color Palette from " + _open.FileName + ".");
                         _open.Dispose();
                     }
                 }

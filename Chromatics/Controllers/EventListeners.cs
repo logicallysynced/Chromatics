@@ -1,7 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,7 +11,7 @@ namespace Chromatics
             if (!allowVisible)
             {
                 value = false;
-                if (!this.IsHandleCreated) CreateHandle();
+                if (!IsHandleCreated) CreateHandle();
             }
             base.SetVisibleCore(value);
         }
@@ -22,44 +19,25 @@ namespace Chromatics
         private void Kh_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
-            {
                 KeyCtrl = true;
-                //e.Handled = true;
-            }
 
             if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
-            {
                 KeyShift = true;
-                //e.Handled = true;
-            }
 
             if (e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
-            {
                 KeyAlt = true;
-                //e.Handled = true;
-            }
         }
 
         private void Kh_KeyUp(object sender, KeyEventArgs e)
         {
-
             if (e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
-            {
                 KeyCtrl = false;
-                //e.Handled = true;
-            }
 
             if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
-            {
                 KeyShift = false;
-                //e.Handled = true;
-            }
 
             if (e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
-            {
                 KeyAlt = false;
-                //e.Handled = true;
-            }
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
@@ -73,7 +51,6 @@ namespace Chromatics
 
             FinalFormClosing(sender);
             //base.OnFormClosing(e);
-
         }
 
         private void FinalFormClosing(object sender)
@@ -105,14 +82,8 @@ namespace Chromatics
         private void OnApplicationExit(object sender, EventArgs e)
         {
             if (chk_lccauto.Checked)
-            {
                 if (LogitechSDKCalled == 1)
-                {
                     ToggleLCCMode(false, true);
-                }
-            }
-
-            
         }
 
         private void ChromaticsForm_Resize(object sender, EventArgs e)

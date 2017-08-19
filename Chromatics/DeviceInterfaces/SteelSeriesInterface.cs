@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Chromatics.DeviceInterfaces
 {
@@ -20,14 +19,16 @@ namespace Chromatics.DeviceInterfaces
 
     public class SteelSeriesSdkWrapper
     {
-        private static Encoding DEFAULT_ENCODING = Encoding.UTF8;
         private const string DEFAULT_CONTENT = "application/json";
 
         public const string GAME = "Final Fantasy XIV";
+        private static readonly Encoding DEFAULT_ENCODING = Encoding.UTF8;
+
+        public static Dictionary<string, EventBind> GameEvents = new Dictionary<string, EventBind>();
 
         public static string SendSDKPostResponse(string url, string json)
         {
-            string result = "";
+            var result = "";
             using (var client = new WebClient())
             {
                 client.Encoding = DEFAULT_ENCODING;
@@ -48,9 +49,8 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public static Dictionary<string, EventBind> GameEvents = new Dictionary<string, EventBind>();
-
         #region Enums
+
         public enum EventIcons
         {
             None = 0,
@@ -71,7 +71,7 @@ namespace Chromatics.DeviceInterfaces
             Clock = 15,
             Lightning = 16,
             Backpack = 17
-        };
+        }
 
         public enum IconColors
         {
@@ -87,7 +87,7 @@ namespace Chromatics.DeviceInterfaces
             Pink = 9,
             Red = 10,
             Silver = 11
-        };
+        }
 
         #endregion
 
@@ -159,17 +159,16 @@ namespace Chromatics.DeviceInterfaces
             [JsonProperty(PropertyName = "data")]
             public Data data { get; set; }
         }
+
         #endregion
     }
 
     public interface ISteelSdk
     {
-        
     }
 
     public class SteelLib : ISteelSdk
     {
-
         private void RegisterEvents()
         {
             /*
@@ -191,12 +190,12 @@ namespace Chromatics.DeviceInterfaces
             */
         }
 
-        public void ApplyMapKeyLighting(string key, System.Drawing.Color col)
+        public void ApplyMapKeyLighting(string key, Color col)
         {
             //Single Key
             var guid = Guid.NewGuid().ToString();
 
-            SteelSeriesSdkWrapper.EventBind SetSingleKey = new SteelSeriesSdkWrapper.EventBind()
+            var SetSingleKey = new SteelSeriesSdkWrapper.EventBind
             {
                 game = SteelSeriesSdkWrapper.GAME,
                 name = guid,
@@ -205,18 +204,18 @@ namespace Chromatics.DeviceInterfaces
                     device = "rgb-per-key-zones",
                     mode = "percent",
                     zone = "logo",
-                    color = new SteelSeriesSdkWrapper.Color { red = 0, green = 0, blue = 0 }
+                    color = new SteelSeriesSdkWrapper.Color {red = 0, green = 0, blue = 0}
                 },
                 icon_id = SteelSeriesSdkWrapper.EventIcons.None,
                 min_value = 0,
                 max_value = 100
             };
 
-            SteelSeriesSdkWrapper.EventSend json = new SteelSeriesSdkWrapper.EventSend
+            var json = new SteelSeriesSdkWrapper.EventSend
             {
                 game = SteelSeriesSdkWrapper.GAME,
                 name = guid,
-                data = new SteelSeriesSdkWrapper.Data { value = 100 }
+                data = new SteelSeriesSdkWrapper.Data {value = 100}
             };
 
             SteelSeriesSdkWrapper.GameEvents.Add(guid, SetSingleKey);

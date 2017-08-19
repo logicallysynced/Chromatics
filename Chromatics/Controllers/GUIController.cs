@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
-using Chromatics.Datastore;
-using Cyotek.Windows.Forms;
-using Chromatics.LCDInterfaces;
-using Microsoft.Win32;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
+using Chromatics.Datastore;
+using Chromatics.LCDInterfaces;
+using Cyotek.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 
 namespace Chromatics
 {
     partial class Chromatics : ILogWrite
     {
         private readonly DataGridViewComboBoxColumn _dGmode = new DataGridViewComboBoxColumn();
-                
+
         private readonly Dictionary<DeviceModeTypes, string> DeviceModes = new Dictionary<DeviceModeTypes, string>
         {
             //Keys
@@ -33,10 +33,10 @@ namespace Chromatics
             {DeviceModeTypes.MP_TRACKER, "MP Tracker"},
             {DeviceModeTypes.TP_TRACKER, "TP Tracker"},
             {DeviceModeTypes.CASTBAR, "Castbar"},
-            {DeviceModeTypes.DUTY_FINDER, "Duty Finder Bell" },
+            {DeviceModeTypes.DUTY_FINDER, "Duty Finder Bell"},
             {DeviceModeTypes.CHROMATICS_DEFAULT, "Chromatics Default"}
         };
-                
+
         private readonly Dictionary<string, string[]> MappingPalette = new Dictionary<string, string[]>
         {
             //Keys
@@ -56,12 +56,12 @@ namespace Chromatics
             {"ColorMapping_CPEmpty", new[] {"CP Empty", "2", "Black", "White"}},
             {"ColorMapping_CastChargeFull", new[] {"Cast Charge", "3", "Black", "White"}},
             {"ColorMapping_CastChargeEmpty", new[] {"Cast Empty", "3", "Black", "White"}},
-            {"ColorMapping_Emnity0", new[] { "Minimal Enmity", "4", "Black", "White"}},
-            {"ColorMapping_Emnity1", new[] { "Low Enmity", "4", "Black", "White"}},
-            {"ColorMapping_Emnity2", new[] { "Medium Enmity", "4", "Black", "White"}},
-            {"ColorMapping_Emnity3", new[] { "High Enmity", "4", "Black", "White"}},
-            {"ColorMapping_Emnity4", new[] { "Max Enmity", "4", "Black", "White"}},
-            {"ColorMapping_NoEmnity", new[] { "No Enmity", "4", "Black", "White"}},
+            {"ColorMapping_Emnity0", new[] {"Minimal Enmity", "4", "Black", "White"}},
+            {"ColorMapping_Emnity1", new[] {"Low Enmity", "4", "Black", "White"}},
+            {"ColorMapping_Emnity2", new[] {"Medium Enmity", "4", "Black", "White"}},
+            {"ColorMapping_Emnity3", new[] {"High Enmity", "4", "Black", "White"}},
+            {"ColorMapping_Emnity4", new[] {"Max Enmity", "4", "Black", "White"}},
+            {"ColorMapping_NoEmnity", new[] {"No Enmity", "4", "Black", "White"}},
             {"ColorMapping_TargetHPClaimed", new[] {"Target HP - Claimed", "5", "Black", "White"}},
             {"ColorMapping_TargetHPIdle", new[] {"Target HP - Idle", "5", "Black", "White"}},
             {"ColorMapping_TargetHPEmpty", new[] {"Target HP - Empty", "5", "Black", "White"}},
@@ -96,9 +96,9 @@ namespace Chromatics
             {"ColorMapping_HotbarReady", new[] {"Keybind Ready", "7", "Black", "White"}},
             {"ColorMapping_HotbarOutRange", new[] {"Keybind Out of Range", "7", "Black", "White"}},
             {"ColorMapping_HotbarNotAvailable", new[] {"Keybind Not Available", "7", "Black", "White"}},
-            {"ColorMapping_DutyFinderBell" , new[] {"Duty Finder Bell", "8", "Black", "White"}}
+            {"ColorMapping_DutyFinderBell", new[] {"Duty Finder Bell", "8", "Black", "White"}}
         };
-        
+
 
         private readonly Dictionary<int, string> PaletteCategories = new Dictionary<int, string>
         {
@@ -110,8 +110,8 @@ namespace Chromatics
             {4, "Enmity/Aggro"},
             {5, "Target/Enemy"},
             {6, "Status Effects"},
-            {7, "Cooldowns/Keybinds" },
-            {8, "Notifications" }
+            {7, "Cooldowns/Keybinds"},
+            {8, "Notifications"}
         };
 
         public void ResetDeviceDataGrid()
@@ -366,7 +366,9 @@ namespace Chromatics
                     dG_devices.Rows.Add(_RzDgKeypad);
                     _RzDgKeypad_dgc.ReadOnly = true;
 
-                    _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad, RazerDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                    _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
+                        RazerDeviceMousepad, RazerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                 }
 
                 if (CorsairSDKCalled == 1)
@@ -463,12 +465,14 @@ namespace Chromatics
                     dG_devices.Rows.Add(_CorsairDgMousepad);
                     _CorsairDgMousepad_dgc.ReadOnly = true;
 
-                    _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse, CorsairDeviceMousepad, CorsairDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                    _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
+                        CorsairDeviceMousepad, CorsairDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                 }
 
                 if (LogitechSDKCalled == 1)
                 {
-                    var _LogitechDgDevices = (DataGridViewRow)dG_devices.Rows[0].Clone();
+                    var _LogitechDgDevices = (DataGridViewRow) dG_devices.Rows[0].Clone();
                     _LogitechDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Logitech Devices";
                     _LogitechDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
                     _LogitechDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value = LogitechDeviceKeyboard
@@ -490,18 +494,22 @@ namespace Chromatics
                     dG_devices.Rows.Add(_LogitechDgDevices);
                     _LogitechDgDevices_dgc.ReadOnly = true;
 
-                    _logitech.ResetLogitechDevices(LogitechDeviceKeyboard, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                    _logitech.ResetLogitechDevices(LogitechDeviceKeyboard,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                 }
 
                 if (CoolermasterSDKCalled == 1)
                 {
-                    var _CoolermasterDgDevices = (DataGridViewRow)dG_devices.Rows[0].Clone();
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Coolermaster Devices";
+                    var _CoolermasterDgDevices = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value =
+                        "Coolermaster Devices";
                     _CoolermasterDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value = CoolermasterDeviceKeyboard
-                        ? "Enabled"
-                        : "Disabled";
-                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_state"].Index].Value = CoolermasterDeviceKeyboard;
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value =
+                        CoolermasterDeviceKeyboard
+                            ? "Enabled"
+                            : "Disabled";
+                    _CoolermasterDgDevices.Cells[dG_devices.Columns["col_state"].Index].Value =
+                        CoolermasterDeviceKeyboard;
                     _CoolermasterDgDevices.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CoolermasterDevice";
 
                     var _CoolermasterDgDevices_dgc = new DataGridViewComboBoxCell();
@@ -517,12 +525,12 @@ namespace Chromatics
                     dG_devices.Rows.Add(_CoolermasterDgDevices);
                     _CoolermasterDgDevices_dgc.ReadOnly = true;
 
-                    _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
+                    _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                 }
 
                 if (LifxSDKCalled == 1)
                     if (_lifx.LifxBulbs > 0)
-                    {
                         foreach (var d in _lifx.LifxBulbsDat.ToList())
                         {
                             Thread.Sleep(1);
@@ -530,14 +538,15 @@ namespace Chromatics
                             //LIFX Device
                             var state = await _lifx.GetLightStateAsync(d.Key);
                             var device = await _lifx.GetDeviceVersionAsync(d.Key);
-                             
+
                             _dGmode.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
                             var LState = _lifx.LifxStateMemory[d.Key.MacAddressName];
 
-                            var _LIFXdGDevice = (DataGridViewRow)dG_devices.Rows[0].Clone();
+                            var _LIFXdGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
                             _LIFXdGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = state.Label + " (" +
-                                                                                                    d.Key.MacAddressName +
+                                                                                                    d.Key
+                                                                                                        .MacAddressName +
                                                                                                     ")";
                             _LIFXdGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
                                 _lifx.LIFXproductids[device.Product] + " (Version " + device.Version + ")";
@@ -559,14 +568,16 @@ namespace Chromatics
                                 _LIFXdGDevice_dgc.Items.Add(x.Value);
                             }
 
-                            _LIFXdGDevice_dgc.Value = d.Value == DeviceModeTypes.CHROMATICS_DEFAULT ? DeviceModes[DeviceModeTypes.STANDBY] : DeviceModes[d.Value];
+                            _LIFXdGDevice_dgc.Value = d.Value == DeviceModeTypes.CHROMATICS_DEFAULT
+                                ? DeviceModes[DeviceModeTypes.STANDBY]
+                                : DeviceModes[d.Value];
                             _LIFXdGDevice_dgc.DisplayStyleForCurrentCellOnly = true;
                             _LIFXdGDevice_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 
                             _LIFXdGDevice.Cells[dG_devices.Columns["col_mode"].Index] = _LIFXdGDevice_dgc;
 
                             //Check for duplicates
-                            
+
                             /*
                             var duplicate = false;
 
@@ -588,14 +599,10 @@ namespace Chromatics
 
                             dG_devices.Rows.Add(_LIFXdGDevice);
                             _LIFXdGDevice_dgc.ReadOnly = d.Value == 0 ? true : false;
-                            
                         }
-                    }
 
                 if (HueSDKCalled == 1)
-                {
                     if (_hue.HueBulbs > 0)
-                    {
                         foreach (var d in _hue.HueBulbsDat.ToList())
                         {
                             Thread.Sleep(1);
@@ -608,10 +615,10 @@ namespace Chromatics
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
                             var LState = _hue.HueStateMemory[d.Key.UniqueId];
 
-                            var _HUEdGDevice = (DataGridViewRow)dG_devices.Rows[0].Clone();
+                            var _HUEdGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
                             _HUEdGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = d.Key.Name + " (" +
-                                                                                                    d.Key.UniqueId +
-                                                                                                    ")";
+                                                                                                   d.Key.UniqueId +
+                                                                                                   ")";
                             _HUEdGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
                                 d.Key.ModelId + " (Version " + device + ")";
                             _HUEdGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = LState == 0
@@ -632,7 +639,9 @@ namespace Chromatics
                                 _HUEdGDevice_dgc.Items.Add(x.Value);
                             }
 
-                            _HUEdGDevice_dgc.Value = d.Value == DeviceModeTypes.CHROMATICS_DEFAULT ? DeviceModes[DeviceModeTypes.STANDBY] : DeviceModes[d.Value];
+                            _HUEdGDevice_dgc.Value = d.Value == DeviceModeTypes.CHROMATICS_DEFAULT
+                                ? DeviceModes[DeviceModeTypes.STANDBY]
+                                : DeviceModes[d.Value];
                             _HUEdGDevice_dgc.DisplayStyleForCurrentCellOnly = true;
                             _HUEdGDevice_dgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 
@@ -660,8 +669,6 @@ namespace Chromatics
                             dG_devices.Rows.Add(_HUEdGDevice);
                             _HUEdGDevice_dgc.ReadOnly = d.Value == 0 ? true : false;
                         }
-                    }
-                }
 
                 DeviceGridStartup = true;
                 dG_devices.AllowUserToAddRows = false;
@@ -678,7 +685,8 @@ namespace Chromatics
             if (DeviceGridStartup)
             {
                 var editedCell = dG_devices.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                var _dattype = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_dattype"].Index].Value;
+                var _dattype = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_dattype"].Index]
+                    .Value;
 
                 if (dG_devices.Columns[e.ColumnIndex].Name == "col_state")
                 {
@@ -700,9 +708,9 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceKeyboard;
 
                         if (RazerSDKCalled == 1)
-                        {
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad, RazerDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
+                                RazerDeviceMousepad, RazerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "RazerDeviceMouse")
                     {
@@ -711,13 +719,14 @@ namespace Chromatics
                         else
                             RazerDeviceMouse = false;
 
-                        change[dG_devices.Columns["col_status"].Index].Value = RazerDeviceMouse ? "Enabled" : "Disabled";
+                        change[dG_devices.Columns["col_status"].Index].Value =
+                            RazerDeviceMouse ? "Enabled" : "Disabled";
                         change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceMouse;
 
                         if (RazerSDKCalled == 1)
-                        {
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad, RazerDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
+                                RazerDeviceMousepad, RazerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "RazerDeviceHeadset")
                     {
@@ -732,9 +741,9 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceHeadset;
 
                         if (RazerSDKCalled == 1)
-                        {
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad, RazerDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
+                                RazerDeviceMousepad, RazerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "RazerDeviceMousepad")
                     {
@@ -749,9 +758,9 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceMousepad;
 
                         if (RazerSDKCalled == 1)
-                        {
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad, RazerDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
+                                RazerDeviceMousepad, RazerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "RazerDeviceKeypad")
                     {
@@ -766,9 +775,9 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = RazerDeviceKeypad;
 
                         if (RazerSDKCalled == 1)
-                        {
-                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad, RazerDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
+                                RazerDeviceMousepad, RazerDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "CorsairDeviceKeyboard")
                     {
@@ -783,9 +792,9 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceKeyboard;
 
                         if (CorsairSDKCalled == 1)
-                        {
-                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse, CorsairDeviceMousepad, CorsairDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
+                                CorsairDeviceMousepad, CorsairDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "CorsairDeviceMouse")
                     {
@@ -800,9 +809,9 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceMouse;
 
                         if (CorsairSDKCalled == 1)
-                        {
-                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse, CorsairDeviceMousepad, CorsairDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
+                                CorsairDeviceMousepad, CorsairDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "CorsairDeviceHeadset")
                     {
@@ -817,9 +826,9 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceHeadset;
 
                         if (CorsairSDKCalled == 1)
-                        {
-                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse, CorsairDeviceMousepad, CorsairDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
+                                CorsairDeviceMousepad, CorsairDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "CorsairDeviceMousepad")
                     {
@@ -834,9 +843,9 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = CorsairDeviceMousepad;
 
                         if (CorsairSDKCalled == 1)
-                        {
-                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse, CorsairDeviceMousepad, CorsairDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
+                                CorsairDeviceMousepad, CorsairDeviceHeadset,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "LogitechDevice")
                     {
@@ -851,9 +860,8 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = LogitechDeviceKeyboard;
 
                         if (LogitechSDKCalled == 1)
-                        {
-                            _logitech.ResetLogitechDevices(LogitechDeviceKeyboard, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _logitech.ResetLogitechDevices(LogitechDeviceKeyboard,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "CoolermasterDevice")
                     {
@@ -868,9 +876,8 @@ namespace Chromatics
                         change[dG_devices.Columns["col_state"].Index].Value = CoolermasterDeviceKeyboard;
 
                         if (CoolermasterSDKCalled == 1)
-                        {
-                            _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                        }
+                            _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
                     }
                     else if (_dattype == "LIFX")
                     {
@@ -902,7 +909,7 @@ namespace Chromatics
                     }
                     else if (_dattype == "HUE")
                     {
-                        var _id = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
+                        var _id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
                         if (HueSDKCalled == 1 && _id != null)
                         {
                             var _bulb = _hue.HueDevices[_id];
@@ -921,7 +928,8 @@ namespace Chromatics
                                 var state = _hue.HueBulbsRestore[_bulb];
                                 WriteConsole(ConsoleTypes.HUE, "Disabled HUE Bulb " + _id);
 
-                                _hue.SetColorAsync(_bulb, state.Hue, state.Saturation, state.Brightness, state.ColorTemperature,
+                                _hue.SetColorAsync(_bulb, state.Hue, state.Saturation, state.Brightness,
+                                    state.ColorTemperature,
                                     TimeSpan.FromMilliseconds(1000));
 
                                 WriteConsole(ConsoleTypes.HUE, "Restoring HUE Bulb " + _bulb.Name);
@@ -938,7 +946,6 @@ namespace Chromatics
                     var _id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
 
                     if (LifxSDKCalled == 1 && _id != null && _dattype == "LIFX")
-                    {
                         if (DeviceModes.ContainsValue(_mode))
                         {
                             var _key = DeviceModes.FirstOrDefault(x => x.Value == _mode).Key;
@@ -947,10 +954,8 @@ namespace Chromatics
                             _lifx.LifxModeMemory[_bulb.MacAddressName] = _key;
                             WriteConsole(ConsoleTypes.LIFX, "Updated Mode of LIFX Bulb " + _id + " to " + _key);
                         }
-                    }
 
                     if (HueSDKCalled == 1 && _id != null && _dattype == "HUE")
-                    {
                         if (DeviceModes.ContainsValue(_mode))
                         {
                             var _key = DeviceModes.FirstOrDefault(x => x.Value == _mode).Key;
@@ -959,16 +964,15 @@ namespace Chromatics
                             _hue.HueModeMemory[_bulb.UniqueId] = _key;
                             WriteConsole(ConsoleTypes.LIFX, "Updated Mode of HUE Bulb " + _id + " to " + _key);
                         }
-                    }
                 }
 
                 SaveDevices();
                 //ResetDeviceDataGrid();
 
                 if (RazerSDKCalled == 1)
-                {
-                    _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad, RazerDeviceHeadset, System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
-                }
+                    _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse,
+                        RazerDeviceMousepad, RazerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor));
             }
         }
 
@@ -1181,7 +1185,7 @@ namespace Chromatics
                         ArxSDK = true;
                         ArxSDKCalled = 1;
                         ArxState = 0;
-                        
+
                         WriteConsole(ConsoleTypes.ARX, "ARX SDK Enabled");
 
                         LoadArxPlugins();
@@ -1219,15 +1223,9 @@ namespace Chromatics
                 cb_arx_mode.Enabled = false;
 
                 if (plugs.Count > 0)
-                {
                     foreach (var plugin in plugs)
-                    {
                         if (cb_arx_mode.Items.Contains(plugin))
-                        {
                             cb_arx_mode.Items.Remove(plugin);
-                        }
-                    }
-                }
 
                 if (ArxSDKCalled == 1)
                 {
@@ -1278,7 +1276,7 @@ namespace Chromatics
 
             if (cb_arx_mode.SelectedIndex < 4)
             {
-                ArxState = cb_arx_mode.SelectedIndex+1;
+                ArxState = cb_arx_mode.SelectedIndex + 1;
 
                 switch (ArxState)
                 {
@@ -1296,10 +1294,8 @@ namespace Chromatics
 
                         var changed = txt_arx_actip.Text;
                         if (changed.EndsWith("/"))
-                        {
                             changed = changed.Substring(0, changed.Length - 1);
-                        }
-                        
+
                         _arx.ArxSendACTInfo(changed, 8085);
                         break;
                 }
@@ -1310,7 +1306,7 @@ namespace Chromatics
                 ArxState = 100;
                 _arx.ArxSetIndex(getPlugin);
             }
-            
+
             WriteConsole(ConsoleTypes.ARX, "ARX Template Changed: " + cb_arx_mode.SelectedItem);
         }
 
@@ -1338,15 +1334,9 @@ namespace Chromatics
         private void mi_winstart_Click(object sender, EventArgs e)
         {
             if (mi_winstart.Checked)
-            {
-                // Add the value in the registry so that the application runs at startup
-                rkApp.SetValue("Chromatics", Application.ExecutablePath.ToString());
-            }
+                rkApp.SetValue("Chromatics", Application.ExecutablePath);
             else
-            {
-                // Remove the value from the registry so that the application doesn't start
                 rkApp.DeleteValue("Chromatics", false);
-            }
 
             chk_startupenable.Checked = mi_winstart.Checked;
         }
@@ -1357,48 +1347,28 @@ namespace Chromatics
             if (!mi_effectsenable.Checked)
             {
                 if (RazerSDK)
-                {
                     RazerSDKCalled = 0;
-                }
                 if (LogitechSDK)
-                {
                     LogitechSDKCalled = 0;
-                }
                 if (CorsairSDK)
-                {
                     CorsairSDKCalled = 0;
-                }
                 if (LifxSDK)
-                {
                     LifxSDKCalled = 0;
-                }
                 if (HueSDK)
-                {
                     HueSDKCalled = 0;
-                }
             }
             else
             {
                 if (RazerSDK)
-                {
                     RazerSDKCalled = 1;
-                }
                 if (LogitechSDK)
-                {
                     LogitechSDKCalled = 1;
-                }
                 if (CorsairSDK)
-                {
                     CorsairSDKCalled = 1;
-                }
                 if (LifxSDK)
-                {
                     LifxSDKCalled = 1;
-                }
                 if (HueSDK)
-                {
                     HueSDKCalled = 1;
-                }
             }
 
             ResetDeviceDataGrid();
@@ -1407,13 +1377,9 @@ namespace Chromatics
         private void enablearx_Click(object sender, EventArgs e)
         {
             if (mi_arxenable.Checked)
-            {
                 chk_arxtoggle.Checked = true;
-            }
             else
-            {
                 chk_arxtoggle.Checked = false;
-            }
         }
 
         private void notify_master_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1432,9 +1398,7 @@ namespace Chromatics
             {
                 var changed = txt_arx_actip.Text;
                 if (changed.EndsWith("/"))
-                {
                     changed = changed.Substring(0, changed.Length - 1);
-                }
 
                 txt_arx_actip.Text = changed;
                 _arx.ArxSendACTInfo(changed, 8085);
@@ -1449,13 +1413,9 @@ namespace Chromatics
             if (startup == false) return;
 
             if (chk_lccenable.Checked)
-            {
                 ToggleLCCMode(true);
-            }
             else
-            {
                 ToggleLCCMode(false);
-            }
         }
 
         private void chk_lccauto_CheckedChanged(object sender, EventArgs e)
@@ -1471,29 +1431,27 @@ namespace Chromatics
             if (LogitechSDKCalled == 0)
                 return;
 
-            DialogResult lccrestore_check = MessageBox.Show("Are you sure you wish to restore LGS to its default settings? This should only be done as a last resort.", "Restore LGS Settings to Default", MessageBoxButtons.OKCancel);
+            var lccrestore_check =
+                MessageBox.Show(
+                    "Are you sure you wish to restore LGS to its default settings? This should only be done as a last resort.",
+                    "Restore LGS Settings to Default", MessageBoxButtons.OKCancel);
             if (lccrestore_check == DialogResult.OK)
-            {
                 try
                 {
                     while (Process.GetProcessesByName("ffxiv_dx11").Length > 0)
                     {
-                        DialogResult lccrestore_warning = MessageBox.Show("You must close Final Fantasy XIV before using restore.", "Please close Final Fantasy XIV", MessageBoxButtons.RetryCancel);
+                        var lccrestore_warning =
+                            MessageBox.Show("You must close Final Fantasy XIV before using restore.",
+                                "Please close Final Fantasy XIV", MessageBoxButtons.RetryCancel);
                         if (lccrestore_warning == DialogResult.Cancel)
-                        {
                             return;
-                        }
                     }
 
                     if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
-                    {
                         File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll");
-                    }
 
                     if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled"))
-                    {
                         File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled");
-                    }
 
                     var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
                     var path = enviroment + @"/LogitechLed.dll";
@@ -1501,21 +1459,17 @@ namespace Chromatics
                     File.Copy(path, LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", true);
                     WriteConsole(ConsoleTypes.LOGITECH, "LGS has been restored to its default settings.");
 
-                    this.chk_lccenable.CheckedChanged -= new System.EventHandler(this.chk_lccenable_CheckedChanged);
+                    chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
                     chk_lccenable.Checked = false;
-                    this.chk_lccenable.CheckedChanged += new System.EventHandler(this.chk_lccenable_CheckedChanged);
+                    chk_lccenable.CheckedChanged += chk_lccenable_CheckedChanged;
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.ERROR, "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
-                    return;
+                    WriteConsole(ConsoleTypes.ERROR,
+                        "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
                 }
-
-            }
             else if (lccrestore_check == DialogResult.Cancel)
-            {
                 return;
-            }
         }
 
         private void ToggleLCCMode([Optional] bool force, [Optional] bool antilog)
@@ -1532,20 +1486,20 @@ namespace Chromatics
             if ((chk_lccenable.Checked || force) && !_force)
             {
                 //Enable LCC
-                
+
                 if (File.Exists(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
                 {
                     try
                     {
                         //File.Copy(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", true);
                         //File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll");
-                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", "LogitechLed.dll.disabled");
-                        
+                        FileSystem.RenameFile(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", "LogitechLed.dll.disabled");
                     }
                     catch (Exception ex)
                     {
                         if (!antilog)
-                            WriteConsole(ConsoleTypes.ERROR, "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
+                            WriteConsole(ConsoleTypes.ERROR,
+                                "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
                         return;
                     }
 
@@ -1555,8 +1509,8 @@ namespace Chromatics
                 else
                 {
                     if (!antilog)
-                        WriteConsole(ConsoleTypes.ERROR, "An Error occurred trying to enable Logitech Conflict Mode. Error: LGS SDK Library not found (A).");
-                    return;
+                        WriteConsole(ConsoleTypes.ERROR,
+                            "An Error occurred trying to enable Logitech Conflict Mode. Error: LGS SDK Library not found (A).");
                 }
             }
             else
@@ -1568,13 +1522,13 @@ namespace Chromatics
                     {
                         //File.Copy(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", true);
                         //File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled");
-                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", "LogitechLed.dll");
-                                                
+                        FileSystem.RenameFile(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", "LogitechLed.dll");
                     }
                     catch (Exception ex)
                     {
                         if (!antilog)
-                            WriteConsole(ConsoleTypes.ERROR, "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
+                            WriteConsole(ConsoleTypes.ERROR,
+                                "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
                         return;
                     }
 
@@ -1584,8 +1538,8 @@ namespace Chromatics
                 else
                 {
                     if (!antilog)
-                        WriteConsole(ConsoleTypes.ERROR, "An Error occurred trying to disable Logitech Conflict Mode. Error: LGS SDK Library not found (B).");
-                    return;
+                        WriteConsole(ConsoleTypes.ERROR,
+                            "An Error occurred trying to disable Logitech Conflict Mode. Error: LGS SDK Library not found (B).");
                 }
             }
         }
@@ -1609,15 +1563,9 @@ namespace Chromatics
         private void chk_startupenable_CheckedChanged(object sender, EventArgs e)
         {
             if (chk_startupenable.Checked)
-            {
-                // Add the value in the registry so that the application runs at startup
-                rkApp.SetValue("Chromatics", Application.ExecutablePath.ToString());
-            }
+                rkApp.SetValue("Chromatics", Application.ExecutablePath);
             else
-            {
-                // Remove the value from the registry so that the application doesn't start
                 rkApp.DeleteValue("Chromatics", false);
-            }
 
             mi_winstart.Checked = chk_startupenable.Checked;
         }

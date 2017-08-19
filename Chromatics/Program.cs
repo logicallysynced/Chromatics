@@ -19,7 +19,7 @@ namespace Chromatics
                 return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
             Application.Run(Locator.ChromaticsInstance);
         }
     }

@@ -1,24 +1,12 @@
-﻿using Chromatics.Controllers;
-using Sharlayan;
-using Sharlayan.Models;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Chromatics.FFXIVInterfaces
 {
-    class FFXIVHotbar
+    internal class FFXIVHotbar
     {
         public static List<string> keybindwhitelist = new List<string>();
 
-        public static readonly Dictionary<string, string> keybindtranslation = new Dictionary<string, string>()
+        public static readonly Dictionary<string, string> keybindtranslation = new Dictionary<string, string>
         {
             //Keys
             {"1", "D1"},
@@ -60,8 +48,8 @@ namespace Chromatics.FFXIVInterfaces
             {"Tab", "Tab"},
             {"Backspace", "Backspace"},
             {"`", "OemTilde"},
-            {"-", "OemMinus" },
-            {"=", "OemEquals" },
+            {"-", "OemMinus"},
+            {"=", "OemEquals"},
             {"[", "OemLeftBracket"},
             {"]", "OemRightBracket"},
             {"/", "OemSlash"},
@@ -69,7 +57,7 @@ namespace Chromatics.FFXIVInterfaces
             {"'", "OemApostrophe"},
             {",", "OemComma"},
             {".", "OemPeriod"},
-            {@"\", "OemBackslash" },
+            {@"\", "OemBackslash"},
             //{"", "EurPound"},
             //{"", "JpnYen"},
             {"Esc", "Escape"}

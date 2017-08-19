@@ -4,8 +4,8 @@ using Microsoft.Practices.ServiceLocation;
 namespace Chromatics.Controllers
 {
     /// <summary>
-    /// This is a Service Locator to allow for loose coupling of components
-    /// See https://martinfowler.com/articles/injection.html#UsingAServiceLocator for a description.
+    ///     This is a Service Locator to allow for loose coupling of components
+    ///     See https://martinfowler.com/articles/injection.html#UsingAServiceLocator for a description.
     /// </summary>
     internal class Locator
     {
@@ -23,10 +23,8 @@ namespace Chromatics.Controllers
 
 
         /// <summary>
-        /// Static reference to our main entry point into Chromatics
+        ///     Static reference to our main entry point into Chromatics
         /// </summary>
         public static Chromatics ChromaticsInstance => SimpleIoc.Default.GetInstance<Chromatics>();
     }
-
-
 }

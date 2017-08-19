@@ -1,19 +1,17 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using Roccat_Talk.RyosTalkFX;
-using Roccat_Talk.RyosTalkFX.KeyboardLayouts;
-using Roccat_Talk.TalkFX;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Ioc;
+using Roccat_Talk.RyosTalkFX;
+using Roccat_Talk.RyosTalkFX.KeyboardLayouts;
 
 namespace Chromatics.DeviceInterfaces
 {
-    class RoccatInterface
+    internal class RoccatInterface
     {
         public static RoccatLib InitializeRoccatSDK()
         {
@@ -27,7 +25,6 @@ namespace Chromatics.DeviceInterfaces
 
                 if (!roccatstat)
                     return null;
-                
             }
 
             return roccat;
@@ -43,24 +40,24 @@ namespace Chromatics.DeviceInterfaces
     {
         bool InitializeSDK();
         void Shutdown();
-        void ResetRoccatDevices(bool DeviceKeyboard, System.Drawing.Color basecol);
-        void UpdateState(string type, System.Drawing.Color col, bool disablekeys, [Optional] System.Drawing.Color col2,
+        void ResetRoccatDevices(bool DeviceKeyboard, Color basecol);
+
+        void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
             [Optional] bool direction, [Optional] int speed);
     }
 
     public class RoccatLib : IRoccatSdk
     {
-        private static ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
+        private static readonly ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
         private static RyosTalkFXConnection client;
-        private bool _initialized;
+
+        private static readonly KeyboardState MasterState = new KeyboardState();
 
         private readonly CancellationTokenSource CCTS = new CancellationTokenSource();
-        private bool RoccatDeviceKeyboard = true;
-
-        private static KeyboardState MasterState = new KeyboardState();
 
         #region keytranslator
-        private readonly Dictionary<string, Key> KeyIDs = new Dictionary<string, Key>()
+
+        private readonly Dictionary<string, Key> KeyIDs = new Dictionary<string, Key>
         {
             //Keys
             {"D1", KeyboardLayout_EN.ONE},
@@ -133,7 +130,7 @@ namespace Chromatics.DeviceInterfaces
             {"CapsLock", KeyboardLayout_EN.CAPS_LOCK},
             {"Backspace", KeyboardLayout_EN.BACKSPACE},
             {"Enter", KeyboardLayout_EN.ENTER},
-            {"LeftControl", KeyboardLayout_EN.LEFT_CTRL },
+            {"LeftControl", KeyboardLayout_EN.LEFT_CTRL},
             {"LeftWindows", KeyboardLayout_EN.WIN},
             {"LeftAlt", KeyboardLayout_EN.LEFT_ALT},
             {"Space", KeyboardLayout_EN.SPACE},
@@ -161,7 +158,11 @@ namespace Chromatics.DeviceInterfaces
             {"OemBackslash", KeyboardLayout_EN.BACKSLASH},
             {"Escape", KeyboardLayout_EN.ESC}
         };
+
         #endregion
+
+        private bool _initialized;
+        private bool RoccatDeviceKeyboard = true;
 
         public bool InitializeSDK()
         {
@@ -192,27 +193,20 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public void ResetRoccatDevices(bool DeviceKeyboard, System.Drawing.Color basecol)
+        public void ResetRoccatDevices(bool DeviceKeyboard, Color basecol)
         {
             RoccatDeviceKeyboard = DeviceKeyboard;
 
             if (_initialized)
-            {
                 if (RoccatDeviceKeyboard)
-                {
                     UpdateState("static", basecol, false);
-                }
                 else
-                {
                     Shutdown();
-                }
-            }
         }
 
-        public void UpdateState(string type, System.Drawing.Color col, bool disablekeys, [Optional] System.Drawing.Color col2,
+        public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
             [Optional] bool direction, [Optional] int speed)
         {
-
             if (!_initialized)
                 return;
 
@@ -237,9 +231,7 @@ namespace Chromatics.DeviceInterfaces
                 try
                 {
                     if (RoccatDeviceKeyboard && disablekeys != true)
-                    {
                         UpdateRoccatStateAll(col);
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -310,7 +302,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (!_initialized)
                 return;
-            
+
 
             if (RoccatDeviceKeyboard)
             {
@@ -319,20 +311,19 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        private void UpdateRoccatStateAll(System.Drawing.Color col)
+        private void UpdateRoccatStateAll(Color col)
         {
             if (!_initialized)
                 return;
 
             if (RoccatDeviceKeyboard)
             {
-
                 foreach (var key in KeyIDs)
                 {
                     //
                 }
 
-                
+
                 MasterState.AllLedsOn();
                 client.SetWholeKeyboardState(MasterState);
             }

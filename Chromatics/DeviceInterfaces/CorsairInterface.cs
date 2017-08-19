@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Chromatics.CorsairLibs;
+using Chromatics.DeviceInterfaces.EffectLibrary;
+using Chromatics.FFXIVInterfaces;
 using CUE.NET;
 using CUE.NET.Brushes;
 using CUE.NET.Devices.Generic.Enums;
 using CUE.NET.Groups;
 using GalaSoft.MvvmLight.Ioc;
-using Chromatics.DeviceInterfaces.EffectLibrary;
-using Chromatics.FFXIVInterfaces;
 
 /* Contains all Corsair SDK code for detection, initilization, states and effects.
  * 
@@ -44,9 +44,15 @@ namespace Chromatics.DeviceInterfaces
     public interface ICorsairSdk
     {
         bool InitializeSDK();
-        void ResetCorsairDevices(bool DeviceKeyboard, bool DeviceKeypad, bool DeviceMouse, bool DeviceMousepad, bool DeviceHeadset, System.Drawing.Color basecol);
+
+        void ResetCorsairDevices(bool DeviceKeyboard, bool DeviceKeypad, bool DeviceMouse, bool DeviceMousepad,
+            bool DeviceHeadset, Color basecol);
+
         void CorsairUpdateLED();
-        void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
+
+        void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2, [Optional] bool direction,
+            [Optional] int speed);
+
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string region, Color col, bool clear);
         void ApplyMapLogoLighting(string key, Color col, bool clear);
@@ -61,7 +67,26 @@ namespace Chromatics.DeviceInterfaces
 
     public class CorsairLib : ICorsairSdk
     {
-        private static ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
+        private static readonly ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
+
+        private static readonly object _Corsairtransition = new object();
+        private static readonly object _CorsairRipple1 = new object();
+        private static readonly object _CorsairRipple2 = new object();
+        private static readonly object _CorsairFlash1 = new object();
+        private static readonly object _CorsairFlash2 = new object();
+        private static readonly object _CorsairFlash4 = new object();
+        private static readonly object _CorsairtransitionConst = new object();
+
+        private static Dictionary<string, Color> _presets = new Dictionary<string, Color>();
+
+        private static int _CorsairFlash3Step;
+        private static bool _CorsairFlash3Running;
+        private static readonly object _Flash3 = new object();
+
+        private static Dictionary<string, Color> _presets4 = new Dictionary<string, Color>();
+
+        //Handle device send/recieve
+        private readonly CancellationTokenSource CCTS = new CancellationTokenSource();
 
         #region Effect Steps
 
@@ -226,19 +251,14 @@ namespace Chromatics.DeviceInterfaces
             {"Strip13", CorsairLedId.Invalid},
             {"Strip14", CorsairLedId.Invalid}
         };
+
         #endregion
 
-        private static readonly object _Corsairtransition = new object();
-        private static readonly object _CorsairRipple1 = new object();
-        private static readonly object _CorsairRipple2 = new object();
-        private static readonly object _CorsairFlash1 = new object();
-        private static readonly object _CorsairFlash2 = new object();
-        private static readonly object _CorsairFlash4 = new object();
-        private static readonly object _CorsairtransitionConst = new object();
-        private ListLedGroup _CorsairAllHeadsetLED; 
+        private ListLedGroup _CorsairAllHeadsetLED;
 
         //Define Corsair LED Groups
         private ListLedGroup _CorsairAllKeyboardLED;
+
         private ListLedGroup _CorsairAllMouseLED;
         private ListLedGroup _CorsairAllMousepadLED;
         private bool _CorsairFlash2Running;
@@ -252,9 +272,6 @@ namespace Chromatics.DeviceInterfaces
         private ListLedGroup _CorsairMouseIndvLED;
         private KeyMapBrush _CorsairMousepadIndvBrush;
         private ListLedGroup _CorsairMousepadIndvLED;
-
-        //Handle device send/recieve
-        private readonly CancellationTokenSource CCTS = new CancellationTokenSource();
         private bool CorsairDeviceHeadset = true;
         private bool CorsairDeviceKeyboard = true;
         private bool CorsairDeviceKeypad = true;
@@ -281,7 +298,7 @@ namespace Chromatics.DeviceInterfaces
                 _CorsairAllKeyboardLED.ZIndex = 1;
                 _CorsairKeyboardIndvLED.ZIndex = 10;
                 _CorsairKeyboardIndvLED.Brush = _CorsairKeyboardIndvBrush;
-                _CorsairAllKeyboardLED.Brush = (SolidColorBrush)Color.Black;
+                _CorsairAllKeyboardLED.Brush = (SolidColorBrush) Color.Black;
 
                 _CorsairMouseIndvBrush = new KeyMapBrush();
                 _CorsairMouseIndvLED = new ListLedGroup(CueSDK.MouseSDK, CueSDK.MouseSDK);
@@ -289,7 +306,7 @@ namespace Chromatics.DeviceInterfaces
                 _CorsairAllMouseLED.ZIndex = 1;
                 _CorsairMouseIndvLED.ZIndex = 10;
                 _CorsairMouseIndvLED.Brush = _CorsairMouseIndvBrush;
-                _CorsairAllMouseLED.Brush = (SolidColorBrush)Color.Black;
+                _CorsairAllMouseLED.Brush = (SolidColorBrush) Color.Black;
 
                 _CorsairMousepadIndvBrush = new KeyMapBrush();
                 _CorsairMousepadIndvLED = new ListLedGroup(CueSDK.MousematSDK, CueSDK.MousematSDK);
@@ -297,22 +314,25 @@ namespace Chromatics.DeviceInterfaces
                 _CorsairAllMousepadLED.ZIndex = 1;
                 _CorsairMousepadIndvLED.ZIndex = 10;
                 _CorsairMousepadIndvLED.Brush = _CorsairMousepadIndvBrush;
-                _CorsairAllMousepadLED.Brush = (SolidColorBrush)Color.Black;
+                _CorsairAllMousepadLED.Brush = (SolidColorBrush) Color.Black;
 
                 _CorsairAllHeadsetLED = new ListLedGroup(CueSDK.HeadsetSDK, CueSDK.HeadsetSDK);
                 _CorsairAllHeadsetLED.ZIndex = 1;
-                _CorsairAllHeadsetLED.Brush = (SolidColorBrush)Color.Black;
+                _CorsairAllHeadsetLED.Brush = (SolidColorBrush) Color.Black;
 
                 var corsairver = CueSDK.ProtocolDetails.ServerVersion.Split('.');
-                int cV = int.Parse(corsairver[0]);
+                var cV = int.Parse(corsairver[0]);
 
                 if (cV < 2)
                 {
-                    write.WriteConsole(ConsoleTypes.ERROR, "Corsair device support requires CUE2 Version 2.0.0 or higher to operate. Please download the latest version of CUE2 from the Corsair website.");
+                    write.WriteConsole(ConsoleTypes.ERROR,
+                        "Corsair device support requires CUE2 Version 2.0.0 or higher to operate. Please download the latest version of CUE2 from the Corsair website.");
                     return false;
                 }
 
-                write.WriteConsole(ConsoleTypes.CORSAIR, "CUE SDK Loaded (" + CueSDK.ProtocolDetails.SdkVersion + "/" + CueSDK.ProtocolDetails.ServerVersion + ")");
+                write.WriteConsole(ConsoleTypes.CORSAIR,
+                    "CUE SDK Loaded (" + CueSDK.ProtocolDetails.SdkVersion + "/" +
+                    CueSDK.ProtocolDetails.ServerVersion + ")");
 
                 CueSDK.UpdateMode = UpdateMode.Continuous;
                 //ResetCorsairDevices();
@@ -326,7 +346,8 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public void ResetCorsairDevices(bool DeviceKeyboard, bool DeviceKeypad, bool DeviceMouse, bool DeviceMousepad, bool DeviceHeadset, System.Drawing.Color basecol)
+        public void ResetCorsairDevices(bool DeviceKeyboard, bool DeviceKeypad, bool DeviceMouse, bool DeviceMousepad,
+            bool DeviceHeadset, Color basecol)
         {
             CorsairDeviceKeyboard = DeviceKeyboard;
             CorsairDeviceKeypad = DeviceKeypad;
@@ -335,9 +356,7 @@ namespace Chromatics.DeviceInterfaces
             CorsairDeviceHeadset = DeviceHeadset;
 
             if (CorsairDeviceKeyboard)
-            {
                 UpdateState("static", basecol, false);
-            }
         }
 
 
@@ -390,10 +409,10 @@ namespace Chromatics.DeviceInterfaces
                 try
                 {
                     if (CorsairDeviceHeadset)
-                        _CorsairAllHeadsetLED.Brush = (SolidColorBrush)col;
+                        _CorsairAllHeadsetLED.Brush = (SolidColorBrush) col;
                     if (CorsairDeviceKeyboard && disablekeys != true)
                     {
-                        _CorsairAllKeyboardLED.Brush = (SolidColorBrush)col;
+                        _CorsairAllKeyboardLED.Brush = (SolidColorBrush) col;
                         CueSDK.KeyboardSDK.Update();
                     }
 
@@ -402,9 +421,9 @@ namespace Chromatics.DeviceInterfaces
                         //Not Implemented
                     }
                     if (CorsairDeviceMouse)
-                        _CorsairAllMouseLED.Brush = (SolidColorBrush)col;
+                        _CorsairAllMouseLED.Brush = (SolidColorBrush) col;
                     if (CorsairDeviceMousepad)
-                        _CorsairAllMousepadLED.Brush = (SolidColorBrush)col;
+                        _CorsairAllMousepadLED.Brush = (SolidColorBrush) col;
                 }
                 catch (Exception ex)
                 {
@@ -525,7 +544,7 @@ namespace Chromatics.DeviceInterfaces
                 var _CrSt = new Task(() =>
                 {
                     if (CorsairDeviceHeadset)
-                        _CorsairAllHeadsetLED.Brush = (SolidColorBrush)col;
+                        _CorsairAllHeadsetLED.Brush = (SolidColorBrush) col;
                     if (CorsairDeviceKeyboard && disablekeys != true)
                     {
                         //CorsairtransitionConst(col, col2, true, speed);
@@ -535,9 +554,9 @@ namespace Chromatics.DeviceInterfaces
                         //Not Implemented
                     }
                     if (CorsairDeviceMouse)
-                        _CorsairAllMouseLED.Brush = (SolidColorBrush)col;
+                        _CorsairAllMouseLED.Brush = (SolidColorBrush) col;
                     if (CorsairDeviceMousepad)
-                        _CorsairAllMousepadLED.Brush = (SolidColorBrush)col;
+                        _CorsairAllMousepadLED.Brush = (SolidColorBrush) col;
                 }, CCTS.Token);
                 MemoryTasks.Add(_CrSt);
                 MemoryTasks.Run(_CrSt);
@@ -550,7 +569,6 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
-
             if (FFXIVHotbar.keybindwhitelist.Contains(key) && !bypasswhitelist)
                 return;
 
@@ -563,7 +581,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                write.WriteConsole(ConsoleTypes.ERROR, "Corsair ("+ key + "): " + ex.Message);
+                write.WriteConsole(ConsoleTypes.ERROR, "Corsair (" + key + "): " + ex.Message);
                 write.WriteConsole(ConsoleTypes.ERROR, "Internal Error (" + key + "): " + ex.StackTrace);
             }
         }
@@ -589,39 +607,10 @@ namespace Chromatics.DeviceInterfaces
                         _CorsairMousepadIndvBrush.CorsairApplyMapKeyLighting(Corsairkeyids[region], col);
         }
 
-        private void transition(Color col, bool forward)
-        {
-            lock (_Corsairtransition)
-            {
-                if (CorsairDeviceKeyboard)
-                {
-                    //To be implemented
-
-                    /*
-                    RectangleF spot = new RectangleF(CueSDK.KeyboardSDK.DeviceRectangle.Width / 2f, CueSDK.KeyboardSDK.DeviceRectangle.Y / 2f, 160, 80);
-                    PointF target = new PointF(spot.X, spot.Y);
-                    RectangleLedGroup _CorsairKeyRec = new RectangleLedGroup(CueSDK.KeyboardSDK, spot);
-
-                    for (uint c = 0; c < Corale.Colore.Razer.Keyboard.Constants.MaxColumns; c++)
-                    {
-                        for (uint r = 0; r < Corale.Colore.Razer.Keyboard.Constants.MaxRows; r++)
-                        {
-                            var row = (forward) ? r : Corale.Colore.Razer.Keyboard.Constants.MaxRows - r - 1;
-                            var colu = (forward) ? c : Corale.Colore.Razer.Keyboard.Constants.MaxColumns - c - 1;
-                            Keyboard.Instance[Convert.ToInt32(row), Convert.ToInt32(colu)] = RzCol;
-                        }
-                        Thread.Sleep(15);
-                    }
-                    */
-                }
-            }
-        }
-
         public Task Ripple1(Color burstcol, int speed, Color _BaseColor)
         {
             return new Task(() =>
             {
-
                 lock (_CorsairRipple1)
                 {
                     if (CorsairDeviceKeyboard)
@@ -840,7 +829,6 @@ namespace Chromatics.DeviceInterfaces
         {
             return new Task(() =>
             {
-
                 lock (_CorsairRipple2)
                 {
                     if (CorsairDeviceKeyboard)
@@ -851,30 +839,18 @@ namespace Chromatics.DeviceInterfaces
                         for (var i = 0; i <= 9; i++)
                         {
                             if (i == 0)
-                            {
-                                //Setup
-
-                                foreach (var key in DeviceEffects._GlobalKeys)
-                                {
-                                    if (Corsairkeyids.ContainsKey(key))
+                                foreach (var s in DeviceEffects._GlobalKeys)
+                                    if (Corsairkeyids.ContainsKey(s))
                                     {
-                                        var _key = Corsairkeyids[key];
+                                        var _key = Corsairkeyids[s];
                                         if (CueSDK.KeyboardSDK[_key] != null)
                                         {
                                             //Color ccX = CueSDK.KeyboardSDK[_key].Color;
                                             Color ccX = _CorsairKeyboardIndvBrush.CorsairGetColorReference(_key);
-                                            presets.Add(key, ccX);
+                                            presets.Add(s, ccX);
                                         }
                                     }
-                                }
-
-                                //Keyboard.Instance.SetCustom(keyboard_custom);
-
-                                //HoldReader = true;
-                            }
                             else if (i == 1)
-                            {
-                                //Step 0
                                 foreach (var key in DeviceEffects._GlobalKeys)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects._PulseOutStep0, key);
@@ -882,10 +858,7 @@ namespace Chromatics.DeviceInterfaces
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
-                            }
                             else if (i == 2)
-                            {
-                                //Step 1
                                 foreach (var key in DeviceEffects._GlobalKeys)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects._PulseOutStep1, key);
@@ -893,10 +866,7 @@ namespace Chromatics.DeviceInterfaces
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
-                            }
                             else if (i == 3)
-                            {
-                                //Step 2
                                 foreach (var key in DeviceEffects._GlobalKeys)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects._PulseOutStep2, key);
@@ -904,10 +874,7 @@ namespace Chromatics.DeviceInterfaces
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
-                            }
                             else if (i == 4)
-                            {
-                                //Step 3
                                 foreach (var key in DeviceEffects._GlobalKeys)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects._PulseOutStep3, key);
@@ -915,10 +882,7 @@ namespace Chromatics.DeviceInterfaces
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
-                            }
                             else if (i == 5)
-                            {
-                                //Step 4
                                 foreach (var key in DeviceEffects._GlobalKeys)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects._PulseOutStep4, key);
@@ -926,10 +890,7 @@ namespace Chromatics.DeviceInterfaces
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
-                            }
                             else if (i == 6)
-                            {
-                                //Step 5
                                 foreach (var key in DeviceEffects._GlobalKeys)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects._PulseOutStep5, key);
@@ -937,10 +898,7 @@ namespace Chromatics.DeviceInterfaces
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
-                            }
                             else if (i == 7)
-                            {
-                                //Step 6
                                 foreach (var key in DeviceEffects._GlobalKeys)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects._PulseOutStep6, key);
@@ -948,36 +906,20 @@ namespace Chromatics.DeviceInterfaces
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
-                            }
                             else if (i == 8)
-                            {
-                                //Step 7
                                 foreach (var key in DeviceEffects._GlobalKeys)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects._PulseOutStep7, key);
                                     if (pos > -1)
-                                    {
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
-                                    }
                                 }
-                            }
                             else if (i == 9)
-                            {
-                                //Spin down
-
                                 foreach (var key in DeviceEffects._GlobalKeys)
-                                {
                                     if (Corsairkeyids.ContainsKey(key))
                                     {
                                         //ApplyMapKeyLighting(key, presets[key], false);
                                     }
-                                }
-
-
-                                //presets.Clear();
-                                //HoldReader = false;
-                            }
 
                             if (i < 9)
                                 Thread.Sleep(speed);
@@ -1007,7 +949,6 @@ namespace Chromatics.DeviceInterfaces
                         //Setup
                         if (CorsairDeviceKeyboard)
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                 {
                                     var _key = Corsairkeyids[key];
@@ -1018,22 +959,15 @@ namespace Chromatics.DeviceInterfaces
                                         presets.Add(key, ccX);
                                     }
                                 }
-                            }
 
                         if (CorsairDeviceMouse)
                         {
                             if (CueSDK.MouseSDK[CorsairLedId.B3] != null)
-                            {
                                 ScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
-                            }
                             if (CueSDK.MouseSDK[CorsairLedId.B1] != null)
-                            {
                                 Logo = CueSDK.MouseSDK[CorsairLedId.B1].Color;
-                            }
                             if (CueSDK.MouseSDK[CorsairLedId.B4] != null)
-                            {
                                 Backlight = CueSDK.MouseSDK[CorsairLedId.B4].Color;
-                            }
                         }
 
                         //Keyboard.Instance.SetCustom(keyboard_custom);
@@ -1044,13 +978,9 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 0
                         if (CorsairDeviceKeyboard)
-                        {
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
-                            }
-                        }
 
                         if (CorsairDeviceMouse)
                         {
@@ -1063,13 +993,9 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 1
                         if (CorsairDeviceKeyboard)
-                        {
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
-                            }
-                        }
 
                         if (CorsairDeviceMouse)
                         {
@@ -1082,13 +1008,9 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 2
                         if (CorsairDeviceKeyboard)
-                        {
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
-                            }
-                        }
 
                         if (CorsairDeviceMouse)
                         {
@@ -1101,13 +1023,9 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 3
                         if (CorsairDeviceKeyboard)
-                        {
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
-                            }
-                        }
 
                         if (CorsairDeviceMouse)
                         {
@@ -1120,13 +1038,9 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 4
                         if (CorsairDeviceKeyboard)
-                        {
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
-                            }
-                        }
 
                         if (CorsairDeviceMouse)
                         {
@@ -1139,13 +1053,9 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 5
                         if (CorsairDeviceKeyboard)
-                        {
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
-                            }
-                        }
 
                         if (CorsairDeviceMouse)
                         {
@@ -1158,13 +1068,9 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 6
                         if (CorsairDeviceKeyboard)
-                        {
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
-                            }
-                        }
 
                         if (CorsairDeviceMouse)
                         {
@@ -1177,13 +1083,9 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 7
                         if (CorsairDeviceKeyboard)
-                        {
                             foreach (var key in regions)
-                            {
                                 if (Corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
-                            }
-                        }
 
                         if (CorsairDeviceMouse)
                         {
@@ -1201,35 +1103,28 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        private static Dictionary<string, Color> _presets = new Dictionary<string, Color>();
         public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
             lock (_CorsairFlash2)
             {
                 var presets = new Dictionary<string, Color>();
-                
+
                 if (!_CorsairFlash2Running)
                 {
                     if (CorsairDeviceMouse)
                     {
                         //CorsairScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
                         if (CueSDK.MouseSDK[CorsairLedId.B3] != null)
-                        {
                             CorsairScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
-                        }
                         if (CueSDK.MouseSDK[CorsairLedId.B1] != null)
-                        {
                             CorsairLogo = CueSDK.MouseSDK[CorsairLedId.B1].Color;
-                        }
 
                         CorsairScrollWheelConv = CorsairScrollWheel;
                         CorsairLogoConv = CorsairLogo;
                     }
 
                     if (CorsairDeviceKeyboard)
-                    {
                         foreach (var key in regions)
-                        {
                             if (Corsairkeyids.ContainsKey(key))
                             {
                                 var _key = Corsairkeyids[key];
@@ -1240,8 +1135,6 @@ namespace Chromatics.DeviceInterfaces
                                     presets.Add(key, ccX);
                                 }
                             }
-                        }
-                    }
 
                     _CorsairFlash2Running = true;
                     _CorsairFlash2Step = 0;
@@ -1249,25 +1142,18 @@ namespace Chromatics.DeviceInterfaces
                 }
 
                 if (_CorsairFlash2Running)
-                {
                     while (_CorsairFlash2Running)
                     {
                         if (cts.IsCancellationRequested)
-                        {
                             break;
-                        }
 
                         if (_CorsairFlash2Step == 0)
                         {
                             if (CorsairDeviceKeyboard)
-                            {
                                 foreach (var key in regions)
-                                {
                                     if (CorsairDeviceKeyboard)
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
-                                }
-                            }
                             if (CorsairDeviceMouse)
                             {
                                 ApplyMapMouseLighting("CorsairScrollWheel", burstcol, false);
@@ -1280,14 +1166,10 @@ namespace Chromatics.DeviceInterfaces
                         else if (_CorsairFlash2Step == 1)
                         {
                             if (CorsairDeviceKeyboard)
-                            {
                                 foreach (var key in regions)
-                                {
                                     if (CorsairDeviceKeyboard)
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, _presets[key], false);
-                                }
-                            }
                             if (CorsairDeviceMouse)
                             {
                                 ApplyMapMouseLighting("CorsairScrollWheel", CorsairScrollWheelConv, false);
@@ -1298,21 +1180,17 @@ namespace Chromatics.DeviceInterfaces
                             Thread.Sleep(speed);
                         }
                     }
-                }
             }
         }
 
-        private static int _CorsairFlash3Step = 0;
-        private static bool _CorsairFlash3Running = false;
-        static readonly object _Flash3 = new object();
-        public void Flash3(System.Drawing.Color burstcol, int speed, CancellationToken cts)
+        public void Flash3(Color burstcol, int speed, CancellationToken cts)
         {
             try
             {
                 //DeviceEffects._NumFlash
                 lock (_Flash3)
                 {
-                    if (CorsairDeviceKeyboard == true)
+                    if (CorsairDeviceKeyboard)
                     {
                         var presets = new Dictionary<string, Color>();
                         _CorsairFlash3Running = true;
@@ -1340,19 +1218,15 @@ namespace Chromatics.DeviceInterfaces
                                     write.WriteConsole(ConsoleTypes.ERROR, "(" + key + "): " + ex.Message);
                                 }
                             */
-
-
                         }
                         else
                         {
-                            while (_CorsairFlash3Running == true)
+                            while (_CorsairFlash3Running)
                             {
                                 //cts.ThrowIfCancellationRequested();
 
                                 if (cts.IsCancellationRequested)
-                                {
                                     break;
-                                }
 
                                 if (_CorsairFlash3Step == 0)
                                 {
@@ -1376,8 +1250,6 @@ namespace Chromatics.DeviceInterfaces
                                     }
 
                                     _CorsairFlash3Step = 0;
-
-
                                 }
 
                                 CueSDK.KeyboardSDK.Update();
@@ -1393,7 +1265,6 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        private static Dictionary<string, Color> _presets4 = new Dictionary<string, Color>();
         public void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
             lock (_CorsairFlash4)
@@ -1406,22 +1277,16 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //CorsairScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
                         if (CueSDK.MouseSDK[CorsairLedId.B3] != null)
-                        {
                             CorsairScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
-                        }
                         if (CueSDK.MouseSDK[CorsairLedId.B1] != null)
-                        {
                             CorsairLogo = CueSDK.MouseSDK[CorsairLedId.B1].Color;
-                        }
 
                         CorsairScrollWheelConv = CorsairScrollWheel;
                         CorsairLogoConv = CorsairLogo;
                     }
 
                     if (CorsairDeviceKeyboard)
-                    {
                         foreach (var key in regions)
-                        {
                             if (Corsairkeyids.ContainsKey(key))
                             {
                                 var _key = Corsairkeyids[key];
@@ -1432,8 +1297,6 @@ namespace Chromatics.DeviceInterfaces
                                     presets.Add(key, ccX);
                                 }
                             }
-                        }
-                    }
 
                     _CorsairFlash4Running = true;
                     _CorsairFlash4Step = 0;
@@ -1441,25 +1304,18 @@ namespace Chromatics.DeviceInterfaces
                 }
 
                 if (_CorsairFlash4Running)
-                {
                     while (_CorsairFlash2Running)
                     {
                         if (cts.IsCancellationRequested)
-                        {
                             break;
-                        }
 
                         if (_CorsairFlash4Step == 0)
                         {
                             if (CorsairDeviceKeyboard)
-                            {
                                 foreach (var key in regions)
-                                {
                                     if (CorsairDeviceKeyboard)
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
-                                }
-                            }
                             if (CorsairDeviceMouse)
                             {
                                 ApplyMapMouseLighting("CorsairScrollWheel", burstcol, false);
@@ -1472,14 +1328,10 @@ namespace Chromatics.DeviceInterfaces
                         else if (_CorsairFlash4Step == 1)
                         {
                             if (CorsairDeviceKeyboard)
-                            {
                                 foreach (var key in regions)
-                                {
                                     if (CorsairDeviceKeyboard)
                                         if (Corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, _presets4[key], false);
-                                }
-                            }
                             if (CorsairDeviceMouse)
                             {
                                 ApplyMapMouseLighting("CorsairScrollWheel", CorsairScrollWheelConv, false);
@@ -1490,6 +1342,33 @@ namespace Chromatics.DeviceInterfaces
                             Thread.Sleep(speed);
                         }
                     }
+            }
+        }
+
+        private void transition(Color col, bool forward)
+        {
+            lock (_Corsairtransition)
+            {
+                if (CorsairDeviceKeyboard)
+                {
+                    //To be implemented
+
+                    /*
+                    RectangleF spot = new RectangleF(CueSDK.KeyboardSDK.DeviceRectangle.Width / 2f, CueSDK.KeyboardSDK.DeviceRectangle.Y / 2f, 160, 80);
+                    PointF target = new PointF(spot.X, spot.Y);
+                    RectangleLedGroup _CorsairKeyRec = new RectangleLedGroup(CueSDK.KeyboardSDK, spot);
+
+                    for (uint c = 0; c < Corale.Colore.Razer.Keyboard.Constants.MaxColumns; c++)
+                    {
+                        for (uint r = 0; r < Corale.Colore.Razer.Keyboard.Constants.MaxRows; r++)
+                        {
+                            var row = (forward) ? r : Corale.Colore.Razer.Keyboard.Constants.MaxRows - r - 1;
+                            var colu = (forward) ? c : Corale.Colore.Razer.Keyboard.Constants.MaxColumns - c - 1;
+                            Keyboard.Instance[Convert.ToInt32(row), Convert.ToInt32(colu)] = RzCol;
+                        }
+                        Thread.Sleep(15);
+                    }
+                    */
                 }
             }
         }

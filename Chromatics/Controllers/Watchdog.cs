@@ -1,5 +1,5 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using System.Timers;
+﻿using System.Timers;
+using GalaSoft.MvvmLight.Ioc;
 
 /* Contains debug code to recover Sharlayan and Colore in case of memory leak or overlap.
  * Uses a timer started as a seperate task which is reset every loop of the MemoryReader loop and if the timer
@@ -13,7 +13,8 @@ namespace Chromatics
     {
         //private Timer Timer;
         private static Timer Timer;
-        private static ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
+
+        private static readonly ILogWrite write = SimpleIoc.Default.GetInstance<ILogWrite>();
 
         public static void WatchdogGo()
         {

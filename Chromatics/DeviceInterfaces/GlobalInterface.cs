@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Chromatics.DeviceInterfaces;
-using System.Diagnostics;
 
 /* Hubs all commands sent from FFXIVInterface and re-routes them to their correct Device interface.
  * 
@@ -16,13 +13,65 @@ namespace Chromatics
 {
     partial class Chromatics
     {
-        private ILogitechSdk _logitech;
-        private IRazerSdk _razer;
-        private ICorsairSdk _corsair;
         private ICoolermasterSdk _coolermaster;
+        private CancellationTokenSource _CoolermasterFl1CTS = new CancellationTokenSource();
+        private Task _CoolermasterFl2;
+        private CancellationTokenSource _CoolermasterFl2CTS = new CancellationTokenSource();
+        private Task _CoolermasterFl3;
+        private CancellationTokenSource _CoolermasterFl3CTS = new CancellationTokenSource();
+        private Task _CoolermasterFl4;
+        private CancellationTokenSource _CoolermasterFl4CTS = new CancellationTokenSource();
+        private ICorsairSdk _corsair;
+        private CancellationTokenSource _CorsairF1CTS = new CancellationTokenSource();
+        private Task _CorsairFl2;
+        private CancellationTokenSource _CorsairFl2CTS = new CancellationTokenSource();
+        private Task _CorsairFl3;
+        private CancellationTokenSource _CorsairFl3CTS = new CancellationTokenSource();
+        private Task _CorsairFl4;
+        private CancellationTokenSource _CorsairFl4CTS = new CancellationTokenSource();
+        private IHueSdk _hue;
+        private CancellationTokenSource _Hue4CTS = new CancellationTokenSource();
+
+        private Task _HueFl4;
+
         //private IRoccatSdk _roccat;
         private ILIFXSdk _lifx;
-        private IHueSdk _hue;
+
+        private CancellationTokenSource _Lifx4CTS = new CancellationTokenSource();
+        private Task _LifxFl4;
+        private Task _LogiFl2;
+        private CancellationTokenSource _LogiFl2CTS = new CancellationTokenSource();
+        private Task _LogiFl3;
+        private CancellationTokenSource _LogiFl3CTS = new CancellationTokenSource();
+        private Task _LogiFl4;
+        private CancellationTokenSource _LogiFl4CTS = new CancellationTokenSource();
+        private ILogitechSdk _logitech;
+        private CancellationTokenSource _LogitechFl1CTS = new CancellationTokenSource();
+        private IRazerSdk _razer;
+
+        //Send a timed flash effect to a Keyboard
+        private CancellationTokenSource _RzFl1CTS = new CancellationTokenSource();
+
+        private Task _RzFl2;
+        private CancellationTokenSource _RzFl2CTS = new CancellationTokenSource();
+        private Task _RzFl3;
+        private CancellationTokenSource _RzFl3CTS = new CancellationTokenSource();
+        private Task _RzFl4;
+        private CancellationTokenSource _RzFl4CTS = new CancellationTokenSource();
+        private Task CoolermasterFlash;
+        private Task CorsairFlash;
+
+        //Send a continuous flash effect to a Keyboard
+        private bool GlobalFlash2Running;
+
+        //Send a continuous flash effect to Numpad
+        private bool GlobalFlash3Running;
+
+        //Flash 4
+        private bool GlobalFlash4Running;
+
+        private Task logFlash;
+        private Task RzFlash;
 
         public void InitializeSDK()
         {
@@ -39,7 +88,7 @@ namespace Chromatics
             {
                 WriteConsole(ConsoleTypes.RAZER, "Razer SDK failed to load.");
             }
-            
+
             WriteConsole(ConsoleTypes.LOGITECH, "Attempting to load Logitech SDK..");
             _logitech = LogitechInterface.InitializeLogitechSDK();
             if (_logitech != null)
@@ -80,7 +129,7 @@ namespace Chromatics
             }
 
             //Load LIFX SDK
-            _lifx = DeviceInterfaces.LIFXInterface.InitializeLIFXSDK();
+            _lifx = LIFXInterface.InitializeLIFXSDK();
             if (_lifx != null)
             {
                 LifxSDK = true;
@@ -117,34 +166,26 @@ namespace Chromatics
         public void ShutDownDevices()
         {
             if (CoolermasterSDKCalled == 1)
-            {
                 _coolermaster.Shutdown();
-            }
         }
 
         public void GlobalResetDevices()
         {
-            var _BaseColor = System.Drawing.ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor);
+            var _BaseColor = ColorTranslator.FromHtml(ColorMappings.ColorMapping_BaseColor);
 
             if (RazerSDKCalled == 1)
-            {
-                _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad, RazerDeviceHeadset, _BaseColor);
-            }
+                _razer.ResetRazerDevices(RazerDeviceKeyboard, RazerDeviceKeypad, RazerDeviceMouse, RazerDeviceMousepad,
+                    RazerDeviceHeadset, _BaseColor);
 
             if (LogitechSDKCalled == 1)
-            {
                 _logitech.ResetLogitechDevices(LogitechDeviceKeyboard, _BaseColor);
-            }
 
             if (CorsairSDKCalled == 1)
-            {
-                _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse, CorsairDeviceMousepad, CorsairDeviceHeadset, _BaseColor);
-            }
+                _corsair.ResetCorsairDevices(CorsairDeviceKeyboard, CorsairDeviceKeypad, CorsairDeviceMouse,
+                    CorsairDeviceMousepad, CorsairDeviceHeadset, _BaseColor);
 
             if (CoolermasterSDKCalled == 1)
-            {
                 _coolermaster.ResetCoolermasterDevices(CoolermasterDeviceKeyboard, CoolermasterDeviceMouse, _BaseColor);
-            }
 
             ResetDeviceDataGrid();
         }
@@ -157,28 +198,21 @@ namespace Chromatics
          * Wave - RGB rainbow scroll effect
          * Breath - Breathing effect on and off
          * Pulse - Constant wipe transitions between two colours
-         */ 
-        public void GlobalUpdateState(string type, System.Drawing.Color col, bool disablekeys, [Optional]System.Drawing.Color col2, [Optional]bool direction, [Optional]int speed)
+         */
+        public void GlobalUpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
+            [Optional] bool direction, [Optional] int speed)
         {
             if (RazerSDKCalled == 1)
-            {
                 _razer.UpdateState(type, col, disablekeys, col2, direction, speed);
-            }
 
             if (LogitechSDKCalled == 1)
-            {
                 _logitech.UpdateState(type, col, disablekeys, col2, direction, speed);
-            }
 
             if (CorsairSDKCalled == 1)
-            {
                 _corsair.UpdateState(type, col, disablekeys, col2, direction, speed);
-            }
 
             if (CoolermasterSDKCalled == 1)
-            {
                 _coolermaster.UpdateState(type, col, disablekeys, col2, direction, speed);
-            }
         }
 
         /* Sends a standard lighting update command to LIFX or HUE devices
@@ -196,70 +230,38 @@ namespace Chromatics
          * 10 - Castbar
          * 100 - All/System
         */
-        public void GlobalUpdateBulbState(DeviceModeTypes mode, System.Drawing.Color col, int transition)
+        public void GlobalUpdateBulbState(DeviceModeTypes mode, Color col, int transition)
         {
             if (LifxSDKCalled == 1)
-            {
                 if (mode != DeviceModeTypes.DISABLED)
-                {
                     if (mode == DeviceModeTypes.STANDBY)
-                    {
-                        _lifx.LIFXUpdateState(mode, System.Drawing.Color.Black, transition);
-                    }
+                        _lifx.LIFXUpdateState(mode, Color.Black, transition);
                     else
-                    {
                         _lifx.LIFXUpdateState(mode, col, transition);
-                    }
-                }
-            }
 
             if (HueSDKCalled == 1)
-            {
                 if (mode != DeviceModeTypes.DISABLED)
-                {
                     if (mode == DeviceModeTypes.STANDBY)
-                    {
-                        _hue.HUEUpdateState(mode, System.Drawing.Color.Black, transition);
-                    }
+                        _hue.HUEUpdateState(mode, Color.Black, transition);
                     else
-                    {
                         _hue.HUEUpdateState(mode, col, transition);
-                    }
-                }
-            }
         }
 
-        public void GlobalUpdateBulbStateBrightness(DeviceModeTypes mode, System.Drawing.Color col, ushort brightness, int transition)
+        public void GlobalUpdateBulbStateBrightness(DeviceModeTypes mode, Color col, ushort brightness, int transition)
         {
             if (LifxSDKCalled == 1)
-            {
                 if (mode != DeviceModeTypes.DISABLED)
-                {
                     if (mode == DeviceModeTypes.STANDBY)
-                    {
-                        _lifx.LIFXUpdateStateBrightness(mode, System.Drawing.Color.Black, brightness, transition);
-                    }
+                        _lifx.LIFXUpdateStateBrightness(mode, Color.Black, brightness, transition);
                     else
-                    {
                         _lifx.LIFXUpdateStateBrightness(mode, col, brightness, transition);
-                    }
-                }
-            }
 
             if (HueSDKCalled == 1)
-            {
                 if (mode != DeviceModeTypes.DISABLED)
-                {
                     if (mode == DeviceModeTypes.STANDBY)
-                    {
-                        _hue.HUEUpdateStateBrightness(mode, System.Drawing.Color.Black, brightness, transition);
-                    }
+                        _hue.HUEUpdateStateBrightness(mode, Color.Black, brightness, transition);
                     else
-                    {
                         _hue.HUEUpdateStateBrightness(mode, col, brightness, transition);
-                    }
-                }
-            }
         }
 
         //_lifx.LIFXUpdateStateBrightness(9, col_tpfull, (ushort) pol_TPZ, 250);
@@ -267,54 +269,35 @@ namespace Chromatics
         public void GlobalKeyboardUpdate()
         {
             if (!HoldReader)
-            {
                 if (RazerSDKCalled == 1)
-                {
                     _razer.KeyboardUpdate();
-                }
-            }
         }
 
         //Send a lighting command to a specific Keyboard LED
-        public void GlobalApplyMapKeyLighting(string key, System.Drawing.Color col, bool clear, [Optional] bool bypasswhitelist)
+        public void GlobalApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
             if (RazerSDKCalled == 1)
-            {
                 _razer.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
-            }
 
             if (LogitechSDKCalled == 1)
             {
                 if (key == "Macro1")
-                {
                     _logitech.ApplyMapKeyLighting("Macro1", col, clear, bypasswhitelist);
-                }
                 else if (key == "Macro2")
-                {
                     _logitech.ApplyMapKeyLighting("Macro4", col, clear, bypasswhitelist);
-                }
                 else if (key == "Macro3")
-                {
                     _logitech.ApplyMapKeyLighting("Macro7", col, clear, bypasswhitelist);
-                }
                 else if (key == "Macro4")
-                {
                     _logitech.ApplyMapKeyLighting("Macro10", col, clear, bypasswhitelist);
-                }
                 else if (key == "Macro5")
-                {
                     _logitech.ApplyMapKeyLighting("Macro13", col, clear, bypasswhitelist);
-                }
                 else
-                {
                     _logitech.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
-                }
 
                 _logitech.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
             }
 
             if (CorsairSDKCalled == 1)
-            {
                 if (key == "Macro1")
                 {
                     _corsair.ApplyMapKeyLighting("Macro1", col, clear, bypasswhitelist);
@@ -349,21 +332,16 @@ namespace Chromatics
                 {
                     _corsair.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
                 }
-            }
 
             if (CoolermasterSDKCalled == 1)
-            {
                 _coolermaster.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
-            }
         }
 
         //Send a lighting command to a specific Keyboard LED outside of MapKey scope
-        public void GlobalApplyMapLogoLighting(string key, System.Drawing.Color col, bool clear)
+        public void GlobalApplyMapLogoLighting(string key, Color col, bool clear)
         {
             if (RazerSDKCalled == 1)
-            {
                 _razer.ApplyMapLogoLighting(key, col, clear);
-            }
 
             if (LogitechSDKCalled == 1)
             {
@@ -371,18 +349,14 @@ namespace Chromatics
             }
 
             if (CorsairSDKCalled == 1)
-            {
                 _corsair.ApplyMapLogoLighting(key, col, clear);
-            }
         }
 
         //Send a lighting command to a specific Mouse LED
-        public void GlobalApplyMapMouseLighting(string region, System.Drawing.Color col, bool clear)
+        public void GlobalApplyMapMouseLighting(string region, Color col, bool clear)
         {
             if (RazerSDKCalled == 1)
-            {
                 _razer.ApplyMapMouseLighting(region, col, clear);
-            }
 
             if (LogitechSDKCalled == 1)
             {
@@ -390,7 +364,6 @@ namespace Chromatics
             }
 
             if (CorsairSDKCalled == 1)
-            {
                 if (region == "All")
                 {
                     _corsair.ApplyMapMouseLighting("MouseFront", col, clear);
@@ -415,17 +388,13 @@ namespace Chromatics
                 {
                     _corsair.ApplyMapMouseLighting(region, col, clear);
                 }
-                
-            }
         }
 
         //Send a lighting command to a specific Mousepad or HUE/LIFX LED
-        public void GlobalApplyMapPadLighting(int region, System.Drawing.Color col, bool clear)
+        public void GlobalApplyMapPadLighting(int region, Color col, bool clear)
         {
             if (RazerSDKCalled == 1)
-            {
                 _razer.ApplyMapPadLighting(region, col, clear);
-            }
 
             if (LogitechSDKCalled == 1)
             {
@@ -434,30 +403,30 @@ namespace Chromatics
 
             if (CorsairSDKCalled == 1)
             {
-                string _CorsairPadRegion = "Pad1";
+                var _CorsairPadRegion = "Pad1";
 
-                if (region == 0) { _CorsairPadRegion = "Pad15"; }
-                else if (region == 1) { _CorsairPadRegion = "Pad14"; }
-                else if (region == 2) { _CorsairPadRegion = "Pad13"; }
-                else if (region == 3) { _CorsairPadRegion = "Pad12"; }
-                else if (region == 4) { _CorsairPadRegion = "Pad11"; }
-                else if (region == 5) { _CorsairPadRegion = "Pad10"; }
-                else if (region == 6) { _CorsairPadRegion = "Pad9"; }
-                else if (region == 7) { _CorsairPadRegion = "Pad8"; }
-                else if (region == 8) { _CorsairPadRegion = "Pad7"; }
-                else if (region == 9) { _CorsairPadRegion = "Pad6"; }
-                else if (region == 10) { _CorsairPadRegion = "Pad5"; }
-                else if (region == 11) { _CorsairPadRegion = "Pad4"; }
-                else if (region == 12) { _CorsairPadRegion = "Pad3"; }
-                else if (region == 13) { _CorsairPadRegion = "Pad2"; }
-                else if (region == 14) { _CorsairPadRegion = "Pad1"; }
+                if (region == 0) _CorsairPadRegion = "Pad15";
+                else if (region == 1) _CorsairPadRegion = "Pad14";
+                else if (region == 2) _CorsairPadRegion = "Pad13";
+                else if (region == 3) _CorsairPadRegion = "Pad12";
+                else if (region == 4) _CorsairPadRegion = "Pad11";
+                else if (region == 5) _CorsairPadRegion = "Pad10";
+                else if (region == 6) _CorsairPadRegion = "Pad9";
+                else if (region == 7) _CorsairPadRegion = "Pad8";
+                else if (region == 8) _CorsairPadRegion = "Pad7";
+                else if (region == 9) _CorsairPadRegion = "Pad6";
+                else if (region == 10) _CorsairPadRegion = "Pad5";
+                else if (region == 11) _CorsairPadRegion = "Pad4";
+                else if (region == 12) _CorsairPadRegion = "Pad3";
+                else if (region == 13) _CorsairPadRegion = "Pad2";
+                else if (region == 14) _CorsairPadRegion = "Pad1";
 
                 _corsair.ApplyMapPadLighting(_CorsairPadRegion, col, clear);
             }
         }
-        
+
         //Send a ripple effect to a Keyboard that reverts back to the base colour once completed
-        public void GlobalRipple1(System.Drawing.Color burstcol, int speed, System.Drawing.Color _BaseColor)
+        public void GlobalRipple1(Color burstcol, int speed, Color _BaseColor)
         {
             MemoryTasks.Cleanup();
 
@@ -466,7 +435,6 @@ namespace Chromatics
                 var rippleTask = _razer.Ripple1(burstcol, speed);
                 MemoryTasks.Add(rippleTask);
                 MemoryTasks.Run(rippleTask);
-                
             }
 
             if (LogitechSDKCalled == 1)
@@ -492,7 +460,7 @@ namespace Chromatics
         }
 
         //Send a ripple effect to a Keyboard that keeps its new colour
-        public void GlobalRipple2(System.Drawing.Color burstcol, int speed)
+        public void GlobalRipple2(Color burstcol, int speed)
         {
             MemoryTasks.Cleanup();
 
@@ -505,11 +473,11 @@ namespace Chromatics
 
             if (LogitechSDKCalled == 1)
             {
-                Task logitechRipple2 = _logitech.Ripple2(burstcol, speed);
+                var logitechRipple2 = _logitech.Ripple2(burstcol, speed);
                 MemoryTasks.Add(logitechRipple2);
                 MemoryTasks.Run(logitechRipple2);
             }
-        
+
             if (CorsairSDKCalled == 1)
             {
                 var rippleTask2 = _corsair.Ripple2(burstcol, speed);
@@ -525,17 +493,7 @@ namespace Chromatics
             }
         }
 
-        //Send a timed flash effect to a Keyboard
-        private CancellationTokenSource _RzFl1CTS = new CancellationTokenSource();
-        private CancellationTokenSource _CorsairF1CTS = new CancellationTokenSource();
-        private CancellationTokenSource _LogitechFl1CTS = new CancellationTokenSource();
-        private CancellationTokenSource _CoolermasterFl1CTS = new CancellationTokenSource();
-        private Task RzFlash;
-        private Task logFlash;
-        private Task CorsairFlash;
-        private Task CoolermasterFlash;
-
-        public void GlobalFlash1(System.Drawing.Color burstcol, int speed, string[] regions)
+        public void GlobalFlash1(Color burstcol, int speed, string[] regions)
         {
             MemoryTasks.Cleanup();
 
@@ -600,18 +558,7 @@ namespace Chromatics
             }
         }
 
-        //Send a continuous flash effect to a Keyboard
-        bool GlobalFlash2Running = false;
-        private CancellationTokenSource _RzFl2CTS = new CancellationTokenSource();
-        private CancellationTokenSource _CorsairFl2CTS = new CancellationTokenSource();
-        private CancellationTokenSource _LogiFl2CTS = new CancellationTokenSource();
-        private CancellationTokenSource _CoolermasterFl2CTS = new CancellationTokenSource();
-        Task _RzFl2;
-        Task _CorsairFl2;
-        Task _LogiFl2;
-        Task _CoolermasterFl2;
-
-        public void GlobalFlash2(System.Drawing.Color burstcol, int speed, string[] template)
+        public void GlobalFlash2(Color burstcol, int speed, string[] template)
         {
             MemoryTasks.Cleanup();
 
@@ -621,7 +568,8 @@ namespace Chromatics
                 {
                     _RzFl2 = null;
                     _RzFl2CTS = new CancellationTokenSource();
-                    _RzFl2 = new Task(() => { _razer.Flash2(burstcol, speed, _RzFl2CTS.Token, template); }, _RzFl2CTS.Token);
+                    _RzFl2 = new Task(() => { _razer.Flash2(burstcol, speed, _RzFl2CTS.Token, template); },
+                        _RzFl2CTS.Token);
                     MemoryTasks.Add(_RzFl2);
                     MemoryTasks.Run(_RzFl2);
                 }
@@ -630,7 +578,8 @@ namespace Chromatics
                 {
                     _LogiFl2 = null;
                     _LogiFl2CTS = new CancellationTokenSource();
-                    _LogiFl2 = new Task(() => { _logitech.Flash2(burstcol, speed, _LogiFl2CTS.Token, template); }, _LogiFl2CTS.Token);
+                    _LogiFl2 = new Task(() => { _logitech.Flash2(burstcol, speed, _LogiFl2CTS.Token, template); },
+                        _LogiFl2CTS.Token);
                     MemoryTasks.Add(_LogiFl2);
                     MemoryTasks.Run(_LogiFl2);
                 }
@@ -639,7 +588,8 @@ namespace Chromatics
                 {
                     _CorsairFl2 = null;
                     _CorsairFl2CTS = new CancellationTokenSource();
-                    _CorsairFl2 = new Task(() => { _corsair.Flash2(burstcol, speed, _CorsairFl2CTS.Token, template); }, _CorsairFl2CTS.Token);
+                    _CorsairFl2 = new Task(() => { _corsair.Flash2(burstcol, speed, _CorsairFl2CTS.Token, template); },
+                        _CorsairFl2CTS.Token);
                     MemoryTasks.Add(_CorsairFl2);
                     MemoryTasks.Run(_CorsairFl2);
                 }
@@ -648,7 +598,9 @@ namespace Chromatics
                 {
                     _CoolermasterFl2 = null;
                     _CoolermasterFl2CTS = new CancellationTokenSource();
-                    _CoolermasterFl2 = new Task(() => { _coolermaster.Flash2(burstcol, speed, _CoolermasterFl2CTS.Token, template); }, _CoolermasterFl2CTS.Token);
+                    _CoolermasterFl2 =
+                        new Task(() => { _coolermaster.Flash2(burstcol, speed, _CoolermasterFl2CTS.Token, template); },
+                            _CoolermasterFl2CTS.Token);
                     MemoryTasks.Add(_CoolermasterFl2);
                     MemoryTasks.Run(_CoolermasterFl2);
                 }
@@ -695,18 +647,7 @@ namespace Chromatics
             MemoryTasks.Cleanup();
         }
 
-        //Send a continuous flash effect to Numpad
-        bool GlobalFlash3Running = false;
-        private CancellationTokenSource _RzFl3CTS = new CancellationTokenSource();
-        private CancellationTokenSource _CorsairFl3CTS = new CancellationTokenSource();
-        private CancellationTokenSource _LogiFl3CTS = new CancellationTokenSource();
-        private CancellationTokenSource _CoolermasterFl3CTS = new CancellationTokenSource();
-        private Task _RzFl3;
-        private Task _CorsairFl3;
-        private Task _LogiFl3;
-        private Task _CoolermasterFl3;
-
-        public void GlobalFlash3(System.Drawing.Color burstcol, int speed)
+        public void GlobalFlash3(Color burstcol, int speed)
         {
             MemoryTasks.Cleanup();
 
@@ -725,7 +666,8 @@ namespace Chromatics
                 {
                     _LogiFl3 = null;
                     _LogiFl3CTS = new CancellationTokenSource();
-                    _LogiFl3 = new Task(() => { _logitech.Flash3(burstcol, speed, _LogiFl3CTS.Token); }, _LogiFl3CTS.Token);
+                    _LogiFl3 = new Task(() => { _logitech.Flash3(burstcol, speed, _LogiFl3CTS.Token); },
+                        _LogiFl3CTS.Token);
                     MemoryTasks.Add(_LogiFl3);
                     MemoryTasks.Run(_LogiFl3);
                 }
@@ -734,7 +676,8 @@ namespace Chromatics
                 {
                     _CorsairFl3 = null;
                     _CorsairFl3CTS = new CancellationTokenSource();
-                    _CorsairFl3 = new Task(() => { _corsair.Flash3(burstcol, speed, _CorsairFl3CTS.Token); }, _CorsairFl3CTS.Token);
+                    _CorsairFl3 = new Task(() => { _corsair.Flash3(burstcol, speed, _CorsairFl3CTS.Token); },
+                        _CorsairFl3CTS.Token);
                     MemoryTasks.Add(_CorsairFl3);
                     MemoryTasks.Run(_CorsairFl3);
                 }
@@ -743,7 +686,9 @@ namespace Chromatics
                 {
                     _CoolermasterFl3 = null;
                     _CoolermasterFl3CTS = new CancellationTokenSource();
-                    _CoolermasterFl3 = new Task(() => { _coolermaster.Flash3(burstcol, speed, _CoolermasterFl3CTS.Token); }, _CoolermasterFl3CTS.Token);
+                    _CoolermasterFl3 =
+                        new Task(() => { _coolermaster.Flash3(burstcol, speed, _CoolermasterFl3CTS.Token); },
+                            _CoolermasterFl3CTS.Token);
                     MemoryTasks.Add(_CoolermasterFl3);
                     MemoryTasks.Run(_CoolermasterFl3);
                 }
@@ -792,22 +737,7 @@ namespace Chromatics
             MemoryTasks.Cleanup();
         }
 
-        //Flash 4
-        bool GlobalFlash4Running = false;
-        private CancellationTokenSource _RzFl4CTS = new CancellationTokenSource();
-        private CancellationTokenSource _CorsairFl4CTS = new CancellationTokenSource();
-        private CancellationTokenSource _LogiFl4CTS = new CancellationTokenSource();
-        private CancellationTokenSource _CoolermasterFl4CTS = new CancellationTokenSource();
-        private CancellationTokenSource _Lifx4CTS = new CancellationTokenSource();
-        private CancellationTokenSource _Hue4CTS = new CancellationTokenSource();
-        Task _RzFl4;
-        Task _CorsairFl4;
-        Task _LogiFl4;
-        Task _CoolermasterFl4;
-        Task _LifxFl4;
-        Task _HueFl4;
-
-        public void GlobalFlash4(System.Drawing.Color basecol, System.Drawing.Color burstcol, int speed, string[] template)
+        public void GlobalFlash4(Color basecol, Color burstcol, int speed, string[] template)
         {
             MemoryTasks.Cleanup();
 
@@ -819,7 +749,8 @@ namespace Chromatics
                     {
                         _RzFl4 = null;
                         _RzFl4CTS = new CancellationTokenSource();
-                        _RzFl4 = new Task(() => { _razer.Flash4(burstcol, speed, _RzFl4CTS.Token, template); }, _RzFl4CTS.Token);
+                        _RzFl4 = new Task(() => { _razer.Flash4(burstcol, speed, _RzFl4CTS.Token, template); },
+                            _RzFl4CTS.Token);
                         MemoryTasks.Add(_RzFl4);
                         MemoryTasks.Run(_RzFl4);
                     }
@@ -828,7 +759,8 @@ namespace Chromatics
                     {
                         _LogiFl4 = null;
                         _LogiFl4CTS = new CancellationTokenSource();
-                        _LogiFl4 = new Task(() => { _logitech.Flash4(burstcol, speed, _LogiFl4CTS.Token, template); }, _LogiFl4CTS.Token);
+                        _LogiFl4 = new Task(() => { _logitech.Flash4(burstcol, speed, _LogiFl4CTS.Token, template); },
+                            _LogiFl4CTS.Token);
                         MemoryTasks.Add(_LogiFl4);
                         MemoryTasks.Run(_LogiFl4);
                     }
@@ -837,7 +769,9 @@ namespace Chromatics
                     {
                         _CorsairFl4 = null;
                         _CorsairFl4CTS = new CancellationTokenSource();
-                        _CorsairFl4 = new Task(() => { _corsair.Flash4(burstcol, speed, _CorsairFl4CTS.Token, template); }, _CorsairFl4CTS.Token);
+                        _CorsairFl4 =
+                            new Task(() => { _corsair.Flash4(burstcol, speed, _CorsairFl4CTS.Token, template); },
+                                _CorsairFl4CTS.Token);
                         MemoryTasks.Add(_CorsairFl4);
                         MemoryTasks.Run(_CorsairFl4);
                     }
@@ -846,7 +780,10 @@ namespace Chromatics
                     {
                         _CoolermasterFl4 = null;
                         _CoolermasterFl4CTS = new CancellationTokenSource();
-                        _CoolermasterFl4 = new Task(() => { _coolermaster.Flash4(burstcol, speed, _CoolermasterFl4CTS.Token, template); }, _CoolermasterFl4CTS.Token);
+                        _CoolermasterFl4 =
+                            new Task(
+                                () => { _coolermaster.Flash4(burstcol, speed, _CoolermasterFl4CTS.Token, template); },
+                                _CoolermasterFl4CTS.Token);
                         MemoryTasks.Add(_CoolermasterFl4);
                         MemoryTasks.Run(_CoolermasterFl4);
                     }
@@ -856,7 +793,8 @@ namespace Chromatics
                 {
                     _LifxFl4 = null;
                     _Lifx4CTS = new CancellationTokenSource();
-                    _LifxFl4 = new Task(() => { _lifx.Flash4(basecol, burstcol, speed*2, _Lifx4CTS.Token); }, _Lifx4CTS.Token);
+                    _LifxFl4 = new Task(() => { _lifx.Flash4(basecol, burstcol, speed * 2, _Lifx4CTS.Token); },
+                        _Lifx4CTS.Token);
                     MemoryTasks.Add(_LifxFl4);
                     MemoryTasks.Run(_LifxFl4);
                 }
@@ -865,7 +803,8 @@ namespace Chromatics
                 {
                     _HueFl4 = null;
                     _Hue4CTS = new CancellationTokenSource();
-                    _HueFl4 = new Task(() => { _hue.Flash4(basecol, burstcol, speed*2, _Hue4CTS.Token); }, _Hue4CTS.Token);
+                    _HueFl4 = new Task(() => { _hue.Flash4(basecol, burstcol, speed * 2, _Hue4CTS.Token); },
+                        _Hue4CTS.Token);
                     MemoryTasks.Add(_HueFl4);
                     MemoryTasks.Run(_HueFl4);
                 }
