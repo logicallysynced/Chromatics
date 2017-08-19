@@ -465,15 +465,13 @@ namespace Chromatics.DeviceInterfaces
                 try
                 {
                     if (_coolermasterDeviceKeyboard && disablekeys != true)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard)
-                            {
-                                foreach (var key in KeyboardState)
-                                    KeyboardState[key.Key] = col;
+                        if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
+                        {
+                            foreach (var key in KeyboardState)
+                                KeyboardState[key.Key] = col;
 
-                                UpdateCoolermasterStateAll(col);
-                                break;
-                            }
+                            UpdateCoolermasterStateAll(col);
+                        }
                     if (_coolermasterDeviceMouse)
                         foreach (var d in Devices)
                             if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse)
@@ -505,19 +503,17 @@ namespace Chromatics.DeviceInterfaces
                 var crSt = new Task(() =>
                 {
                     if (_coolermasterDeviceKeyboard && disablekeys != true)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard)
-                            {
-                                CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
-                                break;
-                            }
-                    if (_coolermasterDeviceMouse)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse)
-                            {
-                                CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
-                                break;
-                            }
+                        if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
+                        {
+                            CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
+                        }
+                    if (!_coolermasterDeviceMouse) return;
+                    {
+                        if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Mouse))
+                        {
+                            CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
+                        }
+                    }
                 });
                 MemoryTasks.Add(crSt);
                 MemoryTasks.Run(crSt);
@@ -1266,19 +1262,15 @@ namespace Chromatics.DeviceInterfaces
                 return;
 
             if (_coolermasterDeviceKeyboard)
-                foreach (var d in Devices)
-                    if (d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard)
-                    {
-                        CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
-                        break;
-                    }
+                if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
+                {
+                    CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
+                }
             if (_coolermasterDeviceMouse)
-                foreach (var d in Devices)
-                    if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse)
-                    {
-                        CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
-                        break;
-                    }
+                if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Mouse))
+                {
+                    CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
+                }
         }
 
         private void UpdateCoolermasterState()

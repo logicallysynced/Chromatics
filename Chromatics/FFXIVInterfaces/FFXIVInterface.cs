@@ -108,7 +108,7 @@ namespace Chromatics
                     Init = false;
                     // supported: English, Chinese, Japanese, French, German, Korean
                     var gameLanguage = "English";
-                    var ignoreJsonCache = ChromaticsSettings.ChromaticsSettingsMemoryCache ? false : true;
+                    var ignoreJsonCache = !ChromaticsSettings.ChromaticsSettingsMemoryCache;
                     // patchVersion of game, or latest
                     var patchVersion = "latest";
                     var process = processes9[0];
@@ -139,7 +139,7 @@ namespace Chromatics
                     Init = false;
                     // supported: English, Chinese, Japanese, French, German, Korean
                     var gameLanguage = "English";
-                    var ignoreJsonCache = ChromaticsSettings.ChromaticsSettingsMemoryCache ? false : true;
+                    var ignoreJsonCache = !ChromaticsSettings.ChromaticsSettingsMemoryCache;
                     // patchVersion of game, or latest
                     var patchVersion = "latest";
                     var process = processes11[0];
@@ -171,7 +171,7 @@ namespace Chromatics
         {
             while (!ct.IsCancellationRequested)
             {
-                await Task.Delay(300);
+                await Task.Delay(300, ct);
                 ReadFfxivMemory();
             }
         }
@@ -330,17 +330,17 @@ namespace Chromatics
 
                     //Console.WriteLine("Debug C");
 
-                    MemoryTasks.Remove(_MemoryTask);
+                    MemoryTasks.Remove(MemoryTask);
 
-                    _MemoryTask = null;
+                    MemoryTask = null;
                     _call = null;
                     _attachcts = new CancellationTokenSource();
                     _ffxiVcts.Cancel();
 
-                    _MemoryTask = new Task(() => { _call = CallFfxivAttach(_attachcts.Token); }, _memoryTask.Token);
+                    MemoryTask = new Task(() => { _call = CallFfxivAttach(_attachcts.Token); }, _memoryTask.Token);
 
-                    MemoryTasks.Add(_MemoryTask);
-                    MemoryTasks.Run(_MemoryTask);
+                    MemoryTasks.Add(MemoryTask);
+                    MemoryTasks.Run(MemoryTask);
                 }
             }
             catch (Exception ex)
@@ -536,23 +536,19 @@ namespace Chromatics
                                     {
                                         //Console.WriteLine(i);
                                         var pid = partyListNew[Convert.ToInt32(i)];
-                                        var ptType = "";
-                                        var ptTpcurrent = "";
-                                        var ptTppercent = "";
-                                        var ptEmnityno = "";
-                                        var ptJob = "";
+                                        string ptType;
+                                        string ptTpcurrent;
+                                        string ptTppercent;
+                                        string ptEmnityno;
+                                        string ptJob;
 
                                         if (targetInfo != null && targetInfo.Type == Actor.Type.Monster &&
                                             targetInfo.IsClaimed)
                                         {
                                             //Collect Emnity Table
                                             //var TargetEmnity = TargetEmnityInfo.Count;
-                                            var emnitytableX = new List<KeyValuePair<uint, uint>>();
+                                            var emnitytableX = targetEmnityInfo.Select(t => new KeyValuePair<uint, uint>(t.ID, t.Enmity)).ToList();
 
-
-                                            for (var g = 0; g < targetEmnityInfo.Count; g++)
-                                                emnitytableX.Add(new KeyValuePair<uint, uint>(targetEmnityInfo[g].ID,
-                                                    targetEmnityInfo[g].Enmity));
 
                                             //Sort emnity by highest holder
                                             emnitytableX.OrderBy(kvp => kvp.Value);
@@ -1116,14 +1112,11 @@ namespace Chromatics
                                 var polTargetHp = (currentThp - 0) * (5 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx = (currentThp - 0) * (65535 - 0) / (maxThp - 0) + 0;
 
-                                if (targetInfo.IsClaimed)
-                                    GlobalUpdateBulbStateBrightness(DeviceModeTypes.TargetHp,
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
-                                        (ushort) polTargetHpx, 250);
-                                else
-                                    GlobalUpdateBulbStateBrightness(DeviceModeTypes.TargetHp,
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
-                                        (ushort) polTargetHpx, 250);
+                                GlobalUpdateBulbStateBrightness(DeviceModeTypes.TargetHp,
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
+                                    (ushort) polTargetHpx, 250);
 
                                 if (polTargetHp == 0)
                                 {
@@ -1350,12 +1343,8 @@ namespace Chromatics
                                     {
                                         //Collect Emnity Table
                                         //var TargetEmnity = TargetEmnityInfo.Count;
-                                        var emnitytable = new List<KeyValuePair<uint, uint>>();
+                                        var emnitytable = targetEmnityInfo.Select(t => new KeyValuePair<uint, uint>(t.ID, t.Enmity)).ToList();
 
-
-                                        for (var i = 0; i < targetEmnityInfo.Count; i++)
-                                            emnitytable.Add(new KeyValuePair<uint, uint>(targetEmnityInfo[i].ID,
-                                                targetEmnityInfo[i].Enmity));
 
                                         //Sort emnity by highest holder
                                         emnitytable.OrderBy(kvp => kvp.Value);
@@ -1859,14 +1848,10 @@ namespace Chromatics
                             var polHpx = (currentHp - 0) * (70 - 0) / (maxHp - 0) + 0;
                             var polHpz = (currentHp - 0) * (65535 - 0) / (maxHp - 0) + 0;
 
-                            if (polHp <= 10)
-                                GlobalUpdateBulbStateBrightness(DeviceModeTypes.HpTracker, colHpempty,
-                                    (ushort) polHpz,
-                                    250);
-                            else
-                                GlobalUpdateBulbStateBrightness(DeviceModeTypes.HpTracker, colHpfull,
-                                    (ushort) polHpz,
-                                    250);
+                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.HpTracker,
+                                polHp <= 10 ? colHpempty : colHpfull,
+                                (ushort) polHpz,
+                                250);
 
                             if (polHp <= 40 && polHp > 30)
                             {
@@ -2395,9 +2380,7 @@ namespace Chromatics
 
                             //Hotbars        
 
-                            var hotbars = new ActionReadResult();
-
-                            hotbars = Reader.GetActions();
+                            var hotbars = Reader.GetActions();
 
                             if (ChromaticsSettings.ChromaticsSettingsKeybindToggle)
                             {
@@ -3397,8 +3380,6 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num1", negburst, false);
                                         }
 
-                                        break;
-                                    default:
                                         break;
                                 }
                             }

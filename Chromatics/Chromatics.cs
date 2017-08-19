@@ -25,8 +25,7 @@ namespace Chromatics
 
         private ILogitechArx _arx;
         private Task _call;
-        private Task _MemoryTask;
-        public int _PaletteMappingCurrentSelect = 1;
+        public Task MemoryTask;
         private bool _allowClose;
         private bool _allowVisible = true;
 
@@ -200,7 +199,7 @@ namespace Chromatics
         {
             //Setup References
             //Watchdog.WatchdogStartup();
-            Text = "Chromatics " + _currentVersionX + " Beta";
+            Text = @"Chromatics " + _currentVersionX + @" Beta";
 
             //Setup Event Listeners
             FormClosing += OnFormClosing;
@@ -226,7 +225,7 @@ namespace Chromatics
             try
             {
                 var lgsApp = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Logitech\\Logitech Gaming Software", false);
-                _lgsInstall = lgsApp.GetValue("InstallDir").ToString();
+                if (lgsApp != null) _lgsInstall = lgsApp.GetValue("InstallDir").ToString();
             }
             catch (Exception ex)
             {
@@ -259,7 +258,7 @@ namespace Chromatics
             //Check Updater
             try
             {
-                var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+                string enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
                 if (!File.Exists(enviroment + @"/updater.exe"))
                 {
                     if (File.Exists(enviroment + @"/_updater.exe"))
@@ -385,13 +384,13 @@ namespace Chromatics
             Startup = true;
 
             //Split off MemoryReader to a Task 
-            _MemoryTask = new Task(() =>
+            MemoryTask = new Task(() =>
             {
                 _call = CallFfxivAttach(_attachcts.Token);
             }, _memoryTask.Token);
 
-            MemoryTasks.Add(_MemoryTask);
-            MemoryTasks.Run(_MemoryTask);
+            MemoryTasks.Add(MemoryTask);
+            MemoryTasks.Run(MemoryTask);
         }
 
         private void LoadArxPlugins()
@@ -487,7 +486,7 @@ namespace Chromatics
             try
             {
                 var currentVersion = _currentVersionX.Replace(".", string.Empty); //UPDATE ME
-                var newVersion = currentVersion;
+                string newVersion;
                 var webRequest = WebRequest.Create(@"https://chromaticsffxiv.com/chromatics2/update/version.txt");
 
                 using (var response = webRequest.GetResponse())
@@ -508,9 +507,11 @@ namespace Chromatics
                     if (result == DialogResult.Yes)
                     {
                         var updatedFile = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-                        var startInfo = new ProcessStartInfo();
-                        startInfo.FileName = updatedFile + @"\updater.exe";
-                        startInfo.Arguments = "\"" + updatedFile + "\"";
+                        var startInfo = new ProcessStartInfo
+                        {
+                            FileName = updatedFile + @"\updater.exe",
+                            Arguments = "\"" + updatedFile + "\""
+                        };
 
                         if (LogitechSdkCalled == 1)
                             ToggleLccMode(false, true);
@@ -521,11 +522,9 @@ namespace Chromatics
                 }
                 else
                 {
-                    if (notify == 1)
-                    {
-                        notify_master.BalloonTipText = @"No new updates currently available.";
-                        notify_master.ShowBalloonTip(2000);
-                    }
+                    if (notify != 1) return;
+                    notify_master.BalloonTipText = @"No new updates currently available.";
+                    notify_master.ShowBalloonTip(2000);
                 }
             }
             catch (Exception ex)

@@ -42,30 +42,16 @@ namespace Chromatics
             var lifxLoad = "";
             var hueLoad = "";
 
-            if (LifxSdk && _lifx.LifxModeMemory.Count() > 0)
+            if (LifxSdk && _lifx.LifxModeMemory.Any())
             {
-                var lifxList = new List<string>();
-                foreach (var lp in _lifx.LifxModeMemory)
-                {
-                    var la = lp.Key + "|" + lp.Value + "|" + _lifx.LifxStateMemory[lp.Key];
-                    lifxList.Add(la);
-                }
-
-                var lifxEx = lifxList.ToArray();
+                var lifxEx = _lifx.LifxModeMemory.Select(lp => lp.Key + "|" + lp.Value + "|" + _lifx.LifxStateMemory[lp.Key]).ToArray();
                 lifxLoad = string.Join(",", lifxEx);
             }
 
 
-            if (HueSdk && _hue.HueModeMemory.Count() > 0)
+            if (HueSdk && _hue.HueModeMemory.Any())
             {
-                var hueList = new List<string>();
-                foreach (var hp in _hue.HueModeMemory)
-                {
-                    var ha = hp.Key + "|" + hp.Value + "|" + _hue.HueStateMemory[hp.Key];
-                    hueList.Add(ha);
-                }
-
-                var hueEx = hueList.ToArray();
+                var hueEx = _hue.HueModeMemory.Select(hp => hp.Key + "|" + hp.Value + "|" + _hue.HueStateMemory[hp.Key]).ToArray();
                 hueLoad = string.Join(",", hueEx);
             }
 
