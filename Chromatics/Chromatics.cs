@@ -21,7 +21,7 @@ namespace Chromatics
     public partial class Chromatics : Form, ILogWrite
     {
         //Setup Threading/Tasks
-        private readonly CancellationTokenSource _memoryTask = new CancellationTokenSource();
+        private CancellationTokenSource _memoryTask = new CancellationTokenSource();
 
         private ILogitechArx _arx;
         private Task _call;
@@ -64,7 +64,7 @@ namespace Chromatics
         private CancellationTokenSource _ffxiVcts = new CancellationTokenSource();
 
         private bool _gameNotify;
-        private Timer _gameResetCatch;
+        //private Timer _gameResetCatch;
         public bool HoldReader = false;
 
         private string _hueDefault = "";
@@ -216,11 +216,13 @@ namespace Chromatics
             _mGlobalHook.KeyDown += Kh_KeyDown;
             _mGlobalHook.KeyUp += Kh_KeyUp;
 
+            /*
             _gameResetCatch = new Timer();
             _gameResetCatch.Elapsed += (source, e) => { FfxivGameStop(); };
             _gameResetCatch.Interval = 12000;
             _gameResetCatch.AutoReset = false;
             _gameResetCatch.Enabled = false;
+            */
 
             try
             {
@@ -423,8 +425,7 @@ namespace Chromatics
         {
             while (!ct.IsCancellationRequested)
             {
-                //Console.Write("Debug E");
-                await Task.Delay(2500);
+                await Task.Delay(2500, ct);
                 AttachFfxiv();
             }
         }
@@ -447,11 +448,25 @@ namespace Chromatics
                     _arx.ArxUpdateInfo("Attached to FFXIV");
 
                 Attatched = 1;
-
+                
+                _attachcts.Cancel();
+                
+                MemoryTasks.Remove(MemoryTask);
+                MemoryTask = null;
+                _memoryTask = new CancellationTokenSource();
                 _ffxiVcts = new CancellationTokenSource();
 
-                _call = CallFfxivMemory(_ffxiVcts.Token); //put into local variable so it doesn't complain, lol
-                _attachcts.Cancel();
+                //_call = CallFfxivMemory(_ffxiVcts.Token);
+
+                MemoryTask = new Task(() =>
+                {
+                    _call = CallFfxivMemory(_ffxiVcts.Token);
+                }, _memoryTask.Token, TaskCreationOptions.LongRunning);
+
+                MemoryTasks.Add(MemoryTask);
+                MemoryTasks.Run(MemoryTask);
+                
+                
             }
             else
             {

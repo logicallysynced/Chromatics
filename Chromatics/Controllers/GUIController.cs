@@ -40,63 +40,63 @@ namespace Chromatics
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
         {
             //Keys
-            {"ColorMapping_BaseColor", new[] {"Base Color", "1", "Black", "White"}},
-            {"ColorMapping_HighlightColor", new[] {"Highlight Color", "1", "Black", "White"}},
-            {"ColorMapping_HPFull", new[] {"HP Full", "2", "Black", "White"}},
-            {"ColorMapping_HPEmpty", new[] {"HP Empty", "2", "Black", "White"}},
-            {"ColorMapping_HPCritical", new[] {"HP Critical", "2", "Black", "White"}},
-            {"ColorMapping_HPLoss", new[] {"HP Loss", "2", "Black", "White"}},
-            {"ColorMapping_MPFull", new[] {"MP Full", "2", "Black", "White"}},
-            {"ColorMapping_MPEmpty", new[] {"MP Empty", "2", "Black", "White"}},
-            {"ColorMapping_TPFull", new[] {"TP Full", "2", "Black", "White"}},
-            {"ColorMapping_TPEmpty", new[] {"TP Empty", "2", "Black", "White"}},
-            {"ColorMapping_GPFull", new[] {"GP Full", "2", "Black", "White"}},
-            {"ColorMapping_GPEmpty", new[] {"GP Empty", "2", "Black", "White"}},
-            {"ColorMapping_CPFull", new[] {"CP Full", "2", "Black", "White"}},
-            {"ColorMapping_CPEmpty", new[] {"CP Empty", "2", "Black", "White"}},
-            {"ColorMapping_CastChargeFull", new[] {"Cast Charge", "3", "Black", "White"}},
-            {"ColorMapping_CastChargeEmpty", new[] {"Cast Empty", "3", "Black", "White"}},
-            {"ColorMapping_Emnity0", new[] {"Minimal Enmity", "4", "Black", "White"}},
-            {"ColorMapping_Emnity1", new[] {"Low Enmity", "4", "Black", "White"}},
-            {"ColorMapping_Emnity2", new[] {"Medium Enmity", "4", "Black", "White"}},
-            {"ColorMapping_Emnity3", new[] {"High Enmity", "4", "Black", "White"}},
-            {"ColorMapping_Emnity4", new[] {"Max Enmity", "4", "Black", "White"}},
-            {"ColorMapping_NoEmnity", new[] {"No Enmity", "4", "Black", "White"}},
-            {"ColorMapping_TargetHPClaimed", new[] {"Target HP - Claimed", "5", "Black", "White"}},
-            {"ColorMapping_TargetHPIdle", new[] {"Target HP - Idle", "5", "Black", "White"}},
-            {"ColorMapping_TargetHPEmpty", new[] {"Target HP - Empty", "5", "Black", "White"}},
-            {"ColorMapping_TargetCasting", new[] {"Target Casting", "5", "Black", "White"}},
-            {"ColorMapping_Bind", new[] {"Bind", "6", "Black", "White"}},
-            {"ColorMapping_Petrification", new[] {"Petrification", "6", "Black", "White"}},
-            {"ColorMapping_Slow", new[] {"Slow", "6", "Black", "White"}},
-            {"ColorMapping_Stun", new[] {"Stun", "6", "Black", "White"}},
-            {"ColorMapping_Silence", new[] {"Silence", "6", "Black", "White"}},
-            {"ColorMapping_Poison", new[] {"Poison", "6", "Black", "White"}},
-            {"ColorMapping_Pollen", new[] {"Pollen", "6", "Black", "White"}},
-            {"ColorMapping_Pox", new[] {"Pox", "6", "Black", "White"}},
-            {"ColorMapping_Paralysis", new[] {"Paralysis", "6", "Black", "White"}},
-            {"ColorMapping_Leaden", new[] {"Leaden", "6", "Black", "White"}},
-            {"ColorMapping_Incapacitation", new[] {"Incapacitation", "6", "Black", "White"}},
-            {"ColorMapping_Dropsy", new[] {"Dropsy", "6", "Black", "White"}},
-            {"ColorMapping_Amnesia", new[] {"Amnesia", "6", "Black", "White"}},
-            {"ColorMapping_Bleed", new[] {"Bleed", "6", "Black", "White"}},
-            {"ColorMapping_Misery", new[] {"Misery", "6", "Black", "White"}},
-            {"ColorMapping_Sleep", new[] {"Sleep", "6", "Black", "White"}},
-            {"ColorMapping_Daze", new[] {"Daze", "6", "Black", "White"}},
-            {"ColorMapping_Heavy", new[] {"Heavy", "6", "Black", "White"}},
-            {"ColorMapping_Infirmary", new[] {"Infirmary", "6", "Black", "White"}},
-            {"ColorMapping_Burns", new[] {"Burns", "6", "Black", "White"}},
-            {"ColorMapping_DeepFreeze", new[] {"Deep Freeze", "6", "Black", "White"}},
-            {"ColorMapping_DamageDown", new[] {"Damage Down", "6", "Black", "White"}},
-            {"ColorMapping_GCDHot", new[] {"GCD Countdown Hot", "7", "Black", "White"}},
-            {"ColorMapping_GCDReady", new[] {"GCD Countdown Ready", "7", "Black", "White"}},
-            {"ColorMapping_GCDEmpty", new[] {"GCD Countdown Empty", "7", "Black", "White"}},
-            {"ColorMapping_HotbarProc", new[] {"Keybind Proc/Combo", "7", "Black", "White"}},
-            {"ColorMapping_HotbarCD", new[] {"Keybind Cooldown", "7", "Black", "White"}},
-            {"ColorMapping_HotbarReady", new[] {"Keybind Ready", "7", "Black", "White"}},
-            {"ColorMapping_HotbarOutRange", new[] {"Keybind Out of Range", "7", "Black", "White"}},
-            {"ColorMapping_HotbarNotAvailable", new[] {"Keybind Not Available", "7", "Black", "White"}},
-            {"ColorMapping_DutyFinderBell", new[] {"Duty Finder Bell", "8", "Black", "White"}}
+            {"ColorMappingBaseColor", new[] {"Base Color", "1", "Black", "White"}},
+            {"ColorMappingHighlightColor", new[] {"Highlight Color", "1", "Black", "White"}},
+            {"ColorMappingHpFull", new[] {"HP Full", "2", "Black", "White"}},
+            {"ColorMappingHpEmpty", new[] {"HP Empty", "2", "Black", "White"}},
+            {"ColorMappingHpCritical", new[] {"HP Critical", "2", "Black", "White"}},
+            {"ColorMappingHpLoss", new[] {"HP Loss", "2", "Black", "White"}},
+            {"ColorMappingMpFull", new[] {"MP Full", "2", "Black", "White"}},
+            {"ColorMappingMpEmpty", new[] {"MP Empty", "2", "Black", "White"}},
+            {"ColorMappingTpFull", new[] {"TP Full", "2", "Black", "White"}},
+            {"ColorMappingTpEmpty", new[] {"TP Empty", "2", "Black", "White"}},
+            {"ColorMappingGpFull", new[] {"GP Full", "2", "Black", "White"}},
+            {"ColorMappingGpEmpty", new[] {"GP Empty", "2", "Black", "White"}},
+            {"ColorMappingCpFull", new[] {"CP Full", "2", "Black", "White"}},
+            {"ColorMappingCpEmpty", new[] {"CP Empty", "2", "Black", "White"}},
+            {"ColorMappingCastChargeFull", new[] {"Cast Charge", "3", "Black", "White"}},
+            {"ColorMappingCastChargeEmpty", new[] {"Cast Empty", "3", "Black", "White"}},
+            {"ColorMappingEmnity0", new[] {"Minimal Enmity", "4", "Black", "White"}},
+            {"ColorMappingEmnity1", new[] {"Low Enmity", "4", "Black", "White"}},
+            {"ColorMappingEmnity2", new[] {"Medium Enmity", "4", "Black", "White"}},
+            {"ColorMappingEmnity3", new[] {"High Enmity", "4", "Black", "White"}},
+            {"ColorMappingEmnity4", new[] {"Max Enmity", "4", "Black", "White"}},
+            {"ColorMappingNoEmnity", new[] {"No Enmity", "4", "Black", "White"}},
+            {"ColorMappingTargetHpClaimed", new[] {"Target HP - Claimed", "5", "Black", "White"}},
+            {"ColorMappingTargetHpIdle", new[] {"Target HP - Idle", "5", "Black", "White"}},
+            {"ColorMappingTargetHpEmpty", new[] {"Target HP - Empty", "5", "Black", "White"}},
+            {"ColorMappingTargetCasting", new[] {"Target Casting", "5", "Black", "White"}},
+            {"ColorMappingBind", new[] {"Bind", "6", "Black", "White"}},
+            {"ColorMappingPetrification", new[] {"Petrification", "6", "Black", "White"}},
+            {"ColorMappingSlow", new[] {"Slow", "6", "Black", "White"}},
+            {"ColorMappingStun", new[] {"Stun", "6", "Black", "White"}},
+            {"ColorMappingSilence", new[] {"Silence", "6", "Black", "White"}},
+            {"ColorMappingPoison", new[] {"Poison", "6", "Black", "White"}},
+            {"ColorMappingPollen", new[] {"Pollen", "6", "Black", "White"}},
+            {"ColorMappingPox", new[] {"Pox", "6", "Black", "White"}},
+            {"ColorMappingParalysis", new[] {"Paralysis", "6", "Black", "White"}},
+            {"ColorMappingLeaden", new[] {"Leaden", "6", "Black", "White"}},
+            {"ColorMappingIncapacitation", new[] {"Incapacitation", "6", "Black", "White"}},
+            {"ColorMappingDropsy", new[] {"Dropsy", "6", "Black", "White"}},
+            {"ColorMappingAmnesia", new[] {"Amnesia", "6", "Black", "White"}},
+            {"ColorMappingBleed", new[] {"Bleed", "6", "Black", "White"}},
+            {"ColorMappingMisery", new[] {"Misery", "6", "Black", "White"}},
+            {"ColorMappingSleep", new[] {"Sleep", "6", "Black", "White"}},
+            {"ColorMappingDaze", new[] {"Daze", "6", "Black", "White"}},
+            {"ColorMappingHeavy", new[] {"Heavy", "6", "Black", "White"}},
+            {"ColorMappingInfirmary", new[] {"Infirmary", "6", "Black", "White"}},
+            {"ColorMappingBurns", new[] {"Burns", "6", "Black", "White"}},
+            {"ColorMappingDeepFreeze", new[] {"Deep Freeze", "6", "Black", "White"}},
+            {"ColorMappingDamageDown", new[] {"Damage Down", "6", "Black", "White"}},
+            {"ColorMappingGcdHot", new[] {"GCD Countdown Hot", "7", "Black", "White"}},
+            {"ColorMappingGcdReady", new[] {"GCD Countdown Ready", "7", "Black", "White"}},
+            {"ColorMappingGcdEmpty", new[] {"GCD Countdown Empty", "7", "Black", "White"}},
+            {"ColorMappingHotbarProc", new[] {"Keybind Proc/Combo", "7", "Black", "White"}},
+            {"ColorMappingHotbarCd", new[] {"Keybind Cooldown", "7", "Black", "White"}},
+            {"ColorMappingHotbarReady", new[] {"Keybind Ready", "7", "Black", "White"}},
+            {"ColorMappingHotbarOutRange", new[] {"Keybind Out of Range", "7", "Black", "White"}},
+            {"ColorMappingHotbarNotAvailable", new[] {"Keybind Not Available", "7", "Black", "White"}},
+            {"ColorMappingDutyFinderBell", new[] {"Duty Finder Bell", "8", "Black", "White"}}
         };
 
 
@@ -184,7 +184,7 @@ namespace Chromatics
                         row.Visible = true;
                 else
                     foreach (DataGridViewRow row in dG_mappings.Rows)
-                        if ((string) row.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value == filter)
+                        if ((string)row.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value == filter)
                             row.Visible = true;
                         else
                             row.Visible = false;
@@ -201,7 +201,7 @@ namespace Chromatics
 
             foreach (var palette in _mappingPalette)
             {
-                var paletteItem = (DataGridViewRow) dG_mappings.Rows[0].Clone();
+                var paletteItem = (DataGridViewRow)dG_mappings.Rows[0].Clone();
                 paletteItem.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value = palette.Key;
                 paletteItem.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value = palette.Value[1];
                 paletteItem.Cells[dG_mappings.Columns["mappings_col_type"].Index].Value = palette.Value[0];
@@ -228,9 +228,9 @@ namespace Chromatics
             foreach (var p in typeof(FfxivColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 var var = p.Name;
-                var color = (string) p.GetValue(ColorMappings);
+                var color = (string)p.GetValue(ColorMappings);
                 var _data = _mappingPalette[var];
-                string[] data = {_data[0], _data[1], color, _data[3]};
+                string[] data = { _data[0], _data[1], color, _data[3] };
                 _mappingPalette[var] = data;
             }
         }
@@ -252,7 +252,7 @@ namespace Chromatics
                 if (RazerSdkCalled == 1)
                 {
                     //Keyboard
-                    var rzDgKeyboard = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var rzDgKeyboard = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     //DataGridViewRow _RzDgKeyboard = new DataGridViewRow();
                     rzDgKeyboard.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Keyboard";
                     rzDgKeyboard.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keyboard";
@@ -275,7 +275,7 @@ namespace Chromatics
                     rzDgKeyboardDgc.ReadOnly = true;
 
                     //Mouse
-                    var rzDgMouse = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var rzDgMouse = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     rzDgMouse.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Mouse";
                     rzDgMouse.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mouse";
                     rzDgMouse.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceMouse
@@ -298,7 +298,7 @@ namespace Chromatics
                     rzDgMouseDgc.ReadOnly = true;
 
                     //Headset
-                    var rzDgHeadset = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var rzDgHeadset = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     rzDgHeadset.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Headset";
                     rzDgHeadset.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Headset";
                     rzDgHeadset.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceHeadset
@@ -321,7 +321,7 @@ namespace Chromatics
                     rzDgHeadsetDgc.ReadOnly = true;
 
                     //Mousepad
-                    var rzDgMousepad = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var rzDgMousepad = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     rzDgMousepad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Mousepad";
                     rzDgMousepad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mousepad";
                     rzDgMousepad.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceMousepad
@@ -344,7 +344,7 @@ namespace Chromatics
                     rzDgMousepadDgc.ReadOnly = true;
 
                     //Keypad
-                    var rzDgKeypad = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var rzDgKeypad = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     rzDgKeypad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Razer Keypad";
                     rzDgKeypad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keypad";
                     rzDgKeypad.Cells[dG_devices.Columns["col_status"].Index].Value = _razerDeviceKeypad
@@ -374,7 +374,7 @@ namespace Chromatics
                 if (CorsairSdkCalled == 1)
                 {
                     //Keyboard
-                    var corsairDgKeyboard = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var corsairDgKeyboard = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     corsairDgKeyboard.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Keyboard";
                     corsairDgKeyboard.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Keyboard";
                     corsairDgKeyboard.Cells[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceKeyboard
@@ -397,7 +397,7 @@ namespace Chromatics
                     corsairDgKeyboardDgc.ReadOnly = true;
 
                     //Mouse
-                    var corsairDgMouse = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var corsairDgMouse = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     corsairDgMouse.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Mouse";
                     corsairDgMouse.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mouse";
                     corsairDgMouse.Cells[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceMouse
@@ -420,7 +420,7 @@ namespace Chromatics
                     corsairDgMouseDgc.ReadOnly = true;
 
                     //Headset
-                    var corsairDgHeadset = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var corsairDgHeadset = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     corsairDgHeadset.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Headset";
                     corsairDgHeadset.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Headset";
                     corsairDgHeadset.Cells[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceHeadset
@@ -443,7 +443,7 @@ namespace Chromatics
                     corsairDgHeadsetDgc.ReadOnly = true;
 
                     //Mousepad
-                    var corsairDgMousepad = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var corsairDgMousepad = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     corsairDgMousepad.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Corsair Mousepad";
                     corsairDgMousepad.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Mousepad";
                     corsairDgMousepad.Cells[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceMousepad
@@ -472,7 +472,7 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    var logitechDgDevices = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var logitechDgDevices = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     logitechDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value = "Logitech Devices";
                     logitechDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
                     logitechDgDevices.Cells[dG_devices.Columns["col_status"].Index].Value = _logitechDeviceKeyboard
@@ -500,7 +500,7 @@ namespace Chromatics
 
                 if (CoolermasterSdkCalled == 1)
                 {
-                    var coolermasterDgDevices = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                    var coolermasterDgDevices = (DataGridViewRow)dG_devices.Rows[0].Clone();
                     coolermasterDgDevices.Cells[dG_devices.Columns["col_devicename"].Index].Value =
                         "Coolermaster Devices";
                     coolermasterDgDevices.Cells[dG_devices.Columns["col_devicetype"].Index].Value = "Multiple Devices";
@@ -543,11 +543,11 @@ namespace Chromatics
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
                             var lState = _lifx.LifxStateMemory[d.Key.MacAddressName];
 
-                            var lifxdGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                            var lifxdGDevice = (DataGridViewRow)dG_devices.Rows[0].Clone();
                             lifxdGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = state.Label + " (" +
-                                                                                                    d.Key
-                                                                                                        .MacAddressName +
-                                                                                                    ")";
+                                                                                                   d.Key
+                                                                                                       .MacAddressName +
+                                                                                                   ")";
                             lifxdGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
                                 _lifx.LifXproductids[device.Product] + " (Version " + device.Version + ")";
                             lifxdGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = lState == 0
@@ -615,10 +615,10 @@ namespace Chromatics
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
                             var lState = _hue.HueStateMemory[d.Key.UniqueId];
 
-                            var huedGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
+                            var huedGDevice = (DataGridViewRow)dG_devices.Rows[0].Clone();
                             huedGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = d.Key.Name + " (" +
-                                                                                                   d.Key.UniqueId +
-                                                                                                   ")";
+                                                                                                  d.Key.UniqueId +
+                                                                                                  ")";
                             huedGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
                                 d.Key.ModelId + " (Version " + device + ")";
                             huedGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = lState == 0
@@ -685,13 +685,13 @@ namespace Chromatics
             if (DeviceGridStartup)
             {
                 var editedCell = dG_devices.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                var dattype = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_dattype"].Index]
+                var dattype = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_dattype"].Index]
                     .Value;
 
                 if (dG_devices.Columns[e.ColumnIndex].Name == "col_state")
                 {
-                    var _switch = (bool) editedCell.Value;
-                    var modeX = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_mode"].Index].Value;
+                    var _switch = (bool)editedCell.Value;
+                    var modeX = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_mode"].Index].Value;
                     var key = _deviceModes.FirstOrDefault(x => x.Value == modeX).Key;
                     var change = dG_devices.CurrentRow.Cells;
 
@@ -881,7 +881,7 @@ namespace Chromatics
                     }
                     else if (dattype == "LIFX")
                     {
-                        var id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
+                        var id = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
                         if (LifxSdkCalled == 1 && id != null)
                         {
                             var bulb = _lifx.LifxDevices[id];
@@ -909,7 +909,7 @@ namespace Chromatics
                     }
                     else if (dattype == "HUE")
                     {
-                        var id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
+                        var id = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
                         if (HueSdkCalled == 1 && id != null)
                         {
                             var bulb = _hue.HueDevices[id];
@@ -942,8 +942,8 @@ namespace Chromatics
 
                 if (dG_devices.Columns[e.ColumnIndex].Name == "col_mode")
                 {
-                    var mode = (string) editedCell.Value;
-                    var id = (string) dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
+                    var mode = (string)editedCell.Value;
+                    var id = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
 
                     if (LifxSdkCalled == 1 && id != null && dattype == "LIFX")
                         if (_deviceModes.ContainsValue(mode))
@@ -1006,7 +1006,7 @@ namespace Chromatics
         private void mapping_colorEditorManager_ColorChanged(object sender, EventArgs e)
         {
             var pmcs = dG_mappings.CurrentRow;
-            var pcmsid = (string) pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
+            var pcmsid = (string)pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
             var pcmsColor = pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor;
 
             previewPanel.BackColor = mapping_colorEditorManager.Color;
@@ -1014,7 +1014,7 @@ namespace Chromatics
             if (pcmsColor != mapping_colorEditorManager.Color)
             {
                 var _data = _mappingPalette[pcmsid];
-                string[] data = {_data[0], _data[1], _data[2], ColorTranslator.ToHtml(pcmsColor)};
+                string[] data = { _data[0], _data[1], _data[2], ColorTranslator.ToHtml(pcmsColor) };
                 _mappingPalette[pcmsid] = data;
 
                 foreach (var p in typeof(FfxivColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
@@ -1035,14 +1035,14 @@ namespace Chromatics
         private void btn_palette_undo_Click(object sender, EventArgs e)
         {
             var pmcs = dG_mappings.CurrentRow;
-            var pcmsid = (string) pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
+            var pcmsid = (string)pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
 
             var cm = new FfxivColorMappings();
             var _restore = ColorTranslator.ToHtml(Color.Black);
 
             foreach (var p in typeof(FfxivColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
                 if (p.Name == pcmsid)
-                    _restore = (string) p.GetValue(cm);
+                    _restore = (string)p.GetValue(cm);
 
             var restore = ColorTranslator.FromHtml(_restore);
             mapping_colorEditorManager.Color = restore;

@@ -41,9 +41,11 @@ namespace Chromatics
         private bool _menuNotify;
 
         //private static readonly object _ReadFFXIVMemory = new object();
+        
         private ActorEntity _playerInfo = new ActorEntity();
-
+        private PlayerEntity _menuInfo = new PlayerEntity();
         private ConcurrentDictionary<uint, ActorEntity> _playerInfoX = new ConcurrentDictionary<uint, ActorEntity>();
+
         private bool _playgroundonce;
         private bool _successcast;
 
@@ -54,6 +56,8 @@ namespace Chromatics
             //Debug.WriteLine("Debug trip");
 
             HoldReader = true;
+            _ffxiVcts.Cancel();
+            _attachcts.Cancel();
 
             if (ArxSdkCalled == 1 && ArxState == 0)
                 _arx.ArxSetIndex("info.html");
@@ -61,24 +65,38 @@ namespace Chromatics
             MemoryTasks.Cleanup();
 
             //Watchdog.WatchdogStop();
-            _gameResetCatch.Enabled = false;
+            //_gameResetCatch.Enabled = false;
             WriteConsole(ConsoleTypes.Ffxiv, "Game stopped");
 
 
             Attatched = 0;
             ArxState = 0;
-            Init = true;
+            Init = false;
             _gameNotify = false;
-            //MemoryHandler.Instance.ProcessModel = null;
+            _menuNotify = false;
+            Setbase = false;
+
+            //MemoryHandler.Instance.
             _call = null;
 
-            _playerInfo = null;
-            _playerInfoX = null;
-
-
             //HoldReader = false;
-            _ffxiVcts.Cancel();
+
             GlobalUpdateState("static", Color.DeepSkyBlue, false);
+            //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
+
+            //Debug.WriteLine("Resetting..");
+
+            MemoryTasks.Remove(MemoryTask);
+
+            _attachcts = new CancellationTokenSource();
+
+            MemoryTask = new Task(() =>
+            {
+                _call = CallFfxivAttach(_attachcts.Token);
+            }, _memoryTask.Token);
+
+            MemoryTasks.Add(MemoryTask);
+            MemoryTasks.Run(MemoryTask);
         }
 
         /* Attatch to FFXIV process after determining if running DX9 or DX11.
@@ -172,6 +190,7 @@ namespace Chromatics
             while (!ct.IsCancellationRequested)
             {
                 await Task.Delay(300, ct);
+                //Debug.WriteLine("Tick C");
                 ReadFfxivMemory();
             }
         }
@@ -189,44 +208,48 @@ namespace Chromatics
 
                 var processes9 = Process.GetProcessesByName("ffxiv");
                 var processes11 = Process.GetProcessesByName("ffxiv_dx11");
-
-                if (processes11.Length == 0)
-                    FfxivGameStop();
-
+                
 
                 if (Attatched > 0)
                 {
                     //Get Data
+                    
+                    if (processes11.Length == 0)
+                        FfxivGameStop();
 
-                    _playerInfoX = Reader.GetActors()?.PCEntities;
-                    _playerInfo = ActorEntity.CurrentUser;
-
-                    //Console.WriteLine(PlayerInfo.Name);
-                    //Action
+                    _playerInfoX = Reader.GetActors().PCEntities;
+                    _menuInfo = Reader.GetPlayerInfo().PlayerEntity;
+                    
                     if (Attatched == 3)
                     {
                         //Game is Running
                         //Check if game has stopped by checking Character data for a null value.
 
-                        if (_playerInfo != null && _playerInfo.Name == "")
+                        if (_menuInfo != null && _menuInfo.Name == "")
                         {
-                            //End Game Running if timed out
-                            if (!_gameResetCatch.Enabled)
+                            if (processes11.Length != 0)
                             {
-                                //Console.WriteLine("Debug on");
-                                _gameResetCatch.Enabled = true;
-                                _gameResetCatch.AutoReset = false;
+                                //Bounce to menu
+                                Attatched = 1;
+                                _menuNotify = false;
+                                HoldReader = true;
+                                Setbase = false;
+
+                                GlobalUpdateState("static", Color.DeepSkyBlue, false);
+
+                                WriteConsole(ConsoleTypes.Ffxiv, "Returning to Main Menu..");
+                            }
+                            else
+                            {
+                                FfxivGameStop();
                             }
                         }
                         else
                         {
-                            _gameResetCatch.Enabled = false;
+                            //Call function to parse FFXIV data
+                            if (HoldReader == false)
+                                ProcessFfxivData();
                         }
-
-
-                        //Call function to parse FFXIV data
-                        if (HoldReader == false)
-                            ProcessFfxivData();
                     }
                     else
                     {
@@ -235,24 +258,21 @@ namespace Chromatics
                         {
                             State = 6;
                             GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
-
-                            _playerInfo = null;
-                            _playerInfoX = null;
-
+                            
                             Attatched = 2;
                         }
 
                         //Game in Menu
                         else if (Attatched == 2)
                         {
-                            if (_playerInfo != null && _playerInfo.Name != "")
+                            if (_menuInfo != null && _menuInfo.Name != "")
                             {
                                 //Set Game Active
-                                WriteConsole(ConsoleTypes.Ffxiv, "Game Running (" + _playerInfo.Name + ")");
+                                WriteConsole(ConsoleTypes.Ffxiv, "Game Running (" + _menuInfo.Name + ")");
 
 
                                 if (ArxSdkCalled == 1 && ArxState == 0)
-                                    _arx.ArxUpdateInfo("Game Running (" + _playerInfo.Name + ")");
+                                    _arx.ArxUpdateInfo("Game Running (" + _menuInfo.Name + ")");
 
                                 _menuNotify = false;
                                 Setbase = false;
@@ -260,6 +280,7 @@ namespace Chromatics
                                 //GlobalUpdateBulbState(100, System.Drawing.Color.Red, 100);
                                 //Watchdog.WatchdogGo();
                                 Attatched = 3;
+                                HoldReader = false;
 
                                 if (ArxSdkCalled == 1)
                                 {
@@ -315,33 +336,6 @@ namespace Chromatics
                         }
                     }
                 }
-                else
-                {
-                    //Not Attached
-                    Attatched = 0;
-                    ArxState = 0;
-
-                    if (ArxSdkCalled == 1 && ArxState == 0)
-                        _arx.ArxSetIndex("info.html");
-
-                    GlobalUpdateState("static", Color.DeepSkyBlue, false);
-                    //GlobalApplyMapMouseLighting("All", Color.DeepSkyBlue, false);
-                    //GlobalUpdateBulbState(DeviceModeTypes.STANDBY, Color.DeepSkyBlue, 0);
-
-                    //Console.WriteLine("Debug C");
-
-                    MemoryTasks.Remove(MemoryTask);
-
-                    MemoryTask = null;
-                    _call = null;
-                    _attachcts = new CancellationTokenSource();
-                    _ffxiVcts.Cancel();
-
-                    MemoryTask = new Task(() => { _call = CallFfxivAttach(_attachcts.Token); }, _memoryTask.Token);
-
-                    MemoryTasks.Add(MemoryTask);
-                    MemoryTasks.Run(MemoryTask);
-                }
             }
             catch (Exception ex)
             {
@@ -354,6 +348,8 @@ namespace Chromatics
         {
             MemoryTasks.Cleanup();
 
+            if (HoldReader) return;
+
             try
             {
                 //Get Data
@@ -364,7 +360,7 @@ namespace Chromatics
                 var partyListOld = new Dictionary<uint, uint>();
 
 
-                _playerInfoX = Reader.GetActors()?.PCEntities;
+                //_playerInfoX = Reader.GetActors()?.PCEntities;
                 _playerInfo = ActorEntity.CurrentUser;
 
                 try

@@ -319,10 +319,12 @@ namespace Chromatics.DeviceInterfaces
                     try
                     {
                         if (_razerDeviceHeadset) Headset.Instance.SetAll(rzCol);
-                        if (_razerDeviceKeyboard && disablekeys != true)
+                        if (_razerDeviceKeyboard && !disablekeys)
                             lock (RazerRipple1)
                             {
+                                //Keyboard.Instance.SetAll(rzCol);
                                 _keyboardGrid.Set(rzCol);
+                                KeyboardUpdate();
                             }
                         if (_razerDeviceKeypad) Keypad.Instance.SetAll(rzCol);
                         if (_razerDeviceMouse)

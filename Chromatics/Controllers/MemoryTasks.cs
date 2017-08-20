@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chromatics
@@ -19,6 +21,15 @@ namespace Chromatics
         }
 
         public static void Run(Task t)
+        {
+            lock (Locker)
+            {
+                if (Tasks.Contains(t))
+                    t.Start();
+            }
+        }
+
+        public static void Cancel(Task t)
         {
             lock (Locker)
             {
@@ -51,6 +62,7 @@ namespace Chromatics
         public static void WaitOnExit()
         {
             // filter, I'm not sure if Wait() on a canceled|completed Task would be OK
+            if (Tasks == null) return;
             var waitfor = Tasks.Where(t => t.Status == TaskStatus.Running).ToArray();
             Task.WaitAll(waitfor, 5000);
         }
