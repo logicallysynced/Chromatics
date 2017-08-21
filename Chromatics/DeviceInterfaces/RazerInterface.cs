@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -304,8 +305,14 @@ namespace Chromatics.DeviceInterfaces
 
         public void SetLights(Color col)
         {
-            if (_razerDeviceKeyboard)
-                Keyboard.Instance.SetAll(col.ToColoreColor());
+            if (!_razerDeviceKeyboard) return;
+            
+
+            var eff = new Static(col.ToColoreColor());
+            Keyboard.Instance.SetStatic(eff);
+
+            Keyboard.Instance.SetAll(col.ToColoreColor());
+
         }
 
         public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
@@ -329,7 +336,9 @@ namespace Chromatics.DeviceInterfaces
                         if (_razerDeviceKeyboard && !disablekeys)
                             lock (RazerRipple1)
                             {
-                                //Keyboard.Instance.SetAll(rzCol);
+                                var eff = new Static(col.ToColoreColor());
+                                Keyboard.Instance.SetStatic(eff);
+
                                 _keyboardGrid.Set(rzCol);
                                 KeyboardUpdate();
                             }
