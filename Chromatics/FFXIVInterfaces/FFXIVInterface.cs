@@ -76,7 +76,7 @@ namespace Chromatics
             _menuNotify = false;
             Setbase = false;
 
-            //MemoryHandler.Instance.
+            MemoryHandler.Instance.UnsetProcess();
             _call = null;
 
             //HoldReader = false;
@@ -219,6 +219,7 @@ namespace Chromatics
 
                     _playerInfoX = Reader.GetActors().PCEntities;
                     _menuInfo = Reader.GetPlayerInfo().PlayerEntity;
+                    
                     
                     if (Attatched == 3)
                     {
