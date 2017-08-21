@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using Chromatics.Controllers;
 using Chromatics.Datastore;
 using Chromatics.LCDInterfaces;
 using Cyotek.Windows.Forms;
@@ -19,24 +20,40 @@ namespace Chromatics
     {
         private readonly DataGridViewComboBoxColumn _dGmode = new DataGridViewComboBoxColumn();
 
-        private readonly Dictionary<DeviceModeTypes, string> _deviceModes = new Dictionary<DeviceModeTypes, string>
+        private readonly Dictionary<BulbModeTypes, string> _bulbModes = new Dictionary<BulbModeTypes, string>
         {
             //Keys
-            {DeviceModeTypes.Disabled, "Disabled"},
-            {DeviceModeTypes.Standby, "Standby"},
-            {DeviceModeTypes.DefaultColor, "Default Color"},
-            {DeviceModeTypes.HighlightColor, "Highlight Colour"},
-            {DeviceModeTypes.EnmityTracker, "Enmity Tracker"},
-            {DeviceModeTypes.TargetHp, "Target HP"},
-            {DeviceModeTypes.StatusEffects, "Status Effects"},
-            {DeviceModeTypes.HpTracker, "HP Tracker"},
-            {DeviceModeTypes.MpTracker, "MP Tracker"},
-            {DeviceModeTypes.TpTracker, "TP Tracker"},
-            {DeviceModeTypes.Castbar, "Castbar"},
-            {DeviceModeTypes.DutyFinder, "Duty Finder Bell"},
-            {DeviceModeTypes.ChromaticsDefault, "Chromatics Default"}
+            {BulbModeTypes.Disabled, "Disabled"},
+            {BulbModeTypes.Standby, "Standby"},
+            {BulbModeTypes.DefaultColor, "Default Color"},
+            {BulbModeTypes.HighlightColor, "Highlight Colour"},
+            {BulbModeTypes.EnmityTracker, "Enmity Tracker"},
+            {BulbModeTypes.TargetHp, "Target HP"},
+            {BulbModeTypes.StatusEffects, "Status Effects"},
+            {BulbModeTypes.HpTracker, "HP Tracker"},
+            {BulbModeTypes.MpTracker, "MP Tracker"},
+            {BulbModeTypes.TpTracker, "TP Tracker"},
+            {BulbModeTypes.Castbar, "Castbar"},
+            {BulbModeTypes.DutyFinder, "Duty Finder Bell"},
+            {BulbModeTypes.ChromaticsDefault, "Chromatics Default"}
         };
 
+        private readonly Dictionary<DevModeTypes, string> _devModesA = new Dictionary<DevModeTypes, string>
+        {
+            //Keys
+            {DevModeTypes.Disabled, "Disabled"},
+            //{DevModeTypes.Standby, "Standby"},
+            {DevModeTypes.DefaultColor, "Default Color"},
+            {DevModeTypes.HighlightColor, "Highlight Colour"},
+            {DevModeTypes.EnmityTracker, "Enmity Tracker"},
+            {DevModeTypes.TargetHp, "Target HP"},
+            {DevModeTypes.HpTracker, "HP Tracker"},
+            {DevModeTypes.MpTracker, "MP Tracker"},
+            {DevModeTypes.TpTracker, "TP Tracker"},
+            {DevModeTypes.Castbar, "Castbar"},
+            {DevModeTypes.DutyFinder, "Duty Finder Bell"}
+        };
+        
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
         {
             //Keys
@@ -248,7 +265,7 @@ namespace Chromatics
                 dG_devices.AllowUserToAddRows = true;
                 dG_devices.Rows.Clear();
 
-
+                /*
                 if (RazerSdkCalled == 1)
                 {
                     //Keyboard
@@ -263,10 +280,10 @@ namespace Chromatics
                     rzDgKeyboard.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceKeyboard";
 
                     var rzDgKeyboardDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         rzDgKeyboardDgc.Items.Add(d.Value);
 
-                    rzDgKeyboardDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgKeyboardDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     rzDgKeyboardDgc.DisplayStyleForCurrentCellOnly = true;
                     rzDgKeyboardDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
                     rzDgKeyboard.Cells[dG_devices.Columns["col_mode"].Index] = rzDgKeyboardDgc;
@@ -285,10 +302,10 @@ namespace Chromatics
                     rzDgMouse.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceMouse";
 
                     var rzDgMouseDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         rzDgMouseDgc.Items.Add(d.Value);
 
-                    rzDgMouseDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgMouseDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     rzDgMouseDgc.DisplayStyleForCurrentCellOnly = true;
                     rzDgMouseDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -308,10 +325,10 @@ namespace Chromatics
                     rzDgHeadset.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceHeadset";
 
                     var rzDgHeadsetDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         rzDgHeadsetDgc.Items.Add(d.Value);
 
-                    rzDgHeadsetDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgHeadsetDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     rzDgHeadsetDgc.DisplayStyleForCurrentCellOnly = true;
                     rzDgHeadsetDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -331,10 +348,10 @@ namespace Chromatics
                     rzDgMousepad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceMousepad";
 
                     var rzDgMousepadDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         rzDgMousepadDgc.Items.Add(d.Value);
 
-                    rzDgMousepadDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgMousepadDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     rzDgMousepadDgc.DisplayStyleForCurrentCellOnly = true;
                     rzDgMousepadDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -354,10 +371,10 @@ namespace Chromatics
                     rzDgKeypad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "RazerDeviceKeypad";
 
                     var rzDgKeypadDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         rzDgKeypadDgc.Items.Add(d.Value);
 
-                    rzDgKeypadDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    rzDgKeypadDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     rzDgKeypadDgc.DisplayStyleForCurrentCellOnly = true;
                     rzDgKeypadDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -384,10 +401,10 @@ namespace Chromatics
                     corsairDgKeyboard.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceKeyboard";
 
                     var corsairDgKeyboardDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         corsairDgKeyboardDgc.Items.Add(d.Value);
 
-                    corsairDgKeyboardDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    corsairDgKeyboardDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     corsairDgKeyboardDgc.DisplayStyleForCurrentCellOnly = true;
                     corsairDgKeyboardDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -407,10 +424,10 @@ namespace Chromatics
                     corsairDgMouse.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceMouse";
 
                     var corsairDgMouseDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         corsairDgMouseDgc.Items.Add(d.Value);
 
-                    corsairDgMouseDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    corsairDgMouseDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     corsairDgMouseDgc.DisplayStyleForCurrentCellOnly = true;
                     corsairDgMouseDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -430,10 +447,10 @@ namespace Chromatics
                     corsairDgHeadset.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceHeadset";
 
                     var corsairDgHeadsetDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         corsairDgHeadsetDgc.Items.Add(d.Value);
 
-                    corsairDgHeadsetDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    corsairDgHeadsetDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     corsairDgHeadsetDgc.DisplayStyleForCurrentCellOnly = true;
                     corsairDgHeadsetDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -453,10 +470,10 @@ namespace Chromatics
                     corsairDgMousepad.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CorsairDeviceMousepad";
 
                     var corsairDgMousepadDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         corsairDgMousepadDgc.Items.Add(d.Value);
 
-                    corsairDgMousepadDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    corsairDgMousepadDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     corsairDgMousepadDgc.DisplayStyleForCurrentCellOnly = true;
                     corsairDgMousepadDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -482,10 +499,10 @@ namespace Chromatics
                     logitechDgDevices.Cells[dG_devices.Columns["col_dattype"].Index].Value = "LogitechDevice";
 
                     var logitechDgDevicesDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         logitechDgDevicesDgc.Items.Add(d.Value);
 
-                    logitechDgDevicesDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    logitechDgDevicesDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     logitechDgDevicesDgc.DisplayStyleForCurrentCellOnly = true;
                     logitechDgDevicesDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -513,10 +530,10 @@ namespace Chromatics
                     coolermasterDgDevices.Cells[dG_devices.Columns["col_dattype"].Index].Value = "CoolermasterDevice";
 
                     var coolermasterDgDevicesDgc = new DataGridViewComboBoxCell();
-                    foreach (var d in _deviceModes)
+                    foreach (var d in _bulbModes)
                         coolermasterDgDevicesDgc.Items.Add(d.Value);
 
-                    coolermasterDgDevicesDgc.Value = _deviceModes[DeviceModeTypes.ChromaticsDefault];
+                    coolermasterDgDevicesDgc.Value = _bulbModes[BulbModeTypes.ChromaticsDefault];
                     coolermasterDgDevicesDgc.DisplayStyleForCurrentCellOnly = true;
                     coolermasterDgDevicesDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
@@ -528,7 +545,7 @@ namespace Chromatics
                     _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
-
+                */
                 if (LifxSdkCalled == 1)
                     if (_lifx.LifxBulbs > 0)
                         foreach (var d in _lifx.LifxBulbsDat.ToList())
@@ -561,16 +578,16 @@ namespace Chromatics
 
                             var lifxdGDeviceDgc = new DataGridViewComboBoxCell();
 
-                            foreach (var x in _deviceModes.ToList())
+                            foreach (var x in _bulbModes.ToList())
                             {
-                                if (d.Value != 0 && x.Key == DeviceModeTypes.Disabled) continue;
-                                if (x.Key == DeviceModeTypes.ChromaticsDefault) continue;
+                                if (d.Value != 0 && x.Key == BulbModeTypes.Disabled) continue;
+                                if (x.Key == BulbModeTypes.ChromaticsDefault) continue;
                                 lifxdGDeviceDgc.Items.Add(x.Value);
                             }
 
-                            lifxdGDeviceDgc.Value = d.Value == DeviceModeTypes.ChromaticsDefault
-                                ? _deviceModes[DeviceModeTypes.Standby]
-                                : _deviceModes[d.Value];
+                            lifxdGDeviceDgc.Value = d.Value == BulbModeTypes.ChromaticsDefault
+                                ? _bulbModes[BulbModeTypes.Standby]
+                                : _bulbModes[d.Value];
                             lifxdGDeviceDgc.DisplayStyleForCurrentCellOnly = true;
                             lifxdGDeviceDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 
@@ -597,7 +614,7 @@ namespace Chromatics
                             if (duplicate) continue;
                             */
 
-                            dG_devices.Rows.Add(lifxdGDevice);
+        dG_devices.Rows.Add(lifxdGDevice);
                             lifxdGDeviceDgc.ReadOnly = d.Value == 0 ? true : false;
                         }
 
@@ -632,16 +649,16 @@ namespace Chromatics
 
                             var huedGDeviceDgc = new DataGridViewComboBoxCell();
 
-                            foreach (var x in _deviceModes.ToList())
+                            foreach (var x in _bulbModes.ToList())
                             {
-                                if (d.Value != 0 && x.Key == DeviceModeTypes.Disabled) continue;
-                                if (x.Key == DeviceModeTypes.ChromaticsDefault) continue;
+                                if (d.Value != 0 && x.Key == BulbModeTypes.Disabled) continue;
+                                if (x.Key == BulbModeTypes.ChromaticsDefault) continue;
                                 huedGDeviceDgc.Items.Add(x.Value);
                             }
 
-                            huedGDeviceDgc.Value = d.Value == DeviceModeTypes.ChromaticsDefault
-                                ? _deviceModes[DeviceModeTypes.Standby]
-                                : _deviceModes[d.Value];
+                            huedGDeviceDgc.Value = d.Value == BulbModeTypes.ChromaticsDefault
+                                ? _bulbModes[BulbModeTypes.Standby]
+                                : _bulbModes[d.Value];
                             huedGDeviceDgc.DisplayStyleForCurrentCellOnly = true;
                             huedGDeviceDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 
@@ -692,9 +709,10 @@ namespace Chromatics
                 {
                     var _switch = (bool)editedCell.Value;
                     var modeX = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_mode"].Index].Value;
-                    var key = _deviceModes.FirstOrDefault(x => x.Value == modeX).Key;
+                    var key = _bulbModes.FirstOrDefault(x => x.Value == modeX).Key;
                     var change = dG_devices.CurrentRow.Cells;
 
+                    /*
                     if (dattype == "RazerDeviceKeyboard")
                     {
                         if (_switch)
@@ -879,7 +897,8 @@ namespace Chromatics
                             _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse,
                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                     }
-                    else if (dattype == "LIFX")
+                    */
+                    if (dattype == "LIFX")
                     {
                         var id = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
                         if (LifxSdkCalled == 1 && id != null)
@@ -946,9 +965,9 @@ namespace Chromatics
                     var id = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
 
                     if (LifxSdkCalled == 1 && id != null && dattype == "LIFX")
-                        if (_deviceModes.ContainsValue(mode))
+                        if (_bulbModes.ContainsValue(mode))
                         {
-                            var key = _deviceModes.FirstOrDefault(x => x.Value == mode).Key;
+                            var key = _bulbModes.FirstOrDefault(x => x.Value == mode).Key;
                             var bulb = _lifx.LifxDevices[id];
                             _lifx.LifxBulbsDat[bulb] = key;
                             _lifx.LifxModeMemory[bulb.MacAddressName] = key;
@@ -956,9 +975,9 @@ namespace Chromatics
                         }
 
                     if (HueSdkCalled == 1 && id != null && dattype == "HUE")
-                        if (_deviceModes.ContainsValue(mode))
+                        if (_bulbModes.ContainsValue(mode))
                         {
-                            var key = _deviceModes.FirstOrDefault(x => x.Value == mode).Key;
+                            var key = _bulbModes.FirstOrDefault(x => x.Value == mode).Key;
                             var bulb = _hue.HueDevices[id];
                             _hue.HueBulbsDat[bulb] = key;
                             _hue.HueModeMemory[bulb.UniqueId] = key;
@@ -969,10 +988,12 @@ namespace Chromatics
                 SaveDevices();
                 //ResetDeviceDataGrid();
 
+                /*
                 if (RazerSdkCalled == 1)
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
                         _razerDeviceMousepad, _razerDeviceHeadset,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                */
             }
         }
 
@@ -1147,6 +1168,111 @@ namespace Chromatics
             chk_highlighttoggle.Checked = ChromaticsSettings.ChromaticsSettingsKeyHighlights;
             chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettingsImpactToggle;
             chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettingsDfBellToggle;
+
+            chk_dev_keyboard.Checked = _deviceKeyboard;
+            chk_dev_mouse.Checked = _deviceMouse;
+            chk_dev_mousepad.Checked = _deviceMousepad;
+            chk_dev_headset.Checked = _deviceHeadset;
+            chk_dev_keypad.Checked = _DeviceKeypad;
+
+            foreach (var item in _devModesA)
+            {
+                cb_singlezonemode.Items.Add(item.Value);
+            }
+
+            cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
+
+            chk_keys_singlemode.Checked = _KeysSingleKeyModeEnabled;
+            cb_singlezonemode.Enabled = _KeysSingleKeyModeEnabled;
+
+            if (RazerSdkCalled == 1)
+            {
+                _razerDeviceKeyboard = true;
+                _razerDeviceMouse = true;
+                _razerDeviceMousepad = true;
+                _razerDeviceKeypad = true;
+                _razerDeviceHeadset = true;
+
+                _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                    _razerDeviceMousepad, _razerDeviceHeadset,
+                    ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+            }
+            else
+            {
+                _razerDeviceKeyboard = false;
+                _razerDeviceMouse = false;
+                _razerDeviceMousepad = false;
+                _razerDeviceKeypad = false;
+                _razerDeviceHeadset = false;
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                _logitechDeviceKeyboard = true;
+                //_logitechDeviceMouse = true;
+                //_logitechDeviceMousepad = true;
+                //_logitechDeviceKeypad = true;
+                //_logitechDeviceHeadset = true;
+            }
+            else
+            {
+                _logitechDeviceKeyboard = false;
+                //_logitechDeviceMouse = false;
+                //_logitechDeviceMousepad = false;
+                //_logitechDeviceKeypad = false;
+                //_logitechDeviceHeadset = false;
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                _corsairDeviceKeyboard = true;
+                _corsairDeviceMouse = true;
+                _corsairDeviceMousepad = true;
+                _corsairDeviceKeypad = true;
+                _corsairDeviceHeadset = true;
+            }
+            else
+            {
+                _corsairDeviceKeyboard = false;
+                _corsairDeviceMouse = false;
+                _corsairDeviceMousepad = false;
+                _corsairDeviceKeypad = false;
+                _corsairDeviceHeadset = false;
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermasterDeviceKeyboard = true;
+                _coolermasterDeviceMouse = true;
+                //_coolermasterDeviceMousepad = true;
+                //_coolermasterDeviceKeypad = true;
+                //_coolermasterDeviceHeadset = true;
+            }
+            else
+            {
+                _coolermasterDeviceKeyboard = false;
+                _coolermasterDeviceMouse = false;
+                //_coolermasterDeviceMousepad = false;
+                //_coolermasterDeviceKeypad = false;
+                //_coolermasterDeviceHeadset = false;
+            }
+
+            if (RoccatSdkCalled == 1)
+            {
+                _roccatDeviceKeyboard = true;
+                _roccatDeviceMouse = true;
+                //_roccatDeviceMousepad = true;
+                //_roccatDeviceKeypad = true;
+                //_roccatDeviceHeadset = true;
+            }
+            else
+            {
+                _roccatDeviceKeyboard = false;
+                _roccatDeviceMouse = false;
+                //_roccatDeviceMousepad = false;
+                //_roccatDeviceKeypad = false;
+                //_roccatDeviceHeadset = false;
+            }
         }
 
         private void InitSettingsArxGui()
@@ -1632,6 +1758,389 @@ namespace Chromatics
 
             ChromaticsSettings.ChromaticsSettingsDfBellToggle = chk_dfbelltoggle.Checked;
             SaveChromaticsSettings(1);
+        }
+
+        private void chk_dev_keyboard_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_dev_keyboard.Checked)
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceKeyboard = true;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    _logitechDeviceKeyboard = true;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceKeyboard = true;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    _coolermasterDeviceKeyboard = true;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    _roccatDeviceKeyboard = true;
+                }
+                
+            }
+            else
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceKeyboard = false;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    _logitechDeviceKeyboard = false;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceKeyboard = false;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    _coolermasterDeviceKeyboard = false;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    _roccatDeviceKeyboard = false;
+                }
+            }
+        }
+
+        private void chk_dev_mouse_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_dev_mouse.Checked)
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceMouse = true;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //_logitechDeviceMouse = true;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceMouse = true;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    _coolermasterDeviceMouse = true;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    _roccatDeviceMouse = true;
+                }
+
+            }
+            else
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceMouse = false;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //_logitechDeviceMouse = false;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceMouse = false;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    _coolermasterDeviceMouse = false;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    _roccatDeviceMouse = false;
+                }
+            }
+
+        }
+
+        private void chk_dev_mousepad_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_dev_mousepad.Checked)
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceMousepad = true;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //_logitechDeviceMousepad = true;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceMousepad = true;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //_coolermasterDeviceMousepad = true;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    //_roccatDeviceMousepad = true;
+                }
+
+            }
+            else
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceMousepad = false;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //_logitechDeviceMousepad = false;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceMousepad = false;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //_coolermasterDeviceMousepad = false;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    //_roccatDeviceMousepad = false;
+                }
+            }
+
+        }
+
+        private void chk_dev_headset_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_dev_headset.Checked)
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceHeadset = true;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //_logitechDeviceHeadset = true;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceHeadset = true;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //_coolermasterDeviceHeadset = true;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    //_roccatDeviceHeadset = true;
+                }
+
+            }
+            else
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceHeadset = false;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //_logitechDeviceHeadset = false;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceHeadset = false;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //_coolermasterDeviceHeadset = false;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    //_roccatDeviceHeadset = false;
+                }
+            }
+
+        }
+
+        private void chk_dev_keypad_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_dev_keypad.Checked)
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceKeypad = true;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //_logitechDeviceKeypad = true;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceKeypad = true;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //_coolermasterDeviceKeypad = true;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    //_roccatDeviceKeypad = true;
+                }
+
+            }
+            else
+            {
+                if (RazerSdkCalled == 1)
+                {
+                    _razerDeviceKeypad = false;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //_logitechDeviceKeypad = false;
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceKeypad = false;
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //_coolermasterDeviceKeypad = false;
+                }
+
+                if (RoccatSdkCalled == 1)
+                {
+                    //_roccatDeviceKeypad = false;
+                }
+            }
+
+        }
+
+        private void chk_keys_singlemode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_keys_singlemode.Checked)
+            {
+                _KeysSingleKeyModeEnabled = true;
+                cb_singlezonemode.Enabled = true;
+            }
+            else
+            {
+                _KeysSingleKeyModeEnabled = false;
+                cb_singlezonemode.Enabled = false;
+            }
+
+            Setbase = false;
+            SaveDevices();
+        }
+
+        private void cb_singlezonemode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string) cb_singlezonemode.SelectedItem != item.Value) continue;
+                _KeysSingleKeyMode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            Setbase = false;
+            SaveDevices();
         }
 
         private delegate void ResetGridDelegate();

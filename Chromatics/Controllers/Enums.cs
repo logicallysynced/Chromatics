@@ -16,7 +16,7 @@
         Error
     }
 
-    public enum DeviceModeTypes
+    public enum BulbModeTypes
     {
         Disabled,
         Standby,
@@ -32,5 +32,19 @@
         ChromaticsDefault,
         DutyFinder,
         Unknown
+    }
+
+    public enum DevModeTypes
+    {
+        Disabled,
+        DefaultColor,
+        HighlightColor,
+        EnmityTracker,
+        TargetHp,
+        HpTracker,
+        MpTracker,
+        TpTracker,
+        Castbar,
+        DutyFinder
     }
 }

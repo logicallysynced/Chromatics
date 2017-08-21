@@ -808,10 +808,15 @@ namespace Chromatics
                         {
                             _baseColor = baseColor;
                             GlobalUpdateState("static", _baseColor, false);
-                            GlobalUpdateBulbState(DeviceModeTypes.DefaultColor, _baseColor, 500);
-                            GlobalUpdateBulbState(DeviceModeTypes.TargetHp, _baseColor, 500);
-                            GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 500);
-                            GlobalUpdateBulbState(DeviceModeTypes.Castbar, _baseColor, 500);
+                            GlobalUpdateBulbState(BulbModeTypes.DefaultColor, _baseColor, 500);
+                            GlobalUpdateBulbState(BulbModeTypes.TargetHp, _baseColor, 500);
+                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
+                            GlobalUpdateBulbState(BulbModeTypes.Castbar, _baseColor, 500);
+
+                            GlobalApplyKeySingleLighting(DevModeTypes.DefaultColor, _baseColor);
+                            GlobalApplyKeySingleLighting(DevModeTypes.TargetHp, _baseColor);
+                            GlobalApplyKeySingleLighting(DevModeTypes.Castbar, _baseColor);
+
                             Setbase = true;
                         }
 
@@ -846,7 +851,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Q", _baseColor, false);
                             }
 
-                            GlobalUpdateBulbState(DeviceModeTypes.HighlightColor, highlightColor, 100);
+                            GlobalUpdateBulbState(BulbModeTypes.HighlightColor, highlightColor, 100);
+                            GlobalApplyKeySingleLighting(DevModeTypes.HighlightColor, highlightColor);
                         }
                         else
                         {
@@ -865,8 +871,11 @@ namespace Chromatics
                         {
                             GlobalApplyMapKeyLighting("PrintScreen",
                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker,
+                            GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), 250);
+
+                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+
                             GlobalApplyMapKeyLighting("Scroll",
                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
                                 false);
@@ -904,68 +913,68 @@ namespace Chromatics
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBind);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Petrification")
                                     {
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPetrification);
                                         GlobalUpdateState("static", _baseColor, false);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 250);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                     }
                                     else if (status.StatusName == "Old")
                                     {
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
                                         GlobalUpdateState("static", _baseColor, false);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 250);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                     }
                                     else if (status.StatusName == "Slow")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Stun")
                                     {
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingStun);
                                         GlobalUpdateState("static", _baseColor, false);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 250);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                     }
                                     else if (status.StatusName == "Silence")
                                     {
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSilence);
                                         GlobalUpdateState("static", _baseColor, false);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 250);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                     }
                                     else if (status.StatusName == "Poison")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Pollen")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Pox")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPox), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPox);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Paralysis")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis),
                                             100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Leaden")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Incapacitation")
                                     {
@@ -974,83 +983,83 @@ namespace Chromatics
                                             100);
                                         _baseColor =
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Dropsy")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Amnesia")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia),
                                             100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Bleed")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Misery")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Sleep")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Daze")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Heavy")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Infirmary")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary),
                                             100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Burns")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns), 100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Deep Freeze")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze),
                                             100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else if (status.StatusName == "Damage Down")
                                     {
                                         GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown),
                                             100);
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                     }
                                     else
                                     {
                                         _baseColor = baseColor;
                                         GlobalUpdateState("static", _baseColor, false);
-                                        GlobalUpdateBulbState(DeviceModeTypes.StatusEffects, _baseColor, 500);
+                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
 
                                         GlobalApplyMapKeyLighting("W", highlightColor, false);
                                         GlobalApplyMapKeyLighting("A", highlightColor, false);
@@ -1068,9 +1077,14 @@ namespace Chromatics
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                             GlobalApplyMapKeyLighting("Pause",
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker,
+
+                                            GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
                                                 250);
+
+                                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+
                                             GlobalApplyMapKeyLighting("Macro16",
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                             GlobalApplyMapKeyLighting("Macro17",
@@ -1108,12 +1122,17 @@ namespace Chromatics
                                 var maxThp = targetInfo.HPMax;
                                 var polTargetHp = (currentThp - 0) * (5 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx = (currentThp - 0) * (65535 - 0) / (maxThp - 0) + 0;
+                                var polTargetHpx2 = (currentThp - 0) * (1.0 - 0.0) / (maxThp - 0) + 0.0;
 
-                                GlobalUpdateBulbStateBrightness(DeviceModeTypes.TargetHp,
+                                GlobalUpdateBulbStateBrightness(BulbModeTypes.TargetHp,
                                     targetInfo.IsClaimed
                                         ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                         : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
                                     (ushort) polTargetHpx, 250);
+
+                                GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
+                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
 
                                 if (polTargetHp == 0)
                                 {
@@ -1294,9 +1313,12 @@ namespace Chromatics
 
                                 if (targetInfo.IsCasting)
                                 {
-                                    GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker,
+                                    GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
                                         0);
+
+                                    GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting));
 
                                     /*
                                     GlobalApplyMapKeyLighting("PrintScreen",
@@ -1357,7 +1379,8 @@ namespace Chromatics
                                         if (emnityPosition == -1)
                                         {
                                             //Engaged/No Aggro
-                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm0, 1000);
+                                            GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm0, 1000);
+                                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm0);
 
                                             if (!_castalert)
                                             {
@@ -1375,7 +1398,8 @@ namespace Chromatics
                                         else if (emnityPosition > 4 && emnityPosition <= 8)
                                         {
                                             //Low Aggro
-                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm1, 1000);
+                                            GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm1, 1000);
+                                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm1);
 
                                             if (!_castalert)
                                             {
@@ -1393,7 +1417,8 @@ namespace Chromatics
                                         else if (emnityPosition > 1 && emnityPosition <= 4)
                                         {
                                             //Moderate Aggro
-                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm2, 1000);
+                                            GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm2, 1000);
+                                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm2);
 
                                             if (!_castalert)
                                             {
@@ -1411,7 +1436,8 @@ namespace Chromatics
                                         else if (emnityPosition == 1)
                                         {
                                             //Partial Aggro
-                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm3, 1000);
+                                            GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm3, 1000);
+                                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm3);
 
                                             if (!_castalert)
                                             {
@@ -1429,7 +1455,8 @@ namespace Chromatics
                                         else if (emnityPosition == 0)
                                         {
                                             //Full Aggro
-                                            GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm4, 1000);
+                                            GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm4, 1000);
+                                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm4);
 
                                             if (!_castalert)
                                             {
@@ -1448,7 +1475,8 @@ namespace Chromatics
                                     else
                                     {
                                         //Not Engaged/No aggro
-                                        GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, colEm0, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm0, 1000);
+                                        GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm0);
 
                                         if (!_castalert)
                                         {
@@ -1469,8 +1497,11 @@ namespace Chromatics
                             {
                                 GlobalApplyMapKeyLighting("PrintScreen",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker,
+                                GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
                                     ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), 250);
+
+                                GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+
                                 GlobalApplyMapKeyLighting("Scroll",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyMapKeyLighting("Pause",
@@ -1490,7 +1521,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
                                 GlobalApplyMapKeyLighting("Macro4", _baseColor, false);
                                 GlobalApplyMapKeyLighting("Macro5", _baseColor, false);
-                                GlobalUpdateBulbState(DeviceModeTypes.EnmityTracker, _baseColor, 1000);
+                                GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, _baseColor, 1000);
+                                GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, _baseColor);
                             }
                         }
                         else
@@ -1500,7 +1532,8 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
                             GlobalApplyMapKeyLighting("Macro4", _baseColor, false);
                             GlobalApplyMapKeyLighting("Macro5", _baseColor, false);
-                            GlobalUpdateBulbState(DeviceModeTypes.TargetHp, _baseColor, 1000);
+                            GlobalUpdateBulbState(BulbModeTypes.TargetHp, _baseColor, 1000);
+                            GlobalApplyKeySingleLighting(DevModeTypes.TargetHp, _baseColor);
 
                             if (_targeted)
                                 _targeted = false;
@@ -1515,15 +1548,19 @@ namespace Chromatics
                         var polCastX = (castPercentage - 0) * (12 - 0) / (1.0 - 0.0) + 0;
                         var polCast = Convert.ToInt32(polCastX);
                         var polCastZ = Convert.ToInt32((castPercentage - 0) * (65535 - 0) / (1.0 - 0.0) + 0);
+                        //double polCastZ2 = Convert.ToInt32((castPercentage - 0) * (1.0 - 0.0) / (1.0 - 0.0) + 0.0);
 
+                        //Debug.WriteLine(castPercentage);
 
                         if (_playerInfo.IsCasting)
                         {
                             //Console.WriteLine(CastPercentage);
                             _lastcast = true;
 
-                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.Castbar, colCastcharge, (ushort) polCastZ,
+                            GlobalUpdateBulbStateBrightness(BulbModeTypes.Castbar, colCastcharge, (ushort) polCastZ,
                                 250);
+
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.Castbar, colCastcharge, castPercentage);
 
                             if (polCast <= 1 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
@@ -1824,7 +1861,8 @@ namespace Chromatics
 
                                 var cBulbRip1 = new Task(() =>
                                 {
-                                    GlobalUpdateBulbState(DeviceModeTypes.Castbar, _baseColor, 500);
+                                    GlobalUpdateBulbState(BulbModeTypes.Castbar, _baseColor, 500);
+                                    GlobalApplyKeySingleLighting(DevModeTypes.Castbar, _baseColor);
                                 });
                                 MemoryTasks.Add(cBulbRip1);
                                 MemoryTasks.Run(cBulbRip1);
@@ -1844,11 +1882,16 @@ namespace Chromatics
                             var polHp = (currentHp - 0) * (40 - 0) / (maxHp - 0) + 0;
                             var polHpx = (currentHp - 0) * (70 - 0) / (maxHp - 0) + 0;
                             var polHpz = (currentHp - 0) * (65535 - 0) / (maxHp - 0) + 0;
+                            var polHpz2 = (currentHp - 0) * (1.0 - 0.0) / (maxHp - 0) + 0.0;
 
-                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.HpTracker,
+                            //Debug.WriteLine(polHpz2);
+
+                            GlobalUpdateBulbStateBrightness(BulbModeTypes.HpTracker,
                                 polHp <= 10 ? colHpempty : colHpfull,
                                 (ushort) polHpz,
                                 250);
+
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, polHpz2);
 
                             if (polHp <= 40 && polHp > 30)
                             {
@@ -2016,9 +2059,12 @@ namespace Chromatics
                             var polMp = (currentMp - 0) * (40 - 0) / (maxMp - 0) + 0;
                             var polMpx = (currentMp - 0) * (70 - 0) / (maxMp - 0) + 0;
                             var polMpz = (currentMp - 0) * (65535 - 0) / (maxMp - 0) + 0;
+                            var polMpz2 = (currentMp - 0) * (1.0 - 0.0) / (maxMp - 0) + 0.0;
 
-                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.MpTracker, colMpfull, (ushort) polMpz,
+                            GlobalUpdateBulbStateBrightness(BulbModeTypes.MpTracker, colMpfull, (ushort) polMpz,
                                 250);
+
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.MpTracker, colMpfull, polMpz2);
 
                             if (polMp <= 40 && polMp > 30)
                             {
@@ -2186,9 +2232,12 @@ namespace Chromatics
                             var polTp = (currentTp - 0) * (40 - 0) / (maxTp - 0) + 0;
                             var polTpx = (currentTp - 0) * (70 - 0) / (maxTp - 0) + 0;
                             var polTpz = (currentTp - 0) * (65535 - 0) / (maxTp - 0) + 0;
+                            var polTpz2 = (currentTp - 0) * (1.0 - 0.0) / (maxTp - 0) + 0.0;
 
-                            GlobalUpdateBulbStateBrightness(DeviceModeTypes.TpTracker, colTpfull, (ushort) polTpz,
+                            GlobalUpdateBulbStateBrightness(BulbModeTypes.TpTracker, colTpfull, (ushort) polTpz,
                                 250);
+
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.TpTracker, colTpfull, polTpz2);
 
                             if (polTp <= 40 && polTp > 30)
                             {
@@ -3416,6 +3465,9 @@ namespace Chromatics
                                     GlobalFlash4(_baseColor,
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), 500,
                                         DeviceEffects.GlobalKeys);
+
+                                    GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
+
                                     _dfpop = true;
                                 }
                                 else
@@ -3426,6 +3478,9 @@ namespace Chromatics
                                         GlobalFlash4(_baseColor,
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), 200,
                                             DeviceEffects.GlobalKeys);
+
+                                        GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
+
                                         _dfcount = true;
                                     }
                                 }
@@ -3438,6 +3493,8 @@ namespace Chromatics
                                     _dfpop = false;
                                     _dfcount = false;
                                     Setbase = false;
+
+                                    GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, _baseColor);
                                 }
                             }
                         }

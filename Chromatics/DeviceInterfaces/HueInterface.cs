@@ -44,9 +44,9 @@ namespace Chromatics.DeviceInterfaces
     public interface IHueSdk
     {
         int HueBulbs { get; set; }
-        Dictionary<string, DeviceModeTypes> HueModeMemory { get; }
+        Dictionary<string, BulbModeTypes> HueModeMemory { get; }
         Dictionary<string, Light> HueDevices { get; }
-        Dictionary<Light, DeviceModeTypes> HueBulbsDat { get; }
+        Dictionary<Light, BulbModeTypes> HueBulbsDat { get; }
         Dictionary<Light, State> HueBulbsRestore { get; }
         Dictionary<string, int> HueStateMemory { get; }
         Task<bool> InitializeSdk(string hueDefault);
@@ -54,8 +54,8 @@ namespace Chromatics.DeviceInterfaces
         Task<State> GetLightStateAsync(Light light);
         Task<string> GetDeviceVersionAsync(Light light);
         void SetColorAsync(Light light, int? hue, int? saturation, int brightness, int? colorTemperature, TimeSpan ts);
-        void HueUpdateState(DeviceModeTypes mode, Color col, int transition);
-        void HueUpdateStateBrightness(DeviceModeTypes mode, Color col, int? brightness, int transition);
+        void HueUpdateState(BulbModeTypes mode, Color col, int transition);
+        void HueUpdateStateBrightness(BulbModeTypes mode, Color col, int? brightness, int transition);
         void Flash4(Color basecol, Color burstcol, int speed, CancellationToken cts);
     }
 
@@ -64,14 +64,14 @@ namespace Chromatics.DeviceInterfaces
         private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
         private static int _hueBulbs;
 
-        private static readonly Dictionary<string, DeviceModeTypes> _HueModeMemory =
-            new Dictionary<string, DeviceModeTypes>();
+        private static readonly Dictionary<string, BulbModeTypes> _HueModeMemory =
+            new Dictionary<string, BulbModeTypes>();
 
         private static readonly Dictionary<string, Light> _HueDevices = new Dictionary<string, Light>();
         private static readonly Dictionary<string, int> _HueStateMemory = new Dictionary<string, int>();
 
-        private static readonly Dictionary<Light, DeviceModeTypes> _HueBulbsDat =
-            new Dictionary<Light, DeviceModeTypes>();
+        private static readonly Dictionary<Light, BulbModeTypes> _HueBulbsDat =
+            new Dictionary<Light, BulbModeTypes>();
 
         private static readonly Dictionary<Light, State> _HueBulbsRestore =
             new Dictionary<Light, State>();
@@ -152,7 +152,7 @@ namespace Chromatics.DeviceInterfaces
 
                     foreach (var light in lights)
                     {
-                        var defaultmode = DeviceModeTypes.Standby;
+                        var defaultmode = BulbModeTypes.Standby;
 
                         if (!_HueModeMemory.ContainsKey(light.UniqueId))
                         {
@@ -223,7 +223,7 @@ namespace Chromatics.DeviceInterfaces
                 Write.WriteConsole(ConsoleTypes.Hue, "Unable to connect to HUE Hub.");
         }
 
-        public async void HueUpdateState(DeviceModeTypes mode, Color col, int transition)
+        public async void HueUpdateState(BulbModeTypes mode, Color col, int transition)
         {
             var connect = await _client.CheckConnection();
 
@@ -244,7 +244,7 @@ namespace Chromatics.DeviceInterfaces
                 //ushort _kelvin = 2700;
 
                 foreach (var d in _HueBulbsDat)
-                    if (d.Value == mode || mode == DeviceModeTypes.Unknown)
+                    if (d.Value == mode || mode == BulbModeTypes.Unknown)
                     {
                         if (_HueStateMemory[d.Key.UniqueId] == 0) return;
                         var state = await _client.GetLightAsync(d.Key.Id); //Unsure if Id or UniqueId should be used
@@ -272,7 +272,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public async void HueUpdateStateBrightness(DeviceModeTypes mode, Color col, int? brightness, int transition)
+        public async void HueUpdateStateBrightness(BulbModeTypes mode, Color col, int? brightness, int transition)
         {
             var connect = await _client.CheckConnection();
 
@@ -295,7 +295,7 @@ namespace Chromatics.DeviceInterfaces
                 //if (mode == 10) _kelvin = 6000;
 
                 foreach (var d in _HueBulbsDat)
-                    if (d.Value == mode || mode == DeviceModeTypes.Unknown)
+                    if (d.Value == mode || mode == BulbModeTypes.Unknown)
                     {
                         if (_HueStateMemory[d.Key.Id] == 0) return;
 
@@ -379,18 +379,18 @@ namespace Chromatics.DeviceInterfaces
                         {
                             if (cts.IsCancellationRequested)
                             {
-                                HueUpdateState(DeviceModeTypes.DutyFinder, basecol, 1000);
+                                HueUpdateState(BulbModeTypes.DutyFinder, basecol, 1000);
                                 break;
                             }
 
                             if (_flash4Step == 0)
                             {
-                                HueUpdateState(DeviceModeTypes.DutyFinder, burstcol, 0);
+                                HueUpdateState(BulbModeTypes.DutyFinder, burstcol, 0);
                                 _flash4Step = 1;
                             }
                             else if (_flash4Step == 1)
                             {
-                                HueUpdateState(DeviceModeTypes.DutyFinder, basecol, 0);
+                                HueUpdateState(BulbModeTypes.DutyFinder, basecol, 0);
                                 _flash4Step = 0;
                             }
 
@@ -415,11 +415,11 @@ namespace Chromatics.DeviceInterfaces
 
         public Dictionary<string, int> HueStateMemory => _HueStateMemory;
 
-        public Dictionary<string, DeviceModeTypes> HueModeMemory => _HueModeMemory;
+        public Dictionary<string, BulbModeTypes> HueModeMemory => _HueModeMemory;
 
         public Dictionary<string, Light> HueDevices => _HueDevices;
 
-        public Dictionary<Light, DeviceModeTypes> HueBulbsDat => _HueBulbsDat;
+        public Dictionary<Light, BulbModeTypes> HueBulbsDat => _HueBulbsDat;
 
         public Dictionary<Light, State> HueBulbsRestore => _HueBulbsRestore;
 

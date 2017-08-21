@@ -173,6 +173,7 @@ namespace Chromatics.DeviceInterfaces
         void ResetCoolermasterDevices(bool deviceKeyboard, bool deviceMouse, Color basecol);
         void Shutdown();
 
+        void SetLights(Color col);
         void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
             [Optional] bool direction, [Optional] int speed);
 
@@ -431,6 +432,19 @@ namespace Chromatics.DeviceInterfaces
                     UpdateState("static", basecol, false);
                 else
                     Shutdown();
+        }
+
+        public void SetLights(Color col)
+        {
+            if (!_coolermasterDeviceKeyboard) return;
+
+            if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
+            {
+                foreach (var key in KeyboardState)
+                    KeyboardState[key.Key] = col;
+
+                UpdateCoolermasterStateAll(col);
+            }
         }
 
         public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,

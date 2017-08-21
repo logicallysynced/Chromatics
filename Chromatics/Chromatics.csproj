@@ -214,6 +214,7 @@
     <Compile Include="Controllers\GUIController.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Controllers\Helpers.cs" />
     <Compile Include="Controllers\Locator.cs" />
     <Compile Include="Controllers\Enums.cs" />
     <Compile Include="Controllers\MemoryTasks.cs" />

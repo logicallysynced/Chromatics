@@ -34,7 +34,20 @@
             this.tb_controlA = new System.Windows.Forms.TabControl();
             this.tP_debug = new System.Windows.Forms.TabPage();
             this.pB_logo1 = new System.Windows.Forms.PictureBox();
-            this.tP_devices = new System.Windows.Forms.TabPage();
+            this.tP_devicesnew = new System.Windows.Forms.TabPage();
+            this.tb_controldev = new System.Windows.Forms.TabControl();
+            this.tP_keys = new System.Windows.Forms.TabPage();
+            this.chk_keys_singlemode = new System.Windows.Forms.CheckBox();
+            this.chk_dev_keyboard = new System.Windows.Forms.CheckBox();
+            this.tP_mouse = new System.Windows.Forms.TabPage();
+            this.chk_dev_mouse = new System.Windows.Forms.CheckBox();
+            this.tP_mousepad = new System.Windows.Forms.TabPage();
+            this.chk_dev_mousepad = new System.Windows.Forms.CheckBox();
+            this.tP_headset = new System.Windows.Forms.TabPage();
+            this.chk_dev_headset = new System.Windows.Forms.CheckBox();
+            this.tP_keypad = new System.Windows.Forms.TabPage();
+            this.chk_dev_keypad = new System.Windows.Forms.CheckBox();
+            this.tP_bulbs = new System.Windows.Forms.TabPage();
             this.dG_devices = new System.Windows.Forms.DataGridView();
             this.col_devicename = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_devicetype = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,6 +56,7 @@
             this.col_mode = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.col_dattype = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tP_misc = new System.Windows.Forms.TabPage();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
             this.chk_dfbelltoggle = new System.Windows.Forms.CheckBox();
@@ -101,10 +115,18 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.cb_singlezonemode = new System.Windows.Forms.ComboBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
-            this.tP_devices.SuspendLayout();
+            this.tP_devicesnew.SuspendLayout();
+            this.tb_controldev.SuspendLayout();
+            this.tP_keys.SuspendLayout();
+            this.tP_mouse.SuspendLayout();
+            this.tP_mousepad.SuspendLayout();
+            this.tP_headset.SuspendLayout();
+            this.tP_keypad.SuspendLayout();
+            this.tP_bulbs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).BeginInit();
             this.tP_settings.SuspendLayout();
             this.gB_effects.SuspendLayout();
@@ -131,7 +153,7 @@
             // tb_controlA
             // 
             this.tb_controlA.Controls.Add(this.tP_debug);
-            this.tb_controlA.Controls.Add(this.tP_devices);
+            this.tb_controlA.Controls.Add(this.tP_devicesnew);
             this.tb_controlA.Controls.Add(this.tP_settings);
             this.tb_controlA.Controls.Add(this.tP_mappings);
             this.tb_controlA.Controls.Add(this.tP_ARX);
@@ -167,16 +189,161 @@
             this.pB_logo1.TabIndex = 2;
             this.pB_logo1.TabStop = false;
             // 
-            // tP_devices
+            // tP_devicesnew
             // 
-            this.tP_devices.BackColor = System.Drawing.SystemColors.Control;
-            this.tP_devices.Controls.Add(this.dG_devices);
-            this.tP_devices.Location = new System.Drawing.Point(4, 25);
-            this.tP_devices.Name = "tP_devices";
-            this.tP_devices.Padding = new System.Windows.Forms.Padding(3);
-            this.tP_devices.Size = new System.Drawing.Size(969, 494);
-            this.tP_devices.TabIndex = 1;
-            this.tP_devices.Text = "Devices";
+            this.tP_devicesnew.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_devicesnew.Controls.Add(this.tb_controldev);
+            this.tP_devicesnew.Location = new System.Drawing.Point(4, 25);
+            this.tP_devicesnew.Name = "tP_devicesnew";
+            this.tP_devicesnew.Size = new System.Drawing.Size(969, 494);
+            this.tP_devicesnew.TabIndex = 5;
+            this.tP_devicesnew.Text = "Devices";
+            // 
+            // tb_controldev
+            // 
+            this.tb_controldev.Controls.Add(this.tP_keys);
+            this.tb_controldev.Controls.Add(this.tP_mouse);
+            this.tb_controldev.Controls.Add(this.tP_mousepad);
+            this.tb_controldev.Controls.Add(this.tP_headset);
+            this.tb_controldev.Controls.Add(this.tP_keypad);
+            this.tb_controldev.Controls.Add(this.tP_bulbs);
+            this.tb_controldev.Controls.Add(this.tP_misc);
+            this.tb_controldev.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tb_controldev.Location = new System.Drawing.Point(0, 0);
+            this.tb_controldev.Name = "tb_controldev";
+            this.tb_controldev.SelectedIndex = 0;
+            this.tb_controldev.Size = new System.Drawing.Size(969, 494);
+            this.tb_controldev.TabIndex = 0;
+            // 
+            // tP_keys
+            // 
+            this.tP_keys.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keys.Controls.Add(this.cb_singlezonemode);
+            this.tP_keys.Controls.Add(this.chk_keys_singlemode);
+            this.tP_keys.Controls.Add(this.chk_dev_keyboard);
+            this.tP_keys.Location = new System.Drawing.Point(4, 25);
+            this.tP_keys.Name = "tP_keys";
+            this.tP_keys.Padding = new System.Windows.Forms.Padding(3);
+            this.tP_keys.Size = new System.Drawing.Size(961, 465);
+            this.tP_keys.TabIndex = 0;
+            this.tP_keys.Text = "Keyboard";
+            // 
+            // chk_keys_singlemode
+            // 
+            this.chk_keys_singlemode.AutoSize = true;
+            this.chk_keys_singlemode.Location = new System.Drawing.Point(559, 18);
+            this.chk_keys_singlemode.Name = "chk_keys_singlemode";
+            this.chk_keys_singlemode.Size = new System.Drawing.Size(145, 21);
+            this.chk_keys_singlemode.TabIndex = 1;
+            this.chk_keys_singlemode.Text = "Single Zone Mode";
+            this.chk_keys_singlemode.UseVisualStyleBackColor = true;
+            this.chk_keys_singlemode.CheckedChanged += new System.EventHandler(this.chk_keys_singlemode_CheckedChanged);
+            // 
+            // chk_dev_keyboard
+            // 
+            this.chk_dev_keyboard.AutoSize = true;
+            this.chk_dev_keyboard.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_keyboard.Name = "chk_dev_keyboard";
+            this.chk_dev_keyboard.Size = new System.Drawing.Size(139, 21);
+            this.chk_dev_keyboard.TabIndex = 0;
+            this.chk_dev_keyboard.Text = "Enable Keyboard";
+            this.chk_dev_keyboard.UseVisualStyleBackColor = true;
+            this.chk_dev_keyboard.CheckedChanged += new System.EventHandler(this.chk_dev_keyboard_CheckedChanged);
+            // 
+            // tP_mouse
+            // 
+            this.tP_mouse.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_mouse.Controls.Add(this.chk_dev_mouse);
+            this.tP_mouse.Location = new System.Drawing.Point(4, 25);
+            this.tP_mouse.Name = "tP_mouse";
+            this.tP_mouse.Padding = new System.Windows.Forms.Padding(3);
+            this.tP_mouse.Size = new System.Drawing.Size(961, 465);
+            this.tP_mouse.TabIndex = 1;
+            this.tP_mouse.Text = "Mouse";
+            // 
+            // chk_dev_mouse
+            // 
+            this.chk_dev_mouse.AutoSize = true;
+            this.chk_dev_mouse.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_mouse.Name = "chk_dev_mouse";
+            this.chk_dev_mouse.Size = new System.Drawing.Size(120, 21);
+            this.chk_dev_mouse.TabIndex = 1;
+            this.chk_dev_mouse.Text = "Enable Mouse";
+            this.chk_dev_mouse.UseVisualStyleBackColor = true;
+            this.chk_dev_mouse.CheckedChanged += new System.EventHandler(this.chk_dev_mouse_CheckedChanged);
+            // 
+            // tP_mousepad
+            // 
+            this.tP_mousepad.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_mousepad.Controls.Add(this.chk_dev_mousepad);
+            this.tP_mousepad.Location = new System.Drawing.Point(4, 25);
+            this.tP_mousepad.Name = "tP_mousepad";
+            this.tP_mousepad.Size = new System.Drawing.Size(961, 465);
+            this.tP_mousepad.TabIndex = 2;
+            this.tP_mousepad.Text = "Mousepad";
+            // 
+            // chk_dev_mousepad
+            // 
+            this.chk_dev_mousepad.AutoSize = true;
+            this.chk_dev_mousepad.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_mousepad.Name = "chk_dev_mousepad";
+            this.chk_dev_mousepad.Size = new System.Drawing.Size(144, 21);
+            this.chk_dev_mousepad.TabIndex = 2;
+            this.chk_dev_mousepad.Text = "Enable Mousepad";
+            this.chk_dev_mousepad.UseVisualStyleBackColor = true;
+            this.chk_dev_mousepad.CheckedChanged += new System.EventHandler(this.chk_dev_mousepad_CheckedChanged);
+            // 
+            // tP_headset
+            // 
+            this.tP_headset.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_headset.Controls.Add(this.chk_dev_headset);
+            this.tP_headset.Location = new System.Drawing.Point(4, 25);
+            this.tP_headset.Name = "tP_headset";
+            this.tP_headset.Size = new System.Drawing.Size(961, 465);
+            this.tP_headset.TabIndex = 3;
+            this.tP_headset.Text = "Headset";
+            // 
+            // chk_dev_headset
+            // 
+            this.chk_dev_headset.AutoSize = true;
+            this.chk_dev_headset.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_headset.Name = "chk_dev_headset";
+            this.chk_dev_headset.Size = new System.Drawing.Size(131, 21);
+            this.chk_dev_headset.TabIndex = 3;
+            this.chk_dev_headset.Text = "Enable Headset";
+            this.chk_dev_headset.UseVisualStyleBackColor = true;
+            this.chk_dev_headset.CheckedChanged += new System.EventHandler(this.chk_dev_headset_CheckedChanged);
+            // 
+            // tP_keypad
+            // 
+            this.tP_keypad.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keypad.Controls.Add(this.chk_dev_keypad);
+            this.tP_keypad.Location = new System.Drawing.Point(4, 25);
+            this.tP_keypad.Name = "tP_keypad";
+            this.tP_keypad.Size = new System.Drawing.Size(961, 465);
+            this.tP_keypad.TabIndex = 6;
+            this.tP_keypad.Text = "Keypad";
+            // 
+            // chk_dev_keypad
+            // 
+            this.chk_dev_keypad.AutoSize = true;
+            this.chk_dev_keypad.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_keypad.Name = "chk_dev_keypad";
+            this.chk_dev_keypad.Size = new System.Drawing.Size(126, 21);
+            this.chk_dev_keypad.TabIndex = 3;
+            this.chk_dev_keypad.Text = "Enable Keypad";
+            this.chk_dev_keypad.UseVisualStyleBackColor = true;
+            this.chk_dev_keypad.CheckedChanged += new System.EventHandler(this.chk_dev_keypad_CheckedChanged);
+            // 
+            // tP_bulbs
+            // 
+            this.tP_bulbs.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_bulbs.Controls.Add(this.dG_devices);
+            this.tP_bulbs.Location = new System.Drawing.Point(4, 25);
+            this.tP_bulbs.Name = "tP_bulbs";
+            this.tP_bulbs.Size = new System.Drawing.Size(961, 465);
+            this.tP_bulbs.TabIndex = 4;
+            this.tP_bulbs.Text = "Smartbulbs";
             // 
             // dG_devices
             // 
@@ -194,13 +361,13 @@
             this.col_dattype,
             this.col_ID});
             this.dG_devices.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dG_devices.Location = new System.Drawing.Point(3, 3);
+            this.dG_devices.Location = new System.Drawing.Point(0, 0);
             this.dG_devices.MultiSelect = false;
             this.dG_devices.Name = "dG_devices";
             this.dG_devices.RowHeadersVisible = false;
             this.dG_devices.RowTemplate.Height = 24;
-            this.dG_devices.Size = new System.Drawing.Size(963, 488);
-            this.dG_devices.TabIndex = 0;
+            this.dG_devices.Size = new System.Drawing.Size(961, 465);
+            this.dG_devices.TabIndex = 1;
             this.dG_devices.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dG_devices_CellValueChanged);
             // 
             // col_devicename
@@ -252,6 +419,15 @@
             this.col_ID.HeaderText = "ID";
             this.col_ID.Name = "col_ID";
             this.col_ID.Visible = false;
+            // 
+            // tP_misc
+            // 
+            this.tP_misc.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_misc.Location = new System.Drawing.Point(4, 25);
+            this.tP_misc.Name = "tP_misc";
+            this.tP_misc.Size = new System.Drawing.Size(961, 465);
+            this.tP_misc.TabIndex = 5;
+            this.tP_misc.Text = "Misc";
             // 
             // tP_settings
             // 
@@ -872,6 +1048,15 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // cb_singlezonemode
+            // 
+            this.cb_singlezonemode.FormattingEnabled = true;
+            this.cb_singlezonemode.Location = new System.Drawing.Point(724, 17);
+            this.cb_singlezonemode.Name = "cb_singlezonemode";
+            this.cb_singlezonemode.Size = new System.Drawing.Size(175, 24);
+            this.cb_singlezonemode.TabIndex = 2;
+            this.cb_singlezonemode.SelectedIndexChanged += new System.EventHandler(this.cb_singlezonemode_SelectedIndexChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -885,7 +1070,19 @@
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).EndInit();
-            this.tP_devices.ResumeLayout(false);
+            this.tP_devicesnew.ResumeLayout(false);
+            this.tb_controldev.ResumeLayout(false);
+            this.tP_keys.ResumeLayout(false);
+            this.tP_keys.PerformLayout();
+            this.tP_mouse.ResumeLayout(false);
+            this.tP_mouse.PerformLayout();
+            this.tP_mousepad.ResumeLayout(false);
+            this.tP_mousepad.PerformLayout();
+            this.tP_headset.ResumeLayout(false);
+            this.tP_headset.PerformLayout();
+            this.tP_keypad.ResumeLayout(false);
+            this.tP_keypad.PerformLayout();
+            this.tP_bulbs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).EndInit();
             this.tP_settings.ResumeLayout(false);
             this.gB_effects.ResumeLayout(false);
@@ -909,15 +1106,6 @@
         private System.Windows.Forms.RichTextBox rtb_debug;
         private System.Windows.Forms.TabControl tb_controlA;
         private System.Windows.Forms.TabPage tP_debug;
-        private System.Windows.Forms.TabPage tP_devices;
-        private System.Windows.Forms.DataGridView dG_devices;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_devicename;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_devicetype;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_status;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn col_state;
-        private System.Windows.Forms.DataGridViewComboBoxColumn col_mode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_dattype;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_ID;
         private System.Windows.Forms.TabPage tP_mappings;
         private System.Windows.Forms.DataGridView dG_mappings;
         private Cyotek.Windows.Forms.ScreenColorPicker screenColorPicker1;
@@ -977,6 +1165,30 @@
         private System.Windows.Forms.CheckBox chk_keybindtoggle;
         private System.Windows.Forms.CheckBox chk_impactflashtog;
         private System.Windows.Forms.CheckBox chk_dfbelltoggle;
+        private System.Windows.Forms.TabPage tP_devicesnew;
+        private System.Windows.Forms.TabControl tb_controldev;
+        private System.Windows.Forms.TabPage tP_keys;
+        private System.Windows.Forms.TabPage tP_mouse;
+        private System.Windows.Forms.TabPage tP_mousepad;
+        private System.Windows.Forms.TabPage tP_headset;
+        private System.Windows.Forms.TabPage tP_bulbs;
+        private System.Windows.Forms.TabPage tP_misc;
+        private System.Windows.Forms.TabPage tP_keypad;
+        private System.Windows.Forms.CheckBox chk_dev_keyboard;
+        private System.Windows.Forms.CheckBox chk_dev_mouse;
+        private System.Windows.Forms.CheckBox chk_dev_mousepad;
+        private System.Windows.Forms.CheckBox chk_dev_headset;
+        private System.Windows.Forms.CheckBox chk_dev_keypad;
+        private System.Windows.Forms.DataGridView dG_devices;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_devicename;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_devicetype;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_status;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn col_state;
+        private System.Windows.Forms.DataGridViewComboBoxColumn col_mode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_dattype;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_ID;
+        private System.Windows.Forms.CheckBox chk_keys_singlemode;
+        private System.Windows.Forms.ComboBox cb_singlezonemode;
     }
 }
 

@@ -49,6 +49,7 @@ namespace Chromatics.DeviceInterfaces
             bool deviceHeadset, Color basecol);
 
         void CorsairUpdateLed();
+        void SetLights(Color col);
 
         void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2, [Optional] bool direction,
             [Optional] int speed);
@@ -366,6 +367,13 @@ namespace Chromatics.DeviceInterfaces
             if (_corsairDeviceKeyboard) CueSDK.KeyboardSDK.Update();
             if (_corsairDeviceMouse) CueSDK.MouseSDK.Update();
             if (_corsairDeviceMousepad) CueSDK.MousematSDK.Update();
+        }
+
+        public void SetLights(Color col)
+        {
+            if (!_corsairDeviceKeyboard) return;
+            _corsairAllKeyboardLed.Brush = (SolidColorBrush)col;
+            CueSDK.KeyboardSDK.Update();
         }
 
         public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,

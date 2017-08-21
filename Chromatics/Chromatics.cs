@@ -113,6 +113,14 @@ namespace Chromatics
         public bool Startup;
         public int State = 0;
 
+        private bool _deviceKeyboard = true;
+        private bool _deviceMouse = true;
+        private bool _deviceMousepad = true;
+        private bool _deviceHeadset = true;
+        private bool _DeviceKeypad = true;
+        private bool _KeysSingleKeyModeEnabled = false;
+        private DevModeTypes _KeysSingleKeyMode = DevModeTypes.Disabled;
+
         //Main Thread
         public Chromatics()
         {
@@ -554,6 +562,8 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
+        
+        
     }
 
     public static class ExceptionExtensions

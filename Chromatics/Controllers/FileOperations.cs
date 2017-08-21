@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Chromatics.Controllers;
 using Chromatics.Datastore;
 
 namespace Chromatics
@@ -38,6 +39,15 @@ namespace Chromatics
             dr.DeviceOperationMouseToggle = MouseToggle;
 
             dr.DeviceOperationLogitechKeyboard = _logitechDeviceKeyboard;
+
+            dr.DeviceOperationKeyboard = _deviceKeyboard;
+            dr.DeviceOperationMouse = _deviceMouse;
+            dr.DeviceOperationMousepad = _deviceMousepad;
+            dr.DeviceOperationHeadset = _deviceHeadset;
+            dr.DeviceOperationKeypad = _DeviceKeypad;
+
+            dr.KeysSingleKeyModeEnabled = _KeysSingleKeyModeEnabled;
+            dr.KeySingleKeyMode = Helpers.ConvertDevModeToString(_KeysSingleKeyMode);
 
             var lifxLoad = "";
             var hueLoad = "";
@@ -119,6 +129,15 @@ namespace Chromatics
                         _logitechDeviceKeyboard = dr.DeviceOperationLogitechKeyboard;
                         _hueDefault = dr.DeviceOperationHueDefault;
 
+                        _deviceKeyboard = dr.DeviceOperationKeyboard;
+                        _deviceMouse = dr.DeviceOperationMouse;
+                        _deviceMousepad = dr.DeviceOperationMousepad;
+                        _deviceHeadset = dr.DeviceOperationHeadset;
+                        _DeviceKeypad = dr.DeviceOperationKeypad;
+
+                        _KeysSingleKeyModeEnabled = dr.KeysSingleKeyModeEnabled;
+                        _KeysSingleKeyMode = Helpers.ConvertStringToDevMode(dr.KeySingleKeyMode);
+
                         var lifxLoad = dr.DeviceOperationLifxDevices;
                         if (lifxLoad != "")
                         {
@@ -127,10 +146,10 @@ namespace Chromatics
                             {
                                 var lState = ld.Split('|');
 
-                                //DeviceModeTypes LMode = DeviceModeTypes.DISABLED;
+                                //BulbModeTypes LMode = BulbModeTypes.DISABLED;
                                 //LMode = LState[1].ToString();
                                 //int.TryParse(LState[1], out LMode);
-                                var lMode = (DeviceModeTypes) Enum.Parse(typeof(DeviceModeTypes), lState[1]);
+                                var lMode = (BulbModeTypes) Enum.Parse(typeof(BulbModeTypes), lState[1]);
 
                                 var lEnabled = 0;
                                 int.TryParse(lState[2], out lEnabled);
@@ -148,7 +167,7 @@ namespace Chromatics
                                 var hState = hd.Split('|');
                                 //var HMode = 0;
                                 //int.TryParse(HState[1], out HMode);
-                                var hMode = (DeviceModeTypes) Enum.Parse(typeof(DeviceModeTypes), hState[1]);
+                                var hMode = (BulbModeTypes) Enum.Parse(typeof(BulbModeTypes), hState[1]);
                                 var hEnabled = 0;
                                 int.TryParse(hState[2], out hEnabled);
                                 _hue.HueModeMemory.Add(hState[0], hMode);

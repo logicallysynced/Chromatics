@@ -106,6 +106,7 @@ namespace Chromatics.DeviceInterfaces
             bool deviceHeadset, Color basecol);
 
         void KeyboardUpdate();
+        void SetLights(Color col);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapLogoLighting(string key, Color col, bool clear);
         void ApplyMapMouseLighting(string key, Color col, bool clear);
@@ -299,6 +300,12 @@ namespace Chromatics.DeviceInterfaces
         {
             //Debug.WriteLine("Setting Razer Default");
             UpdateState("static", Color.DeepSkyBlue, false);
+        }
+
+        public void SetLights(Color col)
+        {
+            if (_razerDeviceKeyboard)
+                Keyboard.Instance.SetAll(col.ToColoreColor());
         }
 
         public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,

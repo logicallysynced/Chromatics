@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Chromatics.Controllers;
 using Chromatics.DeviceInterfaces;
 
 /* Hubs all commands sent from FFXIVInterface and re-routes them to their correct Device interface.
@@ -230,35 +231,35 @@ namespace Chromatics
          * 10 - Castbar
          * 100 - All/System
         */
-        public void GlobalUpdateBulbState(DeviceModeTypes mode, Color col, int transition)
+        public void GlobalUpdateBulbState(BulbModeTypes mode, Color col, int transition)
         {
             if (LifxSdkCalled == 1)
-                if (mode != DeviceModeTypes.Disabled)
-                    if (mode == DeviceModeTypes.Standby)
+                if (mode != BulbModeTypes.Disabled)
+                    if (mode == BulbModeTypes.Standby)
                         _lifx.LifxUpdateState(mode, Color.Black, transition);
                     else
                         _lifx.LifxUpdateState(mode, col, transition);
 
             if (HueSdkCalled == 1)
-                if (mode != DeviceModeTypes.Disabled)
-                    if (mode == DeviceModeTypes.Standby)
+                if (mode != BulbModeTypes.Disabled)
+                    if (mode == BulbModeTypes.Standby)
                         _hue.HueUpdateState(mode, Color.Black, transition);
                     else
                         _hue.HueUpdateState(mode, col, transition);
         }
 
-        public void GlobalUpdateBulbStateBrightness(DeviceModeTypes mode, Color col, ushort brightness, int transition)
+        public void GlobalUpdateBulbStateBrightness(BulbModeTypes mode, Color col, ushort brightness, int transition)
         {
             if (LifxSdkCalled == 1)
-                if (mode != DeviceModeTypes.Disabled)
-                    if (mode == DeviceModeTypes.Standby)
+                if (mode != BulbModeTypes.Disabled)
+                    if (mode == BulbModeTypes.Standby)
                         _lifx.LifxUpdateStateBrightness(mode, Color.Black, brightness, transition);
                     else
                         _lifx.LifxUpdateStateBrightness(mode, col, brightness, transition);
 
             if (HueSdkCalled == 1)
-                if (mode != DeviceModeTypes.Disabled)
-                    if (mode == DeviceModeTypes.Standby)
+                if (mode != BulbModeTypes.Disabled)
+                    if (mode == BulbModeTypes.Standby)
                         _hue.HueUpdateStateBrightness(mode, Color.Black, brightness, transition);
                     else
                         _hue.HueUpdateStateBrightness(mode, col, brightness, transition);
@@ -273,9 +274,27 @@ namespace Chromatics
                     _razer.KeyboardUpdate();
         }
 
+        public void GlobalApplyAllKeyLighting(Color col)
+        {
+            if (RazerSdkCalled == 1)
+                _razer.SetLights(col);
+
+            if (LogitechSdkCalled == 1)
+                _logitech.SetLights(col);
+
+            if (CorsairSdkCalled == 1)
+                _corsair.SetLights(col);
+
+            if (CoolermasterSdkCalled == 1)
+                _coolermaster.SetLights(col);
+        }
+
         //Send a lighting command to a specific Keyboard LED
         public void GlobalApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
             if (RazerSdkCalled == 1)
                 _razer.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
 
@@ -335,6 +354,33 @@ namespace Chromatics
 
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
+        }
+
+        public void GlobalApplyKeySingleLighting(DevModeTypes mode, Color col)
+        {
+            if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
+            
+            GlobalApplyAllKeyLighting(col);
+            //Debug.WriteLine("Set Static");
+        }
+
+        public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color col, double val)
+        {
+            if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
+            
+            var c1 = new Helpers.ColorRGB
+            {
+                R = col.R,
+                G = col.G,
+                B = col.B
+            };
+
+            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
+
+            l = (l - (1 - val));
+
+            var c2 = Helpers.HSL2RGB(h, s, l);
+            GlobalApplyAllKeyLighting(c2);
         }
 
         //Send a lighting command to a specific Keyboard LED outside of MapKey scope
@@ -430,6 +476,9 @@ namespace Chromatics
         {
             MemoryTasks.Cleanup();
 
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
             if (RazerSdkCalled == 1)
             {
                 var rippleTask = _razer.Ripple1(burstcol, speed);
@@ -464,6 +513,9 @@ namespace Chromatics
         {
             MemoryTasks.Cleanup();
 
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
             if (RazerSdkCalled == 1)
             {
                 var rippleTask2 = _razer.Ripple2(burstcol, speed);
@@ -496,6 +548,9 @@ namespace Chromatics
         public void GlobalFlash1(Color burstcol, int speed, string[] regions)
         {
             MemoryTasks.Cleanup();
+
+            if (_KeysSingleKeyModeEnabled)
+                return;
 
             if (RazerSdkCalled == 1)
             {
@@ -562,6 +617,9 @@ namespace Chromatics
         {
             MemoryTasks.Cleanup();
 
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
             if (!_globalFlash2Running)
             {
                 if (RazerSdkCalled == 1)
@@ -611,6 +669,9 @@ namespace Chromatics
 
         public void ToggleGlobalFlash2(bool toggle)
         {
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
             if (!toggle && _globalFlash2Running)
             {
                 _globalFlash2Running = false;
@@ -650,6 +711,9 @@ namespace Chromatics
         public void GlobalFlash3(Color burstcol, int speed)
         {
             MemoryTasks.Cleanup();
+
+            if (_KeysSingleKeyModeEnabled)
+                return;
 
             if (!_globalFlash3Running)
             {
@@ -699,6 +763,9 @@ namespace Chromatics
 
         public void ToggleGlobalFlash3(bool toggle)
         {
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
             if (!toggle && _globalFlash3Running)
             {
                 _globalFlash3Running = false;
@@ -740,6 +807,9 @@ namespace Chromatics
         public void GlobalFlash4(Color basecol, Color burstcol, int speed, string[] template)
         {
             MemoryTasks.Cleanup();
+
+            if (_KeysSingleKeyModeEnabled)
+                return;
 
             if (!_globalFlash4Running)
             {
@@ -815,6 +885,9 @@ namespace Chromatics
 
         public void ToggleGlobalFlash4(bool toggle)
         {
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
             if (!toggle && _globalFlash4Running)
             {
                 _globalFlash4Running = false;
