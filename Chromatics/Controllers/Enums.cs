@@ -47,4 +47,5 @@
         Castbar,
         DutyFinder
     }
+    
 }

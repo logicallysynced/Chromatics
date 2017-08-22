@@ -399,41 +399,120 @@ namespace Chromatics
         }
 
         //Send a lighting command to a specific Mouse LED
-        public void GlobalApplyMapMouseLighting(string region, Color col, bool clear)
+        public void GlobalApplyMapMouseLighting(DevModeTypes mode, string region, Color col, bool clear)
         {
-            if (RazerSdkCalled == 1)
-                _razer.ApplyMapMouseLighting(region, col, clear);
-
-            if (LogitechSdkCalled == 1)
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
+            
+            //Logo
+            if (mode == _MouseZone1Mode)
             {
-                //
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapMouseLighting("Logo", col, clear);
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsair.ApplyMapMouseLighting("MouseLogo", col, clear);
+                    _corsair.ApplyMapMouseLighting("MouseFront", col, clear);
+                }
             }
 
-            if (CorsairSdkCalled == 1)
-                if (region == "All")
+            //Scroll
+            if (mode == _MouseZone2Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapMouseLighting("ScrollWheel", col, clear);
+
+                if (LogitechSdkCalled == 1)
                 {
-                    _corsair.ApplyMapMouseLighting("MouseFront", col, clear);
+                    //
+                }
+
+                if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapMouseLighting("MouseScroll", col, clear);
+
+            }
+
+            //Other
+            if (mode == _MouseZone3Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapMouseLighting("Backlight", col, clear);
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //
+                }
+
+                if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapMouseLighting("MouseSide", col, clear);
-                    _corsair.ApplyMapMouseLighting("MouseLogo", col, clear);
-                }
-                else if (region == "Logo")
+
+            }
+        }
+
+        public void GlobalApplyStripMouseLighting(DevModeTypes mode, string region1, string region2, Color col, bool clear)
+        {
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _MouseStrip1Mode && mode != _MouseStrip2Mode) return;
+
+            //Logo
+            if (mode == _MouseStrip1Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapMouseLighting(region1, col, clear);
+
+                if (LogitechSdkCalled == 1)
                 {
-                    _corsair.ApplyMapMouseLighting("MouseLogo", col, clear);
-                    _corsair.ApplyMapMouseLighting("MouseFront", col, clear);
+                    //
                 }
-                else if (region == "ScrollWheel")
+
+                if (CorsairSdkCalled == 1)
                 {
-                    _corsair.ApplyMapMouseLighting("MouseScroll", col, clear);
+                    //
                 }
-                else if (region == "Backlight")
+            }
+
+            //Scroll
+            if (mode == _MouseStrip2Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapMouseLighting(region2, col, clear);
+
+                if (LogitechSdkCalled == 1)
                 {
-                    _corsair.ApplyMapMouseLighting("MouseSide", col, clear);
+                    //
                 }
-                else
+
+                if (CorsairSdkCalled == 1)
                 {
-                    _corsair.ApplyMapMouseLighting(region, col, clear);
+                    //
                 }
+            }
+        }
+
+        public void GlobalApplyMapMouseLightingBrightness(DevModeTypes mode, string region, Color col, bool clear, double val)
+        {
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
+
+            var c1 = new Helpers.ColorRGB
+            {
+                R = col.R,
+                G = col.G,
+                B = col.B
+            };
+
+            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
+
+            l = (l - (1 - val));
+
+            var c2 = Helpers.HSL2RGB(h, s, l);
+            GlobalApplyMapMouseLighting(mode, region, c2, clear);
         }
 
         //Send a lighting command to a specific Mousepad or HUE/LIFX LED

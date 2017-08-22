@@ -37,6 +37,12 @@ namespace Chromatics.Datastore
 
         public bool KeysSingleKeyModeEnabled = false;
         public string KeySingleKeyMode = "Disabled";
+
+        public string MouseZone1Mode = "Disabled";
+        public string MouseZone2Mode = "Disabled";
+        public string MouseZone3Mode = "Disabled";
+        public string MouseStrip1Mode = "Disabled";
+        public string MouseStrip2Mode = "Disabled";
     }
 
     //Settings

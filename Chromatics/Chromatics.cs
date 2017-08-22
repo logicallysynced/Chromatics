@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chromatics.Datastore;
+using Chromatics.DeviceInterfaces;
 using Chromatics.LCDInterfaces;
 using Gma.System.MouseKeyHook;
 using Microsoft.VisualBasic.FileIO;
@@ -120,6 +121,12 @@ namespace Chromatics
         private bool _DeviceKeypad = true;
         private bool _KeysSingleKeyModeEnabled = false;
         private DevModeTypes _KeysSingleKeyMode = DevModeTypes.Disabled;
+
+        public DevModeTypes _MouseZone1Mode = DevModeTypes.Disabled;
+        public DevModeTypes _MouseZone2Mode = DevModeTypes.Disabled;
+        public DevModeTypes _MouseZone3Mode = DevModeTypes.Disabled;
+        public DevModeTypes _MouseStrip1Mode = DevModeTypes.Disabled;
+        public DevModeTypes _MouseStrip2Mode = DevModeTypes.Disabled;
 
         //Main Thread
         public Chromatics()
@@ -393,6 +400,12 @@ namespace Chromatics
             InitSettingsArxGui();
             Startup = true;
 
+            //Ambience
+            /*
+            if (IsAdministrator())
+                AmbienceInterface.StartAmbience();
+            */
+
             //Split off MemoryReader to a Task 
             MemoryTask = new Task(() =>
             {
@@ -562,7 +575,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-        
+
         
     }
 

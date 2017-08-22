@@ -37,9 +37,21 @@
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
             this.tP_keys = new System.Windows.Forms.TabPage();
+            this.chk_azertymode = new System.Windows.Forms.CheckBox();
+            this.cb_singlezonemode = new System.Windows.Forms.ComboBox();
             this.chk_keys_singlemode = new System.Windows.Forms.CheckBox();
             this.chk_dev_keyboard = new System.Windows.Forms.CheckBox();
             this.tP_mouse = new System.Windows.Forms.TabPage();
+            this.lbl_mouse_zs2 = new System.Windows.Forms.Label();
+            this.cb_mouse_zs2 = new System.Windows.Forms.ComboBox();
+            this.lbl_mouse_zs1 = new System.Windows.Forms.Label();
+            this.cb_mouse_zs1 = new System.Windows.Forms.ComboBox();
+            this.lbl_mouse_z3 = new System.Windows.Forms.Label();
+            this.cb_mouse_z3 = new System.Windows.Forms.ComboBox();
+            this.lbl_mouse_z2 = new System.Windows.Forms.Label();
+            this.cb_mouse_z2 = new System.Windows.Forms.ComboBox();
+            this.lbl_mouse_z1 = new System.Windows.Forms.Label();
+            this.cb_mouse_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_mouse = new System.Windows.Forms.CheckBox();
             this.tP_mousepad = new System.Windows.Forms.TabPage();
             this.chk_dev_mousepad = new System.Windows.Forms.CheckBox();
@@ -74,7 +86,6 @@
             this.lb_lcc = new System.Windows.Forms.Label();
             this.gB_General = new System.Windows.Forms.GroupBox();
             this.chk_startupenable = new System.Windows.Forms.CheckBox();
-            this.chk_azertymode = new System.Windows.Forms.CheckBox();
             this.chk_memorycache = new System.Windows.Forms.CheckBox();
             this.tP_mappings = new System.Windows.Forms.TabPage();
             this.btn_palette_undo = new System.Windows.Forms.Button();
@@ -115,7 +126,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.cb_singlezonemode = new System.Windows.Forms.ComboBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -218,6 +228,7 @@
             // tP_keys
             // 
             this.tP_keys.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keys.Controls.Add(this.chk_azertymode);
             this.tP_keys.Controls.Add(this.cb_singlezonemode);
             this.tP_keys.Controls.Add(this.chk_keys_singlemode);
             this.tP_keys.Controls.Add(this.chk_dev_keyboard);
@@ -228,6 +239,27 @@
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
             // 
+            // chk_azertymode
+            // 
+            this.chk_azertymode.AutoSize = true;
+            this.chk_azertymode.Location = new System.Drawing.Point(17, 58);
+            this.chk_azertymode.Name = "chk_azertymode";
+            this.chk_azertymode.Size = new System.Drawing.Size(124, 21);
+            this.chk_azertymode.TabIndex = 3;
+            this.chk_azertymode.Text = "AZERTY Mode";
+            this.tooltip_main.SetToolTip(this.chk_azertymode, "Toggles between QWERTY and AZERTY keyboard layouts.\r\nDefault: OFF (QWERTY)");
+            this.chk_azertymode.UseVisualStyleBackColor = true;
+            // 
+            // cb_singlezonemode
+            // 
+            this.cb_singlezonemode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_singlezonemode.FormattingEnabled = true;
+            this.cb_singlezonemode.Location = new System.Drawing.Point(724, 17);
+            this.cb_singlezonemode.Name = "cb_singlezonemode";
+            this.cb_singlezonemode.Size = new System.Drawing.Size(175, 24);
+            this.cb_singlezonemode.TabIndex = 2;
+            this.cb_singlezonemode.SelectedIndexChanged += new System.EventHandler(this.cb_singlezonemode_SelectedIndexChanged);
+            // 
             // chk_keys_singlemode
             // 
             this.chk_keys_singlemode.AutoSize = true;
@@ -236,6 +268,8 @@
             this.chk_keys_singlemode.Size = new System.Drawing.Size(145, 21);
             this.chk_keys_singlemode.TabIndex = 1;
             this.chk_keys_singlemode.Text = "Single Zone Mode";
+            this.tooltip_main.SetToolTip(this.chk_keys_singlemode, "If your keyboard only has a single or limited RGB zones and not per-key backlight" +
+        "ing, please enable this function.");
             this.chk_keys_singlemode.UseVisualStyleBackColor = true;
             this.chk_keys_singlemode.CheckedChanged += new System.EventHandler(this.chk_keys_singlemode_CheckedChanged);
             // 
@@ -247,12 +281,23 @@
             this.chk_dev_keyboard.Size = new System.Drawing.Size(139, 21);
             this.chk_dev_keyboard.TabIndex = 0;
             this.chk_dev_keyboard.Text = "Enable Keyboard";
+            this.tooltip_main.SetToolTip(this.chk_dev_keyboard, "Enable keyboard devices within Chromatics.");
             this.chk_dev_keyboard.UseVisualStyleBackColor = true;
             this.chk_dev_keyboard.CheckedChanged += new System.EventHandler(this.chk_dev_keyboard_CheckedChanged);
             // 
             // tP_mouse
             // 
             this.tP_mouse.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_mouse.Controls.Add(this.lbl_mouse_zs2);
+            this.tP_mouse.Controls.Add(this.cb_mouse_zs2);
+            this.tP_mouse.Controls.Add(this.lbl_mouse_zs1);
+            this.tP_mouse.Controls.Add(this.cb_mouse_zs1);
+            this.tP_mouse.Controls.Add(this.lbl_mouse_z3);
+            this.tP_mouse.Controls.Add(this.cb_mouse_z3);
+            this.tP_mouse.Controls.Add(this.lbl_mouse_z2);
+            this.tP_mouse.Controls.Add(this.cb_mouse_z2);
+            this.tP_mouse.Controls.Add(this.lbl_mouse_z1);
+            this.tP_mouse.Controls.Add(this.cb_mouse_z1);
             this.tP_mouse.Controls.Add(this.chk_dev_mouse);
             this.tP_mouse.Location = new System.Drawing.Point(4, 25);
             this.tP_mouse.Name = "tP_mouse";
@@ -260,6 +305,111 @@
             this.tP_mouse.Size = new System.Drawing.Size(961, 465);
             this.tP_mouse.TabIndex = 1;
             this.tP_mouse.Text = "Mouse";
+            // 
+            // lbl_mouse_zs2
+            // 
+            this.lbl_mouse_zs2.AutoSize = true;
+            this.lbl_mouse_zs2.Location = new System.Drawing.Point(313, 93);
+            this.lbl_mouse_zs2.Name = "lbl_mouse_zs2";
+            this.lbl_mouse_zs2.Size = new System.Drawing.Size(49, 17);
+            this.lbl_mouse_zs2.TabIndex = 12;
+            this.lbl_mouse_zs2.Text = "Strip 2";
+            // 
+            // cb_mouse_zs2
+            // 
+            this.cb_mouse_zs2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_mouse_zs2.FormattingEnabled = true;
+            this.cb_mouse_zs2.Location = new System.Drawing.Point(383, 90);
+            this.cb_mouse_zs2.Name = "cb_mouse_zs2";
+            this.cb_mouse_zs2.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_zs2.TabIndex = 11;
+            this.tooltip_main.SetToolTip(this.cb_mouse_zs2, "Controls strip functionality for mouse devices which support LED strip.\r\neg. Raze" +
+        "r Mamba TE, etc.\r\n");
+            this.cb_mouse_zs2.SelectedIndexChanged += new System.EventHandler(this.cb_mouse_zs2_SelectedIndexChanged);
+            // 
+            // lbl_mouse_zs1
+            // 
+            this.lbl_mouse_zs1.AutoSize = true;
+            this.lbl_mouse_zs1.Location = new System.Drawing.Point(313, 63);
+            this.lbl_mouse_zs1.Name = "lbl_mouse_zs1";
+            this.lbl_mouse_zs1.Size = new System.Drawing.Size(49, 17);
+            this.lbl_mouse_zs1.TabIndex = 10;
+            this.lbl_mouse_zs1.Text = "Strip 1";
+            // 
+            // cb_mouse_zs1
+            // 
+            this.cb_mouse_zs1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_mouse_zs1.FormattingEnabled = true;
+            this.cb_mouse_zs1.Location = new System.Drawing.Point(383, 60);
+            this.cb_mouse_zs1.Name = "cb_mouse_zs1";
+            this.cb_mouse_zs1.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_zs1.TabIndex = 9;
+            this.tooltip_main.SetToolTip(this.cb_mouse_zs1, "Controls strip functionality for mouse devices which support LED strip.\r\neg. Raze" +
+        "r Mamba TE, etc.");
+            this.cb_mouse_zs1.SelectedIndexChanged += new System.EventHandler(this.cb_mouse_zs1_SelectedIndexChanged);
+            // 
+            // lbl_mouse_z3
+            // 
+            this.lbl_mouse_z3.AutoSize = true;
+            this.lbl_mouse_z3.Location = new System.Drawing.Point(17, 123);
+            this.lbl_mouse_z3.Name = "lbl_mouse_z3";
+            this.lbl_mouse_z3.Size = new System.Drawing.Size(53, 17);
+            this.lbl_mouse_z3.TabIndex = 8;
+            this.lbl_mouse_z3.Text = "Zone 3";
+            // 
+            // cb_mouse_z3
+            // 
+            this.cb_mouse_z3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_mouse_z3.FormattingEnabled = true;
+            this.cb_mouse_z3.Location = new System.Drawing.Point(87, 120);
+            this.cb_mouse_z3.Name = "cb_mouse_z3";
+            this.cb_mouse_z3.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_z3.TabIndex = 7;
+            this.tooltip_main.SetToolTip(this.cb_mouse_z3, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_mouse_z3.SelectedIndexChanged += new System.EventHandler(this.cb_mouse_z3_SelectedIndexChanged);
+            // 
+            // lbl_mouse_z2
+            // 
+            this.lbl_mouse_z2.AutoSize = true;
+            this.lbl_mouse_z2.Location = new System.Drawing.Point(17, 93);
+            this.lbl_mouse_z2.Name = "lbl_mouse_z2";
+            this.lbl_mouse_z2.Size = new System.Drawing.Size(53, 17);
+            this.lbl_mouse_z2.TabIndex = 6;
+            this.lbl_mouse_z2.Text = "Zone 2";
+            // 
+            // cb_mouse_z2
+            // 
+            this.cb_mouse_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_mouse_z2.FormattingEnabled = true;
+            this.cb_mouse_z2.Location = new System.Drawing.Point(87, 90);
+            this.cb_mouse_z2.Name = "cb_mouse_z2";
+            this.cb_mouse_z2.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_z2.TabIndex = 5;
+            this.tooltip_main.SetToolTip(this.cb_mouse_z2, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_mouse_z2.SelectedIndexChanged += new System.EventHandler(this.cb_mouse_z2_SelectedIndexChanged);
+            // 
+            // lbl_mouse_z1
+            // 
+            this.lbl_mouse_z1.AutoSize = true;
+            this.lbl_mouse_z1.Location = new System.Drawing.Point(17, 63);
+            this.lbl_mouse_z1.Name = "lbl_mouse_z1";
+            this.lbl_mouse_z1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_mouse_z1.TabIndex = 4;
+            this.lbl_mouse_z1.Text = "Zone 1";
+            // 
+            // cb_mouse_z1
+            // 
+            this.cb_mouse_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_mouse_z1.FormattingEnabled = true;
+            this.cb_mouse_z1.Location = new System.Drawing.Point(87, 60);
+            this.cb_mouse_z1.Name = "cb_mouse_z1";
+            this.cb_mouse_z1.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_z1.TabIndex = 3;
+            this.tooltip_main.SetToolTip(this.cb_mouse_z1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_mouse_z1.SelectedIndexChanged += new System.EventHandler(this.cb_mouse_z1_SelectedIndexChanged);
             // 
             // chk_dev_mouse
             // 
@@ -269,6 +419,7 @@
             this.chk_dev_mouse.Size = new System.Drawing.Size(120, 21);
             this.chk_dev_mouse.TabIndex = 1;
             this.chk_dev_mouse.Text = "Enable Mouse";
+            this.tooltip_main.SetToolTip(this.chk_dev_mouse, "Enable mice devices within Chromatics.\r\n");
             this.chk_dev_mouse.UseVisualStyleBackColor = true;
             this.chk_dev_mouse.CheckedChanged += new System.EventHandler(this.chk_dev_mouse_CheckedChanged);
             // 
@@ -290,6 +441,7 @@
             this.chk_dev_mousepad.Size = new System.Drawing.Size(144, 21);
             this.chk_dev_mousepad.TabIndex = 2;
             this.chk_dev_mousepad.Text = "Enable Mousepad";
+            this.tooltip_main.SetToolTip(this.chk_dev_mousepad, "Enable mousepad devices within Chromatics.");
             this.chk_dev_mousepad.UseVisualStyleBackColor = true;
             this.chk_dev_mousepad.CheckedChanged += new System.EventHandler(this.chk_dev_mousepad_CheckedChanged);
             // 
@@ -311,6 +463,7 @@
             this.chk_dev_headset.Size = new System.Drawing.Size(131, 21);
             this.chk_dev_headset.TabIndex = 3;
             this.chk_dev_headset.Text = "Enable Headset";
+            this.tooltip_main.SetToolTip(this.chk_dev_headset, "Enable headset devices within Chromatics.\r\n");
             this.chk_dev_headset.UseVisualStyleBackColor = true;
             this.chk_dev_headset.CheckedChanged += new System.EventHandler(this.chk_dev_headset_CheckedChanged);
             // 
@@ -332,6 +485,7 @@
             this.chk_dev_keypad.Size = new System.Drawing.Size(126, 21);
             this.chk_dev_keypad.TabIndex = 3;
             this.chk_dev_keypad.Text = "Enable Keypad";
+            this.tooltip_main.SetToolTip(this.chk_dev_keypad, "Enable keypad devices within Chromatics.\r\n");
             this.chk_dev_keypad.UseVisualStyleBackColor = true;
             this.chk_dev_keypad.CheckedChanged += new System.EventHandler(this.chk_dev_keypad_CheckedChanged);
             // 
@@ -615,7 +769,6 @@
             // gB_General
             // 
             this.gB_General.Controls.Add(this.chk_startupenable);
-            this.gB_General.Controls.Add(this.chk_azertymode);
             this.gB_General.Controls.Add(this.chk_memorycache);
             this.gB_General.Location = new System.Drawing.Point(4, 4);
             this.gB_General.Name = "gB_General";
@@ -627,7 +780,7 @@
             // chk_startupenable
             // 
             this.chk_startupenable.AutoSize = true;
-            this.chk_startupenable.Location = new System.Drawing.Point(23, 110);
+            this.chk_startupenable.Location = new System.Drawing.Point(23, 66);
             this.chk_startupenable.Name = "chk_startupenable";
             this.chk_startupenable.Size = new System.Drawing.Size(170, 21);
             this.chk_startupenable.TabIndex = 2;
@@ -635,18 +788,6 @@
             this.tooltip_main.SetToolTip(this.chk_startupenable, "Toggles whether to start Chromatics automatically with Windows.\r\nDefault: OFF");
             this.chk_startupenable.UseVisualStyleBackColor = true;
             this.chk_startupenable.CheckedChanged += new System.EventHandler(this.chk_startupenable_CheckedChanged);
-            // 
-            // chk_azertymode
-            // 
-            this.chk_azertymode.AutoSize = true;
-            this.chk_azertymode.Location = new System.Drawing.Point(23, 75);
-            this.chk_azertymode.Name = "chk_azertymode";
-            this.chk_azertymode.Size = new System.Drawing.Size(124, 21);
-            this.chk_azertymode.TabIndex = 1;
-            this.chk_azertymode.Text = "AZERTY Mode";
-            this.tooltip_main.SetToolTip(this.chk_azertymode, "Toggles between QWERTY and AZERTY keyboard layouts.\r\nDefault: OFF (QWERTY)");
-            this.chk_azertymode.UseVisualStyleBackColor = true;
-            this.chk_azertymode.CheckedChanged += new System.EventHandler(this.chk_azertymode_CheckedChanged);
             // 
             // chk_memorycache
             // 
@@ -1048,15 +1189,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // cb_singlezonemode
-            // 
-            this.cb_singlezonemode.FormattingEnabled = true;
-            this.cb_singlezonemode.Location = new System.Drawing.Point(724, 17);
-            this.cb_singlezonemode.Name = "cb_singlezonemode";
-            this.cb_singlezonemode.Size = new System.Drawing.Size(175, 24);
-            this.cb_singlezonemode.TabIndex = 2;
-            this.cb_singlezonemode.SelectedIndexChanged += new System.EventHandler(this.cb_singlezonemode_SelectedIndexChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1154,7 +1286,6 @@
         private System.Windows.Forms.ToolTip tooltip_main;
         private System.Windows.Forms.Button btn_lccrestore;
         private System.Windows.Forms.CheckBox chk_memorycache;
-        private System.Windows.Forms.CheckBox chk_azertymode;
         private System.Windows.Forms.CheckBox chk_startupenable;
         private System.Windows.Forms.GroupBox gB_effects;
         private System.Windows.Forms.CheckBox chk_castchargetoggle;
@@ -1189,6 +1320,17 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn col_ID;
         private System.Windows.Forms.CheckBox chk_keys_singlemode;
         private System.Windows.Forms.ComboBox cb_singlezonemode;
+        private System.Windows.Forms.CheckBox chk_azertymode;
+        private System.Windows.Forms.Label lbl_mouse_z3;
+        private System.Windows.Forms.ComboBox cb_mouse_z3;
+        private System.Windows.Forms.Label lbl_mouse_z2;
+        private System.Windows.Forms.ComboBox cb_mouse_z2;
+        private System.Windows.Forms.Label lbl_mouse_z1;
+        private System.Windows.Forms.ComboBox cb_mouse_z1;
+        private System.Windows.Forms.Label lbl_mouse_zs2;
+        private System.Windows.Forms.ComboBox cb_mouse_zs2;
+        private System.Windows.Forms.Label lbl_mouse_zs1;
+        private System.Windows.Forms.ComboBox cb_mouse_zs1;
     }
 }
 

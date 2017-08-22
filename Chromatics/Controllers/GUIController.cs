@@ -1112,15 +1112,15 @@ namespace Chromatics
                         else
                         {
                             MessageBox.Show(
-                                "Sorry, unable to open palette, the file format is not supported or is not recognized.",
-                                "Load Palette", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                @"Sorry, unable to open palette, the file format is not supported or is not recognized.",
+                                @"Load Palette", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(
                             string.Format("Sorry, unable to open palette. {0}", ex.GetBaseException().Message),
-                            "Load Palette", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            @"Load Palette", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
             }
         }
@@ -1178,9 +1178,20 @@ namespace Chromatics
             foreach (var item in _devModesA)
             {
                 cb_singlezonemode.Items.Add(item.Value);
+                cb_mouse_z1.Items.Add(item.Value);
+                cb_mouse_z2.Items.Add(item.Value);
+                cb_mouse_z3.Items.Add(item.Value);
+                cb_mouse_zs1.Items.Add(item.Value);
+                cb_mouse_zs2.Items.Add(item.Value);
             }
 
             cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
+
+            cb_mouse_z1.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone1Mode);
+            cb_mouse_z2.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone2Mode);
+            cb_mouse_z3.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone3Mode);
+            cb_mouse_zs1.SelectedItem = Helpers.ConvertDevModeToCB(_MouseStrip1Mode);
+            cb_mouse_zs2.SelectedItem = Helpers.ConvertDevModeToCB(_MouseStrip2Mode);
 
             chk_keys_singlemode.Checked = _KeysSingleKeyModeEnabled;
             cb_singlezonemode.Enabled = _KeysSingleKeyModeEnabled;
@@ -2140,6 +2151,81 @@ namespace Chromatics
             }
 
             Setbase = false;
+            SaveDevices();
+        }
+
+        private void cb_mouse_z1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_mouse_z1.SelectedItem != item.Value) continue;
+                _MouseZone1Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            //Setbase = false;
+            SaveDevices();
+        }
+
+        private void cb_mouse_z2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_mouse_z2.SelectedItem != item.Value) continue;
+                _MouseZone2Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            //Setbase = false;
+            SaveDevices();
+        }
+
+        private void cb_mouse_z3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_mouse_z3.SelectedItem != item.Value) continue;
+                _MouseZone3Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            //Setbase = false;
+            SaveDevices();
+        }
+
+        private void cb_mouse_zs1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_mouse_zs1.SelectedItem != item.Value) continue;
+                _MouseStrip1Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            //Setbase = false;
+            SaveDevices();
+        }
+
+        private void cb_mouse_zs2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_mouse_zs2.SelectedItem != item.Value) continue;
+                _MouseStrip2Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            //Setbase = false;
             SaveDevices();
         }
 

@@ -49,6 +49,12 @@ namespace Chromatics
             dr.KeysSingleKeyModeEnabled = _KeysSingleKeyModeEnabled;
             dr.KeySingleKeyMode = Helpers.ConvertDevModeToString(_KeysSingleKeyMode);
 
+            dr.MouseZone1Mode = Helpers.ConvertDevModeToString(_MouseZone1Mode);
+            dr.MouseZone2Mode = Helpers.ConvertDevModeToString(_MouseZone2Mode);
+            dr.MouseZone3Mode = Helpers.ConvertDevModeToString(_MouseZone3Mode);
+            dr.MouseStrip1Mode = Helpers.ConvertDevModeToString(_MouseStrip1Mode);
+            dr.MouseStrip2Mode = Helpers.ConvertDevModeToString(_MouseStrip2Mode);
+
             var lifxLoad = "";
             var hueLoad = "";
 
@@ -137,6 +143,12 @@ namespace Chromatics
 
                         _KeysSingleKeyModeEnabled = dr.KeysSingleKeyModeEnabled;
                         _KeysSingleKeyMode = Helpers.ConvertStringToDevMode(dr.KeySingleKeyMode);
+
+                        _MouseZone1Mode = Helpers.ConvertStringToDevMode(dr.MouseZone1Mode);
+                        _MouseZone2Mode = Helpers.ConvertStringToDevMode(dr.MouseZone2Mode);
+                        _MouseZone3Mode = Helpers.ConvertStringToDevMode(dr.MouseZone3Mode);
+                        _MouseStrip1Mode = Helpers.ConvertStringToDevMode(dr.MouseStrip1Mode);
+                        _MouseStrip2Mode = Helpers.ConvertStringToDevMode(dr.MouseStrip2Mode);
 
                         var lifxLoad = dr.DeviceOperationLifxDevices;
                         if (lifxLoad != "")
