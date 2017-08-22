@@ -399,7 +399,7 @@ namespace Chromatics
         }
 
         //Send a lighting command to a specific Mouse LED
-        public void GlobalApplyMapMouseLighting(DevModeTypes mode, string region, Color col, bool clear)
+        public void GlobalApplyMapMouseLighting(DevModeTypes mode, Color col, bool clear)
         {
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
@@ -495,7 +495,7 @@ namespace Chromatics
             }
         }
 
-        public void GlobalApplyMapMouseLightingBrightness(DevModeTypes mode, string region, Color col, bool clear, double val)
+        public void GlobalApplyMapMouseLightingBrightness(DevModeTypes mode, Color col, bool clear, double val)
         {
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
@@ -512,7 +512,7 @@ namespace Chromatics
             l = (l - (1 - val));
 
             var c2 = Helpers.HSL2RGB(h, s, l);
-            GlobalApplyMapMouseLighting(mode, region, c2, clear);
+            GlobalApplyMapMouseLighting(mode, c2, clear);
         }
 
         //Send a lighting command to a specific Mousepad or HUE/LIFX LED
