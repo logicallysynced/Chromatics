@@ -346,9 +346,10 @@ namespace Chromatics.DeviceInterfaces
                         if (_razerDeviceMouse)
                         {
                             //Mouse.Instance.SetAll(RzCol);
-                            ApplyMapMouseLighting("ScrollWheel", col, false);
-                            ApplyMapMouseLighting("Logo", col, false);
-                            ApplyMapMouseLighting("Backlight", col, false);
+                            
+                            //ApplyMapMouseLighting("ScrollWheel", col, false);
+                            //ApplyMapMouseLighting("Logo", col, false);
+                            //ApplyMapMouseLighting("Backlight", col, false);
                         }
                         if (_razerDeviceMousepad) Mousepad.Instance.SetAll(rzCol);
                     }
@@ -509,20 +510,11 @@ namespace Chromatics.DeviceInterfaces
             if (_razerDeviceMouse)
                 try
                 {
-                    if (region == "Backlight")
-                    {
-                        if (Mouse.Instance[GridLed.Backlight].Value != rzCol)
-                            Mouse.Instance[GridLed.Backlight] = rzCol;
-                    }
-                    else
-                    {
-                        if (Enum.IsDefined(typeof(Led), region))
-                        {
-                            var regionid = (Led) Enum.Parse(typeof(Led), region);
-                            if (Mouse.Instance[regionid].Value != rzCol)
-                                Mouse.Instance.SetLed(regionid, rzCol, clear);
-                        }
-                    }
+                    if (!Enum.IsDefined(typeof(Led), region)) return;
+
+                    var regionid = (Led)Enum.Parse(typeof(Led), region);
+                    Mouse.Instance[regionid] = rzCol;
+
                 }
                 catch (Exception ex)
                 {

@@ -55,6 +55,10 @@ namespace Chromatics
             dr.MouseStrip1Mode = Helpers.ConvertDevModeToString(_MouseStrip1Mode);
             dr.MouseStrip2Mode = Helpers.ConvertDevModeToString(_MouseStrip2Mode);
 
+            dr.PadZone1Mode = Helpers.ConvertDevModeToString(_PadZone1Mode);
+            dr.PadZone2Mode = Helpers.ConvertDevModeToString(_PadZone2Mode);
+            dr.PadZone3Mode = Helpers.ConvertDevModeToString(_PadZone3Mode);
+
             var lifxLoad = "";
             var hueLoad = "";
 
@@ -149,6 +153,10 @@ namespace Chromatics
                         _MouseZone3Mode = Helpers.ConvertStringToDevMode(dr.MouseZone3Mode);
                         _MouseStrip1Mode = Helpers.ConvertStringToDevMode(dr.MouseStrip1Mode);
                         _MouseStrip2Mode = Helpers.ConvertStringToDevMode(dr.MouseStrip2Mode);
+
+                        _PadZone1Mode = Helpers.ConvertStringToDevMode(dr.PadZone1Mode);
+                        _PadZone2Mode = Helpers.ConvertStringToDevMode(dr.PadZone2Mode);
+                        _PadZone3Mode = Helpers.ConvertStringToDevMode(dr.PadZone3Mode);
 
                         var lifxLoad = dr.DeviceOperationLifxDevices;
                         if (lifxLoad != "")

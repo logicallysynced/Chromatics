@@ -110,7 +110,9 @@ namespace Chromatics
         private bool _roccatDeviceMouse = true;
         public bool RoccatSdk = false;
         public int RoccatSdkCalled = 0;
-        public bool Setbase;
+        public bool SetKeysbase;
+        public bool SetMousebase;
+        public bool SetPadbase;
         public bool Startup;
         public int State = 0;
 
@@ -119,14 +121,18 @@ namespace Chromatics
         private bool _deviceMousepad = true;
         private bool _deviceHeadset = true;
         private bool _DeviceKeypad = true;
-        private bool _KeysSingleKeyModeEnabled = false;
+        private bool _KeysSingleKeyModeEnabled;
         private DevModeTypes _KeysSingleKeyMode = DevModeTypes.Disabled;
 
-        public DevModeTypes _MouseZone1Mode = DevModeTypes.Disabled;
-        public DevModeTypes _MouseZone2Mode = DevModeTypes.Disabled;
-        public DevModeTypes _MouseZone3Mode = DevModeTypes.Disabled;
-        public DevModeTypes _MouseStrip1Mode = DevModeTypes.Disabled;
-        public DevModeTypes _MouseStrip2Mode = DevModeTypes.Disabled;
+        public DevModeTypes _MouseZone1Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _MouseZone2Mode = DevModeTypes.EnmityTracker;
+        public DevModeTypes _MouseZone3Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _MouseStrip1Mode = DevModeTypes.HpTracker;
+        public DevModeTypes _MouseStrip2Mode = DevModeTypes.MpTracker;
+
+        public DevModeTypes _PadZone1Mode = DevModeTypes.HpTracker;
+        public DevModeTypes _PadZone2Mode = DevModeTypes.TpTracker;
+        public DevModeTypes _PadZone3Mode = DevModeTypes.MpTracker;
 
         //Main Thread
         public Chromatics()
@@ -575,7 +581,6 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-
         
     }
 

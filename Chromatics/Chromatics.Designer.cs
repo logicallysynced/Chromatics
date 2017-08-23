@@ -54,6 +54,12 @@
             this.cb_mouse_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_mouse = new System.Windows.Forms.CheckBox();
             this.tP_mousepad = new System.Windows.Forms.TabPage();
+            this.lbl_pad_zs3 = new System.Windows.Forms.Label();
+            this.cb_pad_zs3 = new System.Windows.Forms.ComboBox();
+            this.lbl_pad_zs2 = new System.Windows.Forms.Label();
+            this.cb_pad_zs2 = new System.Windows.Forms.ComboBox();
+            this.lbl_pad_zs1 = new System.Windows.Forms.Label();
+            this.cb_pad_zs1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_mousepad = new System.Windows.Forms.CheckBox();
             this.tP_headset = new System.Windows.Forms.TabPage();
             this.chk_dev_headset = new System.Windows.Forms.CheckBox();
@@ -426,12 +432,81 @@
             // tP_mousepad
             // 
             this.tP_mousepad.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_mousepad.Controls.Add(this.lbl_pad_zs3);
+            this.tP_mousepad.Controls.Add(this.cb_pad_zs3);
+            this.tP_mousepad.Controls.Add(this.lbl_pad_zs2);
+            this.tP_mousepad.Controls.Add(this.cb_pad_zs2);
+            this.tP_mousepad.Controls.Add(this.lbl_pad_zs1);
+            this.tP_mousepad.Controls.Add(this.cb_pad_zs1);
             this.tP_mousepad.Controls.Add(this.chk_dev_mousepad);
             this.tP_mousepad.Location = new System.Drawing.Point(4, 25);
             this.tP_mousepad.Name = "tP_mousepad";
             this.tP_mousepad.Size = new System.Drawing.Size(961, 465);
             this.tP_mousepad.TabIndex = 2;
             this.tP_mousepad.Text = "Mousepad";
+            // 
+            // lbl_pad_zs3
+            // 
+            this.lbl_pad_zs3.AutoSize = true;
+            this.lbl_pad_zs3.Location = new System.Drawing.Point(17, 123);
+            this.lbl_pad_zs3.Name = "lbl_pad_zs3";
+            this.lbl_pad_zs3.Size = new System.Drawing.Size(53, 17);
+            this.lbl_pad_zs3.TabIndex = 14;
+            this.lbl_pad_zs3.Text = "Zone 3";
+            // 
+            // cb_pad_zs3
+            // 
+            this.cb_pad_zs3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_pad_zs3.FormattingEnabled = true;
+            this.cb_pad_zs3.Location = new System.Drawing.Point(87, 120);
+            this.cb_pad_zs3.Name = "cb_pad_zs3";
+            this.cb_pad_zs3.Size = new System.Drawing.Size(175, 24);
+            this.cb_pad_zs3.TabIndex = 13;
+            this.tooltip_main.SetToolTip(this.cb_pad_zs3, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_pad_zs3.SelectedIndexChanged += new System.EventHandler(this.cb_pad_zs3_SelectedIndexChanged);
+            // 
+            // lbl_pad_zs2
+            // 
+            this.lbl_pad_zs2.AutoSize = true;
+            this.lbl_pad_zs2.Location = new System.Drawing.Point(17, 93);
+            this.lbl_pad_zs2.Name = "lbl_pad_zs2";
+            this.lbl_pad_zs2.Size = new System.Drawing.Size(53, 17);
+            this.lbl_pad_zs2.TabIndex = 12;
+            this.lbl_pad_zs2.Text = "Zone 2";
+            // 
+            // cb_pad_zs2
+            // 
+            this.cb_pad_zs2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_pad_zs2.FormattingEnabled = true;
+            this.cb_pad_zs2.Location = new System.Drawing.Point(87, 90);
+            this.cb_pad_zs2.Name = "cb_pad_zs2";
+            this.cb_pad_zs2.Size = new System.Drawing.Size(175, 24);
+            this.cb_pad_zs2.TabIndex = 11;
+            this.tooltip_main.SetToolTip(this.cb_pad_zs2, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_pad_zs2.SelectedIndexChanged += new System.EventHandler(this.cb_pad_zs2_SelectedIndexChanged);
+            // 
+            // lbl_pad_zs1
+            // 
+            this.lbl_pad_zs1.AutoSize = true;
+            this.lbl_pad_zs1.Location = new System.Drawing.Point(17, 63);
+            this.lbl_pad_zs1.Name = "lbl_pad_zs1";
+            this.lbl_pad_zs1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_pad_zs1.TabIndex = 10;
+            this.lbl_pad_zs1.Text = "Zone 1";
+            // 
+            // cb_pad_zs1
+            // 
+            this.cb_pad_zs1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_pad_zs1.FormattingEnabled = true;
+            this.cb_pad_zs1.Location = new System.Drawing.Point(87, 60);
+            this.cb_pad_zs1.Name = "cb_pad_zs1";
+            this.cb_pad_zs1.Size = new System.Drawing.Size(175, 24);
+            this.cb_pad_zs1.TabIndex = 9;
+            this.tooltip_main.SetToolTip(this.cb_pad_zs1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_pad_zs1.SelectedIndexChanged += new System.EventHandler(this.cb_pad_zs1_SelectedIndexChanged);
             // 
             // chk_dev_mousepad
             // 
@@ -1331,6 +1406,12 @@
         private System.Windows.Forms.ComboBox cb_mouse_zs2;
         private System.Windows.Forms.Label lbl_mouse_zs1;
         private System.Windows.Forms.ComboBox cb_mouse_zs1;
+        private System.Windows.Forms.Label lbl_pad_zs3;
+        private System.Windows.Forms.ComboBox cb_pad_zs3;
+        private System.Windows.Forms.Label lbl_pad_zs2;
+        private System.Windows.Forms.ComboBox cb_pad_zs2;
+        private System.Windows.Forms.Label lbl_pad_zs1;
+        private System.Windows.Forms.ComboBox cb_pad_zs1;
     }
 }
 

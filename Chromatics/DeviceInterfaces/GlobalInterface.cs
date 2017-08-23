@@ -420,6 +420,7 @@ namespace Chromatics
                     _corsair.ApplyMapMouseLighting("MouseLogo", col, clear);
                     _corsair.ApplyMapMouseLighting("MouseFront", col, clear);
                 }
+                
             }
 
             //Scroll
@@ -435,7 +436,7 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapMouseLighting("MouseScroll", col, clear);
-
+                
             }
 
             //Other
@@ -451,7 +452,7 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapMouseLighting("MouseSide", col, clear);
-
+                
             }
         }
 
@@ -516,38 +517,213 @@ namespace Chromatics
         }
 
         //Send a lighting command to a specific Mousepad or HUE/LIFX LED
-        public void GlobalApplyMapPadLighting(int region, Color col, bool clear)
+        public void GlobalApplyMapPadLighting(DevModeTypes mode, int region1, int region2, int region3, Color col, bool clear)
         {
-            if (RazerSdkCalled == 1)
-                _razer.ApplyMapPadLighting(region, col, clear);
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _PadZone1Mode && mode != _PadZone2Mode && mode != _PadZone3Mode) return;
 
-            if (LogitechSdkCalled == 1)
+            if (mode == _PadZone1Mode)
             {
-                //
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapPadLighting(region1, col, clear);
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    var corsairPadRegion = "Pad1";
+
+                    switch (region1)
+                    {
+                        case 0:
+                            corsairPadRegion = "Pad15";
+                            break;
+                        case 1:
+                            corsairPadRegion = "Pad14";
+                            break;
+                        case 2:
+                            corsairPadRegion = "Pad13";
+                            break;
+                        case 3:
+                            corsairPadRegion = "Pad12";
+                            break;
+                        case 4:
+                            corsairPadRegion = "Pad11";
+                            break;
+                        case 5:
+                            corsairPadRegion = "Pad10";
+                            break;
+                        case 6:
+                            corsairPadRegion = "Pad9";
+                            break;
+                        case 7:
+                            corsairPadRegion = "Pad8";
+                            break;
+                        case 8:
+                            corsairPadRegion = "Pad7";
+                            break;
+                        case 9:
+                            corsairPadRegion = "Pad6";
+                            break;
+                        case 10:
+                            corsairPadRegion = "Pad5";
+                            break;
+                        case 11:
+                            corsairPadRegion = "Pad4";
+                            break;
+                        case 12:
+                            corsairPadRegion = "Pad3";
+                            break;
+                        case 13:
+                            corsairPadRegion = "Pad2";
+                            break;
+                        case 14:
+                            corsairPadRegion = "Pad1";
+                            break;
+                    }
+
+                    _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
+                }
             }
 
-            if (CorsairSdkCalled == 1)
+            if (mode == _PadZone2Mode)
             {
-                var corsairPadRegion = "Pad1";
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapPadLighting(region2, col, clear);
 
-                if (region == 0) corsairPadRegion = "Pad15";
-                else if (region == 1) corsairPadRegion = "Pad14";
-                else if (region == 2) corsairPadRegion = "Pad13";
-                else if (region == 3) corsairPadRegion = "Pad12";
-                else if (region == 4) corsairPadRegion = "Pad11";
-                else if (region == 5) corsairPadRegion = "Pad10";
-                else if (region == 6) corsairPadRegion = "Pad9";
-                else if (region == 7) corsairPadRegion = "Pad8";
-                else if (region == 8) corsairPadRegion = "Pad7";
-                else if (region == 9) corsairPadRegion = "Pad6";
-                else if (region == 10) corsairPadRegion = "Pad5";
-                else if (region == 11) corsairPadRegion = "Pad4";
-                else if (region == 12) corsairPadRegion = "Pad3";
-                else if (region == 13) corsairPadRegion = "Pad2";
-                else if (region == 14) corsairPadRegion = "Pad1";
+                if (LogitechSdkCalled == 1)
+                {
+                    //
+                }
 
-                _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
+                if (CorsairSdkCalled == 1)
+                {
+                    var corsairPadRegion = "Pad1";
+
+                    switch (region2)
+                    {
+                        case 0:
+                            corsairPadRegion = "Pad15";
+                            break;
+                        case 1:
+                            corsairPadRegion = "Pad14";
+                            break;
+                        case 2:
+                            corsairPadRegion = "Pad13";
+                            break;
+                        case 3:
+                            corsairPadRegion = "Pad12";
+                            break;
+                        case 4:
+                            corsairPadRegion = "Pad11";
+                            break;
+                        case 5:
+                            corsairPadRegion = "Pad10";
+                            break;
+                        case 6:
+                            corsairPadRegion = "Pad9";
+                            break;
+                        case 7:
+                            corsairPadRegion = "Pad8";
+                            break;
+                        case 8:
+                            corsairPadRegion = "Pad7";
+                            break;
+                        case 9:
+                            corsairPadRegion = "Pad6";
+                            break;
+                        case 10:
+                            corsairPadRegion = "Pad5";
+                            break;
+                        case 11:
+                            corsairPadRegion = "Pad4";
+                            break;
+                        case 12:
+                            corsairPadRegion = "Pad3";
+                            break;
+                        case 13:
+                            corsairPadRegion = "Pad2";
+                            break;
+                        case 14:
+                            corsairPadRegion = "Pad1";
+                            break;
+                    }
+
+                    _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
+                }
             }
+
+            if (mode == _PadZone3Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapPadLighting(region3, col, clear);
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    var corsairPadRegion = "Pad1";
+
+                    switch (region3)
+                    {
+                        case 0:
+                            corsairPadRegion = "Pad15";
+                            break;
+                        case 1:
+                            corsairPadRegion = "Pad14";
+                            break;
+                        case 2:
+                            corsairPadRegion = "Pad13";
+                            break;
+                        case 3:
+                            corsairPadRegion = "Pad12";
+                            break;
+                        case 4:
+                            corsairPadRegion = "Pad11";
+                            break;
+                        case 5:
+                            corsairPadRegion = "Pad10";
+                            break;
+                        case 6:
+                            corsairPadRegion = "Pad9";
+                            break;
+                        case 7:
+                            corsairPadRegion = "Pad8";
+                            break;
+                        case 8:
+                            corsairPadRegion = "Pad7";
+                            break;
+                        case 9:
+                            corsairPadRegion = "Pad6";
+                            break;
+                        case 10:
+                            corsairPadRegion = "Pad5";
+                            break;
+                        case 11:
+                            corsairPadRegion = "Pad4";
+                            break;
+                        case 12:
+                            corsairPadRegion = "Pad3";
+                            break;
+                        case 13:
+                            corsairPadRegion = "Pad2";
+                            break;
+                        case 14:
+                            corsairPadRegion = "Pad1";
+                            break;
+                    }
+
+                    _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
+                }
+            }
+
+            
         }
 
         //Send a ripple effect to a Keyboard that reverts back to the base colour once completed

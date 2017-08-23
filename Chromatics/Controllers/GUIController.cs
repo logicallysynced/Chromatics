@@ -1048,7 +1048,9 @@ namespace Chromatics
                 pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.SelectionBackColor =
                     mapping_colorEditorManager.Color;
 
-                Setbase = false;
+                SetKeysbase = false;
+                SetMousebase = false;
+                SetPadbase = false;
                 SaveColorMappings(0);
             }
         }
@@ -1183,6 +1185,9 @@ namespace Chromatics
                 cb_mouse_z3.Items.Add(item.Value);
                 cb_mouse_zs1.Items.Add(item.Value);
                 cb_mouse_zs2.Items.Add(item.Value);
+                cb_pad_zs1.Items.Add(item.Value);
+                cb_pad_zs2.Items.Add(item.Value);
+                cb_pad_zs3.Items.Add(item.Value);
             }
 
             cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
@@ -1192,6 +1197,9 @@ namespace Chromatics
             cb_mouse_z3.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone3Mode);
             cb_mouse_zs1.SelectedItem = Helpers.ConvertDevModeToCB(_MouseStrip1Mode);
             cb_mouse_zs2.SelectedItem = Helpers.ConvertDevModeToCB(_MouseStrip2Mode);
+            cb_pad_zs1.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone1Mode);
+            cb_pad_zs2.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone2Mode);
+            cb_pad_zs3.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone3Mode);
 
             chk_keys_singlemode.Checked = _KeysSingleKeyModeEnabled;
             cb_singlezonemode.Enabled = _KeysSingleKeyModeEnabled;
@@ -1570,16 +1578,16 @@ namespace Chromatics
 
             var lccrestoreCheck =
                 MessageBox.Show(
-                    "Are you sure you wish to restore LGS to its default settings? This should only be done as a last resort.",
-                    "Restore LGS Settings to Default", MessageBoxButtons.OKCancel);
+                    @"Are you sure you wish to restore LGS to its default settings? This should only be done as a last resort.",
+                    @"Restore LGS Settings to Default", MessageBoxButtons.OKCancel);
             if (lccrestoreCheck == DialogResult.OK)
                 try
                 {
                     while (Process.GetProcessesByName("ffxiv_dx11").Length > 0)
                     {
                         var lccrestoreWarning =
-                            MessageBox.Show("You must close Final Fantasy XIV before using restore.",
-                                "Please close Final Fantasy XIV", MessageBoxButtons.RetryCancel);
+                            MessageBox.Show(@"You must close Final Fantasy XIV before using restore.",
+                                @"Please close Final Fantasy XIV", MessageBoxButtons.RetryCancel);
                         if (lccrestoreWarning == DialogResult.Cancel)
                             return;
                     }
@@ -2135,7 +2143,7 @@ namespace Chromatics
                 cb_singlezonemode.Enabled = false;
             }
 
-            Setbase = false;
+            SetKeysbase = false;
             SaveDevices();
         }
 
@@ -2150,7 +2158,7 @@ namespace Chromatics
                 break;
             }
 
-            Setbase = false;
+            SetKeysbase = false;
             SaveDevices();
         }
 
@@ -2165,7 +2173,7 @@ namespace Chromatics
                 break;
             }
 
-            //Setbase = false;
+            SetMousebase = false;
             SaveDevices();
         }
 
@@ -2180,7 +2188,7 @@ namespace Chromatics
                 break;
             }
 
-            //Setbase = false;
+            SetMousebase = false;
             SaveDevices();
         }
 
@@ -2195,7 +2203,7 @@ namespace Chromatics
                 break;
             }
 
-            //Setbase = false;
+            SetMousebase = false;
             SaveDevices();
         }
 
@@ -2210,7 +2218,7 @@ namespace Chromatics
                 break;
             }
 
-            //Setbase = false;
+            SetMousebase = false;
             SaveDevices();
         }
 
@@ -2225,7 +2233,52 @@ namespace Chromatics
                 break;
             }
 
-            //Setbase = false;
+            SetMousebase = false;
+            SaveDevices();
+        }
+
+        private void cb_pad_zs1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_pad_zs1.SelectedItem != item.Value) continue;
+                _PadZone1Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetPadbase = false;
+            SaveDevices();
+        }
+
+        private void cb_pad_zs2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_pad_zs2.SelectedItem != item.Value) continue;
+                _PadZone2Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetPadbase = false;
+            SaveDevices();
+        }
+
+        private void cb_pad_zs3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_pad_zs3.SelectedItem != item.Value) continue;
+                _PadZone3Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetPadbase = false;
             SaveDevices();
         }
 

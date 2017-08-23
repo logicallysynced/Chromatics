@@ -38,11 +38,15 @@ namespace Chromatics.Datastore
         public bool KeysSingleKeyModeEnabled = false;
         public string KeySingleKeyMode = "Disabled";
 
-        public string MouseZone1Mode = "Disabled";
-        public string MouseZone2Mode = "Disabled";
-        public string MouseZone3Mode = "Disabled";
-        public string MouseStrip1Mode = "Disabled";
-        public string MouseStrip2Mode = "Disabled";
+        public string MouseZone1Mode = "DefaultColor";
+        public string MouseZone2Mode = "EnmityTracker";
+        public string MouseZone3Mode = "DefaultColor";
+        public string MouseStrip1Mode = "HpTracker";
+        public string MouseStrip2Mode = "MpTracker";
+
+        public string PadZone1Mode = "HpTracker";
+        public string PadZone2Mode = "TpTracker";
+        public string PadZone3Mode = "MpTracker";
     }
 
     //Settings
