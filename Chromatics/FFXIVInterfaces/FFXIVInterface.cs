@@ -76,6 +76,7 @@ namespace Chromatics
             _menuNotify = false;
             SetKeysbase = false;
             SetMousebase = false;
+            SetPadbase = false;
 
             MemoryHandler.Instance.UnsetProcess();
             _call = null;
@@ -237,6 +238,7 @@ namespace Chromatics
                                 HoldReader = true;
                                 SetKeysbase = false;
                                 SetMousebase = false;
+                                SetPadbase = false;
 
                                 GlobalUpdateState("static", Color.DeepSkyBlue, false);
 
@@ -280,6 +282,7 @@ namespace Chromatics
                                 _menuNotify = false;
                                 SetKeysbase = false;
                                 SetMousebase = false;
+                                SetPadbase = false;
                                 //GlobalUpdateState("static", Color.Red, false);
                                 //GlobalUpdateBulbState(100, System.Drawing.Color.Red, 100);
                                 //Watchdog.WatchdogGo();
@@ -4061,17 +4064,24 @@ namespace Chromatics
                                     _dfcount = false;
                                     SetKeysbase = false;
                                     SetMousebase = false;
+                                    SetPadbase = false;
 
                                     GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, _baseColor);
                                     GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, _baseColor, false);
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", _baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", _baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", _baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", _baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", _baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", _baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", _baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip1", "Strip8", _baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip2", "Strip9", _baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip3", "Strip10", _baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip4", "Strip11", _baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip5", "Strip12", _baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip6", "Strip13", _baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip7", "Strip14", _baseColor, false);
+
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 14, 5, 0, _baseColor, false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 13, 6, 1, _baseColor, false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 12, 7, 2, _baseColor, false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 11, 8, 3, _baseColor, false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 10, 9, 4, _baseColor, false);
                                 }
                             }
                         }
