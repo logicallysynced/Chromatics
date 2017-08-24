@@ -47,6 +47,9 @@ namespace Chromatics.Datastore
         public string PadZone1Mode = "HpTracker";
         public string PadZone2Mode = "TpTracker";
         public string PadZone3Mode = "MpTracker";
+
+        public string HeadsetZone1Mode = "DefaultColor";
+        public string KeypadZone1Mode = "DefaultColor";
     }
 
     //Settings

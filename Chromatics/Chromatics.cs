@@ -113,6 +113,8 @@ namespace Chromatics
         public bool SetKeysbase;
         public bool SetMousebase;
         public bool SetPadbase;
+        public bool SetHeadsetbase;
+        public bool SetKeypadbase;
         public bool Startup;
         public int State = 0;
 
@@ -133,6 +135,9 @@ namespace Chromatics
         public DevModeTypes _PadZone1Mode = DevModeTypes.HpTracker;
         public DevModeTypes _PadZone2Mode = DevModeTypes.TpTracker;
         public DevModeTypes _PadZone3Mode = DevModeTypes.MpTracker;
+
+        public DevModeTypes _HeadsetZone1Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _KeypadZone1Mode = DevModeTypes.DefaultColor;
 
         //Main Thread
         public Chromatics()
@@ -581,6 +586,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
+        
         
     }
 

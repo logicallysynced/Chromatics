@@ -62,8 +62,12 @@
             this.cb_pad_zs1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_mousepad = new System.Windows.Forms.CheckBox();
             this.tP_headset = new System.Windows.Forms.TabPage();
+            this.lbl_headset_z1 = new System.Windows.Forms.Label();
+            this.cb_headset_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_headset = new System.Windows.Forms.CheckBox();
             this.tP_keypad = new System.Windows.Forms.TabPage();
+            this.lbl_keypad_z1 = new System.Windows.Forms.Label();
+            this.cb_keypad_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_keypad = new System.Windows.Forms.CheckBox();
             this.tP_bulbs = new System.Windows.Forms.TabPage();
             this.dG_devices = new System.Windows.Forms.DataGridView();
@@ -523,12 +527,35 @@
             // tP_headset
             // 
             this.tP_headset.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_headset.Controls.Add(this.lbl_headset_z1);
+            this.tP_headset.Controls.Add(this.cb_headset_z1);
             this.tP_headset.Controls.Add(this.chk_dev_headset);
             this.tP_headset.Location = new System.Drawing.Point(4, 25);
             this.tP_headset.Name = "tP_headset";
             this.tP_headset.Size = new System.Drawing.Size(961, 465);
             this.tP_headset.TabIndex = 3;
             this.tP_headset.Text = "Headset";
+            // 
+            // lbl_headset_z1
+            // 
+            this.lbl_headset_z1.AutoSize = true;
+            this.lbl_headset_z1.Location = new System.Drawing.Point(17, 63);
+            this.lbl_headset_z1.Name = "lbl_headset_z1";
+            this.lbl_headset_z1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_headset_z1.TabIndex = 12;
+            this.lbl_headset_z1.Text = "Zone 1";
+            // 
+            // cb_headset_z1
+            // 
+            this.cb_headset_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_headset_z1.FormattingEnabled = true;
+            this.cb_headset_z1.Location = new System.Drawing.Point(87, 60);
+            this.cb_headset_z1.Name = "cb_headset_z1";
+            this.cb_headset_z1.Size = new System.Drawing.Size(175, 24);
+            this.cb_headset_z1.TabIndex = 11;
+            this.tooltip_main.SetToolTip(this.cb_headset_z1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_headset_z1.SelectedIndexChanged += new System.EventHandler(this.cb_headset_z1_SelectedIndexChanged);
             // 
             // chk_dev_headset
             // 
@@ -545,12 +572,35 @@
             // tP_keypad
             // 
             this.tP_keypad.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keypad.Controls.Add(this.lbl_keypad_z1);
+            this.tP_keypad.Controls.Add(this.cb_keypad_z1);
             this.tP_keypad.Controls.Add(this.chk_dev_keypad);
             this.tP_keypad.Location = new System.Drawing.Point(4, 25);
             this.tP_keypad.Name = "tP_keypad";
             this.tP_keypad.Size = new System.Drawing.Size(961, 465);
             this.tP_keypad.TabIndex = 6;
             this.tP_keypad.Text = "Keypad";
+            // 
+            // lbl_keypad_z1
+            // 
+            this.lbl_keypad_z1.AutoSize = true;
+            this.lbl_keypad_z1.Location = new System.Drawing.Point(17, 63);
+            this.lbl_keypad_z1.Name = "lbl_keypad_z1";
+            this.lbl_keypad_z1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_keypad_z1.TabIndex = 14;
+            this.lbl_keypad_z1.Text = "Zone 1";
+            // 
+            // cb_keypad_z1
+            // 
+            this.cb_keypad_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_keypad_z1.FormattingEnabled = true;
+            this.cb_keypad_z1.Location = new System.Drawing.Point(87, 60);
+            this.cb_keypad_z1.Name = "cb_keypad_z1";
+            this.cb_keypad_z1.Size = new System.Drawing.Size(175, 24);
+            this.cb_keypad_z1.TabIndex = 13;
+            this.tooltip_main.SetToolTip(this.cb_keypad_z1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_keypad_z1.SelectedIndexChanged += new System.EventHandler(this.cb_keypad_z1_SelectedIndexChanged);
             // 
             // chk_dev_keypad
             // 
@@ -1412,6 +1462,10 @@
         private System.Windows.Forms.ComboBox cb_pad_zs2;
         private System.Windows.Forms.Label lbl_pad_zs1;
         private System.Windows.Forms.ComboBox cb_pad_zs1;
+        private System.Windows.Forms.Label lbl_headset_z1;
+        private System.Windows.Forms.ComboBox cb_headset_z1;
+        private System.Windows.Forms.Label lbl_keypad_z1;
+        private System.Windows.Forms.ComboBox cb_keypad_z1;
     }
 }
 

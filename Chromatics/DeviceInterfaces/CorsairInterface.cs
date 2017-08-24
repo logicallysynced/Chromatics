@@ -58,6 +58,8 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapMouseLighting(string region, Color col, bool clear);
         void ApplyMapLogoLighting(string key, Color col, bool clear);
         void ApplyMapPadLighting(string region, Color col, bool clear);
+        void ApplyMapHeadsetLighting(Color col, bool clear);
+
         Task Ripple1(Color burstcol, int speed, Color baseColor);
         Task Ripple2(Color burstcol, int speed);
         void Flash1(Color burstcol, int speed, string[] regions);
@@ -613,6 +615,17 @@ namespace Chromatics.DeviceInterfaces
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.MousematSDK[_corsairkeyids[region]] != null)
                         _corsairMousepadIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[region], col);
+        }
+
+        public void ApplyMapHeadsetLighting(Color col, bool clear)
+        {
+            if (_corsairDeviceHeadset)
+                if (CueSDK.HeadsetSDK[CorsairLedId.LeftLogo].Color != null)
+                {
+                    CueSDK.HeadsetSDK[CorsairLedId.LeftLogo].Color = col;
+                    CueSDK.HeadsetSDK[CorsairLedId.RightLogo].Color = col;
+                }
+
         }
 
         public Task Ripple1(Color burstcol, int speed, Color baseColor)

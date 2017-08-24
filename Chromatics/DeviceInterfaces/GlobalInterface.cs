@@ -429,7 +429,12 @@ namespace Chromatics
                     _corsair.ApplyMapMouseLighting("MouseLogo", col, clear);
                     _corsair.ApplyMapMouseLighting("MouseFront", col, clear);
                 }
-                
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    _coolermaster.ApplyMapMouseLighting("", col, clear);
+                }
+
             }
 
             //Scroll
@@ -445,7 +450,12 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapMouseLighting("MouseScroll", col, clear);
-                
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    _coolermaster.ApplyMapMouseLighting("", col, clear);
+                }
+
             }
 
             //Other
@@ -461,7 +471,12 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapMouseLighting("MouseSide", col, clear);
-                
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    _coolermaster.ApplyMapMouseLighting("", col, clear);
+                }
+
             }
         }
 
@@ -523,6 +538,106 @@ namespace Chromatics
 
             var c2 = Helpers.HSL2RGB(h, s, l);
             GlobalApplyMapMouseLighting(mode, c2, clear);
+        }
+
+        //Send a lighting command to a specific Headset LED
+        public void GlobalApplyMapHeadsetLighting(DevModeTypes mode, Color col, bool clear)
+        {
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _HeadsetZone1Mode) return;
+
+            //Logo
+            if (mode == _HeadsetZone1Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapHeadsetLighting(col, clear);
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsair.ApplyMapHeadsetLighting(col, clear);
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //
+                }
+
+            }
+        }
+
+        public void GlobalApplyMapHeadsetLightingBrightness(DevModeTypes mode, Color col, bool clear, double val)
+        {
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _HeadsetZone1Mode) return;
+
+            var c1 = new Helpers.ColorRGB
+            {
+                R = col.R,
+                G = col.G,
+                B = col.B
+            };
+
+            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
+
+            l = (l - (1 - val));
+
+            var c2 = Helpers.HSL2RGB(h, s, l);
+            GlobalApplyMapHeadsetLighting(mode, c2, clear);
+        }
+
+        //Send a lighting command to a specific Keypad LED
+        public void GlobalApplyMapKeypadLighting(DevModeTypes mode, Color col, bool clear)
+        {
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _KeypadZone1Mode) return;
+
+            //Logo
+            if (mode == _KeypadZone1Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapKeypadLighting(col, clear);
+
+                if (LogitechSdkCalled == 1)
+                {
+                    //
+                }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    //
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //
+                }
+
+            }
+        }
+
+        public void GlobalApplyMapKeypadLightingBrightness(DevModeTypes mode, Color col, bool clear, double val)
+        {
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _KeypadZone1Mode) return;
+
+            var c1 = new Helpers.ColorRGB
+            {
+                R = col.R,
+                G = col.G,
+                B = col.B
+            };
+
+            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
+
+            l = (l - (1 - val));
+
+            var c2 = Helpers.HSL2RGB(h, s, l);
+            GlobalApplyMapKeypadLighting(mode, c2, clear);
         }
 
         //Send a lighting command to a specific Mousepad or HUE/LIFX LED

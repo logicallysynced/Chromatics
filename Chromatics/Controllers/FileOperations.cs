@@ -59,6 +59,9 @@ namespace Chromatics
             dr.PadZone2Mode = Helpers.ConvertDevModeToString(_PadZone2Mode);
             dr.PadZone3Mode = Helpers.ConvertDevModeToString(_PadZone3Mode);
 
+            dr.HeadsetZone1Mode = Helpers.ConvertDevModeToString(_HeadsetZone1Mode);
+            dr.KeypadZone1Mode = Helpers.ConvertDevModeToString(_KeypadZone1Mode);
+
             var lifxLoad = "";
             var hueLoad = "";
 
@@ -157,6 +160,9 @@ namespace Chromatics
                         _PadZone1Mode = Helpers.ConvertStringToDevMode(dr.PadZone1Mode);
                         _PadZone2Mode = Helpers.ConvertStringToDevMode(dr.PadZone2Mode);
                         _PadZone3Mode = Helpers.ConvertStringToDevMode(dr.PadZone3Mode);
+
+                        _HeadsetZone1Mode = Helpers.ConvertStringToDevMode(dr.HeadsetZone1Mode);
+                        _KeypadZone1Mode = Helpers.ConvertStringToDevMode(dr.KeypadZone1Mode);
 
                         var lifxLoad = dr.DeviceOperationLifxDevices;
                         if (lifxLoad != "")

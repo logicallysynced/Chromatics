@@ -113,6 +113,9 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapMouseLighting(string key, Color col, bool clear);
         void ApplyMapPadLighting(int region, Color col, bool clear);
 
+        void ApplyMapHeadsetLighting(Color col, bool clear);
+        void ApplyMapKeypadLighting(Color col, bool clear);
+
         //void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
 
         void SetWave();
@@ -314,7 +317,7 @@ namespace Chromatics.DeviceInterfaces
             Keyboard.Instance.SetAll(col.ToColoreColor());
 
         }
-
+        
         public void SetWave()
         {
             try
@@ -575,6 +578,37 @@ namespace Chromatics.DeviceInterfaces
             catch (Exception ex)
             {
                 Write.WriteConsole(ConsoleTypes.Error, "Razer Mousepad (" + region + "): " + ex.Message);
+            }
+        }
+
+        public void ApplyMapHeadsetLighting(Color col, bool clear)
+        {
+            uint rzCol = col.ToColoreColor();
+
+            try
+            {
+                if (_razerDeviceHeadset)
+                        Headset.Instance.SetAll(rzCol);
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, "Razer Headset: " + ex.Message);
+            }
+        }
+
+        public void ApplyMapKeypadLighting(Color col, bool clear)
+        {
+            uint rzCol = col.ToColoreColor();
+            
+            try
+            {
+                if (_razerDeviceKeypad)
+                    if (Keypad.Instance[0,0].Value != rzCol)
+                        Keypad.Instance.SetAll(rzCol);
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, "Razer Keypad: " + ex.Message);
             }
         }
 

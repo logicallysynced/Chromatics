@@ -1188,6 +1188,8 @@ namespace Chromatics
                 cb_pad_zs1.Items.Add(item.Value);
                 cb_pad_zs2.Items.Add(item.Value);
                 cb_pad_zs3.Items.Add(item.Value);
+                cb_headset_z1.Items.Add(item.Value);
+                cb_keypad_z1.Items.Add(item.Value);
             }
 
             cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
@@ -1200,6 +1202,8 @@ namespace Chromatics
             cb_pad_zs1.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone1Mode);
             cb_pad_zs2.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone2Mode);
             cb_pad_zs3.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone3Mode);
+            cb_headset_z1.SelectedItem = Helpers.ConvertDevModeToCB(_HeadsetZone1Mode);
+            cb_keypad_z1.SelectedItem = Helpers.ConvertDevModeToCB(_KeypadZone1Mode);
 
             chk_keys_singlemode.Checked = _KeysSingleKeyModeEnabled;
             cb_singlezonemode.Enabled = _KeysSingleKeyModeEnabled;
@@ -2279,6 +2283,36 @@ namespace Chromatics
             }
 
             SetPadbase = false;
+            SaveDevices();
+        }
+
+        private void cb_headset_z1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_headset_z1.SelectedItem != item.Value) continue;
+                _HeadsetZone1Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetHeadsetbase = false;
+            SaveDevices();
+        }
+
+        private void cb_keypad_z1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_keypad_z1.SelectedItem != item.Value) continue;
+                _KeypadZone1Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetKeypadbase = false;
             SaveDevices();
         }
 

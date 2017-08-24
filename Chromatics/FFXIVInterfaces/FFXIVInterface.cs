@@ -77,6 +77,8 @@ namespace Chromatics
             SetKeysbase = false;
             SetMousebase = false;
             SetPadbase = false;
+            SetHeadsetbase = false;
+            SetKeypadbase = false;
 
             MemoryHandler.Instance.UnsetProcess();
             _call = null;
@@ -240,6 +242,8 @@ namespace Chromatics
                                 SetKeysbase = false;
                                 SetMousebase = false;
                                 SetPadbase = false;
+                                SetHeadsetbase = false;
+                                SetKeypadbase = false;
 
                                 //GlobalUpdateState("static", Color.DeepSkyBlue, false);
                                 GlobalApplyAllKeyLighting(Color.DeepSkyBlue);
@@ -286,6 +290,8 @@ namespace Chromatics
                                 SetKeysbase = false;
                                 SetMousebase = false;
                                 SetPadbase = false;
+                                SetHeadsetbase = false;
+                                SetKeypadbase = false;
                                 //GlobalUpdateState("static", Color.Red, false);
                                 //GlobalUpdateBulbState(100, System.Drawing.Color.Red, 100);
                                 //Watchdog.WatchdogGo();
@@ -836,7 +842,7 @@ namespace Chromatics
                             GlobalApplyMapMouseLighting(DevModeTypes.DefaultColor, _baseColor, false);
                             GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, _baseColor, false);
                             GlobalApplyMapMouseLighting(DevModeTypes.Castbar, _baseColor, false);
-
+                            
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip1", "Strip8", _baseColor, false);
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip2", "Strip9", _baseColor, false);
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip3", "Strip10", _baseColor, false);
@@ -887,6 +893,24 @@ namespace Chromatics
                             SetPadbase = true;
                         }
 
+                        if (SetHeadsetbase == false)
+                        {
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.DefaultColor, _baseColor, false);
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.TargetHp, _baseColor, false);
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.Castbar, _baseColor, false);
+
+                            SetHeadsetbase = true;
+                        }
+
+                        if (SetKeypadbase == false)
+                        {
+                            GlobalApplyMapKeypadLighting(DevModeTypes.DefaultColor, _baseColor, false);
+                            GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, _baseColor, false);
+                            GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, _baseColor, false);
+
+                            SetKeypadbase = true;
+                        }
+
                         //Highlight critical FFXIV keybinds
 
                         if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
@@ -921,6 +945,8 @@ namespace Chromatics
                             GlobalUpdateBulbState(BulbModeTypes.HighlightColor, highlightColor, 100);
                             GlobalApplyKeySingleLighting(DevModeTypes.HighlightColor, highlightColor);
                             GlobalApplyMapMouseLighting(DevModeTypes.HighlightColor, highlightColor, false);
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.HighlightColor, highlightColor, false);
+                            GlobalApplyMapKeypadLighting(DevModeTypes.HighlightColor, highlightColor, false);
 
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip1", "Strip8", highlightColor, false);
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip2", "Strip9", highlightColor, false);
@@ -958,6 +984,8 @@ namespace Chromatics
 
                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -1188,6 +1216,8 @@ namespace Chromatics
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
 
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -1253,6 +1283,14 @@ namespace Chromatics
                                     : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
 
                                 GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
+                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
+
+                                GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
+                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
+
+                                GlobalApplyMapKeypadLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
                                     ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                     : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
 
@@ -1597,6 +1635,8 @@ namespace Chromatics
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting));
 
                                     GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
                                     GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
@@ -1673,6 +1713,8 @@ namespace Chromatics
                                             GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm0, 1000);
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm0);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm0, false);
+                                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm0, false);
+                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm0, false);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm0, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm0, false);
@@ -1707,6 +1749,8 @@ namespace Chromatics
                                             GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm1, 1000);
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm1);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm1, false);
+                                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm1, false);
+                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm1, false);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm1, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm1, false);
@@ -1741,6 +1785,8 @@ namespace Chromatics
                                             GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm2, 1000);
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm2);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm2, false);
+                                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm2, false);
+                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm2, false);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm2, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm2, false);
@@ -1775,6 +1821,8 @@ namespace Chromatics
                                             GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm3, 1000);
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm3);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm3, false);
+                                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm3, false);
+                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm3, false);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm3, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm3, false);
@@ -1809,6 +1857,8 @@ namespace Chromatics
                                             GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm4, 1000);
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm4);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm4, false);
+                                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm4, false);
+                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm4, false);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm4, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm4, false);
@@ -1844,6 +1894,8 @@ namespace Chromatics
                                         GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm0, 1000);
                                         GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm0);
                                         GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm0, false);
+                                        GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm0, false);
+                                        GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm0, false);
 
                                         GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm0, false);
                                         GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm0, false);
@@ -1883,6 +1935,8 @@ namespace Chromatics
 
                                 GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
                                 GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -1920,6 +1974,8 @@ namespace Chromatics
                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, _baseColor, 1000);
                                 GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, _baseColor);
                                 GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, _baseColor, false);
+                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, _baseColor, false);
+                                GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, _baseColor, false);
 
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", _baseColor, false);
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", _baseColor, false);
@@ -1946,6 +2002,8 @@ namespace Chromatics
                             GlobalUpdateBulbState(BulbModeTypes.TargetHp, _baseColor, 1000);
                             GlobalApplyKeySingleLighting(DevModeTypes.TargetHp, _baseColor);
                             GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, _baseColor, false);
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.TargetHp, _baseColor, false);
+                            GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, _baseColor, false);
 
                             if (_targeted)
                                 _targeted = false;
@@ -1974,6 +2032,8 @@ namespace Chromatics
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.Castbar, colCastcharge, castPercentage);
                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.Castbar, colCastcharge, false, castPercentage);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, colCastcharge, false, castPercentage);
+                            GlobalApplyMapKeypadLightingBrightness(DevModeTypes.TargetHp, colCastcharge, false, castPercentage);
 
                             if (polCast <= 1 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
@@ -2397,6 +2457,8 @@ namespace Chromatics
                                     GlobalUpdateBulbState(BulbModeTypes.Castbar, _baseColor, 500);
                                     GlobalApplyKeySingleLighting(DevModeTypes.Castbar, _baseColor);
                                     GlobalApplyMapMouseLighting(DevModeTypes.Castbar, _baseColor, false);
+                                    GlobalApplyMapHeadsetLighting(DevModeTypes.Castbar, _baseColor, false);
+                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, _baseColor, false);
                                 });
                                 MemoryTasks.Add(cBulbRip1);
                                 MemoryTasks.Run(cBulbRip1);
@@ -2427,6 +2489,8 @@ namespace Chromatics
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, polHpz2);
                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
+                            GlobalApplyMapKeypadLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
 
                             if (polHp <= 40 && polHp > 30)
                             {
@@ -2604,6 +2668,8 @@ namespace Chromatics
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.MpTracker, colMpfull, polMpz2);
                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.MpTracker, colMpfull, false, polMpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.MpTracker, colMpfull, false, polMpz2);
+                            GlobalApplyMapKeypadLightingBrightness(DevModeTypes.MpTracker, colMpfull, false, polMpz2);
 
                             if (polMp <= 40 && polMp > 30)
                             {
@@ -2783,6 +2849,8 @@ namespace Chromatics
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.TpTracker, colTpfull, polTpz2);
                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.TpTracker, colTpfull, false, polTpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TpTracker, colTpfull, false, polTpz2);
+                            GlobalApplyMapKeypadLightingBrightness(DevModeTypes.TpTracker, colTpfull, false, polTpz2);
 
                             if (polTp <= 40 && polTp > 30)
                             {
@@ -4018,6 +4086,8 @@ namespace Chromatics
 
                                     GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
                                     GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
@@ -4046,6 +4116,8 @@ namespace Chromatics
 
                                         GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
                                         GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
 
                                         GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
                                         GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
@@ -4075,9 +4147,13 @@ namespace Chromatics
                                     SetKeysbase = false;
                                     SetMousebase = false;
                                     SetPadbase = false;
+                                    SetHeadsetbase = false;
+                                    SetKeypadbase = false;
 
                                     GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, _baseColor);
                                     GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, _baseColor, false);
+                                    GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, _baseColor, false);
+                                    GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, _baseColor, false);
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip1", "Strip8", _baseColor, false);
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip2", "Strip9", _baseColor, false);
