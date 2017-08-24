@@ -174,6 +174,8 @@ namespace Chromatics.DeviceInterfaces
         void Shutdown();
 
         void SetLights(Color col);
+        void SetWave();
+        void StopEffects();
         void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
             [Optional] bool direction, [Optional] int speed);
 
@@ -355,6 +357,7 @@ namespace Chromatics.DeviceInterfaces
 
         private bool _peripheralUpdated;
         private Stopwatch _watch = new Stopwatch();
+        private CancellationTokenSource _cancellationTokenSource;
 
 
         public bool InitializeSdk()
@@ -417,6 +420,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (_initialized)
             {
+                StopEffects();
                 CoolermasterSdkWrapper.EnableLedControl(false);
                 _initialized = false;
             }
@@ -434,9 +438,20 @@ namespace Chromatics.DeviceInterfaces
                     Shutdown();
         }
 
+        public void StopEffects()
+        {
+            if (_initialized)
+            {
+                _cancellationTokenSource?.Cancel();
+                CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
+                MemoryTasks.Cleanup();
+            }
+        }
+
         public void SetLights(Color col)
         {
             if (!_coolermasterDeviceKeyboard) return;
+            StopEffects();
 
             if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
             {
@@ -445,6 +460,30 @@ namespace Chromatics.DeviceInterfaces
 
                 UpdateCoolermasterStateAll(col);
             }
+        }
+
+        public void SetWave()
+        {
+            StopEffects();
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            var crSt = new Task(() =>
+            {
+                if (_coolermasterDeviceKeyboard)
+                    if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
+                    {
+                        CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
+                    }
+                if (!_coolermasterDeviceMouse) return;
+                {
+                    if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Mouse))
+                    {
+                        CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
+                    }
+                }
+            }, _cancellationTokenSource.Token);
+            MemoryTasks.Add(crSt);
+            MemoryTasks.Run(crSt);
         }
 
         public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
@@ -584,6 +623,8 @@ namespace Chromatics.DeviceInterfaces
 
             if (FfxivHotbar.Keybindwhitelist.Contains(key) && !bypasswhitelist)
                 return;
+
+            StopEffects();
 
             try
             {

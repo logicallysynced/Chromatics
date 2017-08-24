@@ -190,21 +190,14 @@ namespace Chromatics
 
             ResetDeviceDataGrid();
         }
-
-        /* Sends a standard lighting update command (Do not throw to task)
-         * Types:
-         * Reset - Sends reset commands to clear device states
-         * Static - Sends lighting command to all LED's on a device
-         * Transition - Same as static except using a wipe transition
-         * Wave - RGB rainbow scroll effect
-         * Breath - Breathing effect on and off
-         * Pulse - Constant wipe transitions between two colours
-         */
+        
+        /*
         public void GlobalUpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
             [Optional] bool direction, [Optional] int speed)
         {
             if (RazerSdkCalled == 1)
-                _razer.UpdateState(type, col, disablekeys, col2, direction, speed);
+                _razer.SetLights(col);
+                //_razer.UpdateState(type, col, disablekeys, col2, direction, speed);
 
             if (LogitechSdkCalled == 1)
                 _logitech.UpdateState(type, col, disablekeys, col2, direction, speed);
@@ -214,6 +207,22 @@ namespace Chromatics
 
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.UpdateState(type, col, disablekeys, col2, direction, speed);
+        }
+        */
+        
+        public void GlobalSetWave()
+        {
+            if (RazerSdkCalled == 1)
+                _razer.SetWave();
+
+            if (LogitechSdkCalled == 1)
+                _logitech.SetWave(_baseColor);
+
+            if (CorsairSdkCalled == 1)
+                return;
+
+            if (CoolermasterSdkCalled == 1)
+                _coolermaster.SetWave();
         }
 
         /* Sends a standard lighting update command to LIFX or HUE devices

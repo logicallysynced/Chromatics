@@ -185,6 +185,7 @@ namespace Chromatics.DeviceInterfaces
         bool InitializeLights();
         void SetLights(Color color);
         void StopEffects();
+        void SetWave(Color col);
         void ColorCycle(Color color, CancellationToken token);
         void Pulse(Color color, int milliSecondsDuration, int milliSecondsInterval);
         void ResetLogitechDevices(bool logitechDeviceKeyboard, Color basecol);
@@ -232,6 +233,7 @@ namespace Chromatics.DeviceInterfaces
                 return;
 
             KeyboardNames keyName;
+            StopEffects();
 
             if (Enum.TryParse(key, out keyName))
                 LogitechSdkWrapper.LogiLedSetLightingForKeyWithScanCode((int) keyName,
@@ -291,6 +293,23 @@ namespace Chromatics.DeviceInterfaces
         public void StopEffects()
         {
             LogitechSdkWrapper.LogiLedStopEffects();
+            MemoryTasks.Cleanup();
+            _cancellationTokenSource?.Cancel();
+        }
+
+        public void SetWave(Color col)
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            var rzSt = new Task(() =>
+            {
+                StopEffects();
+                Thread.Sleep(100);
+
+                ColorCycle(col, _cancellationTokenSource.Token);
+            }, _cancellationTokenSource.Token);
+            MemoryTasks.Add(rzSt);
+            MemoryTasks.Run(rzSt);
         }
 
         public void UpdateState(string type, Color col, bool disablekeys,
@@ -382,7 +401,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 if (!_logitechDeviceKeyboard)
                     return;
-
+                
                 for (var i = 0; i <= 9; i++)
                 {
                     if (i == 0)

@@ -83,7 +83,8 @@ namespace Chromatics
 
             //HoldReader = false;
 
-            GlobalUpdateState("static", Color.DeepSkyBlue, false);
+            //GlobalUpdateState("static", Color.DeepSkyBlue, false);
+            GlobalApplyAllKeyLighting(Color.DeepSkyBlue);
             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
 
             //Debug.WriteLine("Resetting..");
@@ -240,7 +241,8 @@ namespace Chromatics
                                 SetMousebase = false;
                                 SetPadbase = false;
 
-                                GlobalUpdateState("static", Color.DeepSkyBlue, false);
+                                //GlobalUpdateState("static", Color.DeepSkyBlue, false);
+                                GlobalApplyAllKeyLighting(Color.DeepSkyBlue);
 
                                 WriteConsole(ConsoleTypes.Ffxiv, "Returning to Main Menu..");
                             }
@@ -262,7 +264,8 @@ namespace Chromatics
                         if (Attatched == 1)
                         {
                             State = 6;
-                            GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
+                            //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
+                            GlobalSetWave();
                             
                             Attatched = 2;
                         }
@@ -813,7 +816,9 @@ namespace Chromatics
                         if (SetKeysbase == false)
                         {
                             _baseColor = baseColor;
-                            GlobalUpdateState("static", _baseColor, false);
+                            //GlobalUpdateState("static", _baseColor, false);
+                            GlobalApplyAllKeyLighting(_baseColor);
+
                             GlobalUpdateBulbState(BulbModeTypes.DefaultColor, _baseColor, 500);
                             GlobalUpdateBulbState(BulbModeTypes.TargetHp, _baseColor, 500);
                             GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
@@ -1010,13 +1015,15 @@ namespace Chromatics
                                     else if (status.StatusName == "Petrification")
                                     {
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPetrification);
-                                        GlobalUpdateState("static", _baseColor, false);
+                                        //GlobalUpdateState("static", _baseColor, false);
+                                        GlobalApplyAllKeyLighting(_baseColor);
                                         GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                     }
                                     else if (status.StatusName == "Old")
                                     {
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
-                                        GlobalUpdateState("static", _baseColor, false);
+                                        //GlobalUpdateState("static", _baseColor, false);
+                                        GlobalApplyAllKeyLighting(_baseColor);
                                         GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                     }
                                     else if (status.StatusName == "Slow")
@@ -1028,13 +1035,15 @@ namespace Chromatics
                                     else if (status.StatusName == "Stun")
                                     {
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingStun);
-                                        GlobalUpdateState("static", _baseColor, false);
+                                        //GlobalUpdateState("static", _baseColor, false);
+                                        GlobalApplyAllKeyLighting(_baseColor);
                                         GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                     }
                                     else if (status.StatusName == "Silence")
                                     {
                                         _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSilence);
-                                        GlobalUpdateState("static", _baseColor, false);
+                                        //GlobalUpdateState("static", _baseColor, false);
+                                        GlobalApplyAllKeyLighting(_baseColor);
                                         GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                     }
                                     else if (status.StatusName == "Poison")
@@ -1150,7 +1159,8 @@ namespace Chromatics
                                     else
                                     {
                                         _baseColor = baseColor;
-                                        GlobalUpdateState("static", _baseColor, false);
+                                        //GlobalUpdateState("static", _baseColor, false);
+                                        GlobalApplyAllKeyLighting(_baseColor);
                                         GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
 
                                         GlobalApplyMapKeyLighting("W", highlightColor, false);

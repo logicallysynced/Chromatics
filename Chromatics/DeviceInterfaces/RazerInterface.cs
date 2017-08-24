@@ -113,8 +113,9 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapMouseLighting(string key, Color col, bool clear);
         void ApplyMapPadLighting(int region, Color col, bool clear);
 
-        void UpdateState(string type, Color col, bool disablekeys,
-            [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
+        //void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
+
+        void SetWave();
 
         Task Ripple1(Color burstcol, int speed);
 
@@ -294,20 +295,19 @@ namespace Chromatics.DeviceInterfaces
             _razerDeathstalker = Chroma.Instance.Query(Devices.Deathstalker).Connected;
 
             if (_razerDeviceKeyboard)
-                UpdateState("static", basecol, false);
+                SetLights(basecol);
         }
 
         public void InitializeLights()
         {
             //Debug.WriteLine("Setting Razer Default");
-            UpdateState("static", Color.DeepSkyBlue, false);
+            SetLights(Color.DeepSkyBlue);
         }
 
         public void SetLights(Color col)
         {
             if (!_razerDeviceKeyboard) return;
             
-
             var eff = new Static(col.ToColoreColor());
             Keyboard.Instance.SetStatic(eff);
 
@@ -315,6 +315,32 @@ namespace Chromatics.DeviceInterfaces
 
         }
 
+        public void SetWave()
+        {
+            try
+            {
+                if (_razerDeviceHeadset)
+                    Headset.Instance.SetEffect(Effect.SpectrumCycling);
+
+                if (_razerDeviceKeyboard)
+                    Keyboard.Instance.SetWave(Direction.LeftToRight);
+
+                if (_razerDeviceKeypad)
+                    Keypad.Instance.SetWave(Corale.Colore.Razer.Keypad.Effects.Direction.LeftToRight);
+
+                if (_razerDeviceMouse)
+                    Mouse.Instance.SetWave(Corale.Colore.Razer.Mouse.Effects.Direction.FrontToBack);
+
+                if (_razerDeviceMousepad)
+                    Mousepad.Instance.SetWave(Corale.Colore.Razer.Mousepad.Effects.Direction.LeftToRight);
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, "Razer (Wave): " + ex.Message);
+            }
+        }
+
+        /*
         public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
             [Optional] bool direction, [Optional] int speed)
         {
@@ -442,6 +468,7 @@ namespace Chromatics.DeviceInterfaces
 
             MemoryTasks.Cleanup();
         }
+        */
 
         public void KeyboardUpdate()
         {
@@ -511,9 +538,22 @@ namespace Chromatics.DeviceInterfaces
                 try
                 {
                     if (!Enum.IsDefined(typeof(Led), region)) return;
-
+                    
                     var regionid = (Led)Enum.Parse(typeof(Led), region);
-                    Mouse.Instance[regionid] = rzCol;
+
+                    if (regionid == Led.Backlight)
+                    {
+                        if (Mouse.Instance[GridLed.Backlight].Value != rzCol)
+                        {
+                            Mouse.Instance[GridLed.Backlight] = rzCol;
+                        }
+                        return;
+                    }
+
+                    if (Mouse.Instance[regionid].Value != rzCol)
+                    {
+                        Mouse.Instance[regionid] = rzCol;
+                    }
 
                 }
                 catch (Exception ex)
