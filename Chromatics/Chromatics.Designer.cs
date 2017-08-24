@@ -136,6 +136,9 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.btn_help = new System.Windows.Forms.Button();
+            this.btn_doc = new System.Windows.Forms.Button();
+            this.btn_web = new System.Windows.Forms.Button();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -187,6 +190,9 @@
             // tP_debug
             // 
             this.tP_debug.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_debug.Controls.Add(this.btn_web);
+            this.tP_debug.Controls.Add(this.btn_doc);
+            this.tP_debug.Controls.Add(this.btn_help);
             this.tP_debug.Controls.Add(this.pB_logo1);
             this.tP_debug.Controls.Add(this.rtb_debug);
             this.tP_debug.Location = new System.Drawing.Point(4, 25);
@@ -1314,6 +1320,36 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // btn_help
+            // 
+            this.btn_help.Location = new System.Drawing.Point(854, 44);
+            this.btn_help.Name = "btn_help";
+            this.btn_help.Size = new System.Drawing.Size(91, 30);
+            this.btn_help.TabIndex = 3;
+            this.btn_help.Text = "Report Bug";
+            this.btn_help.UseVisualStyleBackColor = true;
+            this.btn_help.Click += new System.EventHandler(this.btn_help_Click);
+            // 
+            // btn_doc
+            // 
+            this.btn_doc.Location = new System.Drawing.Point(773, 44);
+            this.btn_doc.Name = "btn_doc";
+            this.btn_doc.Size = new System.Drawing.Size(75, 30);
+            this.btn_doc.TabIndex = 4;
+            this.btn_doc.Text = "Guide";
+            this.btn_doc.UseVisualStyleBackColor = true;
+            this.btn_doc.Click += new System.EventHandler(this.btn_doc_Click);
+            // 
+            // btn_web
+            // 
+            this.btn_web.Location = new System.Drawing.Point(692, 44);
+            this.btn_web.Name = "btn_web";
+            this.btn_web.Size = new System.Drawing.Size(75, 30);
+            this.btn_web.TabIndex = 5;
+            this.btn_web.Text = "Website";
+            this.btn_web.UseVisualStyleBackColor = true;
+            this.btn_web.Click += new System.EventHandler(this.btn_web_Click);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1466,6 +1502,9 @@
         private System.Windows.Forms.ComboBox cb_headset_z1;
         private System.Windows.Forms.Label lbl_keypad_z1;
         private System.Windows.Forms.ComboBox cb_keypad_z1;
+        private System.Windows.Forms.Button btn_doc;
+        private System.Windows.Forms.Button btn_help;
+        private System.Windows.Forms.Button btn_web;
     }
 }
 

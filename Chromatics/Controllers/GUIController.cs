@@ -2316,6 +2316,27 @@ namespace Chromatics
             SaveDevices();
         }
 
+        private void btn_help_Click(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            Process.Start("https://github.com/roxaskeyheart/Chromatics/issues");
+        }
+
+        private void btn_doc_Click(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            Process.Start("https://github.com/roxaskeyheart/Chromatics/");
+        }
+
+        private void btn_web_Click(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            Process.Start("https://chromaticsffxiv.com/");
+        }
+
         private delegate void ResetGridDelegate();
 
         private delegate void ResetMappingsDelegate();
