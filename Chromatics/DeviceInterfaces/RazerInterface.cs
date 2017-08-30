@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -104,7 +105,7 @@ namespace Chromatics.DeviceInterfaces
         void InitializeLights();
 
         void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
-            bool deviceHeadset, Color basecol);
+            bool deviceHeadset, bool deviceChromaLink, Color basecol);
 
         void KeyboardUpdate();
         void SetLights(Color col);
@@ -115,6 +116,8 @@ namespace Chromatics.DeviceInterfaces
 
         void ApplyMapHeadsetLighting(Color col, bool clear);
         void ApplyMapKeypadLighting(Color col, bool clear);
+
+        void ApplyMapChromaLinkLighting(Color col, int pos);
 
         //void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
 
@@ -283,18 +286,20 @@ namespace Chromatics.DeviceInterfaces
         private bool _razerDeviceKeypad = true;
         private bool _razerDeviceMouse = true;
         private bool _razerDeviceMousepad = true;
+        private bool _razerDeviceChromaLink = true;
 
         //Handle device send/recieve
         private readonly CancellationTokenSource _rcts = new CancellationTokenSource();
 
         public void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
-            bool deviceHeadset, Color basecol)
+            bool deviceHeadset, bool deviceChromaLink, Color basecol)
         {
             _razerDeviceKeyboard = deviceKeyboard;
             _razerDeviceKeypad = deviceKeypad;
             _razerDeviceMouse = deviceMouse;
             _razerDeviceMousepad = deviceMousepad;
             _razerDeviceHeadset = deviceHeadset;
+            _razerDeviceChromaLink = deviceChromaLink;
             _razerDeathstalker = Chroma.Instance.Query(Devices.Deathstalker).Connected;
 
             if (_razerDeviceKeyboard)
@@ -310,12 +315,18 @@ namespace Chromatics.DeviceInterfaces
         public void SetLights(Color col)
         {
             if (!_razerDeviceKeyboard) return;
-            
+
+            /*
             var eff = new Static(col.ToColoreColor());
             Keyboard.Instance.SetStatic(eff);
 
             Keyboard.Instance.SetAll(col.ToColoreColor());
+            */
 
+            lock (RazerFlash1)
+            {
+                _keyboardGrid.Set(col.ToColoreColor());
+            }
         }
         
         public void SetWave()
@@ -336,142 +347,17 @@ namespace Chromatics.DeviceInterfaces
 
                 if (_razerDeviceMousepad)
                     Mousepad.Instance.SetWave(Corale.Colore.Razer.Mousepad.Effects.Direction.LeftToRight);
+
+                /*
+                if (_razerDeviceChromaLink)
+                    ChromaLink.Instance.SetEffect(Corale.Colore.Razer.ChromaLink.Effects.Effect.SpectrumCycling);
+                */
             }
             catch (Exception ex)
             {
                 Write.WriteConsole(ConsoleTypes.Error, "Razer (Wave): " + ex.Message);
             }
         }
-
-        /*
-        public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
-            [Optional] bool direction, [Optional] int speed)
-        {
-            MemoryTasks.Cleanup();
-            uint rzCol = col.ToColoreColor();
-            uint rzCol2 = col2.ToColoreColor();
-
-            if (type == "reset")
-            {
-                //
-            }
-            else if (type == "static")
-            {
-                var rzSt = new Task(() =>
-                {
-                    try
-                    {
-                        if (_razerDeviceHeadset) Headset.Instance.SetAll(rzCol);
-                        if (_razerDeviceKeyboard && !disablekeys)
-                            lock (RazerRipple1)
-                            {
-                                var eff = new Static(col.ToColoreColor());
-                                Keyboard.Instance.SetStatic(eff);
-
-                                _keyboardGrid.Set(rzCol);
-                                KeyboardUpdate();
-                            }
-                        if (_razerDeviceKeypad) Keypad.Instance.SetAll(rzCol);
-                        if (_razerDeviceMouse)
-                        {
-                            //Mouse.Instance.SetAll(RzCol);
-                            
-                            //ApplyMapMouseLighting("ScrollWheel", col, false);
-                            //ApplyMapMouseLighting("Logo", col, false);
-                            //ApplyMapMouseLighting("Backlight", col, false);
-                        }
-                        if (_razerDeviceMousepad) Mousepad.Instance.SetAll(rzCol);
-                    }
-                    catch (Exception ex)
-                    {
-                        Write.WriteConsole(ConsoleTypes.Error, "Razer (Static): " + ex.Message);
-                    }
-                });
-                MemoryTasks.Add(rzSt);
-                MemoryTasks.Run(rzSt);
-            }
-            else if (type == "transition")
-            {
-                var rzSt = new Task(() =>
-                {
-                    if (_razerDeviceHeadset) Headset.Instance.SetAll(rzCol);
-                    if (_razerDeviceKeyboard && disablekeys != true)
-                        Razertransition(col, direction);
-                    if (_razerDeviceKeypad) Keypad.Instance.SetAll(rzCol);
-                    if (_razerDeviceMouse) Mouse.Instance.SetAll(rzCol);
-                    if (_razerDeviceMousepad) Mousepad.Instance.SetAll(rzCol);
-                });
-                MemoryTasks.Add(rzSt);
-                MemoryTasks.Run(rzSt);
-            }
-            else if (type == "wave")
-            {
-                var rzSt = new Task(() =>
-                {
-                    try
-                    {
-                        if (_razerDeviceHeadset) Headset.Instance.SetEffect(Effect.SpectrumCycling);
-                        if (_razerDeviceKeyboard && !_razerDeathstalker && disablekeys != true)
-                            Keyboard.Instance.SetWave(Direction.LeftToRight);
-                        if (_razerDeviceKeypad)
-                            Keypad.Instance.SetWave(Corale.Colore.Razer.Keypad.Effects.Direction.LeftToRight);
-                        if (_razerDeviceMouse)
-                            Mouse.Instance.SetWave(Corale.Colore.Razer.Mouse.Effects.Direction.FrontToBack);
-                        if (_razerDeviceMousepad)
-                            Mousepad.Instance.SetWave(Corale.Colore.Razer.Mousepad.Effects.Direction.LeftToRight);
-                    }
-                    catch (Exception ex)
-                    {
-                        Write.WriteConsole(ConsoleTypes.Error, "Razer (Wave): " + ex.Message);
-                    }
-                });
-                MemoryTasks.Add(rzSt);
-                MemoryTasks.Run(rzSt);
-            }
-            else if (type == "breath")
-            {
-                var rzSt = new Task(() =>
-                {
-                    try
-                    {
-                        if (_razerDeviceHeadset) Headset.Instance.SetBreathing(rzCol);
-                        if (_razerDeviceKeypad) Keypad.Instance.SetBreathing(rzCol, rzCol2);
-                        if (_razerDeviceMouse)
-                        {
-                            Mouse.Instance.SetBreathing(rzCol, rzCol2, Led.Backlight);
-                            Mouse.Instance.SetBreathing(rzCol, rzCol2, Led.Logo);
-                            Mouse.Instance.SetBreathing(rzCol, rzCol2, Led.ScrollWheel);
-                        }
-                        if (_razerDeviceMousepad) Mousepad.Instance.SetBreathing(rzCol, rzCol2);
-                        if (_razerDeviceKeyboard && disablekeys != true) Keyboard.Instance.SetBreathing(rzCol, rzCol2);
-                    }
-                    catch (Exception ex)
-                    {
-                        Write.WriteConsole(ConsoleTypes.Error, "Razer (Breath): " + ex.Message);
-                    }
-                });
-                MemoryTasks.Add(rzSt);
-                MemoryTasks.Run(rzSt);
-            }
-            else if (type == "pulse")
-            {
-                var rzSt = new Task(() =>
-                {
-                    if (_razerDeviceHeadset) Headset.Instance.SetAll(rzCol);
-                    if (_razerDeviceKeyboard && disablekeys != true)
-                        RazertransitionConst(col, col2, true, speed);
-                    if (_razerDeviceKeypad) Keypad.Instance.SetAll(rzCol);
-                    if (_razerDeviceMouse) Mouse.Instance.SetAll(rzCol);
-                    if (_razerDeviceMousepad) Mousepad.Instance.SetAll(rzCol);
-                }, _rcts.Token);
-                MemoryTasks.Add(rzSt);
-                MemoryTasks.Run(rzSt);
-                //RzPulse = true;
-            }
-
-            MemoryTasks.Cleanup();
-        }
-        */
 
         public void KeyboardUpdate()
         {
@@ -609,6 +495,27 @@ namespace Chromatics.DeviceInterfaces
             catch (Exception ex)
             {
                 Write.WriteConsole(ConsoleTypes.Error, "Razer Keypad: " + ex.Message);
+            }
+        }
+
+        public void ApplyMapChromaLinkLighting(Color col, int pos)
+        {
+            if (pos >= Corale.Colore.Razer.ChromaLink.Constants.MaxLEDs) return;
+            uint rzCol = col.ToColoreColor();
+            
+            try
+            {
+                if (_razerDeviceChromaLink)
+                {
+                    if (ChromaLink.Instance[pos].Value != rzCol)
+                    {
+                        ChromaLink.Instance[pos] = rzCol;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, "Razer ChromaLink: " + ex.Message);
             }
         }
 
@@ -1634,5 +1541,7 @@ namespace Chromatics.DeviceInterfaces
                 }
             }
         }
+
+        
     }
 }

@@ -15,7 +15,6 @@ using Chromatics.LCDInterfaces;
 using Gma.System.MouseKeyHook;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
-using Timer = System.Timers.Timer;
 
 namespace Chromatics
 {
@@ -99,6 +98,7 @@ namespace Chromatics
         private bool _razerDeviceKeypad = true;
         private bool _razerDeviceMouse = true;
         private bool _razerDeviceMousepad = true;
+        private bool _razerDeviceChromaLink = true;
         public bool RazerRescan = false;
         public bool RazerSdk = false;
         public int RazerSdkCalled = 0;
@@ -115,6 +115,7 @@ namespace Chromatics
         public bool SetPadbase;
         public bool SetHeadsetbase;
         public bool SetKeypadbase;
+        public bool SetCLbase;
         public bool Startup;
         public int State = 0;
 
@@ -122,7 +123,8 @@ namespace Chromatics
         private bool _deviceMouse = true;
         private bool _deviceMousepad = true;
         private bool _deviceHeadset = true;
-        private bool _DeviceKeypad = true;
+        private bool _deviceKeypad = true;
+        private bool _deviceCL = true;
         private bool _KeysSingleKeyModeEnabled;
         private DevModeTypes _KeysSingleKeyMode = DevModeTypes.Disabled;
 
@@ -138,6 +140,12 @@ namespace Chromatics
 
         public DevModeTypes _HeadsetZone1Mode = DevModeTypes.DefaultColor;
         public DevModeTypes _KeypadZone1Mode = DevModeTypes.DefaultColor;
+
+        public DevModeTypes _CLZone1Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _CLZone2Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _CLZone3Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _CLZone4Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _CLZone5Mode = DevModeTypes.DefaultColor;
 
         //Main Thread
         public Chromatics()

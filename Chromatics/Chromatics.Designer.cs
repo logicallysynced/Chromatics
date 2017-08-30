@@ -33,6 +33,9 @@
             this.rtb_debug = new System.Windows.Forms.RichTextBox();
             this.tb_controlA = new System.Windows.Forms.TabControl();
             this.tP_debug = new System.Windows.Forms.TabPage();
+            this.btn_web = new System.Windows.Forms.Button();
+            this.btn_doc = new System.Windows.Forms.Button();
+            this.btn_help = new System.Windows.Forms.Button();
             this.pB_logo1 = new System.Windows.Forms.PictureBox();
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
@@ -79,6 +82,18 @@
             this.col_dattype = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tP_misc = new System.Windows.Forms.TabPage();
+            this.gP_ChromaLink = new System.Windows.Forms.GroupBox();
+            this.lbl_chromalink_z5 = new System.Windows.Forms.Label();
+            this.cb_chromalink_z5 = new System.Windows.Forms.ComboBox();
+            this.lbl_chromalink_z4 = new System.Windows.Forms.Label();
+            this.cb_chromalink_z4 = new System.Windows.Forms.ComboBox();
+            this.lbl_chromalink_z3 = new System.Windows.Forms.Label();
+            this.cb_chromalink_z3 = new System.Windows.Forms.ComboBox();
+            this.lbl_chromalink_z2 = new System.Windows.Forms.Label();
+            this.cb_chromalink_z2 = new System.Windows.Forms.ComboBox();
+            this.lbl_chromalink_z1 = new System.Windows.Forms.Label();
+            this.cb_chromalink_z1 = new System.Windows.Forms.ComboBox();
+            this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
             this.chk_dfbelltoggle = new System.Windows.Forms.CheckBox();
@@ -136,9 +151,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.btn_help = new System.Windows.Forms.Button();
-            this.btn_doc = new System.Windows.Forms.Button();
-            this.btn_web = new System.Windows.Forms.Button();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -151,6 +163,8 @@
             this.tP_keypad.SuspendLayout();
             this.tP_bulbs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).BeginInit();
+            this.tP_misc.SuspendLayout();
+            this.gP_ChromaLink.SuspendLayout();
             this.tP_settings.SuspendLayout();
             this.gB_effects.SuspendLayout();
             this.gB_lcc.SuspendLayout();
@@ -201,6 +215,36 @@
             this.tP_debug.Size = new System.Drawing.Size(969, 494);
             this.tP_debug.TabIndex = 0;
             this.tP_debug.Text = "Debug";
+            // 
+            // btn_web
+            // 
+            this.btn_web.Location = new System.Drawing.Point(692, 44);
+            this.btn_web.Name = "btn_web";
+            this.btn_web.Size = new System.Drawing.Size(75, 30);
+            this.btn_web.TabIndex = 5;
+            this.btn_web.Text = "Website";
+            this.btn_web.UseVisualStyleBackColor = true;
+            this.btn_web.Click += new System.EventHandler(this.btn_web_Click);
+            // 
+            // btn_doc
+            // 
+            this.btn_doc.Location = new System.Drawing.Point(773, 44);
+            this.btn_doc.Name = "btn_doc";
+            this.btn_doc.Size = new System.Drawing.Size(75, 30);
+            this.btn_doc.TabIndex = 4;
+            this.btn_doc.Text = "Guide";
+            this.btn_doc.UseVisualStyleBackColor = true;
+            this.btn_doc.Click += new System.EventHandler(this.btn_doc_Click);
+            // 
+            // btn_help
+            // 
+            this.btn_help.Location = new System.Drawing.Point(854, 44);
+            this.btn_help.Name = "btn_help";
+            this.btn_help.Size = new System.Drawing.Size(91, 30);
+            this.btn_help.TabIndex = 3;
+            this.btn_help.Text = "Report Bug";
+            this.btn_help.UseVisualStyleBackColor = true;
+            this.btn_help.Click += new System.EventHandler(this.btn_help_Click);
             // 
             // pB_logo1
             // 
@@ -708,11 +752,149 @@
             // tP_misc
             // 
             this.tP_misc.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_misc.Controls.Add(this.gP_ChromaLink);
             this.tP_misc.Location = new System.Drawing.Point(4, 25);
             this.tP_misc.Name = "tP_misc";
             this.tP_misc.Size = new System.Drawing.Size(961, 465);
             this.tP_misc.TabIndex = 5;
             this.tP_misc.Text = "Misc";
+            // 
+            // gP_ChromaLink
+            // 
+            this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z5);
+            this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z5);
+            this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z4);
+            this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z4);
+            this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z3);
+            this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z3);
+            this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z2);
+            this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z2);
+            this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z1);
+            this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z1);
+            this.gP_ChromaLink.Controls.Add(this.chk_dev_chromalink);
+            this.gP_ChromaLink.Location = new System.Drawing.Point(4, 3);
+            this.gP_ChromaLink.Name = "gP_ChromaLink";
+            this.gP_ChromaLink.Size = new System.Drawing.Size(466, 241);
+            this.gP_ChromaLink.TabIndex = 0;
+            this.gP_ChromaLink.TabStop = false;
+            this.gP_ChromaLink.Text = "Razer Chroma Link";
+            // 
+            // lbl_chromalink_z5
+            // 
+            this.lbl_chromalink_z5.AutoSize = true;
+            this.lbl_chromalink_z5.Location = new System.Drawing.Point(13, 190);
+            this.lbl_chromalink_z5.Name = "lbl_chromalink_z5";
+            this.lbl_chromalink_z5.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z5.TabIndex = 24;
+            this.lbl_chromalink_z5.Text = "Zone 5";
+            // 
+            // cb_chromalink_z5
+            // 
+            this.cb_chromalink_z5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_chromalink_z5.FormattingEnabled = true;
+            this.cb_chromalink_z5.Location = new System.Drawing.Point(83, 187);
+            this.cb_chromalink_z5.Name = "cb_chromalink_z5";
+            this.cb_chromalink_z5.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z5.TabIndex = 23;
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z5, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_chromalink_z5.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z5_SelectedIndexChanged);
+            // 
+            // lbl_chromalink_z4
+            // 
+            this.lbl_chromalink_z4.AutoSize = true;
+            this.lbl_chromalink_z4.Location = new System.Drawing.Point(13, 160);
+            this.lbl_chromalink_z4.Name = "lbl_chromalink_z4";
+            this.lbl_chromalink_z4.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z4.TabIndex = 22;
+            this.lbl_chromalink_z4.Text = "Zone 4";
+            // 
+            // cb_chromalink_z4
+            // 
+            this.cb_chromalink_z4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_chromalink_z4.FormattingEnabled = true;
+            this.cb_chromalink_z4.Location = new System.Drawing.Point(83, 157);
+            this.cb_chromalink_z4.Name = "cb_chromalink_z4";
+            this.cb_chromalink_z4.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z4.TabIndex = 21;
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z4, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_chromalink_z4.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z4_SelectedIndexChanged);
+            // 
+            // lbl_chromalink_z3
+            // 
+            this.lbl_chromalink_z3.AutoSize = true;
+            this.lbl_chromalink_z3.Location = new System.Drawing.Point(13, 130);
+            this.lbl_chromalink_z3.Name = "lbl_chromalink_z3";
+            this.lbl_chromalink_z3.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z3.TabIndex = 20;
+            this.lbl_chromalink_z3.Text = "Zone 3";
+            // 
+            // cb_chromalink_z3
+            // 
+            this.cb_chromalink_z3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_chromalink_z3.FormattingEnabled = true;
+            this.cb_chromalink_z3.Location = new System.Drawing.Point(83, 127);
+            this.cb_chromalink_z3.Name = "cb_chromalink_z3";
+            this.cb_chromalink_z3.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z3.TabIndex = 19;
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z3, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_chromalink_z3.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z3_SelectedIndexChanged);
+            // 
+            // lbl_chromalink_z2
+            // 
+            this.lbl_chromalink_z2.AutoSize = true;
+            this.lbl_chromalink_z2.Location = new System.Drawing.Point(13, 100);
+            this.lbl_chromalink_z2.Name = "lbl_chromalink_z2";
+            this.lbl_chromalink_z2.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z2.TabIndex = 18;
+            this.lbl_chromalink_z2.Text = "Zone 2";
+            // 
+            // cb_chromalink_z2
+            // 
+            this.cb_chromalink_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_chromalink_z2.FormattingEnabled = true;
+            this.cb_chromalink_z2.Location = new System.Drawing.Point(83, 97);
+            this.cb_chromalink_z2.Name = "cb_chromalink_z2";
+            this.cb_chromalink_z2.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z2.TabIndex = 17;
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z2, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_chromalink_z2.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z2_SelectedIndexChanged);
+            // 
+            // lbl_chromalink_z1
+            // 
+            this.lbl_chromalink_z1.AutoSize = true;
+            this.lbl_chromalink_z1.Location = new System.Drawing.Point(13, 70);
+            this.lbl_chromalink_z1.Name = "lbl_chromalink_z1";
+            this.lbl_chromalink_z1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z1.TabIndex = 16;
+            this.lbl_chromalink_z1.Text = "Zone 1";
+            // 
+            // cb_chromalink_z1
+            // 
+            this.cb_chromalink_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_chromalink_z1.FormattingEnabled = true;
+            this.cb_chromalink_z1.Location = new System.Drawing.Point(83, 67);
+            this.cb_chromalink_z1.Name = "cb_chromalink_z1";
+            this.cb_chromalink_z1.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z1.TabIndex = 15;
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+        "static zones are supported.\r\n");
+            this.cb_chromalink_z1.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z1_SelectedIndexChanged);
+            // 
+            // chk_dev_chromalink
+            // 
+            this.chk_dev_chromalink.AutoSize = true;
+            this.chk_dev_chromalink.Location = new System.Drawing.Point(13, 30);
+            this.chk_dev_chromalink.Name = "chk_dev_chromalink";
+            this.chk_dev_chromalink.Size = new System.Drawing.Size(153, 21);
+            this.chk_dev_chromalink.TabIndex = 1;
+            this.chk_dev_chromalink.Text = "Enable ChromaLink";
+            this.tooltip_main.SetToolTip(this.chk_dev_chromalink, "Enable keyboard devices within Chromatics.");
+            this.chk_dev_chromalink.UseVisualStyleBackColor = true;
+            this.chk_dev_chromalink.CheckedChanged += new System.EventHandler(this.chk_dev_chromalink_CheckedChanged);
             // 
             // tP_settings
             // 
@@ -1320,36 +1502,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // btn_help
-            // 
-            this.btn_help.Location = new System.Drawing.Point(854, 44);
-            this.btn_help.Name = "btn_help";
-            this.btn_help.Size = new System.Drawing.Size(91, 30);
-            this.btn_help.TabIndex = 3;
-            this.btn_help.Text = "Report Bug";
-            this.btn_help.UseVisualStyleBackColor = true;
-            this.btn_help.Click += new System.EventHandler(this.btn_help_Click);
-            // 
-            // btn_doc
-            // 
-            this.btn_doc.Location = new System.Drawing.Point(773, 44);
-            this.btn_doc.Name = "btn_doc";
-            this.btn_doc.Size = new System.Drawing.Size(75, 30);
-            this.btn_doc.TabIndex = 4;
-            this.btn_doc.Text = "Guide";
-            this.btn_doc.UseVisualStyleBackColor = true;
-            this.btn_doc.Click += new System.EventHandler(this.btn_doc_Click);
-            // 
-            // btn_web
-            // 
-            this.btn_web.Location = new System.Drawing.Point(692, 44);
-            this.btn_web.Name = "btn_web";
-            this.btn_web.Size = new System.Drawing.Size(75, 30);
-            this.btn_web.TabIndex = 5;
-            this.btn_web.Text = "Website";
-            this.btn_web.UseVisualStyleBackColor = true;
-            this.btn_web.Click += new System.EventHandler(this.btn_web_Click);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1377,6 +1529,9 @@
             this.tP_keypad.PerformLayout();
             this.tP_bulbs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).EndInit();
+            this.tP_misc.ResumeLayout(false);
+            this.gP_ChromaLink.ResumeLayout(false);
+            this.gP_ChromaLink.PerformLayout();
             this.tP_settings.ResumeLayout(false);
             this.gB_effects.ResumeLayout(false);
             this.gB_effects.PerformLayout();
@@ -1505,6 +1660,18 @@
         private System.Windows.Forms.Button btn_doc;
         private System.Windows.Forms.Button btn_help;
         private System.Windows.Forms.Button btn_web;
+        private System.Windows.Forms.GroupBox gP_ChromaLink;
+        private System.Windows.Forms.Label lbl_chromalink_z5;
+        private System.Windows.Forms.ComboBox cb_chromalink_z5;
+        private System.Windows.Forms.Label lbl_chromalink_z4;
+        private System.Windows.Forms.ComboBox cb_chromalink_z4;
+        private System.Windows.Forms.Label lbl_chromalink_z3;
+        private System.Windows.Forms.ComboBox cb_chromalink_z3;
+        private System.Windows.Forms.Label lbl_chromalink_z2;
+        private System.Windows.Forms.ComboBox cb_chromalink_z2;
+        private System.Windows.Forms.Label lbl_chromalink_z1;
+        private System.Windows.Forms.ComboBox cb_chromalink_z1;
+        private System.Windows.Forms.CheckBox chk_dev_chromalink;
     }
 }
 

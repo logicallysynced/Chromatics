@@ -24,6 +24,7 @@ namespace Chromatics
             dr.DeviceOperationRazerMousepad = _razerDeviceMousepad;
             dr.DeviceOperationRazerKeypad = _razerDeviceKeypad;
             dr.DeviceOperationRazerHeadset = _razerDeviceHeadset;
+            dr.DeviceOperationRazerChromaLink = _razerDeviceChromaLink;
 
             dr.DeviceOperationCorsairKeyboard = _corsairDeviceKeyboard;
             dr.DeviceOperationCorsairMouse = _corsairDeviceMouse;
@@ -44,7 +45,8 @@ namespace Chromatics
             dr.DeviceOperationMouse = _deviceMouse;
             dr.DeviceOperationMousepad = _deviceMousepad;
             dr.DeviceOperationHeadset = _deviceHeadset;
-            dr.DeviceOperationKeypad = _DeviceKeypad;
+            dr.DeviceOperationKeypad = _deviceKeypad;
+            dr.DeviceOperationCL = _deviceCL;
 
             dr.KeysSingleKeyModeEnabled = _KeysSingleKeyModeEnabled;
             dr.KeySingleKeyMode = Helpers.ConvertDevModeToString(_KeysSingleKeyMode);
@@ -58,6 +60,12 @@ namespace Chromatics
             dr.PadZone1Mode = Helpers.ConvertDevModeToString(_PadZone1Mode);
             dr.PadZone2Mode = Helpers.ConvertDevModeToString(_PadZone2Mode);
             dr.PadZone3Mode = Helpers.ConvertDevModeToString(_PadZone3Mode);
+
+            dr.CLZone1Mode = Helpers.ConvertDevModeToString(_CLZone1Mode);
+            dr.CLZone2Mode = Helpers.ConvertDevModeToString(_CLZone2Mode);
+            dr.CLZone3Mode = Helpers.ConvertDevModeToString(_CLZone3Mode);
+            dr.CLZone4Mode = Helpers.ConvertDevModeToString(_CLZone4Mode);
+            dr.CLZone5Mode = Helpers.ConvertDevModeToString(_CLZone5Mode);
 
             dr.HeadsetZone1Mode = Helpers.ConvertDevModeToString(_HeadsetZone1Mode);
             dr.KeypadZone1Mode = Helpers.ConvertDevModeToString(_KeypadZone1Mode);
@@ -125,6 +133,7 @@ namespace Chromatics
                         _razerDeviceMousepad = dr.DeviceOperationRazerMousepad;
                         _razerDeviceKeypad = dr.DeviceOperationRazerKeypad;
                         _razerDeviceHeadset = dr.DeviceOperationRazerHeadset;
+                        _razerDeviceChromaLink = dr.DeviceOperationRazerChromaLink;
 
                         _corsairDeviceKeyboard = dr.DeviceOperationCorsairKeyboard;
                         _corsairDeviceMouse = dr.DeviceOperationCorsairMouse;
@@ -146,7 +155,8 @@ namespace Chromatics
                         _deviceMouse = dr.DeviceOperationMouse;
                         _deviceMousepad = dr.DeviceOperationMousepad;
                         _deviceHeadset = dr.DeviceOperationHeadset;
-                        _DeviceKeypad = dr.DeviceOperationKeypad;
+                        _deviceKeypad = dr.DeviceOperationKeypad;
+                        _deviceCL = dr.DeviceOperationCL;
 
                         _KeysSingleKeyModeEnabled = dr.KeysSingleKeyModeEnabled;
                         _KeysSingleKeyMode = Helpers.ConvertStringToDevMode(dr.KeySingleKeyMode);
@@ -160,6 +170,12 @@ namespace Chromatics
                         _PadZone1Mode = Helpers.ConvertStringToDevMode(dr.PadZone1Mode);
                         _PadZone2Mode = Helpers.ConvertStringToDevMode(dr.PadZone2Mode);
                         _PadZone3Mode = Helpers.ConvertStringToDevMode(dr.PadZone3Mode);
+
+                        _CLZone1Mode = Helpers.ConvertStringToDevMode(dr.CLZone1Mode);
+                        _CLZone2Mode = Helpers.ConvertStringToDevMode(dr.CLZone2Mode);
+                        _CLZone3Mode = Helpers.ConvertStringToDevMode(dr.CLZone3Mode);
+                        _CLZone4Mode = Helpers.ConvertStringToDevMode(dr.CLZone4Mode);
+                        _CLZone5Mode = Helpers.ConvertStringToDevMode(dr.CLZone5Mode);
 
                         _HeadsetZone1Mode = Helpers.ConvertStringToDevMode(dr.HeadsetZone1Mode);
                         _KeypadZone1Mode = Helpers.ConvertStringToDevMode(dr.KeypadZone1Mode);

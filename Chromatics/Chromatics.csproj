@@ -65,7 +65,7 @@
   <ItemGroup>
     <Reference Include="Corale.Colore, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Colore.5.1.0\lib\net35\Corale.Colore.dll</HintPath>
+      <HintPath>..\Build Dependencies\Corale.Colore.dll</HintPath>
     </Reference>
     <Reference Include="Corale.Colore.WinForms, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

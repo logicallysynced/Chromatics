@@ -26,6 +26,7 @@ namespace Chromatics.Datastore
         public bool DeviceOperationRazerKeypad = true;
         public bool DeviceOperationRazerMouse = true;
         public bool DeviceOperationRazerMousepad = true;
+        public bool DeviceOperationRazerChromaLink = true;
         public bool DeviceOperationRoccatKeyboard = true;
         public bool DeviceOperationRoccatMouse = true;
 
@@ -34,6 +35,7 @@ namespace Chromatics.Datastore
         public bool DeviceOperationMousepad = true;
         public bool DeviceOperationHeadset = true;
         public bool DeviceOperationKeypad = true;
+        public bool DeviceOperationCL = true;
 
         public bool KeysSingleKeyModeEnabled = false;
         public string KeySingleKeyMode = "Disabled";
@@ -47,6 +49,12 @@ namespace Chromatics.Datastore
         public string PadZone1Mode = "HpTracker";
         public string PadZone2Mode = "TpTracker";
         public string PadZone3Mode = "MpTracker";
+
+        public string CLZone1Mode = "DefaultColor";
+        public string CLZone2Mode = "DefaultColor";
+        public string CLZone3Mode = "DefaultColor";
+        public string CLZone4Mode = "DefaultColor";
+        public string CLZone5Mode = "DefaultColor";
 
         public string HeadsetZone1Mode = "DefaultColor";
         public string KeypadZone1Mode = "DefaultColor";

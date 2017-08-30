@@ -1175,7 +1175,8 @@ namespace Chromatics
             chk_dev_mouse.Checked = _deviceMouse;
             chk_dev_mousepad.Checked = _deviceMousepad;
             chk_dev_headset.Checked = _deviceHeadset;
-            chk_dev_keypad.Checked = _DeviceKeypad;
+            chk_dev_keypad.Checked = _deviceKeypad;
+            chk_dev_chromalink.Checked = _deviceCL;
 
             foreach (var item in _devModesA)
             {
@@ -1190,6 +1191,11 @@ namespace Chromatics
                 cb_pad_zs3.Items.Add(item.Value);
                 cb_headset_z1.Items.Add(item.Value);
                 cb_keypad_z1.Items.Add(item.Value);
+                cb_chromalink_z1.Items.Add(item.Value);
+                cb_chromalink_z2.Items.Add(item.Value);
+                cb_chromalink_z3.Items.Add(item.Value);
+                cb_chromalink_z4.Items.Add(item.Value);
+                cb_chromalink_z5.Items.Add(item.Value);
             }
 
             cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
@@ -1204,6 +1210,11 @@ namespace Chromatics
             cb_pad_zs3.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone3Mode);
             cb_headset_z1.SelectedItem = Helpers.ConvertDevModeToCB(_HeadsetZone1Mode);
             cb_keypad_z1.SelectedItem = Helpers.ConvertDevModeToCB(_KeypadZone1Mode);
+            cb_chromalink_z1.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone1Mode);
+            cb_chromalink_z2.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone2Mode);
+            cb_chromalink_z3.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone3Mode);
+            cb_chromalink_z4.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone4Mode);
+            cb_chromalink_z5.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone5Mode);
 
             chk_keys_singlemode.Checked = _KeysSingleKeyModeEnabled;
             cb_singlezonemode.Enabled = _KeysSingleKeyModeEnabled;
@@ -1215,10 +1226,21 @@ namespace Chromatics
                 _razerDeviceMousepad = true;
                 _razerDeviceKeypad = true;
                 _razerDeviceHeadset = true;
+                _razerDeviceChromaLink = true;
 
                 _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                    _razerDeviceMousepad, _razerDeviceHeadset,
+                    _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                     ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+
+                /*
+                gP_ChromaLink.Enabled = true;
+                chk_dev_chromalink.Enabled = true;
+                cb_chromalink_z1.Enabled = true;
+                cb_chromalink_z2.Enabled = true;
+                cb_chromalink_z3.Enabled = true;
+                cb_chromalink_z4.Enabled = true;
+                cb_chromalink_z5.Enabled = true;
+                */
             }
             else
             {
@@ -1227,6 +1249,17 @@ namespace Chromatics
                 _razerDeviceMousepad = false;
                 _razerDeviceKeypad = false;
                 _razerDeviceHeadset = false;
+                _razerDeviceChromaLink = false;
+                
+                /*
+                chk_dev_chromalink.Enabled = false;
+                cb_chromalink_z1.Enabled = false;
+                cb_chromalink_z2.Enabled = false;
+                cb_chromalink_z3.Enabled = false;
+                cb_chromalink_z4.Enabled = false;
+                cb_chromalink_z5.Enabled = false;
+                gP_ChromaLink.Enabled = false;
+                */
             }
 
             if (LogitechSdkCalled == 1)
@@ -1794,7 +1827,7 @@ namespace Chromatics
                     _razerDeviceKeyboard = true;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -1826,7 +1859,7 @@ namespace Chromatics
                     _razerDeviceKeyboard = false;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -1863,7 +1896,7 @@ namespace Chromatics
                     _razerDeviceMouse = true;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -1895,7 +1928,7 @@ namespace Chromatics
                     _razerDeviceMouse = false;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -1933,7 +1966,7 @@ namespace Chromatics
                     _razerDeviceMousepad = true;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -1965,7 +1998,7 @@ namespace Chromatics
                     _razerDeviceMousepad = false;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -2003,7 +2036,7 @@ namespace Chromatics
                     _razerDeviceHeadset = true;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -2035,7 +2068,7 @@ namespace Chromatics
                     _razerDeviceHeadset = false;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -2073,7 +2106,7 @@ namespace Chromatics
                     _razerDeviceKeypad = true;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -2105,7 +2138,7 @@ namespace Chromatics
                     _razerDeviceKeypad = false;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                        _razerDeviceMousepad, _razerDeviceHeadset,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                 }
 
@@ -2313,6 +2346,108 @@ namespace Chromatics
             }
 
             SetKeypadbase = false;
+            SaveDevices();
+        }
+
+        private void chk_dev_chromalink_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (RazerSdkCalled == 1)
+            {
+                if (chk_dev_keypad.Checked)
+                {
+                    _razerDeviceChromaLink = true;
+                    SetCLbase = false;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+
+                }
+                else
+                {
+                    _razerDeviceChromaLink = false;
+
+                    _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
+                        _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+            }
+        }
+
+        private void cb_chromalink_z1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_chromalink_z1.SelectedItem != item.Value) continue;
+                _CLZone1Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetCLbase = false;
+            SaveDevices();
+        }
+
+        private void cb_chromalink_z2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_chromalink_z2.SelectedItem != item.Value) continue;
+                _CLZone2Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetCLbase = false;
+            SaveDevices();
+        }
+
+        private void cb_chromalink_z3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_chromalink_z3.SelectedItem != item.Value) continue;
+                _CLZone3Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetCLbase = false;
+            SaveDevices();
+        }
+
+        private void cb_chromalink_z4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_chromalink_z4.SelectedItem != item.Value) continue;
+                _CLZone4Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetCLbase = false;
+            SaveDevices();
+        }
+
+        private void cb_chromalink_z5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_chromalink_z5.SelectedItem != item.Value) continue;
+                _CLZone5Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetCLbase = false;
             SaveDevices();
         }
 

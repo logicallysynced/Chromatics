@@ -176,7 +176,7 @@ namespace Chromatics
 
             if (RazerSdkCalled == 1)
                 _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse, _razerDeviceMousepad,
-                    _razerDeviceHeadset, baseColor);
+                    _razerDeviceHeadset, _razerDeviceChromaLink, baseColor);
 
             if (LogitechSdkCalled == 1)
                 _logitech.ResetLogitechDevices(_logitechDeviceKeyboard, baseColor);
@@ -638,6 +638,65 @@ namespace Chromatics
 
             var c2 = Helpers.HSL2RGB(h, s, l);
             GlobalApplyMapKeypadLighting(mode, c2, clear);
+        }
+
+        //Send a lighting command to a specific Keypad LED
+        public void GlobalApplyMapChromaLinkLighting(DevModeTypes mode, Color col)
+        {
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode) return;
+
+            
+            
+            if (mode == _CLZone1Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapChromaLinkLighting(col, 0);
+            }
+
+            if (mode == _CLZone2Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapChromaLinkLighting(col, 1);
+            }
+
+            if (mode == _CLZone3Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapChromaLinkLighting(col, 2);
+            }
+
+            if (mode == _CLZone4Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapChromaLinkLighting(col, 3);
+            }
+
+            if (mode == _CLZone5Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    _razer.ApplyMapChromaLinkLighting(col, 4);
+            }
+        }
+
+        public void GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes mode, Color col, double val)
+        {
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode) return;
+
+            var c1 = new Helpers.ColorRGB
+            {
+                R = col.R,
+                G = col.G,
+                B = col.B
+            };
+
+            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
+
+            l = (l - (1 - val));
+
+            var c2 = Helpers.HSL2RGB(h, s, l);
+            GlobalApplyMapChromaLinkLighting(mode, c2);
         }
 
         //Send a lighting command to a specific Mousepad or HUE/LIFX LED
