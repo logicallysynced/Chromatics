@@ -37,7 +37,7 @@ namespace Chromatics.FFXIVInterfaces
                             Key = "DUTYFINDER",
                             PointerPath = new List<long>
                             {
-                                0x0178B018,
+                                0x0178C018,
                                 0x7D0,
                                 0x2A0,
                                 0x7C0

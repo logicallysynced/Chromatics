@@ -449,7 +449,7 @@ namespace Chromatics
                         var colEm3 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity3);
                         var colEm4 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity4);
 
-                        Console.WriteLine(_playerInfo.Job);
+                        //Console.WriteLine(_playerInfo.Job);
 
                         //Get Battle, Crafting or Gathering Data
 
@@ -542,7 +542,7 @@ namespace Chromatics
                             }
                             else if (ArxState == 2)
                             {
-                                Console.WriteLine(partyInfo.Count);
+                                //Console.WriteLine(partyInfo.Count);
                                 var datastring = new string[10];
                                 for (uint i = 0; i < 10; i++)
                                     //Console.WriteLine(i);
@@ -743,7 +743,7 @@ namespace Chromatics
                                                         partyInfo[pid].MPCurrent + "," + ptTppercent + "," +
                                                         ptTpcurrent +
                                                         "," + ptEmnityno + "," + ptJob;
-                                        Console.WriteLine(i + @": " + datastring[i]);
+                                        //Console.WriteLine(i + @": " + datastring[i]);
                                     }
                                     else
                                     {
@@ -840,7 +840,6 @@ namespace Chromatics
                             GlobalApplyKeySingleLighting(DevModeTypes.Castbar, _baseColor);
 
                             GlobalApplyKeySingleLighting(DevModeTypes.HighlightColor, highlightColor);
-
                             GlobalUpdateBulbState(BulbModeTypes.HighlightColor, highlightColor, 100);
 
                             SetKeysbase = true;

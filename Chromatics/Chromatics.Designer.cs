@@ -223,6 +223,7 @@
             this.btn_web.Size = new System.Drawing.Size(75, 30);
             this.btn_web.TabIndex = 5;
             this.btn_web.Text = "Website";
+            this.tooltip_main.SetToolTip(this.btn_web, "Opens the Chromatics website in your default browser.");
             this.btn_web.UseVisualStyleBackColor = true;
             this.btn_web.Click += new System.EventHandler(this.btn_web_Click);
             // 
@@ -233,6 +234,7 @@
             this.btn_doc.Size = new System.Drawing.Size(75, 30);
             this.btn_doc.TabIndex = 4;
             this.btn_doc.Text = "Guide";
+            this.tooltip_main.SetToolTip(this.btn_doc, "Opens the Chromatics guide in your default browser.\r\n");
             this.btn_doc.UseVisualStyleBackColor = true;
             this.btn_doc.Click += new System.EventHandler(this.btn_doc_Click);
             // 
@@ -243,6 +245,7 @@
             this.btn_help.Size = new System.Drawing.Size(91, 30);
             this.btn_help.TabIndex = 3;
             this.btn_help.Text = "Report Bug";
+            this.tooltip_main.SetToolTip(this.btn_help, "Report a bug found in Chromatics to the developers.");
             this.btn_help.UseVisualStyleBackColor = true;
             this.btn_help.Click += new System.EventHandler(this.btn_help_Click);
             // 
@@ -516,8 +519,8 @@
             this.cb_pad_zs3.Name = "cb_pad_zs3";
             this.cb_pad_zs3.Size = new System.Drawing.Size(175, 24);
             this.cb_pad_zs3.TabIndex = 13;
-            this.tooltip_main.SetToolTip(this.cb_pad_zs3, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_pad_zs3, "Controls RGB functionality for various LED zones on mousepad devices. \r\nUp to thr" +
+        "ee static zones are supported.\r\n");
             this.cb_pad_zs3.SelectedIndexChanged += new System.EventHandler(this.cb_pad_zs3_SelectedIndexChanged);
             // 
             // lbl_pad_zs2
@@ -537,8 +540,8 @@
             this.cb_pad_zs2.Name = "cb_pad_zs2";
             this.cb_pad_zs2.Size = new System.Drawing.Size(175, 24);
             this.cb_pad_zs2.TabIndex = 11;
-            this.tooltip_main.SetToolTip(this.cb_pad_zs2, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_pad_zs2, "Controls RGB functionality for various LED zones on mousepad devices. \r\nUp to thr" +
+        "ee static zones are supported.\r\n");
             this.cb_pad_zs2.SelectedIndexChanged += new System.EventHandler(this.cb_pad_zs2_SelectedIndexChanged);
             // 
             // lbl_pad_zs1
@@ -558,8 +561,8 @@
             this.cb_pad_zs1.Name = "cb_pad_zs1";
             this.cb_pad_zs1.Size = new System.Drawing.Size(175, 24);
             this.cb_pad_zs1.TabIndex = 9;
-            this.tooltip_main.SetToolTip(this.cb_pad_zs1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_pad_zs1, "Controls RGB functionality for various LED zones on mousepad devices. \r\nUp to thr" +
+        "ee static zones are supported.\r\n");
             this.cb_pad_zs1.SelectedIndexChanged += new System.EventHandler(this.cb_pad_zs1_SelectedIndexChanged);
             // 
             // chk_dev_mousepad
@@ -603,7 +606,7 @@
             this.cb_headset_z1.Name = "cb_headset_z1";
             this.cb_headset_z1.Size = new System.Drawing.Size(175, 24);
             this.cb_headset_z1.TabIndex = 11;
-            this.tooltip_main.SetToolTip(this.cb_headset_z1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
+            this.tooltip_main.SetToolTip(this.cb_headset_z1, "Controls RGB functionality for various LED zones on headset devices. \r\nUp to one " +
         "static zones are supported.\r\n");
             this.cb_headset_z1.SelectedIndexChanged += new System.EventHandler(this.cb_headset_z1_SelectedIndexChanged);
             // 
@@ -648,8 +651,8 @@
             this.cb_keypad_z1.Name = "cb_keypad_z1";
             this.cb_keypad_z1.Size = new System.Drawing.Size(175, 24);
             this.cb_keypad_z1.TabIndex = 13;
-            this.tooltip_main.SetToolTip(this.cb_keypad_z1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_keypad_z1, "Controls RGB functionality for various LED zones on Keypad devices. \r\nUp to one s" +
+        "tatic zones are supported.\r\n");
             this.cb_keypad_z1.SelectedIndexChanged += new System.EventHandler(this.cb_keypad_z1_SelectedIndexChanged);
             // 
             // chk_dev_keypad
@@ -796,8 +799,8 @@
             this.cb_chromalink_z5.Name = "cb_chromalink_z5";
             this.cb_chromalink_z5.Size = new System.Drawing.Size(175, 24);
             this.cb_chromalink_z5.TabIndex = 23;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z5, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z5, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
+        "five static zones are supported.\r\n");
             this.cb_chromalink_z5.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z5_SelectedIndexChanged);
             // 
             // lbl_chromalink_z4
@@ -817,8 +820,8 @@
             this.cb_chromalink_z4.Name = "cb_chromalink_z4";
             this.cb_chromalink_z4.Size = new System.Drawing.Size(175, 24);
             this.cb_chromalink_z4.TabIndex = 21;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z4, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z4, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
+        "five static zones are supported.\r\n");
             this.cb_chromalink_z4.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z4_SelectedIndexChanged);
             // 
             // lbl_chromalink_z3
@@ -838,8 +841,8 @@
             this.cb_chromalink_z3.Name = "cb_chromalink_z3";
             this.cb_chromalink_z3.Size = new System.Drawing.Size(175, 24);
             this.cb_chromalink_z3.TabIndex = 19;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z3, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z3, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
+        "five static zones are supported.\r\n");
             this.cb_chromalink_z3.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z3_SelectedIndexChanged);
             // 
             // lbl_chromalink_z2
@@ -859,8 +862,8 @@
             this.cb_chromalink_z2.Name = "cb_chromalink_z2";
             this.cb_chromalink_z2.Size = new System.Drawing.Size(175, 24);
             this.cb_chromalink_z2.TabIndex = 17;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z2, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z2, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
+        "five static zones are supported.");
             this.cb_chromalink_z2.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z2_SelectedIndexChanged);
             // 
             // lbl_chromalink_z1
@@ -880,8 +883,8 @@
             this.cb_chromalink_z1.Name = "cb_chromalink_z1";
             this.cb_chromalink_z1.Size = new System.Drawing.Size(175, 24);
             this.cb_chromalink_z1.TabIndex = 15;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
-        "static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z1, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
+        "five static zones are supported.\r\n");
             this.cb_chromalink_z1.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z1_SelectedIndexChanged);
             // 
             // chk_dev_chromalink
@@ -892,7 +895,7 @@
             this.chk_dev_chromalink.Size = new System.Drawing.Size(153, 21);
             this.chk_dev_chromalink.TabIndex = 1;
             this.chk_dev_chromalink.Text = "Enable ChromaLink";
-            this.tooltip_main.SetToolTip(this.chk_dev_chromalink, "Enable keyboard devices within Chromatics.");
+            this.tooltip_main.SetToolTip(this.chk_dev_chromalink, "Enable Chroma Link devices within Chromatics.");
             this.chk_dev_chromalink.UseVisualStyleBackColor = true;
             this.chk_dev_chromalink.CheckedChanged += new System.EventHandler(this.chk_dev_chromalink_CheckedChanged);
             // 
