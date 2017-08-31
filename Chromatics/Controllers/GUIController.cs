@@ -2462,7 +2462,7 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            Process.Start("https://github.com/roxaskeyheart/Chromatics/");
+            Process.Start("https://github.com/roxaskeyheart/Chromatics/wiki");
         }
 
         private void btn_web_Click(object sender, EventArgs e)

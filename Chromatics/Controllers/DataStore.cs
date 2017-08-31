@@ -79,7 +79,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsKeyHighlights = true;
         public bool ChromaticsSettingsLccAuto = false;
         public bool ChromaticsSettingsMemoryCache = false;
-        public string FinalFantasyXivVersion = "4.0.5";
+        public string FinalFantasyXivVersion = "4.0.6";
     }
 
     //Color Mapping

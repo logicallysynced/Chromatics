@@ -4116,7 +4116,7 @@ namespace Chromatics
 
                             if (FfxivDutyFinder.IsPopped())
                             {
-                                Debug.WriteLine("DF Pop");
+                                //Debug.WriteLine("DF Pop");
                                 if (!_dfpop)
                                 {
                                     ToggleGlobalFlash4(true);
