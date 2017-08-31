@@ -375,7 +375,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (!_corsairDeviceKeyboard) return;
             _corsairAllKeyboardLed.Brush = (SolidColorBrush)col;
-            CueSDK.KeyboardSDK.Update();
+            CorsairUpdateLed();
         }
 
         public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
