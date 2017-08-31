@@ -90,6 +90,7 @@ namespace Chromatics
         public bool MappingGridStartup = false;
         public int MouseToggle = 0;
         public int PaletteMappingCurrentSelect = 0;
+        public bool LCCStatus = false;
 
         public List<string> Plugs = new List<string>();
         private bool _razerDeviceHeadset = true;

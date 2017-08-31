@@ -1643,6 +1643,7 @@ namespace Chromatics
 
                     chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
                     chk_lccenable.Checked = false;
+                    LCCStatus = false;
                     chk_lccenable.CheckedChanged += chk_lccenable_CheckedChanged;
                 }
                 catch (Exception ex)
@@ -1665,7 +1666,7 @@ namespace Chromatics
                 _force = true;
 
 
-            if ((chk_lccenable.Checked || force) && !_force)
+            if ((!LCCStatus || force) && !_force)
             {
                 //Enable LCC
 
@@ -1676,6 +1677,7 @@ namespace Chromatics
                         //File.Copy(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", true);
                         //File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll");
                         FileSystem.RenameFile(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll", "LogitechLed.dll.disabled");
+                        LCCStatus = true;
                     }
                     catch (Exception ex)
                     {
@@ -1705,6 +1707,7 @@ namespace Chromatics
                         //File.Copy(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", LgsInstall + @"\SDK\LED\x64\LogitechLed.dll", true);
                         //File.Delete(LgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled");
                         FileSystem.RenameFile(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll.disabled", "LogitechLed.dll");
+                        LCCStatus = false;
                     }
                     catch (Exception ex)
                     {

@@ -233,7 +233,7 @@ namespace Chromatics.DeviceInterfaces
                 return;
 
             KeyboardNames keyName;
-            StopEffects();
+            //StopEffects();
 
             if (Enum.TryParse(key, out keyName))
                 LogitechSdkWrapper.LogiLedSetLightingForKeyWithScanCode((int) keyName,
@@ -303,7 +303,7 @@ namespace Chromatics.DeviceInterfaces
 
             var rzSt = new Task(() =>
             {
-                StopEffects();
+                //StopEffects();
                 Thread.Sleep(100);
 
                 ColorCycle(col, _cancellationTokenSource.Token);
@@ -333,7 +333,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 var rzSt = new Task(() =>
                 {
-                    StopEffects();
+                    //StopEffects();
                     Thread.Sleep(100);
 
                     SetLights(col);
@@ -359,7 +359,7 @@ namespace Chromatics.DeviceInterfaces
 
                 var rzSt = new Task(() =>
                 {
-                    StopEffects();
+                    //StopEffects();
                     Thread.Sleep(100);
 
                     ColorCycle(col, _cancellationTokenSource.Token);
