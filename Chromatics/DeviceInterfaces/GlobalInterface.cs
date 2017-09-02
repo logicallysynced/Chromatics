@@ -162,6 +162,7 @@ namespace Chromatics
 
             //InitializeLIFXSDK();
             ResetDeviceDataGrid();
+            //GlobalResetDevices();
         }
 
         public void ShutDownDevices()
@@ -188,7 +189,7 @@ namespace Chromatics
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse, baseColor);
 
-            ResetDeviceDataGrid();
+            //ResetDeviceDataGrid();
         }
         
         /*

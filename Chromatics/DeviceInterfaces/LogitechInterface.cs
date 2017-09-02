@@ -244,12 +244,12 @@ namespace Chromatics.DeviceInterfaces
 
         public void ResetLogitechDevices(bool deviceKeyboard, Color basecol)
         {
+            if (_logitechDeviceKeyboard && !deviceKeyboard)
+                SetLights(basecol);
+
             _logitechDeviceKeyboard = deviceKeyboard;
 
-            if (_logitechDeviceKeyboard)
-                SetLights(basecol);
-            else
-                StopEffects();
+            
         }
 
         public void ColorCycle(Color color, CancellationToken token)

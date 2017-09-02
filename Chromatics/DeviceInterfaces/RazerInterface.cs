@@ -294,6 +294,26 @@ namespace Chromatics.DeviceInterfaces
         public void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
             bool deviceHeadset, bool deviceChromaLink, Color basecol)
         {
+            if (_razerDeviceKeyboard && !deviceKeyboard)
+                Keyboard.Instance.SetAll(basecol.ToColoreColor());
+
+            if (_razerDeviceMouse && !deviceMouse)
+                Mouse.Instance.SetAll(basecol.ToColoreColor());
+
+            if (_razerDeviceMousepad && !deviceMousepad)
+                Mousepad.Instance.SetAll(basecol.ToColoreColor());
+
+            if (_razerDeviceHeadset && !deviceHeadset)
+                Headset.Instance.SetAll(basecol.ToColoreColor());
+
+            if (_razerDeviceKeypad && !deviceKeypad)
+                Keypad.Instance.SetAll(basecol.ToColoreColor());
+
+            if (_razerDeviceChromaLink && !deviceChromaLink)
+            {
+                ChromaLink.Instance.SetStatic(basecol.ToColoreColor());
+            }
+
             _razerDeviceKeyboard = deviceKeyboard;
             _razerDeviceKeypad = deviceKeypad;
             _razerDeviceMouse = deviceMouse;
@@ -301,9 +321,7 @@ namespace Chromatics.DeviceInterfaces
             _razerDeviceHeadset = deviceHeadset;
             _razerDeviceChromaLink = deviceChromaLink;
             _razerDeathstalker = Chroma.Instance.Query(Devices.Deathstalker).Connected;
-
-            if (_razerDeviceKeyboard)
-                SetLights(basecol);
+            
         }
 
         public void InitializeLights()

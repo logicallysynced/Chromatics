@@ -9,6 +9,7 @@ using Chromatics.DeviceInterfaces.EffectLibrary;
 using Chromatics.FFXIVInterfaces;
 using CUE.NET;
 using CUE.NET.Brushes;
+using CUE.NET.Devices.Generic;
 using CUE.NET.Devices.Generic.Enums;
 using CUE.NET.Groups;
 using GalaSoft.MvvmLight.Ioc;
@@ -287,6 +288,8 @@ namespace Chromatics.DeviceInterfaces
         private Color _corsairScrollWheelConv;
         private Dictionary<string, Color> presets = new Dictionary<string, Color>();
 
+        private bool pause;
+
         public bool InitializeSdk()
         {
             Write.WriteConsole(ConsoleTypes.Corsair, "Attempting to load CUE SDK..");
@@ -336,9 +339,22 @@ namespace Chromatics.DeviceInterfaces
                 Write.WriteConsole(ConsoleTypes.Corsair,
                     "CUE SDK Loaded (" + CueSDK.ProtocolDetails.SdkVersion + "/" +
                     CueSDK.ProtocolDetails.ServerVersion + ")");
+                
 
                 CueSDK.UpdateMode = UpdateMode.Continuous;
                 //ResetCorsairDevices();
+
+                if (_corsairDeviceHeadset)
+                {
+                    try
+                    {
+                        _corsairDeviceHeadset = CueSDK.HeadsetSDK.DeviceInfo.Model != "VOID Wireless Demo";
+                    }
+                    catch (Exception e)
+                    {
+                        _corsairDeviceHeadset = false;
+                    }
+                }
 
                 return true;
             }
@@ -352,19 +368,46 @@ namespace Chromatics.DeviceInterfaces
         public void ResetCorsairDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
             bool deviceHeadset, Color basecol)
         {
+            pause = true;
+            
+            if (_corsairDeviceKeyboard && !deviceKeyboard)
+                _corsairAllKeyboardLed.Brush = (SolidColorBrush)basecol;
+
+            if (_corsairDeviceHeadset && !deviceHeadset)
+                _corsairAllHeadsetLed.Brush = (SolidColorBrush)basecol;
+            
+            if (_corsairDeviceMouse && !deviceMouse)
+                _corsairAllMouseLed.Brush = (SolidColorBrush)basecol;
+
+            if (_corsairDeviceMousepad && !deviceMousepad)
+                _corsairAllMousepadLed.Brush = (SolidColorBrush)basecol;
+
             _corsairDeviceKeyboard = deviceKeyboard;
             _corsairDeviceKeypad = deviceKeypad;
             _corsairDeviceMouse = deviceMouse;
             _corsairDeviceMousepad = deviceMousepad;
             _corsairDeviceHeadset = deviceHeadset;
 
-            if (_corsairDeviceKeyboard)
-                UpdateState("static", basecol, false);
+            if (_corsairDeviceHeadset)
+            {
+                try
+                {
+                    _corsairDeviceHeadset = CueSDK.HeadsetSDK.DeviceInfo.Model != "VOID Wireless Demo";
+                }
+                catch (Exception e)
+                {
+                    _corsairDeviceHeadset = false;
+                }
+            }
+            //UpdateState("static", basecol, false);
+            pause = false;
         }
 
 
         public void CorsairUpdateLed()
         {
+            if (pause) return;
+
             if (_corsairDeviceHeadset) CueSDK.HeadsetSDK.Update();
             if (_corsairDeviceKeyboard) CueSDK.KeyboardSDK.Update();
             if (_corsairDeviceMouse) CueSDK.MouseSDK.Update();
@@ -373,15 +416,26 @@ namespace Chromatics.DeviceInterfaces
 
         public void SetLights(Color col)
         {
-            if (!_corsairDeviceKeyboard) return;
-            _corsairAllKeyboardLed.Brush = (SolidColorBrush)col;
-            CorsairUpdateLed();
+            if (pause) return;
+
+            try
+            {
+                if (!_corsairDeviceKeyboard) return;
+
+                _corsairAllKeyboardLed.Brush = (SolidColorBrush) col;
+                CueSDK.KeyboardSDK.Update();
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, "Corsair (Static): " + ex.Message);
+            }
         }
 
         public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
             [Optional] bool direction, [Optional] int speed)
         {
             MemoryTasks.Cleanup();
+            if (pause) return;
             //SolidColorBrush _CorsairAllLEDBrush = new SolidColorBrush(col);
 
             if (type == "reset")
@@ -579,6 +633,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
+            if (pause) return;
+
             if (FfxivHotbar.Keybindwhitelist.Contains(key) && !bypasswhitelist)
                 return;
 
@@ -598,6 +654,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapMouseLighting(string region, Color col, bool clear)
         {
+            if (pause) return;
+
             if (_corsairDeviceMouse)
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.MouseSDK[_corsairkeyids[region]] != null)
@@ -606,11 +664,14 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapLogoLighting(string key, Color col, bool clear)
         {
+            if (pause) return;
             //Not Implemented
         }
 
         public void ApplyMapPadLighting(string region, Color col, bool clear)
         {
+            if (pause) return;
+
             if (_corsairDeviceMousepad)
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.MousematSDK[_corsairkeyids[region]] != null)
@@ -619,13 +680,15 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapHeadsetLighting(Color col, bool clear)
         {
-            if (_corsairDeviceHeadset)
-                if (CueSDK.HeadsetSDK[CorsairLedId.LeftLogo].Color != null)
-                {
-                    CueSDK.HeadsetSDK[CorsairLedId.LeftLogo].Color = col;
-                    CueSDK.HeadsetSDK[CorsairLedId.RightLogo].Color = col;
-                }
+            if (pause) return;
 
+            if (!_corsairDeviceHeadset) return;
+            var cc = new CorsairColor(col);
+
+            if (CueSDK.HeadsetSDK[CorsairLedId.LeftLogo].Color == cc) return;
+
+            CueSDK.HeadsetSDK[CorsairLedId.LeftLogo].Color = cc;
+            CueSDK.HeadsetSDK[CorsairLedId.RightLogo].Color = cc;
         }
 
         public Task Ripple1(Color burstcol, int speed, Color baseColor)
@@ -952,6 +1015,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void Flash1(Color burstcol, int speed, string[] regions)
         {
+            if (pause) return;
+
             lock (CorsairFlash1)
             {
                 var presets = new Dictionary<string, Color>();
@@ -1126,6 +1191,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
+            if (pause) return;
+
             lock (CorsairFlash2)
             {
                 var presets = new Dictionary<string, Color>();
@@ -1206,6 +1273,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void Flash3(Color burstcol, int speed, CancellationToken cts)
         {
+            if (pause) return;
+
             try
             {
                 //DeviceEffects._NumFlash
@@ -1288,6 +1357,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
+            if (pause) return;
+
             lock (CorsairFlash4)
             {
                 var presets = new Dictionary<string, Color>();
@@ -1368,6 +1439,8 @@ namespace Chromatics.DeviceInterfaces
 
         private void Transition(Color col, bool forward)
         {
+            if (pause) return;
+
             lock (Corsairtransition)
             {
                 if (_corsairDeviceKeyboard)
@@ -1396,6 +1469,8 @@ namespace Chromatics.DeviceInterfaces
 
         private void CorsairtransitionConst(Color col1, Color col2, bool forward, int speed)
         {
+            if (pause) return;
+
             lock (_CorsairtransitionConst)
             {
                 //To be implemented

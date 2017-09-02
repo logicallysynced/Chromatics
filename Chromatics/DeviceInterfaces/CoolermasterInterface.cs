@@ -428,14 +428,20 @@ namespace Chromatics.DeviceInterfaces
 
         public void ResetCoolermasterDevices(bool deviceKeyboard, bool deviceMouse, Color basecol)
         {
-            _coolermasterDeviceKeyboard = deviceKeyboard;
-            _coolermasterDeviceMouse = deviceMouse;
-
             if (_initialized)
-                if (_coolermasterDeviceKeyboard)
-                    UpdateState("static", basecol, false);
-                else
-                    Shutdown();
+            {
+                if (_coolermasterDeviceKeyboard && !deviceKeyboard)
+                    SetLights(basecol);
+
+
+                if (_coolermasterDeviceMouse && !deviceMouse)
+                    //Unimplemented
+
+
+                _coolermasterDeviceKeyboard = deviceKeyboard;
+                _coolermasterDeviceMouse = deviceMouse;
+            }
+
         }
 
         public void StopEffects()
