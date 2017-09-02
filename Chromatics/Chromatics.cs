@@ -24,6 +24,7 @@ namespace Chromatics
         private CancellationTokenSource _memoryTask = new CancellationTokenSource();
 
         private ILogitechArx _arx;
+        private ILogitechLcd _lcd;
         private Task _call;
         public Task MemoryTask;
         private bool _allowClose;
@@ -33,6 +34,9 @@ namespace Chromatics
         public int ArxSdkCalled;
         public int ArxState;
         public bool ArxToggle = true;
+
+        public bool LcdSdk;
+        public int LcdSdkCalled;
 
         private CancellationTokenSource _attachcts = new CancellationTokenSource();
 
@@ -400,6 +404,17 @@ namespace Chromatics
 
 
             //Setup LCD Interfaces
+            if (LogitechSdkCalled == 1)
+            {
+                _lcd = LogitechLcdInterface.InitializeLcdSdk();
+
+                if (_lcd != null)
+                {
+                    LcdSdk = true;
+                    LcdSdkCalled = 1;
+                    WriteConsole(ConsoleTypes.Logitech, "LCD SDK Loaded");
+                }
+            }
 
             if (chk_arxtoggle.Checked)
             {
@@ -417,6 +432,7 @@ namespace Chromatics
                 }
             }
 
+            
             //Finish GUI Setup
             InitSettingsArxGui();
             Startup = true;
@@ -489,6 +505,11 @@ namespace Chromatics
                 if (ArxSdkCalled == 1 && ArxState == 0)
                     _arx.ArxUpdateInfo("Attached to FFXIV");
 
+                if (LcdSdkCalled == 1)
+                {
+                    _lcd.StatusLCDInfo(@"Attached to FFXIV");
+                }
+
                 Attatched = 1;
                 
                 _attachcts.Cancel();
@@ -516,6 +537,12 @@ namespace Chromatics
                 {
                     WriteConsole(ConsoleTypes.System, "Waiting for Game Launch..");
                     notify_master.Text = @"Waiting for Game Launch..";
+
+                    if (LcdSdkCalled == 1)
+                    {
+                        _lcd.StatusLCDInfo(@"Waiting for Game Launch..");
+                    }
+
                     if (ArxSdkCalled == 1 && ArxState == 0)
                         _arx.ArxUpdateInfo("Waiting for Game Launch..");
 

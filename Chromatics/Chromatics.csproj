@@ -235,10 +235,12 @@
     <Compile Include="DeviceInterfaces\SteelSeriesInterface.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVCooldowns.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVDutyFinder.cs" />
+    <Compile Include="FFXIVInterfaces\FFXIVHelpers.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVInterface.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FFXIVInterfaces\FFXIVHotbar.cs" />
+    <Compile Include="LCDInterfaces\LogitechLCD.cs" />
     <Compile Include="LCDInterfaces\LogitechARX.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

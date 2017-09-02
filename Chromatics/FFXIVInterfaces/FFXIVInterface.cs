@@ -155,6 +155,10 @@ namespace Chromatics
                 else if (processes11.Length > 0)
                 {
                     WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
+                    if (LcdSdkCalled == 1)
+                    {
+                        _lcd.StatusLCDInfo(@"Attempting Attach..");
+                    }
 
                     if (Init)
                         return true;
@@ -346,6 +350,11 @@ namespace Chromatics
                                 {
                                     WriteConsole(ConsoleTypes.Ffxiv, "Main Menu is still active.");
 
+                                    if (LcdSdkCalled == 1)
+                                    {
+                                        _lcd.StatusLCDInfo(@"Main Menu is still active.");
+                                    }
+
                                     if (ArxSdkCalled == 1 && ArxState == 0)
                                         _arx.ArxUpdateInfo("Main Menu is still active");
 
@@ -507,6 +516,11 @@ namespace Chromatics
                             //Console.WriteLine(PartyInfo[0]);
                             //var partyx = PartyList[1];
                             //Console.WriteLine(PartyListNew.Count);
+                        }
+
+                        if (LcdSdkCalled == 1)
+                        {
+                            _lcd.DrawLCDInfo(_playerInfo, targetInfo);
                         }
 
                         if (ArxSdkCalled == 1)
