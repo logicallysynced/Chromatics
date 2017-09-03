@@ -96,6 +96,10 @@
       <HintPath>..\packages\LifxNet.2.1.1\lib\netstandard1.3\LifxNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Logitech-LCD, Version=1.0.4.0, Culture=neutral, PublicKeyToken=06ced2f874d832d0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Build Dependencies\Logitech-LCD.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
@@ -133,6 +137,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -240,6 +245,30 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FFXIVInterfaces\FFXIVHotbar.cs" />
+    <Compile Include="LCDInterfaces\Pages\LCD_MONO_LocalTime.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_MONO_LocalTime.Designer.cs">
+      <DependentUpon>LCD_MONO_LocalTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_MONO_Latency.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_MONO_Latency.Designer.cs">
+      <DependentUpon>LCD_MONO_Latency.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_MONO_ServerTime.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_MONO_ServerTime.Designer.cs">
+      <DependentUpon>LCD_MONO_ServerTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_MONO_EorzeaTime.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_MONO_EorzeaTime.Designer.cs">
+      <DependentUpon>LCD_MONO_EorzeaTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="LCDInterfaces\LogitechLCD.cs" />
     <Compile Include="LCDInterfaces\LogitechARX.cs" />
     <Compile Include="Program.cs" />
@@ -248,6 +277,18 @@
     <Compile Include="Controllers\Watchdog.cs" />
     <EmbeddedResource Include="Chromatics.resx">
       <DependentUpon>Chromatics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LCDInterfaces\Pages\LCD_MONO_LocalTime.resx">
+      <DependentUpon>LCD_MONO_LocalTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LCDInterfaces\Pages\LCD_MONO_Latency.resx">
+      <DependentUpon>LCD_MONO_Latency.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LCDInterfaces\Pages\LCD_MONO_ServerTime.resx">
+      <DependentUpon>LCD_MONO_ServerTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LCDInterfaces\Pages\LCD_MONO_EorzeaTime.resx">
+      <DependentUpon>LCD_MONO_EorzeaTime.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

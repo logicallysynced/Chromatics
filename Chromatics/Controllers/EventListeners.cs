@@ -59,11 +59,6 @@ namespace Chromatics
             _ffxiVcts.Cancel();
             _attachcts.Cancel();
             ShutDownDevices();
-
-            if (LcdSdkCalled == 1)
-            {
-                _lcd.ShutdownLcd();
-            }
             
             if (LifxSdkCalled == 1)
             {

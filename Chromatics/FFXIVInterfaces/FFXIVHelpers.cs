@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Chromatics.FFXIVInterfaces
 {
@@ -33,11 +34,19 @@ namespace Chromatics.FFXIVInterfaces
 
     public static class ImageExtensions
     {
-        public static byte[] ToByteArray(this Image image, ImageFormat format)
+        public static byte[] ToByteArray(this Image image, ImageFormat format, bool reverse)
         {
             using (MemoryStream ms = new MemoryStream())
             {
                 image.Save(ms, format);
+
+                if (reverse)
+                {
+                    var bytes = ms.ToArray();
+                    var reversed = bytes.Reverse().ToArray();
+                    return reversed;
+                }
+
                 return ms.ToArray();
             }
         }
@@ -51,5 +60,6 @@ namespace Chromatics.FFXIVInterfaces
                 return Image.FromStream(ms);
             }
         }
+        
     }
 }
