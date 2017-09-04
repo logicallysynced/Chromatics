@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using Chromatics.FFXIVInterfaces;
@@ -18,6 +19,7 @@ using Logitech_LCD;
 using Logitech_LCD.Applets;
 using Sharlayan.Core;
 using Sharlayan.Core.Enums;
+using Exception = System.Exception;
 
 namespace Chromatics.LCDInterfaces
 {
@@ -149,20 +151,25 @@ namespace Chromatics.LCDInterfaces
         bool InitializeLcd();
         void DrawLCDInfo(ActorEntity _pI, ActorEntity _tI);
         void StatusLCDInfo(string text);
+        void ShutdownLcd();
     }
     
 
     public class LogitechLcd : ILogitechLcd
     {
         private static ILogWrite _write = SimpleIoc.Default.GetInstance<ILogWrite>();
-
-        private static bool startup;
+        
         private static int _page = 1;
         private const int MaxPage = 4;
         private static BaseAppletM _selectedMonoControl;
         private static BaseAppletM _selectedColorControl;
 
+        private ActorEntity PlayerInfo;
+        private ActorEntity TargetInfo;
+
         private System.Timers.Timer _buttonCheckTimer;
+        
+        private bool startup;
 
         //Color LCD button events
         private event EventHandler LcdColorLeftButtonPressed;
@@ -181,8 +188,13 @@ namespace Chromatics.LCDInterfaces
 
         public bool InitializeLcd()
         {
-            
             Logitech_LCD.LogitechLcd.Instance.Init("Final Fantasy XIV", LcdType.Mono | LcdType.Color);
+
+            if (!Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Mono | LcdType.Color))
+            {
+                _write.WriteConsole(ConsoleTypes.Logitech, "No LCD Screens Connected.");
+                return false;
+            }
 
             try
             {
@@ -212,14 +224,56 @@ namespace Chromatics.LCDInterfaces
             }
         }
 
-        public void DrawLCDInfo(ActorEntity _pI, ActorEntity _tI)
+        public void ShutdownLcd()
         {
-            if (!startup)
-                SwitchPages(1);
+            try
+            {
+                _write.WriteConsole(ConsoleTypes.Logitech, "Disabling LCD SDK.");
+
+                if (_selectedMonoControl != null)
+                {
+                    _selectedMonoControl.IsActive = false;
+                    _selectedMonoControl.Dispose();
+                    _selectedMonoControl = null;
+                }
+
+                _buttonCheckTimer.Stop();
+                LcdMonoButton0Pressed -= SelectedMonoControlOnLcdMonoButton0Pressed;
+                LcdMonoButton1Pressed -= SelectedMonoControlOnLcdMonoButton1Pressed;
+                LcdMonoButton2Pressed -= SelectedMonoControlOnLcdMonoButton2Pressed;
+                LcdMonoButton3Pressed -= SelectedMonoControlOnLcdMonoButton3Pressed;
+
+                _buttonCheckTimer.Dispose();
+
+                Logitech_LCD.LogitechLcd.Instance.Shutdown();
+            }
+            catch (Exception ex)
+            {
+                _write.WriteConsole(ConsoleTypes.Error, ex.Message);
+                _write.WriteConsole(ConsoleTypes.Error, ex.StackTrace);
+            }
         }
 
-        private void SwitchPages(int page)
+        
+        public void DrawLCDInfo(ActorEntity _pI, ActorEntity _tI)
         {
+            PlayerInfo = _pI;
+            TargetInfo = _tI;
+
+            if (!startup)
+            {
+                new Task(() =>
+                {
+                    SwitchPages(1);
+                }).Start();
+                startup = true;
+            }
+            
+        }
+
+        private static void SwitchPages(int page)
+        {
+            
             try
             {
                 //if (_page == _lastpage) return;
@@ -242,6 +296,7 @@ namespace Chromatics.LCDInterfaces
                 //0 - Eorzea Time
                 //1 - Server Time
                 //2 - Local Time
+                
                 switch (page)
                 {
                     case 1:
@@ -265,8 +320,9 @@ namespace Chromatics.LCDInterfaces
 
                         break;
                 }
-
+                
                 _page = page;
+                
             }
             catch (Exception e)
             {

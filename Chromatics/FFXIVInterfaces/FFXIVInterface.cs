@@ -49,6 +49,9 @@ namespace Chromatics
         private bool _playgroundonce;
         private bool _successcast;
 
+        private FFXIVUnsafeMethods _unsafe = new FFXIVUnsafeMethods();
+        private readonly object _CallLcdData = new object();
+
         public void FfxivGameStop()
         {
             if (Attatched == 0) return;
@@ -218,19 +221,19 @@ namespace Chromatics
 
                 var processes9 = Process.GetProcessesByName("ffxiv");
                 var processes11 = Process.GetProcessesByName("ffxiv_dx11");
-                
+
 
                 if (Attatched > 0)
                 {
                     //Get Data
-                    
+
                     if (processes11.Length == 0)
                         FfxivGameStop();
 
                     _playerInfoX = Reader.GetActors().PCEntities;
                     _menuInfo = Reader.GetPlayerInfo().PlayerEntity;
-                    
-                    
+
+
                     if (Attatched == 3)
                     {
                         //Game is Running
@@ -276,7 +279,7 @@ namespace Chromatics
                             State = 6;
                             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
                             GlobalSetWave();
-                            
+
                             Attatched = 2;
                         }
 
@@ -520,7 +523,12 @@ namespace Chromatics
 
                         if (LcdSdkCalled == 1)
                         {
-                            _lcd.DrawLCDInfo(_playerInfo, targetInfo);
+                            //_lcd.DrawLCDInfo(_playerInfo, targetInfo);
+
+                            lock (_CallLcdData)
+                            {
+                                _unsafe.CallLcdData(_lcd, _playerInfo, targetInfo);
+                            }
                         }
 
                         if (ArxSdkCalled == 1)
@@ -833,14 +841,14 @@ namespace Chromatics
                         //Console.WriteLine("Map ID: " + PlayerInfo.MapID);
 
                         //Parse Data
-                        
+
                         //Set Base Keyboard lighting. 
                         //Other LED's are built above this base layer.
 
                         if (SetKeysbase == false)
                         {
                             _baseColor = baseColor;
-                            
+
                             //GlobalUpdateState("static", baseColor, false);
                             GlobalApplyAllKeyLighting(_baseColor);
 
@@ -864,7 +872,7 @@ namespace Chromatics
                             GlobalApplyMapMouseLighting(DevModeTypes.DefaultColor, baseColor, false);
                             GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, baseColor, false);
                             GlobalApplyMapMouseLighting(DevModeTypes.Castbar, baseColor, false);
-                            
+
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip1", "Strip8", baseColor, false);
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip2", "Strip9", baseColor, false);
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip3", "Strip10", baseColor, false);
@@ -921,7 +929,7 @@ namespace Chromatics
                             GlobalApplyMapPadLighting(DevModeTypes.Castbar, 12, 7, 2, baseColor, false);
                             GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, baseColor, false);
                             GlobalApplyMapPadLighting(DevModeTypes.Castbar, 10, 9, 4, baseColor, false);
-                            
+
                             GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 14, 5, 0, highlightColor, false);
                             GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 13, 6, 1, highlightColor, false);
                             GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 12, 7, 2, highlightColor, false);
@@ -1311,7 +1319,7 @@ namespace Chromatics
                                     targetInfo.IsClaimed
                                         ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                         : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
-                                    (ushort) polTargetHpx, 250);
+                                    (ushort)polTargetHpx, 250);
 
                                 GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
                                     ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
@@ -1715,7 +1723,7 @@ namespace Chromatics
                                     {
                                         ToggleGlobalFlash2(true);
                                         GlobalFlash2(ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
-                                            200, new[] {"PrintScreen", "Scroll", "Pause"});
+                                            200, new[] { "PrintScreen", "Scroll", "Pause" });
 
                                         _castalert = true;
                                     }
@@ -2076,7 +2084,7 @@ namespace Chromatics
                             //Console.WriteLine(CastPercentage);
                             _lastcast = true;
 
-                            GlobalUpdateBulbStateBrightness(BulbModeTypes.Castbar, colCastcharge, (ushort) polCastZ,
+                            GlobalUpdateBulbStateBrightness(BulbModeTypes.Castbar, colCastcharge, (ushort)polCastZ,
                                 250);
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.Castbar, colCastcharge, castPercentage);
@@ -2535,7 +2543,7 @@ namespace Chromatics
 
                             GlobalUpdateBulbStateBrightness(BulbModeTypes.HpTracker,
                                 polHp <= 10 ? colHpempty : colHpfull,
-                                (ushort) polHpz,
+                                (ushort)polHpz,
                                 250);
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, polHpz2);
@@ -2715,7 +2723,7 @@ namespace Chromatics
                             var polMpz = (currentMp - 0) * (65535 - 0) / (maxMp - 0) + 0;
                             var polMpz2 = (currentMp - 0) * (1.0 - 0.0) / (maxMp - 0) + 0.0;
 
-                            GlobalUpdateBulbStateBrightness(BulbModeTypes.MpTracker, colMpfull, (ushort) polMpz,
+                            GlobalUpdateBulbStateBrightness(BulbModeTypes.MpTracker, colMpfull, (ushort)polMpz,
                                 250);
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.MpTracker, colMpfull, polMpz2);
@@ -2733,7 +2741,7 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("F7", colMpfull, false);
                                     GlobalApplyMapKeyLighting("F8", colMpfull, false);
                                 }
-                                
+
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 14, 5, 0, colMpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 13, 6, 1, colMpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 12, 7, 2, colMpfull, false);
@@ -2897,7 +2905,7 @@ namespace Chromatics
                             var polTpz = (currentTp - 0) * (65535 - 0) / (maxTp - 0) + 0;
                             var polTpz2 = (currentTp - 0) * (1.0 - 0.0) / (maxTp - 0) + 0.0;
 
-                            GlobalUpdateBulbStateBrightness(BulbModeTypes.TpTracker, colTpfull, (ushort) polTpz,
+                            GlobalUpdateBulbStateBrightness(BulbModeTypes.TpTracker, colTpfull, (ushort)polTpz,
                                 250);
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.TpTracker, colTpfull, polTpz2);

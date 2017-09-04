@@ -245,6 +245,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FFXIVInterfaces\FFXIVHotbar.cs" />
+    <Compile Include="FFXIVInterfaces\FFXIVUnsafeMethods.cs" />
     <Compile Include="LCDInterfaces\Pages\LCD_MONO_LocalTime.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -80,6 +80,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsLccAuto = false;
         public bool ChromaticsSettingsMemoryCache = false;
         public bool ChromaticsSettingsDesktopNotifications = true;
+        public bool ChromaticsSettingsLcdEnabled = true;
         public string FinalFantasyXivVersion = "4.0.6";
     }
 

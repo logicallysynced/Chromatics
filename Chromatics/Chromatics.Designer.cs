@@ -110,6 +110,8 @@
             this.chk_lccenable = new System.Windows.Forms.CheckBox();
             this.lb_lcc = new System.Windows.Forms.Label();
             this.gB_General = new System.Windows.Forms.GroupBox();
+            this.chk_lcdtoggle = new System.Windows.Forms.CheckBox();
+            this.chk_desktopnotify = new System.Windows.Forms.CheckBox();
             this.chk_startupenable = new System.Windows.Forms.CheckBox();
             this.chk_memorycache = new System.Windows.Forms.CheckBox();
             this.tP_mappings = new System.Windows.Forms.TabPage();
@@ -151,7 +153,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_desktopnotify = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1085,6 +1086,7 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.chk_lcdtoggle);
             this.gB_General.Controls.Add(this.chk_desktopnotify);
             this.gB_General.Controls.Add(this.chk_startupenable);
             this.gB_General.Controls.Add(this.chk_memorycache);
@@ -1094,6 +1096,30 @@
             this.gB_General.TabIndex = 0;
             this.gB_General.TabStop = false;
             this.gB_General.Text = "General";
+            // 
+            // chk_lcdtoggle
+            // 
+            this.chk_lcdtoggle.AutoSize = true;
+            this.chk_lcdtoggle.Location = new System.Drawing.Point(23, 126);
+            this.chk_lcdtoggle.Name = "chk_lcdtoggle";
+            this.chk_lcdtoggle.Size = new System.Drawing.Size(162, 21);
+            this.chk_lcdtoggle.TabIndex = 4;
+            this.chk_lcdtoggle.Text = "Enable LCD Displays";
+            this.tooltip_main.SetToolTip(this.chk_lcdtoggle, "Toggles Logitech LCD screens. Requires LGS.\r\nDefault: ON");
+            this.chk_lcdtoggle.UseVisualStyleBackColor = true;
+            this.chk_lcdtoggle.CheckedChanged += new System.EventHandler(this.chk_lcdtoggle_CheckedChanged);
+            // 
+            // chk_desktopnotify
+            // 
+            this.chk_desktopnotify.AutoSize = true;
+            this.chk_desktopnotify.Location = new System.Drawing.Point(23, 96);
+            this.chk_desktopnotify.Name = "chk_desktopnotify";
+            this.chk_desktopnotify.Size = new System.Drawing.Size(201, 21);
+            this.chk_desktopnotify.TabIndex = 3;
+            this.chk_desktopnotify.Text = "Show Desktop Notifications";
+            this.tooltip_main.SetToolTip(this.chk_desktopnotify, "Toggles whether to show desktop notifications.\r\nDefault: ON");
+            this.chk_desktopnotify.UseVisualStyleBackColor = true;
+            this.chk_desktopnotify.CheckedChanged += new System.EventHandler(this.chk_desktopnotify_CheckedChanged);
             // 
             // chk_startupenable
             // 
@@ -1507,18 +1533,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_desktopnotify
-            // 
-            this.chk_desktopnotify.AutoSize = true;
-            this.chk_desktopnotify.Location = new System.Drawing.Point(23, 96);
-            this.chk_desktopnotify.Name = "chk_desktopnotify";
-            this.chk_desktopnotify.Size = new System.Drawing.Size(201, 21);
-            this.chk_desktopnotify.TabIndex = 3;
-            this.chk_desktopnotify.Text = "Show Desktop Notifications";
-            this.tooltip_main.SetToolTip(this.chk_desktopnotify, "Toggles whether to show desktop notifications.\r\nDefault: ON");
-            this.chk_desktopnotify.UseVisualStyleBackColor = true;
-            this.chk_desktopnotify.CheckedChanged += new System.EventHandler(this.chk_desktopnotify_CheckedChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1690,6 +1704,7 @@
         private System.Windows.Forms.ComboBox cb_chromalink_z1;
         private System.Windows.Forms.CheckBox chk_dev_chromalink;
         private System.Windows.Forms.CheckBox chk_desktopnotify;
+        private System.Windows.Forms.CheckBox chk_lcdtoggle;
     }
 }
 

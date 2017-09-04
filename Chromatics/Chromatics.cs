@@ -407,14 +407,19 @@ namespace Chromatics
 
 
             //Setup LCD Interfaces
-            _lcd = LogitechLcdInterface.InitializeLcdSdk();
 
-            if (_lcd != null)
+            if (ChromaticsSettings.ChromaticsSettingsLcdEnabled)
             {
-                LcdSdk = true;
-                LcdSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Logitech, "LCD SDK Loaded");
+                _lcd = LogitechLcdInterface.InitializeLcdSdk();
+
+                if (_lcd != null)
+                {
+                    LcdSdk = true;
+                    LcdSdkCalled = 1;
+                    WriteConsole(ConsoleTypes.Logitech, "LCD SDK Loaded");
+                }
             }
+
 
             if (chk_arxtoggle.Checked)
             {
@@ -611,8 +616,9 @@ namespace Chromatics
                 }
                 else
                 {
-                    if (notify != 1) return;
                     WriteConsole(ConsoleTypes.System, "No new updates currently available.");
+
+                    if (notify != 1) return;
                     if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)
                     {
                         notify_master.BalloonTipText = @"No new updates currently available.";
@@ -635,7 +641,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-        
+
         
     }
 

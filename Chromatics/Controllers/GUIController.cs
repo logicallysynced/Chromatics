@@ -1172,6 +1172,8 @@ namespace Chromatics
             chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettingsImpactToggle;
             chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettingsDfBellToggle;
 
+            chk_lcdtoggle.Checked = ChromaticsSettings.ChromaticsSettingsLcdEnabled;
+            
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
             chk_dev_mousepad.Checked = _deviceMousepad;
@@ -1277,6 +1279,8 @@ namespace Chromatics
                 //_logitechDeviceMousepad = false;
                 //_logitechDeviceKeypad = false;
                 //_logitechDeviceHeadset = false;
+
+                chk_lcdtoggle.Enabled = false;
             }
 
             if (CorsairSdkCalled == 1)
@@ -2526,6 +2530,38 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsDesktopNotifications = chk_desktopnotify.Checked;
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_lcdtoggle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (LogitechSdkCalled == 1)
+            {
+                if (!chk_lcdtoggle.Checked)
+                {
+                    if (LcdSdkCalled == 1)
+                    {
+                        _lcd.ShutdownLcd();
+                        _lcd = null;
+                        LcdSdkCalled = 0;
+                    }
+                }
+                else
+                {
+                    _lcd = LogitechLcdInterface.InitializeLcdSdk();
+
+                    if (_lcd != null)
+                    {
+                        LcdSdk = true;
+                        LcdSdkCalled = 1;
+                        WriteConsole(ConsoleTypes.Logitech, "LCD SDK Enabled");
+                    }
+                }
+            }
+
+            ChromaticsSettings.ChromaticsSettingsLcdEnabled = chk_lcdtoggle.Checked;
             SaveChromaticsSettings(1);
         }
 
