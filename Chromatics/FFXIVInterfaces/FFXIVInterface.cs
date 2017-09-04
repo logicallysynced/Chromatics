@@ -84,6 +84,11 @@ namespace Chromatics
             SetKeypadbase = false;
             SetCLbase = false;
 
+            if (LcdSdkCalled == 1)
+            {
+                _lcd.SetStartupFlag = false;
+            }
+
             MemoryHandler.Instance.UnsetProcess();
             _call = null;
 
@@ -253,6 +258,11 @@ namespace Chromatics
                                 SetHeadsetbase = false;
                                 SetKeypadbase = false;
                                 SetCLbase = false;
+
+                                if (LcdSdkCalled == 1)
+                                {
+                                    _lcd.SetStartupFlag = false;
+                                }
 
                                 //GlobalUpdateState("static", Color.DeepSkyBlue, false);
                                 GlobalApplyAllKeyLighting(Color.DeepSkyBlue);

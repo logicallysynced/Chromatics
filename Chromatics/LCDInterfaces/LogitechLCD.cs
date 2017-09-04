@@ -152,6 +152,8 @@ namespace Chromatics.LCDInterfaces
         void DrawLCDInfo(ActorEntity _pI, ActorEntity _tI);
         void StatusLCDInfo(string text);
         void ShutdownLcd();
+
+        bool SetStartupFlag { get; set; }
     }
     
 
@@ -185,6 +187,12 @@ namespace Chromatics.LCDInterfaces
         private event EventHandler LcdMonoButton1Pressed;
         private event EventHandler LcdMonoButton2Pressed;
         private event EventHandler LcdMonoButton3Pressed;
+
+        public bool SetStartupFlag
+        {
+            get => startup;
+            set => startup = value;
+        }
 
         public bool InitializeLcd()
         {
@@ -262,15 +270,13 @@ namespace Chromatics.LCDInterfaces
             PlayerInfo = _pI;
             TargetInfo = _tI;
 
-            if (!startup)
+            if (startup) return;
+
+            new Task(() =>
             {
-                new Task(() =>
-                {
-                    SwitchPages(1);
-                }).Start();
-                startup = true;
-            }
-            
+                SwitchPages(1);
+            }).Start();
+            startup = true;
         }
 
         private static void SwitchPages(int page)
@@ -389,8 +395,9 @@ namespace Chromatics.LCDInterfaces
             Logitech_LCD.LogitechLcd.Instance.MonoSetText(2, @"");
             Logitech_LCD.LogitechLcd.Instance.MonoSetText(3, @"");
 
-            Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, text);
+            //Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, text);
 
+            //Mono
             if (_selectedMonoControl != null)
             {
                 if (_selectedMonoControl.GetType().ToString() != "Chromatics.LCDInterfaces.LCD_MONO_Boot")
@@ -402,9 +409,8 @@ namespace Chromatics.LCDInterfaces
                     new Task(() =>
                     {
                         _selectedMonoControl = new LCD_MONO_Boot();
+                        if (_selectedMonoControl is LCD_MONO_Boot m1) m1.SetBootText = text;
                     }).Start();
-
-                    Console.WriteLine(@"CATCH");
                 }
             }
             else
@@ -412,10 +418,11 @@ namespace Chromatics.LCDInterfaces
                 new Task(() =>
                 {
                     _selectedMonoControl = new LCD_MONO_Boot();
+                    if (_selectedMonoControl is LCD_MONO_Boot m2) m2.SetBootText = text;
                 }).Start();
             }
 
-            
+            if (_selectedMonoControl is LCD_MONO_Boot m) m.SetBootText = text;
         }
 
         private void CheckButtons(object sender, ElapsedEventArgs e)

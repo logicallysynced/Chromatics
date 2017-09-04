@@ -48,9 +48,9 @@
             // 
             this.lbl_latency_name.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_latency_name.ForeColor = System.Drawing.Color.White;
-            this.lbl_latency_name.Location = new System.Drawing.Point(49, 27);
+            this.lbl_latency_name.Location = new System.Drawing.Point(0, 27);
             this.lbl_latency_name.Name = "lbl_latency_name";
-            this.lbl_latency_name.Size = new System.Drawing.Size(65, 17);
+            this.lbl_latency_name.Size = new System.Drawing.Size(160, 16);
             this.lbl_latency_name.TabIndex = 1;
             this.lbl_latency_name.Text = "Latency";
             this.lbl_latency_name.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
