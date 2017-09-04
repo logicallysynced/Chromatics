@@ -404,16 +404,13 @@ namespace Chromatics
 
 
             //Setup LCD Interfaces
-            if (LogitechSdkCalled == 1)
-            {
-                _lcd = LogitechLcdInterface.InitializeLcdSdk();
+            _lcd = LogitechLcdInterface.InitializeLcdSdk();
 
-                if (_lcd != null)
-                {
-                    LcdSdk = true;
-                    LcdSdkCalled = 1;
-                    WriteConsole(ConsoleTypes.Logitech, "LCD SDK Loaded");
-                }
+            if (_lcd != null)
+            {
+                LcdSdk = true;
+                LcdSdkCalled = 1;
+                WriteConsole(ConsoleTypes.Logitech, "LCD SDK Loaded");
             }
 
             if (chk_arxtoggle.Checked)

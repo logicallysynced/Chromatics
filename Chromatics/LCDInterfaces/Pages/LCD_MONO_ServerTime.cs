@@ -17,7 +17,12 @@ namespace Chromatics.LCDInterfaces
         {
             InitializeComponent();
         }
-        
+
+        public void Shutdown()
+        {
+            //
+        }
+
         protected override void OnDataUpdate(object sender, EventArgs e)
         {
             if (!IsActive) return;

@@ -198,6 +198,8 @@ namespace Chromatics.LCDInterfaces
                 _buttonCheckTimer.Start();
 
                 LcdMonoButton0Pressed += SelectedMonoControlOnLcdMonoButton0Pressed;
+                LcdMonoButton1Pressed += SelectedMonoControlOnLcdMonoButton1Pressed;
+                LcdMonoButton2Pressed += SelectedMonoControlOnLcdMonoButton2Pressed;
                 LcdMonoButton3Pressed += SelectedMonoControlOnLcdMonoButton3Pressed;
 
                 return true;
@@ -258,7 +260,7 @@ namespace Chromatics.LCDInterfaces
 
                         break;
                     case 4:
-                        //Local Time
+                        //Server Latency
                         _selectedMonoControl = new LCD_MONO_Latency();
 
                         break;
@@ -288,6 +290,38 @@ namespace Chromatics.LCDInterfaces
             _page--;
             if (_page <= 0) _page = MaxPage;
             SwitchPages(_page);
+        }
+
+        private void SelectedMonoControlOnLcdMonoButton1Pressed(object o, EventArgs eventArgs)
+        {
+            Console.WriteLine(@"Server Back");
+
+            if (_page == 4)
+            {
+                var p = (LCD_MONO_Latency)_selectedMonoControl;
+                p.CurrentServer--;
+
+                if (p.CurrentServer <= 0)
+                {
+                    p.CurrentServer = p.MaxServer;
+                }
+            }
+        }
+
+        private void SelectedMonoControlOnLcdMonoButton2Pressed(object o, EventArgs eventArgs)
+        {
+            Console.WriteLine(@"Server Forward");
+
+            if (_page == 4)
+            {
+                var p = (LCD_MONO_Latency)_selectedMonoControl;
+                p.CurrentServer++;
+
+                if (p.CurrentServer > p.MaxServer)
+                {
+                    p.CurrentServer = 1;
+                }
+            }
         }
 
         public void StatusLCDInfo(string text)

@@ -34,7 +34,6 @@
             // 
             // lbl_lt_test
             // 
-            this.lbl_lt_test.AutoSize = true;
             this.lbl_lt_test.BackColor = System.Drawing.Color.Transparent;
             this.lbl_lt_test.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_lt_test.ForeColor = System.Drawing.Color.White;
@@ -47,7 +46,6 @@
             // 
             // lbl_et_name
             // 
-            this.lbl_et_name.AutoSize = true;
             this.lbl_et_name.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_et_name.ForeColor = System.Drawing.Color.White;
             this.lbl_et_name.Location = new System.Drawing.Point(37, 27);
@@ -67,7 +65,6 @@
             this.Name = "LCD_MONO_LocalTime";
             this.Size = new System.Drawing.Size(160, 43);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
