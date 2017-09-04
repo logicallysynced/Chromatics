@@ -151,6 +151,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_desktopnotify = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1084,6 +1085,7 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.chk_desktopnotify);
             this.gB_General.Controls.Add(this.chk_startupenable);
             this.gB_General.Controls.Add(this.chk_memorycache);
             this.gB_General.Location = new System.Drawing.Point(4, 4);
@@ -1096,7 +1098,7 @@
             // chk_startupenable
             // 
             this.chk_startupenable.AutoSize = true;
-            this.chk_startupenable.Location = new System.Drawing.Point(23, 66);
+            this.chk_startupenable.Location = new System.Drawing.Point(23, 68);
             this.chk_startupenable.Name = "chk_startupenable";
             this.chk_startupenable.Size = new System.Drawing.Size(170, 21);
             this.chk_startupenable.TabIndex = 2;
@@ -1505,6 +1507,18 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // chk_desktopnotify
+            // 
+            this.chk_desktopnotify.AutoSize = true;
+            this.chk_desktopnotify.Location = new System.Drawing.Point(23, 96);
+            this.chk_desktopnotify.Name = "chk_desktopnotify";
+            this.chk_desktopnotify.Size = new System.Drawing.Size(201, 21);
+            this.chk_desktopnotify.TabIndex = 3;
+            this.chk_desktopnotify.Text = "Show Desktop Notifications";
+            this.tooltip_main.SetToolTip(this.chk_desktopnotify, "Toggles whether to show desktop notifications.\r\nDefault: ON");
+            this.chk_desktopnotify.UseVisualStyleBackColor = true;
+            this.chk_desktopnotify.CheckedChanged += new System.EventHandler(this.chk_desktopnotify_CheckedChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1675,6 +1689,7 @@
         private System.Windows.Forms.Label lbl_chromalink_z1;
         private System.Windows.Forms.ComboBox cb_chromalink_z1;
         private System.Windows.Forms.CheckBox chk_dev_chromalink;
+        private System.Windows.Forms.CheckBox chk_desktopnotify;
     }
 }
 

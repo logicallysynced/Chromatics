@@ -332,8 +332,11 @@ namespace Chromatics
             notify_master.ContextMenuStrip = contextMenuStrip1;
             //mapping_colorEditorManager.Color = Color.White;
 
-            notify_master.BalloonTipText = @"Chromatics will automatically attach to Final Fantasy XIV";
-            notify_master.ShowBalloonTip(2000);
+            if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)
+            {
+                notify_master.BalloonTipText = @"Chromatics will automatically attach to Final Fantasy XIV";
+                notify_master.ShowBalloonTip(2000);
+            }
 
             new Task(() => { CheckUpdates(0); }).Start();
 
@@ -496,8 +499,12 @@ namespace Chromatics
                 WriteConsole(ConsoleTypes.Ffxiv, "Attached to FFXIV");
                 _gameNotify = false;
                 notify_master.Text = @"Attached to FFXIV";
-                notify_master.BalloonTipText = @"Attached to FFXIV";
-                notify_master.ShowBalloonTip(1500);
+
+                if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)
+                {
+                    notify_master.BalloonTipText = @"Attached to FFXIV";
+                    notify_master.ShowBalloonTip(1500);
+                }
 
                 if (ArxSdkCalled == 1 && ArxState == 0)
                     _arx.ArxUpdateInfo("Attached to FFXIV");
@@ -583,6 +590,7 @@ namespace Chromatics
 
                 if (nV > cV)
                 {
+                    WriteConsole(ConsoleTypes.System, "There is an updated version of Chromatics available.");
                     var result = MessageBox.Show(@"There is an updated version of Chromatics. Update it now?",
                         @"New Version", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
@@ -604,23 +612,30 @@ namespace Chromatics
                 else
                 {
                     if (notify != 1) return;
-                    notify_master.BalloonTipText = @"No new updates currently available.";
-                    notify_master.ShowBalloonTip(2000);
+                    WriteConsole(ConsoleTypes.System, "No new updates currently available.");
+                    if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)
+                    {
+                        notify_master.BalloonTipText = @"No new updates currently available.";
+                        notify_master.ShowBalloonTip(2000);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(@"Unable to check for updates (Error: " + ex.Message + @").");
+                WriteConsole(ConsoleTypes.Error, @"Unable to check for updates (Error: " + ex.Message + @").");
                 if (notify == 1)
                 {
-                    notify_master.BalloonTipText = @"Unable to check for updates (Error: " + ex.Message + @").";
-                    notify_master.ShowBalloonTip(2000);
+                    if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)
+                    {
+                        notify_master.BalloonTipText = @"Unable to check for updates (Error: " + ex.Message + @").";
+                        notify_master.ShowBalloonTip(2000);
+                    }
                 }
             }
         }
 
         private delegate void BlinkDelegate();
-
+        
         
     }
 

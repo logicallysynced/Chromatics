@@ -1160,6 +1160,7 @@ namespace Chromatics
             chk_lccauto.Checked = ChromaticsSettings.ChromaticsSettingsLccAuto;
             chk_memorycache.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCache;
             chk_azertymode.Checked = ChromaticsSettings.ChromaticsSettingsAzertyMode;
+            chk_desktopnotify.Checked = ChromaticsSettings.ChromaticsSettingsDesktopNotifications;
 
             chk_castanimatetoggle.Checked = ChromaticsSettings.ChromaticsSettingsCastAnimate;
             chk_castchargetoggle.Checked = ChromaticsSettings.ChromaticsSettingsCastToggle;
@@ -2518,6 +2519,14 @@ namespace Chromatics
             if (Startup == false) return;
 
             Process.Start("https://chromaticsffxiv.com/");
+        }
+
+        private void chk_desktopnotify_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsDesktopNotifications = chk_desktopnotify.Checked;
+            SaveChromaticsSettings(1);
         }
 
         private delegate void ResetGridDelegate();
