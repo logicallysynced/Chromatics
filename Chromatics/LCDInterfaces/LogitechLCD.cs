@@ -214,6 +214,8 @@ namespace Chromatics.LCDInterfaces
                 LcdMonoButton2Pressed += SelectedMonoControlOnLcdMonoButton2Pressed;
                 LcdMonoButton3Pressed += SelectedMonoControlOnLcdMonoButton3Pressed;
 
+                startup = false;
+
                 return true;
             }
             catch (Exception e)
@@ -382,8 +384,38 @@ namespace Chromatics.LCDInterfaces
 
         public void StatusLCDInfo(string text)
         {
+            Logitech_LCD.LogitechLcd.Instance.MonoSetText(0, @"");
+            Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, @"");
+            Logitech_LCD.LogitechLcd.Instance.MonoSetText(2, @"");
+            Logitech_LCD.LogitechLcd.Instance.MonoSetText(3, @"");
+
             Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, text);
-            Logitech_LCD.LogitechLcd.Instance.Update();
+
+            if (_selectedMonoControl != null)
+            {
+                if (_selectedMonoControl.GetType().ToString() != "Chromatics.LCDInterfaces.LCD_MONO_Boot")
+                {
+                    _selectedMonoControl.IsActive = false;
+                    _selectedMonoControl.Dispose();
+                    _selectedMonoControl = null;
+
+                    new Task(() =>
+                    {
+                        _selectedMonoControl = new LCD_MONO_Boot();
+                    }).Start();
+
+                    Console.WriteLine(@"CATCH");
+                }
+            }
+            else
+            {
+                new Task(() =>
+                {
+                    _selectedMonoControl = new LCD_MONO_Boot();
+                }).Start();
+            }
+
+            
         }
 
         private void CheckButtons(object sender, ElapsedEventArgs e)

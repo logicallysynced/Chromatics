@@ -117,35 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="eyedropper" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\eyedropper.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="palette_load" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\palette-load.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Chromatics_icon_144x144" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Chromatics_icon_144x144.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="palette_save" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\palette-save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cellbackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\cellbackground.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Chromatics_icon_128x1281" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Chromatics_icon_128x128.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ret_arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ret_arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Chromatics_icon_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Chromatics_icon_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="chromatics_white_sm" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\chromatics_white_sm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <metadata name="$this.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

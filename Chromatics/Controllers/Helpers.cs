@@ -152,7 +152,7 @@ namespace Chromatics.Controllers
             double v;
             double r, g, b;
 
-            r = l;   // default to gray
+            r = l; // default to gray
             g = l;
             b = l;
             v = (l <= 0.5) ? (l * (1.0 + sl)) : (l + sl - l * sl);
@@ -166,7 +166,7 @@ namespace Chromatics.Controllers
                 m = l + l - v;
                 sv = (v - m) / v;
                 h *= 6.0;
-                sextant = (int)h;
+                sextant = (int) h;
                 fract = h - sextant;
                 vsf = v * sv * fract;
                 mid1 = m + vsf;
@@ -260,7 +260,8 @@ namespace Chromatics.Controllers
                 h = (r == m ? 3.0 + g2 : 5.0 - r2);
             }
 
-            if (h >= 6f) h -= 6f; if (h < 0f) h += 6f;
+            if (h >= 6f) h -= 6f;
+            if (h < 0f) h += 6f;
             h /= 6.0;
         }
     }
