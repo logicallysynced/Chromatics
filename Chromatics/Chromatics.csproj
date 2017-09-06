@@ -294,6 +294,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DeviceInterfaces\RazerInterface.cs" />
     <Compile Include="Controllers\Watchdog.cs" />
+    <None Include="Resources\col_main_back_battle.png" />
     <None Include="Resources\abandon.png" />
     <None Include="Resources\Bard_Icon_3.png" />
     <None Include="Resources\col_main_back_temp.png" />

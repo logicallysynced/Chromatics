@@ -134,10 +134,41 @@ namespace Chromatics.LCDInterfaces
         {
             if (!IsActive) return;
 
+            ProcessStance();
             ProcessET();
             ProcessLatency();
             ProcessBase();
             ProcessEffects();
+            
+        }
+
+        private void ProcessStance()
+        {
+            if (!IsHandleCreated) return;
+            if (Disposing) return;
+
+            if (PlayerInfo.InCombat)
+            {
+                if (InvokeRequired)
+                {
+                    Invoke((Action)delegate { BackgroundImage = Properties.Resources.col_main_back_battle; });
+                }
+                else
+                {
+                    BackgroundImage = Properties.Resources.col_main_back_battle;
+                }
+            }
+            else
+            {
+                if (InvokeRequired)
+                {
+                    Invoke((Action)delegate { BackgroundImage = Properties.Resources.col_main_back; });
+                }
+                else
+                {
+                    BackgroundImage = Properties.Resources.col_main_back;
+                }
+            }
         }
         
         private void ProcessBase()
@@ -155,18 +186,18 @@ namespace Chromatics.LCDInterfaces
                 var job = PlayerInfo.Job.ToString();
                 var hp = (PlayerInfo.HPCurrent - 0) * (100 - 0) / (PlayerInfo.HPMax - 0) + 0;
                 //var hp = Convert.ToInt32(PlayerInfo.HPPercent * 100);
-
+                
                 if (InvokeRequired)
                 {
                     lbl_lvl.Invoke((Action)delegate { lbl_et.Text = lvl; });
                     lbl_job.Invoke((Action)delegate { lbl_job.Text = job; });
-                    prog_hp.Invoke((Action)delegate { prog_hp.Value = hp; });
+                    prog_hp.Invoke((Action)delegate { prog_hp.Value = hp - 1; });
                 }
                 else
                 {
                     lbl_lvl.Text = lvl;
                     lbl_job.Text = job;
-                    prog_hp.Value = hp;
+                    prog_hp.Value = hp - 1;
                 }
 
                 //Job Picture

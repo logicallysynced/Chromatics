@@ -143,6 +143,16 @@ namespace Chromatics.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap col_main_back_battle {
+            get {
+                object obj = ResourceManager.GetObject("col_main_back_battle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap col_main_back_temp {
             get {
                 object obj = ResourceManager.GetObject("col_main_back_temp", resourceCulture);

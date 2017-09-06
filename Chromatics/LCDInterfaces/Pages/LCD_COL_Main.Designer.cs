@@ -137,7 +137,6 @@
             this.prog_hp.ForeColor = System.Drawing.Color.Gold;
             this.prog_hp.Location = new System.Drawing.Point(61, 197);
             this.prog_hp.MarqueeAnimationSpeed = 0;
-            this.prog_hp.Maximum = 101;
             this.prog_hp.Name = "prog_hp";
             this.prog_hp.Size = new System.Drawing.Size(242, 7);
             this.prog_hp.Step = 1;
