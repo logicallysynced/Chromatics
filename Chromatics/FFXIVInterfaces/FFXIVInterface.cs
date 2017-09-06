@@ -907,13 +907,13 @@ namespace Chromatics
                             GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", baseColor, false);
                             GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", baseColor, false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip1", "Strip8", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip2", "Strip9", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip3", "Strip10", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip4", "Strip11", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip5", "Strip12", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip6", "Strip13", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip7", "Strip14", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip1", "Strip8", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip2", "Strip9", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip3", "Strip10", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip4", "Strip11", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip5", "Strip12", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip6", "Strip13", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip7", "Strip14", highlightColor, false);
 
                             GlobalApplyMapMouseLighting(DevModeTypes.HighlightColor, highlightColor, false);
 
@@ -940,11 +940,11 @@ namespace Chromatics
                             GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, baseColor, false);
                             GlobalApplyMapPadLighting(DevModeTypes.Castbar, 10, 9, 4, baseColor, false);
 
-                            GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 14, 5, 0, highlightColor, false);
-                            GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 13, 6, 1, highlightColor, false);
-                            GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 12, 7, 2, highlightColor, false);
-                            GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 11, 8, 3, highlightColor, false);
-                            GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 10, 9, 4, highlightColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.HighlightColor, 14, 5, 0, highlightColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.HighlightColor, 13, 6, 1, highlightColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.HighlightColor, 12, 7, 2, highlightColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.HighlightColor, 11, 8, 3, highlightColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.HighlightColor, 10, 9, 4, highlightColor, false);
 
                             SetPadbase = true;
                         }
@@ -2824,87 +2824,86 @@ namespace Chromatics
                             }
 
                             //Mouse
-                            if (MouseToggle == 0)
-                                if (polMpx <= 70 && polMpx > 60)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpfull, false);
-                                }
-                                else if (polMpx <= 60 && polMpx > 50)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
-                                }
-                                else if (polMpx <= 50 && polMpx > 40)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
-                                }
-                                else if (polMpx <= 40 && polMpx > 30)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
-                                }
-                                else if (polMpx <= 30 && polMpx > 20)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
-                                }
-                                else if (polMpx <= 20 && polMpx > 10)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
-                                }
-                                else if (polMpx <= 10 && polMpx > 0)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
-                                }
-                                else if (polMpx == 0)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
-                                }
+                            if (polMpx <= 70 && polMpx > 60)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpfull, false);
+                            }
+                            else if (polMpx <= 60 && polMpx > 50)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                            }
+                            else if (polMpx <= 50 && polMpx > 40)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                            }
+                            else if (polMpx <= 40 && polMpx > 30)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                            }
+                            else if (polMpx <= 30 && polMpx > 20)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                            }
+                            else if (polMpx <= 20 && polMpx > 10)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                            }
+                            else if (polMpx <= 10 && polMpx > 0)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                            }
+                            else if (polMpx == 0)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                            }
                         }
 
                         //TP
@@ -3006,105 +3005,104 @@ namespace Chromatics
                             }
 
                             //Mouse
-                            if (MouseToggle == 1)
-                                if (polTpx <= 70 && polTpx > 60)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpfull, false);
-                                }
-                                else if (polTpx <= 60 && polTpx > 50)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
-                                }
-                                else if (polTpx <= 50 && polTpx > 40)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
-                                }
-                                else if (polTpx <= 40 && polTpx > 30)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
-                                }
-                                else if (polTpx <= 30 && polTpx > 20)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
-                                }
-                                else if (polTpx <= 20 && polTpx > 10)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
-                                }
-                                else if (polTpx <= 10 && polTpx > 0)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
-                                }
-                                else if (polTpx == 0)
-                                {
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
-                                }
-
-                            //Action Alerts
-
-                            if (ChromaticsSettings.ChromaticsSettingsImpactToggle)
+                            if (polTpx <= 70 && polTpx > 60)
                             {
-                                if (targetInfo != null && targetInfo.Type == Actor.Type.Monster)
-                                    if (targetInfo.IsClaimed)
-                                        if (_hp != 0 && currentHp < _hp)
-                                        {
-                                            _rzFl1Cts.Cancel();
-                                            _corsairF1Cts.Cancel();
-                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingHpLoss),
-                                                100,
-                                                DeviceEffects.GlobalKeys3);
-                                        }
-
-                                _hp = currentHp;
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpfull, false);
                             }
+                            else if (polTpx <= 60 && polTpx > 50)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                            }
+                            else if (polTpx <= 50 && polTpx > 40)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                            }
+                            else if (polTpx <= 40 && polTpx > 30)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                            }
+                            else if (polTpx <= 30 && polTpx > 20)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                            }
+                            else if (polTpx <= 20 && polTpx > 10)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                            }
+                            else if (polTpx <= 10 && polTpx > 0)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                            }
+                            else if (polTpx == 0)
+                            {
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                            }
+                            
+                        }
+
+                        //Action Alerts
+                        if (ChromaticsSettings.ChromaticsSettingsImpactToggle)
+                        {
+                            if (targetInfo != null && targetInfo.Type == Actor.Type.Monster)
+                                if (targetInfo.IsClaimed)
+                                    if (_hp != 0 && currentHp < _hp)
+                                    {
+                                        _rzFl1Cts.Cancel();
+                                        _corsairF1Cts.Cancel();
+                                        GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingHpLoss),
+                                            100,
+                                            DeviceEffects.GlobalKeys3);
+                                    }
+
+                            _hp = currentHp;
                         }
 
                         //DX11 Effects

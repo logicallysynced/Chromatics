@@ -92,7 +92,6 @@ namespace Chromatics
         public int LogitechSdkCalled = 0;
         private IKeyboardMouseEvents _mGlobalHook;
         public bool MappingGridStartup = false;
-        public int MouseToggle = 0;
         public int PaletteMappingCurrentSelect = 0;
         public bool LCCStatus = false;
 

@@ -37,8 +37,6 @@ namespace Chromatics
             dr.DeviceOperationRoccatKeyboard = _roccatDeviceKeyboard;
             dr.DeviceOperationRoccatMouse = _roccatDeviceMouse;
 
-            dr.DeviceOperationMouseToggle = MouseToggle;
-
             dr.DeviceOperationLogitechKeyboard = _logitechDeviceKeyboard;
 
             dr.DeviceOperationKeyboard = _deviceKeyboard;
@@ -145,8 +143,6 @@ namespace Chromatics
                         _coolermasterDeviceMouse = dr.DeviceOperationCoolermasterMouse;
                         _roccatDeviceKeyboard = dr.DeviceOperationRoccatKeyboard;
                         _roccatDeviceMouse = dr.DeviceOperationRoccatMouse;
-
-                        MouseToggle = dr.DeviceOperationMouseToggle;
 
                         _logitechDeviceKeyboard = dr.DeviceOperationLogitechKeyboard;
                         _hueDefault = dr.DeviceOperationHueDefault;

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -18,6 +16,8 @@ using GalaSoft.MvvmLight.Ioc;
 using Color = System.Drawing.Color;
 using Constants = Corale.Colore.Razer.Keyboard.Constants;
 using Effect = Corale.Colore.Razer.Headset.Effects.Effect;
+using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
+using MouseCustom = Corale.Colore.Razer.Mouse.Effects.Custom;
 
 /* Contains all Razer SDK code (via Colore) for detection, initilization, states and effects.
  * Corale.Colore.dll is used to port the Razer SDK into C#
@@ -32,66 +32,12 @@ namespace Chromatics.DeviceInterfaces
 
         public static RazerLib InitializeRazerSdk()
         {
-            var razer = new RazerLib();
+            RazerLib razer = null;
+            razer = new RazerLib();
 
-            string arch;
-            //string arch = @"C:\Program Files\Razer Chroma SDK\bin\RzChromaSDK64.dll";
+            var razerstat = razer.InitializeSdk();
 
-            if (Environment.Is64BitOperatingSystem)
-            {
-                arch = Environment.GetEnvironmentVariable("ProgramW6432") + @"\Razer Chroma SDK\bin\RzChromaSDK64.dll";
-                Write.WriteConsole(ConsoleTypes.System, "Architecture: x64");
-            }
-            else
-            {
-                arch = Environment.GetEnvironmentVariable("ProgramFiles(x86)") +
-                       @"\Razer Chroma SDK\bin\RzChromaSDK.dll";
-                Write.WriteConsole(ConsoleTypes.System, "Architecture: x86");
-            }
-
-            if (File.Exists(arch))
-            {
-                Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK Detected: " + arch);
-
-                if (Chroma.SdkAvailable == false)
-                {
-                    Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK not found");
-                    return null;
-                }
-            }
-            else
-            {
-                //Razer SDK DLL Not Found
-
-                if (Environment.Is64BitOperatingSystem)
-                    Write.WriteConsole(ConsoleTypes.Razer,
-                        "The Razer SDK (RzChromaSDK64.dll) Could not be found on this computer. Uninstall any previous versions of Razer SDK & Synapse and then reinstall Razer Synapse.");
-                else
-                    Write.WriteConsole(ConsoleTypes.Razer,
-                        "The Razer SDK (RzChromaSDK.dll) Could not be found on this computer. Uninstall any previous versions of Razer SDK & Synapse and then reinstall Razer Synapse.");
-
-                return null;
-            }
-
-
-            Write.WriteConsole(ConsoleTypes.Razer, "Start Colore Setup");
-
-            if (Chroma.Instance.Initialized != true)
-            {
-                Write.WriteConsole(ConsoleTypes.Razer, "Attempting to load Colore..");
-                Chroma.Instance.Initialize();
-            }
-            else
-            {
-                Write.WriteConsole(ConsoleTypes.Razer, "Colore Already loaded.");
-            }
-
-
-            //UpdateState("static", System.Drawing.Color.DeepSkyBlue, false);
-            //write.WriteConsole(ConsoleTypes.RAZER, "Razer SDK Loaded");
-            //Console.WriteLine("CALL");
-
-            return razer;
+            return !razerstat ? null : razer;
         }
     }
 
@@ -102,6 +48,7 @@ namespace Chromatics.DeviceInterfaces
 
     public interface IRazerSdk
     {
+        bool InitializeSdk();
         void InitializeLights();
 
         void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
@@ -118,8 +65,6 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapKeypadLighting(Color col, bool clear);
 
         void ApplyMapChromaLinkLighting(Color col, int pos);
-
-        //void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
 
         void SetWave();
 
@@ -272,12 +217,17 @@ namespace Chromatics.DeviceInterfaces
             {"JpnYen", "Yen (¥) Key"},
             {"Escape", "Esc Key"}
         };
+        
+        /*
+        private readonly Dictionary<string, int> _padkeyids = new Dictionary<string, int>
+        {
+            {"D1", 0},
+        }
+        */
 
         private Custom _keyboardGrid = Custom.Create();
-        private Corale.Colore.Razer.Mouse.Effects.Custom _mouseGrid = Corale.Colore.Razer.Mouse.Effects.Custom.Create();
-
-        private Corale.Colore.Razer.Mousepad.Effects.Custom _mousepadGrid =
-            Corale.Colore.Razer.Mousepad.Effects.Custom.Create();
+        private MouseCustom _mouseGrid = MouseCustom.Create();
+        private MousepadCustom _mousepadGrid = MousepadCustom.Create();
 
         private bool _razerDeathstalker;
         private bool _razerDeviceHeadset = true;
@@ -290,6 +240,36 @@ namespace Chromatics.DeviceInterfaces
 
         //Handle device send/recieve
         private readonly CancellationTokenSource _rcts = new CancellationTokenSource();
+
+        public bool InitializeSdk()
+        {
+            try
+            {
+                if (!Chroma.SdkAvailable)
+                {
+                    //Razer SDK DLL Not Found
+
+                    Write.WriteConsole(ConsoleTypes.Razer,
+                        Environment.Is64BitOperatingSystem
+                            ? "The Razer SDK (RzChromaSDK64.dll) Could not be found on this computer. Uninstall any previous versions of Razer SDK & Synapse and then reinstall Razer Synapse."
+                            : "The Razer SDK (RzChromaSDK.dll) Could not be found on this computer. Uninstall any previous versions of Razer SDK & Synapse and then reinstall Razer Synapse.");
+
+                    return false;
+                }
+                
+                if (Chroma.Instance.Initialized != true)
+                {
+                    Chroma.Instance.Initialize();
+                }
+
+                Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded (" + Chroma.Instance.SdkVersion + ")");
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
 
         public void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
             bool deviceHeadset, bool deviceChromaLink, Color basecol)
@@ -379,7 +359,13 @@ namespace Chromatics.DeviceInterfaces
 
         public void KeyboardUpdate()
         {
-            Chroma.Instance.Keyboard.SetCustom(_keyboardGrid);
+            lock (RazerFlash1)
+            {
+                Chroma.Instance.Keyboard.SetCustom(_keyboardGrid);
+            }
+
+            Chroma.Instance.Mouse.SetCustom(_mouseGrid);
+            Chroma.Instance.Mousepad.SetCustom(_mousepadGrid);
         }
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
@@ -424,16 +410,19 @@ namespace Chromatics.DeviceInterfaces
             uint rzCol = col.ToColoreColor();
 
             //Send Lighting
-            if (_razerDeviceKeyboard)
-                try
-                {
-                    if (Keyboard.Instance[0, 20].Value != rzCol)
-                        Keyboard.Instance.SetPosition(0, 20, rzCol, clear);
-                }
-                catch (Exception ex)
-                {
-                    Write.WriteConsole(ConsoleTypes.Error, "Razer (MapLogo): " + ex.Message);
-                }
+            lock (_Razertransition)
+            {
+                if (_razerDeviceKeyboard)
+                    try
+                    {
+                        if (_keyboardGrid[Key.Logo].Value != rzCol)
+                            _keyboardGrid[Key.Logo] = rzCol;
+                    }
+                    catch (Exception ex)
+                    {
+                        Write.WriteConsole(ConsoleTypes.Error, "Razer (MapLogo): " + ex.Message);
+                    }
+            }
         }
 
         public void ApplyMapMouseLighting(string region, Color col, bool clear)
@@ -448,19 +437,18 @@ namespace Chromatics.DeviceInterfaces
                     
                     var regionid = (Led)Enum.Parse(typeof(Led), region);
 
-                    if (regionid == Led.Backlight)
+                    if (regionid == Led.Strip1 || regionid == Led.Strip2 || regionid == Led.Strip3 ||
+                        regionid == Led.Strip4 || regionid == Led.Strip5 || regionid == Led.Strip6 ||
+                        regionid == Led.Strip7 || regionid == Led.Strip8
+                        || regionid == Led.Strip9 || regionid == Led.Strip10 || regionid == Led.Strip11 ||
+                        regionid == Led.Strip12 || regionid == Led.Strip13 || regionid == Led.Strip14)
                     {
-                        if (Mouse.Instance[GridLed.Backlight].Value != rzCol)
-                        {
-                            Mouse.Instance[GridLed.Backlight] = rzCol;
-                        }
+                        _mouseGrid[regionid] = rzCol;
                         return;
                     }
 
-                    if (Mouse.Instance[regionid].Value != rzCol)
-                    {
-                        Mouse.Instance[regionid] = rzCol;
-                    }
+                    if (_mouseGrid[regionid].Value != rzCol)
+                        _mouseGrid[regionid] = rzCol;
 
                 }
                 catch (Exception ex)
@@ -476,8 +464,8 @@ namespace Chromatics.DeviceInterfaces
             try
             {
                 if (_razerDeviceMousepad)
-                    if (Mousepad.Instance[region].Value != rzCol)
-                        Mousepad.Instance[region] = rzCol;
+                    if (_mousepadGrid[region].Value != rzCol)
+                        _mousepadGrid[region] = rzCol;
             }
             catch (Exception ex)
             {

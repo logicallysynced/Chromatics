@@ -83,7 +83,7 @@ namespace Chromatics
             {
                 RazerSdk = true;
                 RazerSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded");
+                //WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded");
                 _razer.InitializeLights();
             }
             else
