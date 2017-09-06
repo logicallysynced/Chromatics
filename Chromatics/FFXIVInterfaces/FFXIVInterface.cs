@@ -399,7 +399,7 @@ namespace Chromatics
                 var partyInfo = new ConcurrentDictionary<uint, PartyEntity>();
                 var partyListNew = new List<uint>();
                 var partyListOld = new Dictionary<uint, uint>();
-
+                //var personalInfo = new PlayerEntity();
 
                 //_playerInfoX = Reader.GetActors()?.PCEntities;
                 _playerInfo = ActorEntity.CurrentUser;
@@ -416,6 +416,8 @@ namespace Chromatics
 
                     partyListNew = Reader.GetPartyMembers()?.NewParty;
                     partyListOld = Reader.GetPartyMembers()?.RemovedParty;
+
+                    //personalInfo = Reader.GetPlayerInfo()?.PlayerEntity;
                 }
                 catch (Exception ex)
                 {

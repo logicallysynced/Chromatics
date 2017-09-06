@@ -164,7 +164,7 @@ namespace Chromatics.LCDInterfaces
         private static int _page = 1;
         private const int MaxPage = 4;
         private static BaseAppletM _selectedMonoControl;
-        private static BaseAppletM _selectedColorControl;
+        private static BaseAppletC _selectedColorControl;
 
         private ActorEntity PlayerInfo;
         private ActorEntity TargetInfo;
@@ -240,11 +240,18 @@ namespace Chromatics.LCDInterfaces
             {
                 _write.WriteConsole(ConsoleTypes.Logitech, "Disabling LCD SDK.");
 
-                if (_selectedMonoControl != null)
+                if (Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Mono) && _selectedMonoControl != null)
                 {
                     _selectedMonoControl.IsActive = false;
                     _selectedMonoControl.Dispose();
                     _selectedMonoControl = null;
+                }
+
+                if (Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Color) && _selectedColorControl != null)
+                {
+                    _selectedColorControl.IsActive = false;
+                    _selectedColorControl.Dispose();
+                    _selectedColorControl = null;
                 }
 
                 _buttonCheckTimer.Stop();
@@ -267,70 +274,90 @@ namespace Chromatics.LCDInterfaces
         
         public void DrawLCDInfo(ActorEntity _pI, ActorEntity _tI)
         {
-            PlayerInfo = _pI;
-            TargetInfo = _tI;
-
-            if (startup) return;
-
-            new Task(() =>
+            if (!startup)
             {
-                SwitchPages(1);
-            }).Start();
-            startup = true;
+                new Task(() =>
+                {
+                    SwitchPages(1);
+                }).Start();
+                startup = true;
+            }
+
+            if (Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Color))
+            {
+                if (_selectedColorControl is LCD_COL_Main c1)
+                {
+                    c1.PlayerInfo = _pI;
+                    c1.TargetInfo = _tI;
+                    //c1.PlayerEntity = _pE;
+                }
+            }
         }
 
         private static void SwitchPages(int page)
         {
-            
             try
             {
-                //if (_page == _lastpage) return;
-
-                Logitech_LCD.LogitechLcd.Instance.MonoSetText(0, @"");
-                Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, @"");
-                Logitech_LCD.LogitechLcd.Instance.MonoSetText(2, @"");
-                Logitech_LCD.LogitechLcd.Instance.MonoSetText(3, @"");
-
-                if (_selectedMonoControl != null)
+                if (Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Mono))
                 {
-                    _selectedMonoControl.IsActive = false;
-                    _selectedMonoControl.Dispose();
-                    _selectedMonoControl = null;
+                    Logitech_LCD.LogitechLcd.Instance.MonoSetText(0, @"");
+                    Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, @"");
+                    Logitech_LCD.LogitechLcd.Instance.MonoSetText(2, @"");
+                    Logitech_LCD.LogitechLcd.Instance.MonoSetText(3, @"");
+
+                    if (_selectedMonoControl != null)
+                    {
+                        _selectedMonoControl.IsActive = false;
+                        _selectedMonoControl.Dispose();
+                        _selectedMonoControl = null;
+                    }
+
+                    Console.WriteLine(@"Page: " + page);
+
+
+                    //0 - Eorzea Time
+                    //1 - Server Time
+                    //2 - Local Time
+
+                    switch (page)
+                    {
+                        case 1:
+                            //Eorzea Time
+                            _selectedMonoControl = new LCD_MONO_EorzeaTime();
+
+                            break;
+                        case 2:
+                            //Server Time
+                            _selectedMonoControl = new LCD_MONO_ServerTime();
+
+                            break;
+                        case 3:
+                            //Local Time
+                            _selectedMonoControl = new LCD_MONO_LocalTime();
+
+                            break;
+                        case 4:
+                            //Server Latency
+                            _selectedMonoControl = new LCD_MONO_Latency();
+
+                            break;
+                    }
+
+                    _page = page;
                 }
 
-                Console.WriteLine(@"Page: " + page);
-
-
-                //0 - Eorzea Time
-                //1 - Server Time
-                //2 - Local Time
-                
-                switch (page)
+                if (Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Color))
                 {
-                    case 1:
-                        //Eorzea Time
-                        _selectedMonoControl = new LCD_MONO_EorzeaTime();
+                    if (_selectedColorControl != null)
+                    {
+                        _selectedColorControl.IsActive = false;
+                        _selectedColorControl.Dispose();
+                        _selectedColorControl = null;
+                    }
 
-                        break;
-                    case 2:
-                        //Server Time
-                        _selectedMonoControl = new LCD_MONO_ServerTime();
-
-                        break;
-                    case 3:
-                        //Local Time
-                        _selectedMonoControl = new LCD_MONO_LocalTime();
-
-                        break;
-                    case 4:
-                        //Server Latency
-                        _selectedMonoControl = new LCD_MONO_Latency();
-
-                        break;
+                    _selectedColorControl = new LCD_COL_Main();
                 }
-                
-                _page = page;
-                
+
             }
             catch (Exception e)
             {
@@ -390,39 +417,72 @@ namespace Chromatics.LCDInterfaces
 
         public void StatusLCDInfo(string text)
         {
-            Logitech_LCD.LogitechLcd.Instance.MonoSetText(0, @"");
-            Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, @"");
-            Logitech_LCD.LogitechLcd.Instance.MonoSetText(2, @"");
-            Logitech_LCD.LogitechLcd.Instance.MonoSetText(3, @"");
-
             //Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, text);
 
             //Mono
-            if (_selectedMonoControl != null)
+            if (Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Mono))
             {
-                if (_selectedMonoControl.GetType().ToString() != "Chromatics.LCDInterfaces.LCD_MONO_Boot")
-                {
-                    _selectedMonoControl.IsActive = false;
-                    _selectedMonoControl.Dispose();
-                    _selectedMonoControl = null;
+                Logitech_LCD.LogitechLcd.Instance.MonoSetText(0, @"");
+                Logitech_LCD.LogitechLcd.Instance.MonoSetText(1, @"");
+                Logitech_LCD.LogitechLcd.Instance.MonoSetText(2, @"");
+                Logitech_LCD.LogitechLcd.Instance.MonoSetText(3, @"");
 
+                if (_selectedMonoControl != null)
+                {
+                    if (_selectedMonoControl.GetType().ToString() != "Chromatics.LCDInterfaces.LCD_MONO_Boot")
+                    {
+                        _selectedMonoControl.IsActive = false;
+                        _selectedMonoControl.Dispose();
+                        _selectedMonoControl = null;
+
+                        new Task(() =>
+                        {
+                            _selectedMonoControl = new LCD_MONO_Boot();
+                            if (_selectedMonoControl is LCD_MONO_Boot m1) m1.SetBootText = text;
+                        }).Start();
+                    }
+                }
+                else
+                {
                     new Task(() =>
                     {
                         _selectedMonoControl = new LCD_MONO_Boot();
-                        if (_selectedMonoControl is LCD_MONO_Boot m1) m1.SetBootText = text;
+                        if (_selectedMonoControl is LCD_MONO_Boot m2) m2.SetBootText = text;
                     }).Start();
                 }
-            }
-            else
-            {
-                new Task(() =>
-                {
-                    _selectedMonoControl = new LCD_MONO_Boot();
-                    if (_selectedMonoControl is LCD_MONO_Boot m2) m2.SetBootText = text;
-                }).Start();
+
+                if (_selectedMonoControl is LCD_MONO_Boot m) m.SetBootText = text;
             }
 
-            if (_selectedMonoControl is LCD_MONO_Boot m) m.SetBootText = text;
+            //Colour
+            if (Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Color))
+            {
+                if (_selectedColorControl != null)
+                {
+                    if (_selectedColorControl.GetType().ToString() != "Chromatics.LCDInterfaces.LCD_COL_Boot")
+                    {
+                        _selectedColorControl.IsActive = false;
+                        _selectedColorControl.Dispose();
+                        _selectedColorControl = null;
+
+                        new Task(() =>
+                        {
+                            _selectedColorControl = new LCD_COL_Boot();
+                            //if (_selectedColorControl is LCD_COL_Boot c1) c1.SetBootText = text;
+                        }).Start();
+                    }
+                }
+                else
+                {
+                    new Task(() =>
+                    {
+                        _selectedColorControl = new LCD_COL_Boot();
+                        //if (_selectedColorControl is LCD_COL_Boot c2) c2.SetBootText = text;
+                    }).Start();
+                }
+
+                //if (_selectedColorControl is LCD_COL_Boot c) c.SetBootText = text;
+            }
         }
 
         private void CheckButtons(object sender, ElapsedEventArgs e)

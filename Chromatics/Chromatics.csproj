@@ -246,6 +246,18 @@
     </Compile>
     <Compile Include="FFXIVInterfaces\FFXIVHotbar.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVUnsafeMethods.cs" />
+    <Compile Include="LCDInterfaces\Pages\LCD_COL_Main.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_COL_Main.Designer.cs">
+      <DependentUpon>LCD_COL_Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_COL_Boot.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LCDInterfaces\Pages\LCD_COL_Boot.Designer.cs">
+      <DependentUpon>LCD_COL_Boot.cs</DependentUpon>
+    </Compile>
     <Compile Include="LCDInterfaces\Pages\LCD_MONO_Boot.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -282,9 +294,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DeviceInterfaces\RazerInterface.cs" />
     <Compile Include="Controllers\Watchdog.cs" />
+    <None Include="Resources\abandon.png" />
+    <None Include="Resources\Bard_Icon_3.png" />
+    <None Include="Resources\col_main_back_temp.png" />
+    <None Include="Resources\col_main_back.png" />
     <None Include="Resources\chromatics_white_sm.png" />
     <EmbeddedResource Include="Chromatics.resx">
       <DependentUpon>Chromatics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LCDInterfaces\Pages\LCD_COL_Main.resx">
+      <DependentUpon>LCD_COL_Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LCDInterfaces\Pages\LCD_COL_Boot.resx">
+      <DependentUpon>LCD_COL_Boot.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LCDInterfaces\Pages\LCD_MONO_Boot.resx">
       <DependentUpon>LCD_MONO_Boot.cs</DependentUpon>

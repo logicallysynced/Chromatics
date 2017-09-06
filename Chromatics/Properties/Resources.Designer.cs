@@ -63,6 +63,26 @@ namespace Chromatics.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap abandon {
+            get {
+                object obj = ResourceManager.GetObject("abandon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Bard_Icon_3 {
+            get {
+                object obj = ResourceManager.GetObject("Bard_Icon_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cellbackground {
             get {
                 object obj = ResourceManager.GetObject("cellbackground", resourceCulture);
@@ -106,6 +126,26 @@ namespace Chromatics.Properties {
         internal static System.Drawing.Bitmap chromatics_white_sm {
             get {
                 object obj = ResourceManager.GetObject("chromatics_white_sm", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap col_main_back {
+            get {
+                object obj = ResourceManager.GetObject("col_main_back", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap col_main_back_temp {
+            get {
+                object obj = ResourceManager.GetObject("col_main_back_temp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
