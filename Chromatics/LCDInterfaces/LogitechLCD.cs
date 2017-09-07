@@ -166,9 +166,6 @@ namespace Chromatics.LCDInterfaces
         private static BaseAppletM _selectedMonoControl;
         private static BaseAppletC _selectedColorControl;
 
-        private ActorEntity PlayerInfo;
-        private ActorEntity TargetInfo;
-
         private System.Timers.Timer _buttonCheckTimer;
         
         private bool startup;

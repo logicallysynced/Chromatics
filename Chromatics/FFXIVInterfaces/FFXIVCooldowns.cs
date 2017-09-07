@@ -43,10 +43,10 @@ namespace Chromatics.FFXIVInterfaces
 
         public static byte[] RawResourceData;
 
-
         public static bool Initialized;
         public static bool CooldownsInitialized;
         public static bool ResourcesInitialized;
+        public static bool JobsInitialized;
         public static bool InitializedActor = false;
         private static List<Signature> _sList;
         private static readonly object RefreshLock = new object();
@@ -1696,6 +1696,46 @@ namespace Chromatics.FFXIVInterfaces
 
         public static float HallowedGround => CooldownType13Remaining;
 
+        public static int OathGauge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[6];
+            }
+        }
+
+
+        //Dark Knight
+        public static int BloodGauge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[6];
+            }
+        }
+
+
+        //White mage
+        public static int FlowerPetals
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[8];
+            }
+        }
+
 
         // Warrior
         public static float Defiance => CooldownType0Remaining;
@@ -1899,12 +1939,14 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
+                
                 if (RawResourceData[9] == 5)
                     return BardSongs.MagesBallad;
                 if (RawResourceData[9] == 10)
                     return BardSongs.ArmysPaeon;
                 if (RawResourceData[9] == 15)
                     return BardSongs.WanderersMinuet;
+                
 
                 return BardSongs.None;
             }
@@ -2087,7 +2129,31 @@ namespace Chromatics.FFXIVInterfaces
             }
         }
 
+        //Samurai
+        public static int SenGauge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                
+                return RawResourceData[7];
+            }
+        }
 
+        public static int KenkiCharge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                
+                return RawResourceData[6];
+            }
+        }
+        
         // Scholar
         public static float Lustrate => CooldownType0Remaining;
 
@@ -2383,7 +2449,7 @@ namespace Chromatics.FFXIVInterfaces
                                     //0x11CDEF4
                                     //0x11CDF84
                                     //0x11CEF84
-                                    0x173F518
+                                    0x1740518
                                 }
                             });
                             Scanner.Instance.LoadOffsets(_sList);
@@ -2412,7 +2478,7 @@ namespace Chromatics.FFXIVInterfaces
                                 Key = "CLASSRESOURCES",
                                 PointerPath = new List<long>
                                 {
-                                    0x178ADAA
+                                    0x178BDAA
                                 }
                             });
                             Scanner.Instance.LoadOffsets(_sList);
@@ -2428,6 +2494,7 @@ namespace Chromatics.FFXIVInterfaces
                                 ResourcesInitialized = true;
                             }
                         }
+                        
 
                         if (CooldownsInitialized && ResourcesInitialized)
                             Initialized = true;

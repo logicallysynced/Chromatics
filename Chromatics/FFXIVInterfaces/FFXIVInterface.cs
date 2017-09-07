@@ -3322,9 +3322,9 @@ namespace Chromatics
                                 switch (_playerInfo.Job)
                                 {
                                     case Actor.Job.WAR:
-                                        var burstwarcol = Color.Orange;
-                                        var maxwarcol = Color.Red;
-                                        var negwarcol = Color.Black;
+                                        var burstwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARWrathBurst);
+                                        var maxwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARWrathMax);
+                                        var negwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARNegative);
                                         var wrath = Cooldowns.Wrath;
                                         var polWrath = (wrath - 0) * (50 - 0) / (100 - 0) + 0;
 
@@ -3476,12 +3476,312 @@ namespace Chromatics
 
                                         break;
                                     case Actor.Job.PLD:
+                                        //Paladin
+                                        var negpldcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDNegative);
+                                        var shieldcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDShieldOath);
+                                        var swordcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDSwordOath);
+
+                                        var oathgauge = Cooldowns.OathGauge;
+                                        var oathPol = (oathgauge - 0) * (50 - 0) / (100 - 0) + 0;
+
+                                        if (statEffects.Find(i => i.StatusName == "Shield Oath") != null)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", shieldcol, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", shieldcol, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", shieldcol, false);
+
+                                            if (oathPol <= 50 && oathPol > 40)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+                                            }
+                                            else if (oathPol <= 40 && oathPol > 30)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+                                            }
+                                            else if (oathPol <= 30 && oathPol > 20)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+                                            }
+                                            else if (oathPol <= 20 && oathPol > 10)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", shieldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+                                            }
+                                            else if (oathPol <= 10 && oathPol > 0)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", shieldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", negpldcol, false);
+                                            }
+                                        }
+                                        else if (statEffects.Find(i => i.StatusName == "Sword Oath") != null)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", swordcol, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", swordcol, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", swordcol, false);
+
+                                            if (oathPol <= 50 && oathPol > 40)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", swordcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", swordcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", swordcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+                                            }
+                                            else if (oathPol <= 40 && oathPol > 30)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", swordcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+                                            }
+                                            else if (oathPol <= 30 && oathPol > 20)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", swordcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+                                            }
+                                            else if (oathPol <= 20 && oathPol > 10)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", swordcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", swordcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", swordcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+                                            }
+                                            else if (oathPol <= 10 && oathPol > 0)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", swordcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negpldcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", negpldcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", negpldcol, false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negpldcol, false);
+
+                                            GlobalApplyMapKeyLighting("NumSubtract", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", negpldcol, false);
+
+                                            GlobalApplyMapKeyLighting("Num7", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("Num8", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("Num9", negpldcol, false);
+                                            
+                                            GlobalApplyMapKeyLighting("Num4", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("Num5", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("Num6", negpldcol, false);
+                                            
+                                            GlobalApplyMapKeyLighting("Num1", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("Num2", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("Num3", negpldcol, false);
+
+                                            GlobalApplyMapKeyLighting("Num0", negpldcol, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", negpldcol, false);
+                                        }
+
                                         break;
                                     case Actor.Job.MNK:
                                         var greased = Cooldowns.GreasedLightningStacks;
                                         var greaseRemaining = Cooldowns.GreasedLightningTimeRemaining;
-                                        var burstmnkcol = Color.Aqua;
-                                        var burstmnkempty = Color.Black;
+                                        var burstmnkcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKGreased);
+                                        var burstmnkempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKNegative);
 
                                         if (greased > 0)
                                         {
@@ -3558,8 +3858,8 @@ namespace Chromatics
                                         break;
                                     case Actor.Job.DRG:
 
-                                        var burstdrgcol = Color.Red;
-                                        var negdrgcol = Color.Black;
+                                        var burstdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
+                                        var negdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGNegative);
                                         var bloodremain = Cooldowns.BloodOfTheDragonTimeRemaining;
                                         var polBlood = (bloodremain - 0) * (50 - 0) / (30 - 0) + 0;
 
@@ -3675,27 +3975,64 @@ namespace Chromatics
                                         break;
                                     case Actor.Job.BRD:
                                         //Bard Songs
-                                        var burstcol = Color.Black;
-                                        var negcol = Color.Black;
+                                        var burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
+                                        var negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
+                                        var repcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDRepertoire);
+
+                                        GlobalApplyMapKeyLighting("Num0", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                        GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
 
                                         if (Cooldowns.Song != Cooldowns.BardSongs.None)
                                         {
                                             var songremain = Cooldowns.SongTimeRemaining;
                                             var polSong = (songremain - 0) * (50 - 0) / (30 - 0) + 0;
-
+                                            
                                             switch (Cooldowns.Song)
                                             {
                                                 case Cooldowns.BardSongs.ArmysPaeon:
-                                                    burstcol = Color.Orange;
-                                                    negcol = Color.Black;
+                                                    burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDArmys);
+                                                    negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
+
+                                                    GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                    GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                    GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                                     break;
                                                 case Cooldowns.BardSongs.MagesBallad:
-                                                    burstcol = Color.MediumSlateBlue;
-                                                    negcol = Color.Black;
+                                                    burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDBallad);
+                                                    negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
+
+                                                    GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                    GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                    GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                                     break;
                                                 case Cooldowns.BardSongs.WanderersMinuet:
-                                                    burstcol = Color.MediumSpringGreen;
-                                                    negcol = Color.Black;
+                                                    burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDMinuet);
+                                                    negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
+
+                                                    switch (Cooldowns.RepertoireStacks)
+                                                    {
+                                                        case 1:
+                                                            GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                            GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                            GlobalApplyMapKeyLighting("NumEnter", repcol, false);
+                                                            break;
+                                                        case 2:
+                                                            GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                            GlobalApplyMapKeyLighting("NumAdd", repcol, false);
+                                                            GlobalApplyMapKeyLighting("NumEnter", repcol, false);
+                                                            break;
+                                                        case 3:
+                                                            GlobalApplyMapKeyLighting("NumSubtract", repcol, false);
+                                                            GlobalApplyMapKeyLighting("NumAdd", repcol, false);
+                                                            GlobalApplyMapKeyLighting("NumEnter", repcol, false);
+                                                            break;
+                                                        default:
+                                                            GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                            GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                            GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                                            break;
+                                                    }
+
                                                     break;
                                             }
 
@@ -3808,14 +4145,276 @@ namespace Chromatics
                                         }
                                         break;
                                     case Actor.Job.WHM:
+                                        //White Mage
+                                        var negwhmcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMNegative);
+                                        var flowercol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMFlowerPetal);
+                                        var cureproc = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMFreecure);
+
+                                        var petalcount = Cooldowns.FlowerPetals;
+
+                                        if (statEffects.Find(i => i.StatusName == "Freecure") != null)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", cureproc, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", cureproc, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", cureproc, false);
+                                            GlobalApplyMapKeyLighting("NumSubtract", cureproc, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", cureproc, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", cureproc, false);
+                                            GlobalApplyMapKeyLighting("Num0", cureproc, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", cureproc, false);
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negwhmcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negwhmcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negwhmcol, false);
+                                            GlobalApplyMapKeyLighting("NumSubtract", negwhmcol, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", negwhmcol, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", negwhmcol, false);
+                                            GlobalApplyMapKeyLighting("Num0", negwhmcol, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", negwhmcol, false);
+                                        }
+
+                                        switch (petalcount)
+                                        {
+                                            case 3:
+                                                GlobalApplyMapKeyLighting("Num9", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num6", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num3", flowercol, false);
+
+                                                GlobalApplyMapKeyLighting("Num8", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num5", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num2", flowercol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num4", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num1", flowercol, false);
+                                                break;
+                                            case 2:
+                                                GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negwhmcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num8", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num5", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num2", flowercol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num4", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num1", flowercol, false);
+                                                break;
+                                            case 1:
+                                                GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negwhmcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num8", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negwhmcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num4", flowercol, false);
+                                                GlobalApplyMapKeyLighting("Num1", flowercol, false);
+                                                break;
+                                            default:
+                                                GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negwhmcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num8", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negwhmcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num4", negwhmcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", negwhmcol, false);
+                                                break;
+                                        }
+
+
                                         break;
                                     case Actor.Job.BLM:
+                                        //Black Mage
+
+                                        var negblmcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMNegative);
+                                        var firecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMAstralFire);
+                                        var icecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMUmbralIce);
+                                        var heartcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMUmbralHeart);
+                                        var enochcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochian);
+
+                                        var firestacks = Cooldowns.AstralFire;
+                                        var icestacks = Cooldowns.UmbralIce;
+                                        var heartstacks = Cooldowns.UmbralHearts;
+
+                                        switch (heartstacks)
+                                        {
+                                            case 1:
+                                                GlobalApplyMapKeyLighting("NumSubtract", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("NumAdd", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("NumEnter", heartcol, false);
+                                                break;
+                                            case 2:
+                                                GlobalApplyMapKeyLighting("NumSubtract", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("NumAdd", heartcol, false);
+                                                GlobalApplyMapKeyLighting("NumEnter", heartcol, false);
+                                                break;
+                                            case 3:
+                                                GlobalApplyMapKeyLighting("NumSubtract", heartcol, false);
+                                                GlobalApplyMapKeyLighting("NumAdd", heartcol, false);
+                                                GlobalApplyMapKeyLighting("NumEnter", heartcol, false);
+                                                break;
+                                            default:
+                                                GlobalApplyMapKeyLighting("NumSubtract", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("NumAdd", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("NumEnter", negblmcol, false);
+                                                break;
+                                        }
+
+                                        if (firestacks > 0)
+                                        {
+                                            switch (firestacks)
+                                            {
+                                                case 1:
+                                                    GlobalApplyMapKeyLighting("NumLock", firecol, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", negblmcol, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negblmcol, false);
+                                                    break;
+                                                case 2:
+                                                    GlobalApplyMapKeyLighting("NumLock", firecol, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", firecol, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negblmcol, false);
+                                                    break;
+                                                case 3:
+                                                    GlobalApplyMapKeyLighting("NumLock", firecol, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", firecol, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", firecol, false);
+                                                    break;
+                                            }
+                                        }
+                                        else if (icestacks > 0)
+                                        {
+                                            switch (icestacks)
+                                            {
+                                                case 1:
+                                                    GlobalApplyMapKeyLighting("NumLock", icecol, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", negblmcol, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negblmcol, false);
+                                                    break;
+                                                case 2:
+                                                    GlobalApplyMapKeyLighting("NumLock", icecol, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", icecol, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negblmcol, false);
+                                                    break;
+                                                case 3:
+                                                    GlobalApplyMapKeyLighting("NumLock", icecol, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", icecol, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", icecol, false);
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negblmcol, false);
+                                        }
+
+                                        if (Cooldowns.EnochianActive)
+                                        {
+                                            var enochtime = (Cooldowns.EnochianTimeRemaining - 0) * (40 - 0) / (30 - 0) + 0;
+
+                                            if (enochtime <= 40 && enochtime > 30)
+                                            {
+                                                GlobalApplyMapKeyLighting("Num7", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num4", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num0", enochcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", enochcol, false);
+                                            }
+                                            else if (enochtime <= 30 && enochtime > 20)
+                                            {
+                                                GlobalApplyMapKeyLighting("Num7", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num4", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num0", enochcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", enochcol, false);
+                                            }
+                                            else if (enochtime <= 20 && enochtime > 10)
+                                            {
+                                                GlobalApplyMapKeyLighting("Num7", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num4", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", enochcol, false);
+                                                GlobalApplyMapKeyLighting("Num0", enochcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", enochcol, false);
+                                            }
+                                            else if (enochtime <= 10 && enochtime > 0)
+                                            {
+                                                GlobalApplyMapKeyLighting("Num7", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num4", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num0", enochcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", enochcol, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("Num7", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num4", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("Num0", negblmcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", negblmcol, false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("Num7", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num8", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num9", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num4", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num5", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num6", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num1", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num2", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num3", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("Num0", negblmcol, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", negblmcol, false);
+                                        }
+                                        
                                         break;
                                     case Actor.Job.SMN:
                                         var aetherflowsmn = Cooldowns.AetherflowCount;
 
-                                        var burstsmncol = Color.Orchid;
-                                        var burstsmnempty = Color.Black;
+                                        var burstsmncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNAetherflow);
+                                        var burstsmnempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNNegative);
 
                                         if (aetherflowsmn > 0)
                                         {
@@ -3882,8 +4481,8 @@ namespace Chromatics
 
                                         var aetherflowsch = Cooldowns.AetherflowCount;
 
-                                        var burstschcol = Color.Orchid;
-                                        var burstschempty = Color.Black;
+                                        var burstschcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHAetherflow);
+                                        var burstschempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHNegative);
 
                                         if (aetherflowsch > 0)
                                         {
@@ -3947,33 +4546,395 @@ namespace Chromatics
 
                                         break;
                                     case Actor.Job.NIN:
+                                        //Ninja
+                                        var negnincol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINNegative);
+                                        var hutoncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHuton);
+
+                                        var hutonremain = Cooldowns.HutonTimeRemaining;
+                                        var polHuton = (hutonremain - 0) * (50 - 0) / (70 - 0) + 0;
+
+                                        if (polHuton <= 50 && polHuton > 40)
+                                        {
+                                            ToggleGlobalFlash3(false);
+
+                                            GlobalApplyMapKeyLighting("NumLock", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", hutoncol, false);
+
+                                            GlobalApplyMapKeyLighting("Num7", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num8", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num9", hutoncol, false);
+
+                                            GlobalApplyMapKeyLighting("Num4", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num5", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num6", hutoncol, false);
+
+                                            GlobalApplyMapKeyLighting("Num1", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num2", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num3", hutoncol, false);
+                                        }
+                                        else if (polHuton <= 40 && polHuton > 30)
+                                        {
+                                            ToggleGlobalFlash3(false);
+
+                                            GlobalApplyMapKeyLighting("NumLock", negnincol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negnincol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negnincol, false);
+
+                                            GlobalApplyMapKeyLighting("Num7", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num8", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num9", hutoncol, false);
+
+                                            GlobalApplyMapKeyLighting("Num4", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num5", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num6", hutoncol, false);
+
+                                            GlobalApplyMapKeyLighting("Num1", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num2", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num3", hutoncol, false);
+                                        }
+                                        else if (polHuton <= 30 && polHuton > 20)
+                                        {
+                                            ToggleGlobalFlash3(false);
+
+                                            GlobalApplyMapKeyLighting("NumLock", negnincol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negnincol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negnincol, false);
+
+                                            GlobalApplyMapKeyLighting("Num7", negnincol, false);
+                                            GlobalApplyMapKeyLighting("Num8", negnincol, false);
+                                            GlobalApplyMapKeyLighting("Num9", negnincol, false);
+
+                                            GlobalApplyMapKeyLighting("Num4", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num5", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num6", hutoncol, false);
+
+                                            GlobalApplyMapKeyLighting("Num1", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num2", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num3", hutoncol, false);
+                                        }
+                                        else if (polHuton <= 20 && polHuton > 10)
+                                        {
+                                            ToggleGlobalFlash3(false);
+
+                                            GlobalApplyMapKeyLighting("NumLock", negnincol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negnincol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negnincol, false);
+
+                                            GlobalApplyMapKeyLighting("Num7", negnincol, false);
+                                            GlobalApplyMapKeyLighting("Num8", negnincol, false);
+                                            GlobalApplyMapKeyLighting("Num9", negnincol, false);
+
+                                            GlobalApplyMapKeyLighting("Num4", negnincol, false);
+                                            GlobalApplyMapKeyLighting("Num5", negnincol, false);
+                                            GlobalApplyMapKeyLighting("Num6", negnincol, false);
+
+                                            GlobalApplyMapKeyLighting("Num1", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num2", hutoncol, false);
+                                            GlobalApplyMapKeyLighting("Num3", hutoncol, false);
+                                        }
+                                        else if (polHuton <= 10 && polHuton > 0)
+                                        {
+                                            //Flash
+                                            ToggleGlobalFlash3(true);
+                                            GlobalFlash3(hutoncol, 150);
+                                        }
+
                                         break;
                                     case Actor.Job.DRK:
+                                        var negdrkcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKNegative);
+                                        var bloodcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKBloodGauge);
+                                        var gritcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKGrit);
+                                        var darksidecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKDarkside);
+
+                                        var bloodgauge = Cooldowns.BloodGauge;
+                                        var bloodPol = (bloodgauge - 0) * (50 - 0) / (100 - 0) + 0;
+
+                                        if (statEffects.Find(i => i.StatusName == "Darkside") != null)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", darksidecol, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", darksidecol, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", darksidecol, false);
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("NumEnter", negdrkcol, false);
+                                        }
+
+
+                                        if (bloodPol <= 50 && bloodPol > 40)
+                                        {
+                                            if (statEffects.Find(i => i.StatusName == "Grit") != null)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", gritcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", gritcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", gritcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", gritcol, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", bloodcol, false);
+                                            }
+                                        }
+                                        else if (bloodPol <= 40 && bloodPol > 30)
+                                        {
+                                            if (statEffects.Find(i => i.StatusName == "Grit") != null)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", gritcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", gritcol, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", bloodcol, false);
+                                            }
+                                        }
+                                        if (bloodPol <= 30 && bloodPol > 20)
+                                        {
+                                            if (statEffects.Find(i => i.StatusName == "Grit") != null)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", gritcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", gritcol, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", bloodcol, false);
+                                            }
+                                        }
+                                        else if (bloodPol <= 20 && bloodPol > 10)
+                                        {
+                                            if (statEffects.Find(i => i.StatusName == "Grit") != null)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", gritcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", gritcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", gritcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", gritcol, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", bloodcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", bloodcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", bloodcol, false);
+                                            }
+                                        }
+                                        else if (bloodPol <= 10 && bloodPol > 0)
+                                        {
+                                            if (statEffects.Find(i => i.StatusName == "Grit") != null)
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", gritcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", gritcol, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num7", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num8", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num9", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num4", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num5", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num6", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num1", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num2", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negdrkcol, false);
+
+                                                GlobalApplyMapKeyLighting("Num0", negdrkcol, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", negdrkcol, false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negdrkcol, false);
+
+                                            GlobalApplyMapKeyLighting("Num7", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("Num8", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("Num9", negdrkcol, false);
+
+                                            GlobalApplyMapKeyLighting("Num4", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("Num5", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("Num6", negdrkcol, false);
+
+                                            GlobalApplyMapKeyLighting("Num1", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("Num2", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("Num3", negdrkcol, false);
+
+                                            GlobalApplyMapKeyLighting("Num0", negdrkcol, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", negdrkcol, false);
+                                        }
                                         break;
                                     case Actor.Job.AST:
-                                        var burstastcol = Color.Black;
+                                        var burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative);
 
                                         if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
                                         {
                                             switch (Cooldowns.CurrentCard)
                                             {
                                                 case Cooldowns.CardTypes.Arrow:
-                                                    burstastcol = Color.Lime;
+                                                    burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTArrow);
                                                     break;
                                                 case Cooldowns.CardTypes.Balance:
-                                                    burstastcol = Color.Crimson;
+                                                    burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBalance);
                                                     break;
                                                 case Cooldowns.CardTypes.Bole:
-                                                    burstastcol = Color.Orange;
+                                                    burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBole);
                                                     break;
                                                 case Cooldowns.CardTypes.Ewer:
-                                                    burstastcol = Color.MediumBlue;
+                                                    burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTEwer);
                                                     break;
                                                 case Cooldowns.CardTypes.Spear:
-                                                    burstastcol = Color.Turquoise;
+                                                    burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpear);
                                                     break;
                                                 case Cooldowns.CardTypes.Spire:
-                                                    burstastcol = Color.SlateBlue;
+                                                    burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpire);
                                                     break;
                                             }
 
@@ -3992,7 +4953,7 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num7", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num8", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num9", burstastcol, false);
-                                            GlobalApplyMapKeyLighting("NumPlus", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num4", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num5", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num6", burstastcol, false);
@@ -4012,7 +4973,7 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num7", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num8", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num9", burstastcol, false);
-                                            GlobalApplyMapKeyLighting("NumPlus", burstastcol, false);
+                                            GlobalApplyMapKeyLighting("NumAdd", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num4", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num5", burstastcol, false);
                                             GlobalApplyMapKeyLighting("Num6", burstastcol, false);
@@ -4025,8 +4986,292 @@ namespace Chromatics
                                         }
                                         break;
                                     case Actor.Job.MCH:
+                                        //Machinist
+                                        var ammo = Cooldowns.AmmoCount;
+
+                                        var ammoburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHAmmo);
+                                        var negmchburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHNegative);
+
+                                        var heatnormal = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHHeatGauge);
+                                        var heatover = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHOverheat);
+
+                                        switch (ammo)
+                                        {
+                                            case 1:
+                                                GlobalApplyMapKeyLighting("NumSubtract", negmchburst, false);
+                                                GlobalApplyMapKeyLighting("NumAdd", negmchburst, false);
+                                                GlobalApplyMapKeyLighting("NumEnter", ammoburst, false);
+                                                break;
+                                            case 2:
+                                                GlobalApplyMapKeyLighting("NumSubtract", negmchburst, false);
+                                                GlobalApplyMapKeyLighting("NumAdd", ammoburst, false);
+                                                GlobalApplyMapKeyLighting("NumEnter", ammoburst, false);
+                                                break;
+                                            case 3:
+                                                GlobalApplyMapKeyLighting("NumSubtract", ammoburst, false);
+                                                GlobalApplyMapKeyLighting("NumAdd", ammoburst, false);
+                                                GlobalApplyMapKeyLighting("NumEnter", ammoburst, false);
+                                                break;
+                                            default:
+                                                GlobalApplyMapKeyLighting("NumSubtract", negmchburst, false);
+                                                GlobalApplyMapKeyLighting("NumAdd", negmchburst, false);
+                                                GlobalApplyMapKeyLighting("NumEnter", negmchburst, false);
+                                                break;
+                                        }
+
+                                        if (Cooldowns.GaussBarrelEnabled)
+                                        {
+                                            var mchoverheat = Cooldowns.OverHeatTime;
+                                            var mchgb = Cooldowns.HeatGauge;
+
+                                            if (mchoverheat > 0)
+                                            {
+                                                //Overheating
+                                                GlobalApplyMapKeyLighting("NumLock", heatover, false);
+                                                GlobalApplyMapKeyLighting("NumDivide", heatover, false);
+                                                GlobalApplyMapKeyLighting("NumMultiply", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num7", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num8", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num9", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num4", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num5", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num6", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num1", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num2", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num3", heatover, false);
+                                                GlobalApplyMapKeyLighting("Num0", heatover, false);
+                                                GlobalApplyMapKeyLighting("NumDecimal", heatover, false);
+                                            }
+                                            else
+                                            {
+                                                //Normal
+                                                var polGB = (mchgb - 0) * (50 - 0) / (100 - 0) + 0;
+                                                if (polGB <= 50 && polGB > 40)
+                                                {
+                                                    GlobalApplyMapKeyLighting("NumLock", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num7", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num8", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num9", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num4", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num5", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num6", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num1", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num2", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num3", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num0", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", heatnormal, false);
+                                                }
+                                                else if (polGB <= 40 && polGB > 30)
+                                                {
+                                                    GlobalApplyMapKeyLighting("NumLock", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num7", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num8", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num9", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num4", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num5", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num6", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num1", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num2", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num3", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num0", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", heatnormal, false);
+                                                }
+                                                else if (polGB <= 30 && polGB > 20)
+                                                {
+                                                    GlobalApplyMapKeyLighting("NumLock", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num7", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num4", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num5", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num6", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num1", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num2", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num3", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num0", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", heatnormal, false);
+                                                }
+                                                else if (polGB <= 20 && polGB > 10)
+                                                {
+                                                    GlobalApplyMapKeyLighting("NumLock", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num7", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num4", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num1", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num2", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num3", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("Num0", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", heatnormal, false);
+                                                }
+                                                else if (polGB <= 10 && polGB > 0)
+                                                {
+                                                    GlobalApplyMapKeyLighting("NumLock", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num7", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num4", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num1", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num0", heatnormal, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", heatnormal, false);
+                                                }
+                                                else if (polGB == 0)
+                                                {
+                                                    GlobalApplyMapKeyLighting("NumLock", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumDivide", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumMultiply", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num7", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num4", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num1", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negmchburst, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negmchburst, false);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num7", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num8", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num9", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num4", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num5", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num6", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num1", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num2", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num3", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("Num0", negmchburst, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", negmchburst, false);
+                                        }
+
                                         break;
                                     case Actor.Job.SAM:
+                                        //Samurai
+                                        var negsamcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMNegative);
+                                        var setsucol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMSetsu); //Top
+                                        var getsucol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMGetsu); //Left
+                                        var kacol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMKa); //Right
+                                        var kenkicol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMKenki);
+
+                                        var sen = Cooldowns.SenGauge;
+                                        var kenkicharge = Cooldowns.KenkiCharge;
+                                        var PolKenki = (kenkicharge - 0) * (40 - 0) / (100 - 0) + 0;
+                                        
+                                        switch (sen)
+                                        {
+                                            case 1:
+                                                GlobalApplyMapKeyLighting("Num8", setsucol, false);
+                                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negsamcol, false);
+                                                break;
+                                            case 2:
+                                                GlobalApplyMapKeyLighting("Num8", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", getsucol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negsamcol, false);
+                                                break;
+                                            case 3:
+                                                GlobalApplyMapKeyLighting("Num8", setsucol, false);
+                                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", getsucol, false);
+                                                break;
+                                            case 4:
+                                                GlobalApplyMapKeyLighting("Num8", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", kacol, false);
+                                                break;
+                                            case 5:
+                                                GlobalApplyMapKeyLighting("Num8", setsucol, false);
+                                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", kacol, false);
+                                                break;
+                                            case 6:
+                                                GlobalApplyMapKeyLighting("Num8", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", getsucol, false);
+                                                GlobalApplyMapKeyLighting("Num3", kacol, false);
+                                                break;
+                                            case 7:
+                                                GlobalApplyMapKeyLighting("Num8", setsucol, false);
+                                                GlobalApplyMapKeyLighting("Num1", getsucol, false);
+                                                GlobalApplyMapKeyLighting("Num3", kacol, false);
+                                                break;
+                                            default:
+                                                GlobalApplyMapKeyLighting("Num8", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
+                                                GlobalApplyMapKeyLighting("Num3", negsamcol, false);
+                                                break;
+                                        }
+                                        
+                                        if (PolKenki <= 40 && PolKenki > 30)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", kenkicol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", kenkicol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", kenkicol, false);
+                                            GlobalApplyMapKeyLighting("NumLock", kenkicol, false);
+                                        }
+                                        else if (PolKenki <= 30 && PolKenki > 20)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", kenkicol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", kenkicol, false);
+                                            GlobalApplyMapKeyLighting("NumLock", kenkicol, false);
+                                        }
+                                        else if (PolKenki <= 20 && PolKenki > 10)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", kenkicol, false);
+                                            GlobalApplyMapKeyLighting("NumLock", kenkicol, false);
+                                        }
+                                        else if (PolKenki <= 10 && PolKenki > 0)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumLock", kenkicol, false);
+                                        }
+                                        else if (PolKenki == 0)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumSubtract", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", negsamcol, false);
+                                            GlobalApplyMapKeyLighting("NumLock", negsamcol, false);
+                                        }
+
+                                        GlobalApplyMapKeyLighting("Num2", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("Num4", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("Num5", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("Num6", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("Num7", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("Num9", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("NumAdd", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("NumEnter", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("Num0", negsamcol, false);
+                                        GlobalApplyMapKeyLighting("NumDecimal", negsamcol, false);
+
                                         break;
                                     case Actor.Job.RDM:
                                         var blackmana = Cooldowns.BlackMana;
@@ -4034,9 +5279,9 @@ namespace Chromatics
                                         var polBlack = (blackmana - 0) * (40 - 0) / (100 - 0) + 0;
                                         var polWhite = (whitemana - 0) * (40 - 0) / (100 - 0) + 0;
 
-                                        var blackburst = Color.Red;
-                                        var whiteburst = Color.White;
-                                        var negburst = Color.Black;
+                                        var blackburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMBlackMana);
+                                        var whiteburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMWhiteMana);
+                                        var negburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMNegative);
 
                                         GlobalApplyMapKeyLighting("NumDivide", Color.Black, false);
                                         GlobalApplyMapKeyLighting("Num8", Color.Black, false);
@@ -4129,7 +5374,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num7", baseColor, false);
                                 GlobalApplyMapKeyLighting("Num8", baseColor, false);
                                 GlobalApplyMapKeyLighting("Num9", baseColor, false);
-                                GlobalApplyMapKeyLighting("NumPlus", baseColor, false);
+                                GlobalApplyMapKeyLighting("NumAdd", baseColor, false);
                                 GlobalApplyMapKeyLighting("Num4", baseColor, false);
                                 GlobalApplyMapKeyLighting("Num5", baseColor, false);
                                 GlobalApplyMapKeyLighting("Num6", baseColor, false);
