@@ -253,7 +253,26 @@ namespace Chromatics.DeviceInterfaces
             {"Strip11", CorsairLedId.Invalid},
             {"Strip12", CorsairLedId.Invalid},
             {"Strip13", CorsairLedId.Invalid},
-            {"Strip14", CorsairLedId.Invalid}
+            {"Strip14", CorsairLedId.Invalid},
+            {"Lightbar1", CorsairLedId.Lightbar1},
+            {"Lightbar2", CorsairLedId.Lightbar2},
+            {"Lightbar3", CorsairLedId.Lightbar3},
+            {"Lightbar4", CorsairLedId.Lightbar4},
+            {"Lightbar5", CorsairLedId.Lightbar5},
+            {"Lightbar6", CorsairLedId.Lightbar6},
+            {"Lightbar7", CorsairLedId.Lightbar7},
+            {"Lightbar8", CorsairLedId.Lightbar8},
+            {"Lightbar9", CorsairLedId.Lightbar9},
+            {"Lightbar10", CorsairLedId.Lightbar10},
+            {"Lightbar11", CorsairLedId.Lightbar11},
+            {"Lightbar12", CorsairLedId.Lightbar12},
+            {"Lightbar13", CorsairLedId.Lightbar13},
+            {"Lightbar14", CorsairLedId.Lightbar14},
+            {"Lightbar15", CorsairLedId.Lightbar15},
+            {"Lightbar16", CorsairLedId.Lightbar16},
+            {"Lightbar17", CorsairLedId.Lightbar17},
+            {"Lightbar18", CorsairLedId.Lightbar18},
+            {"Lightbar19", CorsairLedId.Lightbar19}
         };
 
         #endregion

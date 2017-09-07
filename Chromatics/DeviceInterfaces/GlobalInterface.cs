@@ -371,6 +371,15 @@ namespace Chromatics
                 _coolermaster.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
         }
 
+        public void GlobalApplyMapLightbarLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
+        {
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
+            if (CorsairSdkCalled == 1)
+                _corsair.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
+        }
+
         public void GlobalApplyKeySingleLighting(DevModeTypes mode, Color col)
         {
             if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
