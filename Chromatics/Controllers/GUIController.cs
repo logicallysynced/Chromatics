@@ -1171,6 +1171,7 @@ namespace Chromatics
             chk_highlighttoggle.Checked = ChromaticsSettings.ChromaticsSettingsKeyHighlights;
             chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettingsImpactToggle;
             chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettingsDfBellToggle;
+            chk_showstats.Checked = ChromaticsSettings.ChromaticsSettingsShowStats;
 
             chk_lcdtoggle.Checked = ChromaticsSettings.ChromaticsSettingsLcdEnabled;
             
@@ -2562,6 +2563,15 @@ namespace Chromatics
             }
 
             ChromaticsSettings.ChromaticsSettingsLcdEnabled = chk_lcdtoggle.Checked;
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_showstats_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsShowStats = chk_showstats.Checked;
+            SetKeysbase = false;
             SaveChromaticsSettings(1);
         }
 

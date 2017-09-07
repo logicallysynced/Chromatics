@@ -2566,7 +2566,7 @@ namespace Chromatics
 
                             if (polHp <= 40 && polHp > 30)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F1", colHpfull, false);
                                     GlobalApplyMapKeyLighting("F2", colHpfull, false);
@@ -2581,7 +2581,7 @@ namespace Chromatics
                             }
                             else if (polHp <= 30 && polHp > 20)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F1", colHpfull, false);
                                     GlobalApplyMapKeyLighting("F2", colHpfull, false);
@@ -2597,7 +2597,7 @@ namespace Chromatics
                             }
                             else if (polHp <= 20 && polHp > 10)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F1", colHpfull, false);
                                     GlobalApplyMapKeyLighting("F2", colHpfull, false);
@@ -2613,7 +2613,7 @@ namespace Chromatics
                             }
                             else if (polHp <= 10 && polHp > 0)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F1", colHpcritical, false);
                                     GlobalApplyMapKeyLighting("F2", colHpempty, false);
@@ -2629,7 +2629,7 @@ namespace Chromatics
                             }
                             else if (polHp == 0)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F1", colHpcritical, false);
                                     GlobalApplyMapKeyLighting("F2", colHpcritical, false);
@@ -2746,7 +2746,7 @@ namespace Chromatics
 
                             if (polMp <= 40 && polMp > 30)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F5", colMpfull, false);
                                     GlobalApplyMapKeyLighting("F6", colMpfull, false);
@@ -2762,7 +2762,7 @@ namespace Chromatics
                             }
                             else if (polMp <= 30 && polMp > 20)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F5", colMpfull, false);
                                     GlobalApplyMapKeyLighting("F6", colMpfull, false);
@@ -2778,7 +2778,7 @@ namespace Chromatics
                             }
                             else if (polMp <= 20 && polMp > 10)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F5", colMpfull, false);
                                     GlobalApplyMapKeyLighting("F6", colMpfull, false);
@@ -2794,7 +2794,7 @@ namespace Chromatics
                             }
                             else if (polMp <= 10 && polMp > 0)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F5", colMpempty, false);
                                     GlobalApplyMapKeyLighting("F6", colMpempty, false);
@@ -2810,7 +2810,7 @@ namespace Chromatics
                             }
                             else if (polMp == 0)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F5", colMpempty, false);
                                     GlobalApplyMapKeyLighting("F6", colMpempty, false);
@@ -2927,7 +2927,7 @@ namespace Chromatics
 
                             if (polTp <= 40 && polTp > 30)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F9", colTpfull, false);
                                     GlobalApplyMapKeyLighting("F10", colTpfull, false);
@@ -2943,7 +2943,7 @@ namespace Chromatics
                             }
                             else if (polTp <= 30 && polTp > 20)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F9", colTpfull, false);
                                     GlobalApplyMapKeyLighting("F10", colTpfull, false);
@@ -2959,7 +2959,7 @@ namespace Chromatics
                             }
                             else if (polTp <= 20 && polTp > 10)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F9", colTpfull, false);
                                     GlobalApplyMapKeyLighting("F10", colTpfull, false);
@@ -2975,7 +2975,7 @@ namespace Chromatics
                             }
                             else if (polTp <= 10 && polTp > 0)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F9", colTpempty, false);
                                     GlobalApplyMapKeyLighting("F10", colTpempty, false);
@@ -2991,7 +2991,7 @@ namespace Chromatics
                             }
                             else if (polTp == 0)
                             {
-                                if (!_playerInfo.IsCasting)
+                                if (!_playerInfo.IsCasting && ChromaticsSettings.ChromaticsSettingsShowStats)
                                 {
                                     GlobalApplyMapKeyLighting("F9", colTpempty, false);
                                     GlobalApplyMapKeyLighting("F10", colTpempty, false);

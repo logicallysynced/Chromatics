@@ -75,6 +75,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsImpactToggle = false;
         public bool ChromaticsSettingsJobGaugeToggle = true;
         public bool ChromaticsSettingsKeybindToggle = true;
+        public bool ChromaticsSettingsShowStats = true;
 
         public bool ChromaticsSettingsKeyHighlights = true;
         public bool ChromaticsSettingsLccAuto = false;

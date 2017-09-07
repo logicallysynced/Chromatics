@@ -153,6 +153,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_showstats = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -914,6 +915,7 @@
             // 
             // gB_effects
             // 
+            this.gB_effects.Controls.Add(this.chk_showstats);
             this.gB_effects.Controls.Add(this.chk_dfbelltoggle);
             this.gB_effects.Controls.Add(this.chk_impactflashtog);
             this.gB_effects.Controls.Add(this.chk_keybindtoggle);
@@ -1533,6 +1535,18 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // chk_showstats
+            // 
+            this.chk_showstats.AutoSize = true;
+            this.chk_showstats.Location = new System.Drawing.Point(272, 110);
+            this.chk_showstats.Name = "chk_showstats";
+            this.chk_showstats.Size = new System.Drawing.Size(193, 21);
+            this.chk_showstats.TabIndex = 8;
+            this.chk_showstats.Text = "Enable HP/MP/TP Display";
+            this.tooltip_main.SetToolTip(this.chk_showstats, "Displays your HP/MP/TP across your keyboard.\r\nDefault: ON");
+            this.chk_showstats.UseVisualStyleBackColor = true;
+            this.chk_showstats.CheckedChanged += new System.EventHandler(this.chk_showstats_CheckedChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1705,6 +1719,7 @@
         private System.Windows.Forms.CheckBox chk_dev_chromalink;
         private System.Windows.Forms.CheckBox chk_desktopnotify;
         private System.Windows.Forms.CheckBox chk_lcdtoggle;
+        private System.Windows.Forms.CheckBox chk_showstats;
     }
 }
 
