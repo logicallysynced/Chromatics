@@ -58,4 +58,5 @@ Please visit [this page](https://chromaticsffxiv.com/download.html) for installa
 * [CUE.NET for Corsair device support](https://github.com/DarthAffe/CUE.NET)
 * [Daniel Rouleau for Logitech support](https://github.com/danielrouleau)
 * [Elestriel for Corsair debug](https://github.com/Elestriel)
-
+* [Sidewinder94 for Logitech LCD support](https://github.com/sidewinder94/Logitech-LCD)
+* [C.J. Manca for integration libraries](https://github.com/cjmanca)
