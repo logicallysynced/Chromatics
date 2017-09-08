@@ -218,6 +218,8 @@ namespace Chromatics.LCDInterfaces
                 LcdMonoButton1Pressed += SelectedMonoControlOnLcdMonoButton1Pressed;
                 LcdMonoButton2Pressed += SelectedMonoControlOnLcdMonoButton2Pressed;
                 LcdMonoButton3Pressed += SelectedMonoControlOnLcdMonoButton3Pressed;
+                LcdColorUpButtonPressed += OnLcdColorUpButtonPressed;
+                LcdColorDownButtonPressed += OnLcdColorDownButtonPressed;
 
                 startup = false;
 
@@ -230,7 +232,7 @@ namespace Chromatics.LCDInterfaces
                 return false;
             }
         }
-
+        
         public void ShutdownLcd()
         {
             try
@@ -256,6 +258,9 @@ namespace Chromatics.LCDInterfaces
                 LcdMonoButton1Pressed -= SelectedMonoControlOnLcdMonoButton1Pressed;
                 LcdMonoButton2Pressed -= SelectedMonoControlOnLcdMonoButton2Pressed;
                 LcdMonoButton3Pressed -= SelectedMonoControlOnLcdMonoButton3Pressed;
+                LcdColorUpButtonPressed -= OnLcdColorUpButtonPressed;
+                LcdColorDownButtonPressed -= OnLcdColorDownButtonPressed;
+
 
                 _buttonCheckTimer.Dispose();
 
@@ -364,7 +369,7 @@ namespace Chromatics.LCDInterfaces
 
         private void SelectedMonoControlOnLcdMonoButton3Pressed(object sender, EventArgs eventArgs)
         {
-            Console.WriteLine(@"Forward");
+            //Console.WriteLine(@"Forward");
 
             _page++;
             if (_page > MaxPage) _page = 1;
@@ -373,7 +378,7 @@ namespace Chromatics.LCDInterfaces
 
         private void SelectedMonoControlOnLcdMonoButton0Pressed(object o, EventArgs eventArgs)
         {
-            Console.WriteLine(@"Back");
+            //Console.WriteLine(@"Back");
 
             _page--;
             if (_page <= 0) _page = MaxPage;
@@ -382,7 +387,7 @@ namespace Chromatics.LCDInterfaces
 
         private void SelectedMonoControlOnLcdMonoButton1Pressed(object o, EventArgs eventArgs)
         {
-            Console.WriteLine(@"Server Back");
+            //Console.WriteLine(@"Server Back");
 
             if (_page == 4)
             {
@@ -398,7 +403,7 @@ namespace Chromatics.LCDInterfaces
 
         private void SelectedMonoControlOnLcdMonoButton2Pressed(object o, EventArgs eventArgs)
         {
-            Console.WriteLine(@"Server Forward");
+            //Console.WriteLine(@"Server Forward");
 
             if (_page == 4)
             {
@@ -409,6 +414,30 @@ namespace Chromatics.LCDInterfaces
                 {
                     p.CurrentServer = 1;
                 }
+            }
+        }
+
+        private void OnLcdColorDownButtonPressed(object sender, EventArgs eventArgs)
+        {
+            if (!(_selectedColorControl is LCD_COL_Main p)) return;
+
+            p.CurrentServer--;
+
+            if (p.CurrentServer <= 0)
+            {
+                p.CurrentServer = p.MaxServer;
+            }
+        }
+
+        private void OnLcdColorUpButtonPressed(object sender, EventArgs eventArgs)
+        {
+            if (!(_selectedColorControl is LCD_COL_Main p)) return;
+
+            p.CurrentServer++;
+
+            if (p.CurrentServer > p.MaxServer)
+            {
+                p.CurrentServer = 1;
             }
         }
 

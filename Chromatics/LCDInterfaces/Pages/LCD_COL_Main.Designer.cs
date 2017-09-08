@@ -58,6 +58,7 @@
             this.pB_buff_8 = new System.Windows.Forms.PictureBox();
             this.pB_buff_9 = new System.Windows.Forms.PictureBox();
             this.pB_buff_10 = new System.Windows.Forms.PictureBox();
+            this.lbl_server = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pB_job)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pB_debuff_10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pB_debuff_9)).BeginInit();
@@ -88,7 +89,7 @@
             // lbl_et
             // 
             this.lbl_et.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_et.Font = new System.Drawing.Font("Arial", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_et.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_et.ForeColor = System.Drawing.Color.White;
             this.lbl_et.Location = new System.Drawing.Point(210, 2);
             this.lbl_et.Name = "lbl_et";
@@ -100,7 +101,7 @@
             // lbl_latency
             // 
             this.lbl_latency.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_latency.Font = new System.Drawing.Font("Arial", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_latency.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_latency.ForeColor = System.Drawing.Color.White;
             this.lbl_latency.Location = new System.Drawing.Point(3, 2);
             this.lbl_latency.Name = "lbl_latency";
@@ -468,12 +469,24 @@
             this.pB_buff_10.TabIndex = 19;
             this.pB_buff_10.TabStop = false;
             // 
+            // lbl_server
+            // 
+            this.lbl_server.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_server.Font = new System.Drawing.Font("Arial", 7.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_server.ForeColor = System.Drawing.Color.White;
+            this.lbl_server.Location = new System.Drawing.Point(6, 25);
+            this.lbl_server.Name = "lbl_server";
+            this.lbl_server.Size = new System.Drawing.Size(111, 25);
+            this.lbl_server.TabIndex = 31;
+            this.lbl_server.Text = "Elemental";
+            // 
             // LCD_COL_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImage = global::Chromatics.Properties.Resources.col_main_back;
+            this.Controls.Add(this.lbl_server);
             this.Controls.Add(this.pB_buff_12);
             this.Controls.Add(this.pB_buff_11);
             this.Controls.Add(this.pB_buff_1);
@@ -567,5 +580,6 @@
         private System.Windows.Forms.PictureBox pB_buff_8;
         private System.Windows.Forms.PictureBox pB_buff_9;
         private System.Windows.Forms.PictureBox pB_buff_10;
+        private System.Windows.Forms.Label lbl_server;
     }
 }

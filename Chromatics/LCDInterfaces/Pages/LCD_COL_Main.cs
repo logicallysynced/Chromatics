@@ -553,7 +553,7 @@ namespace Chromatics.LCDInterfaces
             var result = _pingAvg + @"ms";
 
             if (lbl_latency.Disposing) return;
-            if (lbl_latency.Disposing) return;
+            if (lbl_server.Disposing) return;
             if (!IsHandleCreated) return;
 
             try
@@ -561,10 +561,12 @@ namespace Chromatics.LCDInterfaces
                 if (InvokeRequired)
                 {
                     lbl_latency.Invoke((Action)delegate { lbl_latency.Text = result; });
+                    lbl_server.Invoke((Action)delegate { lbl_server.Text = serverList[currentServer - 1][0]; });
                 }
                 else
                 {
                     lbl_latency.Text = result;
+                    lbl_server.Text = serverList[currentServer - 1][0];
                 }
             }
             catch (InvalidOperationException ex)
