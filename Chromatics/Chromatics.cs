@@ -610,7 +610,7 @@ namespace Chromatics
                             ToggleLccMode(false, true);
 
                         Process.Start(startInfo);
-                        Environment.Exit(1);
+                        Process.GetCurrentProcess().Kill();
                     }
                 }
                 else

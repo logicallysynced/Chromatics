@@ -59,7 +59,10 @@ namespace Chromatics
             _ffxiVcts.Cancel();
             _attachcts.Cancel();
             ShutDownDevices();
-            
+
+            if (LCCStatus && LogitechSdkCalled == 1)
+                ToggleLccMode(false, false);
+
             if (LifxSdkCalled == 1)
             {
                 //{ new Task(() => { AttachFFXIV(); }).Start(); };
@@ -82,8 +85,7 @@ namespace Chromatics
 
         private void OnApplicationExit(object sender, EventArgs e)
         {
-            if (LCCStatus && LogitechSdkCalled == 1)
-                ToggleLccMode(false, false);
+            //
         }
 
         private void ChromaticsForm_Resize(object sender, EventArgs e)
