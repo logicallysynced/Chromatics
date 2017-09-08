@@ -363,7 +363,7 @@ namespace Chromatics.LCDInterfaces
             }
             catch (Exception e)
             {
-                //
+                Console.WriteLine(e.InnerException);
             }
         }
 
@@ -391,7 +391,8 @@ namespace Chromatics.LCDInterfaces
 
             if (_page == 4)
             {
-                var p = (LCD_MONO_Latency)_selectedMonoControl;
+                if (!(_selectedMonoControl is LCD_MONO_Latency p)) return;
+
                 p.CurrentServer--;
 
                 if (p.CurrentServer <= 0)
@@ -407,7 +408,8 @@ namespace Chromatics.LCDInterfaces
 
             if (_page == 4)
             {
-                var p = (LCD_MONO_Latency)_selectedMonoControl;
+                if (!(_selectedMonoControl is LCD_MONO_Latency p)) return;
+                
                 p.CurrentServer++;
 
                 if (p.CurrentServer > p.MaxServer)

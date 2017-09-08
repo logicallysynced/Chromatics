@@ -267,6 +267,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.InnerException);
                 return false;
             }
         }

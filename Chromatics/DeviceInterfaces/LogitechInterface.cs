@@ -190,6 +190,7 @@ namespace Chromatics.DeviceInterfaces
         void Pulse(Color color, int milliSecondsDuration, int milliSecondsInterval);
         void ResetLogitechDevices(bool logitechDeviceKeyboard, Color basecol);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
+        void ApplyMapMouseLighting(string key, Color col);
 
         void UpdateState(string type, Color col, bool disablekeys,
             [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
@@ -240,6 +241,11 @@ namespace Chromatics.DeviceInterfaces
                     (int) Math.Ceiling((double) (color.R * 100) / 255),
                     (int) Math.Ceiling((double) (color.G * 100) / 255),
                     (int) Math.Ceiling((double) (color.B * 100) / 255));
+        }
+
+        public void ApplyMapMouseLighting(string key, Color col)
+        {
+            throw new NotImplementedException();
         }
 
         public void ResetLogitechDevices(bool deviceKeyboard, Color basecol)
@@ -830,6 +836,8 @@ namespace Chromatics.DeviceInterfaces
                 return keyName;
             return KeyboardNames.GBadge;
         }
+
+        
     }
 
     public enum KeyboardNames

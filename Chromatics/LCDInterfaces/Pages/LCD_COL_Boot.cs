@@ -53,6 +53,7 @@ namespace Chromatics.LCDInterfaces
             catch (InvalidOperationException ex)
             {
                 if (IsHandleCreated) throw;
+                Console.WriteLine(ex.InnerException);
             }
         }
     }

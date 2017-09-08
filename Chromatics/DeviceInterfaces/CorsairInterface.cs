@@ -372,6 +372,7 @@ namespace Chromatics.DeviceInterfaces
                     catch (Exception e)
                     {
                         _corsairDeviceHeadset = false;
+                        Console.WriteLine(e.InnerException);
                     }
                 }
 
@@ -416,6 +417,7 @@ namespace Chromatics.DeviceInterfaces
                 catch (Exception e)
                 {
                     _corsairDeviceHeadset = false;
+                    Console.WriteLine(e.InnerException);
                 }
             }
             //UpdateState("static", basecol, false);

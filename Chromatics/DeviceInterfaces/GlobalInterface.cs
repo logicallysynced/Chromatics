@@ -31,7 +31,7 @@ namespace Chromatics
         private CancellationTokenSource _corsairFl3Cts = new CancellationTokenSource();
         private Task _corsairFl4;
         private CancellationTokenSource _corsairFl4Cts = new CancellationTokenSource();
-        private IHueSdk _hue;
+        private IHueSdk _hue = new HueLib(); //
         private CancellationTokenSource _hue4Cts = new CancellationTokenSource();
 
         private Task _hueFl4;
