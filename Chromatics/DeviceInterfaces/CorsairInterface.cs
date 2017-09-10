@@ -412,7 +412,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 try
                 {
-                    _corsairDeviceHeadset = CueSDK.HeadsetSDK.DeviceInfo.Model != "VOID Wireless Demo";
+                    _corsairDeviceHeadset = CueSDK.HeadsetSDK?.DeviceInfo?.Model != "VOID Wireless Demo";
                 }
                 catch (Exception e)
                 {
@@ -429,10 +429,10 @@ namespace Chromatics.DeviceInterfaces
         {
             if (pause) return;
 
-            if (_corsairDeviceHeadset) CueSDK.HeadsetSDK.Update();
-            if (_corsairDeviceKeyboard) CueSDK.KeyboardSDK.Update();
-            if (_corsairDeviceMouse) CueSDK.MouseSDK.Update();
-            if (_corsairDeviceMousepad) CueSDK.MousematSDK.Update();
+            if (_corsairDeviceHeadset && !string.IsNullOrEmpty(CueSDK.HeadsetSDK?.HeadsetDeviceInfo?.Model)) CueSDK.HeadsetSDK.Update();
+            if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model)) CueSDK.KeyboardSDK.Update();
+            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model)) CueSDK.MouseSDK.Update();
+            if (_corsairDeviceMousepad && !string.IsNullOrEmpty(CueSDK.MousematSDK?.MousematDeviceInfo?.Model)) CueSDK.MousematSDK.Update();
         }
 
         public void SetLights(Color col)
@@ -441,7 +441,7 @@ namespace Chromatics.DeviceInterfaces
 
             try
             {
-                if (!_corsairDeviceKeyboard) return;
+                if (!_corsairDeviceKeyboard || string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model)) return;
 
                 _corsairAllKeyboardLed.Brush = (SolidColorBrush) col;
                 CueSDK.KeyboardSDK.Update();
@@ -658,10 +658,10 @@ namespace Chromatics.DeviceInterfaces
 
             if (FfxivHotbar.Keybindwhitelist.Contains(key) && !bypasswhitelist)
                 return;
-
+            
             try
             {
-                if (_corsairDeviceKeyboard)
+                if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                     if (_corsairkeyids.ContainsKey(key))
                         if (CueSDK.KeyboardSDK[_corsairkeyids[key]] != null)
                             _corsairKeyboardIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[key], col);
@@ -677,7 +677,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (pause) return;
 
-            if (_corsairDeviceMouse)
+            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.MouseSDK[_corsairkeyids[region]] != null)
                         _corsairMouseIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[region], col);
@@ -693,7 +693,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (pause) return;
 
-            if (_corsairDeviceMousepad)
+            if (_corsairDeviceMousepad && !string.IsNullOrEmpty(CueSDK.MousematSDK?.MousematDeviceInfo?.Model))
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.MousematSDK[_corsairkeyids[region]] != null)
                         _corsairMousepadIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[region], col);
@@ -703,7 +703,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (pause) return;
 
-            if (!_corsairDeviceHeadset) return;
+            if (!_corsairDeviceHeadset || string.IsNullOrEmpty(CueSDK.HeadsetSDK?.HeadsetDeviceInfo?.Model)) return;
             var cc = new CorsairColor(col);
 
             if (CueSDK.HeadsetSDK[CorsairLedId.LeftLogo].Color == cc) return;
@@ -718,7 +718,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (CorsairRipple1)
                 {
-                    if (_corsairDeviceKeyboard)
+                    if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                     {
                         var presets = new Dictionary<string, Color>();
 
@@ -936,7 +936,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (CorsairRipple2)
                 {
-                    if (_corsairDeviceKeyboard)
+                    if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                     {
                         var presets = new Dictionary<string, Color>();
                         //uint burstcol = new Corale.Colore.Core.Color(RzCol.R, RzCol.G, RzCol.B);
@@ -1054,7 +1054,7 @@ namespace Chromatics.DeviceInterfaces
                     if (i == 0)
                     {
                         //Setup
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                 {
@@ -1067,7 +1067,7 @@ namespace Chromatics.DeviceInterfaces
                                     }
                                 }
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             if (CueSDK.MouseSDK[CorsairLedId.B3] != null)
                                 scrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
@@ -1084,12 +1084,12 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 1)
                     {
                         //Step 0
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             ApplyMapMouseLighting("ScrollWheel", burstcol, false);
                             ApplyMapMouseLighting("Logo", burstcol, false);
@@ -1099,12 +1099,12 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 2)
                     {
                         //Step 1
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
                             ApplyMapMouseLighting("Logo", logoConv, false);
@@ -1114,12 +1114,12 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 3)
                     {
                         //Step 2
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             ApplyMapMouseLighting("ScrollWheel", burstcol, false);
                             ApplyMapMouseLighting("Logo", burstcol, false);
@@ -1129,12 +1129,12 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 4)
                     {
                         //Step 3
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
                             ApplyMapMouseLighting("Logo", logoConv, false);
@@ -1144,12 +1144,12 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 5)
                     {
                         //Step 4
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             ApplyMapMouseLighting("ScrollWheel", burstcol, false);
                             ApplyMapMouseLighting("Logo", burstcol, false);
@@ -1159,12 +1159,12 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 6)
                     {
                         //Step 5
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
                             ApplyMapMouseLighting("Logo", logoConv, false);
@@ -1174,12 +1174,12 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 7)
                     {
                         //Step 6
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, burstcol, false);
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             ApplyMapMouseLighting("ScrollWheel", burstcol, false);
                             ApplyMapMouseLighting("Logo", burstcol, false);
@@ -1189,12 +1189,12 @@ namespace Chromatics.DeviceInterfaces
                     else if (i == 8)
                     {
                         //Step 7
-                        if (_corsairDeviceKeyboard)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                             foreach (var key in regions)
                                 if (_corsairkeyids.ContainsKey(key))
                                     ApplyMapKeyLighting(key, presets[key], false);
 
-                        if (_corsairDeviceMouse)
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
                             ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
                             ApplyMapMouseLighting("Logo", logoConv, false);
@@ -1220,7 +1220,7 @@ namespace Chromatics.DeviceInterfaces
 
                 if (!_corsairFlash2Running)
                 {
-                    if (_corsairDeviceMouse)
+                    if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                     {
                         //CorsairScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
                         if (CueSDK.MouseSDK[CorsairLedId.B3] != null)
@@ -1232,7 +1232,7 @@ namespace Chromatics.DeviceInterfaces
                         _corsairLogoConv = _corsairLogo;
                     }
 
-                    if (_corsairDeviceKeyboard)
+                    if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                         foreach (var key in regions)
                             if (_corsairkeyids.ContainsKey(key))
                             {
@@ -1258,12 +1258,12 @@ namespace Chromatics.DeviceInterfaces
 
                         if (_corsairFlash2Step == 0)
                         {
-                            if (_corsairDeviceKeyboard)
+                            if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                                 foreach (var key in regions)
                                     if (_corsairDeviceKeyboard)
                                         if (_corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
-                            if (_corsairDeviceMouse)
+                            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                             {
                                 ApplyMapMouseLighting("CorsairScrollWheel", burstcol, false);
                                 ApplyMapMouseLighting("Logo", burstcol, false);
@@ -1274,12 +1274,12 @@ namespace Chromatics.DeviceInterfaces
                         }
                         else if (_corsairFlash2Step == 1)
                         {
-                            if (_corsairDeviceKeyboard)
+                            if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                                 foreach (var key in regions)
                                     if (_corsairDeviceKeyboard)
                                         if (_corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, _presets[key], false);
-                            if (_corsairDeviceMouse)
+                            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                             {
                                 ApplyMapMouseLighting("CorsairScrollWheel", _corsairScrollWheelConv, false);
                                 ApplyMapMouseLighting("Logo", _corsairLogoConv, false);
@@ -1301,7 +1301,7 @@ namespace Chromatics.DeviceInterfaces
                 //DeviceEffects._NumFlash
                 lock (_Flash3)
                 {
-                    if (_corsairDeviceKeyboard)
+                    if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                     {
                         var presets = new Dictionary<string, Color>();
                         _corsairFlash3Running = true;
@@ -1386,7 +1386,7 @@ namespace Chromatics.DeviceInterfaces
 
                 if (!_corsairFlash4Running)
                 {
-                    if (_corsairDeviceMouse)
+                    if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                     {
                         //CorsairScrollWheel = CueSDK.MouseSDK[CorsairLedId.B3].Color;
                         if (CueSDK.MouseSDK[CorsairLedId.B3] != null)
@@ -1398,7 +1398,7 @@ namespace Chromatics.DeviceInterfaces
                         _corsairLogoConv = _corsairLogo;
                     }
 
-                    if (_corsairDeviceKeyboard)
+                    if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                         foreach (var key in regions)
                             if (_corsairkeyids.ContainsKey(key))
                             {
@@ -1424,12 +1424,12 @@ namespace Chromatics.DeviceInterfaces
 
                         if (_corsairFlash4Step == 0)
                         {
-                            if (_corsairDeviceKeyboard)
+                            if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                                 foreach (var key in regions)
                                     if (_corsairDeviceKeyboard)
                                         if (_corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, burstcol, false);
-                            if (_corsairDeviceMouse)
+                            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                             {
                                 ApplyMapMouseLighting("CorsairScrollWheel", burstcol, false);
                                 ApplyMapMouseLighting("Logo", burstcol, false);
@@ -1440,12 +1440,12 @@ namespace Chromatics.DeviceInterfaces
                         }
                         else if (_corsairFlash4Step == 1)
                         {
-                            if (_corsairDeviceKeyboard)
+                            if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                                 foreach (var key in regions)
                                     if (_corsairDeviceKeyboard)
                                         if (_corsairkeyids.ContainsKey(key))
                                             ApplyMapKeyLighting(key, _presets4[key], false);
-                            if (_corsairDeviceMouse)
+                            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                             {
                                 ApplyMapMouseLighting("CorsairScrollWheel", _corsairScrollWheelConv, false);
                                 ApplyMapMouseLighting("Logo", _corsairLogoConv, false);
@@ -1464,7 +1464,7 @@ namespace Chromatics.DeviceInterfaces
 
             lock (Corsairtransition)
             {
-                if (_corsairDeviceKeyboard)
+                if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                 {
                     //To be implemented
 
