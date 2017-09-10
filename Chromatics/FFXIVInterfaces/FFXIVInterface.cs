@@ -5089,6 +5089,10 @@ namespace Chromatics
                                             ToggleGlobalFlash3(true);
                                             GlobalFlash3(hutoncol, 150);
                                         }
+                                        else
+                                        {
+                                            ToggleGlobalFlash3(false);
+                                        }
 
                                         break;
                                     case Actor.Job.DRK:
