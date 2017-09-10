@@ -5816,6 +5816,553 @@ namespace Chromatics
                                         }
 
                                         break;
+                                    case Actor.Job.ALC:
+                                    case Actor.Job.ARM:
+                                    case Actor.Job.BSM:
+                                    case Actor.Job.CPT:
+                                    case Actor.Job.CUL:
+                                    case Actor.Job.GSM:
+                                    case Actor.Job.LTW:
+                                    case Actor.Job.WVR:
+                                        //Crafter
+                                        var negcraftercol = Color.Black;
+                                        var innerquietcol = Color.BlueViolet;
+                                        var collectablecol = Color.Gold;
+                                        var craftercol = Color.DodgerBlue;
+
+                                        if (statEffects.Find(i => i.StatusName == "Collectable Synthesis") != null)
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", collectablecol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", collectablecol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", collectablecol, false);
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("NumLock", craftercol, false);
+                                            GlobalApplyMapKeyLighting("NumDivide", craftercol, false);
+                                            GlobalApplyMapKeyLighting("NumMultiply", craftercol, false);
+                                        }
+
+                                        if (statEffects.Find(i => i.StatusName == "Inner Quiet") != null)
+                                        {
+                                            var IQStacks = statEffects.Find(i => i.StatusName == "Inner Quiet").Stacks;
+                                            switch (IQStacks)
+                                            {
+                                                case 1:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 2:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 3:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 4:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 5:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 6:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", innerquietcol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 7:
+                                                    GlobalApplyMapKeyLighting("Num7", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 8:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 9:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", innerquietcol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 10:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 11:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", innerquietcol, false);
+                                                    break;
+                                                case 12:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 13:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 14:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 15:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 16:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", innerquietcol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 17:
+                                                    GlobalApplyMapKeyLighting("Num7", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 18:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 19:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", innerquietcol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 20:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 21:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 22:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", innerquietcol, false);
+                                                    break;
+                                                case 23:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 24:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 25:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 26:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", innerquietcol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 27:
+                                                    GlobalApplyMapKeyLighting("Num7", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 28:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 29:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", innerquietcol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                case 30:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", innerquietcol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                                default:
+                                                    GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                                    GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("Num0", negcraftercol, false);
+                                                    GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapKeyLighting("Num7", negcraftercol, false);
+                                            GlobalApplyMapKeyLighting("Num8", negcraftercol, false);
+                                            GlobalApplyMapKeyLighting("Num9", negcraftercol, false);
+
+                                            GlobalApplyMapKeyLighting("Num4", negcraftercol, false);
+                                            GlobalApplyMapKeyLighting("Num5", negcraftercol, false);
+                                            GlobalApplyMapKeyLighting("Num6", negcraftercol, false);
+
+                                            GlobalApplyMapKeyLighting("Num1", negcraftercol, false);
+                                            GlobalApplyMapKeyLighting("Num2", negcraftercol, false);
+                                            GlobalApplyMapKeyLighting("Num3", negcraftercol, false);
+                                            GlobalApplyMapKeyLighting("Num0", innerquietcol, false);
+                                            GlobalApplyMapKeyLighting("NumDecimal", negcraftercol, false);
+                                        }
+
+
+                                        GlobalApplyMapKeyLighting("NumEnter", negcraftercol, false);
+                                        GlobalApplyMapKeyLighting("NumAdd", negcraftercol, false);
+                                        GlobalApplyMapKeyLighting("NumSubtract", negcraftercol, false);
+
+                                        break;
+
+                                    case Actor.Job.FSH:
+                                    case Actor.Job.BTN:
+                                    case Actor.Job.MIN:
+                                        //Gatherer
+                                        GlobalApplyMapKeyLighting("NumLock", baseColor, false);
+                                        GlobalApplyMapKeyLighting("NumDivide", baseColor, false);
+                                        GlobalApplyMapKeyLighting("NumMultiply", baseColor, false);
+                                        GlobalApplyMapKeyLighting("NumSubtract", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num7", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num8", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num9", baseColor, false);
+                                        GlobalApplyMapKeyLighting("NumAdd", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num4", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num5", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num6", baseColor, false);
+                                        GlobalApplyMapKeyLighting("NumEnter", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num1", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num2", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num3", baseColor, false);
+                                        GlobalApplyMapKeyLighting("Num0", baseColor, false);
+                                        GlobalApplyMapKeyLighting("NumDecimal", baseColor, false);
+
+                                        break;
+
                                 }
                             }
                             else

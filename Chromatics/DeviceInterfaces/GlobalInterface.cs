@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Chromatics.Controllers;
 using Chromatics.DeviceInterfaces;
 
@@ -391,26 +392,9 @@ namespace Chromatics
         public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color col, double val)
         {
             if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
+            
+            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 
-            if (Math.Abs(val) < 1)
-            {
-                GlobalApplyAllKeyLighting(Color.Black);
-                return;
-            }
-
-            var c1 = new Helpers.ColorRGB
-            {
-                R = col.R,
-                G = col.G,
-                B = col.B
-            };
-
-            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
-
-            l = (l - (1 - val));
-            if (Math.Abs(l) < 0.001) l = 1.0;
-
-            var c2 = Helpers.HSL2RGB(h, s, l);
             GlobalApplyAllKeyLighting(c2);
         }
 
@@ -547,25 +531,7 @@ namespace Chromatics
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
 
-            if (Math.Abs(val) < 1)
-            {
-                GlobalApplyMapMouseLighting(mode, Color.Black, clear);
-                return;
-            }
-
-            var c1 = new Helpers.ColorRGB
-            {
-                R = col.R,
-                G = col.G,
-                B = col.B
-            };
-
-            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
-
-            l = (l - (1 - val));
-            if (Math.Abs(l) < 0.001) l = 1.0;
-
-            var c2 = Helpers.HSL2RGB(h, s, l);
+            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             GlobalApplyMapMouseLighting(mode, c2, clear);
         }
 
@@ -604,25 +570,7 @@ namespace Chromatics
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _HeadsetZone1Mode) return;
 
-            if (Math.Abs(val) < 1)
-            {
-                GlobalApplyMapHeadsetLighting(mode, Color.Black, clear);
-                return;
-            }
-
-            var c1 = new Helpers.ColorRGB
-            {
-                R = col.R,
-                G = col.G,
-                B = col.B
-            };
-
-            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
-
-            l = (l - (1 - val));
-            if (Math.Abs(l) < 0.001) l = 1.0;
-
-            var c2 = Helpers.HSL2RGB(h, s, l);
+            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             GlobalApplyMapHeadsetLighting(mode, c2, clear);
         }
 
@@ -661,25 +609,7 @@ namespace Chromatics
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _KeypadZone1Mode) return;
 
-            if (Math.Abs(val) < 1)
-            {
-                GlobalApplyMapKeypadLighting(mode, Color.Black, clear);
-                return;
-            }
-
-            var c1 = new Helpers.ColorRGB
-            {
-                R = col.R,
-                G = col.G,
-                B = col.B
-            };
-
-            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
-
-            l = (l - (1 - val));
-            if (Math.Abs(l) < 0.001) l = 1.0;
-
-            var c2 = Helpers.HSL2RGB(h, s, l);
+            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             GlobalApplyMapKeypadLighting(mode, c2, clear);
         }
 
@@ -727,25 +657,7 @@ namespace Chromatics
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode) return;
 
-            if (Math.Abs(val) < 1)
-            {
-                GlobalApplyMapChromaLinkLighting(mode, Color.Black);
-                return;
-            }
-
-            var c1 = new Helpers.ColorRGB
-            {
-                R = col.R,
-                G = col.G,
-                B = col.B
-            };
-
-            Helpers.RGB2HSL(c1, out double h, out double s, out double l);
-
-            l = (l - (1 - val));
-            if (Math.Abs(l) < 0.001) l = 1.0;
-
-            var c2 = Helpers.HSL2RGB(h, s, l);
+            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             GlobalApplyMapChromaLinkLighting(mode, c2);
         }
 
