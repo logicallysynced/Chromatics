@@ -59,4 +59,5 @@ Please visit [this page](https://chromaticsffxiv.com/download.html) for installa
 * [Daniel Rouleau for Logitech support](https://github.com/danielrouleau)
 * [Elestriel for Corsair debug](https://github.com/Elestriel)
 * [Sidewinder94 for Logitech LCD support](https://github.com/sidewinder94/Logitech-LCD)
+* [Sharlayan for FFXIV Integration](https://github.com/Icehunter/sharlayan)
 * [C.J. Manca for integration libraries](https://github.com/cjmanca)
