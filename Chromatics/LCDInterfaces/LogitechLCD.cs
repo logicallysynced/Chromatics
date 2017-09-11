@@ -195,11 +195,13 @@ namespace Chromatics.LCDInterfaces
         {
             Logitech_LCD.LogitechLcd.Instance.Init("Final Fantasy XIV", LcdType.Mono | LcdType.Color);
 
-            if (!Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Mono | LcdType.Color))
+            
+            if (!Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Mono) && !Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Color))
             {
                 _write.WriteConsole(ConsoleTypes.Logitech, "No LCD Screens Connected.");
                 return false;
             }
+            
 
             try
             {
