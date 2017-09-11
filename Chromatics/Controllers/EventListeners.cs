@@ -82,7 +82,7 @@ namespace Chromatics
             
             Application.Exit();
         }
-
+        
         private void OnApplicationExit(object sender, EventArgs e)
         {
             //

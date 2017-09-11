@@ -59,11 +59,12 @@
             // 
             // LCD_MONO_Boot
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.Controls.Add(this.pB_logo1);
             this.Controls.Add(this.lbl_boot_txt);
+            this.MaximumSize = new System.Drawing.Size(160, 43);
+            this.MinimumSize = new System.Drawing.Size(160, 43);
             this.Name = "LCD_MONO_Boot";
             this.Size = new System.Drawing.Size(160, 43);
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).EndInit();
