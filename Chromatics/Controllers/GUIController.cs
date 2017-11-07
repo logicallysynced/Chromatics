@@ -613,13 +613,20 @@ namespace Chromatics
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
                             var lState = _lifx.LifxStateMemory[d.Key.MacAddressName];
 
+                            var devname = _lifx.LifXproductids[0];
+
+                            if (_lifx.LifXproductids.ContainsKey(device.Product))
+                            {
+                                devname = _lifx.LifXproductids[device.Product];
+                            }
+
                             var lifxdGDevice = (DataGridViewRow)dG_devices.Rows[0].Clone();
                             lifxdGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = state.Label + " (" +
                                                                                                    d.Key
                                                                                                        .MacAddressName +
                                                                                                    ")";
                             lifxdGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
-                                _lifx.LifXproductids[device.Product] + " (Version " + device.Version + ")";
+                                devname + " (Version " + device.Version + ")";
                             lifxdGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = lState == 0
                                 ? "Disabled"
                                 : "Enabled";
@@ -2626,6 +2633,53 @@ namespace Chromatics
             ChromaticsSettings.ChromaticsSettingsShowStats = chk_showstats.Checked;
             SetKeysbase = false;
             SaveChromaticsSettings(1);
+        }
+
+        private void btn_ffxivcachereset_Click(object sender, EventArgs e)
+        {
+            var cacheReset =
+                MessageBox.Show(
+                    @"Are you sure you wish to clear Chromatics cache?.",
+                    @"Clear Cache?", MessageBoxButtons.OKCancel);
+            if (cacheReset != DialogResult.OK) return;
+
+            try
+            {
+                string enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+
+                if (File.Exists(enviroment + @"/signatures-x64.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/signatures-x64.json");
+                }
+
+                if (File.Exists(enviroment + @"/structures-x64.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/structures-x64.json");
+                }
+
+                if (File.Exists(enviroment + @"/actions.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/actions.json");
+                }
+
+                if (File.Exists(enviroment + @"/statuses.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/statuses.json");
+                }
+
+                if (File.Exists(enviroment + @"/zones.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/zones.json");
+                }
+
+                MessageBox.Show(@"Cache Cleared. Please restart Chromatics.", @"Cache Cleared", MessageBoxButtons.OK);
+                Thread.Sleep(1);
+                Process.GetCurrentProcess().Kill();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(@"Unable to clear cache. Are you running as Administrator? Error: " + ex.StackTrace, @"Unable to clear Cache", MessageBoxButtons.OK);
+            }
         }
 
         private delegate void ResetGridDelegate();

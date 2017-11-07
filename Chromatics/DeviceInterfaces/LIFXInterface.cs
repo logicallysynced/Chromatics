@@ -75,6 +75,7 @@ namespace Chromatics.DeviceInterfaces
         private static readonly Dictionary<uint, string> _LIFXproductids = new Dictionary<uint, string>
         {
             //Keys
+            {0, "Unknown LIFX Device"},
             {1, "LIFX Original 1000"},
             {3, "LIFX Color 650"},
             {10, "LIFX White 800"},
@@ -86,7 +87,13 @@ namespace Chromatics.DeviceInterfaces
             {28, "LIFX BR30"},
             {29, "LIFX+ A19"},
             {30, "LIFX+ BR30"},
-            {31, "LIFX Z"}
+            {31, "LIFX Z"},
+            {36, "LIFX Downlight"},
+            {37, "LIFX Downlight"},
+            {43, "LIFX A19"},
+            {44, "LIFX BR30"},
+            {45, "LIFX+ A19"},
+            {46, "LIFX+ BR30"}
         };
 
         private static readonly Dictionary<string, int> _LifxStateMemory = new Dictionary<string, int>();

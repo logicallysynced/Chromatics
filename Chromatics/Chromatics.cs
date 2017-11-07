@@ -287,12 +287,30 @@ namespace Chromatics
             {
                 WriteConsole(ConsoleTypes.Error,
                     "Chromatics is not running as Administrator. Please restart with administrative privileges.");
-
+                
                 if (chk_lccauto.Checked)
                     tooltip_main.SetToolTip(gB_lcc,
                         "Logitech Conflict Mode requires Chromatics to be run with Administrative privileges. Please restart with administrative privileges.");
 
                 gB_lcc.Enabled = false;
+                btn_ffxivcachereset.Enabled = false;
+            }
+            else
+            {
+                if (!ChromaticsSettings.ChromaticsSettingsMemoryCache)
+                {
+                    string enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+
+                    if (File.Exists(enviroment + @"/signatures-x64.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/signatures-x64.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/structures-x64.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/structures-x64.json");
+                    }
+                }
             }
 
             //Check Updater
@@ -640,6 +658,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
+        
         
     }
 

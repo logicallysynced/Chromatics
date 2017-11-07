@@ -2449,7 +2449,8 @@ namespace Chromatics.FFXIVInterfaces
                                     //0x11CDEF4
                                     //0x11CDF84
                                     //0x11CEF84
-                                    0x1740518
+                                    //0x1740518
+                                    0x17BB2A8
                                 }
                             });
                             Scanner.Instance.LoadOffsets(_sList);
@@ -2478,7 +2479,8 @@ namespace Chromatics.FFXIVInterfaces
                                 Key = "CLASSRESOURCES",
                                 PointerPath = new List<long>
                                 {
-                                    0x178BDAA
+                                    //0x178BDAA
+                                    0x1806742
                                 }
                             });
                             Scanner.Instance.LoadOffsets(_sList);

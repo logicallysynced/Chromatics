@@ -96,6 +96,7 @@
             this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
+            this.chk_showstats = new System.Windows.Forms.CheckBox();
             this.chk_dfbelltoggle = new System.Windows.Forms.CheckBox();
             this.chk_impactflashtog = new System.Windows.Forms.CheckBox();
             this.chk_keybindtoggle = new System.Windows.Forms.CheckBox();
@@ -153,7 +154,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_showstats = new System.Windows.Forms.CheckBox();
+            this.btn_ffxivcachereset = new System.Windows.Forms.Button();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -931,6 +932,18 @@
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
             // 
+            // chk_showstats
+            // 
+            this.chk_showstats.AutoSize = true;
+            this.chk_showstats.Location = new System.Drawing.Point(272, 110);
+            this.chk_showstats.Name = "chk_showstats";
+            this.chk_showstats.Size = new System.Drawing.Size(193, 21);
+            this.chk_showstats.TabIndex = 8;
+            this.chk_showstats.Text = "Enable HP/MP/TP Display";
+            this.tooltip_main.SetToolTip(this.chk_showstats, "Displays your HP/MP/TP across your keyboard.\r\nDefault: ON");
+            this.chk_showstats.UseVisualStyleBackColor = true;
+            this.chk_showstats.CheckedChanged += new System.EventHandler(this.chk_showstats_CheckedChanged);
+            // 
             // chk_dfbelltoggle
             // 
             this.chk_dfbelltoggle.AutoSize = true;
@@ -1088,6 +1101,7 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.btn_ffxivcachereset);
             this.gB_General.Controls.Add(this.chk_lcdtoggle);
             this.gB_General.Controls.Add(this.chk_desktopnotify);
             this.gB_General.Controls.Add(this.chk_startupenable);
@@ -1535,17 +1549,17 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_showstats
+            // btn_ffxivcachereset
             // 
-            this.chk_showstats.AutoSize = true;
-            this.chk_showstats.Location = new System.Drawing.Point(272, 110);
-            this.chk_showstats.Name = "chk_showstats";
-            this.chk_showstats.Size = new System.Drawing.Size(193, 21);
-            this.chk_showstats.TabIndex = 8;
-            this.chk_showstats.Text = "Enable HP/MP/TP Display";
-            this.tooltip_main.SetToolTip(this.chk_showstats, "Displays your HP/MP/TP across your keyboard.\r\nDefault: ON");
-            this.chk_showstats.UseVisualStyleBackColor = true;
-            this.chk_showstats.CheckedChanged += new System.EventHandler(this.chk_showstats_CheckedChanged);
+            this.btn_ffxivcachereset.Location = new System.Drawing.Point(126, 266);
+            this.btn_ffxivcachereset.Name = "btn_ffxivcachereset";
+            this.btn_ffxivcachereset.Size = new System.Drawing.Size(98, 28);
+            this.btn_ffxivcachereset.TabIndex = 4;
+            this.btn_ffxivcachereset.Text = "Clear Cache";
+            this.tooltip_main.SetToolTip(this.btn_ffxivcachereset, "Use this to restore LGS to its default settings in the case something goes wrong." +
+        "\r\nONLY USE THIS AS A LAST RESORT.");
+            this.btn_ffxivcachereset.UseVisualStyleBackColor = true;
+            this.btn_ffxivcachereset.Click += new System.EventHandler(this.btn_ffxivcachereset_Click);
             // 
             // Chromatics
             // 
@@ -1720,6 +1734,7 @@
         private System.Windows.Forms.CheckBox chk_desktopnotify;
         private System.Windows.Forms.CheckBox chk_lcdtoggle;
         private System.Windows.Forms.CheckBox chk_showstats;
+        private System.Windows.Forms.Button btn_ffxivcachereset;
     }
 }
 
