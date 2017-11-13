@@ -1,5 +1,7 @@
 **Important:** We are now discontinuing support for DX9. Please use DX11 instead.
 
+**LOOKING FOR C# DEVELOPERS TO HELP MAINTAIN THIS - Please contact me if you're keen to get involved!**
+
 **We now have a support Discord:** [Join Support Discord](https://discord.gg/sK47yFE)
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
