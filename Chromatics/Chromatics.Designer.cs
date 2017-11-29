@@ -111,6 +111,9 @@
             this.chk_lccenable = new System.Windows.Forms.CheckBox();
             this.lb_lcc = new System.Windows.Forms.Label();
             this.gB_General = new System.Windows.Forms.GroupBox();
+            this.lbl_lang = new System.Windows.Forms.Label();
+            this.cb_lang = new System.Windows.Forms.ComboBox();
+            this.btn_ffxivcachereset = new System.Windows.Forms.Button();
             this.chk_lcdtoggle = new System.Windows.Forms.CheckBox();
             this.chk_desktopnotify = new System.Windows.Forms.CheckBox();
             this.chk_startupenable = new System.Windows.Forms.CheckBox();
@@ -154,7 +157,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.btn_ffxivcachereset = new System.Windows.Forms.Button();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -316,6 +318,7 @@
             this.chk_azertymode.Text = "AZERTY Mode";
             this.tooltip_main.SetToolTip(this.chk_azertymode, "Toggles between QWERTY and AZERTY keyboard layouts.\r\nDefault: OFF (QWERTY)");
             this.chk_azertymode.UseVisualStyleBackColor = true;
+            this.chk_azertymode.CheckedChanged += new System.EventHandler(this.chk_azertymode_CheckedChanged);
             // 
             // cb_singlezonemode
             // 
@@ -925,9 +928,9 @@
             this.gB_effects.Controls.Add(this.chk_gcdcounttoggle);
             this.gB_effects.Controls.Add(this.chk_castanimatetoggle);
             this.gB_effects.Controls.Add(this.chk_castchargetoggle);
-            this.gB_effects.Location = new System.Drawing.Point(367, 4);
+            this.gB_effects.Location = new System.Drawing.Point(406, 4);
             this.gB_effects.Name = "gB_effects";
-            this.gB_effects.Size = new System.Drawing.Size(594, 314);
+            this.gB_effects.Size = new System.Drawing.Size(555, 314);
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
@@ -1101,6 +1104,8 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.lbl_lang);
+            this.gB_General.Controls.Add(this.cb_lang);
             this.gB_General.Controls.Add(this.btn_ffxivcachereset);
             this.gB_General.Controls.Add(this.chk_lcdtoggle);
             this.gB_General.Controls.Add(this.chk_desktopnotify);
@@ -1108,10 +1113,48 @@
             this.gB_General.Controls.Add(this.chk_memorycache);
             this.gB_General.Location = new System.Drawing.Point(4, 4);
             this.gB_General.Name = "gB_General";
-            this.gB_General.Size = new System.Drawing.Size(356, 314);
+            this.gB_General.Size = new System.Drawing.Size(396, 314);
             this.gB_General.TabIndex = 0;
             this.gB_General.TabStop = false;
             this.gB_General.Text = "General";
+            // 
+            // lbl_lang
+            // 
+            this.lbl_lang.AutoSize = true;
+            this.lbl_lang.Location = new System.Drawing.Point(7, 277);
+            this.lbl_lang.Name = "lbl_lang";
+            this.lbl_lang.Size = new System.Drawing.Size(114, 17);
+            this.lbl_lang.TabIndex = 6;
+            this.lbl_lang.Text = "Game Language";
+            // 
+            // cb_lang
+            // 
+            this.cb_lang.FormattingEnabled = true;
+            this.cb_lang.Items.AddRange(new object[] {
+            "English",
+            "Chinese",
+            "Japanese",
+            "French",
+            "German",
+            "Korean"});
+            this.cb_lang.Location = new System.Drawing.Point(127, 275);
+            this.cb_lang.Name = "cb_lang";
+            this.cb_lang.Size = new System.Drawing.Size(127, 24);
+            this.cb_lang.TabIndex = 5;
+            this.tooltip_main.SetToolTip(this.cb_lang, "Change the language to match the game language.\r\n(Requires Chromatics restart)");
+            this.cb_lang.SelectedIndexChanged += new System.EventHandler(this.cb_lang_SelectedIndexChanged);
+            // 
+            // btn_ffxivcachereset
+            // 
+            this.btn_ffxivcachereset.Location = new System.Drawing.Point(280, 272);
+            this.btn_ffxivcachereset.Name = "btn_ffxivcachereset";
+            this.btn_ffxivcachereset.Size = new System.Drawing.Size(98, 28);
+            this.btn_ffxivcachereset.TabIndex = 4;
+            this.btn_ffxivcachereset.Text = "Clear Cache";
+            this.tooltip_main.SetToolTip(this.btn_ffxivcachereset, "Use this to restore LGS to its default settings in the case something goes wrong." +
+        "\r\nONLY USE THIS AS A LAST RESORT.");
+            this.btn_ffxivcachereset.UseVisualStyleBackColor = true;
+            this.btn_ffxivcachereset.Click += new System.EventHandler(this.btn_ffxivcachereset_Click);
             // 
             // chk_lcdtoggle
             // 
@@ -1549,18 +1592,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // btn_ffxivcachereset
-            // 
-            this.btn_ffxivcachereset.Location = new System.Drawing.Point(126, 266);
-            this.btn_ffxivcachereset.Name = "btn_ffxivcachereset";
-            this.btn_ffxivcachereset.Size = new System.Drawing.Size(98, 28);
-            this.btn_ffxivcachereset.TabIndex = 4;
-            this.btn_ffxivcachereset.Text = "Clear Cache";
-            this.tooltip_main.SetToolTip(this.btn_ffxivcachereset, "Use this to restore LGS to its default settings in the case something goes wrong." +
-        "\r\nONLY USE THIS AS A LAST RESORT.");
-            this.btn_ffxivcachereset.UseVisualStyleBackColor = true;
-            this.btn_ffxivcachereset.Click += new System.EventHandler(this.btn_ffxivcachereset_Click);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1735,6 +1766,8 @@
         private System.Windows.Forms.CheckBox chk_lcdtoggle;
         private System.Windows.Forms.CheckBox chk_showstats;
         private System.Windows.Forms.Button btn_ffxivcachereset;
+        private System.Windows.Forms.Label lbl_lang;
+        private System.Windows.Forms.ComboBox cb_lang;
     }
 }
 

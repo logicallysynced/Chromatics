@@ -12,6 +12,7 @@ using Sharlayan;
 using Sharlayan.Core;
 using Sharlayan.Core.Enums;
 using Sharlayan.Models;
+using Chromatics.Controllers;
 
 
 /* Contains the code to read the FFXIV Memory Stream, parse the data and convert to lighting commands
@@ -140,6 +141,35 @@ namespace Chromatics
                     Init = false;
                     // supported: English, Chinese, Japanese, French, German, Korean
                     var gameLanguage = "English";
+
+                    switch (ChromaticsSettings.ChromaticsSettingsLanguage)
+                    {
+                        case 0:
+                            //English
+                            gameLanguage = "English";
+                            break;
+                        case 1:
+                            //Chinese
+                            gameLanguage = "Chinese";
+                            break;
+                        case 2:
+                            //Japanese
+                            gameLanguage = "Japanese";
+                            break;
+                        case 3:
+                            //French
+                            gameLanguage = "French";
+                            break;
+                        case 4:
+                            //German
+                            gameLanguage = "German";
+                            break;
+                        case 5:
+                            //Korean
+                            gameLanguage = "Korean";
+                            break;
+                    }
+
                     var ignoreJsonCache = !ChromaticsSettings.ChromaticsSettingsMemoryCache;
                     // patchVersion of game, or latest
                     var patchVersion = "latest";
@@ -175,6 +205,35 @@ namespace Chromatics
                     Init = false;
                     // supported: English, Chinese, Japanese, French, German, Korean
                     var gameLanguage = "English";
+
+                    switch (ChromaticsSettings.ChromaticsSettingsLanguage)
+                    {
+                        case 0:
+                            //English
+                            gameLanguage = "English";
+                            break;
+                        case 1:
+                            //Chinese
+                            gameLanguage = "Chinese";
+                            break;
+                        case 2:
+                            //Japanese
+                            gameLanguage = "Japanese";
+                            break;
+                        case 3:
+                            //French
+                            gameLanguage = "French";
+                            break;
+                        case 4:
+                            //German
+                            gameLanguage = "German";
+                            break;
+                        case 5:
+                            //Korean
+                            gameLanguage = "Korean";
+                            break;
+                    }
+
                     var ignoreJsonCache = !ChromaticsSettings.ChromaticsSettingsMemoryCache;
                     // patchVersion of game, or latest
                     var patchVersion = "latest";
@@ -1323,6 +1382,7 @@ namespace Chromatics
                                 //Target HP
                                 var currentThp = targetInfo.HPCurrent;
                                 var maxThp = targetInfo.HPMax;
+                                //var polTargetHp = Helpers.LinIntDouble(0, maxThp, currentThp, 0, 5);
                                 var polTargetHp = (currentThp - 0) * (5 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx = (currentThp - 0) * (65535 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx2 = (currentThp - 0) * (1.0 - 0.0) / (maxThp - 0) + 0.0;
@@ -4432,6 +4492,8 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Num0", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                         GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
 
+                                        //Console.WriteLine(@"Song: " + Cooldowns.Song.ToString());
+
                                         if (Cooldowns.Song != Cooldowns.BardSongs.None)
                                         {
                                             var songremain = Cooldowns.SongTimeRemaining;
@@ -5732,6 +5794,8 @@ namespace Chromatics
                                         var whitemana = Cooldowns.WhiteMana;
                                         var polBlack = (blackmana - 0) * (40 - 0) / (100 - 0) + 0;
                                         var polWhite = (whitemana - 0) * (40 - 0) / (100 - 0) + 0;
+
+                                        //Console.WriteLine(@"RDM: " + Cooldowns.BlackMana.ToString());
 
                                         var blackburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMBlackMana);
                                         var whiteburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMWhiteMana);

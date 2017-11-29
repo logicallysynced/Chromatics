@@ -1234,6 +1234,7 @@ namespace Chromatics
             chk_showstats.Checked = ChromaticsSettings.ChromaticsSettingsShowStats;
 
             chk_lcdtoggle.Checked = ChromaticsSettings.ChromaticsSettingsLcdEnabled;
+            cb_lang.SelectedIndex = ChromaticsSettings.ChromaticsSettingsLanguage;
             
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
@@ -2639,7 +2640,7 @@ namespace Chromatics
         {
             var cacheReset =
                 MessageBox.Show(
-                    @"Are you sure you wish to clear Chromatics cache?.",
+                    @"Are you sure you wish to clear Chromatics cache?",
                     @"Clear Cache?", MessageBoxButtons.OKCancel);
             if (cacheReset != DialogResult.OK) return;
 
@@ -2680,6 +2681,49 @@ namespace Chromatics
             {
                 MessageBox.Show(@"Unable to clear cache. Are you running as Administrator? Error: " + ex.StackTrace, @"Unable to clear Cache", MessageBoxButtons.OK);
             }
+        }
+
+        private void cb_lang_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsLanguage = cb_lang.SelectedIndex;
+            SetKeysbase = false;
+            SaveChromaticsSettings(1);
+
+            /*
+            if (IsAdministrator())
+            {
+                var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+
+                if (File.Exists(enviroment + @"/signatures-x64.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/signatures-x64.json");
+                }
+
+                if (File.Exists(enviroment + @"/structures-x64.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/structures-x64.json");
+                }
+
+                if (File.Exists(enviroment + @"/actions.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/actions.json");
+                }
+
+                if (File.Exists(enviroment + @"/statuses.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/statuses.json");
+                }
+
+                if (File.Exists(enviroment + @"/zones.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/zones.json");
+                }
+            }
+
+            WriteConsole(ConsoleTypes.Ffxiv, @"Language change detected. Clearing Cache..");
+            */
         }
 
         private delegate void ResetGridDelegate();

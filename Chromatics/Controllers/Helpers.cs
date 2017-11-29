@@ -9,6 +9,12 @@ namespace Chromatics.Controllers
 {
     public class Helpers
     {
+        //Y = ( ( X - X1 )( Y2 - Y1) / ( X2 - X1) ) + Y1
+        public static double LinIntDouble(int ValMin, int ValMax, int Val, int OutMin, int OutMax)
+        {
+            return (Val - ValMin) * (OutMax - OutMin) / (ValMax - ValMin) + OutMin;
+        }
+
         public static string ConvertDevModeToString(DevModeTypes mode)
         {
             switch (mode)

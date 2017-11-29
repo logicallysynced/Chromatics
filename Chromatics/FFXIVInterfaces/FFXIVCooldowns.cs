@@ -2450,7 +2450,8 @@ namespace Chromatics.FFXIVInterfaces
                                     //0x11CDF84
                                     //0x11CEF84
                                     //0x1740518
-                                    0x17BB2A8
+                                    //0x17BB2A8
+                                    0x17BD308
                                 }
                             });
                             Scanner.Instance.LoadOffsets(_sList);
@@ -2480,7 +2481,9 @@ namespace Chromatics.FFXIVInterfaces
                                 PointerPath = new List<long>
                                 {
                                     //0x178BDAA
-                                    0x1806742
+                                    //0x1806742
+                                    //0x18087C9
+                                    0x18087C2
                                 }
                             });
                             Scanner.Instance.LoadOffsets(_sList);

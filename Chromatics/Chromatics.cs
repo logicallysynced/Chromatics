@@ -61,7 +61,7 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.3.0";
+        private readonly string _currentVersionX = "2.3.1";
         public bool DeviceGridStartup = false;
 
         public bool EffectRunning = false;
@@ -297,10 +297,10 @@ namespace Chromatics
             }
             else
             {
+                var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+
                 if (!ChromaticsSettings.ChromaticsSettingsMemoryCache)
                 {
-                    string enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-
                     if (File.Exists(enviroment + @"/signatures-x64.json"))
                     {
                         FileSystem.DeleteFile(enviroment + @"/signatures-x64.json");
@@ -310,6 +310,38 @@ namespace Chromatics
                     {
                         FileSystem.DeleteFile(enviroment + @"/structures-x64.json");
                     }
+                    
+                }
+
+                if (ChromaticsSettings.ChromaticsSettingsLanguage != ChromaticsSettings.ChromaticsSettingsPreviousLanguage)
+                {
+                    if (File.Exists(enviroment + @"/signatures-x64.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/signatures-x64.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/structures-x64.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/structures-x64.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/actions.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/actions.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/statuses.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/statuses.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/zones.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/zones.json");
+                    }
+
+                    WriteConsole(ConsoleTypes.Ffxiv, @"Language change detected. Clearing Cache..");
+                    ChromaticsSettings.ChromaticsSettingsPreviousLanguage = ChromaticsSettings.ChromaticsSettingsLanguage;
                 }
             }
 
@@ -322,7 +354,7 @@ namespace Chromatics
                     if (File.Exists(enviroment + @"/_updater.exe"))
                     {
                         FileSystem.RenameFile(enviroment + @"/_updater.exe", "updater.exe");
-                        WriteConsole(ConsoleTypes.System, "Updated Chromatics Updater to latest version.");
+                        WriteConsole(ConsoleTypes.System, @"Updated Chromatics Updater to latest version.");
                     }
                 }
                 else
@@ -331,7 +363,7 @@ namespace Chromatics
                     {
                         File.Delete(enviroment + @"/updater.exe");
                         FileSystem.RenameFile(enviroment + @"/_updater.exe", "updater.exe");
-                        WriteConsole(ConsoleTypes.System, "Updated Chromatics Updater to latest version.");
+                        WriteConsole(ConsoleTypes.System, @"Updated Chromatics Updater to latest version.");
                     }
                 }
             }
@@ -464,6 +496,40 @@ namespace Chromatics
             if (IsAdministrator())
                 AmbienceInterface.StartAmbience();
             */
+
+            
+
+            var gameLanguage = "English";
+
+            switch (ChromaticsSettings.ChromaticsSettingsLanguage)
+            {
+                case 0:
+                    //English
+                    gameLanguage = "English";
+                    break;
+                case 1:
+                    //Chinese
+                    gameLanguage = "Chinese";
+                    break;
+                case 2:
+                    //Japanese
+                    gameLanguage = "Japanese";
+                    break;
+                case 3:
+                    //French
+                    gameLanguage = "French";
+                    break;
+                case 4:
+                    //German
+                    gameLanguage = "German";
+                    break;
+                case 5:
+                    //Korean
+                    gameLanguage = "Korean";
+                    break;
+            }
+
+            WriteConsole(ConsoleTypes.Ffxiv, @"Game Language set to " + gameLanguage + @".");
 
             //Split off MemoryReader to a Task 
             MemoryTask = new Task(() =>
@@ -658,7 +724,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-        
+
         
     }
 

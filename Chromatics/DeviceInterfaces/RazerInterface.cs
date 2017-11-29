@@ -333,19 +333,29 @@ namespace Chromatics.DeviceInterfaces
             try
             {
                 if (_razerDeviceHeadset)
+                {
                     Headset.Instance.SetEffect(Effect.SpectrumCycling);
+                }
 
                 if (_razerDeviceKeyboard)
+                {
                     Keyboard.Instance.SetWave(Direction.LeftToRight);
+                }
 
                 if (_razerDeviceKeypad)
+                {
                     Keypad.Instance.SetWave(Corale.Colore.Razer.Keypad.Effects.Direction.LeftToRight);
+                }
 
                 if (_razerDeviceMouse)
+                {
                     Mouse.Instance.SetWave(Corale.Colore.Razer.Mouse.Effects.Direction.FrontToBack);
+                }
 
                 if (_razerDeviceMousepad)
+                {
                     Mousepad.Instance.SetWave(Corale.Colore.Razer.Mousepad.Effects.Direction.LeftToRight);
+                }
 
                 /*
                 if (_razerDeviceChromaLink)
@@ -507,7 +517,7 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapChromaLinkLighting(Color col, int pos)
         {
-            if (pos >= Corale.Colore.Razer.ChromaLink.Constants.MaxLEDs) return;
+            if (pos >= Corale.Colore.Razer.ChromaLink.Constants.MaxLeds) return;
             uint rzCol = col.ToColoreColor();
             
             try

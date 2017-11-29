@@ -76,13 +76,15 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsJobGaugeToggle = true;
         public bool ChromaticsSettingsKeybindToggle = true;
         public bool ChromaticsSettingsShowStats = true;
+        public int ChromaticsSettingsLanguage = 0;
+        public int ChromaticsSettingsPreviousLanguage = 0;
 
         public bool ChromaticsSettingsKeyHighlights = true;
         public bool ChromaticsSettingsLccAuto = false;
         public bool ChromaticsSettingsMemoryCache = false;
         public bool ChromaticsSettingsDesktopNotifications = true;
         public bool ChromaticsSettingsLcdEnabled = true;
-        public string FinalFantasyXivVersion = "4.0.6";
+        public string FinalFantasyXivVersion = "4.1.5";
     }
 
     //Color Mapping
