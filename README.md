@@ -1,5 +1,7 @@
 **Important:** We are now discontinuing support for DX9. Please use DX11 instead.
 
+**LOOKING FOR C# DEVELOPERS TO HELP MAINTAIN THIS - Please contact me if you're keen to get involved!**
+
 **We now have a support Discord:** [Join Support Discord](https://discord.gg/sK47yFE)
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
@@ -40,7 +42,7 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 # Prerequisites
  
 * [.Net Framework 4.6 (Full)](https://www.microsoft.com/en-au/download/details.aspx?id=49981)
-* [Visual Studio 2015 C++ Redistributable](https://www.microsoft.com/en-au/download/details.aspx?id=48145)
+* [Visual Studio 2017 C++ Redistributable](https://go.microsoft.com/fwlink/?LinkId=746572)
 * [Razer SDK](http://www.razerzone.com/au-en/synapse) (Automatically installed with Razer Synapse) - *For Razer device support*
 * [Logitech Gaming Software](http://support.logitech.com/en_gb/software/gaming-software) - *For Logitech device support*
 * [Corsair Utility Engine](http://www.corsair.com/en-au/support/downloads) - *For Corsair device support*
@@ -59,4 +61,5 @@ Please visit [this page](https://chromaticsffxiv.com/download.html) for installa
 * [Daniel Rouleau for Logitech support](https://github.com/danielrouleau)
 * [Elestriel for Corsair debug](https://github.com/Elestriel)
 * [Sidewinder94 for Logitech LCD support](https://github.com/sidewinder94/Logitech-LCD)
+* [Sharlayan for FFXIV Integration](https://github.com/Icehunter/sharlayan)
 * [C.J. Manca for integration libraries](https://github.com/cjmanca)
