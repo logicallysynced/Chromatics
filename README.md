@@ -10,7 +10,6 @@
 [![Github Latest Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/latest/total.svg)](https://github.com/roxaskeyheart/Chromatics/releases/latest)
 [![Latest Release](https://img.shields.io/github/release/roxaskeyheart/Chromatics.svg)](https://github.com/roxaskeyheart/Chromatics/releases/latest)
 [![Discord](https://img.shields.io/discord/334196655131721741.svg)](https://discord.gg/sK47yFE)
-[Donate](https://discord.gg/rtKsAnj)
 
 **Lighting Effects for Final Fantasy XIV**
 
@@ -26,6 +25,8 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 [Visit Website](https://chromaticsffxiv.com)
 
 [Join Support Discord](https://discord.gg/sK47yFE)
+
+[Donate/Contribute](https://discord.gg/rtKsAnj)
 
 
 # Features
