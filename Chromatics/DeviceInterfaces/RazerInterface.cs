@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -49,7 +50,8 @@ namespace Chromatics.DeviceInterfaces
     public interface IRazerSdk
     {
         bool InitializeSdk();
-        void InitializeLights();
+        bool ShutdownSdk();
+        void InitializeLights(Color initColor);
 
         void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
             bool deviceHeadset, bool deviceChromaLink, Color basecol);
@@ -241,6 +243,11 @@ namespace Chromatics.DeviceInterfaces
         //Handle device send/recieve
         private readonly CancellationTokenSource _rcts = new CancellationTokenSource();
 
+        public bool ShutdownSdk()
+        {
+            return false;
+        }
+
         public bool InitializeSdk()
         {
             try
@@ -305,10 +312,10 @@ namespace Chromatics.DeviceInterfaces
             
         }
 
-        public void InitializeLights()
+        public void InitializeLights(Color initColor)
         {
             //Debug.WriteLine("Setting Razer Default");
-            SetLights(Color.DeepSkyBlue);
+            SetLights(initColor);
         }
 
         public void SetLights(Color col)

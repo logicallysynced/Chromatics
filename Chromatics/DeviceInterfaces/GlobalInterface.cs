@@ -85,7 +85,7 @@ namespace Chromatics
                 RazerSdk = true;
                 RazerSdkCalled = 1;
                 //WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded");
-                _razer.InitializeLights();
+                _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
             }
             else
             {
