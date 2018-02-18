@@ -680,57 +680,74 @@ namespace Chromatics
                 if (CorsairSdkCalled == 1)
                 {
                     var corsairPadRegion = "Pad1";
+                    var corsairStandRegion = "HeadsetStandZone1";
 
                     switch (region1)
                     {
                         case 0:
                             corsairPadRegion = "Pad15";
+                            corsairStandRegion = "HeadsetStandZone3";
                             break;
                         case 1:
                             corsairPadRegion = "Pad14";
+                            corsairStandRegion = "HeadsetStandZone3";
                             break;
                         case 2:
                             corsairPadRegion = "Pad13";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 3:
                             corsairPadRegion = "Pad12";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 4:
                             corsairPadRegion = "Pad11";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 5:
                             corsairPadRegion = "Pad10";
+                            corsairStandRegion = "HeadsetStandZone5";
                             break;
                         case 6:
                             corsairPadRegion = "Pad9";
+                            corsairStandRegion = "HeadsetStandZone5";
                             break;
                         case 7:
                             corsairPadRegion = "Pad8";
+                            corsairStandRegion = "HeadsetStandZone6";
                             break;
                         case 8:
                             corsairPadRegion = "Pad7";
+                            corsairStandRegion = "HeadsetStandZone6";
                             break;
                         case 9:
                             corsairPadRegion = "Pad6";
+                            corsairStandRegion = "HeadsetStandZone7";
                             break;
                         case 10:
                             corsairPadRegion = "Pad5";
+                            corsairStandRegion = "HeadsetStandZone7";
                             break;
                         case 11:
                             corsairPadRegion = "Pad4";
+                            corsairStandRegion = "HeadsetStandZone8";
                             break;
                         case 12:
                             corsairPadRegion = "Pad3";
+                            corsairStandRegion = "HeadsetStandZone8";
                             break;
                         case 13:
                             corsairPadRegion = "Pad2";
+                            corsairStandRegion = "HeadsetStandZone9";
                             break;
                         case 14:
                             corsairPadRegion = "Pad1";
+                            corsairStandRegion = "HeadsetStandZone9";
                             break;
                     }
 
                     _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
+                    _corsair.ApplyMapStandLighting(corsairStandRegion, col, clear);
                 }
             }
 
@@ -747,57 +764,74 @@ namespace Chromatics
                 if (CorsairSdkCalled == 1)
                 {
                     var corsairPadRegion = "Pad1";
+                    var corsairStandRegion = "HeadsetStandZone1";
 
                     switch (region2)
                     {
                         case 0:
                             corsairPadRegion = "Pad15";
+                            corsairStandRegion = "HeadsetStandZone3";
                             break;
                         case 1:
                             corsairPadRegion = "Pad14";
+                            corsairStandRegion = "HeadsetStandZone3";
                             break;
                         case 2:
                             corsairPadRegion = "Pad13";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 3:
                             corsairPadRegion = "Pad12";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 4:
                             corsairPadRegion = "Pad11";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 5:
                             corsairPadRegion = "Pad10";
+                            corsairStandRegion = "HeadsetStandZone5";
                             break;
                         case 6:
                             corsairPadRegion = "Pad9";
+                            corsairStandRegion = "HeadsetStandZone5";
                             break;
                         case 7:
                             corsairPadRegion = "Pad8";
+                            corsairStandRegion = "HeadsetStandZone6";
                             break;
                         case 8:
                             corsairPadRegion = "Pad7";
+                            corsairStandRegion = "HeadsetStandZone6";
                             break;
                         case 9:
                             corsairPadRegion = "Pad6";
+                            corsairStandRegion = "HeadsetStandZone7";
                             break;
                         case 10:
                             corsairPadRegion = "Pad5";
+                            corsairStandRegion = "HeadsetStandZone7";
                             break;
                         case 11:
                             corsairPadRegion = "Pad4";
+                            corsairStandRegion = "HeadsetStandZone8";
                             break;
                         case 12:
                             corsairPadRegion = "Pad3";
+                            corsairStandRegion = "HeadsetStandZone8";
                             break;
                         case 13:
                             corsairPadRegion = "Pad2";
+                            corsairStandRegion = "HeadsetStandZone9";
                             break;
                         case 14:
                             corsairPadRegion = "Pad1";
+                            corsairStandRegion = "HeadsetStandZone9";
                             break;
                     }
 
                     _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
+                    _corsair.ApplyMapStandLighting(corsairStandRegion, col, clear);
                 }
             }
 
@@ -814,57 +848,74 @@ namespace Chromatics
                 if (CorsairSdkCalled == 1)
                 {
                     var corsairPadRegion = "Pad1";
+                    var corsairStandRegion = "HeadsetStandZone1";
 
                     switch (region3)
                     {
                         case 0:
                             corsairPadRegion = "Pad15";
+                            corsairStandRegion = "HeadsetStandZone3";
                             break;
                         case 1:
                             corsairPadRegion = "Pad14";
+                            corsairStandRegion = "HeadsetStandZone3";
                             break;
                         case 2:
                             corsairPadRegion = "Pad13";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 3:
                             corsairPadRegion = "Pad12";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 4:
                             corsairPadRegion = "Pad11";
+                            corsairStandRegion = "HeadsetStandZone4";
                             break;
                         case 5:
                             corsairPadRegion = "Pad10";
+                            corsairStandRegion = "HeadsetStandZone5";
                             break;
                         case 6:
                             corsairPadRegion = "Pad9";
+                            corsairStandRegion = "HeadsetStandZone5";
                             break;
                         case 7:
                             corsairPadRegion = "Pad8";
+                            corsairStandRegion = "HeadsetStandZone6";
                             break;
                         case 8:
                             corsairPadRegion = "Pad7";
+                            corsairStandRegion = "HeadsetStandZone6";
                             break;
                         case 9:
                             corsairPadRegion = "Pad6";
+                            corsairStandRegion = "HeadsetStandZone7";
                             break;
                         case 10:
                             corsairPadRegion = "Pad5";
+                            corsairStandRegion = "HeadsetStandZone7";
                             break;
                         case 11:
                             corsairPadRegion = "Pad4";
+                            corsairStandRegion = "HeadsetStandZone8";
                             break;
                         case 12:
                             corsairPadRegion = "Pad3";
+                            corsairStandRegion = "HeadsetStandZone8";
                             break;
                         case 13:
                             corsairPadRegion = "Pad2";
+                            corsairStandRegion = "HeadsetStandZone9";
                             break;
                         case 14:
                             corsairPadRegion = "Pad1";
+                            corsairStandRegion = "HeadsetStandZone9";
                             break;
                     }
 
                     _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
+                    _corsair.ApplyMapStandLighting(corsairStandRegion, col, clear);
                 }
             }
 

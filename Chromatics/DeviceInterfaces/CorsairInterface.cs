@@ -60,6 +60,7 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapLogoLighting(string key, Color col, bool clear);
         void ApplyMapPadLighting(string region, Color col, bool clear);
         void ApplyMapHeadsetLighting(Color col, bool clear);
+        void ApplyMapStandLighting(string region, Color col, bool clear);
 
         Task Ripple1(Color burstcol, int speed, Color baseColor);
         Task Ripple2(Color burstcol, int speed);
@@ -272,7 +273,16 @@ namespace Chromatics.DeviceInterfaces
             {"Lightbar16", CorsairLedId.Lightbar16},
             {"Lightbar17", CorsairLedId.Lightbar17},
             {"Lightbar18", CorsairLedId.Lightbar18},
-            {"Lightbar19", CorsairLedId.Lightbar19}
+            {"Lightbar19", CorsairLedId.Lightbar19},
+            {"HeadsetStandZone1", CorsairLedId.HeadsetStandZone1},
+            {"HeadsetStandZone2", CorsairLedId.HeadsetStandZone2},
+            {"HeadsetStandZone3", CorsairLedId.HeadsetStandZone3},
+            {"HeadsetStandZone4", CorsairLedId.HeadsetStandZone4},
+            {"HeadsetStandZone5", CorsairLedId.HeadsetStandZone5},
+            {"HeadsetStandZone6", CorsairLedId.HeadsetStandZone6},
+            {"HeadsetStandZone7", CorsairLedId.HeadsetStandZone7},
+            {"HeadsetStandZone8", CorsairLedId.HeadsetStandZone8},
+            {"HeadsetStandZone9", CorsairLedId.HeadsetStandZone9},
         };
 
         #endregion
@@ -284,6 +294,7 @@ namespace Chromatics.DeviceInterfaces
 
         private ListLedGroup _corsairAllMouseLed;
         private ListLedGroup _corsairAllMousepadLed;
+        private ListLedGroup _corsairAllStandLed;
         private bool _corsairFlash2Running;
         private int _corsairFlash2Step;
         private bool _corsairFlash4Running;
@@ -295,11 +306,15 @@ namespace Chromatics.DeviceInterfaces
         private ListLedGroup _corsairMouseIndvLed;
         private KeyMapBrush _corsairMousepadIndvBrush;
         private ListLedGroup _corsairMousepadIndvLed;
+        private KeyMapBrush _corsairStandIndvBrush;
+        private ListLedGroup _corsairStandIndvLed;
+
         private bool _corsairDeviceHeadset = true;
         private bool _corsairDeviceKeyboard = true;
         private bool _corsairDeviceKeypad = true;
         private bool _corsairDeviceMouse = true;
         private bool _corsairDeviceMousepad = true;
+        private bool _corsairDeviceStand = true;
 
         private Color _corsairLogo;
         private Color _corsairLogoConv;
@@ -332,6 +347,14 @@ namespace Chromatics.DeviceInterfaces
                 _corsairMouseIndvLed.ZIndex = 10;
                 _corsairMouseIndvLed.Brush = _corsairMouseIndvBrush;
                 _corsairAllMouseLed.Brush = (SolidColorBrush) Color.Black;
+
+                _corsairStandIndvBrush = new KeyMapBrush();
+                _corsairStandIndvLed = new ListLedGroup(CueSDK.HeadsetStandSDK, CueSDK.HeadsetStandSDK);
+                _corsairAllStandLed = new ListLedGroup(CueSDK.HeadsetStandSDK, CueSDK.HeadsetStandSDK);
+                _corsairAllStandLed.ZIndex = 1;
+                _corsairStandIndvLed.ZIndex = 10;
+                _corsairStandIndvLed.Brush = _corsairStandIndvBrush;
+                _corsairAllStandLed.Brush = (SolidColorBrush) Color.Black;
 
                 _corsairMousepadIndvBrush = new KeyMapBrush();
                 _corsairMousepadIndvLed = new ListLedGroup(CueSDK.MousematSDK, CueSDK.MousematSDK);
@@ -402,11 +425,15 @@ namespace Chromatics.DeviceInterfaces
             if (_corsairDeviceMousepad && !deviceMousepad)
                 _corsairAllMousepadLed.Brush = (SolidColorBrush)basecol;
 
+            if (_corsairDeviceHeadset)
+                _corsairAllStandLed.Brush = (SolidColorBrush)basecol;
+
             _corsairDeviceKeyboard = deviceKeyboard;
             _corsairDeviceKeypad = deviceKeypad;
             _corsairDeviceMouse = deviceMouse;
             _corsairDeviceMousepad = deviceMousepad;
             _corsairDeviceHeadset = deviceHeadset;
+            _corsairDeviceStand = true;
 
             if (_corsairDeviceHeadset)
             {
@@ -433,6 +460,7 @@ namespace Chromatics.DeviceInterfaces
             if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model)) CueSDK.KeyboardSDK.Update();
             if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model)) CueSDK.MouseSDK.Update();
             if (_corsairDeviceMousepad && !string.IsNullOrEmpty(CueSDK.MousematSDK?.MousematDeviceInfo?.Model)) CueSDK.MousematSDK.Update();
+            if (_corsairDeviceStand && !string.IsNullOrEmpty(CueSDK.HeadsetStandSDK?.HeadsetStandDeviceInfo?.Model)) CueSDK.HeadsetStandSDK.Update();
         }
 
         public void SetLights(Color col)
@@ -509,6 +537,8 @@ namespace Chromatics.DeviceInterfaces
                         _corsairAllMouseLed.Brush = (SolidColorBrush) col;
                     if (_corsairDeviceMousepad)
                         _corsairAllMousepadLed.Brush = (SolidColorBrush) col;
+                    if (_corsairDeviceStand)
+                        _corsairAllStandLed.Brush = (SolidColorBrush)col;
                 }
                 catch (Exception ex)
                 {
@@ -642,6 +672,8 @@ namespace Chromatics.DeviceInterfaces
                         _corsairAllMouseLed.Brush = (SolidColorBrush) col;
                     if (_corsairDeviceMousepad)
                         _corsairAllMousepadLed.Brush = (SolidColorBrush) col;
+                    if (_corsairDeviceStand)
+                        _corsairAllStandLed.Brush = (SolidColorBrush)col;
                 }, _ccts.Token);
                 MemoryTasks.Add(crSt);
                 MemoryTasks.Run(crSt);
@@ -697,6 +729,16 @@ namespace Chromatics.DeviceInterfaces
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.MousematSDK[_corsairkeyids[region]] != null)
                         _corsairMousepadIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[region], col);
+        }
+
+        public void ApplyMapStandLighting(string region, Color col, bool clear)
+        {
+            if (pause) return;
+
+            if (_corsairDeviceStand && !string.IsNullOrEmpty(CueSDK.MousematSDK?.MousematDeviceInfo?.Model))
+                if (_corsairkeyids.ContainsKey(region))
+                    if (CueSDK.HeadsetStandSDK[_corsairkeyids[region]] != null)
+                        _corsairStandIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[region], col);
         }
 
         public void ApplyMapHeadsetLighting(Color col, bool clear)
