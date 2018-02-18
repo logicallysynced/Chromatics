@@ -96,7 +96,7 @@ namespace Chromatics
             //HoldReader = false;
 
             //GlobalUpdateState("static", Color.DeepSkyBlue, false);
-            GlobalApplyAllKeyLighting(Color.DeepSkyBlue);
+            GlobalApplyAllKeyLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
 
             //Debug.WriteLine("Resetting..");
@@ -324,7 +324,7 @@ namespace Chromatics
                                 }
 
                                 //GlobalUpdateState("static", Color.DeepSkyBlue, false);
-                                GlobalApplyAllKeyLighting(Color.DeepSkyBlue);
+                                GlobalApplyAllKeyLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
 
                                 WriteConsole(ConsoleTypes.Ffxiv, "Returning to Main Menu..");
                             }
