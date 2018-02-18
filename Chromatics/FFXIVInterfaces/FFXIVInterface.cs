@@ -3938,6 +3938,8 @@ namespace Chromatics
                                             }
                                             else if (polWrath <= 10 && polWrath > 0)
                                             {
+                                                ToggleGlobalFlash3(false);
+
                                                 GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
                                                 GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
                                                 GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
@@ -3956,6 +3958,8 @@ namespace Chromatics
                                             }
                                             else if (polWrath == 0)
                                             {
+                                                ToggleGlobalFlash3(false);
+
                                                 GlobalApplyMapKeyLighting("NumLock", negwarcol, false);
                                                 GlobalApplyMapKeyLighting("NumDivide", negwarcol, false);
                                                 GlobalApplyMapKeyLighting("NumMultiply", negwarcol, false);
@@ -3971,6 +3975,10 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", negwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", negwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", negwarcol, false);
+                                            }
+                                            else
+                                            {
+                                                ToggleGlobalFlash3(false);
                                             }
                                         }
                                         else

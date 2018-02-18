@@ -1186,13 +1186,13 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    _coolermasterFl3Cts.Cancel();
+                    _logiFl3Cts.Cancel();
                     MemoryTasks.Remove(_logiFl3);
                 }
 
                 if (CoolermasterSdkCalled == 1)
                 {
-                    _logiFl3Cts.Cancel();
+                    _coolermasterFl3Cts.Cancel();
                     MemoryTasks.Remove(_coolermasterFl3);
                 }
 

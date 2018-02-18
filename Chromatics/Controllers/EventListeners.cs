@@ -99,5 +99,7 @@ namespace Chromatics
                 Hide();
             }
         }
+
+
     }
 }
