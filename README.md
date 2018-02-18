@@ -26,6 +26,8 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 
 [Join Support Discord](https://discord.gg/sK47yFE)
 
+[Donate/Contribute](https://discord.gg/rtKsAnj)
+
 
 # Features
 
