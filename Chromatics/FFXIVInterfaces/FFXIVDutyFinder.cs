@@ -28,7 +28,7 @@ namespace Chromatics.FFXIVInterfaces
             lock (RefreshLock)
             {
                 if (!_memoryready)
-                    if (!Scanner.Instance.Locations.ContainsKey("COOLDOWNS") || !_siginit)
+                    if (!Scanner.Instance.Locations.ContainsKey("DUTYFINDER") || !_siginit)
                     {
                         _sList = new List<Signature>();
 
