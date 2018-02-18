@@ -462,14 +462,24 @@ namespace Chromatics
 
                 //_playerInfoX = Reader.GetActors()?.PCEntities;
                 _playerInfo = ActorEntity.CurrentUser;
-
+                
                 try
                 {
-                    if (_playerInfo.Name != "" && _playerInfo.TargetID > 0)
+                    if (_playerInfo.Name != "" && _playerInfo.TargetType != Actor.TargetType.Unknown)
                     {
-                        targetInfo = Reader.GetTargetInfo()?.TargetEntity?.CurrentTarget;
-                        targetEmnityInfo = Reader.GetTargetInfo()?.TargetEntity?.EnmityEntries;
+                        if (Reader.CanGetTargetInfo())
+                        {
+                            targetInfo = Reader.GetTargetInfo()?.TargetEntity?.CurrentTarget;
+                        }
+
+                        if (Reader.CanGetEnmityEntities())
+                        {
+                            targetEmnityInfo = Reader.GetTargetInfo()?.TargetEntity?.EnmityEntries;
+                        }
+
+                        //Console.WriteLine(@"Name:" + targetInfo.Name);
                     }
+
 
                     partyInfo = Reader.GetPartyMembers()?.PartyEntities;
 
@@ -477,6 +487,8 @@ namespace Chromatics
                     partyListOld = Reader.GetPartyMembers()?.RemovedParty;
 
                     //personalInfo = Reader.GetPlayerInfo()?.PlayerEntity;
+
+                    
                 }
                 catch (Exception ex)
                 {
@@ -1089,7 +1101,7 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("Z", baseColor, false);
                             GlobalApplyMapKeyLighting("Q", baseColor, false);
                         }
-
+                        
                         if (targetInfo == null)
                         {
                             GlobalApplyMapKeyLighting("PrintScreen",
