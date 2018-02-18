@@ -2602,7 +2602,7 @@ namespace Chromatics
                         var polCastZ = Convert.ToInt32((castPercentage - 0) * (65535 - 0) / (1.0 - 0.0) + 0);
                         //double polCastZ2 = Convert.ToInt32((castPercentage - 0) * (1.0 - 0.0) / (1.0 - 0.0) + 0.0);
 
-                        Console.WriteLine(_playerInfo.IsCasting);
+                        //Console.WriteLine(_playerInfo.IsCasting);
 
                         if (_playerInfo.IsCasting)
                         {
@@ -3655,7 +3655,7 @@ namespace Chromatics
                                                 string.IsNullOrEmpty(action.KeyBinds) ||
                                                 string.IsNullOrEmpty(action.ActionKey)) continue;
 
-                                            Console.WriteLine(@"key: " + action.ActionKey);
+                                            //Console.WriteLine(@"key: " + action.ActionKey);
 
                                             //Collect Modifier Info
                                             var modsactive = action.Modifiers.Count;
@@ -6198,7 +6198,7 @@ namespace Chromatics
 
                             if (FfxivDutyFinder.IsPopped())
                             {
-                                Debug.WriteLine("DF Pop");
+                                //Debug.WriteLine("DF Pop");
                                 if (!_dfpop)
                                 {
                                     ToggleGlobalFlash4(true);

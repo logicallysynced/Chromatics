@@ -41,6 +41,8 @@ namespace Chromatics.FFXIVInterfaces
                                 0x7D0,
                                 0x2A0,
                                 0x7C0
+                                //0x018ECB30,
+                                //0x24
                             }
                         });
 
