@@ -44,7 +44,7 @@ namespace Chromatics
         //private static readonly object _ReadFFXIVMemory = new object();
         
         private ActorEntity _playerInfo = new ActorEntity();
-        private PlayerEntity _menuInfo = new PlayerEntity();
+        private ActorEntity _menuInfo = new ActorEntity();
         private ConcurrentDictionary<uint, ActorEntity> _playerInfoX = new ConcurrentDictionary<uint, ActorEntity>();
 
         private bool _playgroundonce;
@@ -295,7 +295,7 @@ namespace Chromatics
                         FfxivGameStop();
 
                     _playerInfoX = Reader.GetActors().PCEntities;
-                    _menuInfo = Reader.GetPlayerInfo().PlayerEntity;
+                    _menuInfo = ActorEntity.CurrentUser; //Reader.GetPlayerInfo().PlayerEntity;
 
 
                     if (Attatched == 3)
@@ -510,6 +510,9 @@ namespace Chromatics
                         var mpPerc = _playerInfo.MPPercent;
                         var tpPerc = _playerInfo.TPPercent;
                         var cClass = "battle";
+
+                        //Console.WriteLine(_playerInfo.Name);
+                        //Console.WriteLine(_playerInfo.IsCasting);
 
                         //Set colour variables
 
@@ -2599,7 +2602,7 @@ namespace Chromatics
                         var polCastZ = Convert.ToInt32((castPercentage - 0) * (65535 - 0) / (1.0 - 0.0) + 0);
                         //double polCastZ2 = Convert.ToInt32((castPercentage - 0) * (1.0 - 0.0) / (1.0 - 0.0) + 0.0);
 
-                        //Debug.WriteLine(castPercentage);
+                        Console.WriteLine(_playerInfo.IsCasting);
 
                         if (_playerInfo.IsCasting)
                         {
@@ -3623,139 +3626,146 @@ namespace Chromatics
                         {
                             Cooldowns.RefreshData();
 
-
                             //Hotbars        
 
-                            var hotbars = Reader.GetActions();
-
-                            if (ChromaticsSettings.ChromaticsSettingsKeybindToggle)
+                            if (Reader.CanGetActions())
                             {
-                                FfxivHotbar.Keybindwhitelist.Clear();
+                                var hotbars = Reader.GetActions();
 
-                                foreach (var hotbar in hotbars.ActionEntities)
+                                if (ChromaticsSettings.ChromaticsSettingsKeybindToggle)
                                 {
-                                    if (hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_1 ||
-                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_2 ||
-                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_3 ||
-                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_4 ||
-                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_5 ||
-                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_6 ||
-                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_7 ||
-                                        hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_8 ||
-                                        hotbar.Type == HotBarRecast.Container.PETBAR ||
-                                        hotbar.Type == HotBarRecast.Container.CROSS_PETBAR) continue;
+                                    FfxivHotbar.Keybindwhitelist.Clear();
 
-                                    foreach (var action in hotbar.Actions)
+                                    foreach (var hotbar in hotbars.ActionEntities)
                                     {
-                                        if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) ||
-                                            string.IsNullOrEmpty(action.KeyBinds) ||
-                                            string.IsNullOrEmpty(action.ActionKey)) continue;
+                                        if (hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_1 ||
+                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_2 ||
+                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_3 ||
+                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_4 ||
+                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_5 ||
+                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_6 ||
+                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_7 ||
+                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_8 ||
+                                            hotbar.Type == HotBarRecast.Container.PETBAR ||
+                                            hotbar.Type == HotBarRecast.Container.CROSS_PETBAR) continue;
 
-                                        //Collect Modifier Info
-                                        var modsactive = action.Modifiers.Count;
-                                        var _modsactive = modsactive;
-
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(action.ActionKey))
-                                            FfxivHotbar.Keybindwhitelist.Add(action.ActionKey);
-
-
-                                        if (modsactive > 0)
-                                            foreach (var modifier in action.Modifiers)
-                                            {
-                                                if (modsactive == 0) break;
-
-                                                if (modifier == "Ctrl")
-                                                    if (_keyCtrl)
-                                                    {
-                                                        _modsactive--;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (_modsactive < modsactive)
-                                                            _modsactive++;
-                                                    }
-
-                                                if (modifier == "Alt")
-                                                    if (_keyAlt)
-                                                    {
-                                                        _modsactive--;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (_modsactive < modsactive)
-                                                            _modsactive++;
-                                                    }
-
-                                                if (modifier == "Shift")
-                                                    if (_keyShift)
-                                                    {
-                                                        _modsactive--;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (_modsactive < modsactive)
-                                                            _modsactive++;
-                                                    }
-                                            }
-
-                                        //Assign Lighting
-
-                                        if (FfxivHotbar.Keybindtranslation.ContainsKey(action.ActionKey))
+                                        foreach (var action in hotbar.Actions)
                                         {
-                                            var keyid = FfxivHotbar.Keybindtranslation[action.ActionKey];
+                                            if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) ||
+                                                string.IsNullOrEmpty(action.KeyBinds) ||
+                                                string.IsNullOrEmpty(action.ActionKey)) continue;
 
-                                            if (_modsactive == 0)
-                                                if (action.IsAvailable || _playerInfo.IsCasting)
-                                                    if (action.InRange)
-                                                        if (action.IsProcOrCombo)
+                                            Console.WriteLine(@"key: " + action.ActionKey);
+
+                                            //Collect Modifier Info
+                                            var modsactive = action.Modifiers.Count;
+                                            var _modsactive = modsactive;
+
+                                            if (!FfxivHotbar.Keybindwhitelist.Contains(action.ActionKey))
+                                                FfxivHotbar.Keybindwhitelist.Add(action.ActionKey);
+
+
+                                            if (modsactive > 0)
+                                                foreach (var modifier in action.Modifiers)
+                                                {
+                                                    if (modsactive == 0) break;
+
+                                                    if (modifier == "Ctrl")
+                                                        if (_keyCtrl)
                                                         {
-                                                            //Action Proc'd
-                                                            GlobalApplyMapKeyLighting(keyid,
-                                                                ColorTranslator.FromHtml(ColorMappings
-                                                                    .ColorMappingHotbarProc), false, true);
+                                                            _modsactive--;
                                                         }
                                                         else
                                                         {
-                                                            if (action.CoolDownPercent > 0)
-                                                                GlobalApplyMapKeyLighting(keyid,
-                                                                    ColorTranslator.FromHtml(ColorMappings
-                                                                        .ColorMappingHotbarCd), false, true);
-                                                            else
-                                                                GlobalApplyMapKeyLighting(keyid,
-                                                                    ColorTranslator.FromHtml(ColorMappings
-                                                                        .ColorMappingHotbarReady), false, true);
+                                                            if (_modsactive < modsactive)
+                                                                _modsactive++;
                                                         }
+
+                                                    if (modifier == "Alt")
+                                                        if (_keyAlt)
+                                                        {
+                                                            _modsactive--;
+                                                        }
+                                                        else
+                                                        {
+                                                            if (_modsactive < modsactive)
+                                                                _modsactive++;
+                                                        }
+
+                                                    if (modifier == "Shift")
+                                                        if (_keyShift)
+                                                        {
+                                                            _modsactive--;
+                                                        }
+                                                        else
+                                                        {
+                                                            if (_modsactive < modsactive)
+                                                                _modsactive++;
+                                                        }
+                                                }
+
+                                            //Assign Lighting
+
+                                            if (FfxivHotbar.Keybindtranslation.ContainsKey(action.ActionKey))
+                                            {
+                                                var keyid = FfxivHotbar.Keybindtranslation[action.ActionKey];
+
+
+                                                if (_modsactive == 0)
+                                                    if (action.IsAvailable || _playerInfo.IsCasting)
+                                                        if (action.InRange)
+                                                            if (action.IsProcOrCombo)
+                                                            {
+                                                                //Action Proc'd
+                                                                GlobalApplyMapKeyLighting(keyid,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarProc), false, true);
+                                                            }
+                                                            else
+                                                            {
+                                                                if (action.CoolDownPercent > 0)
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarCd), false, true);
+                                                                else
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarReady), false, true);
+                                                            }
+                                                        else
+                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingHotbarOutRange), false, true);
                                                     else
                                                         GlobalApplyMapKeyLighting(keyid,
                                                             ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingHotbarOutRange), false, true);
-                                                else
-                                                    GlobalApplyMapKeyLighting(keyid,
-                                                        ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingHotbarNotAvailable), false, true);
+                                                                .ColorMappingHotbarNotAvailable), false, true);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                GlobalApplyMapKeyLighting("OemTilde", baseColor, false);
-                                GlobalApplyMapKeyLighting("D1", baseColor, false);
-                                GlobalApplyMapKeyLighting("D2", baseColor, false);
-                                GlobalApplyMapKeyLighting("D3", baseColor, false);
-                                GlobalApplyMapKeyLighting("D4", baseColor, false);
-                                GlobalApplyMapKeyLighting("D5", baseColor, false);
-                                GlobalApplyMapKeyLighting("D6", baseColor, false);
-                                GlobalApplyMapKeyLighting("D7", baseColor, false);
-                                GlobalApplyMapKeyLighting("D8", baseColor, false);
-                                GlobalApplyMapKeyLighting("D9", baseColor, false);
-                                GlobalApplyMapKeyLighting("D0", baseColor, false);
-                                GlobalApplyMapKeyLighting("OemMinus", baseColor, false);
-                                GlobalApplyMapKeyLighting("OemEquals", baseColor, false);
+                                else
+                                {
+                                    GlobalApplyMapKeyLighting("OemTilde", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D1", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D2", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D3", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D4", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D5", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D6", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D7", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D8", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D9", baseColor, false);
+                                    GlobalApplyMapKeyLighting("D0", baseColor, false);
+                                    GlobalApplyMapKeyLighting("OemMinus", baseColor, false);
+                                    GlobalApplyMapKeyLighting("OemEquals", baseColor, false);
+                                }
                             }
 
 
                             //Cooldowns
+                            
+                                
                             var gcdHot = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdHot);
                             var gcdReady = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdReady);
                             var gcdEmpty = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdEmpty);

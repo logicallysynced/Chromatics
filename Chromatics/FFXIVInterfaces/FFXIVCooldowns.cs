@@ -2404,38 +2404,39 @@ namespace Chromatics.FFXIVInterfaces
                         {
                             //PluginController.debug("Initializing cooldowns...");
 
-                            _sList = new List<Signature>();
-
-                            // 021386E4
-                            // 021388A4
-
-
-                            /*
-                            // doesn't seem to exist anymore
-                            sList.Add(new Signature
+                            _sList = new List<Signature>
                             {
-                                Key = "AUTO_ATTACK_COUNT",
-                                PointerPath = new List<long>()
+
+                                // 021386E4
+                                // 021388A4
+
+
+                                /*
+                                // doesn't seem to exist anymore
+                                sList.Add(new Signature
                                 {
-                                    0x00F1BCB0,
-                                    0X30,
-                                    0X6c4,
-                                    0X310
-                                }
-                            });
-                            */
+                                    Key = "AUTO_ATTACK_COUNT",
+                                    PointerPath = new List<long>()
+                                    {
+                                        0x00F1BCB0,
+                                        0X30,
+                                        0X6c4,
+                                        0X310
+                                    }
+                                });
+                                */
 
-                            // 022FA1D4
-                            // 01200000
+                                // 022FA1D4
+                                // 01200000
 
 
-                            // 01360ED4
-                            // 001F0000
+                                // 01360ED4
+                                // 001F0000
 
-                            _sList.Add(new Signature
-                            {
-                                Key = "COOLDOWNS",
-                                PointerPath = new List<long>
+                                new Signature
+                                {
+                                    Key = "COOLDOWNS",
+                                    PointerPath = new List<long>
                                 {
                                     //0x10FA1D4
                                     //0x10FB1D4
@@ -2451,9 +2452,10 @@ namespace Chromatics.FFXIVInterfaces
                                     //0x11CEF84
                                     //0x1740518
                                     //0x17BB2A8
-                                    0x17BD308
+                                    0x1860658
                                 }
-                            });
+                                }
+                            };
                             Scanner.Instance.LoadOffsets(_sList);
 
                             Thread.Sleep(100);
@@ -2473,19 +2475,21 @@ namespace Chromatics.FFXIVInterfaces
                         {
                             //PluginController.debug("Initializing cooldowns...");
 
-                            _sList = new List<Signature>();
-
-                            _sList.Add(new Signature
+                            _sList = new List<Signature>
                             {
-                                Key = "CLASSRESOURCES",
-                                PointerPath = new List<long>
+                                new Signature
+                                {
+                                    Key = "CLASSRESOURCES",
+                                    PointerPath = new List<long>
                                 {
                                     //0x178BDAA
                                     //0x1806742
                                     //0x18087C9
-                                    0x18087C2
+                                    //0x18087C2
+                                    0x18AC4B2
                                 }
-                            });
+                                }
+                            };
                             Scanner.Instance.LoadOffsets(_sList);
 
                             Thread.Sleep(100);

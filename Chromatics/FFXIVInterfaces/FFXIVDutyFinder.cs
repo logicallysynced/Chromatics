@@ -69,7 +69,7 @@ namespace Chromatics.FFXIVInterfaces
 
                         //PluginController.debug(" " + address.ToString("X8"));
                         var isPopped = MemoryHandler.Instance.GetInt32(address.GetAddress(), 0);
-                        _isPopped = isPopped == 0 ? false : true;
+                        _isPopped = isPopped != 0;
 
                         _countdown = MemoryHandler.Instance.GetInt32(address.GetAddress(), 4);
                         _initialized = true;
