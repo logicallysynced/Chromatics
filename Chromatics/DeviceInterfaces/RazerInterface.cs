@@ -50,7 +50,7 @@ namespace Chromatics.DeviceInterfaces
     public interface IRazerSdk
     {
         bool InitializeSdk();
-        bool ShutdownSdk();
+        void ShutdownSdk();
         void InitializeLights(Color initColor);
 
         void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
@@ -243,9 +243,12 @@ namespace Chromatics.DeviceInterfaces
         //Handle device send/recieve
         private readonly CancellationTokenSource _rcts = new CancellationTokenSource();
 
-        public bool ShutdownSdk()
+        public void ShutdownSdk()
         {
-            return false;
+            if (Chroma.Instance.Initialized)
+            {
+                Chroma.Instance.Uninitialize();
+            }
         }
 
         public bool InitializeSdk()

@@ -169,6 +169,9 @@ namespace Chromatics
 
         public void ShutDownDevices()
         {
+            if (RazerSdkCalled == 1)
+                _razer.ShutdownSdk();
+
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.Shutdown();
         }
