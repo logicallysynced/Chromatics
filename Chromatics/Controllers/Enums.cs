@@ -47,5 +47,11 @@
         Castbar,
         DutyFinder
     }
-    
+
+    public enum KeyRegion
+    {
+        QWERTY = 0,
+        AZERTY = 1,
+        QWERTZ = 2
+    }
 }

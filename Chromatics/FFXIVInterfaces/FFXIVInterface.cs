@@ -1062,7 +1062,7 @@ namespace Chromatics
 
                         if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
                         {
-                            if (ChromaticsSettings.ChromaticsSettingsAzertyMode)
+                            if (ChromaticsSettings.ChromaticsSettingsQwertyMode == KeyRegion.AZERTY) //AZERTY
                             {
                                 GlobalApplyMapKeyLighting("Z", highlightColor, false);
                                 GlobalApplyMapKeyLighting("Q", highlightColor, false);
@@ -1075,7 +1075,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("W", baseColor, false);
                                 GlobalApplyMapKeyLighting("A", baseColor, false);
                             }
-                            else
+                            else //QWERTY
                             {
                                 GlobalApplyMapKeyLighting("W", highlightColor, false);
                                 GlobalApplyMapKeyLighting("A", highlightColor, false);

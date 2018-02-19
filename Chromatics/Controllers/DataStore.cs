@@ -78,6 +78,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsShowStats = true;
         public int ChromaticsSettingsLanguage = 0;
         public int ChromaticsSettingsPreviousLanguage = 0;
+        public KeyRegion ChromaticsSettingsQwertyMode = 0;
 
         public bool ChromaticsSettingsKeyHighlights = true;
         public bool ChromaticsSettingsLccAuto = false;

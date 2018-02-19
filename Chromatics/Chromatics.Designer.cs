@@ -40,7 +40,7 @@
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
             this.tP_keys = new System.Windows.Forms.TabPage();
-            this.chk_azertymode = new System.Windows.Forms.CheckBox();
+            this.cb_qwerty = new System.Windows.Forms.ComboBox();
             this.cb_singlezonemode = new System.Windows.Forms.ComboBox();
             this.chk_keys_singlemode = new System.Windows.Forms.CheckBox();
             this.chk_dev_keyboard = new System.Windows.Forms.CheckBox();
@@ -297,7 +297,7 @@
             // tP_keys
             // 
             this.tP_keys.BackColor = System.Drawing.SystemColors.Control;
-            this.tP_keys.Controls.Add(this.chk_azertymode);
+            this.tP_keys.Controls.Add(this.cb_qwerty);
             this.tP_keys.Controls.Add(this.cb_singlezonemode);
             this.tP_keys.Controls.Add(this.chk_keys_singlemode);
             this.tP_keys.Controls.Add(this.chk_dev_keyboard);
@@ -308,17 +308,20 @@
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
             // 
-            // chk_azertymode
+            // cb_qwerty
             // 
-            this.chk_azertymode.AutoSize = true;
-            this.chk_azertymode.Location = new System.Drawing.Point(17, 58);
-            this.chk_azertymode.Name = "chk_azertymode";
-            this.chk_azertymode.Size = new System.Drawing.Size(124, 21);
-            this.chk_azertymode.TabIndex = 3;
-            this.chk_azertymode.Text = "AZERTY Mode";
-            this.tooltip_main.SetToolTip(this.chk_azertymode, "Toggles between QWERTY and AZERTY keyboard layouts.\r\nDefault: OFF (QWERTY)");
-            this.chk_azertymode.UseVisualStyleBackColor = true;
-            this.chk_azertymode.CheckedChanged += new System.EventHandler(this.chk_azertymode_CheckedChanged);
+            this.cb_qwerty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_qwerty.FormattingEnabled = true;
+            this.cb_qwerty.Items.AddRange(new object[] {
+            "QWERTY",
+            "AZERTY",
+            "QWERTZ"});
+            this.cb_qwerty.Location = new System.Drawing.Point(17, 54);
+            this.cb_qwerty.Name = "cb_qwerty";
+            this.cb_qwerty.Size = new System.Drawing.Size(175, 24);
+            this.cb_qwerty.TabIndex = 4;
+            this.tooltip_main.SetToolTip(this.cb_qwerty, "Changes the region of Keyboard devices.");
+            this.cb_qwerty.SelectedIndexChanged += new System.EventHandler(this.cb_qwerty_SelectedIndexChanged);
             // 
             // cb_singlezonemode
             // 
@@ -1129,6 +1132,7 @@
             // 
             // cb_lang
             // 
+            this.cb_lang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_lang.FormattingEnabled = true;
             this.cb_lang.Items.AddRange(new object[] {
             "English",
@@ -1726,7 +1730,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn col_ID;
         private System.Windows.Forms.CheckBox chk_keys_singlemode;
         private System.Windows.Forms.ComboBox cb_singlezonemode;
-        private System.Windows.Forms.CheckBox chk_azertymode;
         private System.Windows.Forms.Label lbl_mouse_z3;
         private System.Windows.Forms.ComboBox cb_mouse_z3;
         private System.Windows.Forms.Label lbl_mouse_z2;
@@ -1768,6 +1771,7 @@
         private System.Windows.Forms.Button btn_ffxivcachereset;
         private System.Windows.Forms.Label lbl_lang;
         private System.Windows.Forms.ComboBox cb_lang;
+        private System.Windows.Forms.ComboBox cb_qwerty;
     }
 }
 

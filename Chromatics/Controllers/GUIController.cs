@@ -1219,8 +1219,10 @@ namespace Chromatics
             mi_arxenable.Checked = ChromaticsSettings.ChromaticsSettingsArxToggle;
             chk_lccauto.Checked = ChromaticsSettings.ChromaticsSettingsLccAuto;
             chk_memorycache.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCache;
-            chk_azertymode.Checked = ChromaticsSettings.ChromaticsSettingsAzertyMode;
+            //chk_azertymode.Checked = ChromaticsSettings.ChromaticsSettingsAzertyMode;
             chk_desktopnotify.Checked = ChromaticsSettings.ChromaticsSettingsDesktopNotifications;
+
+            cb_qwerty.SelectedIndex = (int)ChromaticsSettings.ChromaticsSettingsQwertyMode;
 
             chk_castanimatetoggle.Checked = ChromaticsSettings.ChromaticsSettingsCastAnimate;
             chk_castchargetoggle.Checked = ChromaticsSettings.ChromaticsSettingsCastToggle;
@@ -1809,7 +1811,15 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettingsAzertyMode = chk_azertymode.Checked;
+            //ChromaticsSettings.ChromaticsSettingsAzertyMode = chk_azertymode.Checked;
+            //SaveChromaticsSettings(1);
+        }
+
+        private void cb_qwerty_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsQwertyMode = (KeyRegion)cb_qwerty.SelectedIndex;
             SaveChromaticsSettings(1);
         }
 
