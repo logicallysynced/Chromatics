@@ -339,6 +339,7 @@ namespace Chromatics.DeviceInterfaces
                 _corsairKeyboardIndvLed.ZIndex = 10;
                 _corsairKeyboardIndvLed.Brush = _corsairKeyboardIndvBrush;
                 _corsairAllKeyboardLed.Brush = (SolidColorBrush) Color.Black;
+                
 
                 _corsairMouseIndvBrush = new KeyMapBrush();
                 _corsairMouseIndvLed = new ListLedGroup(CueSDK.MouseSDK, CueSDK.MouseSDK);

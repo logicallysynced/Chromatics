@@ -76,6 +76,7 @@
       <HintPath>..\packages\CommonServiceLocator.2.0.2\lib\net45\CommonServiceLocator.dll</HintPath>
     </Reference>
     <Reference Include="Corale.Colore, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Colore.5.2.0\lib\net35\Corale.Colore.dll</HintPath>
     </Reference>
     <Reference Include="Corale.Colore.WinForms, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">

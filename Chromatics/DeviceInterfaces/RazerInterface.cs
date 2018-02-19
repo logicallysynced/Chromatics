@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Chromatics.DeviceInterfaces.EffectLibrary;
 using Chromatics.FFXIVInterfaces;
+using Corale.Colore;
 using Corale.Colore.Core;
 using Corale.Colore.Razer;
 using Corale.Colore.Razer.Keyboard;
@@ -115,6 +116,8 @@ namespace Chromatics.DeviceInterfaces
         private static readonly object RazerFlash4 = new object();
 
         private static readonly object _RazertransitionConst = new object();
+
+        private IChroma _IChroma;
 
         private readonly Dictionary<string, string> _razerkeyids = new Dictionary<string, string>
         {
@@ -1011,11 +1014,13 @@ namespace Chromatics.DeviceInterfaces
 
                         if (_razerDeviceMouse)
                         {
+                            /*
                             scrollWheel = Mouse.Instance[1];
                             logo = Mouse.Instance[2];
                             backlight = Mouse.Instance[3];
                             pad1 = Mousepad.Instance[7];
                             pad2 = Mousepad.Instance[14];
+                            */
                         }
                         //Keyboard.Instance.SetCustom(keyboard_custom);
 
@@ -1213,8 +1218,8 @@ namespace Chromatics.DeviceInterfaces
                     var rzScrollWheelConv = new Color();
                     var rzLogoConv = new Color();
                     var refreshKeyGrid = Custom.Create();
-                    refreshKeyGrid = _keyboardGrid;
 
+                    refreshKeyGrid = _keyboardGrid;
 
                     if (!_razerFlash2Running)
                     {
