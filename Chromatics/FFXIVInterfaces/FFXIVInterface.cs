@@ -33,6 +33,8 @@ namespace Chromatics
         private int _hp;
         private bool _targeted;
         private bool _castalert;
+        private int _lastWeather = 0;
+        private bool _weathertoggle;
 
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
@@ -377,6 +379,8 @@ namespace Chromatics
                                 Attatched = 3;
                                 HoldReader = false;
 
+                                FFXIVWeather.GetWeatherAPI();
+
                                 if (ArxSdkCalled == 1)
                                 {
                                     if (ArxState != 0) return;
@@ -547,7 +551,7 @@ namespace Chromatics
                         var colEm3 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity3);
                         var colEm4 = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity4);
 
-                        //Console.WriteLine(_playerInfo.Job);
+                        //Console.WriteLine(ChromaticsSettings.ChromaticsSettingsReactiveWeather);
 
                         //Get Battle, Crafting or Gathering Data
 
@@ -927,6 +931,72 @@ namespace Chromatics
                         //Console.WriteLine("Map ID: " + PlayerInfo.MapID);
 
                         //Parse Data
+
+                        //Reactive Weather
+
+                        if (ChromaticsSettings.ChromaticsSettingsReactiveWeather)
+                        {
+                            if (!_weathertoggle)
+                            {
+                                SetKeysbase = false;
+                                SetMousebase = false;
+                                SetPadbase = false;
+                                SetHeadsetbase = false;
+                                SetKeypadbase = false;
+                                SetCLbase = false;
+
+                                _weathertoggle = true;
+                            }
+
+                            FFXIVWeather.RefreshData();
+
+                            var currentWeather = FFXIVWeather.WeatherIconID();
+
+                            if (_lastWeather != currentWeather)
+                            {
+                                _lastWeather = currentWeather;
+                                SetKeysbase = false;
+                                SetMousebase = false;
+                                SetPadbase = false;
+                                SetHeadsetbase = false;
+                                SetKeypadbase = false;
+                                SetCLbase = false;
+                            }
+
+                            if (_lastWeather > 0)
+                            {
+                                var weatherMapbaseKey = _mappingPalette.First(x =>
+                                    x.Value[0] == FFXIVWeather.WeatherIconName(_lastWeather) + @" (Base)").Key;
+                                var weatherMaphighlightKey = _mappingPalette.First(x =>
+                                    x.Value[0] == FFXIVWeather.WeatherIconName(_lastWeather) + @" (Highlight)").Key;
+
+                                var weatherMapbase = (string) typeof(Datastore.FfxivColorMappings)
+                                    .GetField(weatherMapbaseKey).GetValue(ColorMappings);
+                                var weatherMaphighlight = (string) typeof(Datastore.FfxivColorMappings)
+                                    .GetField(weatherMaphighlightKey).GetValue(ColorMappings);
+
+                                baseColor = ColorTranslator.FromHtml(weatherMapbase);
+                                highlightColor = ColorTranslator.FromHtml(weatherMaphighlight);
+
+
+                            }
+                        }
+                        else
+                        {
+                            if (_weathertoggle)
+                            {
+                                SetKeysbase = false;
+                                SetMousebase = false;
+                                SetPadbase = false;
+                                SetHeadsetbase = false;
+                                SetKeypadbase = false;
+                                SetCLbase = false;
+                            }
+
+                            _weathertoggle = false;
+                        }
+
+                        //Console.WriteLine(baseColor.Name);
 
                         //Set Base Keyboard lighting. 
                         //Other LED's are built above this base layer.

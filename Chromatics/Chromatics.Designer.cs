@@ -157,6 +157,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_reactiveweather = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -922,6 +923,7 @@
             // 
             // gB_effects
             // 
+            this.gB_effects.Controls.Add(this.chk_reactiveweather);
             this.gB_effects.Controls.Add(this.chk_showstats);
             this.gB_effects.Controls.Add(this.chk_dfbelltoggle);
             this.gB_effects.Controls.Add(this.chk_impactflashtog);
@@ -1596,6 +1598,18 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // chk_reactiveweather
+            // 
+            this.chk_reactiveweather.AutoSize = true;
+            this.chk_reactiveweather.Location = new System.Drawing.Point(272, 145);
+            this.chk_reactiveweather.Name = "chk_reactiveweather";
+            this.chk_reactiveweather.Size = new System.Drawing.Size(191, 21);
+            this.chk_reactiveweather.TabIndex = 9;
+            this.chk_reactiveweather.Text = "Enable Reactive Weather";
+            this.tooltip_main.SetToolTip(this.chk_reactiveweather, "Changes device base colour based on curent in-game weather.\r\n\r\nDefault: OFF");
+            this.chk_reactiveweather.UseVisualStyleBackColor = true;
+            this.chk_reactiveweather.CheckedChanged += new System.EventHandler(this.chk_reactiveweather_CheckedChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1604,7 +1618,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.2.8 Beta";
+            this.Text = "Chromatics 2.3.4 Beta";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
@@ -1772,6 +1786,7 @@
         private System.Windows.Forms.Label lbl_lang;
         private System.Windows.Forms.ComboBox cb_lang;
         private System.Windows.Forms.ComboBox cb_qwerty;
+        private System.Windows.Forms.CheckBox chk_reactiveweather;
     }
 }
 

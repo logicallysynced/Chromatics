@@ -165,7 +165,98 @@ namespace Chromatics
             {"ColorMappingJobSAMKenki", new[] { "SAM: Kenki Charge", "9", "Black", "White"}},
             {"ColorMappingJobRDMNegative", new[] {"RDM: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobRDMBlackMana", new[] { "RDM: Black Mana", "9", "Black", "White"}},
-            {"ColorMappingJobRDMWhiteMana", new[] { "RDM: White Mana", "9", "Black", "White"}}
+            {"ColorMappingJobRDMWhiteMana", new[] { "RDM: White Mana", "9", "Black", "White"}},
+
+            {"ColorMappingWeatherClearBase", new[] { "Clear Skies (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherClearHighlight", new[] { "Clear Skies (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherFairBase", new[] { "Fair Skies (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherFairHighlight", new[] { "Fair Skies (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherCloudsBase", new[] { "Clouds (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherCloudsHighlight", new[] { "Clouds (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherFogBase", new[] { "Fog (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherFogHighlight", new[] { "Fog (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherWindBase", new[] { "Wind (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherWindHighlight", new[] { "Wind (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherGalesBase", new[] { "Gales (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherGalesHighlight", new[] { "Gales (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherRainBase", new[] { "Rain (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherRainHighlight", new[] { "Rain (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherShowersBase", new[] { "Showers (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherShowersHighlight", new[] { "Showers (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherThunderBase", new[] { "Thunder (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherThunderHighlight", new[] { "Thunder (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherThunderstormsBase", new[] { "Thunderstorms (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherThunderstormsHighlight", new[] { "Thunderstorms (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDustBase", new[] { "Dust Storms (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDustHighlight", new[] { "Dust Storms (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherSandstormBase", new[] { "Sandstorms (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherSandstormHighlight", new[] { "Sandstorms (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherHotspellBase", new[] { "Hot Spells (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherHotspellHighlight", new[] { "Hot Spells (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherHeatwaveBase", new[] { "Heat Waves (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherHeatwaveHighlight", new[] { "Heat Waves (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherSnowBase", new[] { "Snow (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherSnowHighlight", new[] { "Snow (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherBlizzardsBase", new[] { "Blizzards (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherBlizzardsHighlight", new[] { "Blizzards (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherGloomBase", new[] { "Gloom (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherGloomHighlight", new[] { "Gloom (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherAurorasBase", new[] { "Auroras (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherAurorasHighlight", new[] { "Auroras (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDarknessBase", new[] { "Darkness (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDarknessHighlight", new[] { "Darkness (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherTensionBase", new[] { "Tension (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherTensionHighlight", new[] { "Tension (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherStormcloudsBase", new[] { "Storm Clouds (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherStormcloudsHighlight", new[] { "Storm Clouds (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherRoughseasBase", new[] { "Rough Seas (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherRoughseasHighlight", new[] { "Rough Seas (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherLouringBase", new[] { "Louring (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherLouringHighlight", new[] { "Louring (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherEruptionsBase", new[] { "Eruptions (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherEruptionsHighlight", new[] { "Eruptions (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherIrradianceBase", new[] { "Irradiance (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherIrradianceHighlight", new[] { "Irradiance (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherCoreradiationBase", new[] { "Core Radiation (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherCoreradiationHighlight", new[] { "Core Radiation (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherShelfcloudsBase", new[] { "Shelf Clouds (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherShelfcloudsHighlight", new[] { "Shelf Clouds (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherOppressionBase", new[] { "Oppression (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherOppressionHighlight", new[] { "Oppression (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherUmbralwindBase", new[] { "Umbral Wind (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherUmbralwindHighlight", new[] { "Umbral Wind (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherUmbralstaticBase", new[] { "Umbral Static (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherUmbralstaticHighlight", new[] { "Umbral Static (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherSmokeBase", new[] { "Smoke (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherSmokeHighlight", new[] { "Smoke (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherRoyallevinBase", new[] { "Royal Levin (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherRoyallevinHighlight", new[] { "Royal Levin (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherHyperelectricityBase", new[] { "Hyperelectricity (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherHyperelectricityHighlight", new[] { "Hyperelectricity (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherMultiplicityBase", new[] { "Multiplicity (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherMultiplicityHighlight", new[] { "Multiplicity (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDragonstormBase", new[] { "Dragonstorm (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDragonstormHighlight", new[] { "Dragonstorm (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherSubterrainBase", new[] { "Subterrain (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherSubterrainHighlight", new[] { "Subterrain (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherConcordanceBase", new[] { "Concordance (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherConcordanceHighlight", new[] { "Concordance (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherBeyondtimeBase", new[] { "Beyond Time (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherBeyondtimeHighlight", new[] { "Beyond Time (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDemonicinfinityBase", new[] { "Demonic Infinity (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDemonicinfinityHighlight", new[] { "Demonic Infinity (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDimensionaldisruptionBase", new[] { "Dimensional Disruption (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherDimensionaldisruptionHighlight", new[] { "Dimensional Disruption (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherRevelstormBase", new[] { "Revelstorm (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherRevelstormHighlight", new[] { "Revelstorm (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherEternalblissBase", new[] { "Eternal Bliss (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherEternalblissHighlight", new[] { "Eternal Bliss (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherWyrmstormBase", new[] { "Wyrmstorm (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherWyrmstormHighlight", new[] { "Wyrmstorm (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherQuicklevinBase", new[] { "Quicklevin (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherQuicklevinHighlight", new[] { "Quicklevin (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherWhitecycloneBase", new[] { "White Cyclone (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherWhitecycloneHighlight", new[] { "White Cyclone (Highlight)", "10", "Black", "White"}}
         };
 
 
@@ -181,7 +272,8 @@ namespace Chromatics
             {6, "Status Effects"},
             {7, "Cooldowns/Keybinds"},
             {8, "Notifications"},
-            {9, "Job Gauges" }
+            {9, "Job Gauges" },
+            {10, "Reactive Weather" }
         };
 
         public void ResetDeviceDataGrid()
@@ -1237,6 +1329,8 @@ namespace Chromatics
 
             chk_lcdtoggle.Checked = ChromaticsSettings.ChromaticsSettingsLcdEnabled;
             cb_lang.SelectedIndex = ChromaticsSettings.ChromaticsSettingsLanguage;
+
+            chk_reactiveweather.Checked = ChromaticsSettings.ChromaticsSettingsReactiveWeather;
             
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
@@ -1820,6 +1914,14 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsQwertyMode = (KeyRegion)cb_qwerty.SelectedIndex;
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_reactiveweather_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsReactiveWeather = chk_reactiveweather.Checked;
             SaveChromaticsSettings(1);
         }
 

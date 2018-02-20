@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +12,56 @@ namespace Chromatics.Controllers
 {
     public class Helpers
     {
+        public static string GetCsvData(string url, string csvPath)
+        {
+            var client = new WebClient();
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = enviroment + @"/" + csvPath;
+
+            client.DownloadFile(new Uri(url), path);
+
+            if (File.Exists(path))
+            {
+                return path;
+            }
+
+            Console.WriteLine(@"An error occurred downloading the file " + csvPath + @" from URI: " + url);
+            return string.Empty;
+        }
+
+        public static string RemoveMatchingBraces(string s)
+        {
+            var stack = new Stack<char>();
+            int count = 0;
+            foreach (char ch in s)
+            {
+                switch (ch)
+                {
+                    case '(':
+                        count += 1;
+                        stack.Push(ch);
+                        break;
+                    case ')':
+                        if (count == 0)
+                            stack.Push(ch);
+                        else
+                        {
+                            char popped;
+                            do
+                            {
+                                popped = stack.Pop();
+                            } while (popped != '(');
+                            count -= 1;
+                        }
+                        break;
+                    default:
+                        stack.Push(ch);
+                        break;
+                }
+            }
+            return string.Join("", stack.Reverse());
+        }
+
         //Y = ( ( X - X1 )( Y2 - Y1) / ( X2 - X1) ) + Y1
         public static double LinIntDouble(int ValMin, int ValMax, int Val, int OutMin, int OutMax)
         {
