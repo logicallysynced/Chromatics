@@ -1132,35 +1132,6 @@ namespace Chromatics
 
                         if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
                         {
-                            /*
-                            if (ChromaticsSettings.ChromaticsSettingsQwertyMode == KeyRegion.AZERTY) //AZERTY
-                            {
-                                GlobalApplyMapKeyLighting("Z", highlightColor, false);
-                                GlobalApplyMapKeyLighting("Q", highlightColor, false);
-                                GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
-                                GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
-                                GlobalApplyMapKeyLighting("Space", highlightColor, false);
-
-                                GlobalApplyMapKeyLighting("W", baseColor, false);
-                                GlobalApplyMapKeyLighting("A", baseColor, false);
-                            }
-                            else //QWERTY
-                            {
-                                GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
-                                GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
-                                GlobalApplyMapKeyLighting("Space", highlightColor, false);
-
-                                GlobalApplyMapKeyLighting("Z", baseColor, false);
-                                GlobalApplyMapKeyLighting("Q", baseColor, false);
-                            }
-                            */
-
                             GlobalApplyMapKeyLighting("W", highlightColor, false);
                             GlobalApplyMapKeyLighting("A", highlightColor, false);
                             GlobalApplyMapKeyLighting("S", highlightColor, false);
@@ -1168,7 +1139,6 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
                             GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
                             GlobalApplyMapKeyLighting("Space", highlightColor, false);
-
                             GlobalApplyMapKeyLighting("Z", baseColor, false);
                             GlobalApplyMapKeyLighting("Q", baseColor, false);
                         }
@@ -3750,7 +3720,7 @@ namespace Chromatics
                                                 string.IsNullOrEmpty(action.KeyBinds) ||
                                                 string.IsNullOrEmpty(action.ActionKey)) continue;
 
-                                            //Console.WriteLine(@"key: " + action.ActionKey);
+                                            Console.WriteLine(@"key: " + action.ActionKey);
 
                                             //Collect Modifier Info
                                             var modsactive = action.Modifiers.Count;

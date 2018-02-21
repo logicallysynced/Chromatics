@@ -60,7 +60,11 @@ namespace Chromatics.FFXIVInterfaces
             {@"\", "OemBackslash"},
             //{"", "EurPound"},
             //{"", "JpnYen"},
-            {"Esc", "Escape"}
+            {"Esc", "Escape"},
+            {"Ü",  "OemLeftBracket"},
+            {"Ö",  "OemSemicolon"},
+            {"Ä",  "OemApostrophe"},
+            {"^",  "OemTilde"}
         };
     }
 }
