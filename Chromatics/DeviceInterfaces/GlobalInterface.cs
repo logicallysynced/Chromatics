@@ -315,64 +315,64 @@ namespace Chromatics
                 return;
 
             if (RazerSdkCalled == 1)
-                _razer.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
+                _razer.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
 
             if (LogitechSdkCalled == 1)
             {
                 if (key == "Macro1")
-                    _logitech.ApplyMapKeyLighting("Macro1", col, clear, bypasswhitelist);
+                    _logitech.ApplyMapKeyLighting(Localization.LocalizeKey("Macro1"), col, clear, bypasswhitelist);
                 else if (key == "Macro2")
-                    _logitech.ApplyMapKeyLighting("Macro4", col, clear, bypasswhitelist);
+                    _logitech.ApplyMapKeyLighting(Localization.LocalizeKey("Macro4"), col, clear, bypasswhitelist);
                 else if (key == "Macro3")
-                    _logitech.ApplyMapKeyLighting("Macro7", col, clear, bypasswhitelist);
+                    _logitech.ApplyMapKeyLighting(Localization.LocalizeKey("Macro7"), col, clear, bypasswhitelist);
                 else if (key == "Macro4")
-                    _logitech.ApplyMapKeyLighting("Macro10", col, clear, bypasswhitelist);
+                    _logitech.ApplyMapKeyLighting(Localization.LocalizeKey("Macro10"), col, clear, bypasswhitelist);
                 else if (key == "Macro5")
-                    _logitech.ApplyMapKeyLighting("Macro13", col, clear, bypasswhitelist);
+                    _logitech.ApplyMapKeyLighting(Localization.LocalizeKey("Macro13"), col, clear, bypasswhitelist);
                 else
-                    _logitech.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
+                    _logitech.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
 
-                _logitech.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
+                _logitech.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
             }
 
             if (CorsairSdkCalled == 1)
                 if (key == "Macro1")
                 {
-                    _corsair.ApplyMapKeyLighting("Macro1", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro2", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro3", col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro1"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro2"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro3"), col, clear, bypasswhitelist);
                 }
                 else if (key == "Macro2")
                 {
-                    _corsair.ApplyMapKeyLighting("Macro4", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro5", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro6", col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro4"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro5"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro6"), col, clear, bypasswhitelist);
                 }
                 else if (key == "Macro3")
                 {
-                    _corsair.ApplyMapKeyLighting("Macro7", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro8", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro9", col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro7"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro8"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro9"), col, clear, bypasswhitelist);
                 }
                 else if (key == "Macro4")
                 {
-                    _corsair.ApplyMapKeyLighting("Macro10", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro11", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro12", col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro10"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro11"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro12"), col, clear, bypasswhitelist);
                 }
                 else if (key == "Macro5")
                 {
-                    _corsair.ApplyMapKeyLighting("Macro13", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro14", col, clear, bypasswhitelist);
-                    _corsair.ApplyMapKeyLighting("Macro15", col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro13"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro14"), col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey("Macro15"), col, clear, bypasswhitelist);
                 }
                 else
                 {
-                    _corsair.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
+                    _corsair.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
                 }
 
             if (CoolermasterSdkCalled == 1)
-                _coolermaster.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
+                _coolermaster.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
         }
 
         public void GlobalApplyMapLightbarLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
@@ -381,7 +381,7 @@ namespace Chromatics
                 return;
 
             if (CorsairSdkCalled == 1)
-                _corsair.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
+                _corsair.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
         }
 
         public void GlobalApplyKeySingleLighting(DevModeTypes mode, Color col)
@@ -405,7 +405,7 @@ namespace Chromatics
         public void GlobalApplyMapLogoLighting(string key, Color col, bool clear)
         {
             if (RazerSdkCalled == 1)
-                _razer.ApplyMapLogoLighting(key, col, clear);
+                _razer.ApplyMapLogoLighting(Localization.LocalizeKey(key), col, clear);
 
             if (LogitechSdkCalled == 1)
             {
@@ -413,7 +413,7 @@ namespace Chromatics
             }
 
             if (CorsairSdkCalled == 1)
-                _corsair.ApplyMapLogoLighting(key, col, clear);
+                _corsair.ApplyMapLogoLighting(Localization.LocalizeKey(key), col, clear);
         }
 
         //Send a lighting command to a specific Mouse LED

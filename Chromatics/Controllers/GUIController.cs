@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Chromatics.Controllers;
 using Chromatics.Datastore;
+using Chromatics.DeviceInterfaces;
 using Chromatics.LCDInterfaces;
 using Cyotek.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
@@ -1914,6 +1915,7 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsQwertyMode = (KeyRegion)cb_qwerty.SelectedIndex;
+            Localization.SetKeyRegion(ChromaticsSettings.ChromaticsSettingsQwertyMode);
             SaveChromaticsSettings(1);
         }
 

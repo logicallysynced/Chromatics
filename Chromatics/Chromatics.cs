@@ -380,6 +380,7 @@ namespace Chromatics
             CenterPictureBox(pB_logo1, pB_logo1.Image);
             notify_master.ContextMenuStrip = contextMenuStrip1;
             //mapping_colorEditorManager.Color = Color.White;
+            Localization.SetKeyRegion(ChromaticsSettings.ChromaticsSettingsQwertyMode);
 
             if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)
             {
