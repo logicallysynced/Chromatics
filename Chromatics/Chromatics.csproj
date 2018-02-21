@@ -242,7 +242,7 @@
     </Compile>
     <Compile Include="DeviceInterfaces\HueInterface.cs" />
     <Compile Include="DeviceInterfaces\LIFXInterface.cs" />
-    <Compile Include="DeviceInterfaces\Localize.cs" />
+    <Compile Include="DeviceInterfaces\Localization.cs" />
     <Compile Include="DeviceInterfaces\LogitechInterface.cs" />
     <Compile Include="DeviceInterfaces\RoccatInterface.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesInterface.cs" />
