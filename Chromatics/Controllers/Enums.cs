@@ -54,4 +54,20 @@
         AZERTY = 1,
         QWERTZ = 2
     }
+
+    public enum LightbarMode
+    {
+        Disabled,
+        DefaultColor,
+        HighlightColor,
+        EnmityTracker,
+        TargetHp,
+        HpTracker,
+        MpTracker,
+        TpTracker,
+        Castbar,
+        DutyFinder,
+        CurrentExp,
+        JobGauge
+    }
 }

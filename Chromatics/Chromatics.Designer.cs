@@ -40,6 +40,9 @@
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
             this.tP_keys = new System.Windows.Forms.TabPage();
+            this.cb_lightbarmode = new System.Windows.Forms.ComboBox();
+            this.lbl_lightbar = new System.Windows.Forms.Label();
+            this.lbl_region = new System.Windows.Forms.Label();
             this.cb_qwerty = new System.Windows.Forms.ComboBox();
             this.cb_singlezonemode = new System.Windows.Forms.ComboBox();
             this.chk_keys_singlemode = new System.Windows.Forms.CheckBox();
@@ -96,6 +99,7 @@
             this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
+            this.chk_reactiveweather = new System.Windows.Forms.CheckBox();
             this.chk_showstats = new System.Windows.Forms.CheckBox();
             this.chk_dfbelltoggle = new System.Windows.Forms.CheckBox();
             this.chk_impactflashtog = new System.Windows.Forms.CheckBox();
@@ -157,7 +161,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_reactiveweather = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -298,6 +301,9 @@
             // tP_keys
             // 
             this.tP_keys.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keys.Controls.Add(this.cb_lightbarmode);
+            this.tP_keys.Controls.Add(this.lbl_lightbar);
+            this.tP_keys.Controls.Add(this.lbl_region);
             this.tP_keys.Controls.Add(this.cb_qwerty);
             this.tP_keys.Controls.Add(this.cb_singlezonemode);
             this.tP_keys.Controls.Add(this.chk_keys_singlemode);
@@ -309,6 +315,35 @@
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
             // 
+            // cb_lightbarmode
+            // 
+            this.cb_lightbarmode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_lightbarmode.FormattingEnabled = true;
+            this.cb_lightbarmode.Location = new System.Drawing.Point(172, 103);
+            this.cb_lightbarmode.Name = "cb_lightbarmode";
+            this.cb_lightbarmode.Size = new System.Drawing.Size(179, 24);
+            this.cb_lightbarmode.TabIndex = 7;
+            this.tooltip_main.SetToolTip(this.cb_lightbarmode, "Changes the mode for the lightbar on Corsair keyboard devices.");
+            this.cb_lightbarmode.SelectedIndexChanged += new System.EventHandler(this.cb_lightbarmode_SelectedIndexChanged);
+            // 
+            // lbl_lightbar
+            // 
+            this.lbl_lightbar.AutoSize = true;
+            this.lbl_lightbar.Location = new System.Drawing.Point(14, 106);
+            this.lbl_lightbar.Name = "lbl_lightbar";
+            this.lbl_lightbar.Size = new System.Drawing.Size(99, 17);
+            this.lbl_lightbar.TabIndex = 6;
+            this.lbl_lightbar.Text = "Lightbar Mode";
+            // 
+            // lbl_region
+            // 
+            this.lbl_region.AutoSize = true;
+            this.lbl_region.Location = new System.Drawing.Point(14, 61);
+            this.lbl_region.Name = "lbl_region";
+            this.lbl_region.Size = new System.Drawing.Size(118, 17);
+            this.lbl_region.TabIndex = 5;
+            this.lbl_region.Text = "Keyboard Region";
+            // 
             // cb_qwerty
             // 
             this.cb_qwerty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -317,9 +352,9 @@
             "QWERTY",
             "AZERTY",
             "QWERTZ"});
-            this.cb_qwerty.Location = new System.Drawing.Point(17, 54);
+            this.cb_qwerty.Location = new System.Drawing.Point(172, 58);
             this.cb_qwerty.Name = "cb_qwerty";
-            this.cb_qwerty.Size = new System.Drawing.Size(175, 24);
+            this.cb_qwerty.Size = new System.Drawing.Size(179, 24);
             this.cb_qwerty.TabIndex = 4;
             this.tooltip_main.SetToolTip(this.cb_qwerty, "Changes the region of Keyboard devices.");
             this.cb_qwerty.SelectedIndexChanged += new System.EventHandler(this.cb_qwerty_SelectedIndexChanged);
@@ -939,6 +974,18 @@
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
+            // 
+            // chk_reactiveweather
+            // 
+            this.chk_reactiveweather.AutoSize = true;
+            this.chk_reactiveweather.Location = new System.Drawing.Point(272, 145);
+            this.chk_reactiveweather.Name = "chk_reactiveweather";
+            this.chk_reactiveweather.Size = new System.Drawing.Size(191, 21);
+            this.chk_reactiveweather.TabIndex = 9;
+            this.chk_reactiveweather.Text = "Enable Reactive Weather";
+            this.tooltip_main.SetToolTip(this.chk_reactiveweather, "Changes device base colour based on curent in-game weather.\r\n\r\nDefault: OFF");
+            this.chk_reactiveweather.UseVisualStyleBackColor = true;
+            this.chk_reactiveweather.CheckedChanged += new System.EventHandler(this.chk_reactiveweather_CheckedChanged);
             // 
             // chk_showstats
             // 
@@ -1598,18 +1645,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_reactiveweather
-            // 
-            this.chk_reactiveweather.AutoSize = true;
-            this.chk_reactiveweather.Location = new System.Drawing.Point(272, 145);
-            this.chk_reactiveweather.Name = "chk_reactiveweather";
-            this.chk_reactiveweather.Size = new System.Drawing.Size(191, 21);
-            this.chk_reactiveweather.TabIndex = 9;
-            this.chk_reactiveweather.Text = "Enable Reactive Weather";
-            this.tooltip_main.SetToolTip(this.chk_reactiveweather, "Changes device base colour based on curent in-game weather.\r\n\r\nDefault: OFF");
-            this.chk_reactiveweather.UseVisualStyleBackColor = true;
-            this.chk_reactiveweather.CheckedChanged += new System.EventHandler(this.chk_reactiveweather_CheckedChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1787,6 +1822,9 @@
         private System.Windows.Forms.ComboBox cb_lang;
         private System.Windows.Forms.ComboBox cb_qwerty;
         private System.Windows.Forms.CheckBox chk_reactiveweather;
+        private System.Windows.Forms.ComboBox cb_lightbarmode;
+        private System.Windows.Forms.Label lbl_lightbar;
+        private System.Windows.Forms.Label lbl_region;
     }
 }
 

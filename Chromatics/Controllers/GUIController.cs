@@ -54,7 +54,24 @@ namespace Chromatics
             {DevModeTypes.Castbar, "Castbar"},
             {DevModeTypes.DutyFinder, "Duty Finder Bell"}
         };
-        
+
+        private readonly Dictionary<LightbarMode, string> _lightbarModes = new Dictionary<LightbarMode, string>
+        {
+            //Keys
+            {LightbarMode.Disabled, "Disabled"},
+            {LightbarMode.DefaultColor, "Default Color"}, //
+            {LightbarMode.HighlightColor, "Highlight Colour"}, //
+            {LightbarMode.EnmityTracker, "Enmity Tracker"}, //
+            {LightbarMode.TargetHp, "Target HP"}, //
+            {LightbarMode.HpTracker, "HP Tracker"}, //
+            {LightbarMode.MpTracker, "MP Tracker"}, //
+            {LightbarMode.TpTracker, "TP Tracker"}, //
+            {LightbarMode.Castbar, "Castbar"}, //
+            {LightbarMode.DutyFinder, "Duty Finder Bell"},
+            {LightbarMode.CurrentExp, "Experience Tracker"},
+            {LightbarMode.JobGauge, "Job Gauge"}
+        };
+
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
         {
             //Keys
@@ -1360,7 +1377,13 @@ namespace Chromatics
                 cb_chromalink_z5.Items.Add(item.Value);
             }
 
+            foreach (var item in _lightbarModes)
+            {
+                cb_lightbarmode.Items.Add(item.Value);
+            }
+
             cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
+            cb_lightbarmode.SelectedItem = Helpers.ConvertLightbarModeToCB(_LightbarMode);
 
             cb_mouse_z1.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone1Mode);
             cb_mouse_z2.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone2Mode);
@@ -2403,6 +2426,21 @@ namespace Chromatics
             {
                 _KeysSingleKeyModeEnabled = false;
                 cb_singlezonemode.Enabled = false;
+            }
+
+            SetKeysbase = false;
+            SaveDevices();
+        }
+
+        private void cb_lightbarmode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _lightbarModes)
+            {
+                if ((string)cb_lightbarmode.SelectedItem != item.Value) continue;
+                _LightbarMode = Helpers.ConvertCBToLightbarMode(item.Value);
+                break;
             }
 
             SetKeysbase = false;

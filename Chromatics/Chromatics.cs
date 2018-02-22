@@ -151,6 +151,8 @@ namespace Chromatics
         public DevModeTypes _CLZone4Mode = DevModeTypes.DefaultColor;
         public DevModeTypes _CLZone5Mode = DevModeTypes.DefaultColor;
 
+        public LightbarMode _LightbarMode = LightbarMode.TargetHp;
+
         //Main Thread
         public Chromatics()
         {

@@ -184,6 +184,138 @@ namespace Chromatics.Controllers
             return "Disabled";
         }
 
+        public static string ConvertLightbarModeToString(LightbarMode mode)
+        {
+            switch (mode)
+            {
+                case LightbarMode.Disabled:
+                    return "Disabled";
+                case LightbarMode.DefaultColor:
+                    return "DefaultColor";
+                case LightbarMode.HighlightColor:
+                    return "HighlightColor";
+                case LightbarMode.EnmityTracker:
+                    return "EnmityTracker";
+                case LightbarMode.TargetHp:
+                    return "TargetHp";
+                case LightbarMode.HpTracker:
+                    return "HpTracker";
+                case LightbarMode.MpTracker:
+                    return "MpTracker";
+                case LightbarMode.TpTracker:
+                    return "TpTracker";
+                case LightbarMode.Castbar:
+                    return "Castbar";
+                case LightbarMode.DutyFinder:
+                    return "DutyFinder";
+                case LightbarMode.CurrentExp:
+                    return "CurrentExp";
+                case LightbarMode.JobGauge:
+                    return "JobGauge";
+            }
+
+            return "Disabled";
+        }
+
+        public static LightbarMode ConvertStringToLightbarMode(string mode)
+        {
+            switch (mode)
+            {
+                case "Disabled":
+                    return LightbarMode.Disabled;
+                case "DefaultColor":
+                    return LightbarMode.DefaultColor;
+                case "HighlightColor":
+                    return LightbarMode.HighlightColor;
+                case "EnmityTracker":
+                    return LightbarMode.EnmityTracker;
+                case "TargetHp":
+                    return LightbarMode.TargetHp;
+                case "HpTracker":
+                    return LightbarMode.HpTracker;
+                case "MpTracker":
+                    return LightbarMode.MpTracker;
+                case "TpTracker":
+                    return LightbarMode.TpTracker;
+                case "Castbar":
+                    return LightbarMode.Castbar;
+                case "DutyFinder":
+                    return LightbarMode.DutyFinder;
+                case "CurrentExp":
+                    return LightbarMode.CurrentExp;
+                case "JobGauge":
+                    return LightbarMode.JobGauge;
+            }
+
+            return LightbarMode.Disabled;
+        }
+
+        public static LightbarMode ConvertCBToLightbarMode(string mode)
+        {
+            switch (mode)
+            {
+                case "Disabled":
+                    return LightbarMode.Disabled;
+                case "Default Color":
+                    return LightbarMode.DefaultColor;
+                case "Highlight Color":
+                    return LightbarMode.HighlightColor;
+                case "Enmity Tracker":
+                    return LightbarMode.EnmityTracker;
+                case "Target HP":
+                    return LightbarMode.TargetHp;
+                case "HP Tracker":
+                    return LightbarMode.HpTracker;
+                case "MP Tracker":
+                    return LightbarMode.MpTracker;
+                case "TP Tracker":
+                    return LightbarMode.TpTracker;
+                case "Castbar":
+                    return LightbarMode.Castbar;
+                case "Duty Finder Bell":
+                    return LightbarMode.DutyFinder;
+                case "Experience Tracker":
+                    return LightbarMode.CurrentExp;
+                case "Job Gauge":
+                    return LightbarMode.JobGauge;
+            }
+
+            return LightbarMode.Disabled;
+        }
+
+        public static string ConvertLightbarModeToCB(LightbarMode mode)
+        {
+            switch (mode)
+            {
+                case LightbarMode.Disabled:
+                    return "Disabled";
+                case LightbarMode.DefaultColor:
+                    return "Default Color";
+                case LightbarMode.HighlightColor:
+                    return "Highlight Color";
+                case LightbarMode.EnmityTracker:
+                    return "Enmity Tracker";
+                case LightbarMode.TargetHp:
+                    return "Target HP";
+                case LightbarMode.HpTracker:
+                    return "HP Tracker";
+                case LightbarMode.MpTracker:
+                    return "MP Tracker";
+                case LightbarMode.TpTracker:
+                    return "TP Tracker";
+                case LightbarMode.Castbar:
+                    return "Castbar";
+                case LightbarMode.DutyFinder:
+                    return "Duty Finder Bell";
+                case LightbarMode.CurrentExp:
+                    return "Experience Tracker";
+                case LightbarMode.JobGauge:
+                    return "Job Gauge";
+            }
+
+            return "Disabled";
+        }
+
         public struct ColorRGB
         {
             public byte R;
