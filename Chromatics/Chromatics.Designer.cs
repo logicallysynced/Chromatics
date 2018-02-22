@@ -161,6 +161,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_debugopt = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1156,6 +1157,7 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.chk_debugopt);
             this.gB_General.Controls.Add(this.lbl_lang);
             this.gB_General.Controls.Add(this.cb_lang);
             this.gB_General.Controls.Add(this.btn_ffxivcachereset);
@@ -1645,6 +1647,19 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // chk_debugopt
+            // 
+            this.chk_debugopt.AutoSize = true;
+            this.chk_debugopt.Location = new System.Drawing.Point(23, 154);
+            this.chk_debugopt.Name = "chk_debugopt";
+            this.chk_debugopt.Size = new System.Drawing.Size(225, 21);
+            this.chk_debugopt.TabIndex = 7;
+            this.chk_debugopt.Text = "Send debug data automatically";
+            this.tooltip_main.SetToolTip(this.chk_debugopt, "Opts-in to automatic debug & analytics to improve app stability. No personal info" +
+        "rmation is ever transmitted.\r\nDefault: ON");
+            this.chk_debugopt.UseVisualStyleBackColor = true;
+            this.chk_debugopt.CheckedChanged += new System.EventHandler(this.chk_debugopt_CheckedChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1653,7 +1668,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.3.4 Beta";
+            this.Text = "Chromatics 2.3.5 Beta";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
@@ -1825,6 +1840,7 @@
         private System.Windows.Forms.ComboBox cb_lightbarmode;
         private System.Windows.Forms.Label lbl_lightbar;
         private System.Windows.Forms.Label lbl_region;
+        private System.Windows.Forms.CheckBox chk_debugopt;
     }
 }
 

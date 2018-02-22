@@ -1351,7 +1351,8 @@ namespace Chromatics
             cb_lang.SelectedIndex = ChromaticsSettings.ChromaticsSettingsLanguage;
 
             chk_reactiveweather.Checked = ChromaticsSettings.ChromaticsSettingsReactiveWeather;
-            
+            chk_debugopt.Checked = ChromaticsSettings.ChromaticsSettingsDebugOpt;
+
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
             chk_dev_mousepad.Checked = _deviceMousepad;
@@ -2746,6 +2747,14 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsDesktopNotifications = chk_desktopnotify.Checked;
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_debugopt_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsDebugOpt = chk_desktopnotify.Checked;
             SaveChromaticsSettings(1);
         }
 

@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Chromatics.Datastore;
 using Chromatics.DeviceInterfaces;
 using Chromatics.LCDInterfaces;
+using CSharpAnalytics;
 using Gma.System.MouseKeyHook;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
@@ -61,7 +62,7 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.3.4";
+        private readonly string _currentVersionX = "2.3.5";
         public bool DeviceGridStartup = false;
 
         public bool EffectRunning = false;
@@ -381,8 +382,15 @@ namespace Chromatics
             SetupTooltips();
             CenterPictureBox(pB_logo1, pB_logo1.Image);
             notify_master.ContextMenuStrip = contextMenuStrip1;
-            //mapping_colorEditorManager.Color = Color.White;
+            
             Localization.SetKeyRegion(ChromaticsSettings.ChromaticsSettingsQwertyMode);
+
+            if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+            {
+                AutoMeasurement.Instance = new WinFormAutoMeasurement();
+                AutoMeasurement.Start(new MeasurementConfiguration("UA-92921709-2"));
+                AutoMeasurement.Client.TrackScreenView("Chromatics");
+            }
 
             if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)
             {
