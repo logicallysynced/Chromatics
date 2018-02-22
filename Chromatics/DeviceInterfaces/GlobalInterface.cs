@@ -381,7 +381,7 @@ namespace Chromatics
                 return;
 
             if (CorsairSdkCalled == 1)
-                _corsair.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
+                _corsair.ApplyMapKeyLighting(key, col, clear, bypasswhitelist);
         }
 
         public void GlobalApplyKeySingleLighting(DevModeTypes mode, Color col)

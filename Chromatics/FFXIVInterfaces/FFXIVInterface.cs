@@ -466,6 +466,7 @@ namespace Chromatics
 
                 //_playerInfoX = Reader.GetActors()?.PCEntities;
                 _playerInfo = ActorEntity.CurrentUser;
+                var _playerData = Reader.GetPlayerInfo().PlayerEntity;
                 
                 try
                 {
@@ -5573,6 +5574,217 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Delete", gcdReady, false);
                             }
 
+                            //Experience Bar
+
+                            
+                            if (_LightbarMode == LightbarMode.CurrentExp)
+                            {
+
+                                var _role = _playerData.WVR_CurrentEXP;
+                                var _currentlvl = 0;
+
+                                var expcolempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingExpEmpty);
+                                var expcolfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingExpFull);
+
+
+                                switch (_playerInfo.Job)
+                                {
+                                    case Actor.Job.Unknown:
+                                        _role = _playerData.WVR_CurrentEXP;
+                                        _currentlvl = 0;
+                                        break;
+                                    case Actor.Job.GLD:
+                                        _role = _playerData.GLD_CurrentEXP;
+                                        _currentlvl = _playerData.GLD;
+                                        break;
+                                    case Actor.Job.PGL:
+                                        _role = _playerData.PGL_CurrentEXP;
+                                        _currentlvl = _playerData.PGL;
+                                        break;
+                                    case Actor.Job.MRD:
+                                        _role = _playerData.MRD_CurrentEXP;
+                                        _currentlvl = _playerData.MRD;
+                                        break;
+                                    case Actor.Job.LNC:
+                                        _role = _playerData.LNC_CurrentEXP;
+                                        _currentlvl = _playerData.LNC;
+                                        break;
+                                    case Actor.Job.ARC:
+                                        _role = _playerData.ARC_CurrentEXP;
+                                        _currentlvl = _playerData.ARC;
+                                        break;
+                                    case Actor.Job.CNJ:
+                                        _role = _playerData.CNJ_CurrentEXP;
+                                        _currentlvl = _playerData.CNJ;
+                                        break;
+                                    case Actor.Job.THM:
+                                        _role = _playerData.THM_CurrentEXP;
+                                        _currentlvl = _playerData.THM;
+                                        break;
+                                    case Actor.Job.CPT:
+                                        _role = _playerData.CPT_CurrentEXP;
+                                        _currentlvl = _playerData.CPT;
+                                        break;
+                                    case Actor.Job.BSM:
+                                        _role = _playerData.BSM_CurrentEXP;
+                                        _currentlvl = _playerData.BSM;
+                                        break;
+                                    case Actor.Job.ARM:
+                                        _role = _playerData.ARM_CurrentEXP;
+                                        _currentlvl = _playerData.ARM;
+                                        break;
+                                    case Actor.Job.GSM:
+                                        _role = _playerData.GSM_CurrentEXP;
+                                        _currentlvl = _playerData.GSM;
+                                        break;
+                                    case Actor.Job.LTW:
+                                        _role = _playerData.LTW_CurrentEXP;
+                                        _currentlvl = _playerData.LTW;
+                                        break;
+                                    case Actor.Job.WVR:
+                                        _role = _playerData.WVR_CurrentEXP;
+                                        _currentlvl = _playerData.WVR;
+                                        break;
+                                    case Actor.Job.ALC:
+                                        _role = _playerData.ALC_CurrentEXP;
+                                        _currentlvl = _playerData.ALC;
+                                        break;
+                                    case Actor.Job.CUL:
+                                        _role = _playerData.CUL_CurrentEXP;
+                                        _currentlvl = _playerData.CUL;
+                                        break;
+                                    case Actor.Job.MIN:
+                                        _role = _playerData.MIN_CurrentEXP;
+                                        _currentlvl = _playerData.MIN;
+                                        break;
+                                    case Actor.Job.BTN:
+                                        _role = _playerData.BTN_CurrentEXP;
+                                        _currentlvl = _playerData.BTN;
+                                        break;
+                                    case Actor.Job.FSH:
+                                        _role = _playerData.FSH_CurrentEXP;
+                                        _currentlvl = _playerData.FSH;
+                                        break;
+                                    case Actor.Job.PLD:
+                                        _role = _playerData.GLD_CurrentEXP;
+                                        _currentlvl = _playerData.GLD;
+                                        break;
+                                    case Actor.Job.MNK:
+                                        _role = _playerData.PGL_CurrentEXP;
+                                        _currentlvl = _playerData.PGL;
+                                        break;
+                                    case Actor.Job.WAR:
+                                        _role = _playerData.MRD_CurrentEXP;
+                                        _currentlvl = _playerData.MRD;
+                                        break;
+                                    case Actor.Job.DRG:
+                                        _role = _playerData.LNC_CurrentEXP;
+                                        _currentlvl = _playerData.LNC;
+                                        break;
+                                    case Actor.Job.BRD:
+                                        _role = _playerData.ARC_CurrentEXP;
+                                        _currentlvl = _playerData.ARC;
+                                        break;
+                                    case Actor.Job.WHM:
+                                        _role = _playerData.CNJ_CurrentEXP;
+                                        _currentlvl = _playerData.CNJ;
+                                        break;
+                                    case Actor.Job.BLM:
+                                        _role = _playerData.THM_CurrentEXP;
+                                        _currentlvl = _playerData.THM;
+                                        break;
+                                    case Actor.Job.ACN:
+                                        _role = _playerData.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.ACN;
+                                        break;
+                                    case Actor.Job.SMN:
+                                        _role = _playerData.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.ACN;
+                                        break;
+                                    case Actor.Job.SCH:
+                                        _role = _playerData.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.ACN;
+                                        break;
+                                    case Actor.Job.ROG:
+                                        _role = _playerData.ROG_CurrentEXP;
+                                        _currentlvl = _playerData.ROG;
+                                        break;
+                                    case Actor.Job.NIN:
+                                        _role = _playerData.ROG_CurrentEXP;
+                                        _currentlvl = _playerData.ROG;
+                                        break;
+                                    case Actor.Job.MCH:
+                                        _role = _playerData.MCH_CurrentEXP;
+                                        _currentlvl = _playerData.MCH;
+                                        break;
+                                    case Actor.Job.DRK:
+                                        _role = _playerData.DRK_CurrentEXP;
+                                        _currentlvl = _playerData.DRK;
+                                        break;
+                                    case Actor.Job.AST:
+                                        _role = _playerData.AST_CurrentEXP;
+                                        _currentlvl = _playerData.AST;
+                                        break;
+                                    case Actor.Job.SAM:
+                                        _role = _playerData.SAM_CurrentEXP;
+                                        _currentlvl = _playerData.SAM;
+                                        break;
+                                    case Actor.Job.RDM:
+                                        _role = _playerData.RDM_CurrentEXP;
+                                        _currentlvl = _playerData.RDM;
+                                        break;
+                                    default:
+                                        _role = _playerData.WVR_CurrentEXP;
+                                        _currentlvl = 0;
+                                        break;
+                                }
+
+
+                                if (_currentlvl == 70)
+                                {
+                                    GlobalApplyMapLightbarLighting("Lightbar19", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar18", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar17", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar16", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar15", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar14", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar13", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar12", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar11", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar10", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar9", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar8", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar7", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar6", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar5", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar4", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar3", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar2", expcolfull, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar1", expcolfull, false, false);
+                                }
+                                else
+                                {
+                                    var lvltranslator = (_role - 0) * (19 - 1) / (Helpers.ExperienceTable[_currentlvl] - 0) + 0;
+                                        
+                                    for (int i = 1; i < 19; i++)
+                                    {
+                                        if (lvltranslator >= i)
+                                        {
+                                            GlobalApplyMapLightbarLighting("Lightbar" + i, expcolfull, false,
+                                                false);
+                                        }
+                                        else
+                                        {
+                                            GlobalApplyMapLightbarLighting("Lightbar" + i, expcolempty, false,
+                                                false);
+                                        }
+                                    }
+                                }
+                            }
+                            
+
+
+
                             //Job Gauges
 
                             if (ChromaticsSettings.ChromaticsSettingsJobGaugeToggle)
@@ -10494,3 +10706,4 @@ namespace Chromatics
         }
     }
 }
+ 
