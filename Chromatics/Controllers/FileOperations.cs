@@ -181,7 +181,8 @@ namespace Chromatics
                         _LightbarMode = Helpers.ConvertStringToLightbarMode(dr.LightbarMode);
 
                         var lifxLoad = dr.DeviceOperationLifxDevices;
-                        if (lifxLoad != "")
+
+                        if (lifxLoad != "" && LifxSdkCalled == 1)
                         {
                             var lifxDevices = lifxLoad.Split(',');
                             foreach (var ld in lifxDevices)
