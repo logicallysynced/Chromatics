@@ -5613,6 +5613,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstwarcol, false, false);
+                                                }
                                             }
                                             else if (polWrath <= 40 && polWrath > 30)
                                             {
@@ -5633,6 +5656,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstwarcol, false, false);
+                                                }
                                             }
                                             else if (polWrath <= 30 && polWrath > 20)
                                             {
@@ -5653,6 +5699,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstwarcol, false, false);
+                                                }
                                             }
                                             else if (polWrath <= 20 && polWrath > 10)
                                             {
@@ -5673,6 +5742,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstwarcol, false, false);
+                                                }
                                             }
                                             else if (polWrath <= 10 && polWrath > 0)
                                             {
@@ -5693,6 +5785,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstwarcol, false, false);
+                                                }
                                             }
                                             else if (polWrath == 0)
                                             {
@@ -5713,10 +5828,56 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", negwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", negwarcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", negwarcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", negwarcol, false, false);
+                                                }
                                             }
                                             else
                                             {
                                                 ToggleGlobalFlash3(false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", negwarcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", negwarcol, false, false);
+                                                }
                                             }
                                         }
                                         else
@@ -5738,6 +5899,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num1", negwarcol, false);
                                             GlobalApplyMapKeyLighting("Num2", negwarcol, false);
                                             GlobalApplyMapKeyLighting("Num3", negwarcol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", negwarcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", negwarcol, false, false);
+                                            }
                                         }
 
                                         break;
@@ -5776,6 +5960,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", shieldcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", shieldcol, false, false);
+                                                }
                                             }
                                             else if (oathPol <= 40 && oathPol > 30)
                                             {
@@ -5797,6 +6004,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", shieldcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", shieldcol, false, false);
+                                                }
                                             }
                                             else if (oathPol <= 30 && oathPol > 20)
                                             {
@@ -5818,6 +6048,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", shieldcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", shieldcol, false, false);
+                                                }
                                             }
                                             else if (oathPol <= 20 && oathPol > 10)
                                             {
@@ -5839,6 +6092,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", shieldcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", shieldcol, false, false);
+                                                }
                                             }
                                             else if (oathPol <= 10 && oathPol > 0)
                                             {
@@ -5860,6 +6136,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", shieldcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", shieldcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", shieldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", shieldcol, false, false);
+                                                }
                                             }
                                             else
                                             {
@@ -5881,6 +6180,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", negpldcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", negpldcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", negpldcol, false, false);
+                                                }
                                             }
                                         }
                                         else if (statEffects.Find(i => i.StatusName == "Sword Oath") != null)
@@ -5909,6 +6231,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", swordcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", swordcol, false, false);
+                                                }
                                             }
                                             else if (oathPol <= 40 && oathPol > 30)
                                             {
@@ -5930,6 +6275,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", swordcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", swordcol, false, false);
+                                                }
                                             }
                                             else if (oathPol <= 30 && oathPol > 20)
                                             {
@@ -5951,6 +6319,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", swordcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", swordcol, false, false);
+                                                }
                                             }
                                             else if (oathPol <= 20 && oathPol > 10)
                                             {
@@ -5972,6 +6363,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", swordcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", swordcol, false, false);
+                                                }
                                             }
                                             else if (oathPol <= 10 && oathPol > 0)
                                             {
@@ -5993,6 +6407,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", swordcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", swordcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", swordcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", swordcol, false, false);
+                                                }
                                             }
                                             else
                                             {
@@ -6014,6 +6451,29 @@ namespace Chromatics
 
                                                 GlobalApplyMapKeyLighting("Num0", negpldcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", negpldcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", negpldcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", negpldcol, false, false);
+                                                }
                                             }
                                         }
                                         else
@@ -6040,6 +6500,29 @@ namespace Chromatics
 
                                             GlobalApplyMapKeyLighting("Num0", negpldcol, false);
                                             GlobalApplyMapKeyLighting("NumDecimal", negpldcol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", negpldcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", negpldcol, false, false);
+                                            }
                                         }
 
                                         break;
@@ -6055,6 +6538,29 @@ namespace Chromatics
                                             {
                                                 ToggleGlobalFlash3(true);
                                                 GlobalFlash3(burstmnkcol, 150);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstmnkempty, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstmnkempty, false, false);
+                                                }
                                             }
                                             else
                                             {
@@ -6074,6 +6580,29 @@ namespace Chromatics
                                                         GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
                                                         GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
                                                         GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+
+                                                        if (_LightbarMode == LightbarMode.JobGauge)
+                                                        {
+                                                            GlobalApplyMapLightbarLighting("Lightbar19", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar18", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar17", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar16", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar15", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar14", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar13", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar12", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar11", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar10", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar9", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar8", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar7", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar6", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar5", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar4", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar3", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar2", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar1", burstmnkcol, false, false);
+                                                        }
                                                         break;
                                                     case 2:
                                                         GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
@@ -6087,6 +6616,29 @@ namespace Chromatics
                                                         GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
                                                         GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
                                                         GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+
+                                                        if (_LightbarMode == LightbarMode.JobGauge)
+                                                        {
+                                                            GlobalApplyMapLightbarLighting("Lightbar19", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar18", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar17", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar16", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar15", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar14", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar13", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar12", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar11", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar10", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar9", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar8", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar7", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar6", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar5", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar4", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar3", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar2", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar1", burstmnkcol, false, false);
+                                                        }
                                                         break;
                                                     case 1:
                                                         GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
@@ -6100,6 +6652,29 @@ namespace Chromatics
                                                         GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
                                                         GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
                                                         GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+
+                                                        if (_LightbarMode == LightbarMode.JobGauge)
+                                                        {
+                                                            GlobalApplyMapLightbarLighting("Lightbar19", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar18", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar17", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar16", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar15", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar14", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar13", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar12", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar11", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar10", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar9", burstmnkempty, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar8", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar7", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar6", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar5", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar4", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar3", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar2", burstmnkcol, false, false);
+                                                            GlobalApplyMapLightbarLighting("Lightbar1", burstmnkcol, false, false);
+                                                        }
                                                         break;
                                                 }
                                             }
@@ -6119,6 +6694,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num7", burstmnkempty, false);
                                             GlobalApplyMapKeyLighting("Num4", burstmnkempty, false);
                                             GlobalApplyMapKeyLighting("Num1", burstmnkempty, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", burstmnkempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", burstmnkempty, false, false);
+                                            }
                                         }
 
                                         break;
@@ -6150,6 +6748,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstdrgcol, false, false);
+                                                }
                                             }
                                             else if (polBlood <= 40 && polBlood > 30)
                                             {
@@ -6170,6 +6791,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstdrgcol, false, false);
+                                                }
                                             }
                                             else if (polBlood <= 30 && polBlood > 20)
                                             {
@@ -6190,6 +6834,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstdrgcol, false, false);
+                                                }
                                             }
                                             else if (polBlood <= 20 && polBlood > 10)
                                             {
@@ -6210,12 +6877,58 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstdrgcol, false, false);
+                                                }
                                             }
                                             else if (polBlood <= 10 && polBlood > 0)
                                             {
                                                 //Flash
                                                 ToggleGlobalFlash3(true);
                                                 GlobalFlash3(burstdrgcol, 150);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", negdrgcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", negdrgcol, false, false);
+                                                }
                                             }
                                         }
                                         else
@@ -6237,6 +6950,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num1", negdrgcol, false);
                                             GlobalApplyMapKeyLighting("Num2", negdrgcol, false);
                                             GlobalApplyMapKeyLighting("Num3", negdrgcol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", negdrgcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", negdrgcol, false, false);
+                                            }
                                         }
                                         break;
                                     case Actor.Job.BRD:
@@ -6323,6 +7059,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstcol, false, false);
+                                                }
                                             }
                                             else if (polSong <= 40 && polSong > 30)
                                             {
@@ -6343,6 +7102,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstcol, false, false);
+                                                }
                                             }
                                             else if (polSong <= 30 && polSong > 20)
                                             {
@@ -6363,6 +7145,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstcol, false, false);
+                                                }
                                             }
                                             else if (polSong <= 20 && polSong > 10)
                                             {
@@ -6383,12 +7188,58 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num1", burstcol, false);
                                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", burstcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", burstcol, false, false);
+                                                }
                                             }
                                             else if (polSong <= 10 && polSong > 0)
                                             {
                                                 //Flash
                                                 ToggleGlobalFlash3(true);
                                                 GlobalFlash3(burstcol, 150);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", negcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", negcol, false, false);
+                                                }
                                             }
                                         }
                                         else
@@ -6410,6 +7261,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num1", negcol, false);
                                             GlobalApplyMapKeyLighting("Num2", negcol, false);
                                             GlobalApplyMapKeyLighting("Num3", negcol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", negcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", negcol, false, false);
+                                            }
                                         }
                                         break;
                                     case Actor.Job.WHM:
@@ -6457,6 +7331,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num7", flowercol, false);
                                                 GlobalApplyMapKeyLighting("Num4", flowercol, false);
                                                 GlobalApplyMapKeyLighting("Num1", flowercol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", flowercol, false, false);
+                                                }
                                                 break;
                                             case 2:
                                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
@@ -6470,6 +7367,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num7", flowercol, false);
                                                 GlobalApplyMapKeyLighting("Num4", flowercol, false);
                                                 GlobalApplyMapKeyLighting("Num1", flowercol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", flowercol, false, false);
+                                                }
                                                 break;
                                             case 1:
                                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
@@ -6483,6 +7403,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num7", flowercol, false);
                                                 GlobalApplyMapKeyLighting("Num4", flowercol, false);
                                                 GlobalApplyMapKeyLighting("Num1", flowercol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", flowercol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", flowercol, false, false);
+                                                }
                                                 break;
                                             default:
                                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
@@ -6496,6 +7439,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num7", negwhmcol, false);
                                                 GlobalApplyMapKeyLighting("Num4", negwhmcol, false);
                                                 GlobalApplyMapKeyLighting("Num1", negwhmcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", negwhmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", negwhmcol, false, false);
+                                                }
                                                 break;
                                         }
 
@@ -6604,6 +7570,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num3", enochcol, false);
                                                 GlobalApplyMapKeyLighting("Num0", enochcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", enochcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", enochcol, false, false);
+                                                }
                                             }
                                             else if (enochtime <= 30 && enochtime > 20)
                                             {
@@ -6618,6 +7607,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num3", enochcol, false);
                                                 GlobalApplyMapKeyLighting("Num0", enochcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", enochcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", enochcol, false, false);
+                                                }
                                             }
                                             else if (enochtime <= 20 && enochtime > 10)
                                             {
@@ -6632,6 +7644,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num3", enochcol, false);
                                                 GlobalApplyMapKeyLighting("Num0", enochcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", enochcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", enochcol, false, false);
+                                                }
                                             }
                                             else if (enochtime <= 10 && enochtime > 0)
                                             {
@@ -6646,6 +7681,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num3", negblmcol, false);
                                                 GlobalApplyMapKeyLighting("Num0", enochcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", enochcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", enochcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", enochcol, false, false);
+                                                }
                                             }
                                             else
                                             {
@@ -6660,6 +7718,29 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Num3", negblmcol, false);
                                                 GlobalApplyMapKeyLighting("Num0", negblmcol, false);
                                                 GlobalApplyMapKeyLighting("NumDecimal", negblmcol, false);
+
+                                                if (_LightbarMode == LightbarMode.JobGauge)
+                                                {
+                                                    GlobalApplyMapLightbarLighting("Lightbar19", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar18", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar17", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar16", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar15", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar14", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar13", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar12", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar11", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar10", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar9", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar8", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar7", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar6", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar5", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar4", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar3", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar2", negblmcol, false, false);
+                                                    GlobalApplyMapLightbarLighting("Lightbar1", negblmcol, false, false);
+                                                }
                                             }
                                         }
                                         else
@@ -6675,6 +7756,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num3", negblmcol, false);
                                             GlobalApplyMapKeyLighting("Num0", negblmcol, false);
                                             GlobalApplyMapKeyLighting("NumDecimal", negblmcol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", negblmcol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", negblmcol, false, false);
+                                            }
                                         }
                                         
                                         break;
@@ -6700,6 +7804,29 @@ namespace Chromatics
                                                     GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
                                                     GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
                                                     GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
+
+                                                    if (_LightbarMode == LightbarMode.JobGauge)
+                                                    {
+                                                        GlobalApplyMapLightbarLighting("Lightbar19", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar18", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar17", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar16", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar15", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar14", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar13", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar12", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar11", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar10", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar9", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar8", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar7", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar6", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar5", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar4", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar3", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar2", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar1", burstsmncol, false, false);
+                                                    }
                                                     break;
                                                 case 2:
                                                     GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
@@ -6713,6 +7840,29 @@ namespace Chromatics
                                                     GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
                                                     GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
                                                     GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
+
+                                                    if (_LightbarMode == LightbarMode.JobGauge)
+                                                    {
+                                                        GlobalApplyMapLightbarLighting("Lightbar19", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar18", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar17", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar16", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar15", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar14", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar13", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar12", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar11", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar10", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar9", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar8", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar7", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar6", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar5", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar4", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar3", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar2", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar1", burstsmncol, false, false);
+                                                    }
                                                     break;
                                                 case 1:
                                                     GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
@@ -6726,6 +7876,29 @@ namespace Chromatics
                                                     GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
                                                     GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
                                                     GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
+
+                                                    if (_LightbarMode == LightbarMode.JobGauge)
+                                                    {
+                                                        GlobalApplyMapLightbarLighting("Lightbar19", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar18", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar17", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar16", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar15", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar14", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar13", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar12", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar11", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar10", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar9", burstsmnempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar8", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar7", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar6", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar5", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar4", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar3", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar2", burstsmncol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar1", burstsmncol, false, false);
+                                                    }
                                                     break;
                                             }
                                         }
@@ -6742,6 +7915,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num7", burstsmnempty, false);
                                             GlobalApplyMapKeyLighting("Num4", burstsmnempty, false);
                                             GlobalApplyMapKeyLighting("Num1", burstsmnempty, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", burstsmnempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", burstsmnempty, false, false);
+                                            }
                                         }
 
                                         break;
@@ -6768,6 +7964,29 @@ namespace Chromatics
                                                     GlobalApplyMapKeyLighting("Num7", burstschcol, false);
                                                     GlobalApplyMapKeyLighting("Num4", burstschcol, false);
                                                     GlobalApplyMapKeyLighting("Num1", burstschcol, false);
+
+                                                    if (_LightbarMode == LightbarMode.JobGauge)
+                                                    {
+                                                        GlobalApplyMapLightbarLighting("Lightbar19", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar18", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar17", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar16", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar15", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar14", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar13", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar12", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar11", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar10", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar9", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar8", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar7", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar6", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar5", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar4", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar3", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar2", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar1", burstschcol, false, false);
+                                                    }
                                                     break;
                                                 case 2:
                                                     GlobalApplyMapKeyLighting("Num9", burstschempty, false);
@@ -6781,6 +8000,29 @@ namespace Chromatics
                                                     GlobalApplyMapKeyLighting("Num7", burstschcol, false);
                                                     GlobalApplyMapKeyLighting("Num4", burstschcol, false);
                                                     GlobalApplyMapKeyLighting("Num1", burstschcol, false);
+
+                                                    if (_LightbarMode == LightbarMode.JobGauge)
+                                                    {
+                                                        GlobalApplyMapLightbarLighting("Lightbar19", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar18", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar17", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar16", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar15", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar14", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar13", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar12", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar11", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar10", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar9", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar8", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar7", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar6", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar5", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar4", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar3", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar2", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar1", burstschcol, false, false);
+                                                    }
                                                     break;
                                                 case 1:
                                                     GlobalApplyMapKeyLighting("Num9", burstschempty, false);
@@ -6794,6 +8036,29 @@ namespace Chromatics
                                                     GlobalApplyMapKeyLighting("Num7", burstschcol, false);
                                                     GlobalApplyMapKeyLighting("Num4", burstschcol, false);
                                                     GlobalApplyMapKeyLighting("Num1", burstschcol, false);
+
+                                                    if (_LightbarMode == LightbarMode.JobGauge)
+                                                    {
+                                                        GlobalApplyMapLightbarLighting("Lightbar19", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar18", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar17", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar16", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar15", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar14", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar13", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar12", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar11", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar10", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar9", burstschempty, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar8", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar7", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar6", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar5", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar4", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar3", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar2", burstschcol, false, false);
+                                                        GlobalApplyMapLightbarLighting("Lightbar1", burstschcol, false, false);
+                                                    }
                                                     break;
                                             }
                                         }
@@ -6810,6 +8075,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num7", burstschempty, false);
                                             GlobalApplyMapKeyLighting("Num4", burstschempty, false);
                                             GlobalApplyMapKeyLighting("Num1", burstschempty, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", burstschempty, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", burstschempty, false, false);
+                                            }
                                         }
 
                                         break;
@@ -6840,6 +8128,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num1", hutoncol, false);
                                             GlobalApplyMapKeyLighting("Num2", hutoncol, false);
                                             GlobalApplyMapKeyLighting("Num3", hutoncol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", hutoncol, false, false);
+                                            }
                                         }
                                         else if (polHuton <= 40 && polHuton > 30)
                                         {
@@ -6860,6 +8171,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num1", hutoncol, false);
                                             GlobalApplyMapKeyLighting("Num2", hutoncol, false);
                                             GlobalApplyMapKeyLighting("Num3", hutoncol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", hutoncol, false, false);
+                                            }
                                         }
                                         else if (polHuton <= 30 && polHuton > 20)
                                         {
@@ -6880,6 +8214,29 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num1", hutoncol, false);
                                             GlobalApplyMapKeyLighting("Num2", hutoncol, false);
                                             GlobalApplyMapKeyLighting("Num3", hutoncol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", hutoncol, false, false);
+                                            }
                                         }
                                         else if (polHuton <= 20 && polHuton > 10)
                                         {
@@ -6900,12 +8257,58 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("Num1", hutoncol, false);
                                             GlobalApplyMapKeyLighting("Num2", hutoncol, false);
                                             GlobalApplyMapKeyLighting("Num3", hutoncol, false);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", hutoncol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", hutoncol, false, false);
+                                            }
                                         }
                                         else if (polHuton <= 10 && polHuton > 0)
                                         {
                                             //Flash
                                             ToggleGlobalFlash3(true);
                                             GlobalFlash3(hutoncol, 150);
+
+                                            if (_LightbarMode == LightbarMode.JobGauge)
+                                            {
+                                                GlobalApplyMapLightbarLighting("Lightbar19", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar18", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar17", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar16", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar15", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar14", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar13", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar12", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar11", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar10", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar9", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar8", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar7", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar6", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar5", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar4", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar3", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar2", negnincol, false, false);
+                                                GlobalApplyMapLightbarLighting("Lightbar1", negnincol, false, false);
+                                            }
                                         }
                                         else
                                         {
