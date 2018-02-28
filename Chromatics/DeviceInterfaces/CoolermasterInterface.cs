@@ -197,6 +197,7 @@ namespace Chromatics.DeviceInterfaces
             Devices = new Dictionary<CoolermasterSdkWrapper.DeviceIndex, CoolermasterSdkWrapper.DeviceType>();
 
         private static readonly Dictionary<string, Color> KeyboardState = new Dictionary<string, Color>();
+        private static readonly Dictionary<string, Color> KeyboardStateUpdate = new Dictionary<string, Color>();
 
         #region keytranslator
 
@@ -355,7 +356,7 @@ namespace Chromatics.DeviceInterfaces
 
         private bool _peripheralUpdated;
         private Stopwatch _watch = new Stopwatch();
-        private CancellationTokenSource _cancellationTokenSource;
+        //private CancellationTokenSource _cancellationTokenSource;
 
 
         public bool InitializeSdk()
@@ -379,17 +380,15 @@ namespace Chromatics.DeviceInterfaces
 
                 Write.WriteConsole(ConsoleTypes.Coolermaster, "Attempting to load Coolermaster SDK..");
 
-                var devices = Enum.GetValues(typeof(CoolermasterSdkWrapper.DeviceIndex))
-                    .Cast<CoolermasterSdkWrapper.DeviceIndex>();
+                var devices = Enum.GetValues(typeof(CoolermasterSdkWrapper.DeviceIndex)).Cast<CoolermasterSdkWrapper.DeviceIndex>();
                 foreach (var d in devices)
                 {
                     CoolermasterSdkWrapper.SetControlDevice(d);
-                    if (CoolermasterSdkWrapper.IsDevicePlug() && CoolermasterSdkWrapper.EnableLedControl(true))
+                    if (CoolermasterSdkWrapper.IsDevicePlug())
                     {
                         Write.WriteConsole(ConsoleTypes.Coolermaster, "Found Coolermaster Device: " + d);
-
-                        if (d == CoolermasterSdkWrapper.DeviceIndex.DevMMouseL ||
-                            d == CoolermasterSdkWrapper.DeviceIndex.DevMMouseS)
+                        
+                        if (d == CoolermasterSdkWrapper.DeviceIndex.DevMMouseL || d == CoolermasterSdkWrapper.DeviceIndex.DevMMouseS)
                         {
                             Devices.Add(d, CoolermasterSdkWrapper.DeviceType.Mouse);
                         }
@@ -399,7 +398,6 @@ namespace Chromatics.DeviceInterfaces
                         }
 
                         found = true;
-                        break;
                     }
                 }
 
@@ -422,7 +420,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (_initialized)
             {
-                StopEffects();
+                //StopEffects();
                 CoolermasterSdkWrapper.EnableLedControl(false);
                 _initialized = false;
             }
@@ -459,12 +457,16 @@ namespace Chromatics.DeviceInterfaces
         public void SetLights(Color col)
         {
             if (!_coolermasterDeviceKeyboard) return;
-            StopEffects();
+            //StopEffects();
 
             if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
             {
                 foreach (var key in KeyCoords)
+                {
+                    if (KeyboardState[key.Key] == col) continue;
+
                     KeyboardState[key.Key] = col;
+                }
 
                 UpdateCoolermasterStateAll(col);
             }
@@ -472,6 +474,7 @@ namespace Chromatics.DeviceInterfaces
 
         public void SetWave()
         {
+            /*
             StopEffects();
 
             if (_coolermasterDeviceKeyboard)
@@ -480,7 +483,7 @@ namespace Chromatics.DeviceInterfaces
                     CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
                 }
 
-            /*
+            
             _cancellationTokenSource = new CancellationTokenSource();
 
             var crSt = new Task(() =>
@@ -511,14 +514,18 @@ namespace Chromatics.DeviceInterfaces
             if (FfxivHotbar.Keybindwhitelist.Contains(key) && !bypasswhitelist)
                 return;
 
-            StopEffects();
+            //StopEffects();
 
             try
             {
                 if (_coolermasterDeviceKeyboard)
                     if (KeyCoords.ContainsKey(key))
                     {
+                        if (KeyboardState[key] == col) return;
+                        if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+
                         KeyboardState[key] = col;
+                        KeyboardStateUpdate.Add(key, col);
                         UpdateCoolermasterState();
                     }
             }
@@ -577,12 +584,20 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
                                     }
                                     else
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = presets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, presets[key]);
+                                        }
                                     }
                                 }
                             }
@@ -595,12 +610,20 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
                                     }
                                     else
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = presets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, presets[key]);
+                                        }
                                     }
                                 }
                             }
@@ -613,12 +636,20 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
                                     }
                                     else
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = presets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, presets[key]);
+                                        }
                                     }
                                 }
                             }
@@ -631,12 +662,20 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
                                     }
                                     else
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = presets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, presets[key]);
+                                        }
                                     }
                                 }
                             }
@@ -649,12 +688,20 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
                                     }
                                     else
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = presets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, presets[key]);
+                                        }
                                     }
                                 }
                             }
@@ -667,12 +714,20 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
                                     }
                                     else
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = presets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, presets[key]);
+                                        }
                                     }
                                 }
                             }
@@ -685,12 +740,20 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
                                     }
                                     else
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = presets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, presets[key]);
+                                        }
                                     }
                                 }
                             }
@@ -703,12 +766,20 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
                                     }
                                     else
                                     {
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = presets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, presets[key]);
+                                        }
                                     }
                                 }
                             }
@@ -717,8 +788,14 @@ namespace Chromatics.DeviceInterfaces
                                 //Spin down
 
                                 foreach (var key in DeviceEffects.GlobalKeys)
+                                {
                                     if (KeyboardState.ContainsKey(key))
+                                    {
                                         KeyboardState[key] = presets[key];
+                                        if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                        KeyboardStateUpdate.Add(key, presets[key]);
+                                    }
+                                }
 
                                 presets.Clear();
                                 //HoldReader = false;
@@ -774,7 +851,11 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                         if (!FfxivHotbar.Keybindwhitelist.Contains(key))
                                             if (KeyboardState.ContainsKey(key))
+                                            {
                                                 KeyboardState[key] = burstcol;
+                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                                KeyboardStateUpdate.Add(key, burstcol);
+                                            }
                                 }
                             }
                             else if (i == 2)
@@ -786,7 +867,11 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                         if (!FfxivHotbar.Keybindwhitelist.Contains(key))
                                             if (KeyboardState.ContainsKey(key))
+                                            {
                                                 KeyboardState[key] = burstcol;
+                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                                KeyboardStateUpdate.Add(key, burstcol);
+                                            }
                                 }
                             }
                             else if (i == 3)
@@ -798,7 +883,11 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                         if (!FfxivHotbar.Keybindwhitelist.Contains(key))
                                             if (KeyboardState.ContainsKey(key))
+                                            {
                                                 KeyboardState[key] = burstcol;
+                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                                KeyboardStateUpdate.Add(key, burstcol);
+                                            }
                                 }
                             }
                             else if (i == 4)
@@ -810,7 +899,11 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                         if (!FfxivHotbar.Keybindwhitelist.Contains(key))
                                             if (KeyboardState.ContainsKey(key))
+                                            {
                                                 KeyboardState[key] = burstcol;
+                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                                KeyboardStateUpdate.Add(key, burstcol);
+                                            }
                                 }
                             }
                             else if (i == 5)
@@ -822,7 +915,11 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                         if (!FfxivHotbar.Keybindwhitelist.Contains(key))
                                             if (KeyboardState.ContainsKey(key))
+                                            {
                                                 KeyboardState[key] = burstcol;
+                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                                KeyboardStateUpdate.Add(key, burstcol);
+                                            }
                                 }
                             }
                             else if (i == 6)
@@ -834,7 +931,11 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                         if (!FfxivHotbar.Keybindwhitelist.Contains(key))
                                             if (KeyboardState.ContainsKey(key))
+                                            {
                                                 KeyboardState[key] = burstcol;
+                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                                KeyboardStateUpdate.Add(key, burstcol);
+                                            }
                                 }
                             }
                             else if (i == 7)
@@ -846,7 +947,11 @@ namespace Chromatics.DeviceInterfaces
                                     if (pos > -1)
                                         if (!FfxivHotbar.Keybindwhitelist.Contains(key))
                                             if (KeyboardState.ContainsKey(key))
+                                            {
                                                 KeyboardState[key] = burstcol;
+                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                                KeyboardStateUpdate.Add(key, burstcol);
+                                            }
                                 }
                             }
                             else if (i == 8)
@@ -859,7 +964,11 @@ namespace Chromatics.DeviceInterfaces
                                     {
                                         if (!FfxivHotbar.Keybindwhitelist.Contains(key))
                                             if (KeyboardState.ContainsKey(key))
+                                            {
                                                 KeyboardState[key] = burstcol;
+                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                                KeyboardStateUpdate.Add(key, burstcol);
+                                            }
                                     }
                                 }
                             }
@@ -920,7 +1029,11 @@ namespace Chromatics.DeviceInterfaces
                         if (_coolermasterDeviceKeyboard)
                             foreach (var key in region)
                                 if (KeyboardState.ContainsKey(key))
+                                {
                                     KeyboardState[key] = burstcol;
+                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                    KeyboardStateUpdate.Add(key, burstcol);
+                                }
                     }
                     else if (i == 2)
                     {
@@ -928,7 +1041,11 @@ namespace Chromatics.DeviceInterfaces
                         if (_coolermasterDeviceKeyboard)
                             foreach (var key in DeviceEffects.GlobalKeys3)
                                 if (KeyboardState.ContainsKey(key))
+                                {
                                     KeyboardState[key] = presets[key];
+                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                    KeyboardStateUpdate.Add(key, presets[key]);
+                                }
                     }
                     else if (i == 3)
                     {
@@ -938,7 +1055,11 @@ namespace Chromatics.DeviceInterfaces
                                 //ApplyMapKeyLighting(key, burstcol, true);
                                 //refreshKeyGrid
                                 if (KeyboardState.ContainsKey(key))
+                                {
                                     KeyboardState[key] = burstcol;
+                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                    KeyboardStateUpdate.Add(key, burstcol);
+                                }
                     }
                     else if (i == 4)
                     {
@@ -946,7 +1067,11 @@ namespace Chromatics.DeviceInterfaces
                         if (_coolermasterDeviceKeyboard)
                             foreach (var key in DeviceEffects.GlobalKeys3)
                                 if (KeyboardState.ContainsKey(key))
+                                {
                                     KeyboardState[key] = presets[key];
+                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                    KeyboardStateUpdate.Add(key, presets[key]);
+                                }
                     }
                     else if (i == 5)
                     {
@@ -956,7 +1081,11 @@ namespace Chromatics.DeviceInterfaces
                                 //ApplyMapKeyLighting(key, burstcol, true);
                                 //refreshKeyGrid
                                 if (KeyboardState.ContainsKey(key))
+                                {
                                     KeyboardState[key] = burstcol;
+                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                    KeyboardStateUpdate.Add(key, burstcol);
+                                }
                     }
                     else if (i == 6)
                     {
@@ -964,7 +1093,11 @@ namespace Chromatics.DeviceInterfaces
                         if (_coolermasterDeviceKeyboard)
                             foreach (var key in DeviceEffects.GlobalKeys3)
                                 if (KeyboardState.ContainsKey(key))
+                                {
                                     KeyboardState[key] = presets[key];
+                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                    KeyboardStateUpdate.Add(key, presets[key]);
+                                }
                     }
                     else if (i == 7)
                     {
@@ -972,7 +1105,11 @@ namespace Chromatics.DeviceInterfaces
                         if (_coolermasterDeviceKeyboard)
                             foreach (var key in region)
                                 if (KeyboardState.ContainsKey(key))
+                                {
                                     KeyboardState[key] = burstcol;
+                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                    KeyboardStateUpdate.Add(key, burstcol);
+                                }
                     }
                     else if (i == 8)
                     {
@@ -980,7 +1117,11 @@ namespace Chromatics.DeviceInterfaces
                         if (_coolermasterDeviceKeyboard)
                             foreach (var key in DeviceEffects.GlobalKeys3)
                                 if (KeyboardState.ContainsKey(key))
+                                {
                                     KeyboardState[key] = presets[key];
+                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                    KeyboardStateUpdate.Add(key, presets[key]);
+                                }
 
                         presets.Clear();
                         //HoldReader = false;
@@ -1033,7 +1174,11 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     foreach (var key in regions)
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
 
                                     UpdateCoolermasterState();
                                 }
@@ -1046,7 +1191,11 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     foreach (var key in regions)
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = _flashpresets[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, _flashpresets[key]);
+                                        }
 
                                     UpdateCoolermasterState();
                                 }
@@ -1094,14 +1243,23 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     foreach (var key in DeviceEffects.NumFlash)
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
+
                                     _coolermasterFlash3Step = 1;
                                 }
                                 else if (_coolermasterFlash3Step == 1)
                                 {
                                     foreach (var key in DeviceEffects.NumFlash)
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = Color.Black;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, Color.Black);
+                                        }
 
                                     _coolermasterFlash3Step = 0;
                                 }
@@ -1158,7 +1316,11 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     foreach (var key in regions)
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = burstcol;
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, burstcol);
+                                        }
 
                                     UpdateCoolermasterState();
                                 }
@@ -1171,7 +1333,11 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     foreach (var key in regions)
                                         if (KeyboardState.ContainsKey(key))
+                                        {
                                             KeyboardState[key] = _flashpresets4[key];
+                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
+                                            KeyboardStateUpdate.Add(key, _flashpresets4[key]);
+                                        }
 
                                     UpdateCoolermasterState();
                                 }
@@ -1203,45 +1369,61 @@ namespace Chromatics.DeviceInterfaces
             if (!_initialized)
                 return;
 
-            if (_coolermasterDeviceKeyboard)
-                if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
-                {
-                    CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
-                }
-            if (_coolermasterDeviceMouse)
-                if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Mouse))
-                {
-                    CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
-                }
+            foreach (var d in Devices)
+            {
+                if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse) continue;
+
+                CoolermasterSdkWrapper.SetControlDevice(d.Key);
+                CoolermasterSdkWrapper.EnableLedControl(false);
+                CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
+                CoolermasterSdkWrapper.EnableLedControl(true);
+            }
         }
 
         private void UpdateCoolermasterState()
         {
-            if (!_initialized)
+            if (!_initialized || !_coolermasterDeviceKeyboard)
                 return;
 
-            ResetEffects();
+            //ResetEffects();
+            foreach (var d in Devices)
+            {
+                if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse) continue;
 
-            foreach (var key in KeyboardState)
-                if (KeyCoords.ContainsKey(key.Key))
-                {
-                    var keyid = KeyCoords[key.Key];
-                    var col = key.Value;
-                    CoolermasterSdkWrapper.SetLedColor(keyid[0], keyid[1], col.R, col.G, col.B);
-                }
+                CoolermasterSdkWrapper.SetControlDevice(d.Key);
+                CoolermasterSdkWrapper.EnableLedControl(true);
 
-            CoolermasterSdkWrapper.RefreshLed(false);
+
+                foreach (var key in KeyboardStateUpdate)
+                    if (KeyCoords.ContainsKey(key.Key))
+                    {
+                        var keyid = KeyCoords[key.Key];
+                        var col = key.Value;
+                        
+                        CoolermasterSdkWrapper.SetLedColor(keyid[0], keyid[1], col.R, col.G, col.B);
+                    }
+
+                CoolermasterSdkWrapper.RefreshLed(false);
+                KeyboardStateUpdate.Clear();
+            }
         }
 
         private void UpdateCoolermasterStateAll(Color col)
         {
-            if (!_initialized)
+            if (!_initialized || !_coolermasterDeviceKeyboard)
                 return;
 
-            ResetEffects();
+            //ResetEffects();
+            foreach (var d in Devices)
+            {
+                if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse) continue;
 
-            CoolermasterSdkWrapper.SetFullLedColor(col.R, col.G, col.B);
-            CoolermasterSdkWrapper.RefreshLed(false);
+                CoolermasterSdkWrapper.SetControlDevice(d.Key);
+                CoolermasterSdkWrapper.EnableLedControl(true);
+
+                CoolermasterSdkWrapper.SetFullLedColor(col.R, col.G, col.B);
+                CoolermasterSdkWrapper.RefreshLed(false);
+            }
         }
     }
 }
