@@ -176,8 +176,6 @@ namespace Chromatics.DeviceInterfaces
         void SetLights(Color col);
         void SetWave();
         void StopEffects();
-        void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
-            [Optional] bool direction, [Optional] int speed);
 
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string region, Color col, bool clear);
@@ -371,7 +369,7 @@ namespace Chromatics.DeviceInterfaces
                     foreach (var key in KeyCoords)
                     {
                         KeyboardState.Add(key.Key, Color.Black);
-                        Debug.WriteLine("Added " + key.Key + " to library.");
+                        //Debug.WriteLine("Added " + key.Key + " to library.");
                     }
 
                     _boot = true;
@@ -452,7 +450,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (_initialized)
             {
-                _cancellationTokenSource?.Cancel();
+                //_cancellationTokenSource?.Cancel();
                 CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
                 MemoryTasks.Cleanup();
             }
@@ -475,6 +473,14 @@ namespace Chromatics.DeviceInterfaces
         public void SetWave()
         {
             StopEffects();
+
+            if (_coolermasterDeviceKeyboard)
+                if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
+                {
+                    CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
+                }
+
+            /*
             _cancellationTokenSource = new CancellationTokenSource();
 
             var crSt = new Task(() =>
@@ -494,137 +500,8 @@ namespace Chromatics.DeviceInterfaces
             }, _cancellationTokenSource.Token);
             MemoryTasks.Add(crSt);
             MemoryTasks.Run(crSt);
+            */
         }
-
-        public void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
-            [Optional] bool direction, [Optional] int speed)
-        {
-            if (!_initialized)
-                return;
-
-            MemoryTasks.Cleanup();
-            ResetEffects();
-
-            if (type == "reset")
-            {
-                try
-                {
-                    if (_coolermasterDeviceKeyboard && disablekeys != true)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard)
-                                break;
-                    if (_coolermasterDeviceMouse)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse)
-                                break;
-                }
-                catch
-                {
-                    //
-                }
-            }
-            else if (type == "static")
-            {
-                try
-                {
-                    if (_coolermasterDeviceKeyboard && disablekeys != true)
-                        if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
-                        {
-                            foreach (var key in KeyCoords)
-                                KeyboardState[key.Key] = col;
-
-                            UpdateCoolermasterStateAll(col);
-                        }
-                    if (_coolermasterDeviceMouse)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse)
-                                break;
-                }
-                catch (Exception ex)
-                {
-                    Write.WriteConsole(ConsoleTypes.Error, "Corsair (Static)" + ex.Message);
-                }
-            }
-            else if (type == "transition")
-            {
-                var crSt = new Task(() =>
-                {
-                    if (_coolermasterDeviceKeyboard && disablekeys != true)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard)
-                                break;
-                    if (_coolermasterDeviceMouse)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse)
-                                break;
-                });
-                MemoryTasks.Add(crSt);
-                MemoryTasks.Run(crSt);
-            }
-            else if (type == "wave")
-            {
-                var crSt = new Task(() =>
-                {
-                    if (_coolermasterDeviceKeyboard && disablekeys != true)
-                        if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
-                        {
-                            CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
-                        }
-                    if (!_coolermasterDeviceMouse) return;
-                    {
-                        if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Mouse))
-                        {
-                            CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
-                        }
-                    }
-                });
-                MemoryTasks.Add(crSt);
-                MemoryTasks.Run(crSt);
-            }
-            else if (type == "breath")
-            {
-                var crSt = new Task(() =>
-                {
-                    try
-                    {
-                        if (_coolermasterDeviceKeyboard && disablekeys != true)
-                            foreach (var d in Devices)
-                                if (d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard)
-                                    break;
-                        if (_coolermasterDeviceMouse)
-                            foreach (var d in Devices)
-                                if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse)
-                                    break;
-                    }
-                    catch (Exception ex)
-                    {
-                        Write.WriteConsole(ConsoleTypes.Error, "Coolermaster (Breath): " + ex.Message);
-                    }
-                });
-                MemoryTasks.Add(crSt);
-                MemoryTasks.Run(crSt);
-            }
-            else if (type == "pulse")
-            {
-                var crSt = new Task(() =>
-                {
-                    if (_coolermasterDeviceKeyboard && disablekeys != true)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard)
-                                break;
-                    if (_coolermasterDeviceMouse)
-                        foreach (var d in Devices)
-                            if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse)
-                                break;
-                }, _ccts.Token);
-                MemoryTasks.Add(crSt);
-                MemoryTasks.Run(crSt);
-                //RzPulse = true;
-            }
-
-            MemoryTasks.Cleanup();
-        }
-
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
@@ -1352,6 +1229,8 @@ namespace Chromatics.DeviceInterfaces
                     var col = key.Value;
                     CoolermasterSdkWrapper.SetLedColor(keyid[0], keyid[1], col.R, col.G, col.B);
                 }
+
+            CoolermasterSdkWrapper.RefreshLed(false);
         }
 
         private void UpdateCoolermasterStateAll(Color col)
@@ -1362,6 +1241,7 @@ namespace Chromatics.DeviceInterfaces
             ResetEffects();
 
             CoolermasterSdkWrapper.SetFullLedColor(col.R, col.G, col.B);
+            CoolermasterSdkWrapper.RefreshLed(false);
         }
     }
 }
