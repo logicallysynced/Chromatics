@@ -392,9 +392,13 @@ namespace Chromatics.DeviceInterfaces
 
                         if (d == CoolermasterSdkWrapper.DeviceIndex.DevMMouseL ||
                             d == CoolermasterSdkWrapper.DeviceIndex.DevMMouseS)
+                        {
                             Devices.Add(d, CoolermasterSdkWrapper.DeviceType.Mouse);
+                        }
                         else
+                        {
                             Devices.Add(d, CoolermasterSdkWrapper.DeviceType.Keyboard);
+                        }
 
                         found = true;
                         break;
@@ -404,7 +408,7 @@ namespace Chromatics.DeviceInterfaces
                 if (found)
                 {
                     _initialized = true;
-                    return false;
+                    return true;
                 }
                 Write.WriteConsole(ConsoleTypes.Coolermaster, "Unable to find any valid Coolermaster devices.");
                 return false;
@@ -461,7 +465,7 @@ namespace Chromatics.DeviceInterfaces
 
             if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
             {
-                foreach (var key in KeyboardState)
+                foreach (var key in KeyCoords)
                     KeyboardState[key.Key] = col;
 
                 UpdateCoolermasterStateAll(col);
@@ -526,7 +530,7 @@ namespace Chromatics.DeviceInterfaces
                     if (_coolermasterDeviceKeyboard && disablekeys != true)
                         if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
                         {
-                            foreach (var key in KeyboardState)
+                            foreach (var key in KeyCoords)
                                 KeyboardState[key.Key] = col;
 
                             UpdateCoolermasterStateAll(col);
