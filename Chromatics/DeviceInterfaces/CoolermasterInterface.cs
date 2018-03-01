@@ -1393,18 +1393,21 @@ namespace Chromatics.DeviceInterfaces
                 CoolermasterSdkWrapper.SetControlDevice(d.Key);
                 CoolermasterSdkWrapper.EnableLedControl(true);
 
+                var dkeys = new List<string>(KeyboardStateUpdate.Keys);
 
-                foreach (var key in KeyboardStateUpdate)
-                    if (KeyCoords.ContainsKey(key.Key))
+                foreach (var key in dkeys)
+                {
+                    if (KeyCoords.ContainsKey(key) && KeyboardStateUpdate.ContainsKey(key))
                     {
-                        var keyid = KeyCoords[key.Key];
-                        var col = key.Value;
-                        
+                        var keyid = KeyCoords[key];
+                        var col = KeyboardStateUpdate[key];
                         CoolermasterSdkWrapper.SetLedColor(keyid[0], keyid[1], col.R, col.G, col.B);
                     }
+                }
 
                 CoolermasterSdkWrapper.RefreshLed(false);
                 KeyboardStateUpdate.Clear();
+                //dkeys.Clear();
             }
         }
 
