@@ -111,7 +111,8 @@ namespace Chromatics.DeviceInterfaces
         public struct ColorMatrix
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaxLedRow * MaxLedColumn,
-                ArraySubType = UnmanagedType.Struct)] public KeyColor[,] KeyColor;
+                ArraySubType = UnmanagedType.Struct)]
+            public KeyColor[,] KeyColor;
         }
 
         #region Enums
@@ -195,6 +196,26 @@ namespace Chromatics.DeviceInterfaces
         private readonly List<CoolermasterSdkWrapper.DeviceIndex> _keyboards = new List<CoolermasterSdkWrapper.DeviceIndex>();
         private readonly CoolermasterSdkWrapper.ColorMatrix _colorMatrix = new CoolermasterSdkWrapper.ColorMatrix();
         private readonly Timer _updateTimer;
+
+        private static readonly object CoolermasterRipple1 = new object();
+
+        private static readonly object CoolermasterRipple2 = new object();
+
+        private static readonly object CoolermasterFlash1 = new object();
+
+        private static int _coolermasterFlash2Step;
+        private static bool _coolermasterFlash2Running;
+        private static Dictionary<string, Color> _flashpresets = new Dictionary<string, Color>();
+        private static readonly object CoolermasterFlash2 = new object();
+
+        private static int _coolermasterFlash3Step;
+        private static bool _coolermasterFlash3Running;
+        private static readonly object CoolermasterFlash3 = new object();
+
+        private static int _coolermasterFlash4Step;
+        private static bool _coolermasterFlash4Running;
+        private static Dictionary<string, Color> _flashpresets4 = new Dictionary<string, Color>();
+        private static readonly object CoolermasterFlash4 = new object();
 
         public bool IsInitialized { get; set; } = false;
 
@@ -320,19 +341,35 @@ namespace Chromatics.DeviceInterfaces
         public static IEnumerable<CoolermasterSdkWrapper.DeviceIndex> SupportedKeyboardDevices => SupportedDevices.Where(d => d != CoolermasterSdkWrapper.DeviceIndex.DevMMouseL && d != CoolermasterSdkWrapper.DeviceIndex.DevMMouseS);
         public static IEnumerable<CoolermasterSdkWrapper.DeviceIndex> SupportedMouseDevices => SupportedDevices.Except(SupportedKeyboardDevices);
 
-        private static CoolermasterSdkWrapper.KeyColor MapColour(Color color) => new CoolermasterSdkWrapper.KeyColor(color.R, color.G, color.B);
+        private static CoolermasterSdkWrapper.KeyColor MapColor(Color color) => new CoolermasterSdkWrapper.KeyColor(color.R, color.G, color.B);
+        private static Color MapKeyColor(CoolermasterSdkWrapper.KeyColor color) => Color.FromArgb(1, color.r, color.g, color.b);
+        private bool SetKeyColor(string key, Color color)
+        {
+            if (!KeyMappings.ContainsKey(key))
+                return false;
+
+            _colorMatrix.KeyColor[KeyMappings[key][0], KeyMappings[key][1]] = MapColor(color);
+            return true;
+        }
+        private Color? GetKeyColor(string key)
+        {
+            if (!KeyMappings.ContainsKey(key))
+                return null;
+
+            return MapKeyColor(_colorMatrix.KeyColor[KeyMappings[key][0], KeyMappings[key][1]]);
+        }
 
         public CoolermasterLib()
         {
             _colorMatrix.KeyColor = new CoolermasterSdkWrapper.KeyColor[CoolermasterSdkWrapper.MaxLedRow, CoolermasterSdkWrapper.MaxLedColumn];
-
-
-
             _updateTimer = new Timer((_) => ApplyKeyboardLighting(), null, Timeout.Infinite, Timeout.Infinite);
         }
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
+            if (!IsInitialized)
+                return;
+
             // clear is unused?
             // whitelist appears to be a blacklist
 
@@ -347,7 +384,7 @@ namespace Chromatics.DeviceInterfaces
                 return;
             }
 
-            _colorMatrix.KeyColor[KeyMappings[key][0], KeyMappings[key][1]] = MapColour(col);
+            SetKeyColor(key, col);
 
             ApplyKeyboardLightingSoon();
         }
@@ -356,20 +393,366 @@ namespace Chromatics.DeviceInterfaces
         {
         }
 
+        public Task Ripple1(Color burstcol, int speed)
+        {
+            return new Task(() =>
+            {
+                if (!IsInitialized)
+                    return;
+
+                lock (CoolermasterRipple1)
+                {
+                    if (_keyboards.Any())
+                    {
+                        var previousValues = new Dictionary<string, Color>();
+                        var safeKeys = DeviceEffects.GlobalKeys.Where(KeyMappings.ContainsKey);
+
+                        for (var i = 0; i <= 9; i++)
+                        {
+                            if (i == 0)
+                            {
+                                //Setup
+
+                                foreach (var key in safeKeys)
+                                {
+                                    previousValues.Add(key, GetKeyColor(key).Value);
+                                }
+                            }
+                            else if (i == 1)
+                            {
+                                //Step 0
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
+                                    if (pos > -1)
+                                    {
+                                        SetKeyColor(key, burstcol);
+                                    }
+                                    else
+                                    {
+                                        SetKeyColor(key, previousValues[key]);
+                                    }
+                                }
+                            }
+                            else if (i == 2)
+                            {
+                                //Step 1
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
+                                    if (pos > -1)
+                                    {
+                                        SetKeyColor(key, burstcol);
+                                    }
+                                    else
+                                    {
+                                        SetKeyColor(key, previousValues[key]);
+                                    }
+                                }
+                            }
+                            else if (i == 3)
+                            {
+                                //Step 2
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
+                                    if (pos > -1)
+                                    {
+                                        SetKeyColor(key, burstcol);
+                                    }
+                                    else
+                                    {
+                                        SetKeyColor(key, previousValues[key]);
+                                    }
+                                }
+                            }
+                            else if (i == 4)
+                            {
+                                //Step 3
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
+                                    if (pos > -1)
+                                    {
+                                        SetKeyColor(key, burstcol);
+                                    }
+                                    else
+                                    {
+                                        SetKeyColor(key, previousValues[key]);
+                                    }
+                                }
+                            }
+                            else if (i == 5)
+                            {
+                                //Step 4
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
+                                    if (pos > -1)
+                                    {
+                                        SetKeyColor(key, burstcol);
+                                    }
+                                    else
+                                    {
+                                        SetKeyColor(key, previousValues[key]);
+                                    }
+                                }
+                            }
+                            else if (i == 6)
+                            {
+                                //Step 5
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
+                                    if (pos > -1)
+                                    {
+                                        SetKeyColor(key, burstcol);
+                                    }
+                                    else
+                                    {
+                                        SetKeyColor(key, previousValues[key]);
+                                    }
+                                }
+                            }
+                            else if (i == 7)
+                            {
+                                //Step 6
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
+                                    if (pos > -1)
+                                    {
+                                        SetKeyColor(key, burstcol);
+                                    }
+                                    else
+                                    {
+                                        SetKeyColor(key, previousValues[key]);
+                                    }
+                                }
+                            }
+                            else if (i == 8)
+                            {
+                                //Step 7
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
+                                    if (pos > -1)
+                                    {
+                                        SetKeyColor(key, burstcol);
+                                    }
+                                    else
+                                    {
+                                        SetKeyColor(key, previousValues[key]);
+                                    }
+                                }
+                            }
+                            else if (i == 9)
+                            {
+                                //Spin down
+
+                                foreach (var key in safeKeys.Where(key => previousValues.ContainsKey(key)))
+                                {
+                                    SetKeyColor(key, previousValues[key]);
+                                }
+
+                                previousValues.Clear();
+                            }
+
+                            if (i < 9)
+                                Thread.Sleep(speed);
+
+                            ApplyKeyboardLighting();
+                        }
+                    }
+                }
+            });
+        }
+
+        public Task Ripple2(Color burstcol, int speed)
+        {
+            return new Task(() =>
+            {
+            if (!IsInitialized)
+                return;
+
+                var safeKeys = DeviceEffects.GlobalKeys.Except(FfxivHotbar.Keybindwhitelist);
+
+                lock (CoolermasterRipple2)
+                {
+                    if (_keyboards.Any())
+                    {
+                        var previousValues = new Dictionary<string, Color>();
+
+                        for (var i = 0; i <= 9; i++)
+                        {
+                            if (i == 0)
+                            {
+                                //Setup
+
+                                foreach (var key in safeKeys
+                                    .Where(KeyMappings.ContainsKey))
+                                {
+                                    previousValues.Add(key, GetKeyColor(key).Value);
+                                }
+                            }
+                            else if (i == 1)
+                            {
+                                //Step 0
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
+                                    if (pos > -1)
+                                        SetKeyColor(key, burstcol);
+                                }
+                            }
+                            else if (i == 2)
+                            {
+                                //Step 1
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
+                                    if (pos > -1)
+                                        SetKeyColor(key, burstcol);
+                                }
+                            }
+                            else if (i == 3)
+                            {
+                                //Step 2
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
+                                    if (pos > -1)
+                                        SetKeyColor(key, burstcol);
+                                }
+                            }
+                            else if (i == 4)
+                            {
+                                //Step 3
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
+                                    if (pos > -1)
+                                        SetKeyColor(key, burstcol);
+                                }
+                            }
+                            else if (i == 5)
+                            {
+                                //Step 4
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
+                                    if (pos > -1)
+                                        SetKeyColor(key, burstcol);
+                                }
+                            }
+                            else if (i == 6)
+                            {
+                                //Step 5
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
+                                    if (pos > -1)
+                                        SetKeyColor(key, burstcol);
+                                }
+                            }
+                            else if (i == 7)
+                            {
+                                //Step 6
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
+                                    if (pos > -1)
+                                        SetKeyColor(key, burstcol);
+                                }
+                            }
+                            else if (i == 8)
+                            {
+                                //Step 7
+                                foreach (var key in safeKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
+                                    if (pos > -1)
+                                        SetKeyColor(key, burstcol);
+                                }
+                            }
+                            else if (i == 9)
+                            {
+                                //Spin down
+
+                                foreach (var key in previousValues.Keys)
+                                {
+                                    SetKeyColor(key, previousValues[key]);
+                                }
+
+                                previousValues.Clear();
+                            }
+
+                            if (i < 9)
+                                Thread.Sleep(speed);
+
+                            ApplyKeyboardLighting();
+                        }
+                    }
+                }
+            });
+        }
+
         public void Flash1(Color burstcol, int speed, string[] region)
         {
+            lock (CoolermasterFlash1)
+            {
+                if (!IsInitialized)
+                    return;
+
+                var previousValues = new Dictionary<string, Color>();
+                var mappedRegion = region.Where(KeyMappings.ContainsKey);
+
+                for (var i = 0; i <= 8; i++)
+                {
+                    if (i == 0)
+                    {
+                        //Setup
+
+                        if (_keyboards.Any())
+                            foreach (var key in mappedRegion)
+                                previousValues.Add(key, GetKeyColor(key).Value);
+                    }
+                    else if (i % 2 == 1)
+                    {
+                        //Step 1, 3, 5, 7
+                        if (_keyboards.Any())
+                            foreach (var key in mappedRegion)
+                                SetKeyColor(key, burstcol);
+                    }
+                    else if (i % 2 == 0)
+                    {
+                        //Step 2, 4, 6, 8
+                        if (_keyboards.Any())
+                            foreach (var key in mappedRegion)
+                                SetKeyColor(key, previousValues[key]);
+                    }
+
+                    if (i < 8)
+                        Thread.Sleep(speed);
+
+                    ApplyKeyboardLighting();
+                }
+            }
         }
 
         public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
+
         }
 
         public void Flash3(Color burstcol, int speed, CancellationToken cts)
         {
+
         }
 
         public void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
+
         }
 
         public bool InitializeSdk()
@@ -418,21 +801,11 @@ namespace Chromatics.DeviceInterfaces
         {
         }
 
-        public Task Ripple1(Color burstcol, int speed)
-        {
-            return new Task(() => Task.Delay(speed * 9).Wait());
-        }
-
-        public Task Ripple2(Color burstcol, int speed)
-        {
-            return new Task(() => Task.Delay(speed * 9).Wait());
-        }
-
         public void SetLights(Color col)
         {
-            foreach(var mapping in KeyMappings)
+            foreach (var mapping in KeyMappings)
             {
-                _colorMatrix.KeyColor[mapping.Value[0], mapping.Value[1]] = MapColour(col);
+                _colorMatrix.KeyColor[mapping.Value[0], mapping.Value[1]] = MapColor(col);
             }
 
             ApplyKeyboardLighting();
@@ -452,7 +825,7 @@ namespace Chromatics.DeviceInterfaces
 
         private void ApplyKeyboardLighting()
         {
-            foreach(var keyboardDevice in _keyboards)
+            foreach (var keyboardDevice in _keyboards)
             {
                 CoolermasterSdkWrapper.SetControlDevice(keyboardDevice);
                 CoolermasterSdkWrapper.SetAllLedColor(_colorMatrix);
@@ -464,1248 +837,6 @@ namespace Chromatics.DeviceInterfaces
         private void ApplyKeyboardLightingSoon()
         {
             _updateTimer.Change(TimeSpan.FromMilliseconds(50), Timeout.InfiniteTimeSpan);
-        }
-    }
-
-    public class OldCoolermasterLib : ICoolermasterSdk
-    {
-        private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
-        private static bool _boot;
-
-        private static readonly Dictionary<CoolermasterSdkWrapper.DeviceIndex, CoolermasterSdkWrapper.DeviceType>
-            Devices = new Dictionary<CoolermasterSdkWrapper.DeviceIndex, CoolermasterSdkWrapper.DeviceType>();
-
-        private static readonly Dictionary<string, Color> KeyboardState = new Dictionary<string, Color>();
-        private static readonly Dictionary<string, Color> KeyboardStateUpdate = new Dictionary<string, Color>();
-
-        #region keytranslator
-
-        public static readonly Dictionary<string, int[]> KeyCoords = new Dictionary<string, int[]>
-        {
-            {"Escape", new[] {0, 0}},
-            {"F1", new[] {0, 1}},
-            {"F2", new[] {0, 2}},
-            {"F3", new[] {0, 3}},
-            {"F4", new[] {0, 4}},
-            {"F5", new[] {0, 6}},
-            {"F6", new[] {0, 7}},
-            {"F7", new[] {0, 8}},
-            {"F8", new[] {0, 9}},
-            {"F9", new[] {0, 11}},
-            {"F10", new[] {0, 12}},
-            {"F11", new[] {0, 13}},
-            {"F12", new[] {0, 14}},
-            {"PrintScreen", new[] {0, 15}},
-            {"Scroll", new[] {0, 16}},
-            {"Pause", new[] {0, 17}},
-            {"Macro1", new[] {0, 18}},
-            {"Macro2", new[] {0, 19}},
-            {"Macro3", new[] {0, 20}},
-            {"Macro4", new[] {0, 21}},
-            {"OmeTilde", new[] {1, 0}},
-            {"D1", new[] {1, 1}},
-            {"D2", new[] {1, 2}},
-            {"D3", new[] {1, 3}},
-            {"D4", new[] {1, 4}},
-            {"D5", new[] {1, 5}},
-            {"D6", new[] {1, 6}},
-            {"D7", new[] {1, 7}},
-            {"D8", new[] {1, 8}},
-            {"D9", new[] {1, 9}},
-            {"D0", new[] {1, 10}},
-            {"OemMinus", new[] {1, 11}},
-            {"OemEquals", new[] {1, 12}},
-            {"Backspace", new[] {1, 14}},
-            {"Insert", new[] {1, 15}},
-            {"Home", new[] {1, 16}},
-            {"PageUp", new[] {1, 17}},
-            {"NumLock", new[] {1, 18}},
-            {"NumDivide", new[] {1, 19}},
-            {"NumMultiply", new[] {1, 20}},
-            {"NumSubtract", new[] {1, 21}},
-            {"Tab", new[] {2, 0}},
-            {"Q", new[] {2, 1}},
-            {"W", new[] {2, 2}},
-            {"E", new[] {2, 3}},
-            {"R", new[] {2, 4}},
-            {"T", new[] {2, 5}},
-            {"Y", new[] {2, 6}},
-            {"U", new[] {2, 7}},
-            {"I", new[] {2, 8}},
-            {"O", new[] {2, 9}},
-            {"P", new[] {2, 10}},
-            {"OemLeftBracket", new[] {2, 11}},
-            {"OemRightBracket", new[] {2, 12}},
-            {"OemBackslash", new[] {2, 14}},
-            {"Delete", new[] {2, 15}},
-            {"End", new[] {2, 16}},
-            {"PageDown", new[] {2, 17}},
-            {"Num7", new[] {2, 18}},
-            {"Num8", new[] {2, 19}},
-            {"Num9", new[] {2, 20}},
-            {"NumAdd", new[] {2, 21}},
-            {"CapsLock", new[] {3, 0}},
-            {"A", new[] {3, 1}},
-            {"S", new[] {3, 2}},
-            {"D", new[] {3, 3}},
-            {"F", new[] {3, 4}},
-            {"G", new[] {3, 5}},
-            {"H", new[] {3, 6}},
-            {"J", new[] {3, 7}},
-            {"K", new[] {3, 8}},
-            {"L", new[] {3, 9}},
-            {"OemSemicolon", new[] {3, 10}},
-            {"OemApostrophe", new[] {3, 11}},
-            {"JpnYen", new[] {3, 12}},
-            {"Enter", new[] {3, 14}},
-            {"Num4", new[] {3, 18}},
-            {"Num5", new[] {3, 19}},
-            {"Num6", new[] {3, 20}},
-            {"LeftShift", new[] {4, 0}},
-            {"EurPound", new[] {4, 1}},
-            {"Z", new[] {4, 2}},
-            {"X", new[] {4, 3}},
-            {"C", new[] {4, 4}},
-            {"V", new[] {4, 5}},
-            {"B", new[] {4, 6}},
-            {"N", new[] {4, 7}},
-            {"M", new[] {4, 8}},
-            {"OemComma", new[] {4, 9}},
-            {"OemPeriod", new[] {4, 10}},
-            {"OemSlash", new[] {4, 11}},
-            {"RightShift", new[] {4, 14}},
-            {"Up", new[] {4, 16}},
-            {"Num1", new[] {4, 18}},
-            {"Num2", new[] {4, 19}},
-            {"Num3", new[] {4, 20}},
-            {"NumEnter", new[] {4, 21}},
-            {"LeftControl", new[] {5, 0}},
-            {"LeftWindows", new[] {5, 1}},
-            {"LeftAlt", new[] {5, 2}},
-            {"Space", new[] {5, 6}},
-            {"RightAlt", new[] {5, 10}},
-            {"RightWindows", new[] {5, 11}},
-            {"RightMenu", new[] {5, 12}},
-            {"RightControl", new[] {5, 14}},
-            {"Left", new[] {5, 15}},
-            {"Down", new[] {5, 16}},
-            {"Right", new[] {5, 17}},
-            {"Num0", new[] {5, 18}},
-            {"NumDecimal", new[] {5, 20}}
-        };
-
-        #endregion
-
-
-        private static readonly object CoolermasterRipple1 = new object();
-
-
-        private static readonly object CoolermasterRipple2 = new object();
-
-
-        private static readonly object CoolermasterFlash1 = new object();
-
-        private static int _coolermasterFlash2Step;
-        private static bool _coolermasterFlash2Running;
-        private static Dictionary<string, Color> _flashpresets = new Dictionary<string, Color>();
-        private static readonly object CoolermasterFlash2 = new object();
-
-        private static int _coolermasterFlash3Step;
-        private static bool _coolermasterFlash3Running;
-        private static readonly object CoolermasterFlash3 = new object();
-
-        private static int _coolermasterFlash4Step;
-        private static bool _coolermasterFlash4Running;
-        private static Dictionary<string, Color> _flashpresets4 = new Dictionary<string, Color>();
-        private static readonly object CoolermasterFlash4 = new object();
-
-        private readonly CancellationTokenSource _ccts = new CancellationTokenSource();
-        private bool _initialized;
-        private bool _coolermasterDeviceKeyboard = true;
-
-        private bool _coolermasterDeviceMouse = true;
-
-        //private CoolermasterSdkWrapper.COLOR_MATRIX color_matrix = new CoolermasterSdkWrapper.COLOR_MATRIX();
-        private CoolermasterSdkWrapper.KeyColor[,] _keyColors =
-            new CoolermasterSdkWrapper.KeyColor[CoolermasterSdkWrapper.MaxLedRow,
-                CoolermasterSdkWrapper.MaxLedColumn];
-
-        //private long lastUpdateTime = 0;
-        private bool _keyboardUpdated;
-
-        private bool _peripheralUpdated;
-        private Stopwatch _watch = new Stopwatch();
-        //private CancellationTokenSource _cancellationTokenSource;
-
-
-        public bool InitializeSdk()
-        {
-            try
-            {
-                //Initialize State
-
-                if (!_boot)
-                {
-                    foreach (var key in KeyCoords)
-                    {
-                        KeyboardState.Add(key.Key, Color.Black);
-                        //Debug.WriteLine("Added " + key.Key + " to library.");
-                    }
-
-                    _boot = true;
-                }
-
-                var found = false;
-
-                Write.WriteConsole(ConsoleTypes.Coolermaster, "Attempting to load Coolermaster SDK..");
-
-                var devices = Enum.GetValues(typeof(CoolermasterSdkWrapper.DeviceIndex)).Cast<CoolermasterSdkWrapper.DeviceIndex>();
-                foreach (var d in devices)
-                {
-                    CoolermasterSdkWrapper.SetControlDevice(d);
-                    if (CoolermasterSdkWrapper.IsDevicePlug())
-                    {
-                        Write.WriteConsole(ConsoleTypes.Coolermaster, "Found Coolermaster Device: " + d);
-                        
-                        if (d == CoolermasterSdkWrapper.DeviceIndex.DevMMouseL || d == CoolermasterSdkWrapper.DeviceIndex.DevMMouseS)
-                        {
-                            Devices.Add(d, CoolermasterSdkWrapper.DeviceType.Mouse);
-                        }
-                        else
-                        {
-                            Devices.Add(d, CoolermasterSdkWrapper.DeviceType.Keyboard);
-                        }
-
-                        found = true;
-                    }
-                }
-
-                if (found)
-                {
-                    _initialized = true;
-                    return true;
-                }
-                Write.WriteConsole(ConsoleTypes.Coolermaster, "Unable to find any valid Coolermaster devices.");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Write.WriteConsole(ConsoleTypes.Coolermaster, "Coolermaster SDK failed to load. Error: " + ex.Message);
-                return false;
-            }
-        }
-
-        public void Shutdown()
-        {
-            if (_initialized)
-            {
-                //StopEffects();
-                CoolermasterSdkWrapper.EnableLedControl(false);
-                _initialized = false;
-            }
-        }
-
-        public void ResetCoolermasterDevices(bool deviceKeyboard, bool deviceMouse, Color basecol)
-        {
-            if (_initialized)
-            {
-                if (_coolermasterDeviceKeyboard && !deviceKeyboard)
-                    SetLights(basecol);
-
-
-                if (_coolermasterDeviceMouse && !deviceMouse)
-                    //Unimplemented
-
-
-                _coolermasterDeviceKeyboard = deviceKeyboard;
-                _coolermasterDeviceMouse = deviceMouse;
-            }
-
-        }
-
-        public void StopEffects()
-        {
-            if (_initialized)
-            {
-                //_cancellationTokenSource?.Cancel();
-                CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
-                MemoryTasks.Cleanup();
-            }
-        }
-
-        public void SetLights(Color col)
-        {
-            if (!_coolermasterDeviceKeyboard) return;
-            //StopEffects();
-
-            if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
-            {
-                foreach (var key in KeyCoords)
-                {
-                    if (KeyboardState[key.Key] == col) continue;
-
-                    KeyboardState[key.Key] = col;
-                }
-
-                UpdateCoolermasterStateAll(col);
-            }
-        }
-
-        public void SetWave()
-        {
-            /*
-            StopEffects();
-
-            if (_coolermasterDeviceKeyboard)
-                if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
-                {
-                    CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
-                }
-
-            
-            _cancellationTokenSource = new CancellationTokenSource();
-
-            var crSt = new Task(() =>
-            {
-                if (_coolermasterDeviceKeyboard)
-                    if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Keyboard))
-                    {
-                        CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
-                    }
-                if (!_coolermasterDeviceMouse) return;
-                {
-                    if (Devices.Any(d => d.Value == CoolermasterSdkWrapper.DeviceType.Mouse))
-                    {
-                        CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffWave);
-                    }
-                }
-            }, _cancellationTokenSource.Token);
-            MemoryTasks.Add(crSt);
-            MemoryTasks.Run(crSt);
-            */
-        }
-
-        public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
-        {
-            if (!_initialized)
-                return;
-
-            if (FfxivHotbar.Keybindwhitelist.Contains(key) && !bypasswhitelist)
-                return;
-
-            //StopEffects();
-
-            try
-            {
-                if (_coolermasterDeviceKeyboard)
-                    if (KeyCoords.ContainsKey(key))
-                    {
-                        if (KeyboardState[key] == col) return;
-                        if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-
-                        KeyboardState[key] = col;
-                        KeyboardStateUpdate.Add(key, col);
-                        UpdateCoolermasterState();
-                    }
-            }
-            catch (Exception ex)
-            {
-                Write.WriteConsole(ConsoleTypes.Error, "Coolermaster (" + key + "): " + ex.Message);
-                Write.WriteConsole(ConsoleTypes.Error, "Internal Error (" + key + "): " + ex.StackTrace);
-            }
-        }
-
-
-        public void ApplyMapMouseLighting(string region, Color col, bool clear)
-        {
-            if (!_initialized)
-                return;
-
-            if (_coolermasterDeviceMouse)
-            {
-                //Unimplemented
-            }
-        }
-
-        public Task Ripple1(Color burstcol, int speed)
-        {
-            return new Task(() =>
-            {
-                if (!_initialized)
-                    return;
-
-                lock (CoolermasterRipple1)
-                {
-                    if (_coolermasterDeviceKeyboard)
-                    {
-                        var presets = new Dictionary<string, Color>();
-
-
-                        for (var i = 0; i <= 9; i++)
-                        {
-                            if (i == 0)
-                            {
-                                //Setup
-
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                    if (KeyboardState.ContainsKey(key))
-                                    {
-                                        var ccX = KeyboardState[key];
-                                        presets.Add(key, ccX);
-                                    }
-                            }
-                            else if (i == 1)
-                            {
-                                //Step 0
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
-                                    if (pos > -1)
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = presets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, presets[key]);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (i == 2)
-                            {
-                                //Step 1
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
-                                    if (pos > -1)
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = presets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, presets[key]);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (i == 3)
-                            {
-                                //Step 2
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
-                                    if (pos > -1)
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = presets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, presets[key]);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (i == 4)
-                            {
-                                //Step 3
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
-                                    if (pos > -1)
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = presets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, presets[key]);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (i == 5)
-                            {
-                                //Step 4
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
-                                    if (pos > -1)
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = presets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, presets[key]);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (i == 6)
-                            {
-                                //Step 5
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
-                                    if (pos > -1)
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = presets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, presets[key]);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (i == 7)
-                            {
-                                //Step 6
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
-                                    if (pos > -1)
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = presets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, presets[key]);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (i == 8)
-                            {
-                                //Step 7
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
-                                    if (pos > -1)
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = presets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, presets[key]);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (i == 9)
-                            {
-                                //Spin down
-
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    if (KeyboardState.ContainsKey(key))
-                                    {
-                                        KeyboardState[key] = presets[key];
-                                        if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                        KeyboardStateUpdate.Add(key, presets[key]);
-                                    }
-                                }
-
-                                presets.Clear();
-                                //HoldReader = false;
-
-                                //MemoryReaderLock.Enabled = true;
-                            }
-
-                            if (i < 9)
-                                Thread.Sleep(speed);
-
-                            UpdateCoolermasterState();
-                        }
-                    }
-                }
-            });
-        }
-
-        public Task Ripple2(Color burstcol, int speed)
-        {
-            return new Task(() =>
-            {
-                if (!_initialized)
-                    return;
-
-                lock (CoolermasterRipple2)
-                {
-                    if (_coolermasterDeviceKeyboard)
-                    {
-                        var presets = new Dictionary<string, Color>();
-
-                        for (var i = 0; i <= 9; i++)
-                        {
-                            if (i == 0)
-                            {
-                                //Setup
-
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            var ccX = KeyboardState[key];
-                                            presets.Add(key, ccX);
-                                        }
-
-                                //HoldReader = true;
-                            }
-                            else if (i == 1)
-                            {
-                                //Step 0
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
-                                    if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                            if (KeyboardState.ContainsKey(key))
-                                            {
-                                                KeyboardState[key] = burstcol;
-                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                                KeyboardStateUpdate.Add(key, burstcol);
-                                            }
-                                }
-                            }
-                            else if (i == 2)
-                            {
-                                //Step 1
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
-                                    if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                            if (KeyboardState.ContainsKey(key))
-                                            {
-                                                KeyboardState[key] = burstcol;
-                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                                KeyboardStateUpdate.Add(key, burstcol);
-                                            }
-                                }
-                            }
-                            else if (i == 3)
-                            {
-                                //Step 2
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
-                                    if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                            if (KeyboardState.ContainsKey(key))
-                                            {
-                                                KeyboardState[key] = burstcol;
-                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                                KeyboardStateUpdate.Add(key, burstcol);
-                                            }
-                                }
-                            }
-                            else if (i == 4)
-                            {
-                                //Step 3
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
-                                    if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                            if (KeyboardState.ContainsKey(key))
-                                            {
-                                                KeyboardState[key] = burstcol;
-                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                                KeyboardStateUpdate.Add(key, burstcol);
-                                            }
-                                }
-                            }
-                            else if (i == 5)
-                            {
-                                //Step 4
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
-                                    if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                            if (KeyboardState.ContainsKey(key))
-                                            {
-                                                KeyboardState[key] = burstcol;
-                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                                KeyboardStateUpdate.Add(key, burstcol);
-                                            }
-                                }
-                            }
-                            else if (i == 6)
-                            {
-                                //Step 5
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
-                                    if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                            if (KeyboardState.ContainsKey(key))
-                                            {
-                                                KeyboardState[key] = burstcol;
-                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                                KeyboardStateUpdate.Add(key, burstcol);
-                                            }
-                                }
-                            }
-                            else if (i == 7)
-                            {
-                                //Step 6
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
-                                    if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                            if (KeyboardState.ContainsKey(key))
-                                            {
-                                                KeyboardState[key] = burstcol;
-                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                                KeyboardStateUpdate.Add(key, burstcol);
-                                            }
-                                }
-                            }
-                            else if (i == 8)
-                            {
-                                //Step 7
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
-                                    if (pos > -1)
-                                    {
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                            if (KeyboardState.ContainsKey(key))
-                                            {
-                                                KeyboardState[key] = burstcol;
-                                                if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                                KeyboardStateUpdate.Add(key, burstcol);
-                                            }
-                                    }
-                                }
-                            }
-                            else if (i == 9)
-                            {
-                                //Spin down
-
-                                foreach (var key in DeviceEffects.GlobalKeys)
-                                {
-                                    //ApplyMapKeyLighting(key, presets[key], true);
-                                }
-
-
-                                //presets.Clear();
-                                presets.Clear();
-                                //HoldReader = false;
-                            }
-
-                            if (i < 9)
-                                Thread.Sleep(speed);
-
-                            UpdateCoolermasterState();
-                        }
-                    }
-                }
-            });
-        }
-
-        public void Flash1(Color burstcol, int speed, string[] region)
-        {
-            lock (CoolermasterFlash1)
-            {
-                if (!_initialized)
-                    return;
-
-                var presets = new Dictionary<string, Color>();
-
-
-                for (var i = 0; i <= 8; i++)
-                {
-                    if (i == 0)
-                    {
-                        //Setup
-
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in region)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    var ccX = KeyboardState[key];
-                                    presets.Add(key, ccX);
-                                }
-
-                        //HoldReader = true;
-                    }
-                    else if (i == 1)
-                    {
-                        //Step 0
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in region)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    KeyboardState[key] = burstcol;
-                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                    KeyboardStateUpdate.Add(key, burstcol);
-                                }
-                    }
-                    else if (i == 2)
-                    {
-                        //Step 1
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in DeviceEffects.GlobalKeys3)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    KeyboardState[key] = presets[key];
-                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                    KeyboardStateUpdate.Add(key, presets[key]);
-                                }
-                    }
-                    else if (i == 3)
-                    {
-                        //Step 2
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in region)
-                                //ApplyMapKeyLighting(key, burstcol, true);
-                                //refreshKeyGrid
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    KeyboardState[key] = burstcol;
-                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                    KeyboardStateUpdate.Add(key, burstcol);
-                                }
-                    }
-                    else if (i == 4)
-                    {
-                        //Step 3
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in DeviceEffects.GlobalKeys3)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    KeyboardState[key] = presets[key];
-                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                    KeyboardStateUpdate.Add(key, presets[key]);
-                                }
-                    }
-                    else if (i == 5)
-                    {
-                        //Step 4
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in region)
-                                //ApplyMapKeyLighting(key, burstcol, true);
-                                //refreshKeyGrid
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    KeyboardState[key] = burstcol;
-                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                    KeyboardStateUpdate.Add(key, burstcol);
-                                }
-                    }
-                    else if (i == 6)
-                    {
-                        //Step 5
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in DeviceEffects.GlobalKeys3)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    KeyboardState[key] = presets[key];
-                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                    KeyboardStateUpdate.Add(key, presets[key]);
-                                }
-                    }
-                    else if (i == 7)
-                    {
-                        //Step 6
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in region)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    KeyboardState[key] = burstcol;
-                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                    KeyboardStateUpdate.Add(key, burstcol);
-                                }
-                    }
-                    else if (i == 8)
-                    {
-                        //Step 7
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in DeviceEffects.GlobalKeys3)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    KeyboardState[key] = presets[key];
-                                    if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                    KeyboardStateUpdate.Add(key, presets[key]);
-                                }
-
-                        presets.Clear();
-                        //HoldReader = false;
-                    }
-
-                    if (i < 8)
-                        Thread.Sleep(speed);
-
-                    UpdateCoolermasterState();
-                }
-            }
-        }
-
-        public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
-        {
-            try
-            {
-                if (!_initialized)
-                    return;
-
-                lock (CoolermasterFlash2)
-                {
-                    var flashpresets = new Dictionary<string, Color>();
-
-
-                    if (!_coolermasterFlash2Running)
-                    {
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in regions)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    var ccX = KeyboardState[key];
-                                    flashpresets.Add(key, ccX);
-                                }
-
-                        _coolermasterFlash2Running = true;
-                        _coolermasterFlash2Step = 0;
-                        _flashpresets = flashpresets;
-                    }
-
-                    if (_coolermasterFlash2Running)
-                        while (_coolermasterFlash2Running)
-                        {
-                            if (cts.IsCancellationRequested)
-                                break;
-
-                            if (_coolermasterFlash2Step == 0)
-                            {
-                                if (_coolermasterDeviceKeyboard)
-                                {
-                                    foreach (var key in regions)
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-
-                                    UpdateCoolermasterState();
-                                }
-
-                                _coolermasterFlash2Step = 1;
-                            }
-                            else if (_coolermasterFlash2Step == 1)
-                            {
-                                if (_coolermasterDeviceKeyboard)
-                                {
-                                    foreach (var key in regions)
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = _flashpresets[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, _flashpresets[key]);
-                                        }
-
-                                    UpdateCoolermasterState();
-                                }
-
-                                _coolermasterFlash2Step = 0;
-                            }
-
-                            Thread.Sleep(speed);
-                        }
-                }
-            }
-            catch
-            {
-                //
-            }
-        }
-
-        public void Flash3(Color burstcol, int speed, CancellationToken cts)
-        {
-            try
-            {
-                if (!_initialized)
-                    return;
-
-                lock (CoolermasterFlash3)
-                {
-                    if (_coolermasterDeviceKeyboard)
-                    {
-                        var presets = new Dictionary<string, Color>();
-                        _coolermasterFlash3Running = true;
-                        _coolermasterFlash3Step = 0;
-
-                        if (_coolermasterFlash3Running == false)
-                        {
-                            //
-                        }
-                        else
-                        {
-                            while (_coolermasterFlash3Running)
-                            {
-                                if (cts.IsCancellationRequested)
-                                    break;
-
-                                if (_coolermasterFlash3Step == 0)
-                                {
-                                    foreach (var key in DeviceEffects.NumFlash)
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-
-                                    _coolermasterFlash3Step = 1;
-                                }
-                                else if (_coolermasterFlash3Step == 1)
-                                {
-                                    foreach (var key in DeviceEffects.NumFlash)
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = Color.Black;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, Color.Black);
-                                        }
-
-                                    _coolermasterFlash3Step = 0;
-                                }
-
-                                UpdateCoolermasterState();
-                                Thread.Sleep(speed);
-                            }
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                //
-            }
-        }
-
-        public void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
-        {
-            try
-            {
-                if (!_initialized)
-                    return;
-
-                lock (CoolermasterFlash4)
-                {
-                    var flashpresets = new Dictionary<string, Color>();
-
-
-                    if (!_coolermasterFlash4Running)
-                    {
-                        if (_coolermasterDeviceKeyboard)
-                            foreach (var key in regions)
-                                if (KeyboardState.ContainsKey(key))
-                                {
-                                    var ccX = KeyboardState[key];
-                                    flashpresets.Add(key, ccX);
-                                }
-
-                        _coolermasterFlash4Running = true;
-                        _coolermasterFlash4Step = 0;
-                        _flashpresets4 = flashpresets;
-                    }
-
-                    if (_coolermasterFlash4Running)
-                        while (_coolermasterFlash4Running)
-                        {
-                            if (cts.IsCancellationRequested)
-                                break;
-
-                            if (_coolermasterFlash4Step == 0)
-                            {
-                                if (_coolermasterDeviceKeyboard)
-                                {
-                                    foreach (var key in regions)
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = burstcol;
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, burstcol);
-                                        }
-
-                                    UpdateCoolermasterState();
-                                }
-
-                                _coolermasterFlash4Step = 1;
-                            }
-                            else if (_coolermasterFlash4Step == 1)
-                            {
-                                if (_coolermasterDeviceKeyboard)
-                                {
-                                    foreach (var key in regions)
-                                        if (KeyboardState.ContainsKey(key))
-                                        {
-                                            KeyboardState[key] = _flashpresets4[key];
-                                            if (KeyboardStateUpdate.ContainsKey(key)) KeyboardStateUpdate.Remove(key);
-                                            KeyboardStateUpdate.Add(key, _flashpresets4[key]);
-                                        }
-
-                                    UpdateCoolermasterState();
-                                }
-
-                                _coolermasterFlash4Step = 0;
-                            }
-
-                            Thread.Sleep(speed);
-                        }
-                }
-            }
-            catch
-            {
-                //
-            }
-        }
-
-        private void Reset()
-        {
-            if (_initialized && (_keyboardUpdated || _peripheralUpdated))
-            {
-                _keyboardUpdated = false;
-                _peripheralUpdated = false;
-            }
-        }
-
-        private void ResetEffects()
-        {
-            if (!_initialized)
-                return;
-
-            foreach (var d in Devices)
-            {
-                if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse) continue;
-
-                CoolermasterSdkWrapper.SetControlDevice(d.Key);
-                CoolermasterSdkWrapper.EnableLedControl(false);
-                CoolermasterSdkWrapper.SwitchLedEffect(CoolermasterSdkWrapper.EffIndex.EffOff);
-                CoolermasterSdkWrapper.EnableLedControl(true);
-            }
-        }
-
-        private void UpdateCoolermasterState()
-        {
-            if (!_initialized || !_coolermasterDeviceKeyboard)
-                return;
-
-            //ResetEffects();
-            foreach (var d in Devices)
-            {
-                if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse) continue;
-
-                CoolermasterSdkWrapper.SetControlDevice(d.Key);
-                CoolermasterSdkWrapper.EnableLedControl(true);
-
-                var dkeys = new List<string>(KeyboardStateUpdate.Keys);
-
-                foreach (var key in dkeys)
-                {
-                    if (KeyCoords.ContainsKey(key) && KeyboardStateUpdate.ContainsKey(key))
-                    {
-                        var keyid = KeyCoords[key];
-                        var col = KeyboardStateUpdate[key];
-                        CoolermasterSdkWrapper.SetLedColor(keyid[0], keyid[1], col.R, col.G, col.B);
-                    }
-                }
-
-                CoolermasterSdkWrapper.RefreshLed(false);
-                KeyboardStateUpdate.Clear();
-                //dkeys.Clear();
-            }
-        }
-
-        private void UpdateCoolermasterStateAll(Color col)
-        {
-            if (!_initialized || !_coolermasterDeviceKeyboard)
-                return;
-
-            //ResetEffects();
-            foreach (var d in Devices)
-            {
-                if (d.Value == CoolermasterSdkWrapper.DeviceType.Mouse) continue;
-
-                CoolermasterSdkWrapper.SetControlDevice(d.Key);
-                CoolermasterSdkWrapper.EnableLedControl(true);
-
-                CoolermasterSdkWrapper.SetFullLedColor(col.R, col.G, col.B);
-                CoolermasterSdkWrapper.RefreshLed(false);
-            }
         }
     }
 }
