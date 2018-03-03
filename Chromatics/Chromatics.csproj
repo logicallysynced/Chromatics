@@ -71,6 +71,9 @@
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.2\lib\net45\CommonServiceLocator.dll</HintPath>
@@ -306,6 +309,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DeviceInterfaces\RazerInterface.cs" />
     <Compile Include="Controllers\Watchdog.cs" />
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NLog.config" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
