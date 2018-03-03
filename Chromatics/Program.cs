@@ -14,13 +14,47 @@ namespace Chromatics
         [STAThread]
         private static void Main()
         {
-            var thisprocessname = Process.GetCurrentProcess().ProcessName;
-            if (Process.GetProcesses().Count(p => p.ProcessName == thisprocessname) > 1)
+            // don't allow multiple instances of Chromatics to run at once
+            if(!ThereCanOnlyBeOne())
+            {
+                if(Debugger.IsAttached)
+                {
+                    Debugger.Break();
+                }
+
                 return;
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             Application.Run(Locator.ChromaticsInstance);
+        }
+
+        private static bool ThereCanOnlyBeOne()
+        {
+            var thisprocessname = Process.GetCurrentProcess().ProcessName;
+            var otherProcesses = Process.GetProcesses()
+                .Where(p => p.ProcessName == thisprocessname)
+                .Where(p => p.Id != Process.GetCurrentProcess().Id);
+
+            if (otherProcesses.Any())
+            {
+                if (MessageBox.Show("Another instance of Chromatics is currently running, and only one can run at a time. Would you like to close the other instance and use this one?", "Already running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    foreach(var process in otherProcesses)
+                    {
+                        process.Kill();
+                        process.WaitForExit(milliseconds: 5000);
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
