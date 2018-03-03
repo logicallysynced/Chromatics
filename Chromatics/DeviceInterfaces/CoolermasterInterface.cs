@@ -572,8 +572,8 @@ namespace Chromatics.DeviceInterfaces
         {
             return new Task(() =>
             {
-            if (!IsInitialized)
-                return;
+                if (!IsInitialized)
+                    return;
 
                 var safeKeys = DeviceEffects.GlobalKeys.Except(FfxivHotbar.Keybindwhitelist);
 
@@ -742,17 +742,182 @@ namespace Chromatics.DeviceInterfaces
 
         public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
+            try
+            {
+                if (!IsInitialized)
+                    return;
 
+                lock (CoolermasterFlash2)
+                {
+                    var previousValues = new Dictionary<string, Color>();
+                    var safeKeys = regions.Where(KeyMappings.ContainsKey);
+
+                    if (!_coolermasterFlash2Running)
+                    {
+                        foreach (var key in safeKeys)
+                            previousValues.Add(key, GetKeyColor(key).Value);
+
+                        _coolermasterFlash2Running = true;
+                        _coolermasterFlash2Step = 0;
+                        _flashpresets = previousValues;
+                    }
+
+                    if (_coolermasterFlash2Running)
+                        while (_coolermasterFlash2Running)
+                        {
+                            if (cts.IsCancellationRequested)
+                                break;
+
+                            if (_coolermasterFlash2Step == 0)
+                            {
+                                if (_keyboards.Any())
+                                {
+                                    foreach (var key in safeKeys)
+                                        SetKeyColor(key, burstcol);
+
+                                    ApplyKeyboardLighting();
+                                }
+
+                                _coolermasterFlash2Step = 1;
+                            }
+                            else if (_coolermasterFlash2Step == 1)
+                            {
+                                if (_keyboards.Any())
+                                {
+                                    foreach (var key in safeKeys)
+                                        SetKeyColor(key, _flashpresets[key]);
+
+                                    ApplyKeyboardLighting();
+                                }
+
+                                _coolermasterFlash2Step = 0;
+                            }
+
+                            Thread.Sleep(speed);
+                        }
+                }
+            }
+            catch
+            {
+                //
+            }
         }
 
         public void Flash3(Color burstcol, int speed, CancellationToken cts)
         {
+           try
+            {
+                if (!IsInitialized)
+                    return;
 
+                lock (CoolermasterFlash3)
+                {
+                    if (_keyboards.Any())
+                    {
+                        var previousValues = new Dictionary<string, Color>();
+                        _coolermasterFlash3Running = true;
+                        _coolermasterFlash3Step = 0;
+
+                        if (_coolermasterFlash3Running == false)
+                        {
+                            //
+                        }
+                        else
+                        {
+                            while (_coolermasterFlash3Running)
+                            {
+                                if (cts.IsCancellationRequested)
+                                    break;
+
+                                if (_coolermasterFlash3Step == 0)
+                                {
+                                    foreach (var key in DeviceEffects.NumFlash.Where(KeyMappings.ContainsKey))
+                                        SetKeyColor(key, burstcol);
+
+                                    _coolermasterFlash3Step = 1;
+                                }
+                                else if (_coolermasterFlash3Step == 1)
+                                {
+                                    foreach (var key in DeviceEffects.NumFlash.Where(KeyMappings.ContainsKey))
+                                        SetKeyColor(key, Color.Black);
+
+                                    _coolermasterFlash3Step = 0;
+                                }
+
+                                ApplyKeyboardLighting();
+                                Thread.Sleep(speed);
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                //
+            }
         }
 
         public void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
+            try
+            {
+                if (!IsInitialized)
+                    return;
 
+                var safeKeys = regions.Where(KeyMappings.ContainsKey);
+
+                lock (CoolermasterFlash4)
+                {
+                    var flashpresets = new Dictionary<string, Color>();
+
+                    if (!_coolermasterFlash4Running)
+                    {
+                        if (_keyboards.Any())
+                            foreach (var key in safeKeys)
+                                flashpresets.Add(key, GetKeyColor(key).Value);
+
+                        _coolermasterFlash4Running = true;
+                        _coolermasterFlash4Step = 0;
+                        _flashpresets4 = flashpresets;
+                    }
+
+                    if (_coolermasterFlash4Running)
+                        while (_coolermasterFlash4Running)
+                        {
+                            if (cts.IsCancellationRequested)
+                                break;
+
+                            if (_coolermasterFlash4Step == 0)
+                            {
+                                if (_keyboards.Any())
+                                {
+                                    foreach (var key in safeKeys)
+                                        SetKeyColor(key, burstcol);
+                                }
+
+                                _coolermasterFlash4Step = 1;
+                            }
+                            else if (_coolermasterFlash4Step == 1)
+                            {
+                                if (_keyboards.Any())
+                                {
+                                    foreach (var key in safeKeys)
+                                        SetKeyColor(key, _flashpresets4[key]);
+
+                                }
+
+                                _coolermasterFlash4Step = 0;
+                            }
+
+                            ApplyKeyboardLighting();
+                            Thread.Sleep(speed);
+                        }
+                }
+            }
+            catch
+            {
+                //
+            }
         }
 
         public bool InitializeSdk()
