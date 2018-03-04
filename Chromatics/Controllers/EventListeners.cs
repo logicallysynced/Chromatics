@@ -44,6 +44,8 @@ namespace Chromatics
         {
             if (!_allowClose)
             {
+                notify_master.Visible = true;
+                _allowVisible = false;
                 Hide();
                 e.Cancel = true;
                 return;

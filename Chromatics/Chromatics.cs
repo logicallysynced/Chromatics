@@ -62,7 +62,7 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.3.4";
+        private readonly string _currentVersionX = "2.3.5";
         public bool DeviceGridStartup = false;
 
         public bool EffectRunning = false;
@@ -256,15 +256,7 @@ namespace Chromatics
             _mGlobalHook = Hook.GlobalEvents();
             _mGlobalHook.KeyDown += Kh_KeyDown;
             _mGlobalHook.KeyUp += Kh_KeyUp;
-
-            /*
-            _gameResetCatch = new Timer();
-            _gameResetCatch.Elapsed += (source, e) => { FfxivGameStop(); };
-            _gameResetCatch.Interval = 12000;
-            _gameResetCatch.AutoReset = false;
-            _gameResetCatch.Enabled = false;
-            */
-
+            
             try
             {
                 var lgsApp = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Logitech\\Logitech Gaming Software", false);
