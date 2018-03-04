@@ -196,6 +196,8 @@ namespace Chromatics.DeviceInterfaces
         private readonly List<CoolermasterSdkWrapper.DeviceIndex> _keyboards = new List<CoolermasterSdkWrapper.DeviceIndex>();
         private readonly CoolermasterSdkWrapper.ColorMatrix _colorMatrix = new CoolermasterSdkWrapper.ColorMatrix();
         private readonly Timer _updateTimer;
+        private bool _coolermasterDeviceKeyboard;
+        private bool _coolermasterDeviceMouse;
 
         private static readonly object CoolermasterRipple1 = new object();
 
@@ -367,7 +369,7 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
-            if (!IsInitialized)
+            if (!IsInitialized || !_coolermasterDeviceKeyboard)
                 return;
 
             // clear is unused?
@@ -397,7 +399,7 @@ namespace Chromatics.DeviceInterfaces
         {
             return new Task(() =>
             {
-                if (!IsInitialized)
+                if (!IsInitialized || !_coolermasterDeviceKeyboard)
                     return;
 
                 lock (CoolermasterRipple1)
@@ -406,6 +408,7 @@ namespace Chromatics.DeviceInterfaces
                     {
                         var previousValues = new Dictionary<string, Color>();
                         var safeKeys = DeviceEffects.GlobalKeys.Where(KeyMappings.ContainsKey);
+                        var enumerable = safeKeys.ToList();
 
                         for (var i = 0; i <= 9; i++)
                         {
@@ -413,7 +416,7 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 //Setup
 
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     previousValues.Add(key, GetKeyColor(key).Value);
                                 }
@@ -421,7 +424,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 1)
                             {
                                 //Step 0
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
                                     if (pos > -1)
@@ -437,7 +440,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 2)
                             {
                                 //Step 1
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
                                     if (pos > -1)
@@ -453,7 +456,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 3)
                             {
                                 //Step 2
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
                                     if (pos > -1)
@@ -469,7 +472,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 4)
                             {
                                 //Step 3
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
                                     if (pos > -1)
@@ -485,7 +488,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 5)
                             {
                                 //Step 4
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
                                     if (pos > -1)
@@ -501,7 +504,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 6)
                             {
                                 //Step 5
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
                                     if (pos > -1)
@@ -517,7 +520,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 7)
                             {
                                 //Step 6
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
                                     if (pos > -1)
@@ -533,7 +536,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 8)
                             {
                                 //Step 7
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
                                     if (pos > -1)
@@ -550,7 +553,7 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 //Spin down
 
-                                foreach (var key in safeKeys.Where(key => previousValues.ContainsKey(key)))
+                                foreach (var key in enumerable.Where(key => previousValues.ContainsKey(key)))
                                 {
                                     SetKeyColor(key, previousValues[key]);
                                 }
@@ -572,7 +575,7 @@ namespace Chromatics.DeviceInterfaces
         {
             return new Task(() =>
             {
-                if (!IsInitialized)
+                if (!IsInitialized || !_coolermasterDeviceKeyboard)
                     return;
 
                 var safeKeys = DeviceEffects.GlobalKeys.Except(FfxivHotbar.Keybindwhitelist);
@@ -582,14 +585,16 @@ namespace Chromatics.DeviceInterfaces
                     if (_keyboards.Any())
                     {
                         var previousValues = new Dictionary<string, Color>();
+                        var enumerable = safeKeys.ToList();
 
                         for (var i = 0; i <= 9; i++)
                         {
+                            
                             if (i == 0)
                             {
                                 //Setup
 
-                                foreach (var key in safeKeys
+                                foreach (var key in enumerable
                                     .Where(KeyMappings.ContainsKey))
                                 {
                                     previousValues.Add(key, GetKeyColor(key).Value);
@@ -598,7 +603,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 1)
                             {
                                 //Step 0
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
                                     if (pos > -1)
@@ -608,7 +613,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 2)
                             {
                                 //Step 1
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
                                     if (pos > -1)
@@ -618,7 +623,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 3)
                             {
                                 //Step 2
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
                                     if (pos > -1)
@@ -628,7 +633,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 4)
                             {
                                 //Step 3
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
                                     if (pos > -1)
@@ -638,7 +643,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 5)
                             {
                                 //Step 4
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
                                     if (pos > -1)
@@ -648,7 +653,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 6)
                             {
                                 //Step 5
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
                                     if (pos > -1)
@@ -658,7 +663,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 7)
                             {
                                 //Step 6
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
                                     if (pos > -1)
@@ -668,7 +673,7 @@ namespace Chromatics.DeviceInterfaces
                             else if (i == 8)
                             {
                                 //Step 7
-                                foreach (var key in safeKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
                                     if (pos > -1)
@@ -701,34 +706,37 @@ namespace Chromatics.DeviceInterfaces
         {
             lock (CoolermasterFlash1)
             {
-                if (!IsInitialized)
+                if (!IsInitialized || !_coolermasterDeviceKeyboard)
                     return;
 
                 var previousValues = new Dictionary<string, Color>();
                 var mappedRegion = region.Where(KeyMappings.ContainsKey);
-
+                var enumerable = mappedRegion.ToList();
                 for (var i = 0; i <= 8; i++)
                 {
+                    
                     if (i == 0)
                     {
                         //Setup
 
                         if (_keyboards.Any())
-                            foreach (var key in mappedRegion)
+                            foreach (var key in enumerable)
+                            {
                                 previousValues.Add(key, GetKeyColor(key).Value);
+                            }
                     }
                     else if (i % 2 == 1)
                     {
                         //Step 1, 3, 5, 7
                         if (_keyboards.Any())
-                            foreach (var key in mappedRegion)
+                            foreach (var key in enumerable)
                                 SetKeyColor(key, burstcol);
                     }
                     else if (i % 2 == 0)
                     {
                         //Step 2, 4, 6, 8
                         if (_keyboards.Any())
-                            foreach (var key in mappedRegion)
+                            foreach (var key in enumerable)
                                 SetKeyColor(key, previousValues[key]);
                     }
 
@@ -744,7 +752,7 @@ namespace Chromatics.DeviceInterfaces
         {
             try
             {
-                if (!IsInitialized)
+                if (!IsInitialized || !_coolermasterDeviceKeyboard)
                     return;
 
                 lock (CoolermasterFlash2)
@@ -752,9 +760,10 @@ namespace Chromatics.DeviceInterfaces
                     var previousValues = new Dictionary<string, Color>();
                     var safeKeys = regions.Where(KeyMappings.ContainsKey);
 
+                    var enumerable = safeKeys.ToList();
                     if (!_coolermasterFlash2Running)
                     {
-                        foreach (var key in safeKeys)
+                        foreach (var key in enumerable)
                             previousValues.Add(key, GetKeyColor(key).Value);
 
                         _coolermasterFlash2Running = true;
@@ -772,7 +781,7 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 if (_keyboards.Any())
                                 {
-                                    foreach (var key in safeKeys)
+                                    foreach (var key in enumerable)
                                         SetKeyColor(key, burstcol);
 
                                     ApplyKeyboardLighting();
@@ -784,7 +793,7 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 if (_keyboards.Any())
                                 {
-                                    foreach (var key in safeKeys)
+                                    foreach (var key in enumerable)
                                         SetKeyColor(key, _flashpresets[key]);
 
                                     ApplyKeyboardLighting();
@@ -807,7 +816,7 @@ namespace Chromatics.DeviceInterfaces
         {
            try
             {
-                if (!IsInitialized)
+                if (!IsInitialized || !_coolermasterDeviceKeyboard)
                     return;
 
                 lock (CoolermasterFlash3)
@@ -861,7 +870,7 @@ namespace Chromatics.DeviceInterfaces
         {
             try
             {
-                if (!IsInitialized)
+                if (!IsInitialized || !_coolermasterDeviceKeyboard)
                     return;
 
                 var safeKeys = regions.Where(KeyMappings.ContainsKey);
@@ -870,10 +879,11 @@ namespace Chromatics.DeviceInterfaces
                 {
                     var flashpresets = new Dictionary<string, Color>();
 
+                    var enumerable = safeKeys.ToList();
                     if (!_coolermasterFlash4Running)
                     {
                         if (_keyboards.Any())
-                            foreach (var key in safeKeys)
+                            foreach (var key in enumerable)
                                 flashpresets.Add(key, GetKeyColor(key).Value);
 
                         _coolermasterFlash4Running = true;
@@ -891,7 +901,7 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 if (_keyboards.Any())
                                 {
-                                    foreach (var key in safeKeys)
+                                    foreach (var key in enumerable)
                                         SetKeyColor(key, burstcol);
                                 }
 
@@ -901,7 +911,7 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 if (_keyboards.Any())
                                 {
-                                    foreach (var key in safeKeys)
+                                    foreach (var key in enumerable)
                                         SetKeyColor(key, _flashpresets4[key]);
 
                                 }
@@ -964,10 +974,15 @@ namespace Chromatics.DeviceInterfaces
 
         public void ResetCoolermasterDevices(bool deviceKeyboard, bool deviceMouse, Color basecol)
         {
+            _coolermasterDeviceKeyboard = deviceKeyboard;
+            _coolermasterDeviceMouse = deviceMouse;
         }
 
         public void SetLights(Color col)
         {
+            if (IsInitialized || !_coolermasterDeviceKeyboard)
+                return;
+
             foreach (var mapping in KeyMappings)
             {
                 _colorMatrix.KeyColor[mapping.Value[0], mapping.Value[1]] = MapColor(col);
@@ -990,6 +1005,9 @@ namespace Chromatics.DeviceInterfaces
 
         private void ApplyKeyboardLighting()
         {
+            if (IsInitialized || !_coolermasterDeviceKeyboard)
+                return;
+
             foreach (var keyboardDevice in _keyboards)
             {
                 CoolermasterSdkWrapper.SetControlDevice(keyboardDevice);
@@ -1001,6 +1019,9 @@ namespace Chromatics.DeviceInterfaces
 
         private void ApplyKeyboardLightingSoon()
         {
+            if (IsInitialized || !_coolermasterDeviceKeyboard)
+                return;
+
             _updateTimer.Change(TimeSpan.FromMilliseconds(50), Timeout.InfiniteTimeSpan);
         }
     }
