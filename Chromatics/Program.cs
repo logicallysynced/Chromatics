@@ -38,14 +38,15 @@ namespace Chromatics
                 .Where(p => p.ProcessName == thisprocessname)
                 .Where(p => p.Id != Process.GetCurrentProcess().Id);
 
-            if (otherProcesses.Any())
+            var enumerable = otherProcesses.ToList();
+            if (enumerable.Any())
             {
-                if (MessageBox.Show("Another instance of Chromatics is currently running, and only one can run at a time. Would you like to close the other instance and use this one?", "Already running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(@"Another instance of Chromatics is currently running, and only one can run at a time. Would you like to close the other instance and use this one?", @"Already running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    foreach(var process in otherProcesses)
+                    foreach(var process in enumerable)
                     {
                         process.Kill();
-                        process.WaitForExit(milliseconds: 5000);
+                        process.WaitForExit(5000);
                     }
                 }
                 else

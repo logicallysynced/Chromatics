@@ -377,11 +377,18 @@ namespace Chromatics
             
             Localization.SetKeyRegion(ChromaticsSettings.ChromaticsSettingsQwertyMode);
 
-            if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+            try
             {
-                AutoMeasurement.Instance = new WinFormAutoMeasurement();
-                AutoMeasurement.Start(new MeasurementConfiguration("UA-92921709-2"));
-                AutoMeasurement.Client.TrackScreenView("Chromatics");
+                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                {
+                    AutoMeasurement.Instance = new WinFormAutoMeasurement();
+                    AutoMeasurement.Start(new MeasurementConfiguration("UA-92921709-2"));
+                    AutoMeasurement.Client.TrackScreenView("Chromatics");
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteConsole(ConsoleTypes.Error, @"Unable to hook debug reporting. Ex: " + ex.Message);
             }
 
             if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)

@@ -30,21 +30,19 @@ namespace Chromatics.FFXIVInterfaces
                 if (!_memoryready)
                     if (!Scanner.Instance.Locations.ContainsKey("DUTYFINDER") || !_siginit)
                     {
-                        _sList = new List<Signature>();
-
-                        _sList.Add(new Signature
+                        _sList = new List<Signature>
                         {
-                            Key = "DUTYFINDER",
-                            PointerPath = new List<long>
+                            new Signature
                             {
-                                0x0178C018,
-                                0x7D0,
-                                0x2A0,
-                                0x7C0
-                                //0x018ECB30,
-                                //0x24
+                                Key = "DUTYFINDER",
+                                PointerPath = new List<long>
+                                {
+                                    0x018ECB30,
+                                    0x24
+                                }
                             }
-                        });
+                        };
+
 
                         Scanner.Instance.LoadOffsets(_sList);
 
@@ -70,12 +68,12 @@ namespace Chromatics.FFXIVInterfaces
                         var address = Scanner.Instance.Locations["DUTYFINDER"];
 
                         //PluginController.debug(" " + address.ToString("X8"));
-                        var isPopped = MemoryHandler.Instance.GetInt32(address.GetAddress(), 0);
-                        _isPopped = isPopped != 0;
+                        var isPopped = MemoryHandler.Instance.GetByte(address.GetAddress(), 113);
+                        _isPopped = isPopped == 2;
 
-                        _countdown = MemoryHandler.Instance.GetInt32(address.GetAddress(), 4);
+                        //_countdown = MemoryHandler.Instance.GetInt32(address.GetAddress(), 4);
                         _initialized = true;
-                        //Debug.WriteLine(isPopped + "/" + _countdown);
+                        //Debug.WriteLine(isPopped + "/" + _isPopped);
                     }
 
 
