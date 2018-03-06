@@ -65,3 +65,4 @@ Please visit [this page](https://chromaticsffxiv.com/download.html) for installa
 * [Sidewinder94 for Logitech LCD support](https://github.com/sidewinder94/Logitech-LCD)
 * [Sharlayan for FFXIV Integration](https://github.com/Icehunter/sharlayan)
 * [C.J. Manca for integration libraries](https://github.com/cjmanca)
+* [Liam Dawson for Coolermaster device debug](https://github.com/liamdawson)

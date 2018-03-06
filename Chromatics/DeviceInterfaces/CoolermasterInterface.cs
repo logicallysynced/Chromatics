@@ -196,8 +196,14 @@ namespace Chromatics.DeviceInterfaces
         private readonly List<CoolermasterSdkWrapper.DeviceIndex> _keyboards = new List<CoolermasterSdkWrapper.DeviceIndex>();
         private readonly CoolermasterSdkWrapper.ColorMatrix _colorMatrix = new CoolermasterSdkWrapper.ColorMatrix();
         private readonly Timer _updateTimer;
-        private bool _coolermasterDeviceKeyboard;
-        private bool _coolermasterDeviceMouse;
+        /// <summary>
+        /// Control whether to update the keyboard
+        /// </summary>
+        private bool _coolermasterDeviceKeyboard = true;
+        /// <summary>
+        /// Control whether to update the mouse
+        /// </summary>
+        private bool _coolermasterDeviceMouse = true;
 
         private static readonly object CoolermasterRipple1 = new object();
 
@@ -948,6 +954,7 @@ namespace Chromatics.DeviceInterfaces
                         {
                             Write.WriteConsole(ConsoleTypes.Coolermaster, $"Found a {supportedDevice} Coolermaster keyboard.");
                             _keyboards.Add(supportedDevice);
+                            CoolermasterSdkWrapper.EnableLedControl(true);
                         }
                     }
 
@@ -980,7 +987,7 @@ namespace Chromatics.DeviceInterfaces
 
         public void SetLights(Color col)
         {
-            if (IsInitialized || !_coolermasterDeviceKeyboard)
+            if (!IsInitialized || !_coolermasterDeviceKeyboard)
                 return;
 
             foreach (var mapping in KeyMappings)
@@ -997,6 +1004,11 @@ namespace Chromatics.DeviceInterfaces
 
         public void Shutdown()
         {
+            foreach(var keyboard in _keyboards)
+            {
+                CoolermasterSdkWrapper.SetControlDevice(keyboard);
+                CoolermasterSdkWrapper.EnableLedControl(false);
+            }
         }
 
         public void StopEffects()
@@ -1005,7 +1017,7 @@ namespace Chromatics.DeviceInterfaces
 
         private void ApplyKeyboardLighting()
         {
-            if (IsInitialized || !_coolermasterDeviceKeyboard)
+            if (!IsInitialized || !_coolermasterDeviceKeyboard)
                 return;
 
             foreach (var keyboardDevice in _keyboards)
@@ -1019,7 +1031,7 @@ namespace Chromatics.DeviceInterfaces
 
         private void ApplyKeyboardLightingSoon()
         {
-            if (IsInitialized || !_coolermasterDeviceKeyboard)
+            if (!IsInitialized || !_coolermasterDeviceKeyboard)
                 return;
 
             _updateTimer.Change(TimeSpan.FromMilliseconds(50), Timeout.InfiniteTimeSpan);
