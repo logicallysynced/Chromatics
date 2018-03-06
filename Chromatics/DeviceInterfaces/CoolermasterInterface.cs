@@ -433,14 +433,7 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
-                                    if (pos > -1)
-                                    {
-                                        SetKeyColor(key, burstcol);
-                                    }
-                                    else
-                                    {
-                                        SetKeyColor(key, previousValues[key]);
-                                    }
+                                    SetKeyColor(key, pos > -1 ? burstcol : previousValues[key]);
                                 }
                             }
                             else if (i == 2)
@@ -449,14 +442,7 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
-                                    if (pos > -1)
-                                    {
-                                        SetKeyColor(key, burstcol);
-                                    }
-                                    else
-                                    {
-                                        SetKeyColor(key, previousValues[key]);
-                                    }
+                                    SetKeyColor(key, pos > -1 ? burstcol : previousValues[key]);
                                 }
                             }
                             else if (i == 3)
@@ -481,14 +467,7 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
-                                    if (pos > -1)
-                                    {
-                                        SetKeyColor(key, burstcol);
-                                    }
-                                    else
-                                    {
-                                        SetKeyColor(key, previousValues[key]);
-                                    }
+                                    SetKeyColor(key, pos > -1 ? burstcol : previousValues[key]);
                                 }
                             }
                             else if (i == 5)
@@ -497,14 +476,7 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
-                                    if (pos > -1)
-                                    {
-                                        SetKeyColor(key, burstcol);
-                                    }
-                                    else
-                                    {
-                                        SetKeyColor(key, previousValues[key]);
-                                    }
+                                    SetKeyColor(key, pos > -1 ? burstcol : previousValues[key]);
                                 }
                             }
                             else if (i == 6)
@@ -513,14 +485,7 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
-                                    if (pos > -1)
-                                    {
-                                        SetKeyColor(key, burstcol);
-                                    }
-                                    else
-                                    {
-                                        SetKeyColor(key, previousValues[key]);
-                                    }
+                                    SetKeyColor(key, pos > -1 ? burstcol : previousValues[key]);
                                 }
                             }
                             else if (i == 7)
@@ -529,14 +494,7 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
-                                    if (pos > -1)
-                                    {
-                                        SetKeyColor(key, burstcol);
-                                    }
-                                    else
-                                    {
-                                        SetKeyColor(key, previousValues[key]);
-                                    }
+                                    SetKeyColor(key, pos > -1 ? burstcol : previousValues[key]);
                                 }
                             }
                             else if (i == 8)
@@ -545,14 +503,7 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
-                                    if (pos > -1)
-                                    {
-                                        SetKeyColor(key, burstcol);
-                                    }
-                                    else
-                                    {
-                                        SetKeyColor(key, previousValues[key]);
-                                    }
+                                    SetKeyColor(key, pos > -1 ? burstcol : previousValues[key]);
                                 }
                             }
                             else if (i == 9)
@@ -829,7 +780,7 @@ namespace Chromatics.DeviceInterfaces
                 {
                     if (_keyboards.Any())
                     {
-                        var previousValues = new Dictionary<string, Color>();
+                        //var previousValues = new Dictionary<string, Color>();
                         _coolermasterFlash3Running = true;
                         _coolermasterFlash3Step = 0;
 

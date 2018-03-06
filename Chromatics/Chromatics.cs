@@ -62,7 +62,7 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.3.5";
+        private readonly string _currentVersionX = "2.3.6";
         public bool DeviceGridStartup = false;
 
         public bool EffectRunning = false;
@@ -383,7 +383,7 @@ namespace Chromatics
                 {
                     AutoMeasurement.Instance = new WinFormAutoMeasurement();
                     AutoMeasurement.Start(new MeasurementConfiguration("UA-92921709-2"));
-                    AutoMeasurement.Client.TrackScreenView("Chromatics");
+                    AutoMeasurement.Client.TrackScreenView("Chromatics " + _currentVersionX);
                 }
             }
             catch (Exception ex)
