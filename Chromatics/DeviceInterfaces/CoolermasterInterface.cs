@@ -939,7 +939,7 @@ namespace Chromatics.DeviceInterfaces
                     if (IsInitialized)
                         return true;
 
-                    Write.WriteConsole(ConsoleTypes.Coolermaster, "Attempting to initializer Coolermaster support...");
+                    Write.WriteConsole(ConsoleTypes.Coolermaster, @"Attempting to initializer Coolermaster support...");
 
                     foreach (var supportedDevice in SupportedKeyboardDevices)
                     {
@@ -960,14 +960,14 @@ namespace Chromatics.DeviceInterfaces
                     }
                     else
                     {
-                        Write.WriteConsole(ConsoleTypes.Coolermaster, "Did not find any supported Coolermaster devices.");
+                        Write.WriteConsole(ConsoleTypes.Coolermaster, @"Did not find any supported Coolermaster devices.");
                     }
 
                 }
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Coolermaster, "Coolermaster SDK failed to load. Error: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK failed to load. Error: " + ex.Message);
             }
             return false;
         }
