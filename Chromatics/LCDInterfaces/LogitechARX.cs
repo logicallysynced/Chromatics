@@ -134,10 +134,14 @@ namespace Chromatics.LCDInterfaces
         void ArxUpdateTheme(string theme);
         void ArxUpdateInfo(string info);
         void ArxSendActInfo(string ip, int port);
+
+        void SetArxCurrentID(int id);
     }
 
     public class LogitechArx : ILogitechArx
     {
+        private static int _ArxID;
+
         private readonly Dictionary<uint, string> _ffxivMapIds = new Dictionary<uint, string>
         {
             //Keys
@@ -187,6 +191,12 @@ namespace Chromatics.LCDInterfaces
 
         private LogitechArxWrapper.LogiArxCb _hookProcDelegate;
 
+        public void SetArxCurrentID(int id)
+        {
+            _ArxID = id;
+            //Console.WriteLine(@"ARX ID: " + _ArxID);
+        }
+
         public bool InitializeArx()
         {
             var result = true;
@@ -207,7 +217,7 @@ namespace Chromatics.LCDInterfaces
                 if (!retVal)
                 {
                     var retCode = LogitechArxWrapper.LogiArxGetLastError();
-                    Console.WriteLine("ARX EX: " + retCode);
+                    Console.WriteLine(@"ARX EX: " + retCode);
                     //write.WriteConsole(ConsoleTypes.ARX, "Loading ARX SDK Failed:" + retCode);
                 }
             }
@@ -328,6 +338,9 @@ namespace Chromatics.LCDInterfaces
             int tpCurrent, uint zone, string job, string hudmode, double targetPercent, int targetHpcurrent,
             int targetHpmax, string targetName, int targetEngaged)
         {
+
+            if (_ArxID != 1) return;
+
             LogitechArxWrapper.LogiArxSetTagContentById("hp_percent", hpPercent.ToString("#0%"));
             LogitechArxWrapper.LogiArxSetTagContentById("mp_percent", mpPercent.ToString("#0%"));
             LogitechArxWrapper.LogiArxSetTagContentById("tp_percent", tpPercent.ToString("#0%"));
@@ -355,6 +368,8 @@ namespace Chromatics.LCDInterfaces
             float casttime, bool castingtoggle, float hitboxrad, bool playerclaimed, Actor.Job playerjob, uint mapid,
             uint mapindex, uint mapterritory, string playername, Actor.TargetType targettype)
         {
+            if (_ArxID != 100) return;
+
             LogitechArxWrapper.LogiArxSetTagContentById("hp_percent", hpPercent.ToString("#0%"));
             LogitechArxWrapper.LogiArxSetTagContentById("mp_percent", mpPercent.ToString("#0%"));
             LogitechArxWrapper.LogiArxSetTagContentById("tp_percent", tpPercent.ToString("#0%"));
@@ -396,6 +411,8 @@ namespace Chromatics.LCDInterfaces
         public void ArxUpdateFfxivParty(string p1Data, string p2Data, string p3Data, string p4Data, string p5Data,
             string p6Data, string p7Data, string p8Data, string p9Data)
         {
+            if (_ArxID != 2) return;
+
             LogitechArxWrapper.LogiArxSetTagContentById("p1_data", p1Data);
             LogitechArxWrapper.LogiArxSetTagContentById("p2_data", p2Data);
             LogitechArxWrapper.LogiArxSetTagContentById("p3_data", p3Data);
@@ -409,6 +426,8 @@ namespace Chromatics.LCDInterfaces
 
         public void ArxSendActInfo(string ip, int port)
         {
+            if (_ArxID != 3) return;
+
             LogitechArxWrapper.LogiArxSetTagContentById("actipaddress", ip);
             LogitechArxWrapper.LogiArxSetTagContentById("actport", port.ToString());
         }
@@ -420,6 +439,8 @@ namespace Chromatics.LCDInterfaces
 
         public void ArxUpdateInfo(string info)
         {
+            if (_ArxID != 0) return;
+
             LogitechArxWrapper.LogiArxSetTagContentById("chromatics_info", info);
         }
 

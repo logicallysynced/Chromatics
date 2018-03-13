@@ -384,9 +384,10 @@ namespace Chromatics
                                 if (ArxSdkCalled == 1)
                                 {
                                     if (ArxState != 0) return;
-                                    if (cb_arx_mode.SelectedIndex < 4)
+                                    if (cb_arx_mode.SelectedIndex < 3)
                                     {
                                         ArxState = cb_arx_mode.SelectedIndex + 1;
+                                        _arx.SetArxCurrentID(ArxState);
 
                                         switch (ArxState)
                                         {
@@ -397,9 +398,6 @@ namespace Chromatics
                                                 _arx.ArxSetIndex("partylist.html");
                                                 break;
                                             case 3:
-                                                _arx.ArxSetIndex("mapdata.html");
-                                                break;
-                                            case 4:
                                                 _arx.ArxSetIndex("act.html");
                                                 var changed = txt_arx_actip.Text;
                                                 if (changed.EndsWith("/"))
@@ -415,6 +413,7 @@ namespace Chromatics
                                         ArxState = 100;
                                         _arx.ArxSetIndex(getPlugin);
                                     }
+                                    
                                 }
 
                                 State = 0;

@@ -2452,7 +2452,8 @@ namespace Chromatics.FFXIVInterfaces
                                     //0x11CEF84
                                     //0x1740518
                                     //0x17BB2A8
-                                    0x1860658
+                                    //0x1860658
+                                    0x1861658
                                 }
                                 }
                             };
@@ -2486,7 +2487,8 @@ namespace Chromatics.FFXIVInterfaces
                                     //0x1806742
                                     //0x18087C9
                                     //0x18087C2
-                                    0x18AC4B2
+                                    //0x18AC4B2
+                                    0x18AD4B2
                                 }
                                 }
                             };

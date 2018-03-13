@@ -37,8 +37,9 @@ namespace Chromatics.FFXIVInterfaces
                                 Key = "DUTYFINDER",
                                 PointerPath = new List<long>
                                 {
-                                    0x018ECB30,
-                                    0x24
+                                    //0x018ECB30,
+                                    //0x24
+                                    0x18EDB40
                                 }
                             }
                         };
@@ -68,12 +69,15 @@ namespace Chromatics.FFXIVInterfaces
                         var address = Scanner.Instance.Locations["DUTYFINDER"];
 
                         //PluginController.debug(" " + address.ToString("X8"));
-                        var isPopped = MemoryHandler.Instance.GetByte(address.GetAddress(), 113);
-                        _isPopped = isPopped == 2;
+                        var isPopped = MemoryHandler.Instance.GetByte(address.GetAddress(), 0);
+                        var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 10);
+                        //_isPopped = isPopped == 2;
+
+                        _isPopped = isPopped == 2 && instanceLock == 0;
 
                         //_countdown = MemoryHandler.Instance.GetInt32(address.GetAddress(), 4);
                         _initialized = true;
-                        //Debug.WriteLine(isPopped + "/" + _isPopped);
+                        //Debug.WriteLine(isPopped + "/" + instanceLock);
                     }
 
 

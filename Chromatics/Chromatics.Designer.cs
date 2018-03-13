@@ -1499,16 +1499,16 @@
             // lbl_arx_actipexample
             // 
             this.lbl_arx_actipexample.AutoSize = true;
-            this.lbl_arx_actipexample.Location = new System.Drawing.Point(431, 107);
+            this.lbl_arx_actipexample.Location = new System.Drawing.Point(374, 111);
             this.lbl_arx_actipexample.Name = "lbl_arx_actipexample";
-            this.lbl_arx_actipexample.Size = new System.Drawing.Size(217, 17);
+            this.lbl_arx_actipexample.Size = new System.Drawing.Size(201, 17);
             this.lbl_arx_actipexample.TabIndex = 7;
-            this.lbl_arx_actipexample.Text = "Example: http://192.168.0.1:8085";
+            this.lbl_arx_actipexample.Text = "Example: http://127.0.0.1:8085";
             // 
             // lbl_arx_actip
             // 
             this.lbl_arx_actip.AutoSize = true;
-            this.lbl_arx_actip.Location = new System.Drawing.Point(278, 85);
+            this.lbl_arx_actip.Location = new System.Drawing.Point(221, 89);
             this.lbl_arx_actip.Name = "lbl_arx_actip";
             this.lbl_arx_actip.Size = new System.Drawing.Size(146, 17);
             this.lbl_arx_actip.TabIndex = 6;
@@ -1516,10 +1516,12 @@
             // 
             // txt_arx_actip
             // 
-            this.txt_arx_actip.Location = new System.Drawing.Point(430, 82);
+            this.txt_arx_actip.Location = new System.Drawing.Point(373, 86);
             this.txt_arx_actip.Name = "txt_arx_actip";
-            this.txt_arx_actip.Size = new System.Drawing.Size(468, 22);
+            this.txt_arx_actip.Size = new System.Drawing.Size(235, 22);
             this.txt_arx_actip.TabIndex = 5;
+            this.tooltip_main.SetToolTip(this.txt_arx_actip, "The URL for ACT\'s Web Server. You can find this in ACT under Options > Output Dis" +
+        "play > ACT Web Server.");
             this.txt_arx_actip.Validated += new System.EventHandler(this.txt_arx_actip_TextChanged);
             // 
             // lb_arx_mode
@@ -1538,7 +1540,6 @@
             this.cb_arx_mode.Items.AddRange(new object[] {
             "Player HUD",
             "Party List",
-            "Minimap",
             "ACT"});
             this.cb_arx_mode.Location = new System.Drawing.Point(740, 28);
             this.cb_arx_mode.Name = "cb_arx_mode";
@@ -1581,6 +1582,7 @@
             this.chk_arxtoggle.Size = new System.Drawing.Size(106, 21);
             this.chk_arxtoggle.TabIndex = 0;
             this.chk_arxtoggle.Text = "Enable ARX";
+            this.tooltip_main.SetToolTip(this.chk_arxtoggle, "Enable Logitech ARX web server.");
             this.chk_arxtoggle.UseVisualStyleBackColor = true;
             this.chk_arxtoggle.CheckedChanged += new System.EventHandler(this.chk_arxtoggle_CheckedChanged);
             // 
@@ -1668,7 +1670,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.3.6 Beta";
+            this.Text = "Chromatics 2.3.7 Beta";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();

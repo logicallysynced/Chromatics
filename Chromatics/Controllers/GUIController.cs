@@ -1644,12 +1644,11 @@ namespace Chromatics
         {
             if (ArxSdkCalled != 1) return;
             if (Startup == false) return;
-            ChromaticsSettings.ChromaticsSettingsArxMode = cb_arx_mode.SelectedItem.ToString();
-            SaveChromaticsSettings(1);
-
-            if (cb_arx_mode.SelectedIndex < 4)
+            
+            if (cb_arx_mode.SelectedIndex < 3)
             {
                 ArxState = cb_arx_mode.SelectedIndex + 1;
+                _arx.SetArxCurrentID(ArxState);
 
                 switch (ArxState)
                 {
@@ -1660,14 +1659,13 @@ namespace Chromatics
                         _arx.ArxSetIndex("partylist.html");
                         break;
                     case 3:
-                        _arx.ArxSetIndex("mapdata.html");
-                        break;
-                    case 4:
                         _arx.ArxSetIndex("act.html");
 
                         var changed = txt_arx_actip.Text;
                         if (changed.EndsWith("/"))
+                        {
                             changed = changed.Substring(0, changed.Length - 1);
+                        }
 
                         _arx.ArxSendActInfo(changed, 8085);
                         break;
@@ -1679,8 +1677,12 @@ namespace Chromatics
                 ArxState = 100;
                 _arx.ArxSetIndex(getPlugin);
             }
+            
 
             WriteConsole(ConsoleTypes.Arx, "ARX Template Changed: " + cb_arx_mode.SelectedItem);
+
+            ChromaticsSettings.ChromaticsSettingsArxMode = cb_arx_mode.SelectedItem.ToString();
+            SaveChromaticsSettings(1);
         }
 
         private void rtb_debug_TextChanged(object sender, EventArgs e)

@@ -65,7 +65,7 @@ namespace Chromatics.Datastore
     //Settings
     public class ChromaticsSettings
     {
-        public string ChromaticsSettingsArxactip = "http://192.168.0.1:8085";
+        public string ChromaticsSettingsArxactip = "http://127.0.0.1:8085";
         public string ChromaticsSettingsArxMode = "Player HUD";
         public int ChromaticsSettingsArxTheme = 0;
         public bool ChromaticsSettingsArxToggle = true;
