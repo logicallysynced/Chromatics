@@ -1670,7 +1670,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.3.7 Beta";
+            this.Text = "Chromatics 2.3.8 Beta";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();

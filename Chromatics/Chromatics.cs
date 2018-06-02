@@ -30,6 +30,7 @@ namespace Chromatics
         public Task MemoryTask;
         private bool _allowClose;
         private bool _allowVisible = true;
+        private bool test4 = true;
 
         public bool ArxSdk;
         public int ArxSdkCalled;
@@ -47,7 +48,7 @@ namespace Chromatics
         public ChromaticsSettings ChromaticsSettings = new ChromaticsSettings();
 
         public FfxivColorMappings ColorMappings = new FfxivColorMappings();
-
+         
         private bool _coolermasterDeviceKeyboard = true;
         private bool _coolermasterDeviceMouse = true;
         public bool CoolermasterSdk = false;
@@ -62,7 +63,7 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.3.7";
+        private readonly string _currentVersionX = "2.3.8";
         public bool DeviceGridStartup = false;
 
         public bool EffectRunning = false;
