@@ -80,9 +80,9 @@ namespace Chromatics.FFXIVInterfaces
                             Key = "WEATHER",
                             PointerPath = new List<long>
                             {
-                                0x018AF778,
+                                0x018FD408,
                                 0x38,
-                                0x10,
+                                0x18,
                                 0x190,
                                 0x20,
                                 0x0

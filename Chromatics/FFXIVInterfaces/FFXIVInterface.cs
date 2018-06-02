@@ -3112,6 +3112,8 @@ namespace Chromatics
                                         _castalert = false;
                                     }
 
+                                    WriteConsole(ConsoleTypes.Ffxiv, targetInfo.Name + @": " + targetInfo.ID);
+
                                     if (targetInfo.IsClaimed)
                                     {
                                         //Collect Emnity Table
@@ -9599,7 +9601,7 @@ namespace Chromatics
                                             GlobalApplyMapKeyLighting("NumDivide", negsamcol, false);
                                             GlobalApplyMapKeyLighting("NumLock", kenkicol, false);
                                         }
-                                        else if (PolKenki == 0)
+                                        else
                                         {
                                             GlobalApplyMapKeyLighting("NumSubtract", negsamcol, false);
                                             GlobalApplyMapKeyLighting("NumMultiply", negsamcol, false);

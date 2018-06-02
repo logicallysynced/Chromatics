@@ -39,7 +39,8 @@ namespace Chromatics.FFXIVInterfaces
                                 {
                                     //0x018ECB30,
                                     //0x24
-                                    0x18EDB40
+                                    //0x18EDB40
+                                    0x193A8F5
                                 }
                             }
                         };
@@ -70,7 +71,7 @@ namespace Chromatics.FFXIVInterfaces
 
                         //PluginController.debug(" " + address.ToString("X8"));
                         var isPopped = MemoryHandler.Instance.GetByte(address.GetAddress(), 0);
-                        var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 10);
+                        var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 7);
                         //_isPopped = isPopped == 2;
 
                         _isPopped = isPopped == 2 && instanceLock == 0;
