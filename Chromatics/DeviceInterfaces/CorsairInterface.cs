@@ -736,7 +736,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (pause) return;
 
-            if (_corsairDeviceStand && !string.IsNullOrEmpty(CueSDK.MousematSDK?.MousematDeviceInfo?.Model))
+            if (_corsairDeviceStand && !string.IsNullOrEmpty(CueSDK.HeadsetStandSDK?.HeadsetStandDeviceInfo?.Model))
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.HeadsetStandSDK[_corsairkeyids[region]] != null)
                         _corsairStandIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[region], col);
