@@ -2404,34 +2404,9 @@ namespace Chromatics.FFXIVInterfaces
                         {
                             //PluginController.debug("Initializing cooldowns...");
 
+                            /*
                             _sList = new List<Signature>
                             {
-
-                                // 021386E4
-                                // 021388A4
-
-
-                                /*
-                                // doesn't seem to exist anymore
-                                sList.Add(new Signature
-                                {
-                                    Key = "AUTO_ATTACK_COUNT",
-                                    PointerPath = new List<long>()
-                                    {
-                                        0x00F1BCB0,
-                                        0X30,
-                                        0X6c4,
-                                        0X310
-                                    }
-                                });
-                                */
-
-                                // 022FA1D4
-                                // 01200000
-
-
-                                // 01360ED4
-                                // 001F0000
 
                                 new Signature
                                 {
@@ -2456,6 +2431,20 @@ namespace Chromatics.FFXIVInterfaces
                                     //0x1861658
                                     0x18AED98
                                 }
+                            };
+                            */
+                            _sList = new List<Signature>
+                            {
+                                new Signature
+                                {
+                                    Key = "COOLDOWNS",
+                                    Value = "8D812DF7FFFFA9F9FFFFFF750881F9D9080000750EF3410F104710F30F1105",
+                                    ASMSignature = true,
+                                    PointerPath = new List<long>
+                                    {
+                                        0,
+                                        0
+                                    }
                                 }
                             };
                             Scanner.Instance.LoadOffsets(_sList);
@@ -2477,6 +2466,7 @@ namespace Chromatics.FFXIVInterfaces
                         {
                             //PluginController.debug("Initializing cooldowns...");
 
+                            /*
                             _sList = new List<Signature>
                             {
                                 new Signature
@@ -2494,6 +2484,23 @@ namespace Chromatics.FFXIVInterfaces
                                 }
                                 }
                             };
+                            */
+                            
+                            _sList = new List<Signature>
+                            {
+                                new Signature
+                                {
+                                    Key = "CLASSRESOURCES",
+                                    Value = "C3CCCCCCCCCCCCCCCCCCCC48896C2410488974241848897C242041564883EC30488B3D",
+                                    ASMSignature = true,
+                                    PointerPath = new List<long>
+                                    {
+                                        0,
+                                        10
+                                    }
+                                }
+                            };
+
                             Scanner.Instance.LoadOffsets(_sList);
 
                             Thread.Sleep(100);
