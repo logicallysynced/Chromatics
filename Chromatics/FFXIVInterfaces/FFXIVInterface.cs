@@ -3112,7 +3112,7 @@ namespace Chromatics
                                         _castalert = false;
                                     }
 
-                                    WriteConsole(ConsoleTypes.Ffxiv, targetInfo.Name + @": " + targetInfo.ID);
+                                    //WriteConsole(ConsoleTypes.Ffxiv, targetInfo.Name + @": " + targetInfo.ID);
 
                                     if (targetInfo.IsClaimed)
                                     {
