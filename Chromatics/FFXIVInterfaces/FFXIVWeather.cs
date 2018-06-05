@@ -75,6 +75,7 @@ namespace Chromatics.FFXIVInterfaces
                     {
                         _sList = new List<Signature>();
 
+                        
                         _sList.Add(new Signature
                         {
                             Key = "WEATHER",
