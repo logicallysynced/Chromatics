@@ -116,9 +116,7 @@ namespace Chromatics.DeviceInterfaces
         private static readonly object RazerFlash4 = new object();
 
         private static readonly object _RazertransitionConst = new object();
-
-        private IChroma _IChroma;
-
+        
         private readonly Dictionary<string, string> _razerkeyids = new Dictionary<string, string>
         {
             //Keys
