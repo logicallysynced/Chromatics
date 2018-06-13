@@ -123,6 +123,10 @@ namespace Chromatics.DeviceInterfaces
         [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
         public static extern void LogiLedShutdown();
 
+        [DllImport("LogitechLedEnginesWrapper ", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool LogiLedSetLightingForTargetZone(DeviceType deviceType, int zone, int
+            redPercentage, int greenPercentage, int bluePercentage);
+
         public static void LogiColourCycle(Color col, object lockObject, CancellationToken token)
         {
             lock (lockObject)
@@ -191,6 +195,9 @@ namespace Chromatics.DeviceInterfaces
         void ResetLogitechDevices(bool logitechDeviceKeyboard, Color basecol);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string key, Color col);
+        void ApplyMapHeadsetLighting(string key, Color col);
+        void ApplyMapPadLighting(string key, Color col);
+        void ApplyMapPadSpeakers(string key, Color col);
 
         void UpdateState(string type, Color col, bool disablekeys,
             [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
@@ -224,6 +231,10 @@ namespace Chromatics.DeviceInterfaces
         private CancellationTokenSource _cancellationTokenSource;
 
         private bool _logitechDeviceKeyboard = true;
+        private bool _logitechDeviceMouse = true;
+        private bool _logitechDeviceHeadset = true;
+        private bool _logitechDeviceMousepad = true;
+        private bool _logitechDeviceSpeakers = true;
 
         public void ApplyMapKeyLighting(string key, Color color, bool clear, [Optional] bool bypasswhitelist)
         {
@@ -243,9 +254,122 @@ namespace Chromatics.DeviceInterfaces
                     (int) Math.Ceiling((double) (color.B * 100) / 255));
         }
 
-        public void ApplyMapMouseLighting(string key, Color col)
+        public void ApplyMapMouseLighting(string key, Color color)
         {
-            throw new NotImplementedException();
+            if (!_logitechDeviceMouse)
+                return;
+
+            switch (key)
+            {
+                case "0":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Mouse, 0,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "1":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Mouse, 1,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "2":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Mouse, 2,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+            }
+        }
+
+        public void ApplyMapHeadsetLighting(string key, Color color)
+        {
+            if (!_logitechDeviceHeadset)
+                return;
+
+            switch (key)
+            {
+                case "0":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Headset, 0,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "1":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Headset, 1,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "2":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Headset, 2,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+            }
+        }
+
+        public void ApplyMapPadLighting(string key, Color color)
+        {
+            if (!_logitechDeviceMousepad)
+                return;
+
+            switch (key)
+            {
+                case "0":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Mousemat, 0,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "1":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Mousemat, 1,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "2":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Mousemat, 2,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+            }
+        }
+
+        public void ApplyMapPadSpeakers(string key, Color color)
+        {
+            if (!_logitechDeviceSpeakers)
+                return;
+
+            switch (key)
+            {
+                case "0":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Speaker, 0,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "1":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Speaker, 1,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "2":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Speaker, 2,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "3":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Speaker, 3,
+                        (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+            }
         }
 
         public void ResetLogitechDevices(bool deviceKeyboard, Color basecol)
@@ -838,6 +962,15 @@ namespace Chromatics.DeviceInterfaces
         }
 
         
+    }
+
+    public enum DeviceType
+    {
+        Keyboard = 0x0,
+        Mouse = 0x3,
+        Mousemat = 0x4,
+        Headset = 0x8,
+        Speaker = 0xe
     }
 
     public enum KeyboardNames

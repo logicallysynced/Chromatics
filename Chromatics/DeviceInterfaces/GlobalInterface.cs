@@ -430,7 +430,7 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    //
+                    _logitech.ApplyMapMouseLighting("0", col);
                 }
 
                 if (CorsairSdkCalled == 1)
@@ -454,7 +454,7 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    //
+                    _logitech.ApplyMapMouseLighting("1", col);
                 }
 
                 if (CorsairSdkCalled == 1)
@@ -475,7 +475,7 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    //
+                    _logitech.ApplyMapMouseLighting("2", col);
                 }
 
                 if (CorsairSdkCalled == 1)
@@ -552,12 +552,38 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    //
+                    _logitech.ApplyMapHeadsetLighting("0", col);
+                    _logitech.ApplyMapPadSpeakers("0", col);
+                    _logitech.ApplyMapPadSpeakers("2", col);
                 }
 
                 if (CorsairSdkCalled == 1)
                 {
                     _corsair.ApplyMapHeadsetLighting(col, clear);
+                }
+
+                if (CoolermasterSdkCalled == 1)
+                {
+                    //
+                }
+
+            }
+
+            if (mode == _HeadsetZone2Mode)
+            {
+                if (RazerSdkCalled == 1)
+                    //
+
+                if (LogitechSdkCalled == 1)
+                {
+                    _logitech.ApplyMapHeadsetLighting("1", col);
+                    _logitech.ApplyMapPadSpeakers("1", col);
+                    _logitech.ApplyMapPadSpeakers("3", col);
+                    }
+
+                if (CorsairSdkCalled == 1)
+                {
+                    //
                 }
 
                 if (CoolermasterSdkCalled == 1)
@@ -677,7 +703,7 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    //
+                    _logitech.ApplyMapPadLighting("0", col);
                 }
 
                 if (CorsairSdkCalled == 1)
@@ -761,7 +787,7 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    //
+                    _logitech.ApplyMapPadLighting("1", col);
                 }
 
                 if (CorsairSdkCalled == 1)
@@ -845,7 +871,7 @@ namespace Chromatics
 
                 if (LogitechSdkCalled == 1)
                 {
-                    //
+                    _logitech.ApplyMapPadLighting("2", col);
                 }
 
                 if (CorsairSdkCalled == 1)

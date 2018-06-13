@@ -145,6 +145,7 @@ namespace Chromatics
         public DevModeTypes _PadZone3Mode = DevModeTypes.MpTracker;
 
         public DevModeTypes _HeadsetZone1Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _HeadsetZone2Mode = DevModeTypes.HighlightColor;
         public DevModeTypes _KeypadZone1Mode = DevModeTypes.DefaultColor;
 
         public DevModeTypes _CLZone1Mode = DevModeTypes.DefaultColor;

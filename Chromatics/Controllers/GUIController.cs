@@ -1372,6 +1372,7 @@ namespace Chromatics
                 cb_pad_zs2.Items.Add(item.Value);
                 cb_pad_zs3.Items.Add(item.Value);
                 cb_headset_z1.Items.Add(item.Value);
+                cb_headset_z2.Items.Add(item.Value);
                 cb_keypad_z1.Items.Add(item.Value);
                 cb_chromalink_z1.Items.Add(item.Value);
                 cb_chromalink_z2.Items.Add(item.Value);
@@ -1397,6 +1398,7 @@ namespace Chromatics
             cb_pad_zs2.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone2Mode);
             cb_pad_zs3.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone3Mode);
             cb_headset_z1.SelectedItem = Helpers.ConvertDevModeToCB(_HeadsetZone1Mode);
+            cb_headset_z2.SelectedItem = Helpers.ConvertDevModeToCB(_HeadsetZone2Mode);
             cb_keypad_z1.SelectedItem = Helpers.ConvertDevModeToCB(_KeypadZone1Mode);
             cb_chromalink_z1.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone1Mode);
             cb_chromalink_z2.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone2Mode);
@@ -2595,6 +2597,21 @@ namespace Chromatics
             {
                 if ((string)cb_headset_z1.SelectedItem != item.Value) continue;
                 _HeadsetZone1Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetHeadsetbase = false;
+            SaveDevices();
+        }
+
+        private void cb_headset_z2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_headset_z2.SelectedItem != item.Value) continue;
+                _HeadsetZone2Mode = Helpers.ConvertCBToDevMode(item.Value);
                 break;
             }
 

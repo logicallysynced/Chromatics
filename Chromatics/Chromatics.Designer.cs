@@ -162,6 +162,8 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.label1 = new System.Windows.Forms.Label();
+            this.cb_headset_z2 = new System.Windows.Forms.ComboBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -627,6 +629,8 @@
             // tP_headset
             // 
             this.tP_headset.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_headset.Controls.Add(this.label1);
+            this.tP_headset.Controls.Add(this.cb_headset_z2);
             this.tP_headset.Controls.Add(this.lbl_headset_z1);
             this.tP_headset.Controls.Add(this.cb_headset_z1);
             this.tP_headset.Controls.Add(this.chk_dev_headset);
@@ -653,7 +657,7 @@
             this.cb_headset_z1.Name = "cb_headset_z1";
             this.cb_headset_z1.Size = new System.Drawing.Size(175, 24);
             this.cb_headset_z1.TabIndex = 11;
-            this.tooltip_main.SetToolTip(this.cb_headset_z1, "Controls RGB functionality for various LED zones on headset devices. \r\nUp to one " +
+            this.tooltip_main.SetToolTip(this.cb_headset_z1, "Controls RGB functionality for various LED zones on headset devices. \r\nUp to two " +
         "static zones are supported.\r\n");
             this.cb_headset_z1.SelectedIndexChanged += new System.EventHandler(this.cb_headset_z1_SelectedIndexChanged);
             // 
@@ -1662,6 +1666,27 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 93);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 17);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Zone 2";
+            // 
+            // cb_headset_z2
+            // 
+            this.cb_headset_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_headset_z2.FormattingEnabled = true;
+            this.cb_headset_z2.Location = new System.Drawing.Point(87, 90);
+            this.cb_headset_z2.Name = "cb_headset_z2";
+            this.cb_headset_z2.Size = new System.Drawing.Size(175, 24);
+            this.cb_headset_z2.TabIndex = 13;
+            this.tooltip_main.SetToolTip(this.cb_headset_z2, "Controls RGB functionality for various LED zones on headset devices. \r\nUp to two " +
+        "static zones are supported.\r\n");
+            this.cb_headset_z2.SelectedIndexChanged += new System.EventHandler(this.cb_headset_z2_SelectedIndexChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1843,6 +1868,8 @@
         private System.Windows.Forms.Label lbl_lightbar;
         private System.Windows.Forms.Label lbl_region;
         private System.Windows.Forms.CheckBox chk_debugopt;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cb_headset_z2;
     }
 }
 
