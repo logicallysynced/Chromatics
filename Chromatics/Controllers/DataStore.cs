@@ -57,6 +57,7 @@ namespace Chromatics.Datastore
         public string CLZone5Mode = "DefaultColor";
 
         public string HeadsetZone1Mode = "DefaultColor";
+        public string HeadsetZone2Mode = "HighlightColor";
         public string KeypadZone1Mode = "DefaultColor";
 
         public string LightbarMode = "TargetHp";
