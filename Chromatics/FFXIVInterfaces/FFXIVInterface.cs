@@ -349,7 +349,8 @@ namespace Chromatics
                         {
                             State = 6;
                             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
-                            GlobalSetWave();
+                            //GlobalSetWave();
+                            GlobalApplyAllKeyLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
 
                             Attatched = 2;
                         }
@@ -995,7 +996,7 @@ namespace Chromatics
 
                             _weathertoggle = false;
                         }
-
+                        
                         //Console.WriteLine(baseColor.Name);
 
                         //Set Base Keyboard lighting. 
@@ -1074,37 +1075,37 @@ namespace Chromatics
                             GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, baseColor, false);
                             GlobalApplyMapMouseLighting(DevModeTypes.Castbar, baseColor, false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip1", "Strip8", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip2", "Strip9", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip3", "Strip10", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip4", "Strip11", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip5", "Strip12", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip6", "Strip13", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "Strip7", "Strip14", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide1", "RightSide1", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide2", "RightSide2", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide3", "RightSide3", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide4", "RightSide4", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide5", "RightSide5", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide6", "RightSide6", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide7", "RightSide7", baseColor, false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", baseColor, false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip1", "Strip8", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip2", "Strip9", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip3", "Strip10", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip4", "Strip11", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide1", "RightSide1", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide2", "RightSide2", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide3", "RightSide3", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", baseColor, false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip1", "Strip8", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip2", "Strip9", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip3", "Strip10", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip4", "Strip11", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip5", "Strip12", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip6", "Strip13", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "Strip7", "Strip14", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide1", "RightSide1", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide2", "RightSide2", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide3", "RightSide3", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide4", "RightSide4", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide5", "RightSide5", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide6", "RightSide6", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide7", "RightSide7", highlightColor, false);
 
                             GlobalApplyMapMouseLighting(DevModeTypes.HighlightColor, highlightColor, false);
 
@@ -1209,13 +1210,13 @@ namespace Chromatics
                             GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -1442,13 +1443,13 @@ namespace Chromatics
                                             GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -2729,13 +2730,13 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("Macro5",
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
 
                                     GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                     GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
@@ -2759,13 +2760,13 @@ namespace Chromatics
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
                                             false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
@@ -2786,13 +2787,13 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro5",
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
@@ -2818,13 +2819,13 @@ namespace Chromatics
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
                                             false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
@@ -2845,13 +2846,13 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro5",
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
@@ -2878,13 +2879,13 @@ namespace Chromatics
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
                                             false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
@@ -2905,13 +2906,13 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro5",
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
@@ -2939,13 +2940,13 @@ namespace Chromatics
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
                                             false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
@@ -2966,13 +2967,13 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro5",
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
@@ -3001,13 +3002,13 @@ namespace Chromatics
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed),
                                             false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
@@ -3028,13 +3029,13 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Macro5",
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
@@ -3061,13 +3062,13 @@ namespace Chromatics
                                     GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting));
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
 
                                     GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
                                     GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
@@ -3142,13 +3143,13 @@ namespace Chromatics
                                             GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm0, false);
 
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm0, false);
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm0, false);
@@ -3202,13 +3203,13 @@ namespace Chromatics
                                             GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm1, false);
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm1);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm1, false);
 
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm1, false);
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm1, false);
@@ -3262,13 +3263,13 @@ namespace Chromatics
                                             GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm2, false);
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm2);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm2, false);
 
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm2, false);
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm2, false);
@@ -3322,13 +3323,13 @@ namespace Chromatics
                                             GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm3, false);
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm3);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm3, false);
 
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm3, false);
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm3, false);
@@ -3382,13 +3383,13 @@ namespace Chromatics
                                             GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm4, false);
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm4);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm4, false);
 
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm4, false);
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm4, false);
@@ -3443,13 +3444,13 @@ namespace Chromatics
                                         GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                         GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm0, false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm0, false);
                                         GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm0, false);
@@ -3508,13 +3509,13 @@ namespace Chromatics
                                 GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                                 if (_LightbarMode == LightbarMode.TargetHp || _LightbarMode == LightbarMode.EnmityTracker)
                                 {
@@ -3571,13 +3572,13 @@ namespace Chromatics
                                 GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, baseColor, false);
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, baseColor);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip1", "Strip8", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip2", "Strip9", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip3", "Strip10", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip4", "Strip11", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip5", "Strip12", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip6", "Strip13", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "Strip7", "Strip14", baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", baseColor, false);
 
                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, baseColor, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, baseColor, false);
@@ -3635,7 +3636,7 @@ namespace Chromatics
                             {
                                 GlobalApplyMapKeyLighting("F1", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
 
                                 if (_LightbarMode == LightbarMode.Castbar)
@@ -3673,7 +3674,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F1", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F2", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
 
                                 if (_LightbarMode == LightbarMode.Castbar)
@@ -3711,8 +3712,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F2", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F3", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
 
@@ -3751,8 +3752,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F3", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F4", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
 
@@ -3792,9 +3793,9 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F4", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F5", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", colCastcharge, false);
 
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
@@ -3837,9 +3838,9 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F5", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F6", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", colCastcharge, false);
 
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
@@ -3883,10 +3884,10 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F6", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F7", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip4", "Strip11", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", colCastcharge, false);
 
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
@@ -3932,10 +3933,10 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F7", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F8", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip4", "Strip11", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", colCastcharge, false);
 
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
@@ -3982,11 +3983,11 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F8", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F9", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip4", "Strip11", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip3", "Strip10", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide3", "RightSide3", colCastcharge, false);
 
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
@@ -4034,11 +4035,11 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("F9", colCastcharge, false);
                                 GlobalApplyMapKeyLighting("F10", colCastcharge, false);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip4", "Strip11", colCastcharge, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip3", "Strip10", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", colCastcharge, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide3", "RightSide3", colCastcharge, false);
 
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
@@ -4089,12 +4090,12 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("F10", colCastcharge, false);
                                     GlobalApplyMapKeyLighting("F11", colCastcharge, false);
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip4", "Strip11", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip3", "Strip10", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip2", "Strip9", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide3", "RightSide3", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide2", "RightSide2", colCastcharge, false);
 
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
@@ -4149,13 +4150,13 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("F11", colCastcharge, false);
                                     GlobalApplyMapKeyLighting("F12", colCastcharge, false);
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip4", "Strip11", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip3", "Strip10", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip2", "Strip9", colCastcharge, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip1", "Strip8", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide3", "RightSide3", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide2", "RightSide2", colCastcharge, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide1", "RightSide1", colCastcharge, false);
 
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
@@ -4185,13 +4186,13 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("F11", baseColor, false);
                                     GlobalApplyMapKeyLighting("F12", baseColor, false);
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip1", "Strip8", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip2", "Strip9", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip3", "Strip10", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip4", "Strip11", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip5", "Strip12", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip6", "Strip13", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "Strip7", "Strip14", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide1", "RightSide1", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide2", "RightSide2", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide3", "RightSide3", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", baseColor, false);
 
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, baseColor, false);
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, baseColor, false);
@@ -4348,13 +4349,13 @@ namespace Chromatics
                             //Mouse
                             if (polHpx <= 70 && polHpx > 60)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip7", "Strip14", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip6", "Strip13", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip5", "Strip12", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip4", "Strip11", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip3", "Strip10", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip2", "Strip9", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip1", "Strip8", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide7", "RightSide7", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide6", "RightSide6", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide5", "RightSide5", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide4", "RightSide4", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide3", "RightSide3", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide2", "RightSide2", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide1", "RightSide1", colHpfull, false);
 
                                 if (_LightbarMode == LightbarMode.HpTracker)
                                 {
@@ -4381,13 +4382,13 @@ namespace Chromatics
                             }
                             else if (polHpx <= 60 && polHpx > 50)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip7", "Strip14", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip6", "Strip13", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip5", "Strip12", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip4", "Strip11", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip3", "Strip10", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip2", "Strip9", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip1", "Strip8", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide7", "RightSide7", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide6", "RightSide6", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide5", "RightSide5", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide4", "RightSide4", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide3", "RightSide3", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide2", "RightSide2", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide1", "RightSide1", colHpempty, false);
 
                                 if (_LightbarMode == LightbarMode.HpTracker)
                                 {
@@ -4414,13 +4415,13 @@ namespace Chromatics
                             }
                             else if (polHpx <= 50 && polHpx > 40)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip7", "Strip14", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip6", "Strip13", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip5", "Strip12", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip4", "Strip11", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip3", "Strip10", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip2", "Strip9", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip1", "Strip8", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide7", "RightSide7", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide6", "RightSide6", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide5", "RightSide5", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide4", "RightSide4", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide3", "RightSide3", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide2", "RightSide2", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide1", "RightSide1", colHpempty, false);
 
                                 if (_LightbarMode == LightbarMode.HpTracker)
                                 {
@@ -4447,13 +4448,13 @@ namespace Chromatics
                             }
                             else if (polHpx <= 40 && polHpx > 30)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip7", "Strip14", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip6", "Strip13", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip5", "Strip12", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip4", "Strip11", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip3", "Strip10", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip2", "Strip9", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip1", "Strip8", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide7", "RightSide7", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide6", "RightSide6", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide5", "RightSide5", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide4", "RightSide4", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide3", "RightSide3", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide2", "RightSide2", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide1", "RightSide1", colHpempty, false);
 
                                 if (_LightbarMode == LightbarMode.HpTracker)
                                 {
@@ -4480,13 +4481,13 @@ namespace Chromatics
                             }
                             else if (polHpx <= 30 && polHpx > 20)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip7", "Strip14", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip6", "Strip13", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip5", "Strip12", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip4", "Strip11", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip3", "Strip10", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip2", "Strip9", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip1", "Strip8", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide7", "RightSide7", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide6", "RightSide6", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide5", "RightSide5", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide4", "RightSide4", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide3", "RightSide3", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide2", "RightSide2", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide1", "RightSide1", colHpempty, false);
 
                                 if (_LightbarMode == LightbarMode.HpTracker)
                                 {
@@ -4513,13 +4514,13 @@ namespace Chromatics
                             }
                             else if (polHpx <= 20 && polHpx > 10)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip7", "Strip14", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip6", "Strip13", colHpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip5", "Strip12", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip4", "Strip11", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip3", "Strip10", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip2", "Strip9", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip1", "Strip8", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide7", "RightSide7", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide6", "RightSide6", colHpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide5", "RightSide5", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide4", "RightSide4", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide3", "RightSide3", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide2", "RightSide2", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide1", "RightSide1", colHpempty, false);
 
                                 if (_LightbarMode == LightbarMode.HpTracker)
                                 {
@@ -4546,13 +4547,13 @@ namespace Chromatics
                             }
                             else if (polHpx <= 10 && polHpx > 0)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip7", "Strip14", colHpcritical, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip6", "Strip13", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip5", "Strip12", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip4", "Strip11", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip3", "Strip10", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip2", "Strip9", colHpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip1", "Strip8", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide7", "RightSide7", colHpcritical, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide6", "RightSide6", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide5", "RightSide5", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide4", "RightSide4", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide3", "RightSide3", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide2", "RightSide2", colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide1", "RightSide1", colHpempty, false);
 
                                 if (_LightbarMode == LightbarMode.HpTracker)
                                 {
@@ -4579,13 +4580,13 @@ namespace Chromatics
                             }
                             else if (polHpx == 0)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip7", "Strip14", colHpcritical, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip6", "Strip13", colHpcritical, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip5", "Strip12", colHpcritical, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip4", "Strip11", colHpcritical, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip3", "Strip10", colHpcritical, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip2", "Strip9", colHpcritical, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "Strip1", "Strip8", colHpcritical, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide7", "RightSide7", colHpcritical, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide6", "RightSide6", colHpcritical, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide5", "RightSide5", colHpcritical, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide4", "RightSide4", colHpcritical, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide3", "RightSide3", colHpcritical, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide2", "RightSide2", colHpcritical, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, "LeftSide1", "RightSide1", colHpcritical, false);
 
                                 if (_LightbarMode == LightbarMode.HpTracker)
                                 {
@@ -4713,13 +4714,13 @@ namespace Chromatics
                             //Mouse
                             if (polMpx <= 70 && polMpx > 60)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide7", "RightSide7", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide6", "RightSide6", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide5", "RightSide5", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide4", "RightSide4", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide3", "RightSide3", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide2", "RightSide2", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide1", "RightSide1", colMpfull, false);
 
                                 if (_LightbarMode == LightbarMode.MpTracker)
                                 {
@@ -4746,13 +4747,13 @@ namespace Chromatics
                             }
                             else if (polMpx <= 60 && polMpx > 50)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide7", "RightSide7", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide6", "RightSide6", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide5", "RightSide5", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide4", "RightSide4", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide3", "RightSide3", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide2", "RightSide2", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide1", "RightSide1", colMpempty, false);
 
                                 if (_LightbarMode == LightbarMode.MpTracker)
                                 {
@@ -4779,13 +4780,13 @@ namespace Chromatics
                             }
                             else if (polMpx <= 50 && polMpx > 40)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide7", "RightSide7", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide6", "RightSide6", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide5", "RightSide5", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide4", "RightSide4", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide3", "RightSide3", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide2", "RightSide2", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide1", "RightSide1", colMpempty, false);
 
                                 if (_LightbarMode == LightbarMode.MpTracker)
                                 {
@@ -4812,13 +4813,13 @@ namespace Chromatics
                             }
                             else if (polMpx <= 40 && polMpx > 30)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide7", "RightSide7", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide6", "RightSide6", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide5", "RightSide5", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide4", "RightSide4", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide3", "RightSide3", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide2", "RightSide2", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide1", "RightSide1", colMpempty, false);
 
                                 if (_LightbarMode == LightbarMode.MpTracker)
                                 {
@@ -4845,13 +4846,13 @@ namespace Chromatics
                             }
                             else if (polMpx <= 30 && polMpx > 20)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide7", "RightSide7", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide6", "RightSide6", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide5", "RightSide5", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide4", "RightSide4", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide3", "RightSide3", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide2", "RightSide2", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide1", "RightSide1", colMpempty, false);
 
                                 if (_LightbarMode == LightbarMode.MpTracker)
                                 {
@@ -4878,13 +4879,13 @@ namespace Chromatics
                             }
                             else if (polMpx <= 20 && polMpx > 10)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide7", "RightSide7", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide6", "RightSide6", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide5", "RightSide5", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide4", "RightSide4", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide3", "RightSide3", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide2", "RightSide2", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide1", "RightSide1", colMpempty, false);
 
                                 if (_LightbarMode == LightbarMode.MpTracker)
                                 {
@@ -4911,13 +4912,13 @@ namespace Chromatics
                             }
                             else if (polMpx <= 10 && polMpx > 0)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide7", "RightSide7", colMpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide6", "RightSide6", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide5", "RightSide5", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide4", "RightSide4", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide3", "RightSide3", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide2", "RightSide2", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide1", "RightSide1", colMpempty, false);
 
                                 if (_LightbarMode == LightbarMode.MpTracker)
                                 {
@@ -4944,13 +4945,13 @@ namespace Chromatics
                             }
                             else if (polMpx == 0)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip7", "Strip14", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip6", "Strip13", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip5", "Strip12", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip4", "Strip11", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip3", "Strip10", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip2", "Strip9", colMpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "Strip1", "Strip8", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide7", "RightSide7", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide6", "RightSide6", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide5", "RightSide5", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide4", "RightSide4", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide3", "RightSide3", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide2", "RightSide2", colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, "LeftSide1", "RightSide1", colMpempty, false);
 
                                 if (_LightbarMode == LightbarMode.MpTracker)
                                 {
@@ -5078,13 +5079,13 @@ namespace Chromatics
                             //Mouse
                             if (polTpx <= 70 && polTpx > 60)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide7", "RightSide7", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide6", "RightSide6", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide5", "RightSide5", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide4", "RightSide4", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide3", "RightSide3", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide2", "RightSide2", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide1", "RightSide1", colTpfull, false);
 
                                 if (_LightbarMode == LightbarMode.TpTracker)
                                 {
@@ -5111,13 +5112,13 @@ namespace Chromatics
                             }
                             else if (polTpx <= 60 && polTpx > 50)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide7", "RightSide7", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide6", "RightSide6", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide5", "RightSide5", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide4", "RightSide4", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide3", "RightSide3", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide2", "RightSide2", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide1", "RightSide1", colTpempty, false);
 
                                 if (_LightbarMode == LightbarMode.TpTracker)
                                 {
@@ -5144,13 +5145,13 @@ namespace Chromatics
                             }
                             else if (polTpx <= 50 && polTpx > 40)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide7", "RightSide7", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide6", "RightSide6", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide5", "RightSide5", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide4", "RightSide4", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide3", "RightSide3", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide2", "RightSide2", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide1", "RightSide1", colTpempty, false);
 
                                 if (_LightbarMode == LightbarMode.TpTracker)
                                 {
@@ -5177,13 +5178,13 @@ namespace Chromatics
                             }
                             else if (polTpx <= 40 && polTpx > 30)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide7", "RightSide7", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide6", "RightSide6", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide5", "RightSide5", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide4", "RightSide4", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide3", "RightSide3", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide2", "RightSide2", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide1", "RightSide1", colTpempty, false);
 
                                 if (_LightbarMode == LightbarMode.TpTracker)
                                 {
@@ -5210,13 +5211,13 @@ namespace Chromatics
                             }
                             else if (polTpx <= 30 && polTpx > 20)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide7", "RightSide7", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide6", "RightSide6", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide5", "RightSide5", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide4", "RightSide4", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide3", "RightSide3", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide2", "RightSide2", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide1", "RightSide1", colTpempty, false);
 
                                 if (_LightbarMode == LightbarMode.TpTracker)
                                 {
@@ -5243,13 +5244,13 @@ namespace Chromatics
                             }
                             else if (polTpx <= 20 && polTpx > 10)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide7", "RightSide7", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide6", "RightSide6", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide5", "RightSide5", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide4", "RightSide4", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide3", "RightSide3", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide2", "RightSide2", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide1", "RightSide1", colTpempty, false);
 
                                 if (_LightbarMode == LightbarMode.TpTracker)
                                 {
@@ -5276,13 +5277,13 @@ namespace Chromatics
                             }
                             else if (polTpx <= 10 && polTpx > 0)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpfull, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide7", "RightSide7", colTpfull, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide6", "RightSide6", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide5", "RightSide5", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide4", "RightSide4", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide3", "RightSide3", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide2", "RightSide2", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide1", "RightSide1", colTpempty, false);
 
                                 if (_LightbarMode == LightbarMode.TpTracker)
                                 {
@@ -5309,13 +5310,13 @@ namespace Chromatics
                             }
                             else if (polTpx == 0)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip7", "Strip14", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip6", "Strip13", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip5", "Strip12", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip4", "Strip11", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip3", "Strip10", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip2", "Strip9", colTpempty, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "Strip1", "Strip8", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide7", "RightSide7", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide6", "RightSide6", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide5", "RightSide5", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide4", "RightSide4", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide3", "RightSide3", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide2", "RightSide2", colTpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, "LeftSide1", "RightSide1", colTpempty, false);
 
                                 if (_LightbarMode == LightbarMode.TpTracker)
                                 {
@@ -10535,13 +10536,13 @@ namespace Chromatics
                                     GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
 
                                     GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
                                     GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
@@ -10589,13 +10590,13 @@ namespace Chromatics
                                         GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
                                         GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip1", "Strip8", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip2", "Strip9", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip3", "Strip10", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip4", "Strip11", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip5", "Strip12", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip6", "Strip13", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip7", "Strip14", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
@@ -10650,13 +10651,13 @@ namespace Chromatics
                                     GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, baseColor, false);
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, baseColor);
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip1", "Strip8", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip2", "Strip9", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip3", "Strip10", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip4", "Strip11", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip5", "Strip12", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip6", "Strip13", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "Strip7", "Strip14", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide2", "RightSide2", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide3", "RightSide3", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide4", "RightSide4", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide5", "RightSide5", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide6", "RightSide6", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide7", "RightSide7", baseColor, false);
 
                                     GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 14, 5, 0, baseColor, false);
                                     GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 13, 6, 1, baseColor, false);

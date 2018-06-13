@@ -290,7 +290,7 @@ namespace Chromatics
         {
             if (!HoldReader)
                 if (RazerSdkCalled == 1)
-                    _razer.KeyboardUpdate();
+                    _razer.DeviceUpdate();
         }
 
         public void GlobalApplyAllKeyLighting(Color col)
@@ -394,7 +394,7 @@ namespace Chromatics
 
         public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color col, double val)
         {
-            if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
+            if (!_KeysSingleKeyModeEnabled || mode != DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
             
             var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 

@@ -27,7 +27,7 @@ namespace Chromatics
             {BulbModeTypes.Disabled, "Disabled"},
             {BulbModeTypes.Standby, "Standby"},
             {BulbModeTypes.DefaultColor, "Default Color"},
-            {BulbModeTypes.HighlightColor, "Highlight Colour"},
+            {BulbModeTypes.HighlightColor, "Highlight Color"},
             {BulbModeTypes.EnmityTracker, "Enmity Tracker"},
             {BulbModeTypes.TargetHp, "Target HP"},
             {BulbModeTypes.StatusEffects, "Status Effects"},
@@ -45,7 +45,7 @@ namespace Chromatics
             {DevModeTypes.Disabled, "Disabled"},
             //{DevModeTypes.Standby, "Standby"},
             {DevModeTypes.DefaultColor, "Default Color"},
-            {DevModeTypes.HighlightColor, "Highlight Colour"},
+            {DevModeTypes.HighlightColor, "Highlight Color"},
             {DevModeTypes.EnmityTracker, "Enmity Tracker"},
             {DevModeTypes.TargetHp, "Target HP"},
             {DevModeTypes.HpTracker, "HP Tracker"},
@@ -60,7 +60,7 @@ namespace Chromatics
             //Keys
             {LightbarMode.Disabled, "Disabled"},
             {LightbarMode.DefaultColor, "Default Color"}, //
-            {LightbarMode.HighlightColor, "Highlight Colour"}, //
+            {LightbarMode.HighlightColor, "Highlight Color"}, //
             {LightbarMode.EnmityTracker, "Enmity Tracker"}, //
             {LightbarMode.TargetHp, "Target HP"}, //
             {LightbarMode.HpTracker, "HP Tracker"}, //
