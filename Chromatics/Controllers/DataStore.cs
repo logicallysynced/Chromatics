@@ -90,7 +90,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsMemoryCache = false;
         public bool ChromaticsSettingsDesktopNotifications = true;
         public bool ChromaticsSettingsLcdEnabled = false;
-        public string FinalFantasyXivVersion = "4.3";
+        public string FinalFantasyXivVersion = "4.31";
     }
 
     //Color Mapping

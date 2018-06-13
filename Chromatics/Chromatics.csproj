@@ -107,15 +107,11 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Colore">
+      <HintPath>..\..\..\..\Downloads\Colore-develop (2)\Colore-develop\src\Colore\bin\Debug\net451\Colore.dll</HintPath>
+    </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.2\lib\net45\CommonServiceLocator.dll</HintPath>
-    </Reference>
-    <Reference Include="Corale.Colore, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Colore.5.2.0\lib\net35\Corale.Colore.dll</HintPath>
-    </Reference>
-    <Reference Include="Corale.Colore.WinForms, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Colore.WinForms.5.2.0\lib\net35\Corale.Colore.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="CSharpAnalytics.Net45, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -254,6 +250,7 @@
     <Compile Include="Chromatics.Designer.cs">
       <DependentUpon>Chromatics.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\AsyncHelpers.cs" />
     <Compile Include="Controllers\CriticalTasks.cs" />
     <Compile Include="Controllers\DataStore.cs" />
     <Compile Include="Controllers\EventListeners.cs">
