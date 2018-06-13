@@ -268,8 +268,8 @@ namespace Chromatics.DeviceInterfaces
         {
             if (Chroma.Initialized)
             {
-                Chroma.UninitializeAsync().RunSynchronously();
-                Chroma = null;
+                //Chroma.UninitializeAsync().RunSynchronously();
+                //Chroma = null;
             }
         }
 
@@ -299,6 +299,7 @@ namespace Chromatics.DeviceInterfaces
                 Chroma = task.Result;
 
                 Keyboard = Chroma.Keyboard;
+                Keypad = Chroma.Keypad;
                 Mouse = Chroma.Mouse;
                 Mousepad = Chroma.Mousepad;
                 Headset = Chroma.Headset;
@@ -421,7 +422,7 @@ namespace Chromatics.DeviceInterfaces
                 Chroma.Keyboard.SetCustomAsync(_keyboardGrid);
             }
 
-            //Chroma.Mouse.SetCustomAsync(_mouseGrid);
+            Chroma.Mouse.SetGridAsync(_mouseGrid);
             Chroma.Mousepad.SetCustomAsync(_mousepadGrid);
         }
 
