@@ -30,7 +30,6 @@ namespace Chromatics
         public Task MemoryTask;
         private bool _allowClose;
         private bool _allowVisible = true;
-        private bool test4 = true;
 
         public bool ArxSdk;
         public int ArxSdkCalled;
