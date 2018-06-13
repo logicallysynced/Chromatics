@@ -308,6 +308,24 @@ namespace Chromatics
                 _coolermaster.SetLights(col);
         }
 
+        public void GlobalApplySingleZoneLighting(Color col)
+        {
+            if (!_KeysSingleKeyModeEnabled)
+                return;
+
+            if (RazerSdkCalled == 1)
+                _razer.ApplyMapSingleLighting(col);
+
+            if (LogitechSdkCalled == 1)
+                _logitech.ApplyMapSingleLighting(col);
+
+            if (CorsairSdkCalled == 1)
+                _corsair.SetLights(col);
+
+            if (CoolermasterSdkCalled == 1)
+                _coolermaster.SetLights(col);
+        }
+
         //Send a lighting command to a specific Keyboard LED
         public void GlobalApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
@@ -387,18 +405,18 @@ namespace Chromatics
         public void GlobalApplyKeySingleLighting(DevModeTypes mode, Color col)
         {
             if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
-            
-            GlobalApplyAllKeyLighting(col);
+
+            GlobalApplySingleZoneLighting(col);
             //Debug.WriteLine("Set Static");
         }
 
         public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color col, double val)
         {
-            if (!_KeysSingleKeyModeEnabled || mode != DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
+            if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
             
             var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 
-            GlobalApplyAllKeyLighting(c2);
+            GlobalApplySingleZoneLighting(c2);
         }
 
         //Send a lighting command to a specific Keyboard LED outside of MapKey scope
@@ -1028,10 +1046,7 @@ namespace Chromatics
         public void GlobalFlash1(Color burstcol, int speed, string[] regions)
         {
             MemoryTasks.Cleanup();
-
-            if (_KeysSingleKeyModeEnabled)
-                return;
-
+            
             if (RazerSdkCalled == 1)
             {
                 _rzFlash = null;
@@ -1040,7 +1055,14 @@ namespace Chromatics
                 _rzFlash = new Task(() =>
                 {
                     HoldReader = true;
-                    _razer.Flash1(burstcol, speed, regions);
+                    if (_KeysSingleKeyModeEnabled)
+                    {
+                        _razer.SingleFlash1(burstcol, speed, regions);
+                    }
+                    else
+                    {
+                        _razer.Flash1(burstcol, speed, regions);
+                    }
                     HoldReader = false;
                 }, _rzFl1Cts.Token);
                 MemoryTasks.Add(_rzFlash);
@@ -1055,7 +1077,14 @@ namespace Chromatics
                 _logFlash = new Task(() =>
                 {
                     HoldReader = true;
-                    _logitech.Flash1(burstcol, speed, regions);
+                    if (_KeysSingleKeyModeEnabled)
+                    {
+                        _logitech.SingleFlash1(burstcol, speed, regions);
+                    }
+                    else
+                    {
+                        _logitech.Flash1(burstcol, speed, regions);
+                    }
                     HoldReader = false;
                 }, _logitechFl1Cts.Token);
                 MemoryTasks.Add(_logFlash);
@@ -1106,7 +1135,17 @@ namespace Chromatics
                 {
                     _rzFl2 = null;
                     _rzFl2Cts = new CancellationTokenSource();
-                    _rzFl2 = new Task(() => { _razer.Flash2(burstcol, speed, _rzFl2Cts.Token, template); },
+                    _rzFl2 = new Task(() =>
+                        {
+                            if (_KeysSingleKeyModeEnabled)
+                            {
+                                _razer.SingleFlash2(burstcol, speed, _rzFl2Cts.Token, template);
+                            }
+                            else
+                            {
+                                _razer.Flash2(burstcol, speed, _rzFl2Cts.Token, template);
+                            }
+                        },
                         _rzFl2Cts.Token);
                     MemoryTasks.Add(_rzFl2);
                     MemoryTasks.Run(_rzFl2);
@@ -1116,7 +1155,18 @@ namespace Chromatics
                 {
                     _logiFl2 = null;
                     _logiFl2Cts = new CancellationTokenSource();
-                    _logiFl2 = new Task(() => { _logitech.Flash2(burstcol, speed, _logiFl2Cts.Token, template); },
+                    _logiFl2 = new Task(() =>
+                        {
+                            if (_KeysSingleKeyModeEnabled)
+                            {
+                                _logitech.SingleFlash2(burstcol, speed, _logiFl2Cts.Token, template);
+                            }
+                            else
+                            {
+                                _logitech.Flash2(burstcol, speed, _logiFl2Cts.Token, template);
+                            }
+                            
+                        },
                         _logiFl2Cts.Token);
                     MemoryTasks.Add(_logiFl2);
                     MemoryTasks.Run(_logiFl2);
@@ -1149,9 +1199,6 @@ namespace Chromatics
 
         public void ToggleGlobalFlash2(bool toggle)
         {
-            if (_KeysSingleKeyModeEnabled)
-                return;
-
             if (!toggle && _globalFlash2Running)
             {
                 _globalFlash2Running = false;
@@ -1287,10 +1334,7 @@ namespace Chromatics
         public void GlobalFlash4(Color basecol, Color burstcol, int speed, string[] template)
         {
             MemoryTasks.Cleanup();
-
-            if (_KeysSingleKeyModeEnabled)
-                return;
-
+            
             if (!_globalFlash4Running)
             {
                 if (ChromaticsSettings.ChromaticsSettingsDfBellToggle)
@@ -1299,7 +1343,17 @@ namespace Chromatics
                     {
                         _rzFl4 = null;
                         _rzFl4Cts = new CancellationTokenSource();
-                        _rzFl4 = new Task(() => { _razer.Flash4(burstcol, speed, _rzFl4Cts.Token, template); },
+                        _rzFl4 = new Task(() =>
+                            {
+                                if (_KeysSingleKeyModeEnabled)
+                                {
+                                    _razer.SingleFlash4(burstcol, speed, _rzFl4Cts.Token, template);
+                                }
+                                else
+                                {
+                                    _razer.Flash4(burstcol, speed, _rzFl4Cts.Token, template);
+                                }
+                            },
                             _rzFl4Cts.Token);
                         MemoryTasks.Add(_rzFl4);
                         MemoryTasks.Run(_rzFl4);
@@ -1309,7 +1363,18 @@ namespace Chromatics
                     {
                         _logiFl4 = null;
                         _logiFl4Cts = new CancellationTokenSource();
-                        _logiFl4 = new Task(() => { _logitech.Flash4(burstcol, speed, _logiFl4Cts.Token, template); },
+                        _logiFl4 = new Task(() =>
+                            {
+                                if (_KeysSingleKeyModeEnabled)
+                                {
+                                    _logitech.SingleFlash4(burstcol, speed, _logiFl4Cts.Token, template);
+                                }
+                                else
+                                {
+                                    _logitech.Flash4(burstcol, speed, _logiFl4Cts.Token, template);
+                                }
+                                
+                            },
                             _logiFl4Cts.Token);
                         MemoryTasks.Add(_logiFl4);
                         MemoryTasks.Run(_logiFl4);
@@ -1365,9 +1430,6 @@ namespace Chromatics
 
         public void ToggleGlobalFlash4(bool toggle)
         {
-            if (_KeysSingleKeyModeEnabled)
-                return;
-
             if (!toggle && _globalFlash4Running)
             {
                 _globalFlash4Running = false;

@@ -193,6 +193,7 @@ namespace Chromatics.DeviceInterfaces
         void ColorCycle(Color color, CancellationToken token);
         void Pulse(Color color, int milliSecondsDuration, int milliSecondsInterval);
         void ResetLogitechDevices(bool logitechDeviceKeyboard, Color basecol);
+        void ApplyMapSingleLighting(Color col);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string key, Color col);
         void ApplyMapHeadsetLighting(string key, Color col);
@@ -210,6 +211,9 @@ namespace Chromatics.DeviceInterfaces
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
         void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
+        void SingleFlash1(Color burstcol, int speed, string[] regions);
+        void SingleFlash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
+        void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
     }
 
     public class Logitech : ILogitechSdk
@@ -252,6 +256,34 @@ namespace Chromatics.DeviceInterfaces
                     (int) Math.Ceiling((double) (color.R * 100) / 255),
                     (int) Math.Ceiling((double) (color.G * 100) / 255),
                     (int) Math.Ceiling((double) (color.B * 100) / 255));
+        }
+
+        public void ApplyMapSingleLighting(Color color)
+        {
+            if (!_logitechDeviceKeyboard)
+                return;
+
+            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 0, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                (int)Math.Ceiling((double)(color.G * 100) / 255),
+                (int)Math.Ceiling((double)(color.B * 100) / 255));
+            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 1, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                (int)Math.Ceiling((double)(color.G * 100) / 255),
+                (int)Math.Ceiling((double)(color.B * 100) / 255));
+            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 2, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                (int)Math.Ceiling((double)(color.G * 100) / 255),
+                (int)Math.Ceiling((double)(color.B * 100) / 255));
+            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 3, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                (int)Math.Ceiling((double)(color.G * 100) / 255),
+                (int)Math.Ceiling((double)(color.B * 100) / 255));
+            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 4, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                (int)Math.Ceiling((double)(color.G * 100) / 255),
+                (int)Math.Ceiling((double)(color.B * 100) / 255));
+            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 5, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                (int)Math.Ceiling((double)(color.G * 100) / 255),
+                (int)Math.Ceiling((double)(color.B * 100) / 255));
+            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 6, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                (int)Math.Ceiling((double)(color.G * 100) / 255),
+                (int)Math.Ceiling((double)(color.B * 100) / 255));
         }
 
         public void ApplyMapMouseLighting(string key, Color color)
@@ -813,6 +845,45 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        public void SingleFlash1(Color burstcol, int speed, string[] regions)
+        {
+            if (!_logitechDeviceKeyboard)
+                return;
+
+            for (var i = 0; i <= 8; i++)
+            {
+                if (i == 0)
+                    LogitechSdkWrapper.LogiLedSaveCurrentLighting();
+
+                else if (i == 1)
+                    ApplyMapSingleLighting(burstcol);
+
+                else if (i == 2)
+                    LogitechSdkWrapper.LogiLedRestoreLighting();
+
+                else if (i == 3)
+                    ApplyMapSingleLighting(burstcol);
+
+                else if (i == 4)
+                    LogitechSdkWrapper.LogiLedRestoreLighting();
+
+                else if (i == 5)
+                    ApplyMapSingleLighting(burstcol);
+
+                else if (i == 6)
+                    LogitechSdkWrapper.LogiLedRestoreLighting();
+
+                else if (i == 7)
+                    ApplyMapSingleLighting(burstcol);
+
+                else if (i == 8)
+                    LogitechSdkWrapper.LogiLedRestoreLighting();
+                
+                if (i < 8)
+                    Thread.Sleep(speed);
+            }
+        }
+
         public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
             if (!_logitechDeviceKeyboard)
@@ -848,6 +919,47 @@ namespace Chromatics.DeviceInterfaces
                         if (_logitechDeviceKeyboard)
                             foreach (var key in regions)
                                 LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
+
+                        _logiFlash2Step = 0;
+
+                        Thread.Sleep(speed);
+                    }
+                }
+        }
+
+        public void SingleFlash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
+        {
+            if (!_logitechDeviceKeyboard)
+                return;
+
+            if (!_logiFlash2Running)
+            {
+                LogitechSdkWrapper.LogiLedSaveCurrentLighting();
+
+                _logiFlash2Running = true;
+                _logiFlash2Step = 0;
+            }
+
+            if (_logiFlash2Running)
+                while (_logiFlash2Running)
+                {
+                    if (cts.IsCancellationRequested)
+                        break;
+
+                    if (_logiFlash2Step == 0)
+                    {
+                        if (_logitechDeviceKeyboard)
+                            ApplyMapSingleLighting(burstcol);
+
+                        _logiFlash2Step = 1;
+
+                        Thread.Sleep(speed);
+                    }
+                    else if (_logiFlash2Step == 1)
+                    {
+                        if (_logitechDeviceKeyboard)
+                            LogitechSdkWrapper.LogiLedRestoreLighting();
+
 
                         _logiFlash2Step = 0;
 
@@ -946,6 +1058,46 @@ namespace Chromatics.DeviceInterfaces
                             foreach (var key in regions)
                                 LogitechSdkWrapper.LogiLedRestoreLightingForKey(ToKeyboardNames(key));
 
+                        _logiFlash4Step = 0;
+
+                        Thread.Sleep(speed);
+                    }
+                }
+        }
+
+        public void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
+        {
+            if (!_logitechDeviceKeyboard)
+                return;
+
+            if (!_logiFlash4Running)
+            {
+                LogitechSdkWrapper.LogiLedSaveCurrentLighting();
+
+                _logiFlash4Running = true;
+                _logiFlash4Step = 0;
+            }
+
+            if (_logiFlash4Running)
+                while (_logiFlash4Running)
+                {
+                    if (cts.IsCancellationRequested)
+                        break;
+
+                    if (_logiFlash4Step == 0)
+                    {
+                        if (_logitechDeviceKeyboard)
+                            ApplyMapSingleLighting(burstcol);
+                        
+                        _logiFlash4Step = 1;
+
+                        Thread.Sleep(speed);
+                    }
+                    else if (_logiFlash4Step == 1)
+                    {
+                        if (_logitechDeviceKeyboard)
+                            LogitechSdkWrapper.LogiLedRestoreLighting();
+                        
                         _logiFlash4Step = 0;
 
                         Thread.Sleep(speed);

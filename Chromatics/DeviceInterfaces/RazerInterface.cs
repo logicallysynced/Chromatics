@@ -59,26 +59,24 @@ namespace Chromatics.DeviceInterfaces
 
         void DeviceUpdate();
         void SetLights(Color col);
+        void ApplyMapSingleLighting(Color col);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapLogoLighting(string key, Color col, bool clear);
         void ApplyMapMouseLighting(string key, Color col, bool clear);
         void ApplyMapPadLighting(int region, Color col, bool clear);
-
         void ApplyMapHeadsetLighting(Color col, bool clear);
         void ApplyMapKeypadLighting(Color col, bool clear);
-
         void ApplyMapChromaLinkLighting(Color col, int pos);
-
         void SetWave();
-
         Task Ripple1(Color burstcol, int speed);
-
         Task Ripple2(Color burstcol, int speed);
-
         void Flash1(Color burstcol, int speed, string[] regions);
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
         void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
+        void SingleFlash1(Color burstcol, int speed, string[] regions);
+        void SingleFlash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
+        void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
     }
 
     public class RazerLib : IRazerSdk
@@ -86,35 +84,20 @@ namespace Chromatics.DeviceInterfaces
         private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
 
         private static readonly object _Razertransition = new object();
-
         private static readonly object RazerRipple1 = new object();
-
-
         private static readonly object RazerRipple2 = new object();
-
-
         private static readonly object RazerFlash1 = new object();
-
         private static int _razerFlash2Step;
         private static bool _razerFlash2Running;
-
         private static Dictionary<string, Color> _flashpresets = new Dictionary<string, Color>();
-
-        //Corale.Colore.Core.Color Pad1 = new ColoreColor();
         private static readonly object RazerFlash2 = new object();
-
         private static int _razerFlash3Step;
         private static bool _razerFlash3Running;
         private static readonly object RazerFlash3 = new object();
-
         private static int _razerFlash4Step;
         private static bool _razerFlash4Running;
-
         private static Dictionary<string, Color> _flashpresets4 = new Dictionary<string, Color>();
-
-        //Corale.Colore.Core.Color Pad1 = new ColoreColor();
         private static readonly object RazerFlash4 = new object();
-
         private static readonly object _RazertransitionConst = new object();
         
         private readonly Dictionary<string, string> _razerkeyids = new Dictionary<string, string>
@@ -221,14 +204,6 @@ namespace Chromatics.DeviceInterfaces
             {"Escape", "Esc Key"}
         };
         
-        /*
-        private readonly Dictionary<string, int> _padkeyids = new Dictionary<string, int>
-        {
-            {"D1", 0},
-        }
-        */
-
-
         private KeyboardCustom _keyboardGrid = KeyboardCustom.Create();
         private MouseCustom _mouseGrid = MouseCustom.Create();
         private MousepadCustom _mousepadGrid = MousepadCustom.Create();
@@ -261,7 +236,7 @@ namespace Chromatics.DeviceInterfaces
         
         private Color FromColoreCol(ColoreColor col)
         {
-            return Color.FromArgb(255, col.R, col.G, col.B);
+            return Color.FromArgb(col.R, col.G, col.B);
         }
 
         public void ShutdownSdk()
@@ -272,12 +247,9 @@ namespace Chromatics.DeviceInterfaces
                 //Chroma = null;
             }
         }
-
-
+        
         public bool InitializeSdk()
-        {
-            //var appInfo = new AppInfo("Chromatics", "Lighting effects for Final Fantasy XIV", "Roxas Keyheart", "hello@chromaticsffxiv.com", Category.Game);
-            
+        {   
             try
             {
                 if (!File.Exists(Environment.GetEnvironmentVariable("ProgramW6432") + @"\Razer Chroma SDK\bin\RzChromaSDK64.dll"))
@@ -305,7 +277,7 @@ namespace Chromatics.DeviceInterfaces
                 Headset = Chroma.Headset;
                 ChromaLink = Chroma.ChromaLink;
 
-                Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded (" + Chroma.SdkVersion + ")");
+                Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded (" + Chroma.Version + ")");
 
                 return true;
             }
@@ -424,6 +396,13 @@ namespace Chromatics.DeviceInterfaces
 
             Chroma.Mouse.SetGridAsync(_mouseGrid);
             Chroma.Mousepad.SetCustomAsync(_mousepadGrid);
+        }
+
+        public void ApplyMapSingleLighting(Color col)
+        {
+            if (!_razerDeviceKeyboard) return;
+
+            Keyboard.SetAllAsync(ToColoreCol(col));
         }
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
@@ -1240,6 +1219,96 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        public void SingleFlash1(Color burstcol, int speed, string[] region)
+        {
+            lock (RazerFlash1)
+            {
+                uint OldCol = 0;
+
+                for (var i = 0; i <= 8; i++)
+                {
+                    if (i == 0)
+                    {
+                        //Setup
+
+                        if (_razerDeviceKeyboard)
+                            OldCol = Keyboard[0].Value;
+
+
+                    }
+                    else if (i == 1)
+                    {
+                        //Step 0
+                        if (_razerDeviceKeyboard)
+                            Keyboard.SetAllAsync(ToColoreCol(burstcol));
+
+
+                    }
+                    else if (i == 2)
+                    {
+                        //Step 1
+                        if (_razerDeviceKeyboard)
+                            Keyboard.SetAllAsync(OldCol);
+
+
+                    }
+                    else if (i == 3)
+                    {
+                        //Step 2
+                        if (_razerDeviceKeyboard)
+                            Keyboard.SetAllAsync(ToColoreCol(burstcol));
+
+
+                    }
+                    else if (i == 4)
+                    {
+                        //Step 3
+                        if (_razerDeviceKeyboard)
+                            Keyboard.SetAllAsync(OldCol);
+
+
+                    }
+                    else if (i == 5)
+                    {
+                        //Step 4
+                        if (_razerDeviceKeyboard)
+                            Keyboard.SetAllAsync(ToColoreCol(burstcol));
+
+
+                    }
+                    else if (i == 6)
+                    {
+                        //Step 5
+                        if (_razerDeviceKeyboard)
+                            Keyboard.SetAllAsync(OldCol);
+
+
+                    }
+                    else if (i == 7)
+                    {
+                        //Step 6
+                        if (_razerDeviceKeyboard)
+                            Keyboard.SetAllAsync(ToColoreCol(burstcol));
+
+
+                    }
+                    else if (i == 8)
+                    {
+                        //Step 7
+                        if (_razerDeviceKeyboard)
+                            Keyboard.SetAllAsync(OldCol);
+
+
+                    }
+
+                    if (i < 8)
+                        Thread.Sleep(speed);
+
+                    
+                }
+            }
+        }
+
         public void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
             try
@@ -1346,6 +1415,58 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        public void SingleFlash2(Color burstcol, int speed, CancellationToken cts, string[] regions)
+        {
+            try
+            {
+                lock (RazerFlash2)
+                {
+                    uint OldCol = 0;
+
+                    if (!_razerFlash2Running)
+                    {
+                        if (_razerDeviceKeyboard)
+                            OldCol = Keyboard[0].Value;
+
+                        _razerFlash2Running = true;
+                        _razerFlash2Step = 0;
+                    }
+
+                    if (_razerFlash2Running)
+                        while (_razerFlash2Running)
+                        {
+                            if (cts.IsCancellationRequested)
+                                break;
+
+                            if (_razerFlash2Step == 0)
+                            {
+                                if (_razerDeviceKeyboard)
+                                {
+                                    Keyboard.SetAllAsync(ToColoreCol(burstcol));
+                                }
+
+                                _razerFlash2Step = 1;
+                            }
+                            else if (_razerFlash2Step == 1)
+                            {
+                                if (_razerDeviceKeyboard)
+                                {
+                                    Keyboard.SetAllAsync(OldCol);
+                                }
+
+                                _razerFlash2Step = 0;
+                            }
+
+                            Thread.Sleep(speed);
+                        }
+                }
+            }
+            catch
+            {
+                //
+            }
+        }
+
         public void Flash3(Color burstcol, int speed, CancellationToken cts)
         {
             try
@@ -1415,7 +1536,7 @@ namespace Chromatics.DeviceInterfaces
                 //
             }
         }
-
+        
         public void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
         {
             try
@@ -1508,6 +1629,59 @@ namespace Chromatics.DeviceInterfaces
                                 }
 
                                 //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
+
+                                _razerFlash4Step = 0;
+                            }
+
+                            Thread.Sleep(speed);
+                        }
+                }
+            }
+            catch
+            {
+                //
+            }
+        }
+
+        public void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions)
+        {
+            try
+            {
+                lock (RazerFlash4)
+                {
+                    uint OldCol = 0;
+
+
+                    if (!_razerFlash4Running)
+                    {
+                        if (_razerDeviceKeyboard)
+                            OldCol = Keyboard[0].Value;
+
+                        _razerFlash4Running = true;
+                        _razerFlash4Step = 0;
+                    }
+
+                    if (_razerFlash4Running)
+                        while (_razerFlash4Running)
+                        {
+                            if (cts.IsCancellationRequested)
+                                break;
+
+                            if (_razerFlash4Step == 0)
+                            {
+                                if (_razerDeviceKeyboard)
+                                {
+                                    Keyboard.SetAllAsync(ToColoreCol(burstcol));
+                                }
+
+                                _razerFlash4Step = 1;
+                            }
+                            else if (_razerFlash4Step == 1)
+                            {
+                                if (_razerDeviceKeyboard)
+                                {
+                                    Keyboard.SetAllAsync(OldCol);
+                                }
 
                                 _razerFlash4Step = 0;
                             }
