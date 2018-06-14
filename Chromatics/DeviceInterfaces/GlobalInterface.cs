@@ -425,7 +425,6 @@ namespace Chromatics
             if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
 
             GlobalApplySingleZoneLighting(col);
-            //Debug.WriteLine("Set Static");
         }
 
         public void GlobalApplyKeyMultiLighting(DevMultiModeTypes mode, Color col, string region)
@@ -433,7 +432,6 @@ namespace Chromatics
             if (!_KeysMultiKeyModeEnabled || mode == DevMultiModeTypes.Disabled || mode != _KeysMultiKeyMode) return;
 
             GlobalApplyMultiZoneLighting(col, region);
-            //Debug.WriteLine("Set Static");
         }
 
         public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color col, double val)
@@ -1059,7 +1057,9 @@ namespace Chromatics
 
             if (LogitechSdkCalled == 1)
             {
-                //
+                var rippleTask = _logitech.MultiRipple1(burstcol, speed);
+                MemoryTasks.Add(rippleTask);
+                MemoryTasks.Run(rippleTask);
             }
 
             if (CorsairSdkCalled == 1)
@@ -1126,7 +1126,9 @@ namespace Chromatics
 
             if (LogitechSdkCalled == 1)
             {
-                //
+                var rippleTask = _logitech.MultiRipple2(burstcol, speed);
+                MemoryTasks.Add(rippleTask);
+                MemoryTasks.Run(rippleTask);
             }
 
             if (CorsairSdkCalled == 1)

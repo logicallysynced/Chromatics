@@ -195,6 +195,7 @@ namespace Chromatics.DeviceInterfaces
         void Pulse(Color color, int milliSecondsDuration, int milliSecondsInterval);
         void ResetLogitechDevices(bool logitechDeviceKeyboard, Color basecol);
         void ApplyMapSingleLighting(Color col);
+        void ApplyMapMultiLighting(Color col, string region);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string key, Color col);
         void ApplyMapHeadsetLighting(string key, Color col);
@@ -205,8 +206,9 @@ namespace Chromatics.DeviceInterfaces
             [Optional] Color col2, [Optional] bool direction, [Optional] int speed);
 
         Task Ripple1(Color burstcol, int speed, Color baseColor);
-
         Task Ripple2(Color burstcol, int speed);
+        Task MultiRipple1(Color burstcol, int speed);
+        Task MultiRipple2(Color burstcol, int speed);
 
         void Flash1(Color burstcol, int speed, string[] regions);
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
@@ -272,29 +274,68 @@ namespace Chromatics.DeviceInterfaces
                 (int)Math.Ceiling((double)(color.G * 100) / 255),
                 (int)Math.Ceiling((double)(color.B * 100) / 255));
 
-            /*
-            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 0, (int)Math.Ceiling((double)(color.R * 100) / 255),
-                (int)Math.Ceiling((double)(color.G * 100) / 255),
-                (int)Math.Ceiling((double)(color.B * 100) / 255));
-            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 1, (int)Math.Ceiling((double)(color.R * 100) / 255),
-                (int)Math.Ceiling((double)(color.G * 100) / 255),
-                (int)Math.Ceiling((double)(color.B * 100) / 255));
-            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 2, (int)Math.Ceiling((double)(color.R * 100) / 255),
-                (int)Math.Ceiling((double)(color.G * 100) / 255),
-                (int)Math.Ceiling((double)(color.B * 100) / 255));
-            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 3, (int)Math.Ceiling((double)(color.R * 100) / 255),
-                (int)Math.Ceiling((double)(color.G * 100) / 255),
-                (int)Math.Ceiling((double)(color.B * 100) / 255));
-            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 4, (int)Math.Ceiling((double)(color.R * 100) / 255),
-                (int)Math.Ceiling((double)(color.G * 100) / 255),
-                (int)Math.Ceiling((double)(color.B * 100) / 255));
-            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 5, (int)Math.Ceiling((double)(color.R * 100) / 255),
-                (int)Math.Ceiling((double)(color.G * 100) / 255),
-                (int)Math.Ceiling((double)(color.B * 100) / 255));
-            LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 6, (int)Math.Ceiling((double)(color.R * 100) / 255),
-                (int)Math.Ceiling((double)(color.G * 100) / 255),
-                (int)Math.Ceiling((double)(color.B * 100) / 255));
-            */
+        }
+
+        public void ApplyMapMultiLighting(Color color, string region)
+        {
+            if (!_logitechDeviceKeyboard)
+                return;
+
+            LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypeRgb);
+
+            switch (region)
+            {
+                case "All":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 0, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 1, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 2, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 3, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 4, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 5, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 6, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "0":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 0, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "1":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 1, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "2":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 2, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "3":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 3, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+                case "4":
+                    LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 4, (int)Math.Ceiling((double)(color.R * 100) / 255),
+                        (int)Math.Ceiling((double)(color.G * 100) / 255),
+                        (int)Math.Ceiling((double)(color.B * 100) / 255));
+                    break;
+            }
+
+            
         }
 
         public void ApplyMapMouseLighting(string key, Color color)
@@ -724,6 +765,54 @@ namespace Chromatics.DeviceInterfaces
             });
         }
 
+        public Task MultiRipple1(Color burstcol, int speed)
+        {
+            return new Task(() =>
+            {
+                if (!_logitechDeviceKeyboard) return;
+                var presetsA = new Dictionary<int, Color>();
+                var zones = 5;
+                LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypeRgb);
+
+                for (var i = 0; i <= 9; i++)
+                {
+                    if (i == 0)
+                    {
+                        LogitechSdkWrapper.LogiLedSaveCurrentLighting();
+
+                        continue;
+                    }
+
+                    if (i == 1 || i == 3 || i == 5 || i == 7)
+                    {
+                        for (int x1 = 0; x1 < zones; x1++)
+                        {
+                            //ApplyMapMultiLighting(burstcol, x1.ToString()); //preset
+                            LogitechSdkWrapper.LogiLedRestoreLighting();
+                        }
+                    }
+
+                    if (i == 2 || i == 4 || i == 6 || i == 8)
+                    {
+                        for (int x1 = 0; x1 < zones; x1++)
+                        {
+                            ApplyMapMultiLighting(burstcol, x1.ToString());
+                        }
+                    }
+
+                    if (i == 9)
+                    {
+                        LogitechSdkWrapper.LogiLedRestoreLighting();
+                    }
+
+                    if (i < 9)
+                    {
+                        Thread.Sleep(speed);
+                    }
+                }
+            });
+        }
+
         public Task Ripple2(Color burstcol, int speed)
         {
             return new Task(() =>
@@ -820,6 +909,54 @@ namespace Chromatics.DeviceInterfaces
 
                     if (i < 9)
                         Thread.Sleep(speed);
+                }
+            });
+        }
+
+        public Task MultiRipple2(Color burstcol, int speed)
+        {
+            return new Task(() =>
+            {
+                if (!_logitechDeviceKeyboard) return;
+                var presetsA = new Dictionary<int, Color>();
+                var zones = 5;
+                LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypeRgb);
+
+                for (var i = 0; i <= 9; i++)
+                {
+                    if (i == 0)
+                    {
+                        LogitechSdkWrapper.LogiLedSaveCurrentLighting();
+
+                        continue;
+                    }
+
+                    if (i == 1 || i == 3 || i == 5 || i == 7)
+                    {
+                        for (int x1 = 0; x1 < zones; x1++)
+                        {
+                            //ApplyMapMultiLighting(burstcol, x1.ToString()); //preset
+                            LogitechSdkWrapper.LogiLedRestoreLighting();
+                        }
+                    }
+
+                    if (i == 2 || i == 4 || i == 6 || i == 8)
+                    {
+                        for (int x1 = 0; x1 < zones; x1++)
+                        {
+                            ApplyMapMultiLighting(burstcol, x1.ToString());
+                        }
+                    }
+
+                    if (i == 9)
+                    {
+                        //LogitechSdkWrapper.LogiLedRestoreLighting();
+                    }
+
+                    if (i < 9)
+                    {
+                        Thread.Sleep(speed);
+                    }
                 }
             });
         }
