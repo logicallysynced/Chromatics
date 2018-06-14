@@ -1185,6 +1185,7 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
                             GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
                             GlobalApplyMapKeyLighting("Space", highlightColor, false);
+                            GlobalApplyMapKeyLighting("LeftAlt", highlightColor, false);
                         }
                         else
                         {
@@ -1195,6 +1196,7 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("LeftShift", baseColor, false);
                             GlobalApplyMapKeyLighting("LeftControl", baseColor, false);
                             GlobalApplyMapKeyLighting("Space", baseColor, false);
+                            GlobalApplyMapKeyLighting("LeftAlt", baseColor, false);
                         }
                         
                         if (targetInfo == null)
