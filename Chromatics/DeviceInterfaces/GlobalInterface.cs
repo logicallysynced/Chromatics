@@ -560,7 +560,7 @@ namespace Chromatics
         public void GlobalApplyMapHeadsetLighting(DevModeTypes mode, Color col, bool clear)
         {
             if (mode == DevModeTypes.Disabled) return;
-            if (mode != _HeadsetZone1Mode) return;
+            if (mode != _HeadsetZone1Mode && mode != _HeadsetZone2Mode) return;
 
             //Logo
             if (mode == _HeadsetZone1Mode)
