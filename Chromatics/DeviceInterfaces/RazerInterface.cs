@@ -462,6 +462,12 @@ namespace Chromatics.DeviceInterfaces
                             Keyboard.SetDeathstalkerZoneAsync(4, rzCol);
                         }
                         break;
+                    case "5":
+                        if (Keyboard[5].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(5, rzCol);
+                        }
+                        break;
                 }
             }
         }
