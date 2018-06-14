@@ -243,8 +243,8 @@ namespace Chromatics.DeviceInterfaces
         {
             if (Chroma.Initialized)
             {
-                //Chroma.UninitializeAsync().RunSynchronously();
-                //Chroma = null;
+                Chroma.UninitializeAsync().RunSynchronously();
+                Chroma = null;
             }
         }
         
