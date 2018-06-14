@@ -5449,7 +5449,7 @@ namespace Chromatics
 
                                             //Assign Lighting
 
-                                            if (ChromaticsSettings.ChromaticsSettingsAzertyMode)
+                                            if (ChromaticsSettings.ChromaticsSettingsQwertyMode == KeyRegion.AZERTY)
                                             {
                                                 if (FfxivHotbar.KeybindtranslationAZERTY.ContainsKey(action.ActionKey))
                                                 {
