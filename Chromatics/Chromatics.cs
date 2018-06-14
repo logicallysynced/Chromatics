@@ -145,7 +145,7 @@ namespace Chromatics
 
         public DevModeTypes _HeadsetZone1Mode = DevModeTypes.DefaultColor;
         public DevModeTypes _HeadsetZone2Mode = DevModeTypes.HighlightColor;
-        public DevModeTypes _KeypadZone1Mode = DevModeTypes.DefaultColor;
+        public DevMultiModeTypes _KeypadZone1Mode = DevMultiModeTypes.DefaultColor;
 
         public DevModeTypes _CLZone1Mode = DevModeTypes.DefaultColor;
         public DevModeTypes _CLZone2Mode = DevModeTypes.DefaultColor;

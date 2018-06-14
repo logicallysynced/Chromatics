@@ -97,6 +97,39 @@ namespace Chromatics.Controllers
             return "Disabled";
         }
 
+        public static string ConvertDevMultiModeToString(DevMultiModeTypes mode)
+        {
+            switch (mode)
+            {
+                case DevMultiModeTypes.Disabled:
+                    return "Disabled";
+                case DevMultiModeTypes.DefaultColor:
+                    return "DefaultColor";
+                case DevMultiModeTypes.HighlightColor:
+                    return "HighlightColor";
+                case DevMultiModeTypes.EnmityTracker:
+                    return "EnmityTracker";
+                case DevMultiModeTypes.TargetHp:
+                    return "TargetHp";
+                case DevMultiModeTypes.HpTracker:
+                    return "HpTracker";
+                case DevMultiModeTypes.MpTracker:
+                    return "MpTracker";
+                case DevMultiModeTypes.TpTracker:
+                    return "TpTracker";
+                case DevMultiModeTypes.Castbar:
+                    return "Castbar";
+                case DevMultiModeTypes.DutyFinder:
+                    return "DutyFinder";
+                case DevMultiModeTypes.ReactiveWeather:
+                    return "ReactiveWeather";
+                case DevMultiModeTypes.StatusEffects:
+                    return "StatusEffects";
+            }
+
+            return "Disabled";
+        }
+
         public static DevModeTypes ConvertStringToDevMode(string mode)
         {
             switch (mode)
@@ -124,6 +157,39 @@ namespace Chromatics.Controllers
             }
             
             return DevModeTypes.Disabled;
+        }
+
+        public static DevMultiModeTypes ConvertStringToDevMultiMode(string mode)
+        {
+            switch (mode)
+            {
+                case "Disabled":
+                    return DevMultiModeTypes.Disabled;
+                case "DefaultColor":
+                    return DevMultiModeTypes.DefaultColor;
+                case "HighlightColor":
+                    return DevMultiModeTypes.HighlightColor;
+                case "EnmityTracker":
+                    return DevMultiModeTypes.EnmityTracker;
+                case "TargetHp":
+                    return DevMultiModeTypes.TargetHp;
+                case "HpTracker":
+                    return DevMultiModeTypes.HpTracker;
+                case "MpTracker":
+                    return DevMultiModeTypes.MpTracker;
+                case "TpTracker":
+                    return DevMultiModeTypes.TpTracker;
+                case "Castbar":
+                    return DevMultiModeTypes.Castbar;
+                case "DutyFinder":
+                    return DevMultiModeTypes.DutyFinder;
+                case "ReactiveWeather":
+                    return DevMultiModeTypes.ReactiveWeather;
+                case "StatusEffects":
+                    return DevMultiModeTypes.StatusEffects;
+            }
+
+            return DevMultiModeTypes.Disabled;
         }
 
         public static DevModeTypes ConvertCBToDevMode(string mode)
@@ -155,6 +221,39 @@ namespace Chromatics.Controllers
             return DevModeTypes.Disabled;
         }
 
+        public static DevMultiModeTypes ConvertCBToDevMultiMode(string mode)
+        {
+            switch (mode)
+            {
+                case "Disabled":
+                    return DevMultiModeTypes.Disabled;
+                case "Default Color":
+                    return DevMultiModeTypes.DefaultColor;
+                case "Highlight Color":
+                    return DevMultiModeTypes.HighlightColor;
+                case "Enmity Tracker":
+                    return DevMultiModeTypes.EnmityTracker;
+                case "Target HP":
+                    return DevMultiModeTypes.TargetHp;
+                case "HP Tracker":
+                    return DevMultiModeTypes.HpTracker;
+                case "MP Tracker":
+                    return DevMultiModeTypes.MpTracker;
+                case "TP Tracker":
+                    return DevMultiModeTypes.TpTracker;
+                case "Castbar":
+                    return DevMultiModeTypes.Castbar;
+                case "Duty Finder Bell":
+                    return DevMultiModeTypes.DutyFinder;
+                case "Reactive Weather":
+                    return DevMultiModeTypes.ReactiveWeather;
+                case "Status Effects":
+                    return DevMultiModeTypes.StatusEffects;
+            }
+
+            return DevMultiModeTypes.Disabled;
+        }
+
         public static string ConvertDevModeToCB(DevModeTypes mode)
         {
             switch (mode)
@@ -179,6 +278,39 @@ namespace Chromatics.Controllers
                     return "Castbar";
                 case DevModeTypes.DutyFinder:
                     return "Duty Finder Bell";
+            }
+
+            return "Disabled";
+        }
+
+        public static string ConvertDevMultiModeToCB(DevMultiModeTypes mode)
+        {
+            switch (mode)
+            {
+                case DevMultiModeTypes.Disabled:
+                    return "Disabled";
+                case DevMultiModeTypes.DefaultColor:
+                    return "Default Color";
+                case DevMultiModeTypes.HighlightColor:
+                    return "Highlight Color";
+                case DevMultiModeTypes.EnmityTracker:
+                    return "Enmity Tracker";
+                case DevMultiModeTypes.TargetHp:
+                    return "Target HP";
+                case DevMultiModeTypes.HpTracker:
+                    return "HP Tracker";
+                case DevMultiModeTypes.MpTracker:
+                    return "MP Tracker";
+                case DevMultiModeTypes.TpTracker:
+                    return "TP Tracker";
+                case DevMultiModeTypes.Castbar:
+                    return "Castbar";
+                case DevMultiModeTypes.DutyFinder:
+                    return "Duty Finder Bell";
+                case DevMultiModeTypes.ReactiveWeather:
+                    return "Reactive Weather";
+                case DevMultiModeTypes.StatusEffects:
+                    return "Status Effects";
             }
 
             return "Disabled";

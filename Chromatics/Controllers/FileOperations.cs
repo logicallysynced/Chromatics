@@ -66,7 +66,7 @@ namespace Chromatics
             dr.CLZone5Mode = Helpers.ConvertDevModeToString(_CLZone5Mode);
 
             dr.HeadsetZone1Mode = Helpers.ConvertDevModeToString(_HeadsetZone1Mode);
-            dr.KeypadZone1Mode = Helpers.ConvertDevModeToString(_KeypadZone1Mode);
+            dr.KeypadZone1Mode = Helpers.ConvertDevMultiModeToString(_KeypadZone1Mode);
 
             dr.LightbarMode = Helpers.ConvertLightbarModeToString(_LightbarMode);
 
@@ -176,7 +176,7 @@ namespace Chromatics
                         _CLZone5Mode = Helpers.ConvertStringToDevMode(dr.CLZone5Mode);
 
                         _HeadsetZone1Mode = Helpers.ConvertStringToDevMode(dr.HeadsetZone1Mode);
-                        _KeypadZone1Mode = Helpers.ConvertStringToDevMode(dr.KeypadZone1Mode);
+                        _KeypadZone1Mode = Helpers.ConvertStringToDevMultiMode(dr.KeypadZone1Mode);
 
                         _LightbarMode = Helpers.ConvertStringToLightbarMode(dr.LightbarMode);
 

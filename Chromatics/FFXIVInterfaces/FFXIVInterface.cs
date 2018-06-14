@@ -934,7 +934,7 @@ namespace Chromatics
                         //Parse Data
 
                         //Reactive Weather
-
+                        
                         if (ChromaticsSettings.ChromaticsSettingsReactiveWeather)
                         {
                             if (!_weathertoggle)
@@ -971,6 +971,8 @@ namespace Chromatics
                                 var weatherMaphighlightKey = _mappingPalette.First(x =>
                                     x.Value[0] == FFXIVWeather.WeatherIconName(_lastWeather) + @" (Highlight)").Key;
 
+                                Console.WriteLine(weatherMapbaseKey);
+
                                 var weatherMapbase = (string) typeof(Datastore.FfxivColorMappings)
                                     .GetField(weatherMapbaseKey).GetValue(ColorMappings);
                                 var weatherMaphighlight = (string) typeof(Datastore.FfxivColorMappings)
@@ -979,7 +981,8 @@ namespace Chromatics
                                 baseColor = ColorTranslator.FromHtml(weatherMapbase);
                                 highlightColor = ColorTranslator.FromHtml(weatherMaphighlight);
 
-
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
+                                    ColorTranslator.FromHtml(weatherMapbase), false, "All");
                             }
                         }
                         else
@@ -1154,11 +1157,11 @@ namespace Chromatics
 
                         if (SetKeypadbase == false)
                         {
-                            GlobalApplyMapKeypadLighting(DevModeTypes.DefaultColor, baseColor, false, "All");
-                            GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, baseColor, false, "All");
-                            GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, baseColor, false, "All");
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.DefaultColor, baseColor, false, "All");
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, baseColor, false, "All");
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "All");
 
-                            GlobalApplyMapKeypadLighting(DevModeTypes.HighlightColor, highlightColor, false, "All");
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.HighlightColor, highlightColor, false, "All");
 
                             SetKeypadbase = true;
                         }
@@ -1209,7 +1212,7 @@ namespace Chromatics
                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
 
                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -1442,7 +1445,7 @@ namespace Chromatics
 
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -2744,11 +2747,11 @@ namespace Chromatics
                                     GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
                                     GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
 
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "1");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "0");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "1");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "0");
                                 }
                                 else if (polTargetHp == 1)
                                 {
@@ -2780,11 +2783,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
                                     }
                                     else
                                     {
@@ -2813,11 +2816,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
                                     }
                                 }
                                 else if (polTargetHp == 2)
@@ -2851,11 +2854,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
                                     }
                                     else
                                     {
@@ -2884,11 +2887,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
                                     }
                                 }
                                 else if (polTargetHp == 3)
@@ -2923,11 +2926,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
                                     }
                                     else
                                     {
@@ -2956,11 +2959,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
                                     }
                                 }
                                 else if (polTargetHp == 4)
@@ -2996,11 +2999,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
                                     }
                                     else
                                     {
@@ -3029,11 +3032,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
                                     }
                                 }
                                 else if (polTargetHp == 5)
@@ -3070,11 +3073,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed), false, "0");
                                     }
                                     else
                                     {
@@ -3103,11 +3106,11 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
                                         GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false);
 
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "4");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "3");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "2");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "1");
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "4");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "3");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "2");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "1");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, "0");
                                     }
                                 }
 
@@ -3125,7 +3128,7 @@ namespace Chromatics
 
                                     GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false, "All");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false, "All");
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting));
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
@@ -3206,7 +3209,7 @@ namespace Chromatics
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm0);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm0, false);
-                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm0, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm0, false, "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm0, false);
@@ -3266,7 +3269,7 @@ namespace Chromatics
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm1);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm1, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm1, false);
-                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm1, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm1, false, "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm1);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm1, false);
@@ -3326,7 +3329,7 @@ namespace Chromatics
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm2);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm2, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm2, false);
-                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm2, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm2, false, "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm2);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm2, false);
@@ -3386,7 +3389,7 @@ namespace Chromatics
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm3);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm3, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm3, false);
-                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm3, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm3, false, "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm3);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm3, false);
@@ -3446,7 +3449,7 @@ namespace Chromatics
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm4);
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm4, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm4, false);
-                                            GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm4, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm4, false, "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm4);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm4, false);
@@ -3507,7 +3510,7 @@ namespace Chromatics
                                         GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm0);
                                         GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                         GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm0, false);
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, colEm0, false, "All");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm0, false, "All");
                                         GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0);
 
                                         GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm0, false);
@@ -3572,7 +3575,7 @@ namespace Chromatics
                                 GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
                                 GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
 
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -3635,7 +3638,7 @@ namespace Chromatics
                                 GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, baseColor);
                                 GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, baseColor, false);
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, baseColor, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.EnmityTracker, baseColor, false, "All");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, baseColor, false, "All");
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, baseColor);
 
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", baseColor, false);
@@ -3664,7 +3667,7 @@ namespace Chromatics
                             GlobalApplyKeySingleLighting(DevModeTypes.TargetHp, baseColor);
                             GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, baseColor, false);
                             GlobalApplyMapHeadsetLighting(DevModeTypes.TargetHp, baseColor, false);
-                            GlobalApplyMapKeypadLighting(DevModeTypes.TargetHp, baseColor, false, "All");
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, baseColor, false, "All");
                             GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor);
 
                             if (_targeted)
@@ -3704,7 +3707,7 @@ namespace Chromatics
 
                                 GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -3743,7 +3746,7 @@ namespace Chromatics
 
                                 GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -3784,8 +3787,8 @@ namespace Chromatics
                                 GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -3826,8 +3829,8 @@ namespace Chromatics
                                 GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -3872,9 +3875,9 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 12, 7, 2, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "2");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -3920,9 +3923,9 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 12, 7, 2, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "2");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -3971,10 +3974,10 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 12, 7, 2, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "3");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -4024,10 +4027,10 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 12, 7, 2, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "3");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -4079,11 +4082,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 12, 7, 2, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "4");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -4136,11 +4139,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 12, 7, 2, colCastcharge, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, colCastcharge, false);
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "4");
 
                                 if (_LightbarMode == LightbarMode.Castbar)
                                 {
@@ -4199,11 +4202,11 @@ namespace Chromatics
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, colCastcharge, false);
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 10, 9, 4, colCastcharge, false);
 
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "2");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "3");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "4");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "2");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "3");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "4");
 
                                     if (_LightbarMode == LightbarMode.Castbar)
                                     {
@@ -4266,11 +4269,11 @@ namespace Chromatics
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, colCastcharge, false);
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 10, 9, 4, colCastcharge, false);
 
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "0");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "1");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "2");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "3");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, colCastcharge, false, "4");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "0");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "1");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "2");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "3");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, "4");
                                 }
                                 _successcast = true;
                             }
@@ -4308,11 +4311,11 @@ namespace Chromatics
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 11, 8, 3, baseColor, false);
                                     GlobalApplyMapPadLighting(DevModeTypes.Castbar, 10, 9, 4, baseColor, false);
 
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, baseColor, false, "0");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, baseColor, false, "1");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, baseColor, false, "2");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, baseColor, false, "3");
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, baseColor, false, "4");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "0");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "1");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "2");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "3");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "4");
 
                                     if (_LightbarMode == LightbarMode.Castbar)
                                     {
@@ -4344,7 +4347,7 @@ namespace Chromatics
                                     GlobalApplyKeySingleLighting(DevModeTypes.Castbar, baseColor);
                                     GlobalApplyMapMouseLighting(DevModeTypes.Castbar, baseColor, false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.Castbar, baseColor, false);
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.Castbar, baseColor, false, "All");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "All");
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.Castbar, baseColor);
                                 });
                                 MemoryTasks.Add(cBulbRip1);
@@ -4395,11 +4398,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 11, 8, 3, colHpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 10, 9, 4, colHpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "0");
                             }
                             else if (polHp <= 30 && polHp > 20)
                             {
@@ -4417,11 +4420,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 11, 8, 3, colHpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 10, 9, 4, colHpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "0");
                             }
                             else if (polHp <= 20 && polHp > 10)
                             {
@@ -4439,11 +4442,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 11, 8, 3, colHpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 10, 9, 4, colHpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpfull, false, "0");
                             }
                             else if (polHp <= 10 && polHp > 0)
                             {
@@ -4461,11 +4464,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 11, 8, 3, colHpempty, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 10, 9, 4, colHpcritical, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpempty, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpcritical, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpempty, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpcritical, false, "0");
                             }
                             else if (polHp == 0)
                             {
@@ -4483,11 +4486,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 11, 8, 3, colHpcritical, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 10, 9, 4, colHpcritical, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpcritical, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpcritical, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpcritical, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpcritical, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.HpTracker, colHpcritical, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpcritical, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpcritical, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpcritical, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpcritical, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, colHpcritical, false, "0");
                             }
 
                             //Mouse
@@ -4790,11 +4793,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 11, 8, 3, colMpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 10, 9, 4, colMpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "0");
                             }
                             else if (polMp <= 30 && polMp > 20)
                             {
@@ -4812,11 +4815,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 11, 8, 3, colMpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 10, 9, 4, colMpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "0");
                             }
                             else if (polMp <= 20 && polMp > 10)
                             {
@@ -4834,11 +4837,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 11, 8, 3, colMpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 10, 9, 4, colMpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "0");
                             }
                             else if (polMp <= 10 && polMp > 0)
                             {
@@ -4856,11 +4859,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 11, 8, 3, colMpempty, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 10, 9, 4, colMpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpfull, false, "0");
                             }
                             else if (polMp == 0)
                             {
@@ -4878,11 +4881,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 11, 8, 3, colMpempty, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 10, 9, 4, colMpempty, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colMpempty, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colMpempty, false, "0");
                             }
 
                             //Mouse
@@ -5185,11 +5188,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 11, 8, 3, colTpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 10, 9, 4, colTpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "0");
                             }
                             else if (polTp <= 30 && polTp > 20)
                             {
@@ -5207,11 +5210,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 11, 8, 3, colTpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 10, 9, 4, colTpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "0");
                             }
                             else if (polTp <= 20 && polTp > 10)
                             {
@@ -5229,11 +5232,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 11, 8, 3, colTpfull, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 10, 9, 4, colTpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "0");
                             }
                             else if (polTp <= 10 && polTp > 0)
                             {
@@ -5251,11 +5254,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 11, 8, 3, colTpempty, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 10, 9, 4, colTpfull, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpfull, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpfull, false, "0");
                             }
                             else if (polTp == 0)
                             {
@@ -5273,11 +5276,11 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 11, 8, 3, colTpempty, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 10, 9, 4, colTpempty, false);
 
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "4");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "3");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "2");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "1");
-                                GlobalApplyMapKeypadLighting(DevModeTypes.MpTracker, colTpempty, false, "0");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "4");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "3");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "2");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "1");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, colTpempty, false, "0");
                             }
 
                             //Mouse
@@ -6051,7 +6054,7 @@ namespace Chromatics
                                     GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
                                     GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, "All");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, "All");
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
@@ -6105,7 +6108,7 @@ namespace Chromatics
                                         GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
                                         GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
                                         GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                        GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, "All");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, "All");
                                         GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
 
                                         GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
@@ -6166,7 +6169,7 @@ namespace Chromatics
                                     GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, baseColor);
                                     GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, baseColor, false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, baseColor, false);
-                                    GlobalApplyMapKeypadLighting(DevModeTypes.DutyFinder, baseColor, false, "All");
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.DutyFinder, baseColor, false, "All");
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, baseColor);
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", baseColor, false);

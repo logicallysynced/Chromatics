@@ -622,10 +622,10 @@ namespace Chromatics
         }
 
         //Send a lighting command to a specific Keypad LED
-        public void GlobalApplyMapKeypadLighting(DevModeTypes mode, Color col, bool clear, string region)
+        public void GlobalApplyMapKeypadLighting(DevMultiModeTypes mode, Color col, bool clear, string region)
         {
             
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevMultiModeTypes.Disabled) return;
             if (mode != _KeypadZone1Mode) return;
 
             //Logo
@@ -653,9 +653,9 @@ namespace Chromatics
             
         }
 
-        public void GlobalApplyMapKeypadLightingBrightness(DevModeTypes mode, Color col, bool clear, double val)
+        public void GlobalApplyMapKeypadLightingBrightness(DevMultiModeTypes mode, Color col, bool clear, double val)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevMultiModeTypes.Disabled) return;
             if (mode != _KeypadZone1Mode) return;
 
             var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));

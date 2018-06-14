@@ -24,13 +24,13 @@
         HighlightColor,
         EnmityTracker,
         TargetHp,
-        StatusEffects,
         HpTracker,
         MpTracker,
         TpTracker,
         Castbar,
         ChromaticsDefault,
         DutyFinder,
+        StatusEffects,
         Unknown
     }
 
@@ -46,6 +46,22 @@
         TpTracker,
         Castbar,
         DutyFinder
+    }
+
+    public enum DevMultiModeTypes
+    {
+        Disabled,
+        DefaultColor,
+        HighlightColor,
+        EnmityTracker,
+        TargetHp,
+        HpTracker,
+        MpTracker,
+        TpTracker,
+        Castbar,
+        DutyFinder,
+        ReactiveWeather,
+        StatusEffects
     }
 
     public enum KeyRegion

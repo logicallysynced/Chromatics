@@ -55,6 +55,24 @@ namespace Chromatics
             {DevModeTypes.DutyFinder, "Duty Finder Bell"}
         };
 
+        private readonly Dictionary<DevMultiModeTypes, string> _devModesMulti = new Dictionary<DevMultiModeTypes, string>
+        {
+            //Keys
+            {DevMultiModeTypes.Disabled, "Disabled"},
+            //{DevMultiModeTypes.Standby, "Standby"},
+            {DevMultiModeTypes.DefaultColor, "Default Color"},
+            {DevMultiModeTypes.HighlightColor, "Highlight Color"},
+            {DevMultiModeTypes.EnmityTracker, "Enmity Tracker"},
+            {DevMultiModeTypes.TargetHp, "Target HP"},
+            {DevMultiModeTypes.HpTracker, "HP Tracker"},
+            {DevMultiModeTypes.MpTracker, "MP Tracker"},
+            {DevMultiModeTypes.TpTracker, "TP Tracker"},
+            {DevMultiModeTypes.Castbar, "Castbar"},
+            {DevMultiModeTypes.DutyFinder, "Duty Finder Bell"},
+            {DevMultiModeTypes.ReactiveWeather, "Reactive Weather"},
+            {DevMultiModeTypes.StatusEffects, "Status Effects"}
+        };
+
         private readonly Dictionary<LightbarMode, string> _lightbarModes = new Dictionary<LightbarMode, string>
         {
             //Keys
@@ -1092,12 +1110,16 @@ namespace Chromatics
                 cb_pad_zs3.Items.Add(item.Value);
                 cb_headset_z1.Items.Add(item.Value);
                 cb_headset_z2.Items.Add(item.Value);
-                cb_keypad_z1.Items.Add(item.Value);
                 cb_chromalink_z1.Items.Add(item.Value);
                 cb_chromalink_z2.Items.Add(item.Value);
                 cb_chromalink_z3.Items.Add(item.Value);
                 cb_chromalink_z4.Items.Add(item.Value);
                 cb_chromalink_z5.Items.Add(item.Value);
+            }
+
+            foreach (var item in _devModesMulti)
+            {
+                cb_keypad_z1.Items.Add(item.Value);
             }
 
             foreach (var item in _lightbarModes)
@@ -1118,7 +1140,7 @@ namespace Chromatics
             cb_pad_zs3.SelectedItem = Helpers.ConvertDevModeToCB(_PadZone3Mode);
             cb_headset_z1.SelectedItem = Helpers.ConvertDevModeToCB(_HeadsetZone1Mode);
             cb_headset_z2.SelectedItem = Helpers.ConvertDevModeToCB(_HeadsetZone2Mode);
-            cb_keypad_z1.SelectedItem = Helpers.ConvertDevModeToCB(_KeypadZone1Mode);
+            cb_keypad_z1.SelectedItem = Helpers.ConvertDevMultiModeToCB(_KeypadZone1Mode);
             cb_chromalink_z1.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone1Mode);
             cb_chromalink_z2.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone2Mode);
             cb_chromalink_z3.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone3Mode);
@@ -2342,10 +2364,10 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            foreach (var item in _devModesA)
+            foreach (var item in _devModesMulti)
             {
                 if ((string)cb_keypad_z1.SelectedItem != item.Value) continue;
-                _KeypadZone1Mode = Helpers.ConvertCBToDevMode(item.Value);
+                _KeypadZone1Mode = Helpers.ConvertCBToDevMultiMode(item.Value);
                 break;
             }
 
