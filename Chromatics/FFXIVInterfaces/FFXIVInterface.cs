@@ -73,6 +73,7 @@ namespace Chromatics
             //Watchdog.WatchdogStop();
             //_gameResetCatch.Enabled = false;
             WriteConsole(ConsoleTypes.Ffxiv, "Game stopped");
+            SetFormName(@"Chromatics " + _currentVersionX + @" Beta");
 
 
             Attatched = 0;
@@ -133,6 +134,7 @@ namespace Chromatics
                 if (processes9.Length > 0)
                 {
                     WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
+                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta");
 
                     if (Init)
                     {
@@ -195,6 +197,7 @@ namespace Chromatics
                 else if (processes11.Length > 0)
                 {
                     WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
+                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta");
                     if (LcdSdkCalled == 1)
                     {
                         _lcd.StatusLCDInfo(@"Attempting Attach..");
@@ -328,7 +331,7 @@ namespace Chromatics
                                 //GlobalUpdateState("static", Color.DeepSkyBlue, false);
                                 GlobalApplyAllKeyLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
 
-                                WriteConsole(ConsoleTypes.Ffxiv, "Returning to Main Menu..");
+                                //WriteConsole(ConsoleTypes.Ffxiv, "Returning to Main Menu..");
                             }
                             else
                             {
@@ -362,6 +365,7 @@ namespace Chromatics
                             {
                                 //Set Game Active
                                 WriteConsole(ConsoleTypes.Ffxiv, "Game Running (" + _menuInfo.Name + ")");
+                                SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Running)");
 
 
                                 if (ArxSdkCalled == 1 && ArxState == 0)
@@ -425,6 +429,7 @@ namespace Chromatics
                                 if (!_menuNotify)
                                 {
                                     WriteConsole(ConsoleTypes.Ffxiv, "Main Menu is still active.");
+                                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Paused)");
 
                                     if (LcdSdkCalled == 1)
                                     {
@@ -470,6 +475,7 @@ namespace Chromatics
                             WriteConsole(ConsoleTypes.Error,
                                 "Chromatics exceeded maximum memory size. Pausing execution (Memory Size: " +
                                 proc.PrivateMemorySize64 / 1024 + "MB).");
+                            SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Paused)");
                             HoldReader = true;
                             xi_interval = xi_scan;
                         }
@@ -479,6 +485,7 @@ namespace Chromatics
                             {
                                 WriteConsole(ConsoleTypes.System,
                                     "Resuming Execution (Memory Size: " + proc.PrivateMemorySize64 / 1024 + "MB)..");
+                                SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Running)");
                                 HoldReader = false;
                                 xi_interval = xi_bench;
                             }
@@ -498,6 +505,7 @@ namespace Chromatics
                 {
                     WriteConsole(ConsoleTypes.System,
                         "Resuming Execution..");
+                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Running)");
                     HoldReader = false;
                     xi_interval = xi_bench;
                 }

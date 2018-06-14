@@ -616,7 +616,8 @@ namespace Chromatics
                 }
 
                 Attatched = 1;
-                
+                SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Attached)");
+
                 _attachcts.Cancel();
                 
                 MemoryTasks.Remove(MemoryTask);
@@ -650,6 +651,8 @@ namespace Chromatics
 
                     if (ArxSdkCalled == 1 && ArxState == 0)
                         _arx.ArxUpdateInfo("Waiting for Game Launch..");
+
+                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta");
 
                     _gameNotify = true;
                 }

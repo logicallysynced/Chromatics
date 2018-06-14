@@ -314,6 +314,23 @@ namespace Chromatics
             {10, "Reactive Weather" }
         };
 
+        public void SetFormName(string text)
+        {
+            if (InvokeRequired)
+            {
+                void Del()
+                {
+                    Text = text;
+                }
+
+                Invoke((SetFormNameDelegate) Del);
+            }
+            else
+            {
+                Text = text;
+            }
+        }
+
         public void ResetDeviceDataGrid()
         {
             if (InvokeRequired)
@@ -2547,7 +2564,7 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            Process.Start("https://github.com/roxaskeyheart/Chromatics/wiki");
+            Process.Start("https://docs.chromaticsffxiv.com/chromatics");
         }
 
         private void btn_web_Click(object sender, EventArgs e)
@@ -2713,7 +2730,7 @@ namespace Chromatics
         }
 
         private delegate void ResetGridDelegate();
-
+        private delegate void SetFormNameDelegate();
         private delegate void ResetMappingsDelegate();
     }
 }
