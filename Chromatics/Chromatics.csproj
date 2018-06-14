@@ -283,6 +283,9 @@
     <Compile Include="DeviceInterfaces\LogitechInterface.cs" />
     <Compile Include="DeviceInterfaces\RoccatInterface.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesInterface.cs" />
+    <Compile Include="FFXIVInterfaces\FFXIVJobGauges.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FFXIVInterfaces\FFXIVWeather.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVCooldowns.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVDutyFinder.cs" />

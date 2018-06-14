@@ -65,7 +65,7 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapMouseLighting(string key, Color col, bool clear);
         void ApplyMapPadLighting(int region, Color col, bool clear);
         void ApplyMapHeadsetLighting(Color col, bool clear);
-        void ApplyMapKeypadLighting(Color col, bool clear);
+        void ApplyMapKeypadLighting(Color col, bool clear, string region);
         void ApplyMapChromaLinkLighting(Color col, int pos);
         void SetWave();
         Task Ripple1(Color burstcol, int speed);
@@ -533,15 +533,72 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public void ApplyMapKeypadLighting(Color col, bool clear)
+        public void ApplyMapKeypadLighting(Color col, bool clear, string region)
         {
             uint rzCol = ToColoreCol(col);
             
             try
             {
                 if (_razerDeviceKeypad)
-                    if (Keypad[0,0].Value != rzCol)
-                        Keypad.SetAllAsync(rzCol);
+                {
+                    
+                    switch (region)
+                    {
+                        case "All":
+                            if (Keypad[0, 0].Value != rzCol)
+                                Keypad.SetAllAsync(rzCol);
+                            
+                            break;
+                        case "0":
+                            if (Keypad[0, 0].Value != rzCol)
+                            {
+                                Keypad[0, 0] = rzCol;
+                                Keypad[1, 0] = rzCol;
+                                Keypad[2, 0] = rzCol;
+                                Keypad[3, 0] = rzCol;
+                            }
+
+                            break;
+                        case "1":
+                            if (Keypad[0, 1].Value != rzCol)
+                            {
+                                Keypad[0, 1] = rzCol;
+                                Keypad[1, 1] = rzCol;
+                                Keypad[2, 1] = rzCol;
+                                Keypad[3, 1] = rzCol;
+                            }
+                            break;
+                        case "2":
+                            if (Keypad[0, 2].Value != rzCol)
+                            {
+                                Keypad[0, 2] = rzCol;
+                                Keypad[1, 2] = rzCol;
+                                Keypad[2, 2] = rzCol;
+                                Keypad[3, 2] = rzCol;
+                            }
+                            break;
+                        case "3":
+                            if (Keypad[0, 3].Value != rzCol)
+                            {
+                                Keypad[0, 3] = rzCol;
+                                Keypad[1, 3] = rzCol;
+                                Keypad[2, 3] = rzCol;
+                                Keypad[3, 3] = rzCol;
+                            }
+                            break;
+                        case "4":
+                            if (Keypad[0, 4].Value != rzCol)
+                            {
+                                Keypad[0, 4] = rzCol;
+                                Keypad[1, 4] = rzCol;
+                                Keypad[2, 4] = rzCol;
+                                Keypad[3, 4] = rzCol;
+                            }
+                            break;
+                    }
+                    
+                }
+                    
             }
             catch (Exception ex)
             {

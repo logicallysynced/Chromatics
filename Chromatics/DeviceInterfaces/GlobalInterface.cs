@@ -622,8 +622,9 @@ namespace Chromatics
         }
 
         //Send a lighting command to a specific Keypad LED
-        public void GlobalApplyMapKeypadLighting(DevModeTypes mode, Color col, bool clear)
+        public void GlobalApplyMapKeypadLighting(DevModeTypes mode, Color col, bool clear, string region)
         {
+            
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _KeypadZone1Mode) return;
 
@@ -631,7 +632,7 @@ namespace Chromatics
             if (mode == _KeypadZone1Mode)
             {
                 if (RazerSdkCalled == 1)
-                    _razer.ApplyMapKeypadLighting(col, clear);
+                    _razer.ApplyMapKeypadLighting(col, clear, region);
 
                 if (LogitechSdkCalled == 1)
                 {
@@ -649,6 +650,7 @@ namespace Chromatics
                 }
 
             }
+            
         }
 
         public void GlobalApplyMapKeypadLightingBrightness(DevModeTypes mode, Color col, bool clear, double val)
@@ -657,7 +659,7 @@ namespace Chromatics
             if (mode != _KeypadZone1Mode) return;
 
             var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
-            GlobalApplyMapKeypadLighting(mode, c2, clear);
+            GlobalApplyMapKeypadLighting(mode, c2, clear, "All");
         }
 
         //Send a lighting command to a specific Keypad LED
