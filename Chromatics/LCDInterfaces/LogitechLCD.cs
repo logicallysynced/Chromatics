@@ -193,6 +193,14 @@ namespace Chromatics.LCDInterfaces
 
         public bool InitializeLcd()
         {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = enviroment + @"/LogitechLcdEnginesWrapper.dll";
+            if (!File.Exists(path))
+            {
+                _write.WriteConsole(ConsoleTypes.Logitech, "Cannot find LogitechLcdEnginesWrapper.dll in Chromatics directory.");
+                return false;
+            }
+
             Logitech_LCD.LogitechLcd.Instance.Init("Final Fantasy XIV", LcdType.Mono | LcdType.Color);
 
             
