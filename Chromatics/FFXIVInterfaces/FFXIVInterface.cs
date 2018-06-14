@@ -35,7 +35,7 @@ namespace Chromatics
         private bool _castalert;
         private int _lastWeather = 0;
         private bool _weathertoggle;
-
+        
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
          */
@@ -448,12 +448,63 @@ namespace Chromatics
             }
         }
 
+        private int xi = 0;
+        private int xi_interval = 50;
+        private int xi_bench = 50;
+        private int xi_scan = 20;
+
         private void ProcessFfxivData()
         {
             MemoryTasks.Cleanup();
 
-            if (HoldReader) return;
+            //Check for crash
 
+            if (!ChromaticsSettings.ChromaticsSettingsMemoryCheck)
+            {
+                if (xi > xi_interval)
+                {
+                    using (var proc = Process.GetCurrentProcess())
+                    {
+                        if (proc.PrivateMemorySize64 / 1024 > 153600)
+                        {
+                            WriteConsole(ConsoleTypes.Error,
+                                "Chromatics exceeded maximum memory size. Pausing execution (Memory Size: " +
+                                proc.PrivateMemorySize64 / 1024 + "MB).");
+                            HoldReader = true;
+                            xi_interval = xi_scan;
+                        }
+                        else
+                        {
+                            if (HoldReader && xi_interval == xi_scan)
+                            {
+                                WriteConsole(ConsoleTypes.System,
+                                    "Resuming Execution (Memory Size: " + proc.PrivateMemorySize64 / 1024 + "MB)..");
+                                HoldReader = false;
+                                xi_interval = xi_bench;
+                            }
+                        }
+                    }
+
+                    xi = 0;
+                }
+                else
+                {
+                    xi++;
+                }
+            }
+            else
+            {
+                if (HoldReader && xi_interval == xi_scan)
+                {
+                    WriteConsole(ConsoleTypes.System,
+                        "Resuming Execution..");
+                    HoldReader = false;
+                    xi_interval = xi_bench;
+                }
+            }
+
+            if (HoldReader) return;
+            
             try
             {
                 //Get Data

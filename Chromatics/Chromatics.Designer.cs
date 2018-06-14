@@ -166,6 +166,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_disablememory = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1209,6 +1210,7 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.chk_disablememory);
             this.gB_General.Controls.Add(this.chk_debugopt);
             this.gB_General.Controls.Add(this.lbl_lang);
             this.gB_General.Controls.Add(this.cb_lang);
@@ -1714,6 +1716,19 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // chk_disablememory
+            // 
+            this.chk_disablememory.AutoSize = true;
+            this.chk_disablememory.Location = new System.Drawing.Point(23, 182);
+            this.chk_disablememory.Name = "chk_disablememory";
+            this.chk_disablememory.Size = new System.Drawing.Size(174, 21);
+            this.chk_disablememory.TabIndex = 8;
+            this.chk_disablememory.Text = "Disable Memory Check";
+            this.tooltip_main.SetToolTip(this.chk_disablememory, "Disable the automatic process that checks if Chromatics is using more memory than" +
+        " it should.\r\nDefault: ON");
+            this.chk_disablememory.UseVisualStyleBackColor = true;
+            this.chk_disablememory.CheckedChanged += new System.EventHandler(this.chk_disablememory_CheckedChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1899,6 +1914,7 @@
         private System.Windows.Forms.ComboBox cb_headset_z2;
         private System.Windows.Forms.ComboBox cb_multizonemode;
         private System.Windows.Forms.CheckBox chk_keys_multimode;
+        private System.Windows.Forms.CheckBox chk_disablememory;
     }
 }
 

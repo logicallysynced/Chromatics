@@ -1089,6 +1089,7 @@ namespace Chromatics
 
             chk_reactiveweather.Checked = ChromaticsSettings.ChromaticsSettingsReactiveWeather;
             chk_debugopt.Checked = ChromaticsSettings.ChromaticsSettingsDebugOpt;
+            chk_disablememory.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCheck;
 
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
@@ -2610,6 +2611,14 @@ namespace Chromatics
 
             ChromaticsSettings.ChromaticsSettingsShowStats = chk_showstats.Checked;
             SetKeysbase = false;
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_disablememory_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsMemoryCheck = chk_disablememory.Checked;
             SaveChromaticsSettings(1);
         }
 
