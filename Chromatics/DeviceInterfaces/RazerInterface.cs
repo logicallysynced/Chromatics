@@ -241,11 +241,19 @@ namespace Chromatics.DeviceInterfaces
 
         public void ShutdownSdk()
         {
-            if (Chroma.Initialized)
+            try
             {
-                Chroma.UninitializeAsync();
-                Chroma = null;
+                if (Chroma.Initialized)
+                {
+                    Chroma.UninitializeAsync();
+                    Chroma = null;
+                }
             }
+            catch (Exception e)
+            {
+                //
+            }
+            
         }
         
         public bool InitializeSdk()

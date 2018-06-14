@@ -39,6 +39,16 @@ namespace Chromatics.DeviceInterfaces
                         return key;
                     }
 
+                case "S":
+                    if (_region == KeyRegion.AZERTY)
+                    {
+                        return "S";
+                    }
+                    else
+                    {
+                        return key;
+                    }
+
                 case "W":
                     if (_region == KeyRegion.AZERTY)
                     {

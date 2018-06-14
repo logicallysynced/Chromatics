@@ -41,13 +41,14 @@ namespace Chromatics.DeviceInterfaces
 
         private const int LogiDevicetypeRgbOrd = 1;
         private const int LogiDevicetypePerkeyRgbOrd = 2;
-
+        
         public const int LogiDevicetypeMonochrome = 1 << LogiDevicetypeMonochromeOrd;
         public const int LogiDevicetypeRgb = 1 << LogiDevicetypeRgbOrd;
         public const int LogiDevicetypePerkeyRgb = 1 << LogiDevicetypePerkeyRgbOrd;
         public const int LogiLedBitmapWidth = 21;
         public const int LogiLedBitmapHeight = 6;
         public const int LogiLedBitmapBytesPerKey = 4;
+        public const int LogiDevicetypeAll = 3;
 
         public const int LogiLedBitmapSize =
             LogiLedBitmapWidth * LogiLedBitmapHeight * LogiLedBitmapBytesPerKey;
@@ -242,6 +243,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapKeyLighting(string key, Color color, bool clear, [Optional] bool bypasswhitelist)
         {
+            LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypePerkeyRgb);
+            
             if (!_logitechDeviceKeyboard)
                 return;
 
@@ -263,6 +266,13 @@ namespace Chromatics.DeviceInterfaces
             if (!_logitechDeviceKeyboard)
                 return;
 
+            LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypeRgb | LogitechSdkWrapper.LogiDevicetypePerkeyRgb);
+
+            LogitechSdkWrapper.LogiLedSetLighting((int)Math.Ceiling((double)(color.R * 100) / 255),
+                (int)Math.Ceiling((double)(color.G * 100) / 255),
+                (int)Math.Ceiling((double)(color.B * 100) / 255));
+
+            /*
             LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 0, (int)Math.Ceiling((double)(color.R * 100) / 255),
                 (int)Math.Ceiling((double)(color.G * 100) / 255),
                 (int)Math.Ceiling((double)(color.B * 100) / 255));
@@ -284,12 +294,15 @@ namespace Chromatics.DeviceInterfaces
             LogitechSdkWrapper.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 6, (int)Math.Ceiling((double)(color.R * 100) / 255),
                 (int)Math.Ceiling((double)(color.G * 100) / 255),
                 (int)Math.Ceiling((double)(color.B * 100) / 255));
+            */
         }
 
         public void ApplyMapMouseLighting(string key, Color color)
         {
             if (!_logitechDeviceMouse)
                 return;
+
+            LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypeAll);
 
             switch (key)
             {
@@ -319,6 +332,8 @@ namespace Chromatics.DeviceInterfaces
             if (!_logitechDeviceHeadset)
                 return;
 
+            LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypeAll);
+
             switch (key)
             {
                 case "0":
@@ -347,6 +362,8 @@ namespace Chromatics.DeviceInterfaces
             if (!_logitechDeviceMousepad)
                 return;
 
+            LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypeAll);
+
             switch (key)
             {
                 case "0":
@@ -374,6 +391,8 @@ namespace Chromatics.DeviceInterfaces
         {
             if (!_logitechDeviceSpeakers)
                 return;
+
+            LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypeAll);
 
             switch (key)
             {
