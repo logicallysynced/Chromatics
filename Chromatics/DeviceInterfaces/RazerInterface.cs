@@ -60,6 +60,7 @@ namespace Chromatics.DeviceInterfaces
         void DeviceUpdate();
         void SetLights(Color col);
         void ApplyMapSingleLighting(Color col);
+        void ApplyMapMultiLighting(Color col, string region);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapLogoLighting(string key, Color col, bool clear);
         void ApplyMapMouseLighting(string key, Color col, bool clear);
@@ -70,6 +71,8 @@ namespace Chromatics.DeviceInterfaces
         void SetWave();
         Task Ripple1(Color burstcol, int speed);
         Task Ripple2(Color burstcol, int speed);
+        Task MultiRipple1(Color burstcol, int speed, bool _keyboard, bool _keypad);
+        Task MultiRipple2(Color burstcol, int speed, bool _keyboard, bool _keypad);
         void Flash1(Color burstcol, int speed, string[] regions);
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
@@ -85,7 +88,9 @@ namespace Chromatics.DeviceInterfaces
 
         private static readonly object _Razertransition = new object();
         private static readonly object RazerRipple1 = new object();
+        private static readonly object RazerMultiRipple1 = new object();
         private static readonly object RazerRipple2 = new object();
+        private static readonly object RazerMultiRipple2 = new object();
         private static readonly object RazerFlash1 = new object();
         private static int _razerFlash2Step;
         private static bool _razerFlash2Running;
@@ -411,6 +416,54 @@ namespace Chromatics.DeviceInterfaces
             if (!_razerDeviceKeyboard) return;
 
             Keyboard.SetAllAsync(ToColoreCol(col));
+        }
+
+        public void ApplyMapMultiLighting(Color col, string region)
+        {
+            if (!Keyboard.IsDeathstalkerConnected) return;
+            {
+                uint rzCol = ToColoreCol(col);
+
+                switch (region)
+                {
+                    case "All":
+                        if (Keyboard[0].Value != rzCol)
+                            Keyboard.SetAllAsync(rzCol);
+
+                        break;
+                    case "0":
+                        if (Keyboard[0].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(0, rzCol);
+                        }
+
+                        break;
+                    case "1":
+                        if (Keyboard[1].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(1, rzCol);
+                        }
+                        break;
+                    case "2":
+                        if (Keyboard[2].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(2, rzCol);
+                        }
+                        break;
+                    case "3":
+                        if (Keyboard[3].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(3, rzCol);
+                        }
+                        break;
+                    case "4":
+                        if (Keyboard[4].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(4, rzCol);
+                        }
+                        break;
+                }
+            }
         }
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
@@ -879,6 +932,116 @@ namespace Chromatics.DeviceInterfaces
             });
         }
 
+        public Task MultiRipple1(Color burstcol, int speed, bool _keyboard, bool _keypad)
+        {
+            return new Task(() =>
+            {
+                lock (RazerMultiRipple1)
+                {
+                    if (!_razerDeviceKeyboard && !Keyboard.IsDeathstalkerConnected && !_razerDeviceKeypad) return;
+                    var presetsA = new Dictionary<int, Color>();
+                    var presetsB = new Dictionary<int, Color>();
+
+                    for (var i = 0; i <= 9; i++)
+                    {
+                        if (i == 0)
+                        {
+                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            {
+                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                {
+                                    var ccX = FromColoreCol(Keyboard[x1]);
+                                    presetsA.Add(x1, ccX);
+                                }
+                            }
+
+                            if (_razerDeviceKeypad && _keypad)
+                            {
+                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                {
+                                    var ccX = FromColoreCol(Keypad[0, x2]);
+                                    presetsB.Add(x2, ccX);
+                                }
+                            }
+
+                            continue;
+                        }
+
+                        if (i == 1 || i == 3 || i == 5 || i == 7)
+                        {
+                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            {
+                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                {
+                                    Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
+                                }
+                            }
+
+                            if (_razerDeviceKeypad && _keypad)
+                            {
+                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                {
+                                    Keypad[0, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[1, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[2, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[3, x2] = ToColoreCol(presetsB[x2]);
+                                }
+                            }
+                        }
+
+                        if (i == 2 || i == 4 || i == 6 || i == 8)
+                        {
+                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            {
+                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                {
+                                    Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(burstcol));
+                                }
+                            }
+
+                            if (_razerDeviceKeypad && _keypad)
+                            {
+                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                {
+                                    Keypad[0, x2] = ToColoreCol(burstcol);
+                                    Keypad[1, x2] = ToColoreCol(burstcol);
+                                    Keypad[2, x2] = ToColoreCol(burstcol);
+                                    Keypad[3, x2] = ToColoreCol(burstcol);
+                                }
+                            }
+                        }
+
+                        if (i == 9)
+                        {
+                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            {
+                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                {
+                                    Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
+                                }
+                            }
+
+                            if (_razerDeviceKeypad && _keypad)
+                            {
+                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                {
+                                    Keypad[0, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[1, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[2, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[3, x2] = ToColoreCol(presetsB[x2]);
+                                }
+                            }
+                        }
+
+                        if (i < 9)
+                        {
+                            Thread.Sleep(speed);
+                        }
+                    }
+                }
+            });
+        }
+
         public Task Ripple2(Color burstcol, int speed)
         {
             return new Task(() =>
@@ -1050,6 +1213,109 @@ namespace Chromatics.DeviceInterfaces
                             Thread.Sleep(speed);
 
                         Keyboard.SetCustomAsync(refreshGrid);
+                    }
+                }
+            });
+        }
+
+        public Task MultiRipple2(Color burstcol, int speed, bool _keyboard, bool _keypad)
+        {
+            return new Task(() =>
+            {
+                lock (RazerMultiRipple2)
+                {
+                    if (!_razerDeviceKeyboard && !Keyboard.IsDeathstalkerConnected && !_razerDeviceKeypad) return;
+                    var presetsA = new Dictionary<int, Color>();
+                    var presetsB = new Dictionary<int, Color>();
+
+
+                    for (var i = 0; i <= 9; i++)
+                    {
+                        if (i == 0)
+                        {
+                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            {
+                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                {
+                                    var ccX = FromColoreCol(Keyboard[x1]);
+                                    presetsA.Add(x1, ccX);
+                                }
+                            }
+
+                            if (_razerDeviceKeypad && _keypad)
+                            {
+                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                {
+                                    var ccX = FromColoreCol(Keypad[0, x2]);
+                                    presetsB.Add(x2, ccX);
+                                }
+                            }
+
+                            continue;
+                        }
+
+                        if (i == 1 || i == 3 || i == 5 || i == 7)
+                        {
+                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            {
+                                for (int x2 = 0; x2 < KeyboardConstants.MaxDeathstalkerZones; x2++)
+                                {
+                                    //Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(burstcol));
+                                    Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(presetsA[x2]));
+                                }
+                            }
+
+                            if (_razerDeviceKeypad && _keypad)
+                            {
+                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                {
+                                    Keypad[0, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[1, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[2, x2] = ToColoreCol(presetsB[x2]);
+                                    Keypad[3, x2] = ToColoreCol(presetsB[x2]);
+                                }
+                            }
+                        }
+
+                        if (i == 2 || i == 4 || i == 6 || i == 8)
+                        {
+                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            {
+                                for (int x2 = 0; x2 < KeyboardConstants.MaxDeathstalkerZones; x2++)
+                                {
+                                    Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(burstcol));
+                                }
+                            }
+
+                            if (_razerDeviceKeypad && _keypad)
+                            {
+                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                {
+                                    Keypad[0, x2] = ToColoreCol(burstcol);
+                                    Keypad[1, x2] = ToColoreCol(burstcol);
+                                    Keypad[2, x2] = ToColoreCol(burstcol);
+                                    Keypad[3, x2] = ToColoreCol(burstcol);
+                                }
+                            }
+                        }
+
+                        if (i == 9)
+                        {
+                            /*
+                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            {
+                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                {
+                                    Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
+                                }
+                            }
+                            */
+                        }
+
+                        if (i < 9)
+                        {
+                            Thread.Sleep(speed);
+                        }
                     }
                 }
             });

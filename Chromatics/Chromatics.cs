@@ -131,7 +131,9 @@ namespace Chromatics
         private bool _deviceKeypad = true;
         private bool _deviceCL = true;
         private bool _KeysSingleKeyModeEnabled;
+        private bool _KeysMultiKeyModeEnabled;
         private DevModeTypes _KeysSingleKeyMode = DevModeTypes.Disabled;
+        private DevMultiModeTypes _KeysMultiKeyMode = DevMultiModeTypes.Disabled;
 
         public DevModeTypes _MouseZone1Mode = DevModeTypes.DefaultColor;
         public DevModeTypes _MouseZone2Mode = DevModeTypes.EnmityTracker;
@@ -735,6 +737,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
+
         
     }
 

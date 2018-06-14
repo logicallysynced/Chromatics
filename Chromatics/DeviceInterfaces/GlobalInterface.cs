@@ -326,10 +326,28 @@ namespace Chromatics
                 _coolermaster.SetLights(col);
         }
 
+        public void GlobalApplyMultiZoneLighting(Color col, string region)
+        {
+            if (!_KeysMultiKeyModeEnabled)
+                return;
+
+            if (RazerSdkCalled == 1)
+                _razer.ApplyMapMultiLighting(col, region);
+
+            if (LogitechSdkCalled == 1)
+                _logitech.ApplyMapSingleLighting(col);
+
+            if (CorsairSdkCalled == 1)
+                _corsair.SetLights(col);
+
+            if (CoolermasterSdkCalled == 1)
+                _coolermaster.SetLights(col);
+        }
+
         //Send a lighting command to a specific Keyboard LED
         public void GlobalApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
-            if (_KeysSingleKeyModeEnabled)
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
             if (RazerSdkCalled == 1)
@@ -395,7 +413,7 @@ namespace Chromatics
 
         public void GlobalApplyMapLightbarLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
-            if (_KeysSingleKeyModeEnabled)
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
             if (CorsairSdkCalled == 1)
@@ -410,6 +428,14 @@ namespace Chromatics
             //Debug.WriteLine("Set Static");
         }
 
+        public void GlobalApplyKeyMultiLighting(DevMultiModeTypes mode, Color col, string region)
+        {
+            if (!_KeysMultiKeyModeEnabled || mode == DevMultiModeTypes.Disabled || mode != _KeysMultiKeyMode) return;
+
+            GlobalApplyMultiZoneLighting(col, region);
+            //Debug.WriteLine("Set Static");
+        }
+
         public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color col, double val)
         {
             if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
@@ -417,6 +443,15 @@ namespace Chromatics
             var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 
             GlobalApplySingleZoneLighting(c2);
+        }
+
+        public void GlobalApplyKeyMultiLightingBrightness(DevMultiModeTypes mode, Color col, double val)
+        {
+            if (!_KeysMultiKeyModeEnabled || mode == DevMultiModeTypes.Disabled || mode != _KeysMultiKeyMode) return;
+
+            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+
+            GlobalApplyMultiZoneLighting(c2, "All");
         }
 
         //Send a lighting command to a specific Keyboard LED outside of MapKey scope
@@ -976,7 +1011,7 @@ namespace Chromatics
         {
             MemoryTasks.Cleanup();
 
-            if (_KeysSingleKeyModeEnabled)
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
             if (RazerSdkCalled == 1)
@@ -1008,12 +1043,42 @@ namespace Chromatics
             }
         }
 
+        public void GlobalMultiRipple1(Color burstcol, int speed, Color baseColor)
+        {
+            MemoryTasks.Cleanup();
+
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
+            if (RazerSdkCalled == 1)
+            {
+                var rippleTask = _razer.MultiRipple1(burstcol, speed, _KeysMultiKeyModeEnabled, _deviceKeypad);
+                MemoryTasks.Add(rippleTask);
+                MemoryTasks.Run(rippleTask);
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                //
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                //
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                //
+            }
+        }
+
         //Send a ripple effect to a Keyboard that keeps its new colour
         public void GlobalRipple2(Color burstcol, int speed)
         {
             MemoryTasks.Cleanup();
 
-            if (_KeysSingleKeyModeEnabled)
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
             if (RazerSdkCalled == 1)
@@ -1045,6 +1110,36 @@ namespace Chromatics
             }
         }
 
+        public void GlobalMultiRipple2(Color burstcol, int speed)
+        {
+            MemoryTasks.Cleanup();
+
+            if (_KeysSingleKeyModeEnabled)
+                return;
+
+            if (RazerSdkCalled == 1)
+            {
+                var rippleTask2 = _razer.MultiRipple2(burstcol, speed, _KeysMultiKeyModeEnabled, _deviceKeypad);
+                MemoryTasks.Add(rippleTask2);
+                MemoryTasks.Run(rippleTask2);
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                //
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                //
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                //
+            }
+        }
+
         public void GlobalFlash1(Color burstcol, int speed, string[] regions)
         {
             MemoryTasks.Cleanup();
@@ -1057,7 +1152,7 @@ namespace Chromatics
                 _rzFlash = new Task(() =>
                 {
                     HoldReader = true;
-                    if (_KeysSingleKeyModeEnabled)
+                    if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                     {
                         _razer.SingleFlash1(burstcol, speed, regions);
                     }
@@ -1079,7 +1174,7 @@ namespace Chromatics
                 _logFlash = new Task(() =>
                 {
                     HoldReader = true;
-                    if (_KeysSingleKeyModeEnabled)
+                    if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                     {
                         _logitech.SingleFlash1(burstcol, speed, regions);
                     }
@@ -1127,10 +1222,7 @@ namespace Chromatics
         public void GlobalFlash2(Color burstcol, int speed, string[] template)
         {
             MemoryTasks.Cleanup();
-
-            if (_KeysSingleKeyModeEnabled)
-                return;
-
+            
             if (!_globalFlash2Running)
             {
                 if (RazerSdkCalled == 1)
@@ -1139,7 +1231,7 @@ namespace Chromatics
                     _rzFl2Cts = new CancellationTokenSource();
                     _rzFl2 = new Task(() =>
                         {
-                            if (_KeysSingleKeyModeEnabled)
+                            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                             {
                                 _razer.SingleFlash2(burstcol, speed, _rzFl2Cts.Token, template);
                             }
@@ -1159,7 +1251,7 @@ namespace Chromatics
                     _logiFl2Cts = new CancellationTokenSource();
                     _logiFl2 = new Task(() =>
                         {
-                            if (_KeysSingleKeyModeEnabled)
+                            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                             {
                                 _logitech.SingleFlash2(burstcol, speed, _logiFl2Cts.Token, template);
                             }
@@ -1241,7 +1333,7 @@ namespace Chromatics
         {
             MemoryTasks.Cleanup();
 
-            if (_KeysSingleKeyModeEnabled)
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
             if (!_globalFlash3Running)
@@ -1292,7 +1384,7 @@ namespace Chromatics
 
         public void ToggleGlobalFlash3(bool toggle)
         {
-            if (_KeysSingleKeyModeEnabled)
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
             if (!toggle && _globalFlash3Running)
@@ -1347,7 +1439,7 @@ namespace Chromatics
                         _rzFl4Cts = new CancellationTokenSource();
                         _rzFl4 = new Task(() =>
                             {
-                                if (_KeysSingleKeyModeEnabled)
+                                if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                                 {
                                     _razer.SingleFlash4(burstcol, speed, _rzFl4Cts.Token, template);
                                 }
@@ -1367,7 +1459,7 @@ namespace Chromatics
                         _logiFl4Cts = new CancellationTokenSource();
                         _logiFl4 = new Task(() =>
                             {
-                                if (_KeysSingleKeyModeEnabled)
+                                if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                                 {
                                     _logitech.SingleFlash4(burstcol, speed, _logiFl4Cts.Token, template);
                                 }

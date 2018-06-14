@@ -40,6 +40,8 @@
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
             this.tP_keys = new System.Windows.Forms.TabPage();
+            this.cb_multizonemode = new System.Windows.Forms.ComboBox();
+            this.chk_keys_multimode = new System.Windows.Forms.CheckBox();
             this.cb_lightbarmode = new System.Windows.Forms.ComboBox();
             this.lbl_lightbar = new System.Windows.Forms.Label();
             this.lbl_region = new System.Windows.Forms.Label();
@@ -68,6 +70,8 @@
             this.cb_pad_zs1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_mousepad = new System.Windows.Forms.CheckBox();
             this.tP_headset = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cb_headset_z2 = new System.Windows.Forms.ComboBox();
             this.lbl_headset_z1 = new System.Windows.Forms.Label();
             this.cb_headset_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_headset = new System.Windows.Forms.CheckBox();
@@ -162,8 +166,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.cb_headset_z2 = new System.Windows.Forms.ComboBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -304,6 +306,8 @@
             // tP_keys
             // 
             this.tP_keys.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keys.Controls.Add(this.cb_multizonemode);
+            this.tP_keys.Controls.Add(this.chk_keys_multimode);
             this.tP_keys.Controls.Add(this.cb_lightbarmode);
             this.tP_keys.Controls.Add(this.lbl_lightbar);
             this.tP_keys.Controls.Add(this.lbl_region);
@@ -317,6 +321,29 @@
             this.tP_keys.Size = new System.Drawing.Size(961, 465);
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
+            // 
+            // cb_multizonemode
+            // 
+            this.cb_multizonemode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_multizonemode.FormattingEnabled = true;
+            this.cb_multizonemode.Location = new System.Drawing.Point(724, 61);
+            this.cb_multizonemode.Name = "cb_multizonemode";
+            this.cb_multizonemode.Size = new System.Drawing.Size(175, 24);
+            this.cb_multizonemode.TabIndex = 9;
+            this.cb_multizonemode.SelectedIndexChanged += new System.EventHandler(this.cb_multizonemode_SelectedIndexChanged);
+            // 
+            // chk_keys_multimode
+            // 
+            this.chk_keys_multimode.AutoSize = true;
+            this.chk_keys_multimode.Location = new System.Drawing.Point(559, 62);
+            this.chk_keys_multimode.Name = "chk_keys_multimode";
+            this.chk_keys_multimode.Size = new System.Drawing.Size(135, 21);
+            this.chk_keys_multimode.TabIndex = 8;
+            this.chk_keys_multimode.Text = "Multi Zone Mode";
+            this.tooltip_main.SetToolTip(this.chk_keys_multimode, "If your keyboard only has limited RGB zones and not per-key backlighting, please " +
+        "enable this function.");
+            this.chk_keys_multimode.UseVisualStyleBackColor = true;
+            this.chk_keys_multimode.CheckedChanged += new System.EventHandler(this.chk_keys_multimode_CheckedChanged);
             // 
             // cb_lightbarmode
             // 
@@ -639,6 +666,27 @@
             this.tP_headset.Size = new System.Drawing.Size(961, 465);
             this.tP_headset.TabIndex = 3;
             this.tP_headset.Text = "Headset";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 93);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 17);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Zone 2";
+            // 
+            // cb_headset_z2
+            // 
+            this.cb_headset_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_headset_z2.FormattingEnabled = true;
+            this.cb_headset_z2.Location = new System.Drawing.Point(87, 90);
+            this.cb_headset_z2.Name = "cb_headset_z2";
+            this.cb_headset_z2.Size = new System.Drawing.Size(175, 24);
+            this.cb_headset_z2.TabIndex = 13;
+            this.tooltip_main.SetToolTip(this.cb_headset_z2, "Controls RGB functionality for various LED zones on headset devices. \r\nUp to two " +
+        "static zones are supported.\r\n");
+            this.cb_headset_z2.SelectedIndexChanged += new System.EventHandler(this.cb_headset_z2_SelectedIndexChanged);
             // 
             // lbl_headset_z1
             // 
@@ -1666,27 +1714,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 93);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 17);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Zone 2";
-            // 
-            // cb_headset_z2
-            // 
-            this.cb_headset_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cb_headset_z2.FormattingEnabled = true;
-            this.cb_headset_z2.Location = new System.Drawing.Point(87, 90);
-            this.cb_headset_z2.Name = "cb_headset_z2";
-            this.cb_headset_z2.Size = new System.Drawing.Size(175, 24);
-            this.cb_headset_z2.TabIndex = 13;
-            this.tooltip_main.SetToolTip(this.cb_headset_z2, "Controls RGB functionality for various LED zones on headset devices. \r\nUp to two " +
-        "static zones are supported.\r\n");
-            this.cb_headset_z2.SelectedIndexChanged += new System.EventHandler(this.cb_headset_z2_SelectedIndexChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1870,6 +1897,8 @@
         private System.Windows.Forms.CheckBox chk_debugopt;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cb_headset_z2;
+        private System.Windows.Forms.ComboBox cb_multizonemode;
+        private System.Windows.Forms.CheckBox chk_keys_multimode;
     }
 }
 

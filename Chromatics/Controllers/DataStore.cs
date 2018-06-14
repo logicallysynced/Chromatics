@@ -38,7 +38,9 @@ namespace Chromatics.Datastore
         public bool DeviceOperationCL = true;
 
         public bool KeysSingleKeyModeEnabled = false;
+        public bool KeysMultiKeyModeEnabled = false;
         public string KeySingleKeyMode = "Disabled";
+        public string KeyMultiKeyMode = "Disabled";
 
         public string MouseZone1Mode = "DefaultColor";
         public string MouseZone2Mode = "EnmityTracker";

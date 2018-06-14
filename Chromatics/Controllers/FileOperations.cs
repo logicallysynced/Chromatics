@@ -49,6 +49,9 @@ namespace Chromatics
             dr.KeysSingleKeyModeEnabled = _KeysSingleKeyModeEnabled;
             dr.KeySingleKeyMode = Helpers.ConvertDevModeToString(_KeysSingleKeyMode);
 
+            dr.KeysMultiKeyModeEnabled = _KeysMultiKeyModeEnabled;
+            dr.KeyMultiKeyMode = Helpers.ConvertDevMultiModeToString(_KeysMultiKeyMode);
+
             dr.MouseZone1Mode = Helpers.ConvertDevModeToString(_MouseZone1Mode);
             dr.MouseZone2Mode = Helpers.ConvertDevModeToString(_MouseZone2Mode);
             dr.MouseZone3Mode = Helpers.ConvertDevModeToString(_MouseZone3Mode);
@@ -158,6 +161,9 @@ namespace Chromatics
 
                         _KeysSingleKeyModeEnabled = dr.KeysSingleKeyModeEnabled;
                         _KeysSingleKeyMode = Helpers.ConvertStringToDevMode(dr.KeySingleKeyMode);
+
+                        _KeysMultiKeyModeEnabled = dr.KeysMultiKeyModeEnabled;
+                        _KeysMultiKeyMode = Helpers.ConvertStringToDevMultiMode(dr.KeyMultiKeyMode);
 
                         _MouseZone1Mode = Helpers.ConvertStringToDevMode(dr.MouseZone1Mode);
                         _MouseZone2Mode = Helpers.ConvertStringToDevMode(dr.MouseZone2Mode);

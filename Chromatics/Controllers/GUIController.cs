@@ -1120,6 +1120,7 @@ namespace Chromatics
             foreach (var item in _devModesMulti)
             {
                 cb_keypad_z1.Items.Add(item.Value);
+                cb_multizonemode.Items.Add(item.Value);
             }
 
             foreach (var item in _lightbarModes)
@@ -1128,6 +1129,8 @@ namespace Chromatics
             }
 
             cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
+            cb_multizonemode.SelectedItem = Helpers.ConvertDevMultiModeToCB(_KeysMultiKeyMode);
+
             cb_lightbarmode.SelectedItem = Helpers.ConvertLightbarModeToCB(_LightbarMode);
 
             cb_mouse_z1.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone1Mode);
@@ -1149,6 +1152,9 @@ namespace Chromatics
 
             chk_keys_singlemode.Checked = _KeysSingleKeyModeEnabled;
             cb_singlezonemode.Enabled = _KeysSingleKeyModeEnabled;
+
+            chk_keys_multimode.Checked = _KeysMultiKeyModeEnabled;
+            cb_multizonemode.Enabled = _KeysMultiKeyModeEnabled;
         }
 
         private void InitDevicesGui()
@@ -2169,11 +2175,59 @@ namespace Chromatics
             {
                 _KeysSingleKeyModeEnabled = true;
                 cb_singlezonemode.Enabled = true;
+
+                _KeysMultiKeyModeEnabled = false;
+                chk_keys_multimode.Enabled = false;
+                cb_multizonemode.Enabled = false;
             }
             else
             {
                 _KeysSingleKeyModeEnabled = false;
                 cb_singlezonemode.Enabled = false;
+
+                chk_keys_multimode.Enabled = true;
+                cb_multizonemode.Enabled = true;
+            }
+
+            SetKeysbase = false;
+            SaveDevices();
+        }
+
+        private void chk_keys_multimode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_keys_multimode.Checked)
+            {
+                _KeysMultiKeyModeEnabled = true;
+                cb_multizonemode.Enabled = true;
+
+                _KeysSingleKeyModeEnabled = false;
+                chk_keys_singlemode.Enabled = false;
+                cb_singlezonemode.Enabled = false;
+            }
+            else
+            {
+                _KeysMultiKeyModeEnabled = false;
+                cb_multizonemode.Enabled = false;
+
+                chk_keys_singlemode.Enabled = true;
+                cb_singlezonemode.Enabled = true;
+            }
+
+            SetKeysbase = false;
+            SaveDevices();
+        }
+
+        private void cb_multizonemode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesMulti)
+            {
+                if ((string)cb_multizonemode.SelectedItem != item.Value) continue;
+                _KeysMultiKeyMode = Helpers.ConvertCBToDevMultiMode(item.Value);
+                break;
             }
 
             SetKeysbase = false;
