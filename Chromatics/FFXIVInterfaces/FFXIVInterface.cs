@@ -468,6 +468,8 @@ namespace Chromatics
             {
                 if (xi > xi_interval)
                 {
+                    Console.WriteLine(@"Ping");
+
                     using (var proc = Process.GetCurrentProcess())
                     {
                         if (proc.PrivateMemorySize64 / 1024 > 153600)
