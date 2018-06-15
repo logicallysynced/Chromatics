@@ -30,6 +30,23 @@ namespace Chromatics.FFXIVInterfaces
                 if (!_memoryready)
                     if (!Scanner.Instance.Locations.ContainsKey("DUTYFINDER") || !_siginit)
                     {
+
+                        _sList = new List<Signature>
+                        {
+                            new Signature
+                            {
+                                Key = "DUTYFINDER",
+                                Value = "440fb643**488d51**488d0d",
+                                ASMSignature = true,
+                                PointerPath = new List<long>
+                                {
+                                    0x0,
+                                    0xF4
+                                }
+                            }
+                        };
+
+                        /*
                         _sList = new List<Signature>
                         {
                             new Signature
@@ -44,6 +61,7 @@ namespace Chromatics.FFXIVInterfaces
                                 }
                             }
                         };
+                        */
 
 
                         Scanner.Instance.LoadOffsets(_sList);
@@ -70,15 +88,15 @@ namespace Chromatics.FFXIVInterfaces
                         var address = Scanner.Instance.Locations["DUTYFINDER"];
 
                         //PluginController.debug(" " + address.ToString("X8"));
-                        var isPopped = MemoryHandler.Instance.GetByte(address.GetAddress(), 0);
-                        var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 7);
+                        var contentFinderState = MemoryHandler.Instance.GetByte(address.GetAddress(), 0x71);
+                        //var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 7);
                         //_isPopped = isPopped == 2;
 
-                        _isPopped = isPopped == 2 && instanceLock == 0;
+                        _isPopped = contentFinderState == 2;
 
                         //_countdown = MemoryHandler.Instance.GetInt32(address.GetAddress(), 4);
                         _initialized = true;
-                        //Debug.WriteLine(isPopped + "/" + instanceLock);
+                        //Debug.WriteLine(contentFinderState + "/" + _isPopped);
                     }
 
 

@@ -73,9 +73,27 @@ namespace Chromatics.FFXIVInterfaces
                 if (!_memoryready)
                     if (!Scanner.Instance.Locations.ContainsKey("WEATHER") || !_siginit)
                     {
-                        _sList = new List<Signature>();
+                        _sList = new List<Signature>
+                        {
+                            new Signature
+                            {
+                                Key = "WEATHER",
+                                Value = "49896b**488bf1488b0d",
+                                ASMSignature = true,
+                                PointerPath = new List<long>
+                                {
+                                    0x0,
+                                    0x0,
+                                    0x38,
+                                    0x18,
+                                    0x190,
+                                    0x20,
+                                    0x0
+                                }
+                            }
+                        };
 
-                        
+                        /*
                         _sList.Add(new Signature
                         {
                             Key = "WEATHER",
@@ -89,6 +107,7 @@ namespace Chromatics.FFXIVInterfaces
                                 0x0
                             }
                         });
+                        */
 
                         Scanner.Instance.LoadOffsets(_sList);
 
@@ -118,7 +137,7 @@ namespace Chromatics.FFXIVInterfaces
 
                         
                         _initialized = true;
-                        //Debug.WriteLine(isPopped + "/" + _countdown);
+                        //Debug.WriteLine(_weatherIconID);
                     }
 
 
