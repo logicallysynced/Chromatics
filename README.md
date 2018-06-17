@@ -15,8 +15,6 @@
 
 **NEW Chromatics V2 Released!** Does not require ACT to function.
 
-**Please remove the Chromatics plugin from ACT and install Version 2 BETA**
-
 Chromatics is a lightweight third-party companion app which connects FINAL FANTASY XIV with Razer Chroma, Logitech & Corsair RGB devices. Additionally it enables off-screen compatibility with the Logitech ARX mobile app.
 
 
@@ -32,11 +30,12 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 # Features
 
 * **DX11 & Final Fantasy XIV STORMBLOOD (4.0) Now Supported**
-
-* **NEW V2.2.6!** Displays per-keybind lighting feedback on each of your keybinds to show when your actions are ready to use or in combo/proc.
+* Displays per-keybind lighting feedback on each of your keybinds to show when your actions are ready to use or in combo/proc.
 * Your RGB enabled keyboard will display your HP, MP, TP and other vital stats across easy to see keys so you always have a visual indication of your stats.
 * Displays target HP and emnity data as various effects across your devices. See how hostile an enemy is before you engage it and keep track of your hate with various alerts.
 * Animates your casting bar and displays animations when cast is successful across your devices.
+* Reactive Weather, Cutscene & Status Effect animations.
+* Job Gauge effects on Per-key RGB num-pads.
 * Logitech ARX Support. See essential stats as a second screen on your mobile or tablet device. Requires Logitech ARX application.
 * Chromatics now supports a range of Smart LED lighting including LIFX and Philips HUE support on the way.
 * Use HTML/JavaScript to create custom views within Logitech ARX and make your own plugins or browse other's creations.
@@ -48,7 +47,6 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 * [Razer SDK](http://www.razerzone.com/au-en/synapse) (Automatically installed with Razer Synapse) - *For Razer device support*
 * [Logitech Gaming Software](http://support.logitech.com/en_gb/software/gaming-software) - *For Logitech device support*
 * [Corsair Utility Engine](http://www.corsair.com/en-au/support/downloads) - *For Corsair device support*
-
 
 
 # Installation
