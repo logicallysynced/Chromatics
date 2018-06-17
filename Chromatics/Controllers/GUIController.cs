@@ -95,6 +95,14 @@ namespace Chromatics
             //Keys
             {"ColorMappingBaseColor", new[] {"Base Color", "1", "Black", "White"}},
             {"ColorMappingHighlightColor", new[] {"Highlight Color", "1", "Black", "White"}},
+            {"ColorMappingMenuBase", new[] {"Menu Base Color", "1", "Black", "White"}},
+            {"ColorMappingMenuHighlight1", new[] { "Menu Highlight Color 1", "1", "Black", "White"}},
+            {"ColorMappingMenuHighlight2", new[] { "Menu Highlight Color 2", "1", "Black", "White"}},
+            {"ColorMappingMenuHighlight3", new[] { "Menu Highlight Color 3", "1", "Black", "White"}},
+            {"ColorMappingCutsceneBase", new[] {"Cutscene Base Color", "1", "Black", "White"}},
+            {"ColorMappingCutsceneHighlight1", new[] {"Cutscene Highlight Color 1", "1", "Black", "White"}},
+            {"ColorMappingCutsceneHighlight2", new[] { "Cutscene Highlight Color 2", "1", "Black", "White"}},
+            {"ColorMappingCutsceneHighlight3", new[] { "Cutscene Highlight Color 3", "1", "Black", "White"}},
             {"ColorMappingHpFull", new[] {"HP Full", "2", "Black", "White"}},
             {"ColorMappingHpEmpty", new[] {"HP Empty", "2", "Black", "White"}},
             {"ColorMappingHpCritical", new[] {"HP Critical", "2", "Black", "White"}},
@@ -638,192 +646,6 @@ namespace Chromatics
                     var key = _bulbModes.FirstOrDefault(x => x.Value == modeX).Key;
                     var change = dG_devices.CurrentRow.Cells;
 
-                    /*
-                    if (dattype == "RazerDeviceKeyboard")
-                    {
-                        if (_switch)
-                            _razerDeviceKeyboard = true;
-                        else
-                            _razerDeviceKeyboard = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _razerDeviceKeyboard
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceKeyboard;
-
-                        if (RazerSdkCalled == 1)
-                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                                _razerDeviceMousepad, _razerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "RazerDeviceMouse")
-                    {
-                        if (_switch)
-                            _razerDeviceMouse = true;
-                        else
-                            _razerDeviceMouse = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value =
-                            _razerDeviceMouse ? "Enabled" : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceMouse;
-
-                        if (RazerSdkCalled == 1)
-                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                                _razerDeviceMousepad, _razerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "RazerDeviceHeadset")
-                    {
-                        if (_switch)
-                            _razerDeviceHeadset = true;
-                        else
-                            _razerDeviceHeadset = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _razerDeviceHeadset
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceHeadset;
-
-                        if (RazerSdkCalled == 1)
-                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                                _razerDeviceMousepad, _razerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "RazerDeviceMousepad")
-                    {
-                        if (_switch)
-                            _razerDeviceMousepad = true;
-                        else
-                            _razerDeviceMousepad = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _razerDeviceMousepad
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceMousepad;
-
-                        if (RazerSdkCalled == 1)
-                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                                _razerDeviceMousepad, _razerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "RazerDeviceKeypad")
-                    {
-                        if (_switch)
-                            _razerDeviceKeypad = true;
-                        else
-                            _razerDeviceKeypad = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _razerDeviceKeypad
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _razerDeviceKeypad;
-
-                        if (RazerSdkCalled == 1)
-                            _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
-                                _razerDeviceMousepad, _razerDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "CorsairDeviceKeyboard")
-                    {
-                        if (_switch)
-                            _corsairDeviceKeyboard = true;
-                        else
-                            _corsairDeviceKeyboard = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceKeyboard
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceKeyboard;
-
-                        if (CorsairSdkCalled == 1)
-                            _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
-                                _corsairDeviceMousepad, _corsairDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "CorsairDeviceMouse")
-                    {
-                        if (_switch)
-                            _corsairDeviceMouse = true;
-                        else
-                            _corsairDeviceMouse = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceMouse
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceMouse;
-
-                        if (CorsairSdkCalled == 1)
-                            _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
-                                _corsairDeviceMousepad, _corsairDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "CorsairDeviceHeadset")
-                    {
-                        if (_switch)
-                            _corsairDeviceHeadset = true;
-                        else
-                            _corsairDeviceHeadset = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceHeadset
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceHeadset;
-
-                        if (CorsairSdkCalled == 1)
-                            _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
-                                _corsairDeviceMousepad, _corsairDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "CorsairDeviceMousepad")
-                    {
-                        if (_switch)
-                            _corsairDeviceMousepad = true;
-                        else
-                            _corsairDeviceMousepad = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _corsairDeviceMousepad
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _corsairDeviceMousepad;
-
-                        if (CorsairSdkCalled == 1)
-                            _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
-                                _corsairDeviceMousepad, _corsairDeviceHeadset,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "LogitechDevice")
-                    {
-                        if (_switch)
-                            _logitechDeviceKeyboard = true;
-                        else
-                            _logitechDeviceKeyboard = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _logitechDeviceKeyboard
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _logitechDeviceKeyboard;
-
-                        if (LogitechSdkCalled == 1)
-                            _logitech.ResetLogitechDevices(_logitechDeviceKeyboard,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    else if (dattype == "CoolermasterDevice")
-                    {
-                        if (_switch)
-                            _coolermasterDeviceKeyboard = true;
-                        else
-                            _coolermasterDeviceKeyboard = false;
-
-                        change[dG_devices.Columns["col_status"].Index].Value = _coolermasterDeviceKeyboard
-                            ? "Enabled"
-                            : "Disabled";
-                        change[dG_devices.Columns["col_state"].Index].Value = _coolermasterDeviceKeyboard;
-
-                        if (CoolermasterSdkCalled == 1)
-                            _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse,
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                    }
-                    */
                     if (dattype == "LIFX")
                     {
                         var id = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
@@ -1087,6 +909,7 @@ namespace Chromatics
             chk_memorycache.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCache;
             //chk_azertymode.Checked = ChromaticsSettings.ChromaticsSettingsAzertyMode;
             chk_desktopnotify.Checked = ChromaticsSettings.ChromaticsSettingsDesktopNotifications;
+            chk_cutscenes.Checked = ChromaticsSettings.ChromaticsSettingsCutsceneAnimation;
 
             cb_qwerty.SelectedIndex = (int)ChromaticsSettings.ChromaticsSettingsQwertyMode;
 
@@ -2552,7 +2375,7 @@ namespace Chromatics
             SetCLbase = false;
             SaveDevices();
         }
-
+        
         private void btn_help_Click(object sender, EventArgs e)
         {
             if (Startup == false) return;
@@ -2580,6 +2403,15 @@ namespace Chromatics
 
             ChromaticsSettings.ChromaticsSettingsDesktopNotifications = chk_desktopnotify.Checked;
             SaveChromaticsSettings(1);
+        }
+
+        private void chk_cutscenes_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsCutsceneAnimation = chk_cutscenes.Checked;
+
+            SaveDevices();
         }
 
         private void chk_debugopt_CheckedChanged(object sender, EventArgs e)

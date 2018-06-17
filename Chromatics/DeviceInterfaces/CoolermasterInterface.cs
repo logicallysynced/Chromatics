@@ -187,6 +187,7 @@ namespace Chromatics.DeviceInterfaces
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
         void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
+        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts);
     }
 
     public class CoolermasterLib : ICoolermasterSdk
@@ -884,6 +885,66 @@ namespace Chromatics.DeviceInterfaces
             catch
             {
                 //
+            }
+        }
+
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts)
+        {
+            if (!IsInitialized || !_coolermasterDeviceKeyboard) return;
+            if (cts.IsCancellationRequested) return;
+
+
+            Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
+            var safeKeys = regions.Where(KeyMappings.ContainsKey);
+            var enumerable = safeKeys.ToList();
+
+            //Keyboard.SetCustomAsync(refreshKeyGrid);
+            Thread.Sleep(500);
+
+            while (true)
+            {
+                if (cts.IsCancellationRequested) break;
+
+                var rnd = new Random();
+                colorFaderDict.Clear();
+
+                foreach (var key in regions)
+                {
+                    if (cts.IsCancellationRequested) return;
+
+                    if (_keyboards.Any())
+                    {
+                        var rndCol = toColor[rnd.Next(toColor.Length)];
+
+                        colorFaderDict.Add(key, new ColorFader(toColor[0], rndCol, interval));
+                    }
+                }
+
+                Task t = Task.Factory.StartNew(() =>
+                {
+                    //Thread.Sleep(500);
+
+                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                    foreach (var key in enumerable)
+                    {
+                        if (cts.IsCancellationRequested) return;
+
+                        foreach (var color in colorFaderDict[key].Fade())
+                        {
+                            if (cts.IsCancellationRequested) return;
+                            if (_keyboards.Any())
+                            {
+                                SetKeyColor(key, color);
+                            }
+                        }
+
+                        //Keyboard.SetCustomAsync(refreshKeyGrid);
+                        Thread.Sleep(50);
+                    }
+                });
+
+                Thread.Sleep(regions.Length * 50 / 2);
             }
         }
 

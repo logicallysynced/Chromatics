@@ -119,6 +119,7 @@
             this.chk_lccenable = new System.Windows.Forms.CheckBox();
             this.lb_lcc = new System.Windows.Forms.Label();
             this.gB_General = new System.Windows.Forms.GroupBox();
+            this.chk_disablememory = new System.Windows.Forms.CheckBox();
             this.chk_debugopt = new System.Windows.Forms.CheckBox();
             this.lbl_lang = new System.Windows.Forms.Label();
             this.cb_lang = new System.Windows.Forms.ComboBox();
@@ -166,7 +167,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_disablememory = new System.Windows.Forms.CheckBox();
+            this.chk_cutscenes = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1012,6 +1013,7 @@
             // 
             // gB_effects
             // 
+            this.gB_effects.Controls.Add(this.chk_cutscenes);
             this.gB_effects.Controls.Add(this.chk_reactiveweather);
             this.gB_effects.Controls.Add(this.chk_showstats);
             this.gB_effects.Controls.Add(this.chk_dfbelltoggle);
@@ -1225,6 +1227,19 @@
             this.gB_General.TabIndex = 0;
             this.gB_General.TabStop = false;
             this.gB_General.Text = "General";
+            // 
+            // chk_disablememory
+            // 
+            this.chk_disablememory.AutoSize = true;
+            this.chk_disablememory.Location = new System.Drawing.Point(23, 182);
+            this.chk_disablememory.Name = "chk_disablememory";
+            this.chk_disablememory.Size = new System.Drawing.Size(174, 21);
+            this.chk_disablememory.TabIndex = 8;
+            this.chk_disablememory.Text = "Disable Memory Check";
+            this.tooltip_main.SetToolTip(this.chk_disablememory, "Disable the automatic process that checks if Chromatics is using more memory than" +
+        " it should.\r\nDefault: ON");
+            this.chk_disablememory.UseVisualStyleBackColor = true;
+            this.chk_disablememory.CheckedChanged += new System.EventHandler(this.chk_disablememory_CheckedChanged);
             // 
             // chk_debugopt
             // 
@@ -1716,18 +1731,17 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_disablememory
+            // chk_cutscenes
             // 
-            this.chk_disablememory.AutoSize = true;
-            this.chk_disablememory.Location = new System.Drawing.Point(23, 182);
-            this.chk_disablememory.Name = "chk_disablememory";
-            this.chk_disablememory.Size = new System.Drawing.Size(174, 21);
-            this.chk_disablememory.TabIndex = 8;
-            this.chk_disablememory.Text = "Disable Memory Check";
-            this.tooltip_main.SetToolTip(this.chk_disablememory, "Disable the automatic process that checks if Chromatics is using more memory than" +
-        " it should.\r\nDefault: ON");
-            this.chk_disablememory.UseVisualStyleBackColor = true;
-            this.chk_disablememory.CheckedChanged += new System.EventHandler(this.chk_disablememory_CheckedChanged);
+            this.chk_cutscenes.AutoSize = true;
+            this.chk_cutscenes.Location = new System.Drawing.Point(272, 181);
+            this.chk_cutscenes.Name = "chk_cutscenes";
+            this.chk_cutscenes.Size = new System.Drawing.Size(210, 21);
+            this.chk_cutscenes.TabIndex = 10;
+            this.chk_cutscenes.Text = "Enable Cutscene Animations";
+            this.tooltip_main.SetToolTip(this.chk_cutscenes, "Shows special effects on per-key RGB keyboards during cutscenes.\r\n\r\nDefault: ON");
+            this.chk_cutscenes.UseVisualStyleBackColor = true;
+            this.chk_cutscenes.CheckedChanged += new System.EventHandler(this.chk_cutscenes_CheckedChanged);
             // 
             // Chromatics
             // 
@@ -1915,6 +1929,7 @@
         private System.Windows.Forms.ComboBox cb_multizonemode;
         private System.Windows.Forms.CheckBox chk_keys_multimode;
         private System.Windows.Forms.CheckBox chk_disablememory;
+        private System.Windows.Forms.CheckBox chk_cutscenes;
     }
 }
 

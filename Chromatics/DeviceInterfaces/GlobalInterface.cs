@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chromatics.Controllers;
 using Chromatics.DeviceInterfaces;
+using Chromatics.DeviceInterfaces.EffectLibrary;
 
 /* Hubs all commands sent from FFXIVInterface and re-routes them to their correct Device interface.
  * 
@@ -64,6 +65,19 @@ namespace Chromatics
         private Task _coolermasterFlash;
         private Task _corsairFlash;
 
+        private Task _rzPart;
+        private CancellationTokenSource _rzPartCts = new CancellationTokenSource();
+        private bool _globalParticleRunning;
+
+        private Task _logiPart;
+        private CancellationTokenSource _logiPartCts = new CancellationTokenSource();
+
+        private Task _corsairPart;
+        private CancellationTokenSource _corsairPartCts = new CancellationTokenSource();
+
+        private Task _coolermasterPart;
+        private CancellationTokenSource _coolermasterPartCts = new CancellationTokenSource();
+
         //Send a continuous flash effect to a Keyboard
         private bool _globalFlash2Running;
 
@@ -86,6 +100,7 @@ namespace Chromatics
                 RazerSdkCalled = 1;
                 //WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded");
                 _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                
             }
             else
             {
@@ -293,6 +308,36 @@ namespace Chromatics
                     _razer.DeviceUpdate();
         }
 
+        public void GlobalApplyAllDeviceLighting(Color col)
+        {
+            if (_KeysSingleKeyModeEnabled) GlobalApplySingleZoneLighting(col);
+            if (_KeysMultiKeyModeEnabled) GlobalApplyMultiZoneLighting(col, "All");
+
+            if (RazerSdkCalled == 1)
+            {
+                _razer.SetAllLights(col);
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                _logitech.SetAllLights(col);
+            }
+            
+            if (CorsairSdkCalled == 1)
+            {
+                _corsair.SetAllLights(col);
+            }
+
+            /*
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermaster.ApplyMapMouseLighting("", col, false);
+            }
+
+            */
+            
+        }
+
         public void GlobalApplyAllKeyLighting(Color col)
         {
             if (RazerSdkCalled == 1)
@@ -305,7 +350,9 @@ namespace Chromatics
                 _corsair.SetLights(col);
 
             if (CoolermasterSdkCalled == 1)
+            {
                 _coolermaster.SetLights(col);
+            }
         }
 
         public void GlobalApplySingleZoneLighting(Color col)
@@ -1575,6 +1622,120 @@ namespace Chromatics
             }
 
             MemoryTasks.Cleanup();
+        }
+
+        public void GlobalParticleEffects(Color[] toColor, string[] regions, uint interval = 20)
+        {
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
+                return;
+
+            if (regions == null)
+            {
+                regions = DeviceEffects.GlobalKeysAll;
+            }
+
+            MemoryTasks.Cleanup();
+
+            if (RazerSdkCalled == 1)
+            {
+                _rzPart = null;
+                _rzPartCts = new CancellationTokenSource();
+                _rzPart = new Task(() =>
+                {
+                    _razer.ParticleEffect(toColor, regions, interval, _rzPartCts);
+                }, _rzPartCts.Token);
+
+                MemoryTasks.Add(_rzPart);
+                MemoryTasks.Run(_rzPart);
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                _logiPart = null;
+                _logiPartCts = new CancellationTokenSource();
+                _logiPart = new Task(() =>
+                {
+                    _logitech.ParticleEffect(toColor, regions, interval, _logiPartCts);
+                }, _logiPartCts.Token);
+
+                MemoryTasks.Add(_logiPart);
+                MemoryTasks.Run(_logiPart);
+            }
+
+            /*
+            if (CorsairSdkCalled == 1)
+            {
+                _corsairPart = null;
+                _corsairPartCts = new CancellationTokenSource();
+                _corsairPart = new Task(() =>
+                {
+                    _corsair.ParticleEffect(toColor, regions, interval, _corsairPartCts);
+                }, _corsairPartCts.Token);
+
+                MemoryTasks.Add(_corsairPart);
+                MemoryTasks.Run(_corsairPart);
+            }
+            */
+            
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermasterPart = null;
+                _coolermasterPartCts = new CancellationTokenSource();
+                _coolermasterPart = new Task(() =>
+                {
+                    _coolermaster.ParticleEffect(toColor, regions, interval, _coolermasterPartCts);
+                }, _coolermasterPartCts.Token);
+
+                MemoryTasks.Add(_coolermasterPart);
+                MemoryTasks.Run(_coolermasterPart);
+            }
+            
+
+            _globalParticleRunning = true;
+        }
+
+        public void GlobalStopParticleEffects()
+        {
+            if (!_globalParticleRunning) return;
+
+            if (RazerSdkCalled == 1)
+            {
+                _rzPartCts.Cancel();
+                MemoryTasks.Remove(_rzPart);
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                _logiPartCts.Cancel();
+                MemoryTasks.Remove(_logiPart);
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                _corsairPartCts.Cancel();
+                MemoryTasks.Remove(_corsairPart);
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermasterPartCts.Cancel();
+                MemoryTasks.Remove(_coolermasterPart);
+            }
+
+
+        }
+
+        public void GlobalFadeAllLights(Color toColor, Color fromColor, uint interval = 20)
+        {
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
+                return;
+
+            MemoryTasks.Cleanup();
+
+            if (RazerSdkCalled == 1)
+            {
+                _razer.FadeColourAll(toColor, fromColor, interval);
+            }
         }
     }
 }

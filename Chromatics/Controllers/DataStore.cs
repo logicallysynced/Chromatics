@@ -87,6 +87,7 @@ namespace Chromatics.Datastore
         public KeyRegion ChromaticsSettingsQwertyMode = 0;
         public bool ChromaticsSettingsDebugOpt = true;
         public bool ChromaticsSettingsMemoryCheck = false;
+        public bool ChromaticsSettingsCutsceneAnimation = true;
 
         public bool ChromaticsSettingsKeyHighlights = true;
         public bool ChromaticsSettingsLccAuto = false;
@@ -211,6 +212,14 @@ namespace Chromatics.Datastore
         public string ColorMappingJobRDMNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobRDMBlackMana = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingJobRDMWhiteMana = ColorTranslator.ToHtml(Color.White);
+        public string ColorMappingMenuBase = ColorTranslator.ToHtml(Color.OrangeRed);
+        public string ColorMappingMenuHighlight1 = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingMenuHighlight2 = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingMenuHighlight3 = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingCutsceneBase = ColorTranslator.ToHtml(Color.DeepSkyBlue);
+        public string ColorMappingCutsceneHighlight1 = ColorTranslator.ToHtml(Color.White);
+        public string ColorMappingCutsceneHighlight2 = ColorTranslator.ToHtml(Color.White);
+        public string ColorMappingCutsceneHighlight3 = ColorTranslator.ToHtml(Color.White);
 
         public string ColorMappingWeatherClearBase = ColorTranslator.ToHtml(Color.SkyBlue);
         public string ColorMappingWeatherClearHighlight = ColorTranslator.ToHtml(Color.LightYellow);

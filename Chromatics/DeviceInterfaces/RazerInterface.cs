@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Chromatics.Controllers;
 using Chromatics.DeviceInterfaces.EffectLibrary;
 using Chromatics.FFXIVInterfaces;
@@ -18,6 +20,7 @@ using Colore.Effects.Mouse;
 using Colore.Effects.Mousepad;
 using Colore.Native;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.VisualBasic.Devices;
 using Color = System.Drawing.Color;
 using ColoreColor = Colore.Data.Color;
 
@@ -59,6 +62,7 @@ namespace Chromatics.DeviceInterfaces
 
         void DeviceUpdate();
         void SetLights(Color col);
+        void SetAllLights(Color col);
         void ApplyMapSingleLighting(Color col);
         void ApplyMapMultiLighting(Color col, string region);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
@@ -80,6 +84,8 @@ namespace Chromatics.DeviceInterfaces
         void SingleFlash1(Color burstcol, int speed, string[] regions);
         void SingleFlash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
+        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts);
+        void FadeColourAll(Color toColor, Color fromColor, uint interval);
     }
 
     public class RazerLib : IRazerSdk
@@ -340,6 +346,18 @@ namespace Chromatics.DeviceInterfaces
             //Debug.WriteLine("Setting Razer Default");
             SetLights(initColor);
 
+        }
+
+        public void SetAllLights(Color col)
+        {
+            var c = ToColoreCol(col);
+
+            if (_razerDeviceKeyboard) Keyboard.SetAllAsync(c);
+            if (_razerDeviceMouse) Mouse.SetAllAsync(c);
+            if (_razerDeviceMousepad) Mousepad.SetAllAsync(c);
+            if (_razerDeviceChromaLink) ChromaLink.SetAllAsync(c);
+            if (_razerDeviceKeypad) Keypad.SetAllAsync(c);
+            if (_razerDeviceHeadset) Headset.SetAllAsync(c);
         }
 
         public void SetLights(Color col)
@@ -2119,6 +2137,104 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        
+        public void FadeColourAll(Color toColor, Color fromColor, uint interval)
+        {
+            if (!_razerDeviceKeyboard) return;
+
+            var colorFader = new ColorFader(fromColor, toColor, interval); //FromColoreCol(Keyboard[Key.Q]
+
+            Keyboard.SetAllAsync(ToColoreCol(fromColor));
+
+            /*  LinearFading Process isolated in a seperate Task to avoid blocking UI   */
+            Task t = Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(500);
+                foreach (var color in colorFader.Fade())
+                {
+                    Keyboard.SetAllAsync(ToColoreCol(color));
+                    Thread.Sleep(50);
+                }
+            });
+        }
+
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts)
+        {
+            if (!_razerDeviceKeyboard) return;
+            if (cts.IsCancellationRequested) return;
+
+            var refreshKeyGrid = KeyboardCustom.Create();
+            refreshKeyGrid = _keyboardGrid;
+
+
+            Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
+
+            Keyboard.SetCustomAsync(refreshKeyGrid);
+            Thread.Sleep(500);
+
+            while (true)
+            {
+                if (cts.IsCancellationRequested) break;
+
+                var rnd = new Random();
+                colorFaderDict.Clear();
+
+                foreach (var key in regions)
+                {
+                    if (cts.IsCancellationRequested) return;
+
+                    if (Enum.IsDefined(typeof(Key), key))
+                    {
+                        var rndCol = Color.Black;
+                        var keyid = (Key)Enum.Parse(typeof(Key), key);
+
+                        do
+                        {
+                            rndCol = toColor[rnd.Next(toColor.Length)];
+                        } while (FromColoreCol(Keyboard[keyid]).ToArgb() == rndCol.ToArgb());
+
+                        colorFaderDict.Add(key,
+                            new ColorFader(FromColoreCol(refreshKeyGrid[keyid]), rndCol, interval));
+                    }
+                }
+
+                Task t = Task.Factory.StartNew(async () =>
+                {
+                    //Thread.Sleep(500);
+
+                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                    foreach (var key in _regions)
+                    {
+                        if (cts.IsCancellationRequested) return;
+
+                        if (!Enum.IsDefined(typeof(Key), key)) continue;
+                        if (!colorFaderDict.ContainsKey(key)) continue;
+
+                        foreach (var color in colorFaderDict[key].Fade())
+                        {
+                            if (cts.IsCancellationRequested) return;
+                            if (Enum.IsDefined(typeof(Key), key))
+                            {
+                                var keyid = (Key)Enum.Parse(typeof(Key), key);
+                                var rzCol = ToColoreCol(color);
+
+                                if (Keyboard[keyid].Value != rzCol)
+                                    await Keyboard.SetKeyAsync(keyid, rzCol);
+
+                                //refreshKeyGrid[keyid] = ToColoreCol(color);
+                            }
+                        }
+
+                        //Keyboard.SetCustomAsync(refreshKeyGrid);
+                        Thread.Sleep(50);
+                    }
+                });
+
+
+                Thread.Sleep(regions.Length * 50 / 2);
+            }
+        }
+
+
     }
 }

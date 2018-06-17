@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using CUE.NET.Devices.Generic;
 using CUE.NET.Devices.Generic.Enums;
 using CUE.NET.Groups;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.VisualBasic.Devices;
 
 /* Contains all Corsair SDK code for detection, initilization, states and effects.
  * 
@@ -55,6 +57,7 @@ namespace Chromatics.DeviceInterfaces
         void UpdateState(string type, Color col, bool disablekeys, [Optional] Color col2, [Optional] bool direction,
             [Optional] int speed);
 
+        void SetAllLights(Color color);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string region, Color col, bool clear);
         void ApplyMapLogoLighting(string key, Color col, bool clear);
@@ -68,6 +71,7 @@ namespace Chromatics.DeviceInterfaces
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
         void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
+        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts);
     }
 
     public class CorsairLib : ICorsairSdk
@@ -464,6 +468,35 @@ namespace Chromatics.DeviceInterfaces
             if (_corsairDeviceStand && !string.IsNullOrEmpty(CueSDK.HeadsetStandSDK?.HeadsetStandDeviceInfo?.Model)) CueSDK.HeadsetStandSDK.Update();
         }
 
+        public void SetAllLights(Color color)
+        {
+            if (pause) return;
+
+            if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
+            {
+                _corsairAllKeyboardLed.Brush = (SolidColorBrush)color;
+                CueSDK.KeyboardSDK.Update(true);
+            }
+
+            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
+            {
+                _corsairAllMouseLed.Brush = (SolidColorBrush)color;
+                CueSDK.MouseSDK.Update(true);
+            }
+
+            if (_corsairDeviceMousepad && !string.IsNullOrEmpty(CueSDK.MousematSDK?.MousematDeviceInfo?.Model))
+            {
+                _corsairAllMousepadLed.Brush = (SolidColorBrush)color;
+                CueSDK.MousematSDK.Update(true);
+            }
+
+            if (_corsairDeviceHeadset)
+            {
+                _corsairAllHeadsetLed.Brush = (SolidColorBrush)color;
+                CueSDK.HeadsetSDK.Update(true);
+            }
+        }
+
         public void SetLights(Color col)
         {
             if (pause) return;
@@ -473,7 +506,7 @@ namespace Chromatics.DeviceInterfaces
                 if (!_corsairDeviceKeyboard || string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model)) return;
 
                 _corsairAllKeyboardLed.Brush = (SolidColorBrush) col;
-                CueSDK.KeyboardSDK.Update();
+                CueSDK.KeyboardSDK.Update(true);
             }
             catch (Exception ex)
             {
@@ -1538,6 +1571,73 @@ namespace Chromatics.DeviceInterfaces
             lock (_CorsairtransitionConst)
             {
                 //To be implemented
+            }
+        }
+
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts)
+        {
+            if (!_corsairDeviceKeyboard || string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model)) return;
+            if (cts.IsCancellationRequested) return;
+
+            var presets = new Dictionary<string, Color>();
+
+            Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
+
+            //Keyboard.SetCustomAsync(refreshKeyGrid);
+            Thread.Sleep(500);
+
+            while (true)
+            {
+                if (cts.IsCancellationRequested) break;
+
+                var rnd = new Random();
+                colorFaderDict.Clear();
+
+                foreach (var key in regions)
+                {
+                    if (cts.IsCancellationRequested) return;
+
+                    if (_corsairkeyids.ContainsKey(key))
+                    {
+                        var rndCol = Color.Black;
+                        var keyid = _corsairkeyids[key];
+
+                        do
+                        {
+                            rndCol = toColor[rnd.Next(toColor.Length)];
+                        }
+                        while ((Color)_corsairKeyboardIndvBrush.CorsairGetColorReference(keyid) == rndCol);
+
+                        colorFaderDict.Add(key, new ColorFader(_corsairKeyboardIndvBrush.CorsairGetColorReference(keyid), rndCol, interval));
+                    }
+                }
+
+                Task t = Task.Factory.StartNew(() =>
+                {
+                    //Thread.Sleep(500);
+
+                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                    foreach (var key in _regions)
+                    {
+                        if (cts.IsCancellationRequested) return;
+                        if (!_corsairkeyids.ContainsKey(key)) continue;
+
+                        foreach (var color in colorFaderDict[key].Fade())
+                        {
+                            if (cts.IsCancellationRequested) return;
+                            if (_corsairkeyids.ContainsKey(key))
+                            {
+                                ApplyMapKeyLighting(key, color, false);
+                            }
+                        }
+
+                        //Keyboard.SetCustomAsync(refreshKeyGrid);
+                        Thread.Sleep(50);
+                    }
+                });
+
+                Thread.Sleep(regions.Length * 50 / 2);
             }
         }
     }

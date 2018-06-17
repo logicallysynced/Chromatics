@@ -35,7 +35,8 @@ namespace Chromatics
         private bool _castalert;
         private int _lastWeather = 0;
         private bool _weathertoggle;
-        
+        private bool _inCutscene;
+
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
          */
@@ -99,7 +100,8 @@ namespace Chromatics
             //HoldReader = false;
 
             //GlobalUpdateState("static", Color.DeepSkyBlue, false);
-            GlobalApplyAllKeyLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+            GlobalStopParticleEffects();
+            GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
 
             //Debug.WriteLine("Resetting..");
@@ -329,8 +331,9 @@ namespace Chromatics
                                 }
 
                                 //GlobalUpdateState("static", Color.DeepSkyBlue, false);
-                                GlobalApplyAllKeyLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-
+                                GlobalStopParticleEffects();
+                                GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                                
                                 //WriteConsole(ConsoleTypes.Ffxiv, "Returning to Main Menu..");
                             }
                             else
@@ -353,8 +356,9 @@ namespace Chromatics
                             State = 6;
                             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
                             //GlobalSetWave();
-                            GlobalApplyAllKeyLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-
+                            GlobalStopParticleEffects();
+                            GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                            
                             Attatched = 2;
                         }
 
@@ -431,6 +435,9 @@ namespace Chromatics
                                     WriteConsole(ConsoleTypes.Ffxiv, "Main Menu is still active.");
                                     SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Paused)");
 
+                                    GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase));
+                                    GlobalParticleEffects(new Color[] { ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight1), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight2), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight3), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase) }, null, 20);
+
                                     if (LcdSdkCalled == 1)
                                     {
                                         _lcd.StatusLCDInfo(@"Main Menu is still active.");
@@ -461,7 +468,7 @@ namespace Chromatics
         private void ProcessFfxivData()
         {
             MemoryTasks.Cleanup();
-
+            
             //Check for crash
 
             if (!ChromaticsSettings.ChromaticsSettingsMemoryCheck)
@@ -514,7 +521,49 @@ namespace Chromatics
             }
 
             if (HoldReader) return;
-            
+
+
+            //Cutscenes
+
+            if (ChromaticsSettings.ChromaticsSettingsCutsceneAnimation)
+            {
+                FfxivCutscenes.RefreshData();
+                if (FfxivCutscenes.InCutscene())
+                {
+                    if (!_inCutscene)
+                    {
+                        GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneBase));
+                        GlobalParticleEffects(
+                            new Color[]
+                            {
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight1),
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight2),
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight3),
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneBase)
+                            }, null,
+                            20);
+
+                        _inCutscene = true;
+                    }
+
+                    return;
+                }
+                else
+                {
+                    if (_inCutscene)
+                    {
+                        _inCutscene = false;
+                        SetKeysbase = false;
+                    }
+
+                    GlobalStopParticleEffects();
+                }
+            }
+            else
+            {
+                GlobalStopParticleEffects();
+            }
+
             try
             {
                 //Get Data

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -194,6 +195,7 @@ namespace Chromatics.DeviceInterfaces
         void ColorCycle(Color color, CancellationToken token);
         void Pulse(Color color, int milliSecondsDuration, int milliSecondsInterval);
         void ResetLogitechDevices(bool logitechDeviceKeyboard, Color basecol);
+        void SetAllLights(Color col);
         void ApplyMapSingleLighting(Color col);
         void ApplyMapMultiLighting(Color col, string region);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
@@ -217,6 +219,7 @@ namespace Chromatics.DeviceInterfaces
         void SingleFlash1(Color burstcol, int speed, string[] regions);
         void SingleFlash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
+        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts);
     }
 
     public class Logitech : ILogitechSdk
@@ -261,6 +264,13 @@ namespace Chromatics.DeviceInterfaces
                     (int) Math.Ceiling((double) (color.R * 100) / 255),
                     (int) Math.Ceiling((double) (color.G * 100) / 255),
                     (int) Math.Ceiling((double) (color.B * 100) / 255));
+        }
+
+        public void SetAllLights(Color color)
+        {
+            LogitechSdkWrapper.LogiLedSetLighting((int) Math.Ceiling((double) (color.R * 100) / 255),
+                (int) Math.Ceiling((double) (color.G * 100) / 255),
+                (int) Math.Ceiling((double) (color.B * 100) / 255));
         }
 
         public void ApplyMapSingleLighting(Color color)
@@ -1259,6 +1269,59 @@ namespace Chromatics.DeviceInterfaces
                         Thread.Sleep(speed);
                     }
                 }
+        }
+
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts)
+        {
+            if (!_logitechDeviceKeyboard) return;
+            if (cts.IsCancellationRequested) return;
+
+            Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
+
+            //Keyboard.SetCustomAsync(refreshKeyGrid);
+            //
+            Thread.Sleep(500);
+
+            while (true)
+            {
+                if (cts.IsCancellationRequested) break;
+
+                var rnd = new Random();
+                colorFaderDict.Clear();
+
+                foreach (var key in regions)
+                {
+                    if (cts.IsCancellationRequested) return;
+
+                    var rndCol = toColor[rnd.Next(toColor.Length)];
+
+                    LogitechSdkWrapper.LogiLedSaveLightingForKey(ToKeyboardNames(key));
+                    colorFaderDict.Add(key, new ColorFader(toColor[0], rndCol, interval));
+                }
+
+                Task t = Task.Factory.StartNew(() =>
+                {
+                    //Thread.Sleep(500);
+
+                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                    foreach (var key in _regions)
+                    {
+                        if (cts.IsCancellationRequested) return;
+
+                        foreach (var color in colorFaderDict[key].Fade())
+                        {
+                            if (cts.IsCancellationRequested) return;
+
+                            ApplyMapKeyLighting(key, color, false);
+                        }
+
+                        Thread.Sleep(50);
+                    }
+                });
+
+                Thread.Sleep(regions.Length * 50 / 2);
+            }
         }
 
         private static KeyboardNames ToKeyboardNames(string key)
