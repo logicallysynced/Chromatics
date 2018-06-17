@@ -74,7 +74,7 @@ namespace Chromatics
             //Watchdog.WatchdogStop();
             //_gameResetCatch.Enabled = false;
             WriteConsole(ConsoleTypes.Ffxiv, "Game stopped");
-            SetFormName(@"Chromatics " + _currentVersionX + @" Beta");
+            SetFormName(@"Chromatics " + _currentVersionX);
 
 
             Attatched = 0;
@@ -136,7 +136,7 @@ namespace Chromatics
                 if (processes9.Length > 0)
                 {
                     WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
-                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta");
+                    SetFormName(@"Chromatics " + _currentVersionX);
 
                     if (Init)
                     {
@@ -199,7 +199,7 @@ namespace Chromatics
                 else if (processes11.Length > 0)
                 {
                     WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
-                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta");
+                    SetFormName(@"Chromatics " + _currentVersionX);
                     if (LcdSdkCalled == 1)
                     {
                         _lcd.StatusLCDInfo(@"Attempting Attach..");
@@ -369,7 +369,7 @@ namespace Chromatics
                             {
                                 //Set Game Active
                                 WriteConsole(ConsoleTypes.Ffxiv, "Game Running (" + _menuInfo.Name + ")");
-                                SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Running)");
+                                SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
 
 
                                 if (ArxSdkCalled == 1 && ArxState == 0)
@@ -433,7 +433,7 @@ namespace Chromatics
                                 if (!_menuNotify)
                                 {
                                     WriteConsole(ConsoleTypes.Ffxiv, "Main Menu is still active.");
-                                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Paused)");
+                                    SetFormName(@"Chromatics " + _currentVersionX + @" (Paused)");
 
                                     GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase));
                                     GlobalParticleEffects(new Color[] { ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight1), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight2), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight3), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase) }, null, 20);
@@ -484,7 +484,7 @@ namespace Chromatics
                             WriteConsole(ConsoleTypes.Error,
                                 "Chromatics exceeded maximum memory size. Pausing execution (Memory Size: " +
                                 proc.PrivateMemorySize64 / 1024 + "MB).");
-                            SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Paused)");
+                            SetFormName(@"Chromatics " + _currentVersionX + @" (Paused)");
                             HoldReader = true;
                             xi_interval = xi_scan;
                         }
@@ -494,7 +494,7 @@ namespace Chromatics
                             {
                                 WriteConsole(ConsoleTypes.System,
                                     "Resuming Execution (Memory Size: " + proc.PrivateMemorySize64 / 1024 + "MB)..");
-                                SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Running)");
+                                SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
                                 HoldReader = false;
                                 xi_interval = xi_bench;
                             }
@@ -514,7 +514,7 @@ namespace Chromatics
                 {
                     WriteConsole(ConsoleTypes.System,
                         "Resuming Execution..");
-                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Running)");
+                    SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
                     HoldReader = false;
                     xi_interval = xi_bench;
                 }

@@ -62,7 +62,7 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.3.9";
+        private readonly string _currentVersionX = "2.4.0";
         public bool DeviceGridStartup = false;
 
         public bool EffectRunning = false;
@@ -243,7 +243,7 @@ namespace Chromatics
         {
             //Setup References
             //Watchdog.WatchdogStartup();
-            Text = @"Chromatics " + _currentVersionX + @" Beta";
+            Text = @"Chromatics " + _currentVersionX;
 
             //Setup Event Listeners
             FormClosing += OnFormClosing;
@@ -271,7 +271,7 @@ namespace Chromatics
             }
 
             //Bind
-            WriteConsole(ConsoleTypes.System, "Starting Chromatics Version " + _currentVersionX + " (Beta)");
+            WriteConsole(ConsoleTypes.System, "Starting Chromatics Version " + _currentVersionX);
 
 
             //Load Functions
@@ -652,7 +652,7 @@ namespace Chromatics
                     if (ArxSdkCalled == 1 && ArxState == 0)
                         _arx.ArxUpdateInfo("Waiting for Game Launch..");
 
-                    SetFormName(@"Chromatics " + _currentVersionX + @" Beta");
+                    SetFormName(@"Chromatics " + _currentVersionX);
 
                     _gameNotify = true;
                 }

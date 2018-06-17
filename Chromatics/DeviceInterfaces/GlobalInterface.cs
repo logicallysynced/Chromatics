@@ -327,15 +327,11 @@ namespace Chromatics
             {
                 _corsair.SetAllLights(col);
             }
-
-            /*
+            
             if (CoolermasterSdkCalled == 1)
             {
                 _coolermaster.ApplyMapMouseLighting("", col, false);
             }
-
-            */
-            
         }
 
         public void GlobalApplyAllKeyLighting(Color col)
@@ -1661,8 +1657,7 @@ namespace Chromatics
                 MemoryTasks.Add(_logiPart);
                 MemoryTasks.Run(_logiPart);
             }
-
-            /*
+            
             if (CorsairSdkCalled == 1)
             {
                 _corsairPart = null;
@@ -1675,7 +1670,6 @@ namespace Chromatics
                 MemoryTasks.Add(_corsairPart);
                 MemoryTasks.Run(_corsairPart);
             }
-            */
             
             if (CoolermasterSdkCalled == 1)
             {

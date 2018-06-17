@@ -178,6 +178,7 @@ namespace Chromatics.DeviceInterfaces
         void SetWave();
         void StopEffects();
 
+        void SetAllLights(Color color);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string region, Color col, bool clear);
 
@@ -372,6 +373,17 @@ namespace Chromatics.DeviceInterfaces
         {
             _colorMatrix.KeyColor = new CoolermasterSdkWrapper.KeyColor[CoolermasterSdkWrapper.MaxLedRow, CoolermasterSdkWrapper.MaxLedColumn];
             _updateTimer = new Timer((_) => ApplyKeyboardLighting(), null, Timeout.Infinite, Timeout.Infinite);
+        }
+
+        public void SetAllLights(Color color)
+        {
+            if (!IsInitialized) return;
+
+            if (_coolermasterDeviceKeyboard)
+            {
+                SetAllLights(color);
+                ApplyKeyboardLightingSoon();
+            }
         }
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
