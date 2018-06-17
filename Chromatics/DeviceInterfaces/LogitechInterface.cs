@@ -1150,8 +1150,6 @@ namespace Chromatics.DeviceInterfaces
                     if (_logiFlash3Running)
                         while (_logiFlash3Running)
                         {
-                            cts.ThrowIfCancellationRequested();
-
                             if (cts.IsCancellationRequested)
                                 break;
 

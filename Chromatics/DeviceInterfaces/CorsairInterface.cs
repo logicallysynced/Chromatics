@@ -391,7 +391,7 @@ namespace Chromatics.DeviceInterfaces
                 CueSDK.UpdateMode = UpdateMode.Continuous;
                 //ResetCorsairDevices();
 
-                if (_corsairDeviceHeadset)
+                if (_corsairDeviceHeadset && !string.IsNullOrEmpty(CueSDK.HeadsetSDK?.HeadsetDeviceInfo?.Model))
                 {
                     try
                     {
@@ -490,7 +490,7 @@ namespace Chromatics.DeviceInterfaces
                 CueSDK.MousematSDK.Update(true);
             }
 
-            if (_corsairDeviceHeadset)
+            if (_corsairDeviceHeadset && !string.IsNullOrEmpty(CueSDK.HeadsetSDK?.HeadsetDeviceInfo?.Model))
             {
                 _corsairAllHeadsetLed.Brush = (SolidColorBrush)color;
                 CueSDK.HeadsetSDK.Update(true);
@@ -1410,7 +1410,6 @@ namespace Chromatics.DeviceInterfaces
                         {
                             while (_corsairFlash3Running)
                             {
-                                //cts.ThrowIfCancellationRequested();
 
                                 if (cts.IsCancellationRequested)
                                     break;

@@ -1853,7 +1853,6 @@ namespace Chromatics.DeviceInterfaces
                     {
                         while (_razerFlash3Running)
                         {
-                            //cts.ThrowIfCancellationRequested();
 
                             if (cts.IsCancellationRequested)
                                 break;
@@ -2085,7 +2084,6 @@ namespace Chromatics.DeviceInterfaces
 
                     while (state == 6)
                     {
-                        _rcts.Token.ThrowIfCancellationRequested();
                         if (i == 1)
                         {
                             for (uint c = 0; c < KeyboardConstants.MaxColumns; c++)

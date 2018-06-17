@@ -58,8 +58,8 @@ namespace Chromatics
         private void FinalFormClosing(object sender)
         {
             HoldReader = true;
-            _ffxiVcts.Cancel();
             _attachcts.Cancel();
+            _ffxiVcts.Cancel();
             ShutDownDevices();
 
             if (LCCStatus && LogitechSdkCalled == 1)
