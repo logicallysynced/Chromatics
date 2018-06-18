@@ -34,6 +34,11 @@ namespace Chromatics
 
             dr.DeviceOperationCoolermasterKeyboard = _coolermasterDeviceKeyboard;
             dr.DeviceOperationCoolermasterMouse = _coolermasterDeviceMouse;
+
+            dr.DeviceOperationSteelKeyboard = _steelDeviceKeyboard;
+            dr.DeviceOperationSteelHeadset = _steelDeviceHeadset;
+            dr.DeviceOperationSteelMouse = _steelDeviceMouse;
+
             dr.DeviceOperationRoccatKeyboard = _roccatDeviceKeyboard;
             dr.DeviceOperationRoccatMouse = _roccatDeviceMouse;
 
@@ -146,6 +151,11 @@ namespace Chromatics
 
                         _coolermasterDeviceKeyboard = dr.DeviceOperationCoolermasterKeyboard;
                         _coolermasterDeviceMouse = dr.DeviceOperationCoolermasterMouse;
+
+                        _steelDeviceKeyboard = dr.DeviceOperationSteelKeyboard;
+                        _steelDeviceMouse = dr.DeviceOperationSteelMouse;
+                        _steelDeviceHeadset = dr.DeviceOperationSteelHeadset;
+
                         _roccatDeviceKeyboard = dr.DeviceOperationRoccatKeyboard;
                         _roccatDeviceMouse = dr.DeviceOperationRoccatMouse;
 

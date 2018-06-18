@@ -8,12 +8,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Chromatics.Controllers;
 using Chromatics.DeviceInterfaces.EffectLibrary;
 using Chromatics.DeviceInterfaces.SteelSeriesLibs;
 using Chromatics.FFXIVInterfaces;
-using Chromatics.Properties;
 using GalaSoft.MvvmLight.Ioc;
-using Newtonsoft.Json;
 
 namespace Chromatics.DeviceInterfaces
 {
@@ -22,11 +21,15 @@ namespace Chromatics.DeviceInterfaces
         public static SteelLib InitializeSteelSdk()
         {
             SteelLib steel = null;
-            steel = new SteelLib();
-            var result = steel.InitializeLights();
+            if (Process.GetProcessesByName("SteelSeriesEngine3").Length > 0)
+            {
+                steel = new SteelLib();
+                var result = steel.InitializeLights();
 
-            if (!result)
-                return null;
+                if (!result)
+                    return null;
+
+            }
 
             return steel;
         }
@@ -56,14 +59,16 @@ namespace Chromatics.DeviceInterfaces
     public interface ISteelSdk
     {
         bool InitializeLights();
+        void DeviceUpdate();
         void Shutdown();
         void ResetSteelSeriesDevices(bool deviceKeyboard, bool deviceMouse, bool deviceHeadset, Color basecol);
         void SetAllLights(Color col);
+        void SetLights(Color col);
         void ApplyMapSingleLighting(Color col);
         void ApplyMapMultiLighting(Color col, string region);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string key, Color col);
-        void ApplyMapHeadsetLighting(string key, Color col);
+        void ApplyMapHeadsetLighting(Color col);
         Task Ripple1(Color burstcol, int speed, Color baseColor);
         Task Ripple2(Color burstcol, int speed);
         Task MultiRipple1(Color burstcol, int speed);
@@ -91,6 +96,7 @@ namespace Chromatics.DeviceInterfaces
         private bool HeadsetUpdated;
 
         private Dictionary<byte, Color> prevKeyboard = new Dictionary<byte, Color>();
+        private List<byte> KeyboardHIDs = new List<byte>();
         private Color prevMouseScroll = Color.Black;
         private Color prevMouseFront = Color.Black;
         private Color prevMouseLogo = Color.Black;
@@ -131,15 +137,36 @@ namespace Chromatics.DeviceInterfaces
                 {
                     try
                     {
-                        gameSenseSDK.init("Chromatics", "Final Fantasy XIV", 7);
+                        gameSenseSDK.init("CHROMATICS", "Final Fantasy XIV", 5);
 
                         //First Time
 
-                        foreach (var hid in Enum.GetValues(typeof(USBHIDCodes)).Cast<byte>())
+                        var hidsA = Helpers.EnumUtil.GetValues<USBHIDCodes>();
+                        var hidsB = Helpers.EnumUtil.GetValues<SteelSeriesSdkWrapper.SteelSeriesKeyCodes>();
+
+                        foreach (var hid in hidsA)
                         {
-                            if (!prevKeyboard.ContainsKey(hid))
+                            if (!prevKeyboard.ContainsKey((byte)hid))
                             {
-                                prevKeyboard.Add(hid, Color.Black);
+                                prevKeyboard.Add((byte)hid, Color.Black);
+                            }
+
+                            if (!KeyboardHIDs.Contains((byte)hid))
+                            {
+                                KeyboardHIDs.Add((byte)hid);
+                            }
+                        }
+
+                        foreach (var hid in hidsB)
+                        {
+                            if (!prevKeyboard.ContainsKey((byte)hid))
+                            {
+                                prevKeyboard.Add((byte)hid, Color.Black);
+                            }
+
+                            if (!KeyboardHIDs.Contains((byte)hid))
+                            {
+                                KeyboardHIDs.Add((byte)hid);
                             }
                         }
 
@@ -156,6 +183,11 @@ namespace Chromatics.DeviceInterfaces
                     }
                     catch (Exception ex)
                     {
+                        if (ex.Message.Contains("System.Net.WebException"))
+                        {
+                            Write.WriteConsole(ConsoleTypes.Steel, "Cannot detect any SteelSeries devices connected. Please connect a device and restart Chromatics.");
+                        }
+
                         Write.WriteConsole(ConsoleTypes.Steel, "SteelSeries GameSense SDK failed to load. EX: " + ex);
 
                         isInitialized = false;
@@ -197,7 +229,7 @@ namespace Chromatics.DeviceInterfaces
             _steelMouse = deviceMouse;
             _steelHeadset = deviceHeadset;
         }
-
+        
         public void SetAllLights(Color col)
         {
             if (!isInitialized) return;
@@ -215,13 +247,13 @@ namespace Chromatics.DeviceInterfaces
                     List<byte> hids = new List<byte>();
                     List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
-                    foreach (var hid in prevKeyboard)
+                    foreach (var hid in KeyboardHIDs)
                     {
-                        if (prevKeyboard.ContainsKey(hid.Key) && prevKeyboard[hid.Key] != col)
+                        if (prevKeyboard.ContainsKey(hid) && prevKeyboard[hid] != col)
                         {
-                            hids.Add(hid.Key);
+                            hids.Add(hid);
                             colors.Add(Tuple.Create(col.R, col.G, col.B));
-                            prevKeyboard[hid.Key] = col;
+                            prevKeyboard[hid] = col;
                         }
                     }
 
@@ -253,6 +285,73 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        public void DeviceUpdate()
+        {
+            if (!isInitialized) return;
+
+            try
+            {
+                SendKeepalive();
+
+                if (_steelKeyboard)
+                {
+                    var hids = new List<byte>();
+                    var cols = new List<Tuple<byte, byte, byte>>();
+
+                    foreach (var updates in prevKeyboard)
+                    {
+                        hids.Add(updates.Key);
+                        cols.Add(Tuple.Create(updates.Value.R, updates.Value.G, updates.Value.B));
+                    }
+
+                    gameSenseSDK.setKeyboardColors(hids, cols);
+                    keyboard_updated = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Steel,
+                    "SteelSeries GameSense SDK, error when updating keyboard. EX: " + ex);
+            }
+        }
+
+        public void SetLights(Color col)
+        {
+            if (!isInitialized) return;
+
+            keyboard_updated = false;
+
+            try
+            {
+                SendKeepalive();
+
+                if (_steelKeyboard)
+                {
+                    List<byte> hids = new List<byte>();
+                    List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+                    foreach (var hid in KeyboardHIDs)
+                    {
+                        if (prevKeyboard.ContainsKey(hid) && prevKeyboard[hid] != col)
+                        {
+                            hids.Add(hid);
+                            colors.Add(Tuple.Create(col.R, col.G, col.B));
+                            prevKeyboard[hid] = col;
+                        }
+                    }
+
+                    //Console.WriteLine(@"Tag");
+                    //gameSenseSDK.setKeyboardColors(hids, colors);
+                    keyboard_updated = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Steel,
+                    "SteelSeries GameSense SDK, error when updating keyboard. EX: " + ex);
+            }
+        }
+
         public void ApplyMapSingleLighting(Color col)
         {
             //Not Implemented
@@ -273,9 +372,10 @@ namespace Chromatics.DeviceInterfaces
             try
             {
                 SendKeepalive();
-
+                
                 var keyid = GetHIDCode(key);
                 if (!prevKeyboard.ContainsKey(keyid) || prevKeyboard[keyid] == col) return;
+
 
                 var hids = new List<byte>();
                 var colors = new List<Tuple<byte, byte, byte>>();
@@ -285,9 +385,14 @@ namespace Chromatics.DeviceInterfaces
 
                 if (hids.Count == 0) return;
 
-                gameSenseSDK.setKeyboardColors(hids, colors);
+                if (clear)
+                {
+                    gameSenseSDK.setKeyboardColors(hids, colors);
+                    keyboard_updated = true;
+                }
+                
                 prevKeyboard[keyid] = col;
-                keyboard_updated = true;
+                
             }
             catch (Exception ex)
             {
@@ -309,23 +414,55 @@ namespace Chromatics.DeviceInterfaces
 
                 switch (key)
                 {
+                    case "All":
+                        if (prevMouseFront != col)
+                        {
+                            gameSenseSDK.setMouseColor(col.R, col.G, col.B);
+                            MouseUpdated = true;
+                            prevMouseFront = col;
+                        }
+
+                        if (prevMouseScroll != col)
+                        {
+                            gameSenseSDK.setMouseScrollWheelColor(col.R, col.G, col.B);
+                            MouseUpdated = true;
+                            prevMouseScroll = col;
+                        }
+
+                        if (prevMouseLogo != col)
+                        {
+                            gameSenseSDK.setMouseLogoColor(col.R, col.G, col.B);
+                            MouseUpdated = true;
+                            prevMouseLogo = col;
+                        }
+
+                        break;
                     case "MouseFront":
-                        if (prevMouseFront == col) return;
-                        gameSenseSDK.setMouseColor(col.R, col.G, col.B);
-                        MouseUpdated = true;
-                        prevMouseFront = col;
+                        if (prevMouseFront != col)
+                        {
+                            gameSenseSDK.setMouseColor(col.R, col.G, col.B);
+                            MouseUpdated = true;
+                            prevMouseFront = col;
+                        }
+                        
                         break;
                     case "MouseScroll":
-                        if (prevMouseScroll == col) return;
-                        gameSenseSDK.setMouseScrollWheelColor(col.R, col.G, col.B);
-                        MouseUpdated = true;
-                        prevMouseScroll = col;
+                        if (prevMouseScroll != col)
+                        {
+                            gameSenseSDK.setMouseScrollWheelColor(col.R, col.G, col.B);
+                            MouseUpdated = true;
+                            prevMouseScroll = col;
+                        }
+                        
                         break;
                     case "MouseLogo":
-                        if (prevMouseLogo == col) return;
-                        gameSenseSDK.setMouseLogoColor(col.R, col.G, col.B);
-                        MouseUpdated = true;
-                        prevMouseLogo = col;
+                        if (prevMouseLogo != col)
+                        {
+                            gameSenseSDK.setMouseLogoColor(col.R, col.G, col.B);
+                            MouseUpdated = true;
+                            prevMouseLogo = col;
+                        }
+                        
                         break;
                 }
             }
@@ -336,7 +473,7 @@ namespace Chromatics.DeviceInterfaces
             
         }
 
-        public void ApplyMapHeadsetLighting(string key, Color col)
+        public void ApplyMapHeadsetLighting(Color col)
         {
             if (!isInitialized) return;
 
@@ -367,6 +504,8 @@ namespace Chromatics.DeviceInterfaces
                     return;
 
                 var presets = new Dictionary<string, Color>();
+                List<byte> hids = new List<byte>();
+                List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
                 for (var i = 0; i <= 9; i++)
                 {
@@ -393,7 +532,17 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
-                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], false);
+                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
+                            if (pos > -1)
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            }
+                            else
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(presets[key].R, presets[key].G, presets[key].B));
+                            }
                         }
                     }
                     else if (i == 2)
@@ -402,7 +551,17 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
-                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], false);
+                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
+                            if (pos > -1)
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            }
+                            else
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(presets[key].R, presets[key].G, presets[key].B));
+                            }
                         }
                     }
                     else if (i == 3)
@@ -411,7 +570,17 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
-                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], false);
+                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
+                            if (pos > -1)
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            }
+                            else
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(presets[key].R, presets[key].G, presets[key].B));
+                            }
                         }
                     }
                     else if (i == 4)
@@ -420,7 +589,17 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
-                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], false);
+                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
+                            if (pos > -1)
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            }
+                            else
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(presets[key].R, presets[key].G, presets[key].B));
+                            }
                         }
                     }
                     else if (i == 5)
@@ -429,7 +608,17 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
-                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], false);
+                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
+                            if (pos > -1)
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            }
+                            else
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(presets[key].R, presets[key].G, presets[key].B));
+                            }
                         }
                     }
                     else if (i == 6)
@@ -438,7 +627,17 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
-                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], false);
+                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
+                            if (pos > -1)
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            }
+                            else
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(presets[key].R, presets[key].G, presets[key].B));
+                            }
                         }
                     }
                     else if (i == 7)
@@ -447,7 +646,17 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
-                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], false);
+                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
+                            if (pos > -1)
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            }
+                            else
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(presets[key].R, presets[key].G, presets[key].B));
+                            }
                         }
                     }
                     else if (i == 8)
@@ -456,7 +665,17 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
-                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], false);
+                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
+                            if (pos > -1)
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            }
+                            else
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(presets[key].R, presets[key].G, presets[key].B));
+                            }
                         }
                     }
                     else if (i == 9)
@@ -464,26 +683,63 @@ namespace Chromatics.DeviceInterfaces
                         //Spin down
 
                         foreach (var key in DeviceEffects.GlobalKeys)
-                            ApplyMapKeyLighting(key, presets[key], false);
+                        {
+                            hids.Add(GetHIDCode(key));
+                            colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            //ApplyMapKeyLighting(key, presets[key], true);
+                        }
 
-                        ApplyMapKeyLighting("D1", baseColor, false);
-                        ApplyMapKeyLighting("D2", baseColor, false);
-                        ApplyMapKeyLighting("D3", baseColor, false);
-                        ApplyMapKeyLighting("D4", baseColor, false);
-                        ApplyMapKeyLighting("D5", baseColor, false);
-                        ApplyMapKeyLighting("D6", baseColor, false);
-                        ApplyMapKeyLighting("D7", baseColor, false);
-                        ApplyMapKeyLighting("D8", baseColor, false);
-                        ApplyMapKeyLighting("D9", baseColor, false);
-                        ApplyMapKeyLighting("D0", baseColor, false);
-                        ApplyMapKeyLighting("OemMinus", baseColor, false);
-                        ApplyMapKeyLighting("OemEquals", baseColor, false);
+                        hids.Add(GetHIDCode("D1"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D2"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D3"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D4"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D5"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D6"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D7"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D8"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D9"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("D0"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("OemMinus"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+                        hids.Add(GetHIDCode("OemEquals"));
+                        colors.Add(Tuple.Create(baseColor.R, baseColor.G, baseColor.B));
+
+                        /*
+                        ApplyMapKeyLighting("D1", baseColor, true);
+                        ApplyMapKeyLighting("D2", baseColor, true);
+                        ApplyMapKeyLighting("D3", baseColor, true);
+                        ApplyMapKeyLighting("D4", baseColor, true);
+                        ApplyMapKeyLighting("D5", baseColor, true);
+                        ApplyMapKeyLighting("D6", baseColor, true);
+                        ApplyMapKeyLighting("D7", baseColor, true);
+                        ApplyMapKeyLighting("D8", baseColor, true);
+                        ApplyMapKeyLighting("D9", baseColor, true);
+                        ApplyMapKeyLighting("D0", baseColor, true);
+                        ApplyMapKeyLighting("OemMinus", baseColor, true);
+                        ApplyMapKeyLighting("OemEquals", baseColor, true);
+                        */
 
                         presets.Clear();
                     }
 
                     if (i < 9)
+                    {
                         Thread.Sleep(speed);
+                    }
+
+                    EffectKeyUpdate(hids, colors);
+                    hids.Clear();
+                    colors.Clear();
                 }
             });
         }
@@ -501,6 +757,8 @@ namespace Chromatics.DeviceInterfaces
                 {
                     var previousValues = new Dictionary<string, Color>();
                     var enumerable = safeKeys.ToList();
+                    List<byte> hids = new List<byte>();
+                    List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
                     for (var i = 0; i <= 9; i++)
                     {
@@ -529,7 +787,11 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
                                 if (pos > -1)
-                                    ApplyMapKeyLighting(key, burstcol, false);
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
                             }
                         }
                         else if (i == 2)
@@ -539,7 +801,11 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
                                 if (pos > -1)
-                                    ApplyMapKeyLighting(key, burstcol, false);
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
                             }
                         }
                         else if (i == 3)
@@ -549,7 +815,11 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
                                 if (pos > -1)
-                                    ApplyMapKeyLighting(key, burstcol, false);
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
                             }
                         }
                         else if (i == 4)
@@ -559,7 +829,11 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
                                 if (pos > -1)
-                                    ApplyMapKeyLighting(key, burstcol, false);
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
                             }
                         }
                         else if (i == 5)
@@ -569,7 +843,11 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
                                 if (pos > -1)
-                                    ApplyMapKeyLighting(key, burstcol, false);
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
                             }
                         }
                         else if (i == 6)
@@ -579,7 +857,11 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
                                 if (pos > -1)
-                                    ApplyMapKeyLighting(key, burstcol, false);
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
                             }
                         }
                         else if (i == 7)
@@ -589,7 +871,11 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
                                 if (pos > -1)
-                                    ApplyMapKeyLighting(key, burstcol, false);
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
                             }
                         }
                         else if (i == 8)
@@ -599,7 +885,11 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
                                 if (pos > -1)
-                                    ApplyMapKeyLighting(key, burstcol, false);
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
                             }
                         }
                         else if (i == 9)
@@ -608,14 +898,22 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in previousValues.Keys)
                             {
-                                ApplyMapKeyLighting(key, previousValues[key], false);
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(previousValues[key].R, previousValues[key].G, previousValues[key].B));
+                                //ApplyMapKeyLighting(key, previousValues[key], true);
                             }
 
                             previousValues.Clear();
                         }
 
                         if (i < 9)
+                        {
                             Thread.Sleep(speed);
+                        }
+
+                        EffectKeyUpdate(hids, colors);
+                        hids.Clear();
+                        colors.Clear();
                     }
                 }
             });
@@ -639,6 +937,9 @@ namespace Chromatics.DeviceInterfaces
                     return;
 
                 var previousValues = new Dictionary<string, Color>();
+                List<byte> hids = new List<byte>();
+                List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
                 for (var i = 0; i <= 8; i++)
                 {
 
@@ -658,18 +959,31 @@ namespace Chromatics.DeviceInterfaces
                     {
                         //Step 1, 3, 5, 7
                         foreach (var key in regions)
-                            ApplyMapKeyLighting(key, burstcol, false);
+                        {
+                            hids.Add(GetHIDCode(key));
+                            colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                            //ApplyMapKeyLighting(key, burstcol, true);
+                        }
                     }
                     else if (i % 2 == 0)
                     {
                         //Step 2, 4, 6, 8
                         foreach (var key in regions)
-                            ApplyMapKeyLighting(key, previousValues[key], false);
+                        {
+                            hids.Add(GetHIDCode(key));
+                            colors.Add(Tuple.Create(previousValues[key].R, previousValues[key].G, previousValues[key].B));
+                            //ApplyMapKeyLighting(key, previousValues[key], true);
+                        }
                     }
 
                     if (i < 8)
+                    {
                         Thread.Sleep(speed);
+                    }
 
+                    EffectKeyUpdate(hids, colors);
+                    hids.Clear();
+                    colors.Clear();
                 }
             }
         }
@@ -684,6 +998,8 @@ namespace Chromatics.DeviceInterfaces
                 lock (SteelFlash2)
                 {
                     var previousValues = new Dictionary<string, Color>();
+                    List<byte> hids = new List<byte>();
+                    List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
                     if (!_steelFlash2Running)
                     {
@@ -709,18 +1025,29 @@ namespace Chromatics.DeviceInterfaces
                             if (_steelFlash2Step == 0)
                             {
                                 foreach (var key in regions)
-                                    ApplyMapKeyLighting(key, burstcol, false);
-
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
+                                
                                 _steelFlash2Step = 1;
                             }
                             else if (_steelFlash2Step == 1)
                             {
                                 foreach (var key in regions)
-                                    ApplyMapKeyLighting(key, _flashpresets[key], false);
-
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(_flashpresets[key].R, _flashpresets[key].G, _flashpresets[key].B));
+                                    //ApplyMapKeyLighting(key, _flashpresets[key], true);
+                                }
+                                
                                 _steelFlash2Step = 0;
                             }
 
+                            EffectKeyUpdate(hids, colors);
+                            hids.Clear();
+                            colors.Clear();
                             Thread.Sleep(speed);
                         }
                 }
@@ -744,6 +1071,9 @@ namespace Chromatics.DeviceInterfaces
                     _steelFlash3Running = true;
                     _steelFlash3Step = 0;
 
+                    List<byte> hids = new List<byte>();
+                    List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
                     if (_steelFlash3Running == false)
                     {
                         //
@@ -760,7 +1090,12 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in DeviceEffects.NumFlash)
                                 {
                                     if (prevKeyboard.ContainsKey(GetHIDCode(key)))
-                                        ApplyMapKeyLighting(key, burstcol, false);
+                                    {
+                                        hids.Add(GetHIDCode(key));
+                                        colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                        //ApplyMapKeyLighting(key, burstcol, true);
+                                    }
+                                        
                                 }
                                   
 
@@ -771,12 +1106,19 @@ namespace Chromatics.DeviceInterfaces
                                 foreach (var key in DeviceEffects.NumFlash)
                                 {
                                     if (prevKeyboard.ContainsKey(GetHIDCode(key)))
-                                        ApplyMapKeyLighting(key, Color.Black, false);
+                                    {
+                                        hids.Add(GetHIDCode(key));
+                                        colors.Add(Tuple.Create(Color.Black.R, Color.Black.G, Color.Black.B));
+                                        //ApplyMapKeyLighting(key, Color.Black, true);
+                                    }
                                 }
                                 
                                 _steelFlash3Step = 0;
                             }
 
+                            EffectKeyUpdate(hids, colors);
+                            hids.Clear();
+                            colors.Clear();
                             Thread.Sleep(speed);
                         }
                     }
@@ -798,6 +1140,8 @@ namespace Chromatics.DeviceInterfaces
                 lock (SteelFlash4)
                 {
                     var flashpresets = new Dictionary<string, Color>();
+                    List<byte> hids = new List<byte>();
+                    List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
                     if (!_steelFlash4Running)
                     {
@@ -818,21 +1162,33 @@ namespace Chromatics.DeviceInterfaces
                         {
                             if (cts.IsCancellationRequested)
                                 break;
-
+                            
                             if (_steelFlash4Step == 0)
                             {
                                 foreach (var key in regions)
-                                    ApplyMapKeyLighting(key, burstcol, false);
-
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(burstcol.R, burstcol.G, burstcol.B));
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                }
+                                
                                 _steelFlash4Step = 1;
                             }
                             else if (_steelFlash4Step == 1)
                             {
                                 foreach (var key in regions)
-                                    ApplyMapKeyLighting(key, _flashpresets4[key], false);
-
+                                {
+                                    hids.Add(GetHIDCode(key));
+                                    colors.Add(Tuple.Create(_flashpresets4[key].R, _flashpresets4[key].G, _flashpresets4[key].B));
+                                    //ApplyMapKeyLighting(key, _flashpresets4[key], true);
+                                }
+                                
                                 _steelFlash4Step = 0;
                             }
+
+                            EffectKeyUpdate(hids, colors);
+                            hids.Clear();
+                            colors.Clear();
 
                             Thread.Sleep(speed);
                         }
@@ -863,8 +1219,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (!isInitialized || !_steelKeyboard) return;
             if (cts.IsCancellationRequested) return;
-
-
+            
             Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
 
             //Keyboard.SetCustomAsync(refreshKeyGrid);
@@ -892,7 +1247,10 @@ namespace Chromatics.DeviceInterfaces
 
                     var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
 
-                    foreach (var key in regions)
+                    List<byte> hids = new List<byte>();
+                    List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+                    foreach (var key in _regions)
                     {
                         if (cts.IsCancellationRequested) return;
 
@@ -901,15 +1259,42 @@ namespace Chromatics.DeviceInterfaces
                             if (cts.IsCancellationRequested) return;
 
                             if (prevKeyboard.ContainsKey(GetHIDCode(key)))
-                                ApplyMapKeyLighting(key, color, false);
+                            {
+                                hids.Add(GetHIDCode(key));
+                                colors.Add(Tuple.Create(color.R, color.G, color.B));
+                            }
                         }
 
-                        //Keyboard.SetCustomAsync(refreshKeyGrid);
+                        EffectKeyUpdate(hids, colors);
+                        hids.Clear();
+                        colors.Clear();
+
                         Thread.Sleep(50);
                     }
                 });
 
                 Thread.Sleep(regions.Length * 50 / 2);
+            }
+        }
+
+        private void EffectKeyUpdate(List<byte> hids, List<Tuple<byte, byte, byte>> cols)
+        {
+            if (!isInitialized) return;
+
+            try
+            {
+                SendKeepalive();
+
+                if (_steelKeyboard)
+                {
+                    gameSenseSDK.setKeyboardColors(hids, cols);
+                    keyboard_updated = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Steel,
+                    "SteelSeries GameSense SDK, error when updating keyboard. EX: " + ex);
             }
         }
 
@@ -1196,5 +1581,7 @@ namespace Chromatics.DeviceInterfaces
                     return (byte) USBHIDCodes.ERROR;
             }
         }
+
+        
     }
 }

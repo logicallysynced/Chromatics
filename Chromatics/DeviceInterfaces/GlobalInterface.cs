@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Chromatics.Controllers;
 using Chromatics.DeviceInterfaces;
 using Chromatics.DeviceInterfaces.EffectLibrary;
+using CSharpAnalytics;
 
 /* Hubs all commands sent from FFXIVInterface and re-routes them to their correct Device interface.
  * 
@@ -35,6 +36,16 @@ namespace Chromatics
         private CancellationTokenSource _corsairFl4Cts = new CancellationTokenSource();
         private IHueSdk _hue;
         private CancellationTokenSource _hue4Cts = new CancellationTokenSource();
+
+        private ISteelSdk _steel;
+        private CancellationTokenSource _steelFl1Cts = new CancellationTokenSource();
+        private Task _steelFl2;
+        private CancellationTokenSource _steelFl2Cts = new CancellationTokenSource();
+        private Task _steelFl3;
+        private CancellationTokenSource _steelFl3Cts = new CancellationTokenSource();
+        private Task _steelFl4;
+        private CancellationTokenSource _steelFl4Cts = new CancellationTokenSource();
+        private Task _steelFlash;
 
         private Task _hueFl4;
 
@@ -78,6 +89,9 @@ namespace Chromatics
         private Task _coolermasterPart;
         private CancellationTokenSource _coolermasterPartCts = new CancellationTokenSource();
 
+        private Task _steelPart;
+        private CancellationTokenSource _steelPartCts = new CancellationTokenSource();
+
         //Send a continuous flash effect to a Keyboard
         private bool _globalFlash2Running;
 
@@ -100,7 +114,11 @@ namespace Chromatics
                 RazerSdkCalled = 1;
                 //WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded");
                 _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-                
+
+                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                {
+                    AutoMeasurement.Client.TrackScreenView("Razer");
+                }
             }
             else
             {
@@ -114,10 +132,15 @@ namespace Chromatics
                 LogitechSdk = true;
                 LogitechSdkCalled = 1;
                 WriteConsole(ConsoleTypes.Logitech, "Logitech SDK Loaded");
+
+                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                {
+                    AutoMeasurement.Client.TrackScreenView("Logitech");
+                }
             }
             else
             {
-                WriteConsole(ConsoleTypes.Logitech, "Logitech SDK failed to load.");
+                WriteConsole(ConsoleTypes.Logitech, "Logitech SDK failed to load. Please make sure LGS is running.");
             }
 
             //WriteConsole(ConsoleTypes.CORSAIR, "Attempting to load Corsair SDK..");
@@ -127,10 +150,15 @@ namespace Chromatics
                 CorsairSdk = true;
                 CorsairSdkCalled = 1;
                 //WriteConsole(ConsoleTypes.CORSAIR, "Corsair SDK Loaded");
+
+                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                {
+                    AutoMeasurement.Client.TrackScreenView("Corsair");
+                }
             }
             else
             {
-                WriteConsole(ConsoleTypes.Corsair, "CUE SDK failed to load.");
+                WriteConsole(ConsoleTypes.Corsair, "CUE SDK failed to load. Please make sure CUE2 is running.");
             }
 
             //WriteConsole(ConsoleTypes.CORSAIR, "Attempting to load Corsair SDK..");
@@ -140,10 +168,32 @@ namespace Chromatics
                 CoolermasterSdk = true;
                 CoolermasterSdkCalled = 1;
                 WriteConsole(ConsoleTypes.Coolermaster, "Coolermaster SDK Loaded");
+
+                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                {
+                    AutoMeasurement.Client.TrackScreenView("Coolermaster");
+                }
             }
             else
             {
                 WriteConsole(ConsoleTypes.Coolermaster, "Coolermaster SDK failed to load.");
+            }
+
+            _steel = SteelSeriesInterface.InitializeSteelSdk();
+            if (_steel != null)
+            {
+                SteelSdk = true;
+                SteelSdkCalled = 1;
+                WriteConsole(ConsoleTypes.Steel, "SteelSeries SDK Loaded");
+
+                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                {
+                    AutoMeasurement.Client.TrackScreenView("SteelSeries");
+                }
+            }
+            else
+            {
+                WriteConsole(ConsoleTypes.Steel, "SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
             }
 
             //Load LIFX SDK
@@ -153,6 +203,14 @@ namespace Chromatics
                 LifxSdk = true;
                 LifxSdkCalled = 1;
                 //WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Loaded");
+
+                if (_lifx.LifxBulbs > 0)
+                {
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("LIFX");
+                    }
+                }
             }
             else
             {
@@ -189,6 +247,9 @@ namespace Chromatics
 
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.Shutdown();
+
+            if (SteelSdkCalled == 1)
+                _steel.Shutdown();
         }
 
         public void GlobalResetDevices()
@@ -209,27 +270,11 @@ namespace Chromatics
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse, baseColor);
 
+            if (SteelSdkCalled == 1)
+                _steel.ResetSteelSeriesDevices(_steelDeviceKeyboard, _steelDeviceMouse, _steelDeviceHeadset, baseColor);
+
             //ResetDeviceDataGrid();
         }
-        
-        /*
-        public void GlobalUpdateState(string type, Color col, bool disablekeys, [Optional] Color col2,
-            [Optional] bool direction, [Optional] int speed)
-        {
-            if (RazerSdkCalled == 1)
-                _razer.SetLights(col);
-                //_razer.UpdateState(type, col, disablekeys, col2, direction, speed);
-
-            if (LogitechSdkCalled == 1)
-                _logitech.UpdateState(type, col, disablekeys, col2, direction, speed);
-
-            if (CorsairSdkCalled == 1)
-                _corsair.UpdateState(type, col, disablekeys, col2, direction, speed);
-
-            if (CoolermasterSdkCalled == 1)
-                _coolermaster.UpdateState(type, col, disablekeys, col2, direction, speed);
-        }
-        */
         
         public void GlobalSetWave()
         {
@@ -304,8 +349,13 @@ namespace Chromatics
         public void GlobalKeyboardUpdate()
         {
             if (!HoldReader)
+            {
                 if (RazerSdkCalled == 1)
                     _razer.DeviceUpdate();
+
+                if (SteelSdkCalled == 1)
+                    _steel.DeviceUpdate();
+            }
         }
 
         public void GlobalApplyAllDeviceLighting(Color col)
@@ -330,7 +380,13 @@ namespace Chromatics
             
             if (CoolermasterSdkCalled == 1)
             {
-                _coolermaster.ApplyMapMouseLighting("", col, false);
+                _coolermaster.SetAllLights(col);
+                //_coolermaster.ApplyMapMouseLighting("", col, false);
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                _steel.SetAllLights(col);
             }
         }
 
@@ -348,6 +404,11 @@ namespace Chromatics
             if (CoolermasterSdkCalled == 1)
             {
                 _coolermaster.SetLights(col);
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                _steel.SetLights(col);
             }
         }
 
@@ -367,6 +428,9 @@ namespace Chromatics
 
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.SetLights(col);
+
+            //if (SteelSdkCalled == 1)
+                //_steel.SetLights(col);
         }
 
         public void GlobalApplyMultiZoneLighting(Color col, string region)
@@ -385,6 +449,9 @@ namespace Chromatics
 
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.SetLights(col);
+
+            //if (SteelSdkCalled == 1)
+                //_steel.SetLights(col);
         }
 
         //Send a lighting command to a specific Keyboard LED
@@ -452,6 +519,34 @@ namespace Chromatics
 
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
+
+            if (SteelSdkCalled == 1)
+            {
+                if (key == "Macro1")
+                {
+                    _steel.ApplyMapKeyLighting(Localization.LocalizeKey("Macro1"), col, clear, bypasswhitelist);
+                }
+                else if (key == "Macro2")
+                {
+                    _steel.ApplyMapKeyLighting(Localization.LocalizeKey("Macro2"), col, clear, bypasswhitelist);
+                }
+                else if (key == "Macro3")
+                {
+                    _steel.ApplyMapKeyLighting(Localization.LocalizeKey("Macro3"), col, clear, bypasswhitelist);
+                }
+                else if (key == "Macro4")
+                {
+                    _steel.ApplyMapKeyLighting(Localization.LocalizeKey("Macro4"), col, clear, bypasswhitelist);
+                }
+                else if (key == "Macro5")
+                {
+                    _steel.ApplyMapKeyLighting(Localization.LocalizeKey("Macro5"), col, clear, bypasswhitelist);
+                }
+                else
+                {
+                    _steel.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
+                }
+            }
         }
 
         public void GlobalApplyMapLightbarLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
@@ -508,6 +603,11 @@ namespace Chromatics
 
             if (CorsairSdkCalled == 1)
                 _corsair.ApplyMapLogoLighting(Localization.LocalizeKey(key), col, clear);
+
+            if (SteelSdkCalled == 1)
+            {
+                //
+            }
         }
 
         //Send a lighting command to a specific Mouse LED
@@ -538,6 +638,10 @@ namespace Chromatics
                     _coolermaster.ApplyMapMouseLighting("", col, clear);
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    _steel.ApplyMapMouseLighting("MouseFront", col);
+                }
             }
 
             //Scroll
@@ -559,6 +663,10 @@ namespace Chromatics
                     _coolermaster.ApplyMapMouseLighting("", col, clear);
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    _steel.ApplyMapMouseLighting("MouseScroll", col);
+                }
             }
 
             //Other
@@ -578,6 +686,11 @@ namespace Chromatics
                 if (CoolermasterSdkCalled == 1)
                 {
                     _coolermaster.ApplyMapMouseLighting("", col, clear);
+                }
+
+                if (SteelSdkCalled == 1)
+                {
+                    _steel.ApplyMapMouseLighting("MouseLogo", col);
                 }
 
             }
@@ -661,6 +774,11 @@ namespace Chromatics
                     //
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    _steel.ApplyMapHeadsetLighting(col);
+                }
+
             }
 
             if (mode == _HeadsetZone2Mode)
@@ -681,6 +799,11 @@ namespace Chromatics
                 }
 
                 if (CoolermasterSdkCalled == 1)
+                {
+                    //
+                }
+
+                if (SteelSdkCalled == 1)
                 {
                     //
                 }
@@ -725,6 +848,10 @@ namespace Chromatics
                     //
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    //
+                }
             }
             
         }
@@ -874,6 +1001,11 @@ namespace Chromatics
                     _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
                     _corsair.ApplyMapStandLighting(corsairStandRegion, col, clear);
                 }
+
+                if (SteelSdkCalled == 1)
+                {
+                    //
+                }
             }
 
             if (mode == _PadZone2Mode)
@@ -957,6 +1089,11 @@ namespace Chromatics
 
                     _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
                     _corsair.ApplyMapStandLighting(corsairStandRegion, col, clear);
+                }
+
+                if (SteelSdkCalled == 1)
+                {
+                    //
                 }
             }
 
@@ -1042,6 +1179,11 @@ namespace Chromatics
                     _corsair.ApplyMapPadLighting(corsairPadRegion, col, clear);
                     _corsair.ApplyMapStandLighting(corsairStandRegion, col, clear);
                 }
+
+                if (SteelSdkCalled == 1)
+                {
+                    //
+                }
             }
 
             
@@ -1082,6 +1224,13 @@ namespace Chromatics
                 MemoryTasks.Add(rippleTask);
                 MemoryTasks.Run(rippleTask);
             }
+
+            if (SteelSdkCalled == 1)
+            {
+                var rippleTask = _steel.Ripple1(burstcol, speed, baseColor);
+                MemoryTasks.Add(rippleTask);
+                MemoryTasks.Run(rippleTask);
+            }
         }
 
         public void GlobalMultiRipple1(Color burstcol, int speed, Color baseColor)
@@ -1111,6 +1260,11 @@ namespace Chromatics
             }
 
             if (CoolermasterSdkCalled == 1)
+            {
+                //
+            }
+
+            if (SteelSdkCalled == 1)
             {
                 //
             }
@@ -1151,6 +1305,13 @@ namespace Chromatics
                 MemoryTasks.Add(rippleTask2);
                 MemoryTasks.Run(rippleTask2);
             }
+
+            if (SteelSdkCalled == 1)
+            {
+                var rippleTask2 = _steel.Ripple2(burstcol, speed);
+                MemoryTasks.Add(rippleTask2);
+                MemoryTasks.Run(rippleTask2);
+            }
         }
 
         public void GlobalMultiRipple2(Color burstcol, int speed)
@@ -1180,6 +1341,11 @@ namespace Chromatics
             }
 
             if (CoolermasterSdkCalled == 1)
+            {
+                //
+            }
+
+            if (SteelSdkCalled == 1)
             {
                 //
             }
@@ -1262,6 +1428,21 @@ namespace Chromatics
                 MemoryTasks.Add(_coolermasterFlash);
                 MemoryTasks.Run(_coolermasterFlash);
             }
+
+            if (SteelSdkCalled == 1)
+            {
+                _steelFlash = null;
+                _steelFl1Cts = new CancellationTokenSource();
+
+                _steelFlash = new Task(() =>
+                {
+                    HoldReader = true;
+                    _steel.Flash1(burstcol, speed, regions);
+                    HoldReader = false;
+                }, _steelFl1Cts.Token);
+                MemoryTasks.Add(_steelFlash);
+                MemoryTasks.Run(_steelFlash);
+            }
         }
 
         public void GlobalFlash2(Color burstcol, int speed, string[] template)
@@ -1332,6 +1513,17 @@ namespace Chromatics
                     MemoryTasks.Run(_coolermasterFl2);
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    _steelFl2 = null;
+                    _steelFl2Cts = new CancellationTokenSource();
+                    _steelFl2 =
+                        new Task(() => { _steel.Flash2(burstcol, speed, _steelFl2Cts.Token, template); },
+                            _steelFl2Cts.Token);
+                    MemoryTasks.Add(_steelFl2);
+                    MemoryTasks.Run(_steelFl2);
+                }
+
                 _globalFlash2Running = true;
             }
         }
@@ -1364,6 +1556,12 @@ namespace Chromatics
                 {
                     _coolermasterFl2Cts.Cancel();
                     MemoryTasks.Remove(_coolermasterFl2);
+                }
+
+                if (SteelSdkCalled == 1)
+                {
+                    _steelFl2Cts.Cancel();
+                    MemoryTasks.Remove(_steelFl2);
                 }
 
                 //Debug.WriteLine("Stopping Flash 2");
@@ -1423,6 +1621,17 @@ namespace Chromatics
                     MemoryTasks.Run(_coolermasterFl3);
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    _steelFl3 = null;
+                    _steelFl3Cts = new CancellationTokenSource();
+                    _steelFl3 =
+                        new Task(() => { _steel.Flash3(burstcol, speed, _steelFl3Cts.Token); },
+                            _steelFl3Cts.Token);
+                    MemoryTasks.Add(_steelFl3);
+                    MemoryTasks.Run(_steelFl3);
+                }
+
                 _globalFlash3Running = true;
             }
         }
@@ -1460,6 +1669,12 @@ namespace Chromatics
                 {
                     _coolermasterFl3Cts.Cancel();
                     MemoryTasks.Remove(_coolermasterFl3);
+                }
+
+                if (SteelSdkCalled == 1)
+                {
+                    _steelFl3Cts.Cancel();
+                    MemoryTasks.Remove(_steelFl3);
                 }
 
                 //Debug.WriteLine("Stopping Flash 3");
@@ -1541,6 +1756,18 @@ namespace Chromatics
                         MemoryTasks.Add(_coolermasterFl4);
                         MemoryTasks.Run(_coolermasterFl4);
                     }
+
+                    if (SteelSdkCalled == 1)
+                    {
+                        _steelFl4 = null;
+                        _steelFl4Cts = new CancellationTokenSource();
+                        _steelFl4 =
+                            new Task(
+                                () => { _steel.Flash4(burstcol, speed, _steelFl4Cts.Token, template); },
+                                _steelFl4Cts.Token);
+                        MemoryTasks.Add(_steelFl4);
+                        MemoryTasks.Run(_steelFl4);
+                    }
                 }
 
                 if (LifxSdkCalled == 1)
@@ -1597,6 +1824,12 @@ namespace Chromatics
                     {
                         _coolermasterFl4Cts.Cancel();
                         MemoryTasks.Remove(_coolermasterFl4);
+                    }
+
+                    if (SteelSdkCalled == 1)
+                    {
+                        _steelFl4Cts.Cancel();
+                        MemoryTasks.Remove(_steelFl4);
                     }
                 }
 
@@ -1683,7 +1916,19 @@ namespace Chromatics
                 MemoryTasks.Add(_coolermasterPart);
                 MemoryTasks.Run(_coolermasterPart);
             }
-            
+
+            if (SteelSdkCalled == 1)
+            {
+                _steelPart = null;
+                _steelPartCts = new CancellationTokenSource();
+                _steelPart = new Task(() =>
+                {
+                    _steel.ParticleEffect(toColor, regions, interval, _steelPartCts);
+                }, _steelPartCts.Token);
+
+                MemoryTasks.Add(_steelPart);
+                MemoryTasks.Run(_steelPart);
+            }
 
             _globalParticleRunning = true;
         }
@@ -1716,7 +1961,11 @@ namespace Chromatics
                 MemoryTasks.Remove(_coolermasterPart);
             }
 
-
+            if (SteelSdkCalled == 1)
+            {
+                _steelPartCts.Cancel();
+                MemoryTasks.Remove(_steelPart);
+            }
         }
 
         public void GlobalFadeAllLights(Color toColor, Color fromColor, uint interval = 20)

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Chromatics.Datastore;
+using CSharpAnalytics;
 using GalaSoft.MvvmLight.Ioc;
 using LifxNet;
 using Color = System.Drawing.Color;
@@ -71,7 +73,7 @@ namespace Chromatics.DeviceInterfaces
 
         private static readonly Dictionary<string, BulbModeTypes> _LifxModeMemory =
             new Dictionary<string, BulbModeTypes>();
-
+        
         private static readonly Dictionary<uint, string> _LIFXproductids = new Dictionary<uint, string>
         {
             //Keys
@@ -337,7 +339,7 @@ namespace Chromatics.DeviceInterfaces
             var version = await _client.GetDeviceVersionAsync(e.Device);
             var state = await _client.GetLightStateAsync(e.Device as LightBulb);
             var defaultmode = BulbModeTypes.Standby;
-
+            
             if (!_LifxModeMemory.ContainsKey(e.Device.MacAddressName))
             {
                 //Save to devices.chromatics

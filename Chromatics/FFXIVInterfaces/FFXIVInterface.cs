@@ -482,7 +482,7 @@ namespace Chromatics
             {
                 if (xi > xi_interval)
                 {
-                    Console.WriteLine(@"Ping");
+                    //Console.WriteLine(@"Ping");
 
                     using (var proc = Process.GetCurrentProcess())
                     {
@@ -528,49 +528,7 @@ namespace Chromatics
             }
 
             if (HoldReader) return;
-
-
-            //Cutscenes
-
-            if (ChromaticsSettings.ChromaticsSettingsCutsceneAnimation)
-            {
-                FfxivCutscenes.RefreshData();
-                if (FfxivCutscenes.InCutscene())
-                {
-                    if (!_inCutscene)
-                    {
-                        GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneBase));
-                        GlobalParticleEffects(
-                            new Color[]
-                            {
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight1),
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight2),
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight3),
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneBase)
-                            }, null,
-                            20);
-
-                        _inCutscene = true;
-                    }
-
-                    return;
-                }
-                else
-                {
-                    if (_inCutscene)
-                    {
-                        _inCutscene = false;
-                        SetKeysbase = false;
-                    }
-
-                    GlobalStopParticleEffects();
-                }
-            }
-            else
-            {
-                GlobalStopParticleEffects();
-            }
-
+            
             try
             {
                 //Get Data
@@ -615,6 +573,46 @@ namespace Chromatics
                 catch (Exception ex)
                 {
                     WriteConsole(ConsoleTypes.Error, "Parser B: " + ex.Message);
+                }
+
+                //Cutscenes
+
+                if (ChromaticsSettings.ChromaticsSettingsCutsceneAnimation)
+                {
+                    if (_playerInfo.IconID == 15)
+                    {
+                        if (!_inCutscene)
+                        {
+                            GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneBase));
+                            GlobalParticleEffects(
+                                new Color[]
+                                {
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight1),
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight2),
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneHighlight3),
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneBase)
+                                }, null,
+                                20);
+
+                            _inCutscene = true;
+                        }
+
+                        return;
+                    }
+                    else
+                    {
+                        if (_inCutscene)
+                        {
+                            _inCutscene = false;
+                            SetKeysbase = false;
+                        }
+
+                        GlobalStopParticleEffects();
+                    }
+                }
+                else
+                {
+                    GlobalStopParticleEffects();
                 }
 
 

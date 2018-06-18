@@ -1092,6 +1092,23 @@ namespace Chromatics
                 //_coolermasterDeviceHeadset = false;
             }
 
+            if (SteelSdkCalled == 1)
+            {
+                _steelDeviceKeyboard = _deviceKeyboard;
+                _steelDeviceMouse = _deviceMouse;
+                //_steelDeviceMousepad = true;
+                //_steelDeviceKeypad = true;
+                _steelDeviceHeadset = true;
+            }
+            else
+            {
+                _steelDeviceKeyboard = false;
+                _steelDeviceMouse = false;
+                //_steelDeviceMousepad = false;
+                //_steelDeviceKeypad = false;
+                _steelDeviceHeadset = false;
+            }
+
             if (RoccatSdkCalled == 1)
             {
                 _roccatDeviceKeyboard = _deviceKeyboard;
@@ -1647,6 +1664,11 @@ namespace Chromatics
                     _coolermasterDeviceKeyboard = true;
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    _steelDeviceKeyboard = true;
+                }
+
                 if (RoccatSdkCalled == 1)
                 {
                     _roccatDeviceKeyboard = true;
@@ -1675,6 +1697,11 @@ namespace Chromatics
                 if (CoolermasterSdkCalled == 1)
                 {
                     _coolermasterDeviceKeyboard = false;
+                }
+
+                if (SteelSdkCalled == 1)
+                {
+                    _steelDeviceKeyboard = false;
                 }
 
                 if (RoccatSdkCalled == 1)
@@ -1721,6 +1748,11 @@ namespace Chromatics
                     _coolermasterDeviceMouse = true;
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    _steelDeviceMouse = true;
+                }
+
                 if (RoccatSdkCalled == 1)
                 {
                     _roccatDeviceMouse = true;
@@ -1755,6 +1787,11 @@ namespace Chromatics
                 if (CoolermasterSdkCalled == 1)
                 {
                     _coolermasterDeviceMouse = false;
+                }
+
+                if (SteelSdkCalled == 1)
+                {
+                    _steelDeviceMouse = false;
                 }
 
                 if (RoccatSdkCalled == 1)
@@ -1882,6 +1919,11 @@ namespace Chromatics
                     //_coolermasterDeviceHeadset = true;
                 }
 
+                if (SteelSdkCalled == 1)
+                {
+                    _steelDeviceHeadset = true;
+                }
+
                 if (RoccatSdkCalled == 1)
                 {
                     //_roccatDeviceHeadset = true;
@@ -1916,6 +1958,11 @@ namespace Chromatics
                 if (CoolermasterSdkCalled == 1)
                 {
                     //_coolermasterDeviceHeadset = false;
+                }
+
+                if (SteelSdkCalled == 1)
+                {
+                    _steelDeviceHeadset = false;
                 }
 
                 if (RoccatSdkCalled == 1)

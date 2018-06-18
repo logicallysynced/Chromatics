@@ -936,9 +936,9 @@ namespace Chromatics.DeviceInterfaces
                 {
                     //Thread.Sleep(500);
 
-                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+                    var _regions = enumerable.OrderBy(x => rnd.Next()).ToArray();
 
-                    foreach (var key in enumerable)
+                    foreach (var key in _regions)
                     {
                         if (cts.IsCancellationRequested) return;
 

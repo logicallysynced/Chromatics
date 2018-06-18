@@ -108,6 +108,14 @@ namespace Chromatics
         public bool RazerSdk = false;
         public int RazerSdkCalled = 0;
 
+        private bool _steelDeviceKeyboard = true;
+        private bool _steelDeviceKeypad = true;
+        private bool _steelDeviceMouse = true;
+        private bool _steelDeviceMousepad = true;
+        private bool _steelDeviceHeadset = true;
+        public bool SteelSdk = false;
+        public int SteelSdkCalled = 0;
+
         private readonly RegistryKey _rkApp =
             Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 

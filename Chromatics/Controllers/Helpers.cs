@@ -12,6 +12,14 @@ namespace Chromatics.Controllers
 {
     public class Helpers
     {
+        public static class EnumUtil
+        {
+            public static IEnumerable<T> GetValues<T>()
+            {
+                return Enum.GetValues(typeof(T)).Cast<T>();
+            }
+        }
+
         public static string GetCsvData(string url, string csvPath)
         {
             var client = new WebClient();

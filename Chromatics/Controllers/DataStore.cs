@@ -29,6 +29,9 @@ namespace Chromatics.Datastore
         public bool DeviceOperationRazerChromaLink = true;
         public bool DeviceOperationRoccatKeyboard = true;
         public bool DeviceOperationRoccatMouse = true;
+        public bool DeviceOperationSteelHeadset = true;
+        public bool DeviceOperationSteelKeyboard = true;
+        public bool DeviceOperationSteelMouse = true;
 
         public bool DeviceOperationKeyboard = true;
         public bool DeviceOperationMouse = true;
