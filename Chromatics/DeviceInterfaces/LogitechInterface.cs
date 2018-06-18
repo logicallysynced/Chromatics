@@ -211,7 +211,6 @@ namespace Chromatics.DeviceInterfaces
         Task Ripple2(Color burstcol, int speed);
         Task MultiRipple1(Color burstcol, int speed);
         Task MultiRipple2(Color burstcol, int speed);
-
         void Flash1(Color burstcol, int speed, string[] regions);
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);

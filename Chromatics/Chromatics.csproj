@@ -283,6 +283,9 @@
     <Compile Include="DeviceInterfaces\LogitechInterface.cs" />
     <Compile Include="DeviceInterfaces\RoccatInterface.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesInterface.cs" />
+    <Compile Include="DeviceInterfaces\SteelSeriesLibs\ColorUtils.cs" />
+    <Compile Include="DeviceInterfaces\SteelSeriesLibs\GameSenseSDK.cs" />
+    <Compile Include="DeviceInterfaces\SteelSeriesLibs\USBHIDCodes.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVCutscenes.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVJobGauges.cs">
       <SubType>Form</SubType>
@@ -456,6 +459,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

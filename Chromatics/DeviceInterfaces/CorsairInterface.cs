@@ -1016,11 +1016,13 @@ namespace Chromatics.DeviceInterfaces
                     {
                         var presets = new Dictionary<string, Color>();
                         //uint burstcol = new Corale.Colore.Core.Color(RzCol.R, RzCol.G, RzCol.B);
+                        var safeKeys = DeviceEffects.GlobalKeys.Except(FfxivHotbar.Keybindwhitelist);
+                        var enumerable = safeKeys.ToList();
 
                         for (var i = 0; i <= 9; i++)
                         {
                             if (i == 0)
-                                foreach (var s in DeviceEffects.GlobalKeys)
+                                foreach (var s in enumerable)
                                     if (_corsairkeyids.ContainsKey(s))
                                     {
                                         var key = _corsairkeyids[s];
@@ -1032,7 +1034,7 @@ namespace Chromatics.DeviceInterfaces
                                         }
                                     }
                             else if (i == 1)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
                                     if (pos > -1)
@@ -1040,7 +1042,7 @@ namespace Chromatics.DeviceInterfaces
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
                             else if (i == 2)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
                                     if (pos > -1)
@@ -1048,7 +1050,7 @@ namespace Chromatics.DeviceInterfaces
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
                             else if (i == 3)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
                                     if (pos > -1)
@@ -1056,7 +1058,7 @@ namespace Chromatics.DeviceInterfaces
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
                             else if (i == 4)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
                                     if (pos > -1)
@@ -1064,7 +1066,7 @@ namespace Chromatics.DeviceInterfaces
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
                             else if (i == 5)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
                                     if (pos > -1)
@@ -1072,7 +1074,7 @@ namespace Chromatics.DeviceInterfaces
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
                             else if (i == 6)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
                                     if (pos > -1)
@@ -1080,7 +1082,7 @@ namespace Chromatics.DeviceInterfaces
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
                             else if (i == 7)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
                                     if (pos > -1)
@@ -1088,7 +1090,7 @@ namespace Chromatics.DeviceInterfaces
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
                             else if (i == 8)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
                                     if (pos > -1)
@@ -1096,7 +1098,7 @@ namespace Chromatics.DeviceInterfaces
                                             ApplyMapKeyLighting(key, burstcol, false);
                                 }
                             else if (i == 9)
-                                foreach (var key in DeviceEffects.GlobalKeys)
+                                foreach (var key in enumerable)
                                     if (_corsairkeyids.ContainsKey(key))
                                     {
                                         //ApplyMapKeyLighting(key, presets[key], false);
