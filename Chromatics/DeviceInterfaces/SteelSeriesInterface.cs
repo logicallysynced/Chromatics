@@ -97,6 +97,7 @@ namespace Chromatics.DeviceInterfaces
 
         private Dictionary<byte, Color> prevKeyboard = new Dictionary<byte, Color>();
         private List<byte> KeyboardHIDs = new List<byte>();
+        private Dictionary<int, Color> KeyboardZones = new Dictionary<int, Color>();
         private Color prevMouseScroll = Color.Black;
         private Color prevMouseFront = Color.Black;
         private Color prevMouseLogo = Color.Black;
@@ -124,9 +125,7 @@ namespace Chromatics.DeviceInterfaces
         private static bool _steelFlash4Running;
         private static Dictionary<string, Color> _flashpresets4 = new Dictionary<string, Color>();
         private static readonly object SteelFlash4 = new object();
-
-        private Thread heartbeatThread; 
-
+        
         public bool InitializeLights()
         {
             Write.WriteConsole(ConsoleTypes.Steel, "Attempting to load SteelSeries GameSense SDK..");
@@ -169,6 +168,13 @@ namespace Chromatics.DeviceInterfaces
                                 KeyboardHIDs.Add((byte)hid);
                             }
                         }
+
+                        KeyboardZones.Add(0, Color.Black);
+                        KeyboardZones.Add(1, Color.Black);
+                        KeyboardZones.Add(2, Color.Black);
+                        KeyboardZones.Add(3, Color.Black);
+                        KeyboardZones.Add(4, Color.Black);
+                        KeyboardZones.Add(5, Color.Black);
 
                         /*
                         if (!heartbeatThread.IsAlive)
@@ -354,12 +360,106 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapSingleLighting(Color col)
         {
-            //Not Implemented
+            if (!isInitialized) return;
+
+            keyboard_updated = false;
+
+            try
+            {
+                SendKeepalive();
+
+                if (_steelKeyboard)
+                {
+                    if (KeyboardZones[0] == col) return;
+
+                    gameSenseSDK.sendColor("periph", col.R, col.G, col.B);
+                    keyboard_updated = true;
+                    KeyboardZones[0] = col;
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Steel,
+                    "SteelSeries GameSense SDK, error when updating keyboard (single). EX: " + ex);
+            }
         }
 
         public void ApplyMapMultiLighting(Color col, string region)
         {
-            //Not Implemented
+            if (!isInitialized) return;
+
+            keyboard_updated = false;
+
+            try
+            {
+                SendKeepalive();
+
+                if (_steelKeyboard)
+                {
+                    switch (region)
+                    {
+                        case "All":
+                            if (KeyboardZones[0] != col)
+                            {
+                                gameSenseSDK.sendColor("periph", col.R, col.G, col.B);
+                                keyboard_updated = true;
+                                KeyboardZones[0] = col;
+                            }
+
+                            break;
+                        case "0":
+                            if (KeyboardZones[1] != col)
+                            {
+                                gameSenseSDK.sendColor("zone1", col.R, col.G, col.B);
+                                keyboard_updated = true;
+                                KeyboardZones[1] = col;
+                            }
+
+                            break;
+                        case "1":
+                            if (KeyboardZones[2] != col)
+                            {
+                                gameSenseSDK.sendColor("zone2", col.R, col.G, col.B);
+                                keyboard_updated = true;
+                                KeyboardZones[2] = col;
+                            }
+
+                            break;
+                        case "2":
+                            if (KeyboardZones[3] != col)
+                            {
+                                gameSenseSDK.sendColor("zone3", col.R, col.G, col.B);
+                                keyboard_updated = true;
+                                KeyboardZones[3] = col;
+                            }
+
+                            break;
+                        case "3":
+                            if (KeyboardZones[4] != col)
+                            {
+                                gameSenseSDK.sendColor("zone4", col.R, col.G, col.B);
+                                keyboard_updated = true;
+                                KeyboardZones[4] = col;
+                            }
+
+                            break;
+                        case "4":
+                            if (KeyboardZones[5] != col)
+                            {
+                                gameSenseSDK.sendColor("zone5", col.R, col.G, col.B);
+                                keyboard_updated = true;
+                                KeyboardZones[5] = col;
+                            }
+
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Steel,
+                    "SteelSeries GameSense SDK, error when updating keyboard (single). EX: " + ex);
+            }
         }
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, bool bypasswhitelist = false)

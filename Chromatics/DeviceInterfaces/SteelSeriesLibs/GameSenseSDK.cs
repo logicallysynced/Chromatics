@@ -132,7 +132,7 @@ namespace Chromatics.DeviceInterfaces.SteelSeriesLibs
             String json = JsonConvert.SerializeObject(payload);
             sendPostRequest("http://" + sseAddress + "/game_event", json);
         }
-
+        
         public void sendHeartbeat()
         {
             GameSensePayloadHeartbeatJSON payload = new GameSensePayloadHeartbeatJSON();
@@ -176,6 +176,26 @@ namespace Chromatics.DeviceInterfaces.SteelSeriesLibs
                 (on-device ""rgb-4-zone"" show: color)
                 (on-device ""rgb-5-zone"" show: color)
                 (on-device ""rgb-12-zone"" show: color)))
+        (when (zone1:? data)
+            (let* ((periph (periph: data))
+                    (color (color: periph)))
+                (on-device ""rgb-1-zone"" show: color)))
+        (when (zone2:? data)
+            (let* ((periph (periph: data))
+                    (color (color: periph)))
+                (on-device ""rgb-2-zone"" show: color)))
+        (when (zone3:? data)
+            (let* ((periph (periph: data))
+                    (color (color: periph)))
+                (on-device ""rgb-3-zone"" show: color)))
+        (when (zone4:? data)
+            (let* ((periph (periph: data))
+                    (color (color: periph)))
+                (on-device ""rgb-4-zone"" show: color)))
+        (when (zone5:? data)
+            (let* ((periph (periph: data))
+                    (color (color: periph)))
+                (on-device ""rgb-5-zone"" show: color)))
         (when (mouse:? data)
             (let* ((mouse (mouse: data))
                    (color (color: mouse)))

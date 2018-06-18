@@ -260,9 +260,9 @@ namespace Chromatics.DeviceInterfaces
                     Chroma = null;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //
+                Console.WriteLine(@"EX: " + ex);
             }
             
         }

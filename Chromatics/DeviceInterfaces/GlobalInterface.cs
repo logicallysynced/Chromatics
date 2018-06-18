@@ -429,8 +429,8 @@ namespace Chromatics
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.SetLights(col);
 
-            //if (SteelSdkCalled == 1)
-                //_steel.SetLights(col);
+            if (SteelSdkCalled == 1)
+                _steel.ApplyMapSingleLighting(col);
         }
 
         public void GlobalApplyMultiZoneLighting(Color col, string region)
@@ -450,8 +450,8 @@ namespace Chromatics
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.SetLights(col);
 
-            //if (SteelSdkCalled == 1)
-                //_steel.SetLights(col);
+            if (SteelSdkCalled == 1)
+                _steel.ApplyMapMultiLighting(col, region);
         }
 
         //Send a lighting command to a specific Keyboard LED
