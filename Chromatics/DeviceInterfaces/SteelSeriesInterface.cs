@@ -80,7 +80,8 @@ namespace Chromatics.DeviceInterfaces
         void SingleFlash1(Color burstcol, int speed, string[] regions);
         void SingleFlash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
-        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts);
+        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
+        void CycleEffect(int interval, CancellationTokenSource token);
     }
 
     public class SteelLib : ISteelSdk
@@ -213,7 +214,7 @@ namespace Chromatics.DeviceInterfaces
                 {
                     if (isInitialized)
                     {
-                        this.Reset();
+                        Reset();
                         //GameSenseSDK.sendStop(); doesn't work atm so just wait for timeout=15sec
                         isInitialized = false;
                     }
@@ -1315,7 +1316,7 @@ namespace Chromatics.DeviceInterfaces
             throw new NotImplementedException();
         }
 
-        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts)
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50)
         {
             if (!isInitialized || !_steelKeyboard) return;
             if (cts.IsCancellationRequested) return;
@@ -1353,6 +1354,7 @@ namespace Chromatics.DeviceInterfaces
                     foreach (var key in _regions)
                     {
                         if (cts.IsCancellationRequested) return;
+                        if (!colorFaderDict.ContainsKey(key)) continue;
 
                         foreach (var color in colorFaderDict[key].Fade())
                         {
@@ -1369,12 +1371,93 @@ namespace Chromatics.DeviceInterfaces
                         hids.Clear();
                         colors.Clear();
 
-                        Thread.Sleep(50);
+                        Thread.Sleep(speed);
                     }
                 });
 
-                Thread.Sleep(regions.Length * 50 / 2);
+                Thread.Sleep(colorFaderDict.Count * speed);
             }
+        }
+
+        public void CycleEffect(int interval, CancellationTokenSource token)
+        {
+            if (!isInitialized || !_steelKeyboard)
+                return;
+
+            List<byte> hids = new List<byte>();
+            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+            while (true)
+            {
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    foreach (var hid in KeyboardHIDs)
+                    {
+                        hids.Add(hid);
+                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(250 * 100) / 255), (byte)Math.Ceiling((double)(x * 100) / 255), (byte)0));
+                    }
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    foreach (var hid in KeyboardHIDs)
+                    {
+                        hids.Add(hid);
+                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(x * 100) / 255), (byte)Math.Ceiling((double)(250 * 100) / 255), (byte)0));
+                    }
+                }
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    foreach (var hid in KeyboardHIDs)
+                    {
+                        hids.Add(hid);
+                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(x * 100) / 255), (byte)Math.Ceiling((double)(250 * 100) / 255), (byte)0));
+                    }
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    foreach (var hid in KeyboardHIDs)
+                    {
+                        hids.Add(hid);
+                        colors.Add(Tuple.Create((byte)0, (byte)Math.Ceiling((double)(x * 100) / 255), (byte)Math.Ceiling((double)(250 * 100) / 255)));
+                    }
+                }
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    foreach (var hid in KeyboardHIDs)
+                    {
+                        hids.Add(hid);
+                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(x * 100) / 255), (byte)0, (byte)Math.Ceiling((double)(250 * 100) / 255)));
+                    }
+
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    foreach (var hid in KeyboardHIDs)
+                    {
+                        hids.Add(hid);
+                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(250 * 100) / 255), (byte)0, (byte)Math.Ceiling((double)(x * 100) / 255)));
+                    }
+
+                }
+                if (token.IsCancellationRequested) break;
+
+                EffectKeyUpdate(hids, colors);
+                hids.Clear();
+                colors.Clear();
+            }
+            Thread.Sleep(interval);
         }
 
         private void EffectKeyUpdate(List<byte> hids, List<Tuple<byte, byte, byte>> cols)

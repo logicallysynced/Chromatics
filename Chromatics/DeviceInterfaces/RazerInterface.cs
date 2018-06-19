@@ -56,6 +56,7 @@ namespace Chromatics.DeviceInterfaces
         bool InitializeSdk();
         void ShutdownSdk();
         void InitializeLights(Color initColor);
+        bool CheckCrash();
 
         void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
             bool deviceHeadset, bool deviceChromaLink, Color basecol);
@@ -84,8 +85,9 @@ namespace Chromatics.DeviceInterfaces
         void SingleFlash1(Color burstcol, int speed, string[] regions);
         void SingleFlash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
-        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts);
+        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
         void FadeColourAll(Color toColor, Color fromColor, uint interval);
+        void CycleEffect(int interval, CancellationTokenSource token);
     }
 
     public class RazerLib : IRazerSdk
@@ -236,6 +238,9 @@ namespace Chromatics.DeviceInterfaces
         private bool _razerDeviceMousepad = true;
         private bool _razerDeviceChromaLink = true;
 
+        private bool _isInitialized;
+        private bool _isCrashed;
+
         //Handle device send/recieve
         private readonly CancellationTokenSource _rcts = new CancellationTokenSource();
 
@@ -259,6 +264,8 @@ namespace Chromatics.DeviceInterfaces
                     Chroma.UninitializeAsync();
                     Chroma = null;
                 }
+
+                _isInitialized = false;
             }
             catch (Exception ex)
             {
@@ -297,6 +304,8 @@ namespace Chromatics.DeviceInterfaces
                 ChromaLink = Chroma.ChromaLink;
 
                 Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded (" + Chroma.Version + ")");
+                _isInitialized = true;
+                _isCrashed = false;
 
                 return true;
             }
@@ -308,9 +317,16 @@ namespace Chromatics.DeviceInterfaces
             
         }
 
+        public bool CheckCrash()
+        {
+            return _isCrashed;
+        }
+
         public void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
             bool deviceHeadset, bool deviceChromaLink, Color basecol)
         {
+            if (!_isInitialized) return;
+
             if (_razerDeviceKeyboard && !deviceKeyboard)
                 Keyboard.SetStaticAsync(new KeyboardStatic(ToColoreCol(basecol)));
 
@@ -343,6 +359,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void InitializeLights(Color initColor)
         {
+            if (!_isInitialized) return;
+
             //Debug.WriteLine("Setting Razer Default");
             SetLights(initColor);
 
@@ -350,18 +368,27 @@ namespace Chromatics.DeviceInterfaces
 
         public void SetAllLights(Color col)
         {
+            if (!_isInitialized) return;
             var c = ToColoreCol(col);
 
-            if (_razerDeviceKeyboard) Keyboard.SetAllAsync(c);
-            if (_razerDeviceMouse) Mouse.SetAllAsync(c);
-            if (_razerDeviceMousepad) Mousepad.SetAllAsync(c);
-            if (_razerDeviceChromaLink) ChromaLink.SetAllAsync(c);
-            if (_razerDeviceKeypad) Keypad.SetAllAsync(c);
-            if (_razerDeviceHeadset) Headset.SetAllAsync(c);
+            try
+            {
+                if (_razerDeviceKeyboard) Keyboard.SetAllAsync(c);
+                if (_razerDeviceMouse) Mouse.SetAllAsync(c);
+                if (_razerDeviceMousepad) Mousepad.SetAllAsync(c);
+                if (_razerDeviceChromaLink) ChromaLink.SetAllAsync(c);
+                if (_razerDeviceKeypad) Keypad.SetAllAsync(c);
+                if (_razerDeviceHeadset) Headset.SetAllAsync(c);
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+            }
         }
 
         public void SetLights(Color col)
         {
+            if (!_isInitialized) return;
             if (!_razerDeviceKeyboard) return;
 
             /*
@@ -373,12 +400,21 @@ namespace Chromatics.DeviceInterfaces
 
             lock (RazerFlash1)
             {
-                _keyboardGrid.Set(ToColoreCol(col));
+                try
+                {
+                    _keyboardGrid.Set(ToColoreCol(col));
+                }
+                catch (Exception ex)
+                {
+                    CheckRazerEx(ex);
+                }
             }
         }
         
         public void SetWave()
         {
+            if (!_isInitialized) return;
+
             try
             {
                 /*
@@ -415,83 +451,118 @@ namespace Chromatics.DeviceInterfaces
             catch (Exception ex)
             {
                 Write.WriteConsole(ConsoleTypes.Error, "Razer (Wave): " + ex.Message);
+                CheckRazerEx(ex);
             }
         }
 
         public void DeviceUpdate()
         {
-            lock (RazerFlash1)
-            {
-                Chroma.Keyboard.SetCustomAsync(_keyboardGrid);
-            }
+            if (!_isInitialized) return;
 
-            Chroma.Mouse.SetGridAsync(_mouseGrid);
-            Chroma.Mousepad.SetCustomAsync(_mousepadGrid);
+            try
+            {
+                lock (RazerFlash1)
+                {
+                    Chroma.Keyboard.SetCustomAsync(_keyboardGrid);
+                }
+
+                Chroma.Mouse.SetGridAsync(_mouseGrid);
+                Chroma.Mousepad.SetCustomAsync(_mousepadGrid);
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+            }
+            
         }
 
         public void ApplyMapSingleLighting(Color col)
         {
+            if (!_isInitialized) return;
             if (!_razerDeviceKeyboard) return;
 
-            Keyboard.SetAllAsync(ToColoreCol(col));
+            try
+            {
+                Keyboard.SetAllAsync(ToColoreCol(col));
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+            }
+            
         }
 
         public void ApplyMapMultiLighting(Color col, string region)
         {
+            if (!_isInitialized) return;
             if (!Keyboard.IsDeathstalkerConnected) return;
             {
-                uint rzCol = ToColoreCol(col);
-
-                switch (region)
+                try
                 {
-                    case "All":
-                        if (Keyboard[0].Value != rzCol)
-                            Keyboard.SetAllAsync(rzCol);
+                    uint rzCol = ToColoreCol(col);
 
-                        break;
-                    case "0":
-                        if (Keyboard[0].Value != rzCol)
-                        {
-                            Keyboard.SetDeathstalkerZoneAsync(0, rzCol);
-                        }
+                    switch (region)
+                    {
+                        case "All":
+                            if (Keyboard[0].Value != rzCol)
+                                Keyboard.SetAllAsync(rzCol);
 
-                        break;
-                    case "1":
-                        if (Keyboard[1].Value != rzCol)
-                        {
-                            Keyboard.SetDeathstalkerZoneAsync(1, rzCol);
-                        }
-                        break;
-                    case "2":
-                        if (Keyboard[2].Value != rzCol)
-                        {
-                            Keyboard.SetDeathstalkerZoneAsync(2, rzCol);
-                        }
-                        break;
-                    case "3":
-                        if (Keyboard[3].Value != rzCol)
-                        {
-                            Keyboard.SetDeathstalkerZoneAsync(3, rzCol);
-                        }
-                        break;
-                    case "4":
-                        if (Keyboard[4].Value != rzCol)
-                        {
-                            Keyboard.SetDeathstalkerZoneAsync(4, rzCol);
-                        }
-                        break;
-                    case "5":
-                        if (Keyboard[5].Value != rzCol)
-                        {
-                            Keyboard.SetDeathstalkerZoneAsync(5, rzCol);
-                        }
-                        break;
+                            break;
+                        case "0":
+                            if (Keyboard[0].Value != rzCol)
+                            {
+                                Keyboard.SetDeathstalkerZoneAsync(0, rzCol);
+                            }
+
+                            break;
+                        case "1":
+                            if (Keyboard[1].Value != rzCol)
+                            {
+                                Keyboard.SetDeathstalkerZoneAsync(1, rzCol);
+                            }
+
+                            break;
+                        case "2":
+                            if (Keyboard[2].Value != rzCol)
+                            {
+                                Keyboard.SetDeathstalkerZoneAsync(2, rzCol);
+                            }
+
+                            break;
+                        case "3":
+                            if (Keyboard[3].Value != rzCol)
+                            {
+                                Keyboard.SetDeathstalkerZoneAsync(3, rzCol);
+                            }
+
+                            break;
+                        case "4":
+                            if (Keyboard[4].Value != rzCol)
+                            {
+                                Keyboard.SetDeathstalkerZoneAsync(4, rzCol);
+                            }
+
+                            break;
+                        case "5":
+                            if (Keyboard[5].Value != rzCol)
+                            {
+                                Keyboard.SetDeathstalkerZoneAsync(5, rzCol);
+                            }
+
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    CheckRazerEx(ex);
                 }
             }
         }
 
         public void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
+            if (!_isInitialized) return;
+
             if (FfxivHotbar.Keybindwhitelist.Contains(key) && !bypasswhitelist)
                 return;
 
@@ -524,11 +595,13 @@ namespace Chromatics.DeviceInterfaces
                 catch (Exception ex)
                 {
                     Write.WriteConsole(ConsoleTypes.Error, "Razer Keyboard (" + key + "): " + ex.Message);
+                    CheckRazerEx(ex);
                 }
         }
 
         public void ApplyMapLogoLighting(string key, Color col, bool clear)
         {
+            if (!_isInitialized) return;
             uint rzCol = ToColoreCol(col);
 
             //Send Lighting
@@ -543,12 +616,14 @@ namespace Chromatics.DeviceInterfaces
                     catch (Exception ex)
                     {
                         Write.WriteConsole(ConsoleTypes.Error, "Razer (MapLogo): " + ex.Message);
+                        CheckRazerEx(ex);
                     }
             }
         }
 
         public void ApplyMapMouseLighting(string region, Color col, bool clear)
         {
+            if (!_isInitialized) return;
             uint rzCol = ToColoreCol(col);
 
             //Send Lighting
@@ -575,12 +650,14 @@ namespace Chromatics.DeviceInterfaces
                 }
                 catch (Exception ex)
                 {
+                    CheckRazerEx(ex);
                     Write.WriteConsole(ConsoleTypes.Error, "Razer Mouse (" + region + "): " + ex.Message);
                 }
         }
 
         public void ApplyMapPadLighting(int region, Color col, bool clear)
         {
+            if (!_isInitialized) return;
             uint rzCol = ToColoreCol(col);
 
             try
@@ -591,12 +668,14 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
+                CheckRazerEx(ex);
                 Write.WriteConsole(ConsoleTypes.Error, "Razer Mousepad (" + region + "): " + ex.Message);
             }
         }
 
         public void ApplyMapHeadsetLighting(Color col, bool clear)
         {
+            if (!_isInitialized) return;
             uint rzCol = ToColoreCol(col);
 
             try
@@ -606,12 +685,14 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
+                CheckRazerEx(ex);
                 Write.WriteConsole(ConsoleTypes.Error, "Razer Headset: " + ex.Message);
             }
         }
 
         public void ApplyMapKeypadLighting(Color col, bool clear, string region)
         {
+            if (!_isInitialized) return;
             uint rzCol = ToColoreCol(col);
             
             try
@@ -680,11 +761,13 @@ namespace Chromatics.DeviceInterfaces
             catch (Exception ex)
             {
                 Write.WriteConsole(ConsoleTypes.Error, "Razer Keypad: " + ex.Message);
+                CheckRazerEx(ex);
             }
         }
 
         public void ApplyMapChromaLinkLighting(Color col, int pos)
         {
+            if (!_isInitialized) return;
             if (pos >= ChromaLinkConstants.MaxLeds) return;
             uint rzCol = ToColoreCol(col);
             
@@ -701,6 +784,7 @@ namespace Chromatics.DeviceInterfaces
             catch (Exception ex)
             {
                 Write.WriteConsole(ConsoleTypes.Error, "Razer ChromaLink: " + ex.Message);
+                CheckRazerEx(ex);
             }
         }
 
@@ -710,247 +794,255 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (RazerRipple1)
                 {
-                    if (!_razerDeviceKeyboard) return;
-                    var presets = new Dictionary<string, Color>();
-                    KeyboardCustom refreshGrid;
-                    refreshGrid = _keyboardGrid;
-
-                    for (var i = 0; i <= 9; i++)
+                    try
                     {
-                        if (i == 0)
-                        {
-                            //Setup
+                        if (!_isInitialized) return;
+                        if (!_razerDeviceKeyboard) return;
+                        var presets = new Dictionary<string, Color>();
+                        KeyboardCustom refreshGrid;
+                        refreshGrid = _keyboardGrid;
 
-                            foreach (var key in DeviceEffects.GlobalKeys)
+                        for (var i = 0; i <= 9; i++)
+                        {
+                            if (i == 0)
                             {
-                                var fkey = (Key) Enum.Parse(typeof(Key), key);
-                                var cc = _keyboardGrid[fkey]; //Keyboard.Instance[fkey];
-                                var ccX = FromColoreCol(cc);
+                                //Setup
+
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var fkey = (Key) Enum.Parse(typeof(Key), key);
+                                    var cc = _keyboardGrid[fkey]; //Keyboard.Instance[fkey];
+                                    var ccX = FromColoreCol(cc);
                                     //.ToSystemColor(); //System.Drawing.Color.FromArgb(cc.R, cc.G, cc.B);
-                                presets.Add(key, ccX);
-                            }
-
-                            //Keyboard.SetCustom(keyboard_custom);
-
-                            //Chroma.Instance.Keyboard.SetCustom(keyboardGrid);
-                            //HoldReader = true;
-                        }
-                        else if (i == 1)
-                        {
-                            //Step 0
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
-                                if (pos > -1)
-                                {
-                                    //ApplyMapKeyLighting(key, burstcol, true);
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(burstcol);
-                                    }
-                                }
-                                else
-                                {
-                                    //ApplyMapKeyLighting(key, presets[key], true);
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
-                                    }
-                                }
-                            }
-                        }
-                        else if (i == 2)
-                        {
-                            //Step 1
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
-                                if (pos > -1)
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(burstcol);
-                                    }
-                                }
-                                else
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
-                                    }
-                                }
-                            }
-                        }
-                        else if (i == 3)
-                        {
-                            //Step 2
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
-                                if (pos > -1)
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(burstcol);
-                                    }
-                                }
-                                else
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
-                                    }
-                                }
-                            }
-                        }
-                        else if (i == 4)
-                        {
-                            //Step 3
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
-                                if (pos > -1)
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(burstcol);
-                                    }
-                                }
-                                else
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
-                                    }
-                                }
-                            }
-                        }
-                        else if (i == 5)
-                        {
-                            //Step 4
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
-                                if (pos > -1)
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(burstcol);
-                                    }
-                                }
-                                else
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
-                                    }
-                                }
-                            }
-                        }
-                        else if (i == 6)
-                        {
-                            //Step 5
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
-                                if (pos > -1)
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(burstcol);
-                                    }
-                                }
-                                else
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
-                                    }
-                                }
-                            }
-                        }
-                        else if (i == 7)
-                        {
-                            //Step 6
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
-                                if (pos > -1)
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(burstcol);
-                                    }
-                                }
-                                else
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
-                                    }
-                                }
-                            }
-                        }
-                        else if (i == 8)
-                        {
-                            //Step 7
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
-                                if (pos > -1)
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(burstcol);
-                                    }
-                                }
-                                else
-                                {
-                                    if (Enum.IsDefined(typeof(Key), key))
-                                    {
-                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
-                                    }
-                                }
-                            }
-                        }
-                        else if (i == 9)
-                        {
-                            //Spin down
-
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    //ApplyMapKeyLighting(key, presets[key], true);
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                    presets.Add(key, ccX);
                                 }
 
-                            presets.Clear();
-                            //HoldReader = false;
+                                //Keyboard.SetCustom(keyboard_custom);
 
-                            //MemoryReaderLock.Enabled = true;
+                                //Chroma.Instance.Keyboard.SetCustom(keyboardGrid);
+                                //HoldReader = true;
+                            }
+                            else if (i == 1)
+                            {
+                                //Step 0
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
+                                    if (pos > -1)
+                                    {
+                                        //ApplyMapKeyLighting(key, burstcol, true);
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(burstcol);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //ApplyMapKeyLighting(key, presets[key], true);
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (i == 2)
+                            {
+                                //Step 1
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
+                                    if (pos > -1)
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(burstcol);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (i == 3)
+                            {
+                                //Step 2
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
+                                    if (pos > -1)
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(burstcol);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (i == 4)
+                            {
+                                //Step 3
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
+                                    if (pos > -1)
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(burstcol);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (i == 5)
+                            {
+                                //Step 4
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
+                                    if (pos > -1)
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(burstcol);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (i == 6)
+                            {
+                                //Step 5
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
+                                    if (pos > -1)
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(burstcol);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (i == 7)
+                            {
+                                //Step 6
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
+                                    if (pos > -1)
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(burstcol);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (i == 8)
+                            {
+                                //Step 7
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
+                                    if (pos > -1)
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(burstcol);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Enum.IsDefined(typeof(Key), key))
+                                        {
+                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                            refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (i == 9)
+                            {
+                                //Spin down
+
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        //ApplyMapKeyLighting(key, presets[key], true);
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshGrid[keyid] = ToColoreCol(presets[key]);
+                                    }
+
+                                presets.Clear();
+                                //HoldReader = false;
+
+                                //MemoryReaderLock.Enabled = true;
+                            }
+
+                            if (i < 9)
+                                Thread.Sleep(speed);
+
+                            Keyboard.SetCustomAsync(refreshGrid);
                         }
-
-                        if (i < 9)
-                            Thread.Sleep(speed);
-
-                        Keyboard.SetCustomAsync(refreshGrid);
+                    }
+                    catch (Exception ex)
+                    {
+                        CheckRazerEx(ex);
                     }
                 }
             });
@@ -962,105 +1054,113 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (RazerMultiRipple1)
                 {
-                    if (!_razerDeviceKeyboard && !Keyboard.IsDeathstalkerConnected && !_razerDeviceKeypad) return;
-                    var presetsA = new Dictionary<int, Color>();
-                    var presetsB = new Dictionary<int, Color>();
-
-                    for (var i = 0; i <= 9; i++)
+                    try
                     {
-                        if (i == 0)
+                        if (!_isInitialized) return;
+                        if (!_razerDeviceKeyboard && !Keyboard.IsDeathstalkerConnected && !_razerDeviceKeypad) return;
+                        var presetsA = new Dictionary<int, Color>();
+                        var presetsB = new Dictionary<int, Color>();
+
+                        for (var i = 0; i <= 9; i++)
                         {
-                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            if (i == 0)
                             {
-                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                if (Keyboard.IsDeathstalkerConnected && _keyboard)
                                 {
-                                    var ccX = FromColoreCol(Keyboard[x1]);
-                                    presetsA.Add(x1, ccX);
+                                    for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                    {
+                                        var ccX = FromColoreCol(Keyboard[x1]);
+                                        presetsA.Add(x1, ccX);
+                                    }
+                                }
+
+                                if (_razerDeviceKeypad && _keypad)
+                                {
+                                    for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                    {
+                                        var ccX = FromColoreCol(Keypad[0, x2]);
+                                        presetsB.Add(x2, ccX);
+                                    }
+                                }
+
+                                continue;
+                            }
+
+                            if (i == 1 || i == 3 || i == 5 || i == 7)
+                            {
+                                if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                                {
+                                    for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                    {
+                                        Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
+                                    }
+                                }
+
+                                if (_razerDeviceKeypad && _keypad)
+                                {
+                                    for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                    {
+                                        Keypad[0, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[1, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[2, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[3, x2] = ToColoreCol(presetsB[x2]);
+                                    }
                                 }
                             }
 
-                            if (_razerDeviceKeypad && _keypad)
+                            if (i == 2 || i == 4 || i == 6 || i == 8)
                             {
-                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                if (Keyboard.IsDeathstalkerConnected && _keyboard)
                                 {
-                                    var ccX = FromColoreCol(Keypad[0, x2]);
-                                    presetsB.Add(x2, ccX);
+                                    for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                    {
+                                        Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(burstcol));
+                                    }
+                                }
+
+                                if (_razerDeviceKeypad && _keypad)
+                                {
+                                    for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                    {
+                                        Keypad[0, x2] = ToColoreCol(burstcol);
+                                        Keypad[1, x2] = ToColoreCol(burstcol);
+                                        Keypad[2, x2] = ToColoreCol(burstcol);
+                                        Keypad[3, x2] = ToColoreCol(burstcol);
+                                    }
                                 }
                             }
 
-                            continue;
+                            if (i == 9)
+                            {
+                                if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                                {
+                                    for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                    {
+                                        Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
+                                    }
+                                }
+
+                                if (_razerDeviceKeypad && _keypad)
+                                {
+                                    for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                    {
+                                        Keypad[0, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[1, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[2, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[3, x2] = ToColoreCol(presetsB[x2]);
+                                    }
+                                }
+                            }
+
+                            if (i < 9)
+                            {
+                                Thread.Sleep(speed);
+                            }
                         }
-
-                        if (i == 1 || i == 3 || i == 5 || i == 7)
-                        {
-                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
-                            {
-                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
-                                {
-                                    Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
-                                }
-                            }
-
-                            if (_razerDeviceKeypad && _keypad)
-                            {
-                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
-                                {
-                                    Keypad[0, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[1, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[2, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[3, x2] = ToColoreCol(presetsB[x2]);
-                                }
-                            }
-                        }
-
-                        if (i == 2 || i == 4 || i == 6 || i == 8)
-                        {
-                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
-                            {
-                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
-                                {
-                                    Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(burstcol));
-                                }
-                            }
-
-                            if (_razerDeviceKeypad && _keypad)
-                            {
-                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
-                                {
-                                    Keypad[0, x2] = ToColoreCol(burstcol);
-                                    Keypad[1, x2] = ToColoreCol(burstcol);
-                                    Keypad[2, x2] = ToColoreCol(burstcol);
-                                    Keypad[3, x2] = ToColoreCol(burstcol);
-                                }
-                            }
-                        }
-
-                        if (i == 9)
-                        {
-                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
-                            {
-                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
-                                {
-                                    Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
-                                }
-                            }
-
-                            if (_razerDeviceKeypad && _keypad)
-                            {
-                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
-                                {
-                                    Keypad[0, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[1, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[2, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[3, x2] = ToColoreCol(presetsB[x2]);
-                                }
-                            }
-                        }
-
-                        if (i < 9)
-                        {
-                            Thread.Sleep(speed);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        CheckRazerEx(ex);
                     }
                 }
             });
@@ -1072,171 +1172,179 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (RazerRipple2)
                 {
-                    if (!_razerDeviceKeyboard) return;
-                    var presets = new Dictionary<string, Color>();
-                    var refreshGrid = KeyboardCustom.Create();
-                    refreshGrid = _keyboardGrid;
-
-                    for (var i = 0; i <= 9; i++)
+                    try
                     {
-                        if (i == 0)
-                        {
-                            //Setup
+                        if (!_isInitialized) return;
+                        if (!_razerDeviceKeyboard) return;
+                        var presets = new Dictionary<string, Color>();
+                        var refreshGrid = KeyboardCustom.Create();
+                        refreshGrid = _keyboardGrid;
 
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                                if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                        for (var i = 0; i <= 9; i++)
+                        {
+                            if (i == 0)
+                            {
+                                //Setup
+
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                    {
+                                        var fkey = (Key) Enum.Parse(typeof(Key), key);
+                                        var cc = _keyboardGrid[fkey];
+                                        var ccX = FromColoreCol(cc);
+                                        presets.Add(key, ccX);
+                                    }
+
+                                //Keyboard.SetCustom(keyboard_custom);
+
+                                //HoldReader = true;
+                            }
+                            else if (i == 1)
+                            {
+                                //Step 0
+                                foreach (var key in DeviceEffects.GlobalKeys)
                                 {
-                                    var fkey = (Key) Enum.Parse(typeof(Key), key);
-                                    var cc = _keyboardGrid[fkey];
-                                    var ccX = FromColoreCol(cc);
-                                    presets.Add(key, ccX);
-                                }
-
-                            //Keyboard.SetCustom(keyboard_custom);
-
-                            //HoldReader = true;
-                        }
-                        else if (i == 1)
-                        {
-                            //Step 0
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
-                                if (pos > -1)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (Enum.IsDefined(typeof(Key), key))
-                                        {
-                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                            refreshGrid[keyid] = ToColoreCol(burstcol);
-                                        }
-                            }
-                        }
-                        else if (i == 2)
-                        {
-                            //Step 1
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
-                                if (pos > -1)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (Enum.IsDefined(typeof(Key), key))
-                                        {
-                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                            refreshGrid[keyid] = ToColoreCol(burstcol);
-                                        }
-                            }
-                        }
-                        else if (i == 3)
-                        {
-                            //Step 2
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
-                                if (pos > -1)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (Enum.IsDefined(typeof(Key), key))
-                                        {
-                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                            refreshGrid[keyid] = ToColoreCol(burstcol);
-                                        }
-                            }
-                        }
-                        else if (i == 4)
-                        {
-                            //Step 3
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
-                                if (pos > -1)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (Enum.IsDefined(typeof(Key), key))
-                                        {
-                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                            refreshGrid[keyid] = ToColoreCol(burstcol);
-                                        }
-                            }
-                        }
-                        else if (i == 5)
-                        {
-                            //Step 4
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
-                                if (pos > -1)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (Enum.IsDefined(typeof(Key), key))
-                                        {
-                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                            refreshGrid[keyid] = ToColoreCol(burstcol);
-                                        }
-                            }
-                        }
-                        else if (i == 6)
-                        {
-                            //Step 5
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
-                                if (pos > -1)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (Enum.IsDefined(typeof(Key), key))
-                                        {
-                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                            refreshGrid[keyid] = ToColoreCol(burstcol);
-                                        }
-                            }
-                        }
-                        else if (i == 7)
-                        {
-                            //Step 6
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
-                                if (pos > -1)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (Enum.IsDefined(typeof(Key), key))
-                                        {
-                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                            refreshGrid[keyid] = ToColoreCol(burstcol);
-                                        }
-                            }
-                        }
-                        else if (i == 8)
-                        {
-                            //Step 7
-                            foreach (var key in DeviceEffects.GlobalKeys)
-                            {
-                                var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
-                                if (pos > -1)
-                                {
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
-                                        if (Enum.IsDefined(typeof(Key), key))
-                                        {
-                                            var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                            refreshGrid[keyid] = ToColoreCol(burstcol);
-                                        }
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
+                                    if (pos > -1)
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                            if (Enum.IsDefined(typeof(Key), key))
+                                            {
+                                                var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                                refreshGrid[keyid] = ToColoreCol(burstcol);
+                                            }
                                 }
                             }
-                        }
-                        else if (i == 9)
-                        {
-                            //Spin down
-
-                            foreach (var key in DeviceEffects.GlobalKeys)
+                            else if (i == 2)
                             {
-                                //ApplyMapKeyLighting(key, presets[key], true);
+                                //Step 1
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
+                                    if (pos > -1)
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                            if (Enum.IsDefined(typeof(Key), key))
+                                            {
+                                                var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                                refreshGrid[keyid] = ToColoreCol(burstcol);
+                                            }
+                                }
+                            }
+                            else if (i == 3)
+                            {
+                                //Step 2
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
+                                    if (pos > -1)
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                            if (Enum.IsDefined(typeof(Key), key))
+                                            {
+                                                var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                                refreshGrid[keyid] = ToColoreCol(burstcol);
+                                            }
+                                }
+                            }
+                            else if (i == 4)
+                            {
+                                //Step 3
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
+                                    if (pos > -1)
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                            if (Enum.IsDefined(typeof(Key), key))
+                                            {
+                                                var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                                refreshGrid[keyid] = ToColoreCol(burstcol);
+                                            }
+                                }
+                            }
+                            else if (i == 5)
+                            {
+                                //Step 4
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
+                                    if (pos > -1)
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                            if (Enum.IsDefined(typeof(Key), key))
+                                            {
+                                                var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                                refreshGrid[keyid] = ToColoreCol(burstcol);
+                                            }
+                                }
+                            }
+                            else if (i == 6)
+                            {
+                                //Step 5
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
+                                    if (pos > -1)
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                            if (Enum.IsDefined(typeof(Key), key))
+                                            {
+                                                var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                                refreshGrid[keyid] = ToColoreCol(burstcol);
+                                            }
+                                }
+                            }
+                            else if (i == 7)
+                            {
+                                //Step 6
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
+                                    if (pos > -1)
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                            if (Enum.IsDefined(typeof(Key), key))
+                                            {
+                                                var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                                refreshGrid[keyid] = ToColoreCol(burstcol);
+                                            }
+                                }
+                            }
+                            else if (i == 8)
+                            {
+                                //Step 7
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
+                                    if (pos > -1)
+                                    {
+                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                            if (Enum.IsDefined(typeof(Key), key))
+                                            {
+                                                var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                                refreshGrid[keyid] = ToColoreCol(burstcol);
+                                            }
+                                    }
+                                }
+                            }
+                            else if (i == 9)
+                            {
+                                //Spin down
+
+                                foreach (var key in DeviceEffects.GlobalKeys)
+                                {
+                                    //ApplyMapKeyLighting(key, presets[key], true);
+                                }
+
+
+                                //presets.Clear();
+                                presets.Clear();
+                                //HoldReader = false;
                             }
 
+                            if (i < 9)
+                                Thread.Sleep(speed);
 
-                            //presets.Clear();
-                            presets.Clear();
-                            //HoldReader = false;
+                            Keyboard.SetCustomAsync(refreshGrid);
                         }
-
-                        if (i < 9)
-                            Thread.Sleep(speed);
-
-                        Keyboard.SetCustomAsync(refreshGrid);
+                    }
+                    catch (Exception ex)
+                    {
+                        CheckRazerEx(ex);
                     }
                 }
             });
@@ -1248,98 +1356,106 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (RazerMultiRipple2)
                 {
-                    if (!_razerDeviceKeyboard && !Keyboard.IsDeathstalkerConnected && !_razerDeviceKeypad) return;
-                    var presetsA = new Dictionary<int, Color>();
-                    var presetsB = new Dictionary<int, Color>();
-
-
-                    for (var i = 0; i <= 9; i++)
+                    try
                     {
-                        if (i == 0)
+                        if (!_isInitialized) return;
+                        if (!_razerDeviceKeyboard && !Keyboard.IsDeathstalkerConnected && !_razerDeviceKeypad) return;
+                        var presetsA = new Dictionary<int, Color>();
+                        var presetsB = new Dictionary<int, Color>();
+
+
+                        for (var i = 0; i <= 9; i++)
                         {
-                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                            if (i == 0)
                             {
-                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                if (Keyboard.IsDeathstalkerConnected && _keyboard)
                                 {
-                                    var ccX = FromColoreCol(Keyboard[x1]);
-                                    presetsA.Add(x1, ccX);
+                                    for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                    {
+                                        var ccX = FromColoreCol(Keyboard[x1]);
+                                        presetsA.Add(x1, ccX);
+                                    }
+                                }
+
+                                if (_razerDeviceKeypad && _keypad)
+                                {
+                                    for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                    {
+                                        var ccX = FromColoreCol(Keypad[0, x2]);
+                                        presetsB.Add(x2, ccX);
+                                    }
+                                }
+
+                                continue;
+                            }
+
+                            if (i == 1 || i == 3 || i == 5 || i == 7)
+                            {
+                                if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                                {
+                                    for (int x2 = 0; x2 < KeyboardConstants.MaxDeathstalkerZones; x2++)
+                                    {
+                                        //Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(burstcol));
+                                        Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(presetsA[x2]));
+                                    }
+                                }
+
+                                if (_razerDeviceKeypad && _keypad)
+                                {
+                                    for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                    {
+                                        Keypad[0, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[1, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[2, x2] = ToColoreCol(presetsB[x2]);
+                                        Keypad[3, x2] = ToColoreCol(presetsB[x2]);
+                                    }
                                 }
                             }
 
-                            if (_razerDeviceKeypad && _keypad)
+                            if (i == 2 || i == 4 || i == 6 || i == 8)
                             {
-                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                if (Keyboard.IsDeathstalkerConnected && _keyboard)
                                 {
-                                    var ccX = FromColoreCol(Keypad[0, x2]);
-                                    presetsB.Add(x2, ccX);
+                                    for (int x2 = 0; x2 < KeyboardConstants.MaxDeathstalkerZones; x2++)
+                                    {
+                                        Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(burstcol));
+                                    }
+                                }
+
+                                if (_razerDeviceKeypad && _keypad)
+                                {
+                                    for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
+                                    {
+                                        Keypad[0, x2] = ToColoreCol(burstcol);
+                                        Keypad[1, x2] = ToColoreCol(burstcol);
+                                        Keypad[2, x2] = ToColoreCol(burstcol);
+                                        Keypad[3, x2] = ToColoreCol(burstcol);
+                                    }
                                 }
                             }
 
-                            continue;
+                            if (i == 9)
+                            {
+                                /*
+                                if (Keyboard.IsDeathstalkerConnected && _keyboard)
+                                {
+                                    for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
+                                    {
+                                        Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
+                                    }
+                                }
+                                */
+                            }
+
+                            if (i < 9)
+                            {
+                                Thread.Sleep(speed);
+                            }
                         }
-
-                        if (i == 1 || i == 3 || i == 5 || i == 7)
-                        {
-                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
-                            {
-                                for (int x2 = 0; x2 < KeyboardConstants.MaxDeathstalkerZones; x2++)
-                                {
-                                    //Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(burstcol));
-                                    Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(presetsA[x2]));
-                                }
-                            }
-
-                            if (_razerDeviceKeypad && _keypad)
-                            {
-                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
-                                {
-                                    Keypad[0, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[1, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[2, x2] = ToColoreCol(presetsB[x2]);
-                                    Keypad[3, x2] = ToColoreCol(presetsB[x2]);
-                                }
-                            }
-                        }
-
-                        if (i == 2 || i == 4 || i == 6 || i == 8)
-                        {
-                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
-                            {
-                                for (int x2 = 0; x2 < KeyboardConstants.MaxDeathstalkerZones; x2++)
-                                {
-                                    Keyboard.SetDeathstalkerZoneAsync(x2, ToColoreCol(burstcol));
-                                }
-                            }
-
-                            if (_razerDeviceKeypad && _keypad)
-                            {
-                                for (int x2 = 0; x2 < KeypadConstants.MaxColumns; x2++)
-                                {
-                                    Keypad[0, x2] = ToColoreCol(burstcol);
-                                    Keypad[1, x2] = ToColoreCol(burstcol);
-                                    Keypad[2, x2] = ToColoreCol(burstcol);
-                                    Keypad[3, x2] = ToColoreCol(burstcol);
-                                }
-                            }
-                        }
-
-                        if (i == 9)
-                        {
-                            /*
-                            if (Keyboard.IsDeathstalkerConnected && _keyboard)
-                            {
-                                for (int x1 = 0; x1 < KeyboardConstants.MaxDeathstalkerZones; x1++)
-                                {
-                                    Keyboard.SetDeathstalkerZoneAsync(x1, ToColoreCol(presetsA[x1]));
-                                }
-                            }
-                            */
-                        }
-
-                        if (i < 9)
-                        {
-                            Thread.Sleep(speed);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        CheckRazerEx(ex);
                     }
                 }
             });
@@ -1349,227 +1465,235 @@ namespace Chromatics.DeviceInterfaces
         {
             lock (RazerFlash1)
             {
-                var presets = new Dictionary<string, Color>();
-                var scrollWheel = new ColoreColor();
-                var logo = new ColoreColor();
-                var backlight = new ColoreColor();
-                var pad1 = new ColoreColor();
-                var pad2 = new ColoreColor();
-
-                var pad1Conv = Color.FromArgb(pad1.R, pad1.G, pad1.B);
-                var pad2Conv = Color.FromArgb(pad2.R, pad2.G, pad2.B);
-                var scrollWheelConv = Color.FromArgb(scrollWheel.R, scrollWheel.G, scrollWheel.B);
-                var logoConv = Color.FromArgb(logo.R, logo.G, logo.B);
-                var backlightConv = Color.FromArgb(backlight.R, backlight.G, backlight.B);
-
-                KeyboardCustom refreshKeyGrid;
-                refreshKeyGrid = _keyboardGrid;
-
-                for (var i = 0; i <= 8; i++)
+                try
                 {
-                    if (i == 0)
-                    {
-                        //Setup
+                    if (!_isInitialized) return;
+                    var presets = new Dictionary<string, Color>();
+                    var scrollWheel = new ColoreColor();
+                    var logo = new ColoreColor();
+                    var backlight = new ColoreColor();
+                    var pad1 = new ColoreColor();
+                    var pad2 = new ColoreColor();
 
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in region)
+                    var pad1Conv = Color.FromArgb(pad1.R, pad1.G, pad1.B);
+                    var pad2Conv = Color.FromArgb(pad2.R, pad2.G, pad2.B);
+                    var scrollWheelConv = Color.FromArgb(scrollWheel.R, scrollWheel.G, scrollWheel.B);
+                    var logoConv = Color.FromArgb(logo.R, logo.G, logo.B);
+                    var backlightConv = Color.FromArgb(backlight.R, backlight.G, backlight.B);
+
+                    KeyboardCustom refreshKeyGrid;
+                    refreshKeyGrid = _keyboardGrid;
+
+                    for (var i = 0; i <= 8; i++)
+                    {
+                        if (i == 0)
+                        {
+                            //Setup
+
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in region)
+                                {
+                                    var fkey = (Key) Enum.Parse(typeof(Key), key);
+                                    var cc = _keyboardGrid[fkey]; //Keyboard.Instance[fkey];
+                                    var ccX = FromColoreCol(cc);
+                                    presets.Add(key, ccX);
+                                }
+
+                            if (_razerDeviceMouse)
                             {
-                                var fkey = (Key) Enum.Parse(typeof(Key), key);
-                                var cc = _keyboardGrid[fkey]; //Keyboard.Instance[fkey];
-                                var ccX = FromColoreCol(cc);
-                                presets.Add(key, ccX);
+                                /*
+                                scrollWheel = Mouse.Instance[1];
+                                logo = Mouse.Instance[2];
+                                backlight = Mouse.Instance[3];
+                                pad1 = Mousepad.Instance[7];
+                                pad2 = Mousepad.Instance[14];
+                                */
+                            }
+                            //Keyboard.SetCustom(keyboard_custom);
+
+                            //HoldReader = true;
+                        }
+                        else if (i == 1)
+                        {
+                            //Step 0
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in region)
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    //refreshKeyGrid
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshKeyGrid[keyid] = ToColoreCol(burstcol);
+                                    }
+
+                            if (_razerDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                                ApplyMapMouseLighting("Logo", burstcol, false);
+                                ApplyMapMouseLighting("Backlight", burstcol, false);
                             }
 
-                        if (_razerDeviceMouse)
-                        {
-                            /*
-                            scrollWheel = Mouse.Instance[1];
-                            logo = Mouse.Instance[2];
-                            backlight = Mouse.Instance[3];
-                            pad1 = Mousepad.Instance[7];
-                            pad2 = Mousepad.Instance[14];
-                            */
+                            //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
                         }
-                        //Keyboard.SetCustom(keyboard_custom);
-
-                        //HoldReader = true;
-                    }
-                    else if (i == 1)
-                    {
-                        //Step 0
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in region)
-                                //ApplyMapKeyLighting(key, burstcol, true);
-                                //refreshKeyGrid
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshKeyGrid[keyid] = ToColoreCol(burstcol);
-                                }
-
-                        if (_razerDeviceMouse)
+                        else if (i == 2)
                         {
-                            ApplyMapMouseLighting("ScrollWheel", burstcol, false);
-                            ApplyMapMouseLighting("Logo", burstcol, false);
-                            ApplyMapMouseLighting("Backlight", burstcol, false);
+                            //Step 1
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in DeviceEffects.GlobalKeys3)
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshKeyGrid[keyid] = ToColoreCol(presets[key]);
+                                    }
+
+                            if (_razerDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
+                                ApplyMapMouseLighting("Logo", logoConv, false);
+                                ApplyMapMouseLighting("Backlight", backlightConv, false);
+                            }
+
+                            //if (RazerDeviceHeadset) { Headset.SetAllAsync(Pad1); }
                         }
-
-                        //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
-                    }
-                    else if (i == 2)
-                    {
-                        //Step 1
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in DeviceEffects.GlobalKeys3)
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshKeyGrid[keyid] = ToColoreCol(presets[key]);
-                                }
-
-                        if (_razerDeviceMouse)
+                        else if (i == 3)
                         {
-                            ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
-                            ApplyMapMouseLighting("Logo", logoConv, false);
-                            ApplyMapMouseLighting("Backlight", backlightConv, false);
+                            //Step 2
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in region)
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    //refreshKeyGrid
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshKeyGrid[keyid] = ToColoreCol(burstcol);
+                                    }
+
+                            if (_razerDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                                ApplyMapMouseLighting("Logo", burstcol, false);
+                                ApplyMapMouseLighting("Backlight", burstcol, false);
+                            }
+
+                            //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
                         }
-
-                        //if (RazerDeviceHeadset) { Headset.SetAllAsync(Pad1); }
-                    }
-                    else if (i == 3)
-                    {
-                        //Step 2
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in region)
-                                //ApplyMapKeyLighting(key, burstcol, true);
-                                //refreshKeyGrid
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshKeyGrid[keyid] = ToColoreCol(burstcol);
-                                }
-
-                        if (_razerDeviceMouse)
+                        else if (i == 4)
                         {
-                            ApplyMapMouseLighting("ScrollWheel", burstcol, false);
-                            ApplyMapMouseLighting("Logo", burstcol, false);
-                            ApplyMapMouseLighting("Backlight", burstcol, false);
+                            //Step 3
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in DeviceEffects.GlobalKeys3)
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshKeyGrid[keyid] = ToColoreCol(presets[key]);
+                                    }
+
+                            if (_razerDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
+                                ApplyMapMouseLighting("Logo", logoConv, false);
+                                ApplyMapMouseLighting("Backlight", backlightConv, false);
+                            }
+
+                            //if (RazerDeviceHeadset) { Headset.SetAllAsync(Pad1); }
                         }
-
-                        //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
-                    }
-                    else if (i == 4)
-                    {
-                        //Step 3
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in DeviceEffects.GlobalKeys3)
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshKeyGrid[keyid] = ToColoreCol(presets[key]);
-                                }
-
-                        if (_razerDeviceMouse)
+                        else if (i == 5)
                         {
-                            ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
-                            ApplyMapMouseLighting("Logo", logoConv, false);
-                            ApplyMapMouseLighting("Backlight", backlightConv, false);
+                            //Step 4
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in region)
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    //refreshKeyGrid
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshKeyGrid[keyid] = ToColoreCol(burstcol);
+                                    }
+
+                            if (_razerDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                                ApplyMapMouseLighting("Logo", burstcol, false);
+                                ApplyMapMouseLighting("Backlight", burstcol, false);
+                            }
+
+                            //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
                         }
-
-                        //if (RazerDeviceHeadset) { Headset.SetAllAsync(Pad1); }
-                    }
-                    else if (i == 5)
-                    {
-                        //Step 4
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in region)
-                                //ApplyMapKeyLighting(key, burstcol, true);
-                                //refreshKeyGrid
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshKeyGrid[keyid] = ToColoreCol(burstcol);
-                                }
-
-                        if (_razerDeviceMouse)
+                        else if (i == 6)
                         {
-                            ApplyMapMouseLighting("ScrollWheel", burstcol, false);
-                            ApplyMapMouseLighting("Logo", burstcol, false);
-                            ApplyMapMouseLighting("Backlight", burstcol, false);
+                            //Step 5
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in DeviceEffects.GlobalKeys3)
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshKeyGrid[keyid] = ToColoreCol(presets[key]);
+                                    }
+
+                            if (_razerDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
+                                ApplyMapMouseLighting("Logo", logoConv, false);
+                                ApplyMapMouseLighting("Backlight", backlightConv, false);
+                            }
+
+                            //if (RazerDeviceHeadset) { Headset.SetAllAsync(Pad1); }
                         }
-
-                        //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
-                    }
-                    else if (i == 6)
-                    {
-                        //Step 5
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in DeviceEffects.GlobalKeys3)
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshKeyGrid[keyid] = ToColoreCol(presets[key]);
-                                }
-
-                        if (_razerDeviceMouse)
+                        else if (i == 7)
                         {
-                            ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
-                            ApplyMapMouseLighting("Logo", logoConv, false);
-                            ApplyMapMouseLighting("Backlight", backlightConv, false);
+                            //Step 6
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in region)
+                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    //refreshKeyGrid
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshKeyGrid[keyid] = ToColoreCol(burstcol);
+                                    }
+
+                            if (_razerDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("ScrollWheel", burstcol, false);
+                                ApplyMapMouseLighting("Logo", burstcol, false);
+                                ApplyMapMouseLighting("Backlight", burstcol, false);
+                            }
+
+                            //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
                         }
-
-                        //if (RazerDeviceHeadset) { Headset.SetAllAsync(Pad1); }
-                    }
-                    else if (i == 7)
-                    {
-                        //Step 6
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in region)
-                                //ApplyMapKeyLighting(key, burstcol, true);
-                                //refreshKeyGrid
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshKeyGrid[keyid] = ToColoreCol(burstcol);
-                                }
-
-                        if (_razerDeviceMouse)
+                        else if (i == 8)
                         {
-                            ApplyMapMouseLighting("ScrollWheel", burstcol, false);
-                            ApplyMapMouseLighting("Logo", burstcol, false);
-                            ApplyMapMouseLighting("Backlight", burstcol, false);
+                            //Step 7
+                            if (_razerDeviceKeyboard)
+                                foreach (var key in DeviceEffects.GlobalKeys3)
+                                    if (Enum.IsDefined(typeof(Key), key))
+                                    {
+                                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                                        refreshKeyGrid[keyid] = ToColoreCol(presets[key]);
+                                    }
+
+                            if (_razerDeviceMouse)
+                            {
+                                ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
+                                ApplyMapMouseLighting("Logo", logoConv, false);
+                                ApplyMapMouseLighting("Backlight", backlightConv, false);
+                            }
+
+                            //if (RazerDeviceHeadset) { Headset.SetAllAsync(Pad1); }
+
+                            presets.Clear();
+                            //HoldReader = false;
                         }
 
-                        //if (RazerDeviceHeadset) { Headset.SetAllAsync(Corale.Colore.WinForms.Extensions.ToColoreColor(burstcol)); }
+                        if (i < 8)
+                            Thread.Sleep(speed);
+
+                        Keyboard.SetCustomAsync(refreshKeyGrid);
                     }
-                    else if (i == 8)
-                    {
-                        //Step 7
-                        if (_razerDeviceKeyboard)
-                            foreach (var key in DeviceEffects.GlobalKeys3)
-                                if (Enum.IsDefined(typeof(Key), key))
-                                {
-                                    var keyid = (Key) Enum.Parse(typeof(Key), key);
-                                    refreshKeyGrid[keyid] = ToColoreCol(presets[key]);
-                                }
-
-                        if (_razerDeviceMouse)
-                        {
-                            ApplyMapMouseLighting("ScrollWheel", scrollWheelConv, false);
-                            ApplyMapMouseLighting("Logo", logoConv, false);
-                            ApplyMapMouseLighting("Backlight", backlightConv, false);
-                        }
-
-                        //if (RazerDeviceHeadset) { Headset.SetAllAsync(Pad1); }
-
-                        presets.Clear();
-                        //HoldReader = false;
-                    }
-
-                    if (i < 8)
-                        Thread.Sleep(speed);
-
-                    Keyboard.SetCustomAsync(refreshKeyGrid);
+                }
+                catch (Exception ex)
+                {
+                    CheckRazerEx(ex);
                 }
             }
         }
@@ -1578,88 +1702,96 @@ namespace Chromatics.DeviceInterfaces
         {
             lock (RazerFlash1)
             {
-                uint OldCol = 0;
-
-                for (var i = 0; i <= 8; i++)
+                try
                 {
-                    if (i == 0)
-                    {
-                        //Setup
+                    if (!_isInitialized) return;
+                    uint OldCol = 0;
 
-                        if (_razerDeviceKeyboard)
-                            OldCol = Keyboard[0].Value;
+                    for (var i = 0; i <= 8; i++)
+                    {
+                        if (i == 0)
+                        {
+                            //Setup
+
+                            if (_razerDeviceKeyboard)
+                                OldCol = Keyboard[0].Value;
+
+
+                        }
+                        else if (i == 1)
+                        {
+                            //Step 0
+                            if (_razerDeviceKeyboard)
+                                Keyboard.SetAllAsync(ToColoreCol(burstcol));
+
+
+                        }
+                        else if (i == 2)
+                        {
+                            //Step 1
+                            if (_razerDeviceKeyboard)
+                                Keyboard.SetAllAsync(OldCol);
+
+
+                        }
+                        else if (i == 3)
+                        {
+                            //Step 2
+                            if (_razerDeviceKeyboard)
+                                Keyboard.SetAllAsync(ToColoreCol(burstcol));
+
+
+                        }
+                        else if (i == 4)
+                        {
+                            //Step 3
+                            if (_razerDeviceKeyboard)
+                                Keyboard.SetAllAsync(OldCol);
+
+
+                        }
+                        else if (i == 5)
+                        {
+                            //Step 4
+                            if (_razerDeviceKeyboard)
+                                Keyboard.SetAllAsync(ToColoreCol(burstcol));
+
+
+                        }
+                        else if (i == 6)
+                        {
+                            //Step 5
+                            if (_razerDeviceKeyboard)
+                                Keyboard.SetAllAsync(OldCol);
+
+
+                        }
+                        else if (i == 7)
+                        {
+                            //Step 6
+                            if (_razerDeviceKeyboard)
+                                Keyboard.SetAllAsync(ToColoreCol(burstcol));
+
+
+                        }
+                        else if (i == 8)
+                        {
+                            //Step 7
+                            if (_razerDeviceKeyboard)
+                                Keyboard.SetAllAsync(OldCol);
+
+
+                        }
+
+                        if (i < 8)
+                            Thread.Sleep(speed);
 
 
                     }
-                    else if (i == 1)
-                    {
-                        //Step 0
-                        if (_razerDeviceKeyboard)
-                            Keyboard.SetAllAsync(ToColoreCol(burstcol));
-
-
-                    }
-                    else if (i == 2)
-                    {
-                        //Step 1
-                        if (_razerDeviceKeyboard)
-                            Keyboard.SetAllAsync(OldCol);
-
-
-                    }
-                    else if (i == 3)
-                    {
-                        //Step 2
-                        if (_razerDeviceKeyboard)
-                            Keyboard.SetAllAsync(ToColoreCol(burstcol));
-
-
-                    }
-                    else if (i == 4)
-                    {
-                        //Step 3
-                        if (_razerDeviceKeyboard)
-                            Keyboard.SetAllAsync(OldCol);
-
-
-                    }
-                    else if (i == 5)
-                    {
-                        //Step 4
-                        if (_razerDeviceKeyboard)
-                            Keyboard.SetAllAsync(ToColoreCol(burstcol));
-
-
-                    }
-                    else if (i == 6)
-                    {
-                        //Step 5
-                        if (_razerDeviceKeyboard)
-                            Keyboard.SetAllAsync(OldCol);
-
-
-                    }
-                    else if (i == 7)
-                    {
-                        //Step 6
-                        if (_razerDeviceKeyboard)
-                            Keyboard.SetAllAsync(ToColoreCol(burstcol));
-
-
-                    }
-                    else if (i == 8)
-                    {
-                        //Step 7
-                        if (_razerDeviceKeyboard)
-                            Keyboard.SetAllAsync(OldCol);
-
-
-                    }
-
-                    if (i < 8)
-                        Thread.Sleep(speed);
-
-                    
+                }
+                catch (Exception ex)
+                {
+                    CheckRazerEx(ex);
                 }
             }
         }
@@ -1670,6 +1802,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (RazerFlash2)
                 {
+                    if (!_isInitialized) return;
                     var flashpresets = new Dictionary<string, Color>();
                     var rzScrollWheel = new ColoreColor();
                     var rzLogo = new ColoreColor();
@@ -1764,9 +1897,9 @@ namespace Chromatics.DeviceInterfaces
                         }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //
+                CheckRazerEx(ex);
             }
         }
 
@@ -1776,6 +1909,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (RazerFlash2)
                 {
+                    if (!_isInitialized) return;
                     uint OldCol = 0;
 
                     if (!_razerFlash2Running)
@@ -1816,9 +1950,9 @@ namespace Chromatics.DeviceInterfaces
                         }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //
+                CheckRazerEx(ex);
             }
         }
 
@@ -1829,6 +1963,7 @@ namespace Chromatics.DeviceInterfaces
                 //DeviceEffects._NumFlash
                 lock (RazerFlash3)
                 {
+                    if (!_isInitialized) return;
                     if (!_razerDeviceKeyboard) return;
                     var presets = new Dictionary<string, Color>();
                     var refreshGrid = KeyboardCustom.Create();
@@ -1885,9 +2020,9 @@ namespace Chromatics.DeviceInterfaces
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //
+                CheckRazerEx(ex);
             }
         }
         
@@ -1897,6 +2032,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (RazerFlash4)
                 {
+                    if (!_isInitialized) return;
                     var flashpresets = new Dictionary<string, Color>();
                     var rzScrollWheel = new ColoreColor();
                     var rzLogo = new ColoreColor();
@@ -1991,9 +2127,9 @@ namespace Chromatics.DeviceInterfaces
                         }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //
+                CheckRazerEx(ex);
             }
         }
 
@@ -2003,6 +2139,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 lock (RazerFlash4)
                 {
+                    if (!_isInitialized) return;
                     uint OldCol = 0;
 
 
@@ -2044,9 +2181,9 @@ namespace Chromatics.DeviceInterfaces
                         }
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                //
+                CheckRazerEx(ex);
             }
         }
 
@@ -2054,18 +2191,27 @@ namespace Chromatics.DeviceInterfaces
         {
             lock (_Razertransition)
             {
+                if (!_isInitialized) return;
                 if (_razerDeviceKeyboard)
                 {
-                    uint rzCol = ToColoreCol(col);
-                    for (uint c = 0; c < KeyboardConstants.MaxColumns; c++)
+                    try
                     {
-                        for (uint r = 0; r < KeyboardConstants.MaxRows; r++)
+                        uint rzCol = ToColoreCol(col);
+                        for (uint c = 0; c < KeyboardConstants.MaxColumns; c++)
                         {
-                            var row = forward ? r : KeyboardConstants.MaxRows - r - 1;
-                            var colu = forward ? c : KeyboardConstants.MaxColumns - c - 1;
-                            Keyboard[Convert.ToInt32(row), Convert.ToInt32(colu)] = rzCol;
+                            for (uint r = 0; r < KeyboardConstants.MaxRows; r++)
+                            {
+                                var row = forward ? r : KeyboardConstants.MaxRows - r - 1;
+                                var colu = forward ? c : KeyboardConstants.MaxColumns - c - 1;
+                                Keyboard[Convert.ToInt32(row), Convert.ToInt32(colu)] = rzCol;
+                            }
+
+                            Thread.Sleep(15);
                         }
-                        Thread.Sleep(15);
+                    }
+                    catch (Exception ex)
+                    {
+                        CheckRazerEx(ex);
                     }
                 }
             }
@@ -2075,6 +2221,7 @@ namespace Chromatics.DeviceInterfaces
         {
             lock (_RazertransitionConst)
             {
+                if (!_isInitialized) return;
                 if (_razerDeviceKeyboard)
                 {
                     var i = 1;
@@ -2097,10 +2244,9 @@ namespace Chromatics.DeviceInterfaces
                                     {
                                         Keyboard[Convert.ToInt32(row), Convert.ToInt32(colu)] = rzCol;
                                     }
-                                    catch (Exception)
+                                    catch (Exception ex)
                                     {
-                                        //Debug.WriteLine(ex.Message);
-                                        //rtb_console.AppendText(ex.Message + " \r\n");
+                                        CheckRazerEx(ex);
                                     }
                                 }
                                 Thread.Sleep(speed);
@@ -2120,10 +2266,9 @@ namespace Chromatics.DeviceInterfaces
                                     {
                                         Keyboard[Convert.ToInt32(row), Convert.ToInt32(colu)] = rzCol2;
                                     }
-                                    catch (Exception)
+                                    catch (Exception ex)
                                     {
-                                        //Debug.WriteLine(ex.Message);
-                                        //rtb_console.AppendText(ex.Message + " \r\n");
+                                        CheckRazerEx(ex);
                                     }
                                 }
                                 Thread.Sleep(speed);
@@ -2137,37 +2282,65 @@ namespace Chromatics.DeviceInterfaces
 
         public void FadeColourAll(Color toColor, Color fromColor, uint interval)
         {
+            if (!_isInitialized) return;
             if (!_razerDeviceKeyboard) return;
 
             var colorFader = new ColorFader(fromColor, toColor, interval); //FromColoreCol(Keyboard[Key.Q]
 
-            Keyboard.SetAllAsync(ToColoreCol(fromColor));
+            try
+            {
+                Keyboard.SetAllAsync(ToColoreCol(fromColor));
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+            }
+            
 
             /*  LinearFading Process isolated in a seperate Task to avoid blocking UI   */
             Task t = Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(500);
-                foreach (var color in colorFader.Fade())
+                try
                 {
-                    Keyboard.SetAllAsync(ToColoreCol(color));
-                    Thread.Sleep(50);
+                    foreach (var color in colorFader.Fade())
+                    {
+                        Keyboard.SetAllAsync(ToColoreCol(color));
+                        Thread.Sleep(50);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    CheckRazerEx(ex);
                 }
             });
         }
 
-        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts)
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50)
         {
+            if (!_isInitialized) return;
             if (!_razerDeviceKeyboard) return;
             if (cts.IsCancellationRequested) return;
 
             var refreshKeyGrid = KeyboardCustom.Create();
             refreshKeyGrid = _keyboardGrid;
 
+            var _effectGrid = KeyboardCustom.Create();
+            _effectGrid = refreshKeyGrid;
+
 
             Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
 
-            Keyboard.SetCustomAsync(refreshKeyGrid);
-            Thread.Sleep(500);
+            try
+            {
+                Keyboard.SetCustomAsync(refreshKeyGrid);
+                Thread.Sleep(500);
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+            }
+            
 
             while (true)
             {
@@ -2192,6 +2365,7 @@ namespace Chromatics.DeviceInterfaces
 
                         colorFaderDict.Add(key,
                             new ColorFader(FromColoreCol(refreshKeyGrid[keyid]), rndCol, interval));
+                        
                     }
                 }
 
@@ -2216,23 +2390,164 @@ namespace Chromatics.DeviceInterfaces
                                 var keyid = (Key)Enum.Parse(typeof(Key), key);
                                 var rzCol = ToColoreCol(color);
 
-                                if (Keyboard[keyid].Value != rzCol)
-                                    await Keyboard.SetKeyAsync(keyid, rzCol);
+                                try
+                                {
+                                    if (_effectGrid[keyid].Value != rzCol)
+                                    {
+                                        _effectGrid[keyid] = rzCol;
+                                        //await Keyboard.SetKeyAsync(keyid, rzCol);
+                                    }
 
-                                //refreshKeyGrid[keyid] = ToColoreCol(color);
+                                    //refreshKeyGrid[keyid] = ToColoreCol(color);
+                                }
+                                catch (Exception ex)
+                                {
+                                    CheckRazerEx(ex);
+                                }
+                                
                             }
                         }
 
-                        //Keyboard.SetCustomAsync(refreshKeyGrid);
-                        Thread.Sleep(50);
+                        await Keyboard.SetCustomAsync(_effectGrid);
+                        //_effectGrid.Clear();
+                        Thread.Sleep(speed);
                     }
                 });
-
-
-                Thread.Sleep(regions.Length * 50 / 2);
+                
+                Thread.Sleep(colorFaderDict.Count * speed);
             }
         }
 
+        public void CycleEffect(int interval, CancellationTokenSource token)
+        {
+            if (!_isInitialized) return;
+            if (!_razerDeviceKeyboard) return;
+            try
+            {
+                while (true)
+                {
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = new ColoreColor((int) Math.Ceiling((double) (250 * 100) / 255),
+                            (int) Math.Ceiling((double) (x * 100) / 255), 0);
 
+                        Keyboard.SetAllAsync(col);
+
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+
+                        Keyboard.SetAllAsync(col);
+
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+
+                        Keyboard.SetAllAsync(col);
+
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = new ColoreColor(0, (int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255));
+
+                        Keyboard.SetAllAsync(col);
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255), 0,
+                            (int) Math.Ceiling((double) (250 * 100) / 255));
+
+                        Keyboard.SetAllAsync(col);
+
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = new ColoreColor((int) Math.Ceiling((double) (250 * 100) / 255), 0,
+                            (int) Math.Ceiling((double) (x * 100) / 255));
+
+                        Keyboard.SetAllAsync(col);
+
+                    }
+
+                    if (token.IsCancellationRequested) break;
+                }
+
+                Thread.Sleep(interval);
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+            }
+        }
+
+        private void CheckRazerEx(Exception ex)
+        {
+            if (ex.Message ==
+                "Call to native Chroma SDK function DeleteEffect failed with error: Unknown: Unknown. (1168)")
+            {
+                Write.WriteConsole(ConsoleTypes.Error, "The Razer SDK has crashed. Please restart Chromatics to fix.");
+                try
+                {
+                    /*
+                    _isCrashed = true;
+                    //ShutdownSdk();
+                    
+                    if (Chroma.Initialized)
+                    {
+                        Chroma.UninitializeAsync();
+                    }
+
+                    _isInitialized = false;
+                    _isCrashed = true;
+
+                    var task = ColoreProvider.CreateNativeAsync();
+                    task.Wait();
+                    Chroma = task.Result;
+
+                    Keyboard = Chroma.Keyboard;
+                    Keypad = Chroma.Keypad;
+                    Mouse = Chroma.Mouse;
+                    Mousepad = Chroma.Mousepad;
+                    Headset = Chroma.Headset;
+                    ChromaLink = Chroma.ChromaLink;
+                    
+                    _keyboardGrid = KeyboardCustom.Create();
+                    _mouseGrid = MouseCustom.Create();
+                    _mousepadGrid = MousepadCustom.Create();
+
+                    Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK Resolved..");
+                    _isCrashed = false;
+                    _isInitialized = true;
+                    */
+                }
+                catch (Exception ex2)
+                {
+                    Console.WriteLine(ex2.Message);
+                    
+                }
+            }
+        }
     }
 }

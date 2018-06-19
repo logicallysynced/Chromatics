@@ -103,6 +103,7 @@
             this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
+            this.chk_cutscenes = new System.Windows.Forms.CheckBox();
             this.chk_reactiveweather = new System.Windows.Forms.CheckBox();
             this.chk_showstats = new System.Windows.Forms.CheckBox();
             this.chk_dfbelltoggle = new System.Windows.Forms.CheckBox();
@@ -167,7 +168,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_cutscenes = new System.Windows.Forms.CheckBox();
+            this.chk_vegasmode = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1013,6 +1014,7 @@
             // 
             // gB_effects
             // 
+            this.gB_effects.Controls.Add(this.chk_vegasmode);
             this.gB_effects.Controls.Add(this.chk_cutscenes);
             this.gB_effects.Controls.Add(this.chk_reactiveweather);
             this.gB_effects.Controls.Add(this.chk_showstats);
@@ -1030,6 +1032,18 @@
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
+            // 
+            // chk_cutscenes
+            // 
+            this.chk_cutscenes.AutoSize = true;
+            this.chk_cutscenes.Location = new System.Drawing.Point(272, 181);
+            this.chk_cutscenes.Name = "chk_cutscenes";
+            this.chk_cutscenes.Size = new System.Drawing.Size(210, 21);
+            this.chk_cutscenes.TabIndex = 10;
+            this.chk_cutscenes.Text = "Enable Cutscene Animations";
+            this.tooltip_main.SetToolTip(this.chk_cutscenes, "Shows special effects on per-key RGB keyboards during cutscenes.\r\n\r\nDefault: ON");
+            this.chk_cutscenes.UseVisualStyleBackColor = true;
+            this.chk_cutscenes.CheckedChanged += new System.EventHandler(this.chk_cutscenes_CheckedChanged);
             // 
             // chk_reactiveweather
             // 
@@ -1731,17 +1745,17 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_cutscenes
+            // chk_vegasmode
             // 
-            this.chk_cutscenes.AutoSize = true;
-            this.chk_cutscenes.Location = new System.Drawing.Point(272, 181);
-            this.chk_cutscenes.Name = "chk_cutscenes";
-            this.chk_cutscenes.Size = new System.Drawing.Size(210, 21);
-            this.chk_cutscenes.TabIndex = 10;
-            this.chk_cutscenes.Text = "Enable Cutscene Animations";
-            this.tooltip_main.SetToolTip(this.chk_cutscenes, "Shows special effects on per-key RGB keyboards during cutscenes.\r\n\r\nDefault: ON");
-            this.chk_cutscenes.UseVisualStyleBackColor = true;
-            this.chk_cutscenes.CheckedChanged += new System.EventHandler(this.chk_cutscenes_CheckedChanged);
+            this.chk_vegasmode.AutoSize = true;
+            this.chk_vegasmode.Location = new System.Drawing.Point(272, 218);
+            this.chk_vegasmode.Name = "chk_vegasmode";
+            this.chk_vegasmode.Size = new System.Drawing.Size(240, 21);
+            this.chk_vegasmode.TabIndex = 11;
+            this.chk_vegasmode.Text = "Enable Gold Saucer Vegas Mode";
+            this.tooltip_main.SetToolTip(this.chk_vegasmode, "Displays color scrolling effects while in the Gold Saucer.\r\n\r\nDefault: OFF");
+            this.chk_vegasmode.UseVisualStyleBackColor = true;
+            this.chk_vegasmode.CheckedChanged += new System.EventHandler(this.chk_vegasmode_CheckedChanged);
             // 
             // Chromatics
             // 
@@ -1751,7 +1765,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.3.8 Beta";
+            this.Text = "Chromatics 2.4.1 Beta";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
@@ -1930,6 +1944,7 @@
         private System.Windows.Forms.CheckBox chk_keys_multimode;
         private System.Windows.Forms.CheckBox chk_disablememory;
         private System.Windows.Forms.CheckBox chk_cutscenes;
+        private System.Windows.Forms.CheckBox chk_vegasmode;
     }
 }
 

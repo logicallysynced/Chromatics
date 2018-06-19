@@ -72,9 +72,9 @@ namespace Chromatics
         private CancellationTokenSource _logiFl4Cts = new CancellationTokenSource();
         private ILogitechSdk _logitech;
         private CancellationTokenSource _logitechFl1Cts = new CancellationTokenSource();
-        private IRazerSdk _razer;
 
-        //Send a timed flash effect to a Keyboard
+
+        private IRazerSdk _razer;
         private CancellationTokenSource _rzFl1Cts = new CancellationTokenSource();
 
         private Task _rzFl2;
@@ -86,24 +86,33 @@ namespace Chromatics
         private Task _coolermasterFlash;
         private Task _corsairFlash;
 
+        private bool _globalParticleRunning;
         private Task _rzPart;
         private CancellationTokenSource _rzPartCts = new CancellationTokenSource();
-        private bool _globalParticleRunning;
-
         private Task _logiPart;
         private CancellationTokenSource _logiPartCts = new CancellationTokenSource();
-
         private Task _corsairPart;
         private CancellationTokenSource _corsairPartCts = new CancellationTokenSource();
-
         private Task _coolermasterPart;
         private CancellationTokenSource _coolermasterPartCts = new CancellationTokenSource();
-
         private Task _steelPart;
         private CancellationTokenSource _steelPartCts = new CancellationTokenSource();
-
         private Task _wootingPart;
         private CancellationTokenSource _wootingPartCts = new CancellationTokenSource();
+
+        private bool _globalCycleRunning;
+        private Task _rzCycle;
+        private CancellationTokenSource _rzCycleCts = new CancellationTokenSource();
+        private Task _logiCycle;
+        private CancellationTokenSource _logiCycleCts = new CancellationTokenSource();
+        private Task _corsairCycle;
+        private CancellationTokenSource _corsairCycleCts = new CancellationTokenSource();
+        private Task _coolermasterCycle;
+        private CancellationTokenSource _coolermasterCycleCts = new CancellationTokenSource();
+        private Task _steelCycle;
+        private CancellationTokenSource _steelCycleCts = new CancellationTokenSource();
+        private Task _wootingCycle;
+        private CancellationTokenSource _wootingCycleCts = new CancellationTokenSource();
 
         //Send a continuous flash effect to a Keyboard
         private bool _globalFlash2Running;
@@ -283,6 +292,49 @@ namespace Chromatics
 
             if (WootingSdkCalled == 1)
                 _wooting.Shutdown();
+        }
+
+        public void GlobalCheckCrash()
+        {
+            //Check Razer library for crash
+            /*
+            if (RazerSdkCalled == 1)
+            {
+                if (_razer.CheckCrash())
+                {
+                    WriteConsole(ConsoleTypes.Error, "Razer SDK has crashed.");
+                    _razer.ShutdownSdk();
+                    RazerSdkCalled = 0;
+                    RazerSdk = false;
+
+                    _rzFl1Cts.Cancel();
+                    MemoryTasks.Remove(_rzFlash);
+                    _rzFl2Cts.Cancel();
+                    MemoryTasks.Remove(_rzFl2);
+                    _rzFl3Cts.Cancel();
+                    MemoryTasks.Remove(_rzFl3);
+                    _rzFl4Cts.Cancel();
+                    MemoryTasks.Remove(_rzFl4);
+                    _rzPartCts.Cancel();
+                    MemoryTasks.Remove(_rzPart);
+                    _rzCycleCts.Cancel();
+                    MemoryTasks.Remove(_rzCycle);
+                    
+                    _razer = null;
+
+                    _razer = RazerInterface.InitializeRazerSdk();
+                    if (_razer != null)
+                    {
+                        RazerSdk = true;
+                        RazerSdkCalled = 1;
+                    }
+                    else
+                    {
+                        WriteConsole(ConsoleTypes.Razer, "Razer SDK failed to load.");
+                    }
+                }
+            }
+            */
         }
 
         public void GlobalResetDevices()
@@ -2028,7 +2080,7 @@ namespace Chromatics
             MemoryTasks.Cleanup();
         }
 
-        public void GlobalParticleEffects(Color[] toColor, string[] regions, uint interval = 20)
+        public void GlobalParticleEffects(Color[] toColor, string[] regions, uint interval = 20, int speed = 50)
         {
             if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
@@ -2046,7 +2098,7 @@ namespace Chromatics
                 _rzPartCts = new CancellationTokenSource();
                 _rzPart = new Task(() =>
                 {
-                    _razer.ParticleEffect(toColor, regions, interval, _rzPartCts);
+                    _razer.ParticleEffect(toColor, regions, interval, _rzPartCts, speed);
                 }, _rzPartCts.Token);
 
                 MemoryTasks.Add(_rzPart);
@@ -2059,7 +2111,7 @@ namespace Chromatics
                 _logiPartCts = new CancellationTokenSource();
                 _logiPart = new Task(() =>
                 {
-                    _logitech.ParticleEffect(toColor, regions, interval, _logiPartCts);
+                    _logitech.ParticleEffect(toColor, regions, interval, _logiPartCts, speed);
                 }, _logiPartCts.Token);
 
                 MemoryTasks.Add(_logiPart);
@@ -2072,7 +2124,7 @@ namespace Chromatics
                 _corsairPartCts = new CancellationTokenSource();
                 _corsairPart = new Task(() =>
                 {
-                    _corsair.ParticleEffect(toColor, regions, interval, _corsairPartCts);
+                    _corsair.ParticleEffect(toColor, regions, interval, _corsairPartCts, speed);
                 }, _corsairPartCts.Token);
 
                 MemoryTasks.Add(_corsairPart);
@@ -2085,7 +2137,7 @@ namespace Chromatics
                 _coolermasterPartCts = new CancellationTokenSource();
                 _coolermasterPart = new Task(() =>
                 {
-                    _coolermaster.ParticleEffect(toColor, regions, interval, _coolermasterPartCts);
+                    _coolermaster.ParticleEffect(toColor, regions, interval, _coolermasterPartCts, speed);
                 }, _coolermasterPartCts.Token);
 
                 MemoryTasks.Add(_coolermasterPart);
@@ -2098,7 +2150,7 @@ namespace Chromatics
                 _steelPartCts = new CancellationTokenSource();
                 _steelPart = new Task(() =>
                 {
-                    _steel.ParticleEffect(toColor, regions, interval, _steelPartCts);
+                    _steel.ParticleEffect(toColor, regions, interval, _steelPartCts, speed);
                 }, _steelPartCts.Token);
 
                 MemoryTasks.Add(_steelPart);
@@ -2111,7 +2163,7 @@ namespace Chromatics
                 _wootingPartCts = new CancellationTokenSource();
                 _wootingPart = new Task(() =>
                 {
-                    _wooting.ParticleEffect(toColor, regions, interval, _wootingPartCts);
+                    _wooting.ParticleEffect(toColor, regions, interval, _wootingPartCts, speed);
                 }, _wootingPartCts.Token);
 
                 MemoryTasks.Add(_wootingPart);
@@ -2159,6 +2211,135 @@ namespace Chromatics
             {
                 _wootingPartCts.Cancel();
                 MemoryTasks.Remove(_wootingPart);
+            }
+        }
+
+        public void GlobalColorCycle(int interval = 100)
+        {
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
+                return;
+
+            MemoryTasks.Cleanup();
+
+            if (RazerSdkCalled == 1)
+            {
+                _rzCycle = null;
+                _rzCycleCts = new CancellationTokenSource();
+                _rzCycle = new Task(() =>
+                {
+                    _razer.CycleEffect(interval, _rzCycleCts);
+                }, _rzCycleCts.Token);
+
+                MemoryTasks.Add(_rzCycle);
+                MemoryTasks.Run(_rzCycle);
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                _logiCycle = null;
+                _logiCycleCts = new CancellationTokenSource();
+                _logiCycle = new Task(() =>
+                {
+                    _logitech.CycleEffect(interval, _logiCycleCts);
+                }, _logiCycleCts.Token);
+
+                MemoryTasks.Add(_logiCycle);
+                MemoryTasks.Run(_logiCycle);
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                _corsairCycle = null;
+                _corsairCycleCts = new CancellationTokenSource();
+                _corsairCycle = new Task(() =>
+                {
+                    _corsair.CycleEffect(interval, _corsairCycleCts);
+                }, _corsairCycleCts.Token);
+
+                MemoryTasks.Add(_corsairCycle);
+                MemoryTasks.Run(_corsairCycle);
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermasterCycle = null;
+                _coolermasterCycleCts = new CancellationTokenSource();
+                _coolermasterCycle = new Task(() =>
+                {
+                    _coolermaster.CycleEffect(interval, _coolermasterCycleCts);
+                }, _coolermasterCycleCts.Token);
+
+                MemoryTasks.Add(_coolermasterCycle);
+                MemoryTasks.Run(_coolermasterCycle);
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                _steelCycle = null;
+                _steelCycleCts = new CancellationTokenSource();
+                _steelCycle = new Task(() =>
+                {
+                    _steel.CycleEffect(interval, _steelCycleCts);
+                }, _steelCycleCts.Token);
+
+                MemoryTasks.Add(_steelCycle);
+                MemoryTasks.Run(_steelCycle);
+            }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wootingCycle = null;
+                _wootingCycleCts = new CancellationTokenSource();
+                _wootingCycle = new Task(() =>
+                {
+                    _wooting.CycleEffect(interval, _wootingCycleCts);
+                }, _wootingCycleCts.Token);
+
+                MemoryTasks.Add(_wootingCycle);
+                MemoryTasks.Run(_wootingCycle);
+            }
+
+            _globalCycleRunning = true;
+        }
+
+        public void GlobalStopCycleEffects()
+        {
+            if (!_globalCycleRunning) return;
+
+            if (RazerSdkCalled == 1)
+            {
+                _rzCycleCts.Cancel();
+                MemoryTasks.Remove(_rzCycle);
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                _logiCycleCts.Cancel();
+                MemoryTasks.Remove(_logiCycle);
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                _corsairCycleCts.Cancel();
+                MemoryTasks.Remove(_corsairCycle);
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermasterCycleCts.Cancel();
+                MemoryTasks.Remove(_coolermasterCycle);
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                _steelCycleCts.Cancel();
+                MemoryTasks.Remove(_steelCycle);
+            }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wootingCycleCts.Cancel();
+                MemoryTasks.Remove(_wootingCycle);
             }
         }
 

@@ -56,7 +56,7 @@ namespace Chromatics.DeviceInterfaces
 
         [DllImport(SdkDll, EntryPoint = "IsDevicePlug")]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static extern bool IsDevicePlug();
+        public static extern bool IsDevicePlug(DeviceIndex devIndex);
 
         [DllImport(SdkDll, EntryPoint = "GetDeviceLayout")]
         public static extern LayoutKeyboard GetDeviceLayout();
@@ -192,7 +192,8 @@ namespace Chromatics.DeviceInterfaces
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
         void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
-        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts);
+        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
+        void CycleEffect(int interval, CancellationTokenSource token);
     }
 
     public class CoolermasterLib : ICoolermasterSdk
@@ -932,7 +933,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts)
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50)
         {
             if (!IsInitialized || !_coolermasterDeviceKeyboard) return;
             if (cts.IsCancellationRequested) return;
@@ -980,16 +981,93 @@ namespace Chromatics.DeviceInterfaces
                             if (_keyboards.Any())
                             {
                                 SetKeyColor(key, color);
+                                ApplyKeyboardLightingSoon();
                             }
                         }
 
                         //Keyboard.SetCustomAsync(refreshKeyGrid);
-                        Thread.Sleep(50);
+                        Thread.Sleep(speed);
                     }
                 });
 
-                Thread.Sleep(regions.Length * 50 / 2);
+                Thread.Sleep(colorFaderDict.Count * speed);
             }
+        }
+
+        public void CycleEffect(int interval, CancellationTokenSource token)
+        {
+            if (!_coolermasterDeviceKeyboard) return;
+            if (!_keyboards.Any())
+            {
+                return;
+            }
+
+            while (true)
+            {
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255),
+                        (int) Math.Ceiling((double) (x * 100) / 255), 0);
+
+                    SetAllLights(col);
+
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
+                        (int)Math.Ceiling((double)(250 * 100) / 255), 0);
+
+                    SetAllLights(col);
+
+                }
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
+                        (int)Math.Ceiling((double)(250 * 100) / 255), 0);
+
+                    SetAllLights(col);
+
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb(0, (int)Math.Ceiling((double)(x * 100) / 255),
+                        (int)Math.Ceiling((double)(250 * 100) / 255));
+
+                    SetAllLights(col);
+                }
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), 0,
+                        (int)Math.Ceiling((double)(250 * 100) / 255));
+
+                    SetAllLights(col);
+
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255), 0,
+                        (int)Math.Ceiling((double)(x * 100) / 255));
+
+                    SetAllLights(col);
+
+                }
+                if (token.IsCancellationRequested) break;
+
+                ApplyKeyboardLightingSoon();
+            }
+            Thread.Sleep(interval);
         }
 
         public bool InitializeSdk()
@@ -1006,18 +1084,19 @@ namespace Chromatics.DeviceInterfaces
                     foreach (var supportedDevice in SupportedKeyboardDevices)
                     {
                         CoolermasterSdkWrapper.SetControlDevice(supportedDevice);
-                        if (CoolermasterSdkWrapper.IsDevicePlug())
+                        if (CoolermasterSdkWrapper.IsDevicePlug(supportedDevice))
                         {
                             Write.WriteConsole(ConsoleTypes.Coolermaster, $"Found a {supportedDevice} Coolermaster keyboard.");
                             _keyboards.Add(supportedDevice);
                             CoolermasterSdkWrapper.EnableLedControl(true);
                         }
+
                     }
 
                     foreach (var supportedDevice in SupportedMouseDevices)
                     {
                         CoolermasterSdkWrapper.SetControlDevice(supportedDevice);
-                        if (CoolermasterSdkWrapper.IsDevicePlug())
+                        if (CoolermasterSdkWrapper.IsDevicePlug(supportedDevice))
                         {
                             Write.WriteConsole(ConsoleTypes.Coolermaster, $"Found a {supportedDevice} Coolermaster mouse.");
                             _mice.Add(supportedDevice);

@@ -36,6 +36,7 @@ namespace Chromatics
         private int _lastWeather = 0;
         private bool _weathertoggle;
         private bool _inCutscene;
+        private bool _inVegas;
 
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
@@ -317,7 +318,7 @@ namespace Chromatics
                         //Game is Running
                         //Check if game has stopped by checking Character data for a null value.
 
-                        if (_menuInfo != null && _menuInfo.Name == "")
+                        if (_menuInfo != null && _menuInfo.Name == "" && _menuInfo.MapTerritory == 0)
                         {
                             if (processes11.Length != 0)
                             {
@@ -475,8 +476,9 @@ namespace Chromatics
         private void ProcessFfxivData()
         {
             MemoryTasks.Cleanup();
-            
+
             //Check for crash
+            GlobalCheckCrash();
 
             if (!ChromaticsSettings.ChromaticsSettingsMemoryCheck)
             {
@@ -575,14 +577,15 @@ namespace Chromatics
                     WriteConsole(ConsoleTypes.Error, "Parser B: " + ex.Message);
                 }
 
-                //Cutscenes
 
-                if (ChromaticsSettings.ChromaticsSettingsCutsceneAnimation)
+                //Cutscenes
+                if (ChromaticsSettings.ChromaticsSettingsCutsceneAnimation && !_inVegas)
                 {
                     if (_playerInfo.IconID == 15)
                     {
                         if (!_inCutscene)
                         {
+                            GlobalStopCycleEffects();
                             GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneBase));
                             GlobalParticleEffects(
                                 new Color[]
@@ -608,13 +611,63 @@ namespace Chromatics
                         }
 
                         GlobalStopParticleEffects();
+                        GlobalStopCycleEffects();
+                    }
+                }
+                else
+                {
+                    if (!_inVegas)
+                        GlobalStopParticleEffects();
+                }
+
+                //DF Bell
+                FfxivDutyFinder.RefreshData();
+
+                //Vegas Mode
+                if (ChromaticsSettings.ChromaticsSettingsVegasMode)
+                {
+                    if (_playerInfo.MapTerritory == 144 && !FfxivDutyFinder.IsPopped())
+                    {
+                        if (!_inVegas)
+                        {
+                            //Console.WriteLine(@"Vegas Mode On");
+                            ToggleGlobalFlash4(false);
+                            GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+
+                            GlobalParticleEffects(
+                                new Color[]
+                                {
+                                    Color.Red,
+                                    Color.Orange,
+                                    Color.Green,
+                                    Color.DodgerBlue,
+                                    Color.Magenta,
+                                    Color.Purple
+                                }, null,
+                                50);
+
+
+                            _inVegas = true;
+                        }
+
+                        return;
+                    }
+                    else
+                    {
+                        if (_inVegas)
+                        {
+                            _inVegas = false;
+                            SetKeysbase = false;
+                            //Console.WriteLine(@"Vegas Mode Off");
+                        }
+
+                        GlobalStopParticleEffects();
                     }
                 }
                 else
                 {
                     GlobalStopParticleEffects();
                 }
-
 
                 if (_playerInfo != null && _playerInfo.Name != "")
                     //Watchdog.WatchdogReset();
@@ -6473,10 +6526,7 @@ namespace Chromatics
 
 
                             //Duty Finder Bell
-
-                            FfxivDutyFinder.RefreshData();
-                            //Debug.WriteLine(FFXIVInterfaces.FFXIVDutyFinder.isPopped() + "//" + FFXIVInterfaces.FFXIVDutyFinder.Countdown());
-
+                            
                             if (FfxivDutyFinder.IsPopped())
                             {
                                 //Debug.WriteLine("DF Pop");
@@ -6649,13 +6699,10 @@ namespace Chromatics
                                     }
                                 }
                             }
-                        }
 
-                        if (CorsairSdkCalled == 1)
-                        {
-                            //CorsairUpdateLED();
-                        }
 
+                        }
+                        
                         GlobalKeyboardUpdate();
                         MemoryTasks.Cleanup();
                     }

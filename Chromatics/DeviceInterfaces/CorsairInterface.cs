@@ -71,7 +71,8 @@ namespace Chromatics.DeviceInterfaces
         void Flash2(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void Flash3(Color burstcol, int speed, CancellationToken cts);
         void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
-        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts);
+        void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
+        void CycleEffect(int interval, CancellationTokenSource token);
     }
 
     public class CorsairLib : ICorsairSdk
@@ -1575,7 +1576,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts)
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50)
         {
             if (!_corsairDeviceKeyboard || string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model)) return;
             if (cts.IsCancellationRequested) return;
@@ -1634,14 +1635,90 @@ namespace Chromatics.DeviceInterfaces
                         }
 
                         //Keyboard.SetCustomAsync(refreshKeyGrid);
-                        Thread.Sleep(50);
+                        Thread.Sleep(speed);
                     }
                 });
 
-                Thread.Sleep(regions.Length * 50 / 2);
+                Thread.Sleep(colorFaderDict.Count * speed);
             }
         }
+
+        public void CycleEffect(int interval, CancellationTokenSource token)
+        {
+            if (!_corsairDeviceKeyboard) return;
+            if (string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
+            {
+                return;
+            }
+
+            while (true)
+            {
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255),
+                        (int)Math.Ceiling((double)(x * 100) / 255), 0);
+                    
+                    SetAllLights(col);
+
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
+                        (int)Math.Ceiling((double)(250 * 100) / 255), 0);
+
+                    SetAllLights(col);
+
+                }
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
+                        (int)Math.Ceiling((double)(250 * 100) / 255), 0);
+
+                    SetAllLights(col);
+
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb(0, (int)Math.Ceiling((double)(x * 100) / 255),
+                        (int)Math.Ceiling((double)(250 * 100) / 255));
+
+                    SetAllLights(col);
+                }
+                for (var x = 0; x <= 250; x += 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), 0,
+                        (int)Math.Ceiling((double)(250 * 100) / 255));
+
+                    SetAllLights(col);
+
+                }
+                for (var x = 250; x >= 5; x -= 5)
+                {
+                    if (token.IsCancellationRequested) break;
+                    Thread.Sleep(10);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255), 0,
+                        (int)Math.Ceiling((double)(x * 100) / 255));
+
+                    SetAllLights(col);
+
+                }
+                if (token.IsCancellationRequested) break;
+
+            }
+            Thread.Sleep(interval);
+        }
     }
+
 
     public static class ExceptionExtensions
     {

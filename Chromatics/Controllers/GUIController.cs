@@ -910,6 +910,7 @@ namespace Chromatics
             //chk_azertymode.Checked = ChromaticsSettings.ChromaticsSettingsAzertyMode;
             chk_desktopnotify.Checked = ChromaticsSettings.ChromaticsSettingsDesktopNotifications;
             chk_cutscenes.Checked = ChromaticsSettings.ChromaticsSettingsCutsceneAnimation;
+            chk_vegasmode.Checked = ChromaticsSettings.ChromaticsSettingsVegasMode;
 
             cb_qwerty.SelectedIndex = (int)ChromaticsSettings.ChromaticsSettingsQwertyMode;
 
@@ -2477,7 +2478,16 @@ namespace Chromatics
 
             ChromaticsSettings.ChromaticsSettingsCutsceneAnimation = chk_cutscenes.Checked;
 
-            SaveDevices();
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_vegasmode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsVegasMode = chk_vegasmode.Checked;
+
+            SaveChromaticsSettings(1);
         }
 
         private void chk_debugopt_CheckedChanged(object sender, EventArgs e)
