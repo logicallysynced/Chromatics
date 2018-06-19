@@ -1109,6 +1109,15 @@ namespace Chromatics
                 _steelDeviceHeadset = false;
             }
 
+            if (WootingSdkCalled == 1)
+            {
+                _wootingDeviceKeyboard = _deviceKeyboard;
+            }
+            else
+            {
+                _wootingDeviceKeyboard = false;
+            }
+
             if (RoccatSdkCalled == 1)
             {
                 _roccatDeviceKeyboard = _deviceKeyboard;
@@ -1669,6 +1678,11 @@ namespace Chromatics
                     _steelDeviceKeyboard = true;
                 }
 
+                if (WootingSdkCalled == 1)
+                {
+                    _wootingDeviceKeyboard = true;
+                }
+
                 if (RoccatSdkCalled == 1)
                 {
                     _roccatDeviceKeyboard = true;
@@ -1702,6 +1716,11 @@ namespace Chromatics
                 if (SteelSdkCalled == 1)
                 {
                     _steelDeviceKeyboard = false;
+                }
+
+                if (WootingSdkCalled == 1)
+                {
+                    _wootingDeviceKeyboard = false;
                 }
 
                 if (RoccatSdkCalled == 1)

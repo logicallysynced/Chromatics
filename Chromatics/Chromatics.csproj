@@ -243,6 +243,9 @@
       <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Serialization" />
+    <Reference Include="Wooting.NET">
+      <HintPath>..\Build Dependencies\Wooting.NET.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chromatics.cs">
@@ -286,6 +289,7 @@
     <Compile Include="DeviceInterfaces\SteelSeriesLibs\ColorUtils.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesLibs\GameSenseSDK.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesLibs\USBHIDCodes.cs" />
+    <Compile Include="DeviceInterfaces\WootingInterface.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVCutscenes.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVJobGauges.cs">
       <SubType>Form</SubType>

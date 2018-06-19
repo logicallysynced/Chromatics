@@ -32,6 +32,7 @@ namespace Chromatics.Datastore
         public bool DeviceOperationSteelHeadset = true;
         public bool DeviceOperationSteelKeyboard = true;
         public bool DeviceOperationSteelMouse = true;
+        public bool DeviceOperationWootingKeyboard = true;
 
         public bool DeviceOperationKeyboard = true;
         public bool DeviceOperationMouse = true;

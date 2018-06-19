@@ -47,6 +47,16 @@ namespace Chromatics
         private CancellationTokenSource _steelFl4Cts = new CancellationTokenSource();
         private Task _steelFlash;
 
+        private IWootingSdk _wooting;
+        private CancellationTokenSource _wootingFl1Cts = new CancellationTokenSource();
+        private Task _wootingFl2;
+        private CancellationTokenSource _wootingFl2Cts = new CancellationTokenSource();
+        private Task _wootingFl3;
+        private CancellationTokenSource _wootingFl3Cts = new CancellationTokenSource();
+        private Task _wootingFl4;
+        private CancellationTokenSource _wootingFl4Cts = new CancellationTokenSource();
+        private Task _wootingFlash;
+
         private Task _hueFl4;
 
         //private IRoccatSdk _roccat;
@@ -91,6 +101,9 @@ namespace Chromatics
 
         private Task _steelPart;
         private CancellationTokenSource _steelPartCts = new CancellationTokenSource();
+
+        private Task _wootingPart;
+        private CancellationTokenSource _wootingPartCts = new CancellationTokenSource();
 
         //Send a continuous flash effect to a Keyboard
         private bool _globalFlash2Running;
@@ -193,7 +206,24 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Steel, "SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
+                WriteConsole(ConsoleTypes.Wooting, "SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
+            }
+
+            _wooting = WootingInterface.InitializeWootingSdk();
+            if (_wooting != null)
+            {
+                WootingSdk = true;
+                WootingSdkCalled = 1;
+                WriteConsole(ConsoleTypes.Wooting, "Wooting SDK Loaded");
+
+                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                {
+                    AutoMeasurement.Client.TrackScreenView("Wooting");
+                }
+            }
+            else
+            {
+                WriteConsole(ConsoleTypes.Wooting, "Wooting SDK failed to load.");
             }
 
             //Load LIFX SDK
@@ -250,6 +280,9 @@ namespace Chromatics
 
             if (SteelSdkCalled == 1)
                 _steel.Shutdown();
+
+            if (WootingSdkCalled == 1)
+                _wooting.Shutdown();
         }
 
         public void GlobalResetDevices()
@@ -272,6 +305,9 @@ namespace Chromatics
 
             if (SteelSdkCalled == 1)
                 _steel.ResetSteelSeriesDevices(_steelDeviceKeyboard, _steelDeviceMouse, _steelDeviceHeadset, baseColor);
+
+            if (WootingSdkCalled == 1)
+                _wooting.ResetWootingDevices(_steelDeviceKeyboard, baseColor);
 
             //ResetDeviceDataGrid();
         }
@@ -355,6 +391,9 @@ namespace Chromatics
 
                 if (SteelSdkCalled == 1)
                     _steel.DeviceUpdate();
+
+                if (WootingSdkCalled == 1)
+                    _wooting.DeviceUpdate();
             }
         }
 
@@ -388,6 +427,11 @@ namespace Chromatics
             {
                 _steel.SetAllLights(col);
             }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wooting.SetAllLights(col);
+            }
         }
 
         public void GlobalApplyAllKeyLighting(Color col)
@@ -410,6 +454,11 @@ namespace Chromatics
             {
                 _steel.SetLights(col);
             }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wooting.SetLights(col);
+            }
         }
 
         public void GlobalApplySingleZoneLighting(Color col)
@@ -431,6 +480,9 @@ namespace Chromatics
 
             if (SteelSdkCalled == 1)
                 _steel.ApplyMapSingleLighting(col);
+
+            if (WootingSdkCalled == 1)
+                _wooting.ApplyMapSingleLighting(col);
         }
 
         public void GlobalApplyMultiZoneLighting(Color col, string region)
@@ -452,6 +504,9 @@ namespace Chromatics
 
             if (SteelSdkCalled == 1)
                 _steel.ApplyMapMultiLighting(col, region);
+
+            if (WootingSdkCalled == 1)
+                _wooting.ApplyMapMultiLighting(col, region);
         }
 
         //Send a lighting command to a specific Keyboard LED
@@ -547,6 +602,30 @@ namespace Chromatics
                     _steel.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
                 }
             }
+
+            if (WootingSdkCalled == 1)
+            {
+                if (key == "Macro1")
+                {
+                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey("Macro1"), col, clear, bypasswhitelist);
+                }
+                else if (key == "Macro2")
+                {
+                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey("Macro2"), col, clear, bypasswhitelist);
+                }
+                else if (key == "Macro3")
+                {
+                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey("Macro3"), col, clear, bypasswhitelist);
+                }
+                else if (key == "Macro4")
+                {
+                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey("Macro4"), col, clear, bypasswhitelist);
+                }
+                else
+                {
+                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
+                }
+            }
         }
 
         public void GlobalApplyMapLightbarLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
@@ -608,6 +687,11 @@ namespace Chromatics
             {
                 //
             }
+
+            if (WootingSdkCalled == 1)
+            {
+                //
+            }
         }
 
         //Send a lighting command to a specific Mouse LED
@@ -635,7 +719,7 @@ namespace Chromatics
 
                 if (CoolermasterSdkCalled == 1)
                 {
-                    _coolermaster.ApplyMapMouseLighting("", col, clear);
+                    _coolermaster.ApplyMapMouseLighting("MouseFront", col, clear);
                 }
 
                 if (SteelSdkCalled == 1)
@@ -660,7 +744,7 @@ namespace Chromatics
 
                 if (CoolermasterSdkCalled == 1)
                 {
-                    _coolermaster.ApplyMapMouseLighting("", col, clear);
+                    _coolermaster.ApplyMapMouseLighting("MouseScroll", col, clear);
                 }
 
                 if (SteelSdkCalled == 1)
@@ -685,7 +769,7 @@ namespace Chromatics
 
                 if (CoolermasterSdkCalled == 1)
                 {
-                    _coolermaster.ApplyMapMouseLighting("", col, clear);
+                    _coolermaster.ApplyMapMouseLighting("MouseSide", col, clear);
                 }
 
                 if (SteelSdkCalled == 1)
@@ -1231,6 +1315,13 @@ namespace Chromatics
                 MemoryTasks.Add(rippleTask);
                 MemoryTasks.Run(rippleTask);
             }
+
+            if (WootingSdkCalled == 1)
+            {
+                var rippleTask = _wooting.Ripple1(burstcol, speed, baseColor);
+                MemoryTasks.Add(rippleTask);
+                MemoryTasks.Run(rippleTask);
+            }
         }
 
         public void GlobalMultiRipple1(Color burstcol, int speed, Color baseColor)
@@ -1265,6 +1356,11 @@ namespace Chromatics
             }
 
             if (SteelSdkCalled == 1)
+            {
+                //
+            }
+
+            if (WootingSdkCalled == 1)
             {
                 //
             }
@@ -1312,6 +1408,13 @@ namespace Chromatics
                 MemoryTasks.Add(rippleTask2);
                 MemoryTasks.Run(rippleTask2);
             }
+
+            if (WootingSdkCalled == 1)
+            {
+                var rippleTask2 = _wooting.Ripple2(burstcol, speed);
+                MemoryTasks.Add(rippleTask2);
+                MemoryTasks.Run(rippleTask2);
+            }
         }
 
         public void GlobalMultiRipple2(Color burstcol, int speed)
@@ -1346,6 +1449,11 @@ namespace Chromatics
             }
 
             if (SteelSdkCalled == 1)
+            {
+                //
+            }
+
+            if (WootingSdkCalled == 1)
             {
                 //
             }
@@ -1443,6 +1551,21 @@ namespace Chromatics
                 MemoryTasks.Add(_steelFlash);
                 MemoryTasks.Run(_steelFlash);
             }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wootingFlash = null;
+                _wootingFl1Cts = new CancellationTokenSource();
+
+                _wootingFlash = new Task(() =>
+                {
+                    HoldReader = true;
+                    _wooting.Flash1(burstcol, speed, regions);
+                    HoldReader = false;
+                }, _wootingFl1Cts.Token);
+                MemoryTasks.Add(_wootingFlash);
+                MemoryTasks.Run(_wootingFlash);
+            }
         }
 
         public void GlobalFlash2(Color burstcol, int speed, string[] template)
@@ -1524,6 +1647,17 @@ namespace Chromatics
                     MemoryTasks.Run(_steelFl2);
                 }
 
+                if (WootingSdkCalled == 1)
+                {
+                    _wootingFl2 = null;
+                    _wootingFl2Cts = new CancellationTokenSource();
+                    _wootingFl2 =
+                        new Task(() => { _wooting.Flash2(burstcol, speed, _wootingFl2Cts.Token, template); },
+                            _wootingFl2Cts.Token);
+                    MemoryTasks.Add(_wootingFl2);
+                    MemoryTasks.Run(_wootingFl2);
+                }
+
                 _globalFlash2Running = true;
             }
         }
@@ -1562,6 +1696,12 @@ namespace Chromatics
                 {
                     _steelFl2Cts.Cancel();
                     MemoryTasks.Remove(_steelFl2);
+                }
+
+                if (WootingSdkCalled == 1)
+                {
+                    _wootingFl2Cts.Cancel();
+                    MemoryTasks.Remove(_wootingFl2);
                 }
 
                 //Debug.WriteLine("Stopping Flash 2");
@@ -1632,6 +1772,17 @@ namespace Chromatics
                     MemoryTasks.Run(_steelFl3);
                 }
 
+                if (WootingSdkCalled == 1)
+                {
+                    _wootingFl3 = null;
+                    _wootingFl3Cts = new CancellationTokenSource();
+                    _wootingFl3 =
+                        new Task(() => { _wooting.Flash3(burstcol, speed, _wootingFl3Cts.Token); },
+                            _steelFl3Cts.Token);
+                    MemoryTasks.Add(_wootingFl3);
+                    MemoryTasks.Run(_wootingFl3);
+                }
+
                 _globalFlash3Running = true;
             }
         }
@@ -1675,6 +1826,12 @@ namespace Chromatics
                 {
                     _steelFl3Cts.Cancel();
                     MemoryTasks.Remove(_steelFl3);
+                }
+
+                if (WootingSdkCalled == 1)
+                {
+                    _wootingFl3Cts.Cancel();
+                    MemoryTasks.Remove(_wootingFl3);
                 }
 
                 //Debug.WriteLine("Stopping Flash 3");
@@ -1768,6 +1925,18 @@ namespace Chromatics
                         MemoryTasks.Add(_steelFl4);
                         MemoryTasks.Run(_steelFl4);
                     }
+
+                    if (WootingSdkCalled == 1)
+                    {
+                        _wootingFl4 = null;
+                        _wootingFl4Cts = new CancellationTokenSource();
+                        _wootingFl4 =
+                            new Task(
+                                () => { _wooting.Flash4(burstcol, speed, _wootingFl4Cts.Token, template); },
+                                _wootingFl4Cts.Token);
+                        MemoryTasks.Add(_wootingFl4);
+                        MemoryTasks.Run(_wootingFl4);
+                    }
                 }
 
                 if (LifxSdkCalled == 1)
@@ -1830,6 +1999,12 @@ namespace Chromatics
                     {
                         _steelFl4Cts.Cancel();
                         MemoryTasks.Remove(_steelFl4);
+                    }
+
+                    if (WootingSdkCalled == 1)
+                    {
+                        _wootingFl4Cts.Cancel();
+                        MemoryTasks.Remove(_wootingFl4);
                     }
                 }
 
@@ -1930,6 +2105,19 @@ namespace Chromatics
                 MemoryTasks.Run(_steelPart);
             }
 
+            if (WootingSdkCalled == 1)
+            {
+                _wootingPart = null;
+                _wootingPartCts = new CancellationTokenSource();
+                _wootingPart = new Task(() =>
+                {
+                    _wooting.ParticleEffect(toColor, regions, interval, _wootingPartCts);
+                }, _wootingPartCts.Token);
+
+                MemoryTasks.Add(_wootingPart);
+                MemoryTasks.Run(_wootingPart);
+            }
+
             _globalParticleRunning = true;
         }
 
@@ -1965,6 +2153,12 @@ namespace Chromatics
             {
                 _steelPartCts.Cancel();
                 MemoryTasks.Remove(_steelPart);
+            }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wootingPartCts.Cancel();
+                MemoryTasks.Remove(_wootingPart);
             }
         }
 

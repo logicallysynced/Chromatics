@@ -116,6 +116,10 @@ namespace Chromatics
         public bool SteelSdk = false;
         public int SteelSdkCalled = 0;
 
+        private bool _wootingDeviceKeyboard = true;
+        public bool WootingSdk = false;
+        public int WootingSdkCalled = 0;
+
         private readonly RegistryKey _rkApp =
             Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
@@ -201,6 +205,8 @@ namespace Chromatics
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.DarkBlue; });
                     else if (type == ConsoleTypes.Roccat)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.RosyBrown; });
+                    else if (type == ConsoleTypes.Wooting)
+                        rtb_debug.Invoke((Action)delegate { rtb_debug.SelectionColor = Color.Green; });
                     else if (type == ConsoleTypes.Error)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Red; });
                     else rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Black; });
@@ -220,6 +226,7 @@ namespace Chromatics
                     else if (type == ConsoleTypes.Steel) rtb_debug.SelectionColor = Color.HotPink;
                     else if (type == ConsoleTypes.Coolermaster) rtb_debug.SelectionColor = Color.DarkBlue;
                     else if (type == ConsoleTypes.Roccat) rtb_debug.SelectionColor = Color.RosyBrown;
+                    else if (type == ConsoleTypes.Wooting) rtb_debug.SelectionColor = Color.Green;
                     else if (type == ConsoleTypes.Error) rtb_debug.SelectionColor = Color.Red;
                     else rtb_debug.SelectionColor = Color.Black;
 
@@ -649,7 +656,7 @@ namespace Chromatics
             {
                 if (!_gameNotify)
                 {
-                    WriteConsole(ConsoleTypes.System, "Waiting for Game Launch..");
+                    WriteConsole(ConsoleTypes.Ffxiv, "Waiting for Game Launch..");
                     notify_master.Text = @"Waiting for Game Launch..";
 
                     if (LcdSdkCalled == 1)

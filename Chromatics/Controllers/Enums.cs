@@ -13,6 +13,7 @@
         Steel,
         Coolermaster,
         Roccat,
+        Wooting,
         Error
     }
 

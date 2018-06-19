@@ -499,7 +499,7 @@ namespace Chromatics
                         {
                             if (HoldReader && xi_interval == xi_scan)
                             {
-                                WriteConsole(ConsoleTypes.System,
+                                WriteConsole(ConsoleTypes.Ffxiv,
                                     "Resuming Execution (Memory Size: " + proc.PrivateMemorySize64 / 1024 + "MB)..");
                                 SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
                                 HoldReader = false;
@@ -519,7 +519,7 @@ namespace Chromatics
             {
                 if (HoldReader && xi_interval == xi_scan)
                 {
-                    WriteConsole(ConsoleTypes.System,
+                    WriteConsole(ConsoleTypes.Ffxiv,
                         "Resuming Execution..");
                     SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
                     HoldReader = false;

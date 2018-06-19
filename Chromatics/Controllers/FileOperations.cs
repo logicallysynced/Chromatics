@@ -39,6 +39,8 @@ namespace Chromatics
             dr.DeviceOperationSteelHeadset = _steelDeviceHeadset;
             dr.DeviceOperationSteelMouse = _steelDeviceMouse;
 
+            dr.DeviceOperationWootingKeyboard = _wootingDeviceKeyboard;
+
             dr.DeviceOperationRoccatKeyboard = _roccatDeviceKeyboard;
             dr.DeviceOperationRoccatMouse = _roccatDeviceMouse;
 
@@ -155,6 +157,8 @@ namespace Chromatics
                         _steelDeviceKeyboard = dr.DeviceOperationSteelKeyboard;
                         _steelDeviceMouse = dr.DeviceOperationSteelMouse;
                         _steelDeviceHeadset = dr.DeviceOperationSteelHeadset;
+
+                        _wootingDeviceKeyboard = dr.DeviceOperationWootingKeyboard;
 
                         _roccatDeviceKeyboard = dr.DeviceOperationRoccatKeyboard;
                         _roccatDeviceMouse = dr.DeviceOperationRoccatMouse;
