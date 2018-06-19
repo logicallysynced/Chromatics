@@ -79,11 +79,11 @@ namespace Chromatics.DeviceInterfaces
 
         [DllImport(SdkDll, EntryPoint = "SetAllLedColor")]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static extern bool SetAllLedColor(ColorMatrix colorMatrix);
+        public static extern bool SetAllLedColor(ColorMatrix colorMatrix, DeviceIndex devIndex);
 
         [DllImport(SdkDll, EntryPoint = "SetLedColor")]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static extern bool SetLedColor(int iRow, int iColumn, byte r, byte g, byte b);
+        public static extern bool SetLedColor(int iRow, int iColumn, byte r, byte g, byte b, DeviceIndex devIndex);
 
         [DllImport(SdkDll, EntryPoint = "EnableKeyInterrupt")]
         [return: MarshalAs(UnmanagedType.I1)]
@@ -149,7 +149,11 @@ namespace Chromatics.DeviceInterfaces
             DevMMouseL = 4,
             DevMMouseS = 5,
             DevMKeysM = 6,
-            DevMKeysSWhite = 7
+            DevMKeysSWhite = 7,
+            DevMM520 = 8,
+            DevMM530 = 9,
+            DevMK750 = 10
+
         }
 
         public enum DeviceType
@@ -196,6 +200,7 @@ namespace Chromatics.DeviceInterfaces
         private readonly object _initLock = new object();
         private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
         private readonly List<CoolermasterSdkWrapper.DeviceIndex> _keyboards = new List<CoolermasterSdkWrapper.DeviceIndex>();
+        private readonly List<CoolermasterSdkWrapper.DeviceIndex> _mice = new List<CoolermasterSdkWrapper.DeviceIndex>();
         private readonly CoolermasterSdkWrapper.ColorMatrix _colorMatrix = new CoolermasterSdkWrapper.ColorMatrix();
         private readonly Timer _updateTimer;
         /// <summary>
@@ -412,6 +417,33 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapMouseLighting(string region, Color col, bool clear)
         {
+            if (!IsInitialized || !_coolermasterDeviceKeyboard)
+                return;
+
+            foreach (var mouseDevice in _mice)
+            {
+                CoolermasterSdkWrapper.SetControlDevice(mouseDevice);
+
+                switch (region)
+                {
+                    case "All":
+                        CoolermasterSdkWrapper.SetLedColor(0, 0, col.R, col.G, col.B, mouseDevice);
+                        CoolermasterSdkWrapper.SetLedColor(0, 1, col.R, col.G, col.B, mouseDevice);
+                        CoolermasterSdkWrapper.SetLedColor(0, 2, col.R, col.G, col.B, mouseDevice);
+                        CoolermasterSdkWrapper.SetLedColor(0, 3, col.R, col.G, col.B, mouseDevice);
+                        break;
+                    case "MouseFront":
+                        CoolermasterSdkWrapper.SetLedColor(0, 0, col.R, col.G, col.B, mouseDevice);
+                        break;
+                    case "MouseScroll":
+                        CoolermasterSdkWrapper.SetLedColor(0, 1, col.R, col.G, col.B, mouseDevice);
+                        break;
+                    case "MouseSide":
+                        CoolermasterSdkWrapper.SetLedColor(0, 2, col.R, col.G, col.B, mouseDevice);
+                        CoolermasterSdkWrapper.SetLedColor(0, 3, col.R, col.G, col.B, mouseDevice);
+                        break;
+                }
+            }
         }
 
         public Task Ripple1(Color burstcol, int speed)
@@ -982,9 +1014,18 @@ namespace Chromatics.DeviceInterfaces
                         }
                     }
 
-                    // TODO(devices): Coolermaster Mice
+                    foreach (var supportedDevice in SupportedMouseDevices)
+                    {
+                        CoolermasterSdkWrapper.SetControlDevice(supportedDevice);
+                        if (CoolermasterSdkWrapper.IsDevicePlug())
+                        {
+                            Write.WriteConsole(ConsoleTypes.Coolermaster, $"Found a {supportedDevice} Coolermaster mouse.");
+                            _mice.Add(supportedDevice);
+                            CoolermasterSdkWrapper.EnableLedControl(true);
+                        }
+                    }
 
-                    if (_keyboards.Any())
+                    if (_keyboards.Any() || _mice.Any())
                     {
                         IsInitialized = true;
                         return true;
@@ -1047,7 +1088,7 @@ namespace Chromatics.DeviceInterfaces
             foreach (var keyboardDevice in _keyboards)
             {
                 CoolermasterSdkWrapper.SetControlDevice(keyboardDevice);
-                CoolermasterSdkWrapper.SetAllLedColor(_colorMatrix);
+                CoolermasterSdkWrapper.SetAllLedColor(_colorMatrix, keyboardDevice);
             }
 
             _updateTimer.Change(Timeout.Infinite, Timeout.Infinite);
