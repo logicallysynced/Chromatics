@@ -6083,7 +6083,6 @@ namespace Chromatics
                                             hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_6 ||
                                             hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_7 ||
                                             hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_8 ||
-                                            hotbar.Type == HotBarRecast.Container.PETBAR ||
                                             hotbar.Type == HotBarRecast.Container.CROSS_PETBAR) continue;
 
                                         foreach (var action in hotbar.Actions)
@@ -6152,33 +6151,86 @@ namespace Chromatics
 
                                                     if (_modsactive == 0)
                                                         if (action.IsAvailable || _playerInfo.IsCasting)
+                                                        {
                                                             if (action.InRange)
+                                                            {
                                                                 if (action.IsProcOrCombo)
                                                                 {
                                                                     //Action Proc'd
-                                                                    GlobalApplyMapKeyLighting(keyid,
-                                                                        ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                    {
+                                                                        GlobalApplyMapKeyLighting(keyid,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingPetProc), false, true);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        GlobalApplyMapKeyLighting(keyid,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingHotbarProc), false, true);
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (action.CoolDownPercent > 0)
-                                                                        GlobalApplyMapKeyLighting(keyid,
-                                                                            ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingHotbarCd), false, true);
+                                                                    if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                    {
+                                                                        if (action.CoolDownPercent > 0)
+                                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingPetCd), false,
+                                                                                true);
+                                                                        else
+                                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingPetReady), false,
+                                                                                true);
+                                                                    }
                                                                     else
-                                                                        GlobalApplyMapKeyLighting(keyid,
-                                                                            ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingHotbarReady), false, true);
+                                                                    {
+                                                                        if (action.CoolDownPercent > 0)
+                                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingHotbarCd), false,
+                                                                                true);
+                                                                        else
+                                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingHotbarReady), false,
+                                                                                true);
+                                                                    }
                                                                 }
+                                                            }
                                                             else
+                                                            {
+                                                                if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingPetOutRange), false, true);
+                                                                }
+                                                                else
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarOutRange), false, true);
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                            {
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
-                                                                        .ColorMappingHotbarOutRange), false, true);
-                                                        else
-                                                            GlobalApplyMapKeyLighting(keyid,
-                                                                ColorTranslator.FromHtml(ColorMappings
-                                                                    .ColorMappingHotbarNotAvailable), false, true);
+                                                                        .ColorMappingPetNotAvailable), false, true);
+                                                            }
+                                                            else
+                                                            {
+                                                                GlobalApplyMapKeyLighting(keyid,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarNotAvailable), false, true);
+                                                            }
+                                                        }
                                                 }
                                             }
                                             else
@@ -6190,33 +6242,87 @@ namespace Chromatics
 
                                                     if (_modsactive == 0)
                                                         if (action.IsAvailable || _playerInfo.IsCasting)
+                                                        {
                                                             if (action.InRange)
+                                                            {
                                                                 if (action.IsProcOrCombo)
                                                                 {
-                                                                    //Action Proc'd
-                                                                    GlobalApplyMapKeyLighting(keyid,
-                                                                        ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                    {
+                                                                        //Action Proc'd
+                                                                        GlobalApplyMapKeyLighting(keyid,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingPetProc), false, true);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        //Action Proc'd
+                                                                        GlobalApplyMapKeyLighting(keyid,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingHotbarProc), false, true);
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (action.CoolDownPercent > 0)
-                                                                        GlobalApplyMapKeyLighting(keyid,
-                                                                            ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingHotbarCd), false, true);
+                                                                    if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                    {
+                                                                        if (action.CoolDownPercent > 0)
+                                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingPetCd), false,
+                                                                                true);
+                                                                        else
+                                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingPetReady), false,
+                                                                                true);
+                                                                    }
                                                                     else
-                                                                        GlobalApplyMapKeyLighting(keyid,
-                                                                            ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingHotbarReady), false, true);
+                                                                    {
+                                                                        if (action.CoolDownPercent > 0)
+                                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingHotbarCd), false,
+                                                                                true);
+                                                                        else
+                                                                            GlobalApplyMapKeyLighting(keyid,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingHotbarReady), false,
+                                                                                true);
+                                                                    }
                                                                 }
+                                                            }
                                                             else
+                                                            {
+                                                                if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingPetOutRange), false, true);
+                                                                }
+                                                                else
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarOutRange), false, true);
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                            {
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
-                                                                        .ColorMappingHotbarOutRange), false, true);
-                                                        else
-                                                            GlobalApplyMapKeyLighting(keyid,
-                                                                ColorTranslator.FromHtml(ColorMappings
-                                                                    .ColorMappingHotbarNotAvailable), false, true);
+                                                                        .ColorMappingPetNotAvailable), false, true);
+                                                            }
+                                                            else
+                                                            {
+                                                                GlobalApplyMapKeyLighting(keyid,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarNotAvailable), false, true);
+                                                            }
+                                                        }
                                                 }
                                             }
                                         }
