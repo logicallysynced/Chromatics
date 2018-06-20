@@ -6092,7 +6092,7 @@ namespace Chromatics
                                                 string.IsNullOrEmpty(action.ActionKey)) continue;
 
                                             //Console.WriteLine(@"key: " + action.ActionKey);
-
+                                            
                                             //Collect Modifier Info
                                             var modsactive = action.Modifiers.Count;
                                             var _modsactive = modsactive;
@@ -6148,8 +6148,81 @@ namespace Chromatics
                                                 {
                                                     var keyid = FfxivHotbar.KeybindtranslationAZERTY[action.ActionKey];
 
-
                                                     if (_modsactive == 0)
+
+                                                        if (action.Category == 51)
+                                                        {
+                                                            if (!action.IsAvailable || !action.InRange)
+                                                            {
+                                                                GlobalApplyMapKeyLighting(keyid,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarNotAvailable), false, true);
+
+                                                                continue;
+                                                            }
+
+                                                            switch (action.Name)
+                                                            {
+                                                                case "Map":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Aether Currents":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Signs":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Waymarks":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Record Ready Check":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Ready Check":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Countdown":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Emotes":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Linkshells":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Cross-world Linkshell":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Contacts":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                            }
+
+                                                            continue;
+                                                        }
+
                                                         if (action.IsAvailable || _playerInfo.IsCasting)
                                                         {
                                                             if (action.InRange)
@@ -6241,7 +6314,87 @@ namespace Chromatics
 
 
                                                     if (_modsactive == 0)
-                                                        if (action.IsAvailable || _playerInfo.IsCasting)
+
+                                                        if (action.ActionKey == "1")
+                                                        {
+                                                            Console.WriteLine(action.Category);
+                                                            Console.WriteLine(action.Name);
+                                                        }
+
+                                                        if (action.Category == 51)
+                                                        {
+                                                            if (!action.IsAvailable || !action.InRange)
+                                                            {
+                                                                GlobalApplyMapKeyLighting(keyid,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarNotAvailable), false, true);
+
+                                                                continue;
+                                                            }
+
+                                                            switch (action.Name)
+                                                            {
+                                                                case "Map":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Aether Currents":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Signs":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Waymarks":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Record Ready Check":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Ready Check":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Countdown":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Emotes":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Linkshells":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Cross-world Linkshell":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                                case "Contacts":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false, true);
+                                                                    break;
+                                                            }
+
+                                                            continue;
+                                                        }
+
+                                                    if (action.IsAvailable || _playerInfo.IsCasting)
                                                         {
                                                             if (action.InRange)
                                                             {
