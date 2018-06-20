@@ -291,7 +291,9 @@ namespace Chromatics.DeviceInterfaces
                 }
 
                 //var task = Task.Run(ColoreProvider.CreateNativeAsync).GetAwaiter().GetResult();
-                
+
+                //var appInfo = new AppInfo("Chromatics", "Lighting effects for Final Fantasy XIV", "Roxas Keyheart", "hello@chromaticsffxiv.com", Category.Game);
+                //var task = ColoreProvider.CreateRestAsync(appInfo);
                 var task = ColoreProvider.CreateNativeAsync();
                 task.Wait();
                 Chroma = task.Result;
