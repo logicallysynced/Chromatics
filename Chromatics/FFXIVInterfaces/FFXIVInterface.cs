@@ -37,6 +37,8 @@ namespace Chromatics
         private bool _weathertoggle;
         private bool _inCutscene;
         private bool _inVegas;
+        private int _catchMenuchange;
+        private int _countMainMenuHold;
 
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
@@ -56,12 +58,13 @@ namespace Chromatics
 
         private FFXIVUnsafeMethods _unsafe = new FFXIVUnsafeMethods();
         private readonly object _CallLcdData = new object();
+        private readonly object _CallFFXIVData = new object();
 
         public void FfxivGameStop()
         {
             if (Attatched == 0) return;
 
-            //Debug.WriteLine("Debug trip");
+            //Console.WriteLine("Debug trip");
 
             HoldReader = true;
             _ffxiVcts.Cancel();
@@ -311,14 +314,26 @@ namespace Chromatics
 
                     _playerInfoX = Reader.GetActors().PCEntities;
                     _menuInfo = ActorEntity.CurrentUser; //Reader.GetPlayerInfo().PlayerEntity;
+                    
+                    if (_playerInfoX.Count == 0)
+                    {
+                        _catchMenuchange++;
+                    }
+                    else
+                    {
+                        _catchMenuchange = 0;
 
+                    }
 
                     if (Attatched == 3)
                     {
                         //Game is Running
                         //Check if game has stopped by checking Character data for a null value.
 
-                        if (_menuInfo != null && _menuInfo.Name == "" && _menuInfo.MapTerritory == 0)
+                        _countMainMenuHold = 0;
+
+                        //if ((_menuInfo == null || _menuInfo.Name == "") && _catchMenuchange > 5)
+                        if (_catchMenuchange > 5)
                         {
                             if (processes11.Length != 0)
                             {
@@ -353,7 +368,12 @@ namespace Chromatics
                         {
                             //Call function to parse FFXIV data
                             if (HoldReader == false)
-                                ProcessFfxivData();
+                            {
+                                lock (_CallFFXIVData)
+                                {
+                                    ProcessFfxivData();
+                                }
+                            }
                         }
                     }
                     else
@@ -368,12 +388,13 @@ namespace Chromatics
                             GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                             
                             Attatched = 2;
+                            _countMainMenuHold = 0;
                         }
 
                         //Game in Menu
                         else if (Attatched == 2)
                         {
-                            if (_menuInfo != null && _menuInfo.Name != "")
+                            if (_menuInfo != null && _menuInfo.Name != "" && _catchMenuchange <= 5)
                             {
                                 //Set Game Active
                                 WriteConsole(ConsoleTypes.Ffxiv, "Game Running (" + _menuInfo.Name + ")");
@@ -395,6 +416,7 @@ namespace Chromatics
                                 //Watchdog.WatchdogGo();
                                 Attatched = 3;
                                 HoldReader = false;
+                                _countMainMenuHold = 0;
 
                                 FFXIVWeather.GetWeatherAPI();
 
@@ -438,14 +460,27 @@ namespace Chromatics
                             else
                             {
                                 //Main Menu Still Active
+                                if (_countMainMenuHold == 5)
+                                {
+                                    GlobalApplyAllDeviceLighting(
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase));
+                                    GlobalParticleEffects(
+                                        new Color[]
+                                        {
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight1),
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight2),
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight3),
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase)
+                                        }, null, 20);
+                                }
+
+                                _countMainMenuHold++;
+
                                 if (!_menuNotify)
                                 {
                                     WriteConsole(ConsoleTypes.Ffxiv, "Main Menu is still active.");
                                     SetFormName(@"Chromatics " + _currentVersionX + @" (Paused)");
-
-                                    GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase));
-                                    GlobalParticleEffects(new Color[] { ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight1), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight2), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight3), ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase) }, null, 20);
-
+                                    
                                     if (LcdSdkCalled == 1)
                                     {
                                         _lcd.StatusLCDInfo(@"Main Menu is still active.");
@@ -6152,7 +6187,7 @@ namespace Chromatics
 
                                                         if (action.Category == 49 || action.Category == 51)
                                                         {
-                                                            if (!action.IsAvailable || !action.InRange || action.CoolDownPercent > 0)
+                                                            if (!action.IsAvailable || !action.InRange || _playerInfo.IsCasting || action.CoolDownPercent > 0)
                                                             {
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
@@ -6253,12 +6288,17 @@ namespace Chromatics
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindDig), false, true);
                                                                     break;
+                                                                case "Inventory":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindInventory), false, true);
+                                                                    break;
                                                             }
 
                                                             continue;
                                                         }
 
-                                                    if (action.IsAvailable || _playerInfo.IsCasting)
+                                                        if (action.IsAvailable || !_playerInfo.IsCasting)
                                                         {
                                                             if (action.InRange)
                                                             {
@@ -6349,10 +6389,10 @@ namespace Chromatics
 
 
                                                     if (_modsactive == 0)
-
+                                                       
                                                         if (action.Category == 49 || action.Category == 51)
                                                         {
-                                                            if (!action.IsAvailable || !action.InRange || action.CoolDownPercent > 0)
+                                                            if (!action.IsAvailable || !action.InRange || _playerInfo.IsCasting || action.CoolDownPercent > 0)
                                                             {
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
@@ -6453,12 +6493,17 @@ namespace Chromatics
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindDig), false, true);
                                                                     break;
+                                                                case "Inventory":
+                                                                    GlobalApplyMapKeyLighting(keyid,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindInventory), false, true);
+                                                                    break;
                                                             }
 
                                                             continue;
                                                         }
 
-                                                    if (action.IsAvailable || _playerInfo.IsCasting)
+                                                        if (action.IsAvailable || !_playerInfo.IsCasting)
                                                         {
                                                             if (action.InRange)
                                                             {

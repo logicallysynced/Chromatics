@@ -2367,7 +2367,7 @@ namespace Chromatics.DeviceInterfaces
 
                         colorFaderDict.Add(key,
                             new ColorFader(FromColoreCol(refreshKeyGrid[keyid]), rndCol, interval));
-                        
+
                     }
                 }
 

@@ -182,6 +182,7 @@ namespace Chromatics
             {"ColorMappingKeybindDutyAction", new[] { "Duty Action Keybind", "7", "Black", "White"}},
             {"ColorMappingKeybindRepair", new[] { "Repair Keybind", "7", "Black", "White"}},
             {"ColorMappingKeybindDig", new[] { "Dig Keybind", "7", "Black", "White"}},
+            {"ColorMappingKeybindInventory", new[] { "Inventory Keybind", "7", "Black", "White"}},
             {"ColorMappingDutyFinderBell", new[] {"Duty Finder Bell", "8", "Black", "White"}},
             {"ColorMappingJobWARNegative", new[] {"WAR: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobWARWrathBurst", new[] { "WAR: Wrath (Burst)", "9", "Black", "White"}},

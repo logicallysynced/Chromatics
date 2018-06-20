@@ -160,6 +160,7 @@ namespace Chromatics.Datastore
         public string ColorMappingKeybindDutyAction = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingKeybindRepair = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingKeybindDig = ColorTranslator.ToHtml(Color.OrangeRed);
+        public string ColorMappingKeybindInventory = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingHpCritical = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingHpEmpty = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingHpFull = ColorTranslator.ToHtml(Color.Lime);
@@ -246,7 +247,7 @@ namespace Chromatics.Datastore
         public string ColorMappingMenuHighlight3 = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingCutsceneBase = ColorTranslator.ToHtml(Color.DeepSkyBlue);
         public string ColorMappingCutsceneHighlight1 = ColorTranslator.ToHtml(Color.White);
-        public string ColorMappingCutsceneHighlight2 = ColorTranslator.ToHtml(Color.White);
+        public string ColorMappingCutsceneHighlight2 = ColorTranslator.ToHtml(Color.DeepSkyBlue);
         public string ColorMappingCutsceneHighlight3 = ColorTranslator.ToHtml(Color.White);
 
         public string ColorMappingWeatherClearBase = ColorTranslator.ToHtml(Color.SkyBlue);

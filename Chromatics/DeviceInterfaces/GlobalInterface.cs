@@ -201,6 +201,7 @@ namespace Chromatics
                 WriteConsole(ConsoleTypes.Coolermaster, "Coolermaster SDK failed to load.");
             }
 
+            WriteConsole(ConsoleTypes.Steel, "Attempting to load SteelSeries GameSense SDK..");
             _steel = SteelSeriesInterface.InitializeSteelSdk();
             if (_steel != null)
             {
@@ -215,7 +216,7 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Wooting, "SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
+                WriteConsole(ConsoleTypes.Steel, "SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
             }
 
             _wooting = WootingInterface.InitializeWootingSdk();
@@ -515,7 +516,7 @@ namespace Chromatics
 
         public void GlobalApplySingleZoneLighting(Color col)
         {
-            if (!_KeysSingleKeyModeEnabled)
+            if (!_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
             if (RazerSdkCalled == 1)
@@ -539,7 +540,7 @@ namespace Chromatics
 
         public void GlobalApplyMultiZoneLighting(Color col, string region)
         {
-            if (!_KeysMultiKeyModeEnabled)
+            if (!_KeysMultiKeyModeEnabled || _KeysSingleKeyModeEnabled)
                 return;
 
             if (RazerSdkCalled == 1)

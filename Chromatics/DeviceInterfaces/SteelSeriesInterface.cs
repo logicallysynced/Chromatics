@@ -129,8 +129,6 @@ namespace Chromatics.DeviceInterfaces
         
         public bool InitializeLights()
         {
-            Write.WriteConsole(ConsoleTypes.Steel, "Attempting to load SteelSeries GameSense SDK..");
-
             lock (action_lock)
             {
                 if (!isInitialized)
