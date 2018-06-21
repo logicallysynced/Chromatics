@@ -705,20 +705,23 @@ namespace Chromatics
             GlobalApplyMultiZoneLighting(col, region);
         }
 
-        public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color col, double val)
+        public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, double val)
         {
             if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
-            
-            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 
+            //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+
+            var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
+            
             GlobalApplySingleZoneLighting(c2);
         }
 
-        public void GlobalApplyKeyMultiLightingBrightness(DevMultiModeTypes mode, Color col, double val)
+        public void GlobalApplyKeyMultiLightingBrightness(DevMultiModeTypes mode, Color colMin, Color colMax, double val)
         {
             if (!_KeysMultiKeyModeEnabled || mode == DevMultiModeTypes.Disabled || mode != _KeysMultiKeyMode) return;
 
-            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
 
             GlobalApplyMultiZoneLighting(c2, "All");
         }
@@ -874,12 +877,15 @@ namespace Chromatics
             }
         }
 
-        public void GlobalApplyMapMouseLightingBrightness(DevModeTypes mode, Color col, bool clear, double val)
+        public void GlobalApplyMapMouseLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, bool clear, double val)
         {
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
 
-            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+
+            var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
+
             GlobalApplyMapMouseLighting(mode, c2, clear);
         }
 
@@ -949,12 +955,14 @@ namespace Chromatics
             }
         }
 
-        public void GlobalApplyMapHeadsetLightingBrightness(DevModeTypes mode, Color col, bool clear, double val)
+        public void GlobalApplyMapHeadsetLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, bool clear, double val)
         {
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _HeadsetZone1Mode) return;
 
-            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
+
             GlobalApplyMapHeadsetLighting(mode, c2, clear);
         }
 
@@ -994,12 +1002,14 @@ namespace Chromatics
             
         }
 
-        public void GlobalApplyMapKeypadLightingBrightness(DevMultiModeTypes mode, Color col, bool clear, double val)
+        public void GlobalApplyMapKeypadLightingBrightness(DevMultiModeTypes mode, Color colMin, Color colMax, bool clear, double val)
         {
             if (mode == DevMultiModeTypes.Disabled) return;
             if (mode != _KeypadZone1Mode) return;
 
-            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
+
             GlobalApplyMapKeypadLighting(mode, c2, clear, "All");
         }
 
@@ -1042,12 +1052,14 @@ namespace Chromatics
             }
         }
 
-        public void GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes mode, Color col, double val)
+        public void GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, double val)
         {
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode) return;
 
-            var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
+            var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
+
             GlobalApplyMapChromaLinkLighting(mode, c2);
         }
 

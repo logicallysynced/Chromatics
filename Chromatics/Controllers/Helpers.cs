@@ -670,5 +670,43 @@ namespace Chromatics.Controllers
             if (h < 0f) h += 6f;
             h /= 6.0;
         }
+
+        
+    }
+
+    public class ColorInterpolator
+    {
+        delegate byte ComponentSelector(System.Drawing.Color color);
+        static ComponentSelector _redSelector = color => color.R;
+        static ComponentSelector _greenSelector = color => color.G;
+        static ComponentSelector _blueSelector = color => color.B;
+
+        public static System.Drawing.Color InterpolateBetween(
+            System.Drawing.Color endPoint1,
+            System.Drawing.Color endPoint2,
+            double lambda)
+        {
+            if (lambda < 0 || lambda > 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(lambda));
+            }
+            System.Drawing.Color color = System.Drawing.Color.FromArgb(
+                InterpolateComponent(endPoint1, endPoint2, lambda, _redSelector),
+                InterpolateComponent(endPoint1, endPoint2, lambda, _greenSelector),
+                InterpolateComponent(endPoint1, endPoint2, lambda, _blueSelector)
+            );
+
+            return color;
+        }
+
+        static byte InterpolateComponent(
+            System.Drawing.Color endPoint1,
+            System.Drawing.Color endPoint2,
+            double lambda,
+            ComponentSelector selector)
+        {
+            return (byte)(selector(endPoint1)
+                          + (selector(endPoint2) - selector(endPoint1)) * lambda);
+        }
     }
 }

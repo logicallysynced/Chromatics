@@ -1780,21 +1780,21 @@ namespace Chromatics
                                         : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
                                     (ushort)polTargetHpx, 250);
 
-                                GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
+                                GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
                                     ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                     : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
 
-                                GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
+                                GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
                                     ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                     : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
 
-                                GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
+                                GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
                                     ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                     : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
 
                                 ////GlobalApplyMapKeypadLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
 
-                                GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp, targetInfo.IsClaimed
+                                GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
                                     ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                     : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
 
@@ -4054,11 +4054,11 @@ namespace Chromatics
                             GlobalUpdateBulbStateBrightness(BulbModeTypes.Castbar, colCastcharge, (ushort)polCastZ,
                                 250);
 
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.Castbar, colCastcharge, castPercentage);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.Castbar, colCastcharge, false, castPercentage);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, colCastcharge, false, castPercentage);
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, castPercentage);
+                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, false, castPercentage);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, colCastempty, colCastcharge, false, castPercentage);
                             //GlobalApplyMapKeypadLightingBrightness(DevModeTypes.TargetHp, colCastcharge, false, castPercentage);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp, colCastcharge, castPercentage);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp, colCastempty, colCastcharge, castPercentage);
 
                             if (polCast <= 1 && ChromaticsSettings.ChromaticsSettingsCastToggle)
                             {
@@ -4808,11 +4808,11 @@ namespace Chromatics
                                 (ushort)polHpz,
                                 250);
 
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, polHpz2);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
-                            //GlobalApplyMapKeypadLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, polHpz2);
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpcritical : colHpfull, polHpz2);
+                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
+                            //GlobalApplyMapKeypadLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpempty : colHpfull, polHpz2);
 
                             if (polHp <= 40 && polHp > 30)
                             {
@@ -5237,11 +5237,11 @@ namespace Chromatics
                             GlobalUpdateBulbStateBrightness(BulbModeTypes.MpTracker, colMpfull, (ushort)polMpz,
                                 250);
 
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.MpTracker, colMpfull, polMpz2);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.MpTracker, colMpfull, false, polMpz2);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.MpTracker, colMpfull, false, polMpz2);
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, polMpz2);
+                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, false, polMpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, false, polMpz2);
                             //GlobalApplyMapKeypadLightingBrightness(DevModeTypes.MpTracker, colMpfull, false, polMpz2);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.MpTracker, colMpfull, polMpz2);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, polMpz2);
 
                             if (polMp <= 40 && polMp > 30)
                             {
@@ -5667,11 +5667,11 @@ namespace Chromatics
                             GlobalUpdateBulbStateBrightness(BulbModeTypes.TpTracker, colTpfull, (ushort)polTpz,
                                 250);
 
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.TpTracker, colTpfull, polTpz2);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.TpTracker, colTpfull, false, polTpz2);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TpTracker, colTpfull, false, polTpz2);
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, polTpz2);
+                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, false, polTpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, false, polTpz2);
                             //GlobalApplyMapKeypadLightingBrightness(DevModeTypes.TpTracker, colTpfull, false, polTpz2);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TpTracker, colTpfull, polTpz2);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, polTpz2);
 
                             if (polTp <= 40 && polTp > 30)
                             {
