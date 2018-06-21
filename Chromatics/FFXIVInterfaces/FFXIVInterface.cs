@@ -264,8 +264,16 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.Error, "Error: " + ex.Message);
-                WriteConsole(ConsoleTypes.Error, "Internal Error: " + ex.StackTrace);
+                if (ex.Message == "The remote server returned an error: (500) Internal Server Error." || ex.Message == "The remote server returned an error: (400) Page Not Found.")
+                {
+                    WriteConsole(ConsoleTypes.Error, "The external API server experienced an error. Please use local cache or try again later.");
+                    WriteConsole(ConsoleTypes.Error, "Error: " + ex.Message);
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Error, "Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, "Internal Error: " + ex.StackTrace);
+                }
             }
 
             return initiated;
@@ -395,6 +403,7 @@ namespace Chromatics
                         else if (Attatched == 2)
                         {
                             if (_menuInfo != null && _menuInfo.Name != "" && _catchMenuchange <= 5)
+                            //if (_catchMenuchange <= 5)
                             {
                                 //Set Game Active
                                 WriteConsole(ConsoleTypes.Ffxiv, "Game Running (" + _menuInfo.Name + ")");
@@ -520,9 +529,9 @@ namespace Chromatics
                 if (xi > xi_interval)
                 {
                     //Console.WriteLine(@"Ping");
-
                     using (var proc = Process.GetCurrentProcess())
                     {
+
                         if (proc.PrivateMemorySize64 / 1024 > 153600)
                         {
                             WriteConsole(ConsoleTypes.Error,
