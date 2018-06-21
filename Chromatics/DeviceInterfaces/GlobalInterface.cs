@@ -128,13 +128,13 @@ namespace Chromatics
 
         public void InitializeSdk()
         {
-            WriteConsole(ConsoleTypes.Razer, "Attempting to load Razer SDK..");
+            WriteConsole(ConsoleTypes.Razer, @"Attempting to load Razer SDK..");
             _razer = RazerInterface.InitializeRazerSdk();
             if (_razer != null)
             {
                 RazerSdk = true;
                 RazerSdkCalled = 1;
-                //WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded");
+                //WriteConsole(ConsoleTypes.Razer, @"Razer SDK Loaded");
                 _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
 
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
@@ -144,16 +144,16 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Razer, "Razer SDK failed to load.");
+                WriteConsole(ConsoleTypes.Razer, @"Razer SDK failed to load.");
             }
 
-            WriteConsole(ConsoleTypes.Logitech, "Attempting to load Logitech SDK..");
+            WriteConsole(ConsoleTypes.Logitech, @"Attempting to load Logitech SDK..");
             _logitech = LogitechInterface.InitializeLogitechSdk();
             if (_logitech != null)
             {
                 LogitechSdk = true;
                 LogitechSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Logitech, "Logitech SDK Loaded");
+                WriteConsole(ConsoleTypes.Logitech, @"Logitech SDK Loaded");
 
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                 {
@@ -162,16 +162,16 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Logitech, "Logitech SDK failed to load. Please make sure LGS is running.");
+                WriteConsole(ConsoleTypes.Logitech, @"Logitech SDK failed to load. Please make sure LGS is running.");
             }
 
-            WriteConsole(ConsoleTypes.Corsair, "Attempting to load Corsair SDK..");
+            WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
             _corsair = CorsairInterface.InitializeCorsairSdk();
             if (_corsair != null)
             {
                 CorsairSdk = true;
                 CorsairSdkCalled = 1;
-                //WriteConsole(ConsoleTypes.Corsair, "Corsair SDK Loaded");
+                //WriteConsole(ConsoleTypes.Corsair, @"Corsair SDK Loaded");
 
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                 {
@@ -180,7 +180,7 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Corsair, "CUE SDK failed to load. Please make sure CUE2 is running.");
+                WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. Please make sure CUE2 is running.");
             }
 
             //WriteConsole(ConsoleTypes.CORSAIR, "Attempting to load Corsair SDK..");
@@ -189,7 +189,7 @@ namespace Chromatics
             {
                 CoolermasterSdk = true;
                 CoolermasterSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Coolermaster, "Coolermaster SDK Loaded");
+                WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK Loaded");
 
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                 {
@@ -198,16 +198,16 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Coolermaster, "Coolermaster SDK failed to load.");
+                WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK failed to load.");
             }
 
-            WriteConsole(ConsoleTypes.Steel, "Attempting to load SteelSeries GameSense SDK..");
+            WriteConsole(ConsoleTypes.Steel, @"Attempting to load SteelSeries GameSense SDK..");
             _steel = SteelSeriesInterface.InitializeSteelSdk();
             if (_steel != null)
             {
                 SteelSdk = true;
                 SteelSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Steel, "SteelSeries SDK Loaded");
+                WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK Loaded");
 
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                 {
@@ -216,7 +216,7 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Steel, "SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
+                WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
             }
 
             _wooting = WootingInterface.InitializeWootingSdk();
@@ -224,7 +224,7 @@ namespace Chromatics
             {
                 WootingSdk = true;
                 WootingSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Wooting, "Wooting SDK Loaded");
+                WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK Loaded");
 
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                 {
@@ -233,7 +233,7 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Wooting, "Wooting SDK failed to load.");
+                WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK failed to load.");
             }
 
             //Load LIFX SDK
@@ -254,7 +254,7 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Lifx, "LIFX SDK failed to load.");
+                WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK failed to load.");
             }
 
 
@@ -303,7 +303,7 @@ namespace Chromatics
             {
                 if (_razer.CheckCrash())
                 {
-                    WriteConsole(ConsoleTypes.Error, "Razer SDK has crashed.");
+                    WriteConsole(ConsoleTypes.Error, @"Razer SDK has crashed.");
                     _razer.ShutdownSdk();
                     RazerSdkCalled = 0;
                     RazerSdk = false;
@@ -331,7 +331,7 @@ namespace Chromatics
                     }
                     else
                     {
-                        WriteConsole(ConsoleTypes.Razer, "Razer SDK failed to load.");
+                        WriteConsole(ConsoleTypes.Razer, @"Razer SDK failed to load.");
                     }
                 }
             }

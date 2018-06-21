@@ -130,7 +130,7 @@ namespace Chromatics.DeviceInterfaces
 
         public bool InitializeSdk()
         {
-            Write.WriteConsole(ConsoleTypes.Lifx, "Attempting to load LIFX SDK..");
+            Write.WriteConsole(ConsoleTypes.Lifx, @"Attempting to load LIFX SDK..");
 
             try
             {
@@ -141,12 +141,12 @@ namespace Chromatics.DeviceInterfaces
                 _client.DeviceLost += LIFXClient_DeviceLost;
                 _client.StartDeviceDiscovery();
 
-                Write.WriteConsole(ConsoleTypes.Lifx, "LIFX SDK Loaded");
+                Write.WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK Loaded");
                 return true;
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Lifx, "LIFX SDK Failed to Load. Error: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK Failed to Load. Error: " + ex.Message);
                 return false;
             }
         }
@@ -158,7 +158,7 @@ namespace Chromatics.DeviceInterfaces
                 var state = d.Value;
                 await _client.SetColorAsync(d.Key, state.Hue, state.Saturation, state.Brightness, state.Kelvin,
                     TimeSpan.FromMilliseconds(1000));
-                Write.WriteConsole(ConsoleTypes.Lifx, "Restoring LIFX Bulb " + state.Label);
+                Write.WriteConsole(ConsoleTypes.Lifx, @"Restoring LIFX Bulb " + state.Label);
                 //Thread.Sleep(500);
             }
         }
@@ -328,7 +328,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 _lifxSdk = false;
                 //LifxSDKCalled = 0;
-                Write.WriteConsole(ConsoleTypes.Lifx, "LIFX SDK Disabled (No Devices Found)");
+                Write.WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK Disabled (No Devices Found)");
             }
 
             Write.ResetDeviceDataGrid();
@@ -364,7 +364,7 @@ namespace Chromatics.DeviceInterfaces
             {
                 _lifxSdk = true;
                 //LifxSDKCalled = 1;
-                Write.WriteConsole(ConsoleTypes.Lifx, "LIFX SDK Enabled");
+                Write.WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK Enabled");
             }
 
             Write.WriteConsole(ConsoleTypes.Lifx,

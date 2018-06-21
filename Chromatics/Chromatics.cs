@@ -287,7 +287,7 @@ namespace Chromatics
             }
 
             //Bind
-            WriteConsole(ConsoleTypes.System, "Starting Chromatics Version " + _currentVersionX);
+            WriteConsole(ConsoleTypes.System, @"Starting Chromatics Version " + _currentVersionX);
 
 
             //Load Functions
@@ -300,11 +300,11 @@ namespace Chromatics
             if (!IsAdministrator())
             {
                 WriteConsole(ConsoleTypes.Error,
-                    "Chromatics is not running as Administrator. Please restart with administrative privileges.");
+                    @"Chromatics is not running as Administrator. Please restart with administrative privileges.");
                 
                 if (chk_lccauto.Checked)
                     tooltip_main.SetToolTip(gB_lcc,
-                        "Logitech Conflict Mode requires Chromatics to be run with Administrative privileges. Please restart with administrative privileges.");
+                        @"Logitech Conflict Mode requires Chromatics to be run with Administrative privileges. Please restart with administrative privileges.");
 
                 gB_lcc.Enabled = false;
                 btn_ffxivcachereset.Enabled = false;
@@ -442,12 +442,12 @@ namespace Chromatics
                             else
                             {
                                 WriteConsole(ConsoleTypes.Error,
-                                    "Logitech: Chromatics has detected that the LGS internal SDK library is causing a conflict between FFXIV and Chromatics. Please make sure to enable 'Logitech Conflict Mode' under the settings tab and check that 'LED Illumination' is disabled for 'ffxiv_dx11' within LGS.");
+                                    @"Logitech: Chromatics has detected that the LGS internal SDK library is causing a conflict between FFXIV and Chromatics. Please make sure to enable 'Logitech Conflict Mode' under the settings tab and check that 'LED Illumination' is disabled for 'ffxiv_dx11' within LGS.");
                             }
                         }
                         else
                         {
-                            WriteConsole(ConsoleTypes.Logitech, "Logitech Conflict Mode is already enabled.");
+                            WriteConsole(ConsoleTypes.Logitech, @"Logitech Conflict Mode is already enabled.");
 
                             chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
                             chk_lccenable.Checked = true;
@@ -461,7 +461,7 @@ namespace Chromatics
                         if (chk_lccauto.Checked)
                         {
                             WriteConsole(ConsoleTypes.Error,
-                                "Logitech Conflict Mode failed to automatically start. Error: " + ex.Message);
+                                @"Logitech Conflict Mode failed to automatically start. Error: " + ex.Message);
 
                             chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
                             chk_lccenable.Checked = false;
@@ -494,7 +494,7 @@ namespace Chromatics
                 {
                     LcdSdk = true;
                     LcdSdkCalled = 1;
-                    WriteConsole(ConsoleTypes.Logitech, "LCD SDK Loaded");
+                    WriteConsole(ConsoleTypes.Logitech, @"LCD SDK Loaded");
                 }
             }
 
@@ -508,7 +508,7 @@ namespace Chromatics
                     ArxSdk = true;
                     ArxState = 0;
                     ArxSdkCalled = 1;
-                    WriteConsole(ConsoleTypes.Arx, "ARX SDK Loaded");
+                    WriteConsole(ConsoleTypes.Arx, @"ARX SDK Loaded");
 
                     //Load Plugins
                     LoadArxPlugins();
@@ -592,7 +592,7 @@ namespace Chromatics
                         WriteConsole(ConsoleTypes.Arx, plug + " Plugin Loaded.");
                     }
                 else
-                    WriteConsole(ConsoleTypes.Arx, "No Plugins Found.");
+                    WriteConsole(ConsoleTypes.Arx, @"No Plugins Found.");
             }
         }
 
@@ -710,7 +710,7 @@ namespace Chromatics
 
                 if (nV > cV)
                 {
-                    WriteConsole(ConsoleTypes.System, "There is an updated version of Chromatics available.");
+                    WriteConsole(ConsoleTypes.System, @"There is an updated version of Chromatics available.");
                     var result = MessageBox.Show(@"There is an updated version of Chromatics. Update it now?",
                         @"New Version", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
@@ -731,7 +731,7 @@ namespace Chromatics
                 }
                 else
                 {
-                    WriteConsole(ConsoleTypes.System, "No new updates currently available.");
+                    WriteConsole(ConsoleTypes.System, @"No new updates currently available.");
 
                     if (notify != 1) return;
                     if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)

@@ -89,7 +89,7 @@ namespace Chromatics.DeviceInterfaces
 
         public async Task<bool> InitializeSdk(string hueDefault)
         {
-            Write.WriteConsole(ConsoleTypes.Hue, "Attempting to load HUE SDK..");
+            Write.WriteConsole(ConsoleTypes.Hue, @"Attempting to load HUE SDK..");
 
             try
             {
@@ -120,7 +120,7 @@ namespace Chromatics.DeviceInterfaces
                         else
                         {
                             selectdevice = devices.FirstOrDefault().Key;
-                            Write.WriteConsole(ConsoleTypes.Hue, "Unable to find your preferred HUE Bridge.");
+                            Write.WriteConsole(ConsoleTypes.Hue, @"Unable to find your preferred HUE Bridge.");
                             Write.WriteConsole(ConsoleTypes.Hue,
                                 "Connected to HUE Bridge (" + devices.FirstOrDefault().Value.BridgeId + ") at " +
                                 devices.FirstOrDefault().Value.IpAddress);
@@ -136,7 +136,7 @@ namespace Chromatics.DeviceInterfaces
                 }
                 else
                 {
-                    Write.WriteConsole(ConsoleTypes.Hue, "Unable to find any HUE Bridges.");
+                    Write.WriteConsole(ConsoleTypes.Hue, @"Unable to find any HUE Bridges.");
                     return false;
                 }
 
@@ -174,19 +174,19 @@ namespace Chromatics.DeviceInterfaces
 
                         _hueBulbs++;
 
-                        Write.WriteConsole(ConsoleTypes.Hue, "HUE Bulb Found: " + light.Name + " (" + light.Id + ").");
+                        Write.WriteConsole(ConsoleTypes.Hue, @"HUE Bulb Found: " + light.Name + " (" + light.Id + ").");
 
                         Write.ResetDeviceDataGrid();
                     }
 
                     return true;
                 }
-                Write.WriteConsole(ConsoleTypes.Hue, "HUE SDK Failed to Load. Error: Bridge Scan Error");
+                Write.WriteConsole(ConsoleTypes.Hue, @"HUE SDK Failed to Load. Error: Bridge Scan Error");
                 return false;
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Hue, "HUE SDK Failed to Load. Error: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Hue, @"HUE SDK Failed to Load. Error: " + ex.Message);
                 return false;
             }
         }
@@ -211,7 +211,7 @@ namespace Chromatics.DeviceInterfaces
                         await _client.SendCommandAsync(command,
                             new List<string> {d.Key.Id}); //Unsure if Id or UniqueId should be used
 
-                        Write.WriteConsole(ConsoleTypes.Hue, "Restoring HUE Bulb " + d.Key.Name);
+                        Write.WriteConsole(ConsoleTypes.Hue, @"Restoring HUE Bulb " + d.Key.Name);
                         //Thread.Sleep(500);
                     }
                     catch (Exception ex)
@@ -220,7 +220,7 @@ namespace Chromatics.DeviceInterfaces
                             "An Error occurred while restoring HUE Bulb " + d.Key.Name + ". Error: " + ex.Message);
                     }
             else
-                Write.WriteConsole(ConsoleTypes.Hue, "Unable to connect to HUE Hub.");
+                Write.WriteConsole(ConsoleTypes.Hue, @"Unable to connect to HUE Hub.");
         }
 
         public async void HueUpdateState(BulbModeTypes mode, Color col, int transition)
@@ -358,7 +358,7 @@ namespace Chromatics.DeviceInterfaces
             }
             else
             {
-                Write.WriteConsole(ConsoleTypes.Hue, "Unable to connect to HUE Hub.");
+                Write.WriteConsole(ConsoleTypes.Hue, @"Unable to connect to HUE Hub.");
             }
         }
 

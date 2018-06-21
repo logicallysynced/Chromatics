@@ -305,7 +305,7 @@ namespace Chromatics.DeviceInterfaces
                 Headset = Chroma.Headset;
                 ChromaLink = Chroma.ChromaLink;
 
-                Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK Loaded (" + Chroma.Version + ")");
+                Write.WriteConsole(ConsoleTypes.Razer, @"Razer SDK Loaded (" + Chroma.Version + ")");
                 _isInitialized = true;
                 _isCrashed = false;
 
@@ -452,7 +452,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Error, "Razer (Wave): " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Razer (Wave): " + ex.Message);
                 CheckRazerEx(ex);
             }
         }
@@ -596,7 +596,7 @@ namespace Chromatics.DeviceInterfaces
                 }
                 catch (Exception ex)
                 {
-                    Write.WriteConsole(ConsoleTypes.Error, "Razer Keyboard (" + key + "): " + ex.Message);
+                    Write.WriteConsole(ConsoleTypes.Error, @"Razer Keyboard (" + key + "): " + ex.Message);
                     CheckRazerEx(ex);
                 }
         }
@@ -617,7 +617,7 @@ namespace Chromatics.DeviceInterfaces
                     }
                     catch (Exception ex)
                     {
-                        Write.WriteConsole(ConsoleTypes.Error, "Razer (MapLogo): " + ex.Message);
+                        Write.WriteConsole(ConsoleTypes.Error, @"Razer (MapLogo): " + ex.Message);
                         CheckRazerEx(ex);
                     }
             }
@@ -653,7 +653,7 @@ namespace Chromatics.DeviceInterfaces
                 catch (Exception ex)
                 {
                     CheckRazerEx(ex);
-                    Write.WriteConsole(ConsoleTypes.Error, "Razer Mouse (" + region + "): " + ex.Message);
+                    Write.WriteConsole(ConsoleTypes.Error, @"Razer Mouse (" + region + "): " + ex.Message);
                 }
         }
 
@@ -671,7 +671,7 @@ namespace Chromatics.DeviceInterfaces
             catch (Exception ex)
             {
                 CheckRazerEx(ex);
-                Write.WriteConsole(ConsoleTypes.Error, "Razer Mousepad (" + region + "): " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Razer Mousepad (" + region + "): " + ex.Message);
             }
         }
 
@@ -688,7 +688,7 @@ namespace Chromatics.DeviceInterfaces
             catch (Exception ex)
             {
                 CheckRazerEx(ex);
-                Write.WriteConsole(ConsoleTypes.Error, "Razer Headset: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Razer Headset: " + ex.Message);
             }
         }
 
@@ -762,7 +762,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Error, "Razer Keypad: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Razer Keypad: " + ex.Message);
                 CheckRazerEx(ex);
             }
         }
@@ -785,7 +785,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Error, "Razer ChromaLink: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Razer ChromaLink: " + ex.Message);
                 CheckRazerEx(ex);
             }
         }
@@ -2509,7 +2509,7 @@ namespace Chromatics.DeviceInterfaces
             if (ex.Message ==
                 "Call to native Chroma SDK function DeleteEffect failed with error: Unknown: Unknown. (1168)")
             {
-                Write.WriteConsole(ConsoleTypes.Error, "The Razer SDK has crashed. Please restart Chromatics to fix.");
+                Write.WriteConsole(ConsoleTypes.Error, @"The Razer SDK has crashed. Please restart Chromatics to fix.");
                 try
                 {
                     /*
@@ -2539,7 +2539,7 @@ namespace Chromatics.DeviceInterfaces
                     _mouseGrid = MouseCustom.Create();
                     _mousepadGrid = MousepadCustom.Create();
 
-                    Write.WriteConsole(ConsoleTypes.Razer, "Razer SDK Resolved..");
+                    Write.WriteConsole(ConsoleTypes.Razer, @"Razer SDK Resolved..");
                     _isCrashed = false;
                     _isInitialized = true;
                     */

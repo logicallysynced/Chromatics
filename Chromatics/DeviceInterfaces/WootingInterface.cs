@@ -98,7 +98,7 @@ namespace Chromatics.DeviceInterfaces
 
         public bool InitializeLights()
         {
-            Write.WriteConsole(ConsoleTypes.Wooting, "Attempting to load Wooting SDK..");
+            Write.WriteConsole(ConsoleTypes.Wooting, @"Attempting to load Wooting SDK..");
 
             lock (action_lock)
             {
@@ -127,12 +127,12 @@ namespace Chromatics.DeviceInterfaces
                             return true;
                         }
 
-                        Write.WriteConsole(ConsoleTypes.Wooting, "No Wooting devices found.");
+                        Write.WriteConsole(ConsoleTypes.Wooting, @"No Wooting devices found.");
                         return false;
                     }
                     catch (Exception ex)
                     {
-                        Write.WriteConsole(ConsoleTypes.Wooting, "Wooting SDK failed to load. EX: " + ex);
+                        Write.WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK failed to load. EX: " + ex);
 
                         isInitialized = false;
                         return false;
@@ -158,7 +158,7 @@ namespace Chromatics.DeviceInterfaces
                 }
                 catch (Exception ex)
                 {
-                    Write.WriteConsole(ConsoleTypes.Wooting, "There was an error shutting down Wooting SDK. EX: " + ex);
+                    Write.WriteConsole(ConsoleTypes.Wooting, @"There was an error shutting down Wooting SDK. EX: " + ex);
                     isInitialized = false;
                 }
             }
@@ -193,7 +193,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Wooting, "Wooting SDK: Error while updating devices. EX: " + ex);
+                Write.WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK: Error while updating devices. EX: " + ex);
             }
         }
 
@@ -307,7 +307,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Wooting, "Wooting SDK error while updating key. EX: " + ex);
+                Write.WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK error while updating key. EX: " + ex);
             }
 
         }
@@ -339,7 +339,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                             catch (Exception ex)
                             {
-                                Write.WriteConsole(ConsoleTypes.Error, "(" + key + "): " + ex.Message);
+                                Write.WriteConsole(ConsoleTypes.Error, @"(" + key + "): " + ex.Message);
                             }
                     }
                     else if (i == 1)
@@ -593,7 +593,7 @@ namespace Chromatics.DeviceInterfaces
                                 }
                                 catch (Exception ex)
                                 {
-                                    Write.WriteConsole(ConsoleTypes.Error, "(" + key + "): " + ex.Message);
+                                    Write.WriteConsole(ConsoleTypes.Error, @"(" + key + "): " + ex.Message);
                                 }
                         }
                         else if (i == 1)

@@ -47,8 +47,6 @@ namespace Chromatics
         private bool _lastcast;
         private bool _menuNotify;
 
-        //private static readonly object _ReadFFXIVMemory = new object();
-        
         private ActorEntity _playerInfo = new ActorEntity();
         private ActorEntity _menuInfo = new ActorEntity();
         private ConcurrentDictionary<uint, ActorEntity> _playerInfoX = new ConcurrentDictionary<uint, ActorEntity>();
@@ -77,7 +75,7 @@ namespace Chromatics
 
             //Watchdog.WatchdogStop();
             //_gameResetCatch.Enabled = false;
-            WriteConsole(ConsoleTypes.Ffxiv, "Game stopped");
+            WriteConsole(ConsoleTypes.Ffxiv, @"Game stopped");
             SetFormName(@"Chromatics " + _currentVersionX);
 
 
@@ -139,12 +137,12 @@ namespace Chromatics
                 // DX9
                 if (processes9.Length > 0)
                 {
-                    WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
+                    WriteConsole(ConsoleTypes.Ffxiv, @"Attempting Attach..");
                     SetFormName(@"Chromatics " + _currentVersionX);
 
                     if (Init)
                     {
-                        WriteConsole(ConsoleTypes.Ffxiv, "Chromatics already attached.");
+                        WriteConsole(ConsoleTypes.Ffxiv, @"Chromatics already attached.");
                         return true;
                     }
 
@@ -194,7 +192,7 @@ namespace Chromatics
                     Init = true;
                     IsDx11 = false;
 
-                    WriteConsole(ConsoleTypes.Ffxiv, "DX9 Initiated");
+                    WriteConsole(ConsoleTypes.Ffxiv, @"DX9 Initiated");
                     WriteConsole(ConsoleTypes.Error,
                         "DX9 support has been phased out from Chromatics. Please use DX11 when using Chromatics.");
                 }
@@ -202,7 +200,7 @@ namespace Chromatics
                 // DX11
                 else if (processes11.Length > 0)
                 {
-                    WriteConsole(ConsoleTypes.Ffxiv, "Attempting Attach..");
+                    WriteConsole(ConsoleTypes.Ffxiv, @"Attempting Attach..");
                     SetFormName(@"Chromatics " + _currentVersionX);
                     if (LcdSdkCalled == 1)
                     {
@@ -259,20 +257,20 @@ namespace Chromatics
                     Init = true;
                     IsDx11 = true;
 
-                    WriteConsole(ConsoleTypes.Ffxiv, "DX11 Initiated");
+                    WriteConsole(ConsoleTypes.Ffxiv, @"DX11 Initiated");
                 }
             }
             catch (Exception ex)
             {
                 if (ex.Message == "The remote server returned an error: (500) Internal Server Error." || ex.Message == "The remote server returned an error: (400) Page Not Found.")
                 {
-                    WriteConsole(ConsoleTypes.Error, "The external API server experienced an error. Please use local cache or try again later.");
-                    WriteConsole(ConsoleTypes.Error, "Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, @"The external API server experienced an error. Please use local cache or try again later.");
+                    WriteConsole(ConsoleTypes.Error, @"Error: " + ex.Message);
                 }
                 else
                 {
-                    WriteConsole(ConsoleTypes.Error, "Error: " + ex.Message);
-                    WriteConsole(ConsoleTypes.Error, "Internal Error: " + ex.StackTrace);
+                    WriteConsole(ConsoleTypes.Error, @"Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, @"Internal Error: " + ex.StackTrace);
                 }
             }
 
@@ -294,7 +292,6 @@ namespace Chromatics
 
                     ReadFfxivMemory();
                     await Task.Delay(300);
-                    //Debug.WriteLine("Tick C");
                     
                 }
             }
@@ -371,7 +368,7 @@ namespace Chromatics
                                 GlobalStopParticleEffects();
                                 GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                                 
-                                //WriteConsole(ConsoleTypes.Ffxiv, "Returning to Main Menu..");
+                                //WriteConsole(ConsoleTypes.Ffxiv, @"Returning to Main Menu..");
                             }
                             else
                             {
@@ -412,7 +409,7 @@ namespace Chromatics
                             //if (_catchMenuchange <= 5)
                             {
                                 //Set Game Active
-                                WriteConsole(ConsoleTypes.Ffxiv, "Game Running (" + _menuInfo.Name + ")");
+                                WriteConsole(ConsoleTypes.Ffxiv, @"Game Running (" + _menuInfo.Name + ")");
                                 SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
 
 
@@ -493,7 +490,7 @@ namespace Chromatics
 
                                 if (!_menuNotify)
                                 {
-                                    WriteConsole(ConsoleTypes.Ffxiv, "Main Menu is still active.");
+                                    WriteConsole(ConsoleTypes.Ffxiv, @"Main Menu is still active.");
                                     SetFormName(@"Chromatics " + _currentVersionX + @" (Paused)");
                                     
                                     if (LcdSdkCalled == 1)
@@ -513,8 +510,8 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.Error, "Init Error: " + ex.Message);
-                WriteConsole(ConsoleTypes.Error, "Internal Error: " + ex.StackTrace);
+                WriteConsole(ConsoleTypes.Error, @"Init Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, @"Internal Error: " + ex.StackTrace);
             }
         }
 
@@ -624,7 +621,7 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.Error, "Parser B: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, @"Parser B: " + ex.Message);
                 }
 
 
@@ -7092,8 +7089,8 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.Error, "Parse Error: " + ex.Message);
-                WriteConsole(ConsoleTypes.Error, "Internal Error: " + ex.StackTrace);
+                WriteConsole(ConsoleTypes.Error, @"Parse Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, @"Internal Error: " + ex.StackTrace);
             }
         }
     }

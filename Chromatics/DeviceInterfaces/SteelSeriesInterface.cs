@@ -190,10 +190,10 @@ namespace Chromatics.DeviceInterfaces
                     {
                         if (ex.Message.Contains("System.Net.WebException"))
                         {
-                            Write.WriteConsole(ConsoleTypes.Steel, "Cannot detect any SteelSeries devices connected. Please connect a device and restart Chromatics.");
+                            Write.WriteConsole(ConsoleTypes.Steel, @"Cannot detect any SteelSeries devices connected. Please connect a device and restart Chromatics.");
                         }
 
-                        Write.WriteConsole(ConsoleTypes.Steel, "SteelSeries GameSense SDK failed to load. EX: " + ex);
+                        Write.WriteConsole(ConsoleTypes.Steel, @"SteelSeries GameSense SDK failed to load. EX: " + ex);
 
                         isInitialized = false;
                         return false;
@@ -219,7 +219,7 @@ namespace Chromatics.DeviceInterfaces
                 }
                 catch (Exception ex)
                 {
-                    Write.WriteConsole(ConsoleTypes.Steel, "There was an error shutting down SteelSeries GameSense SDK. EX: " + ex);
+                    Write.WriteConsole(ConsoleTypes.Steel, @"There was an error shutting down SteelSeries GameSense SDK. EX: " + ex);
                     isInitialized = false;
                 }
 
@@ -286,7 +286,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Steel, "SteelSeries GameSense SDK, error when updating devices. EX: " + ex);
+                Write.WriteConsole(ConsoleTypes.Steel, @"SteelSeries GameSense SDK, error when updating devices. EX: " + ex);
             }
         }
 
@@ -495,7 +495,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Steel, "SteelSeries GameSense SDK, error when updating key. EX: " + ex);
+                Write.WriteConsole(ConsoleTypes.Steel, @"SteelSeries GameSense SDK, error when updating key. EX: " + ex);
             }
             
         }
@@ -567,7 +567,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Steel, "SteelSeries GameSense SDK, error when updating mouse. EX: " + ex);
+                Write.WriteConsole(ConsoleTypes.Steel, @"SteelSeries GameSense SDK, error when updating mouse. EX: " + ex);
             }
             
         }
@@ -590,7 +590,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Steel, "SteelSeries GameSense SDK, error when updating headset. EX: " + ex);
+                Write.WriteConsole(ConsoleTypes.Steel, @"SteelSeries GameSense SDK, error when updating headset. EX: " + ex);
             }
             
         }
@@ -622,7 +622,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                             catch (Exception ex)
                             {
-                                Write.WriteConsole(ConsoleTypes.Error, "(" + key + "): " + ex.Message);
+                                Write.WriteConsole(ConsoleTypes.Error, @"(" + key + "): " + ex.Message);
                             }
                     }
                     else if (i == 1)
@@ -876,7 +876,7 @@ namespace Chromatics.DeviceInterfaces
                                 }
                                 catch (Exception ex)
                                 {
-                                    Write.WriteConsole(ConsoleTypes.Error, "(" + key + "): " + ex.Message);
+                                    Write.WriteConsole(ConsoleTypes.Error, @"(" + key + "): " + ex.Message);
                                 }
                         }
                         else if (i == 1)

@@ -650,8 +650,8 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.Error, "EX: " + ex.Message);
-                WriteConsole(ConsoleTypes.Error, "EX: " + ex.StackTrace);
+                WriteConsole(ConsoleTypes.Error, @"EX: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, @"EX: " + ex.StackTrace);
             }
         }
 
@@ -681,7 +681,7 @@ namespace Chromatics
                             {
                                 _lifx.LifxBulbsDat[bulb] = _lifx.LifxModeMemory[id];
                                 _lifx.LifxStateMemory[bulb.MacAddressName] = 1;
-                                WriteConsole(ConsoleTypes.Lifx, "Enabled LIFX Bulb " + id);
+                                WriteConsole(ConsoleTypes.Lifx, @"Enabled LIFX Bulb " + id);
                             }
                             else
                             {
@@ -689,10 +689,10 @@ namespace Chromatics
                                 _lifx.LifxStateMemory[bulb.MacAddressName] = 0;
                                 _lifx.LifxBulbsDat[bulb] = 0;
                                 var state = _lifx.LifxBulbsRestore[bulb];
-                                WriteConsole(ConsoleTypes.Lifx, "Disabled LIFX Bulb " + id);
+                                WriteConsole(ConsoleTypes.Lifx, @"Disabled LIFX Bulb " + id);
                                 _lifx.SetColorAsync(bulb, state.Hue, state.Saturation, state.Brightness, state.Kelvin,
                                     TimeSpan.FromMilliseconds(1000));
-                                WriteConsole(ConsoleTypes.Lifx, "Restoring LIFX Bulb " + state.Label);
+                                WriteConsole(ConsoleTypes.Lifx, @"Restoring LIFX Bulb " + state.Label);
                             }
 
                             change[dG_devices.Columns["col_status"].Index].Value = _switch ? "Enabled" : "Disabled";
@@ -709,7 +709,7 @@ namespace Chromatics
                             {
                                 _hue.HueBulbsDat[bulb] = _hue.HueModeMemory[id];
                                 _hue.HueStateMemory[bulb.UniqueId] = 1;
-                                WriteConsole(ConsoleTypes.Hue, "Enabled HUE Bulb " + id);
+                                WriteConsole(ConsoleTypes.Hue, @"Enabled HUE Bulb " + id);
                             }
                             else
                             {
@@ -717,13 +717,13 @@ namespace Chromatics
                                 _hue.HueStateMemory[bulb.UniqueId] = 0;
                                 _hue.HueBulbsDat[bulb] = 0;
                                 var state = _hue.HueBulbsRestore[bulb];
-                                WriteConsole(ConsoleTypes.Hue, "Disabled HUE Bulb " + id);
+                                WriteConsole(ConsoleTypes.Hue, @"Disabled HUE Bulb " + id);
 
                                 _hue.SetColorAsync(bulb, state.Hue, state.Saturation, state.Brightness,
                                     state.ColorTemperature,
                                     TimeSpan.FromMilliseconds(1000));
 
-                                WriteConsole(ConsoleTypes.Hue, "Restoring HUE Bulb " + bulb.Name);
+                                WriteConsole(ConsoleTypes.Hue, @"Restoring HUE Bulb " + bulb.Name);
                             }
 
                             change[dG_devices.Columns["col_status"].Index].Value = _switch ? "Enabled" : "Disabled";
@@ -743,7 +743,7 @@ namespace Chromatics
                             var bulb = _lifx.LifxDevices[id];
                             _lifx.LifxBulbsDat[bulb] = key;
                             _lifx.LifxModeMemory[bulb.MacAddressName] = key;
-                            WriteConsole(ConsoleTypes.Lifx, "Updated Mode of LIFX Bulb " + id + " to " + key);
+                            WriteConsole(ConsoleTypes.Lifx, @"Updated Mode of LIFX Bulb " + id + " to " + key);
                         }
 
                     if (HueSdkCalled == 1 && id != null && dattype == "HUE")
@@ -753,7 +753,7 @@ namespace Chromatics
                             var bulb = _hue.HueDevices[id];
                             _hue.HueBulbsDat[bulb] = key;
                             _hue.HueModeMemory[bulb.UniqueId] = key;
-                            WriteConsole(ConsoleTypes.Lifx, "Updated Mode of HUE Bulb " + id + " to " + key);
+                            WriteConsole(ConsoleTypes.Lifx, @"Updated Mode of HUE Bulb " + id + " to " + key);
                         }
                 }
 
@@ -849,7 +849,7 @@ namespace Chromatics
             {
                 Filter = PaletteSerializer.DefaultOpenFilter,
                 DefaultExt = "pal",
-                Title = "Open Palette File"
+                Title = @"Open Palette File"
             })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
@@ -893,7 +893,7 @@ namespace Chromatics
                     catch (Exception ex)
                     {
                         MessageBox.Show(
-                            string.Format("Sorry, unable to open palette. {0}", ex.GetBaseException().Message),
+                            string.Format(@"Sorry, unable to open palette. {0}", ex.GetBaseException().Message),
                             @"Load Palette", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
             }
@@ -1200,7 +1200,7 @@ namespace Chromatics
                         ArxSdkCalled = 1;
                         ArxState = 0;
 
-                        WriteConsole(ConsoleTypes.Arx, "ARX SDK Enabled");
+                        WriteConsole(ConsoleTypes.Arx, @"ARX SDK Enabled");
 
                         LoadArxPlugins();
 
@@ -1245,7 +1245,7 @@ namespace Chromatics
                 {
                     _arx.ShutdownArx();
                     ArxSdkCalled = 0;
-                    WriteConsole(ConsoleTypes.Arx, "ARX SDK Disabled");
+                    WriteConsole(ConsoleTypes.Arx, @"ARX SDK Disabled");
                 }
             }
         }
@@ -1320,7 +1320,7 @@ namespace Chromatics
             }
             
 
-            WriteConsole(ConsoleTypes.Arx, "ARX Template Changed: " + cb_arx_mode.SelectedItem);
+            WriteConsole(ConsoleTypes.Arx, @"ARX Template Changed: " + cb_arx_mode.SelectedItem);
 
             ChromaticsSettings.ChromaticsSettingsArxMode = cb_arx_mode.SelectedItem.ToString();
             SaveChromaticsSettings(1);
@@ -1473,7 +1473,7 @@ namespace Chromatics
                     var path = enviroment + @"/LogitechLed.dll";
 
                     File.Copy(path, _lgsInstall + @"\SDK\LED\x64\LogitechLed.dll", true);
-                    WriteConsole(ConsoleTypes.Logitech, "LGS has been restored to its default settings.");
+                    WriteConsole(ConsoleTypes.Logitech, @"LGS has been restored to its default settings.");
 
                     chk_lccenable.CheckedChanged -= chk_lccenable_CheckedChanged;
                     chk_lccenable.Checked = false;
@@ -1517,18 +1517,18 @@ namespace Chromatics
                     {
                         if (!antilog)
                             WriteConsole(ConsoleTypes.Error,
-                                "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
+                                @"An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
                         return;
                     }
 
                     if (!antilog)
-                        WriteConsole(ConsoleTypes.Logitech, "Logitech Conflict Mode Enabled.");
+                        WriteConsole(ConsoleTypes.Logitech, @"Logitech Conflict Mode Enabled.");
                 }
                 else
                 {
                     if (!antilog)
                         WriteConsole(ConsoleTypes.Error,
-                            "An Error occurred trying to enable Logitech Conflict Mode. Error: LGS SDK Library not found (A).");
+                            @"An Error occurred trying to enable Logitech Conflict Mode. Error: LGS SDK Library not found (A).");
                 }
             }
             else
@@ -1547,18 +1547,18 @@ namespace Chromatics
                     {
                         if (!antilog)
                             WriteConsole(ConsoleTypes.Error,
-                                "An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
+                                @"An Error occurred trying to enable Logitech Conflict Mode. Error: " + ex.Message);
                         return;
                     }
 
                     if (!antilog)
-                        WriteConsole(ConsoleTypes.Logitech, "Logitech Conflict Mode Disabled.");
+                        WriteConsole(ConsoleTypes.Logitech, @"Logitech Conflict Mode Disabled.");
                 }
                 else
                 {
                     if (!antilog)
                         WriteConsole(ConsoleTypes.Error,
-                            "An Error occurred trying to disable Logitech Conflict Mode. Error: LGS SDK Library not found (B).");
+                            @"An Error occurred trying to disable Logitech Conflict Mode. Error: LGS SDK Library not found (B).");
                 }
             }
         }
@@ -2545,7 +2545,7 @@ namespace Chromatics
                     {
                         LcdSdk = true;
                         LcdSdkCalled = 1;
-                        WriteConsole(ConsoleTypes.Logitech, "LCD SDK Enabled");
+                        WriteConsole(ConsoleTypes.Logitech, @"LCD SDK Enabled");
                     }
                 }
             }

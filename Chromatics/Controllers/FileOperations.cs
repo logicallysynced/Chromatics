@@ -115,13 +115,13 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.Error, "Error saving states to devices.chromatics. Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, @"Error saving states to devices.chromatics. Error: " + ex.Message);
             }
         }
 
         private void LoadDevices()
         {
-            WriteConsole(ConsoleTypes.System, "Searching for devices.chromatics..");
+            WriteConsole(ConsoleTypes.System, @"Searching for devices.chromatics..");
             var ds = new DeviceDataStore();
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/devices.chromatics";
@@ -129,7 +129,7 @@ namespace Chromatics
             if (File.Exists(path))
             {
                 //Read Device Save
-                WriteConsole(ConsoleTypes.System, "Attempting to load devices.chromatics..");
+                WriteConsole(ConsoleTypes.System, @"Attempting to load devices.chromatics..");
                 using (var sr = new StreamReader(path))
                 {
                     try
@@ -239,18 +239,18 @@ namespace Chromatics
                             }
                         }
 
-                        WriteConsole(ConsoleTypes.System, "devices.chromatics loaded.");
+                        WriteConsole(ConsoleTypes.System, @"devices.chromatics loaded.");
                     }
                     catch (Exception ex)
                     {
-                        WriteConsole(ConsoleTypes.Error, "Error loading devices.chromatics. Error: " + ex.Message);
+                        WriteConsole(ConsoleTypes.Error, @"Error loading devices.chromatics. Error: " + ex.Message);
                     }
                 }
             }
             else
             {
                 //Create Device Save
-                WriteConsole(ConsoleTypes.System, "devices.chromatics not found. Creating one..");
+                WriteConsole(ConsoleTypes.System, @"devices.chromatics not found. Creating one..");
                 try
                 {
                     using (var sw = new StreamWriter(path))
@@ -263,7 +263,7 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.Error, "Error creating devices.chromatics. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, @"Error creating devices.chromatics. Error: " + ex.Message);
                 }
             }
         }
@@ -293,20 +293,20 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.Error, "Error saving states to mappings.chromatics. Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, @"Error saving states to mappings.chromatics. Error: " + ex.Message);
             }
         }
 
         private void LoadColorMappings()
         {
-            WriteConsole(ConsoleTypes.System, "Searching for mappings.chromatics..");
+            WriteConsole(ConsoleTypes.System, @"Searching for mappings.chromatics..");
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/mappings.chromatics";
 
             if (File.Exists(path))
             {
                 //Read Device Save
-                WriteConsole(ConsoleTypes.System, "Attempting to load mappings.chromatics..");
+                WriteConsole(ConsoleTypes.System, @"Attempting to load mappings.chromatics..");
                 using (var sr = new StreamReader(path))
                 {
                     try
@@ -317,18 +317,18 @@ namespace Chromatics
 
                         ColorMappings = colorMappings;
 
-                        WriteConsole(ConsoleTypes.System, "mappings.chromatics loaded.");
+                        WriteConsole(ConsoleTypes.System, @"mappings.chromatics loaded.");
                     }
                     catch (Exception ex)
                     {
-                        WriteConsole(ConsoleTypes.Error, "Error loading mappings.chromatics. Error: " + ex.Message);
+                        WriteConsole(ConsoleTypes.Error, @"Error loading mappings.chromatics. Error: " + ex.Message);
                     }
                 }
             }
             else
             {
                 //Create Device Save
-                WriteConsole(ConsoleTypes.System, "mappings.chromatics not found. Creating one..");
+                WriteConsole(ConsoleTypes.System, @"mappings.chromatics not found. Creating one..");
                 try
                 {
                     using (var sw = new StreamWriter(path))
@@ -341,7 +341,7 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.Error, "Error creating mappings.chromatics. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, @"Error creating mappings.chromatics. Error: " + ex.Message);
                 }
             }
         }
@@ -371,20 +371,20 @@ namespace Chromatics
             }
             catch (Exception ex)
             {
-                WriteConsole(ConsoleTypes.Error, "Error saving states to settings.chromatics. Error: " + ex.Message);
+                WriteConsole(ConsoleTypes.Error, @"Error saving states to settings.chromatics. Error: " + ex.Message);
             }
         }
 
         private void LoadChromaticsSettings()
         {
-            WriteConsole(ConsoleTypes.System, "Searching for settings.chromatics..");
+            WriteConsole(ConsoleTypes.System, @"Searching for settings.chromatics..");
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/settings.chromatics";
 
             if (File.Exists(path))
             {
                 //Read Device Save
-                WriteConsole(ConsoleTypes.System, "Attempting to load settings.chromatics..");
+                WriteConsole(ConsoleTypes.System, @"Attempting to load settings.chromatics..");
                 using (var sr = new StreamReader(path))
                 {
                     try
@@ -395,18 +395,18 @@ namespace Chromatics
 
                         ChromaticsSettings = chromaticsSettings;
 
-                        WriteConsole(ConsoleTypes.System, "settings.chromatics loaded.");
+                        WriteConsole(ConsoleTypes.System, @"settings.chromatics loaded.");
                     }
                     catch (Exception ex)
                     {
-                        WriteConsole(ConsoleTypes.Error, "Error loading settings.chromatics. Error: " + ex.Message);
+                        WriteConsole(ConsoleTypes.Error, @"Error loading settings.chromatics. Error: " + ex.Message);
                     }
                 }
             }
             else
             {
                 //Create Device Save
-                WriteConsole(ConsoleTypes.System, "settings.chromatics not found. Creating one..");
+                WriteConsole(ConsoleTypes.System, @"settings.chromatics not found. Creating one..");
                 try
                 {
                     using (var sw = new StreamWriter(path))
@@ -419,7 +419,7 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.Error, "Error creating settings.chromatics. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, @"Error creating settings.chromatics. Error: " + ex.Message);
                 }
             }
         }
@@ -447,7 +447,7 @@ namespace Chromatics
 
             if (open.ShowDialog() == DialogResult.OK)
             {
-                WriteConsole(ConsoleTypes.System, "Importing Color Palette..");
+                WriteConsole(ConsoleTypes.System, @"Importing Color Palette..");
 
                 try
                 {
@@ -466,7 +466,7 @@ namespace Chromatics
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.Error, "Error importing Color Palette. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, @"Error importing Color Palette. Error: " + ex.Message);
                     open.Dispose();
                 }
             }
@@ -498,7 +498,7 @@ namespace Chromatics
             {
                 SaveColorMappings(0);
 
-                WriteConsole(ConsoleTypes.System, "Exporting Color Palette..");
+                WriteConsole(ConsoleTypes.System, @"Exporting Color Palette..");
 
                 var colorMappings = new FfxivColorMappings();
                 colorMappings = ColorMappings;
@@ -513,12 +513,12 @@ namespace Chromatics
                         sw.Close();
                     }
 
-                    WriteConsole(ConsoleTypes.System, "Success. Exported Color Palette to " + save.FileName + ".");
+                    WriteConsole(ConsoleTypes.System, @"Success. Exported Color Palette to " + save.FileName + ".");
                     save.Dispose();
                 }
                 catch (Exception ex)
                 {
-                    WriteConsole(ConsoleTypes.Error, "Error exporting Color Palette. Error: " + ex.Message);
+                    WriteConsole(ConsoleTypes.Error, @"Error exporting Color Palette. Error: " + ex.Message);
                 }
             }
         }

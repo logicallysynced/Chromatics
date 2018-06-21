@@ -197,7 +197,7 @@ namespace Chromatics.LCDInterfaces
             var path = enviroment + @"/LogitechLcdEnginesWrapper.dll";
             if (!File.Exists(path))
             {
-                _write.WriteConsole(ConsoleTypes.Logitech, "Cannot find LogitechLcdEnginesWrapper.dll in Chromatics directory.");
+                _write.WriteConsole(ConsoleTypes.Logitech, @"Cannot find LogitechLcdEnginesWrapper.dll in Chromatics directory.");
                 return false;
             }
 
@@ -206,7 +206,7 @@ namespace Chromatics.LCDInterfaces
             
             if (!Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Mono) && !Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Color))
             {
-                _write.WriteConsole(ConsoleTypes.Logitech, "No LCD Screens Connected.");
+                _write.WriteConsole(ConsoleTypes.Logitech, @"No LCD Screens Connected.");
                 return false;
             }
             
@@ -238,7 +238,7 @@ namespace Chromatics.LCDInterfaces
             catch (Exception e)
             {
                 _write.WriteConsole(ConsoleTypes.Error, e.StackTrace);
-                _write.WriteConsole(ConsoleTypes.Logitech, "Unable to load LCD SDK.");
+                _write.WriteConsole(ConsoleTypes.Logitech, @"Unable to load LCD SDK.");
                 return false;
             }
         }
@@ -247,7 +247,7 @@ namespace Chromatics.LCDInterfaces
         {
             try
             {
-                _write.WriteConsole(ConsoleTypes.Logitech, "Disabling LCD SDK.");
+                _write.WriteConsole(ConsoleTypes.Logitech, @"Disabling LCD SDK.");
 
                 if (Logitech_LCD.LogitechLcd.Instance.IsConnected(LcdType.Mono) && _selectedMonoControl != null)
                 {

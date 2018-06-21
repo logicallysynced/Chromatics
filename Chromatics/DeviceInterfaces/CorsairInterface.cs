@@ -412,7 +412,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Corsair, "CUE SDK failed to load. EX: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. EX: " + ex.Message);
                 return false;
             }
         }
@@ -514,7 +514,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Error, "Corsair (Static): " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Corsair (Static): " + ex.Message);
             }
         }
 
@@ -580,7 +580,7 @@ namespace Chromatics.DeviceInterfaces
                 }
                 catch (Exception ex)
                 {
-                    Write.WriteConsole(ConsoleTypes.Error, "Corsair (Static)" + ex.Message);
+                    Write.WriteConsole(ConsoleTypes.Error, @"Corsair (Static)" + ex.Message);
                 }
             }
             else if (type == "transition")
@@ -686,7 +686,7 @@ namespace Chromatics.DeviceInterfaces
                     }
                     catch (Exception ex)
                     {
-                        Write.WriteConsole(ConsoleTypes.Error, "Corsair (Breath): " + ex.Message);
+                        Write.WriteConsole(ConsoleTypes.Error, @"Corsair (Breath): " + ex.Message);
                     }
                 });
                 MemoryTasks.Add(crSt);
@@ -738,8 +738,8 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Error, "Corsair (" + key + "): " + ex.Message);
-                Write.WriteConsole(ConsoleTypes.Error, "Internal Error (" + key + "): " + ex.StackTrace);
+                Write.WriteConsole(ConsoleTypes.Error, @"Corsair (" + key + "): " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Internal Error (" + key + "): " + ex.StackTrace);
             }
         }
 
@@ -824,7 +824,7 @@ namespace Chromatics.DeviceInterfaces
                                     }
                                     catch (Exception ex)
                                     {
-                                        Write.WriteConsole(ConsoleTypes.Error, "(" + key + "): " + ex.Message);
+                                        Write.WriteConsole(ConsoleTypes.Error, @"(" + key + "): " + ex.Message);
                                     }
 
                                 //Keyboard.Instance.SetCustom(keyboard_custom);

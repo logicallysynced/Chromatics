@@ -179,7 +179,7 @@ namespace Chromatics.DeviceInterfaces
             }
             catch (Exception ex)
             {
-                Write.WriteConsole(ConsoleTypes.Roccat, "Roccat SDK failed to load. Error: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Roccat, @"Roccat SDK failed to load. Error: " + ex.Message);
                 return false;
             }
         }
@@ -235,7 +235,7 @@ namespace Chromatics.DeviceInterfaces
                 }
                 catch (Exception ex)
                 {
-                    Write.WriteConsole(ConsoleTypes.Error, "Corsair (Static)" + ex.Message);
+                    Write.WriteConsole(ConsoleTypes.Error, @"Corsair (Static)" + ex.Message);
                 }
             }
             else if (type == "transition")
@@ -275,7 +275,7 @@ namespace Chromatics.DeviceInterfaces
                     }
                     catch (Exception ex)
                     {
-                        Write.WriteConsole(ConsoleTypes.Error, "Coolermaster (Breath): " + ex.Message);
+                        Write.WriteConsole(ConsoleTypes.Error, @"Coolermaster (Breath): " + ex.Message);
                     }
                 });
                 MemoryTasks.Add(crSt);

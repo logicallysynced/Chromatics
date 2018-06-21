@@ -18,7 +18,7 @@ namespace Chromatics
 
         public static void WatchdogGo()
         {
-            Write.WriteConsole(ConsoleTypes.System, "Watchdog Started");
+            Write.WriteConsole(ConsoleTypes.System, @"Watchdog Started");
             _timer.Start();
         }
 
@@ -26,7 +26,7 @@ namespace Chromatics
         {
             if (_timer.Enabled)
             {
-                Write.WriteConsole(ConsoleTypes.System, "Watchdog Stopped");
+                Write.WriteConsole(ConsoleTypes.System, @"Watchdog Stopped");
                 _timer.Stop();
             }
         }
@@ -58,7 +58,7 @@ namespace Chromatics
 
         private static void WatchdogOnTimerExpired()
         {
-            Write.WriteConsole(ConsoleTypes.Error, "Watchdog Triggered");
+            Write.WriteConsole(ConsoleTypes.Error, @"Watchdog Triggered");
             _timer.Stop();
             //RestartServices();
             Write.FfxivGameStop();

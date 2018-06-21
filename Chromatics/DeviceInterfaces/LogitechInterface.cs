@@ -649,7 +649,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                             catch (Exception ex)
                             {
-                                Write.WriteConsole(ConsoleTypes.Error, "(" + key + "): " + ex.Message);
+                                Write.WriteConsole(ConsoleTypes.Error, @"(" + key + "): " + ex.Message);
                             }
                     }
                     else if (i == 1)
