@@ -207,7 +207,8 @@ namespace Chromatics
             {
                 SteelSdk = true;
                 SteelSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK Loaded");
+                
+                WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK Loaded.");
 
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                 {

@@ -183,6 +183,11 @@ namespace Chromatics.DeviceInterfaces
                         }
                         */
 
+                        if (Process.GetProcessesByName("Discord").Length > 0)
+                        {
+                            Write.WriteConsole(ConsoleTypes.Steel, @"Please disable the Discord profile in Engine Apps.");
+                        }
+
                         isInitialized = true;
                         return true;
                     }
