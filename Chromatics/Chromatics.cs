@@ -30,6 +30,7 @@ namespace Chromatics
         public Task MemoryTask;
         private bool _allowClose;
         private bool _allowVisible = true;
+        private bool _exit;
 
         public bool ArxSdk;
         public int ArxSdkCalled;
@@ -179,7 +180,7 @@ namespace Chromatics
         {
             try
             {
-                //Debug.WriteLine(line);
+                if (_exit) return;
 
                 if (InvokeRequired)
                 {
@@ -644,7 +645,7 @@ namespace Chromatics
 
                 MemoryTask = new Task(() =>
                 {
-                    _call = CallFfxivMemory(_ffxiVcts.Token);
+                    _call = CallFfxivMemory(_ffxiVcts);
                 }, _memoryTask.Token, TaskCreationOptions.LongRunning);
 
                 MemoryTasks.Add(MemoryTask);
@@ -684,7 +685,7 @@ namespace Chromatics
             else
             {
                 //Watchdog.WatchdogGo();
-                _call = CallFfxivMemory(_ffxiVcts.Token);
+                _call = CallFfxivMemory(_ffxiVcts);
             }
         }
 

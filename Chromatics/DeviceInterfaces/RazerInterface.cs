@@ -259,7 +259,7 @@ namespace Chromatics.DeviceInterfaces
         {
             try
             {
-                if (Chroma.Initialized)
+                if (Chroma != null && Chroma.Initialized)
                 {
                     Chroma.UninitializeAsync();
                     Chroma = null;

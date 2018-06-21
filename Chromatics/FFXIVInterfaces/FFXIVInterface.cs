@@ -281,15 +281,21 @@ namespace Chromatics
 
         /* Memory Loop */
 
-        private async Task CallFfxivMemory(CancellationToken ct)
+        private async Task CallFfxivMemory(CancellationTokenSource ct)
         {
             try
             {
-                while (!ct.IsCancellationRequested)
+                while (!ct.IsCancellationRequested && !_exit)
                 {
-                    await Task.Delay(300, ct);
-                    //Debug.WriteLine("Tick C");
+                    if (_exit)
+                    {
+                        ct.Cancel();
+                    }
+
                     ReadFfxivMemory();
+                    await Task.Delay(300);
+                    //Debug.WriteLine("Tick C");
+                    
                 }
             }
             catch (Exception ex)

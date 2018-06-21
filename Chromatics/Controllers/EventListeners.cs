@@ -57,6 +57,7 @@ namespace Chromatics
 
         private void FinalFormClosing(object sender)
         {
+            _exit = true;
             HoldReader = true;
             _attachcts.Cancel();
             _ffxiVcts.Cancel();

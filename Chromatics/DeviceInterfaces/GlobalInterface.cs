@@ -165,13 +165,13 @@ namespace Chromatics
                 WriteConsole(ConsoleTypes.Logitech, "Logitech SDK failed to load. Please make sure LGS is running.");
             }
 
-            //WriteConsole(ConsoleTypes.CORSAIR, "Attempting to load Corsair SDK..");
+            WriteConsole(ConsoleTypes.Corsair, "Attempting to load Corsair SDK..");
             _corsair = CorsairInterface.InitializeCorsairSdk();
             if (_corsair != null)
             {
                 CorsairSdk = true;
                 CorsairSdkCalled = 1;
-                //WriteConsole(ConsoleTypes.CORSAIR, "Corsair SDK Loaded");
+                //WriteConsole(ConsoleTypes.Corsair, "Corsair SDK Loaded");
 
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                 {

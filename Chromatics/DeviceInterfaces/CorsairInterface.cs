@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -12,6 +13,7 @@ using CUE.NET;
 using CUE.NET.Brushes;
 using CUE.NET.Devices.Generic;
 using CUE.NET.Devices.Generic.Enums;
+using CUE.NET.Exceptions;
 using CUE.NET.Groups;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.VisualBasic.Devices;
@@ -28,12 +30,15 @@ namespace Chromatics.DeviceInterfaces
         public static CorsairLib InitializeCorsairSdk()
         {
             CorsairLib corsair = null;
-            corsair = new CorsairLib();
+            if (Process.GetProcessesByName("CUE").Length > 0)
+            {
+                corsair = new CorsairLib();
 
-            var corsairstat = corsair.InitializeSdk();
+                var corsairstat = corsair.InitializeSdk();
 
-            if (!corsairstat)
-                return null;
+                if (!corsairstat)
+                    return null;
+            }
 
             return corsair;
         }
@@ -331,8 +336,6 @@ namespace Chromatics.DeviceInterfaces
 
         public bool InitializeSdk()
         {
-            Write.WriteConsole(ConsoleTypes.Corsair, "Attempting to load CUE SDK..");
-
             try
             {
                 CueSDK.Initialize();
