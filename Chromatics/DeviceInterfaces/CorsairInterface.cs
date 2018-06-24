@@ -30,7 +30,7 @@ namespace Chromatics.DeviceInterfaces
         public static CorsairLib InitializeCorsairSdk()
         {
             CorsairLib corsair = null;
-            if (Process.GetProcessesByName("CUE").Length > 0)
+            if (Process.GetProcessesByName("CUE").Length > 0 || Process.GetProcessesByName("iCUE").Length > 0)
             {
                 corsair = new CorsairLib();
 
