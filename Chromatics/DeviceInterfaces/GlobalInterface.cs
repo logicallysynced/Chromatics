@@ -2134,6 +2134,8 @@ namespace Chromatics
             
             if (CorsairSdkCalled == 1)
             {
+                Thread.Sleep(100);
+                GlobalApplyAllKeyLighting(toColor[0]);
                 _corsairPart = null;
                 _corsairPartCts = new CancellationTokenSource();
                 _corsairPart = new Task(() =>
@@ -2226,6 +2228,7 @@ namespace Chromatics
                 _wootingPartCts.Cancel();
                 MemoryTasks.Remove(_wootingPart);
             }
+
         }
 
         public void GlobalColorCycle(int interval = 100)

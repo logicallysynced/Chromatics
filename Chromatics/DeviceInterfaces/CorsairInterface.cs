@@ -731,6 +731,8 @@ namespace Chromatics.DeviceInterfaces
             
             try
             {
+                _corsairKeyboardIndvLed.Brush = _corsairKeyboardIndvBrush;
+
                 if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
                     if (_corsairkeyids.ContainsKey(key))
                         if (CueSDK.KeyboardSDK[_corsairkeyids[key]] != null)
@@ -1585,12 +1587,15 @@ namespace Chromatics.DeviceInterfaces
             if (cts.IsCancellationRequested) return;
 
             var presets = new Dictionary<string, Color>();
+            var _corsairKeyboardIndvBrushEffect = new KeyMapBrush();
+            _corsairKeyboardIndvLed.Brush = _corsairKeyboardIndvBrushEffect;
+            //_corsairKeyboardIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[key], col);
 
             Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
 
             //Keyboard.SetCustomAsync(refreshKeyGrid);
             Thread.Sleep(500);
-
+            
             while (true)
             {
                 if (cts.IsCancellationRequested) break;
@@ -1633,7 +1638,9 @@ namespace Chromatics.DeviceInterfaces
                             if (cts.IsCancellationRequested) return;
                             if (_corsairkeyids.ContainsKey(key))
                             {
-                                ApplyMapKeyLighting(key, color, false);
+                                //ApplyMapKeyLighting(key, color, false);
+                                if (CueSDK.KeyboardSDK[_corsairkeyids[key]] != null)
+                                    _corsairKeyboardIndvBrushEffect.CorsairApplyMapKeyLighting(_corsairkeyids[key], color);
                             }
                         }
 
