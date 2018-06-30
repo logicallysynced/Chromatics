@@ -2233,89 +2233,96 @@ namespace Chromatics
 
         public void GlobalColorCycle(int interval = 100)
         {
-            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
-                return;
+            //if (!_KeysSingleKeyModeEnabled && !_KeysMultiKeyModeEnabled) return;
 
             MemoryTasks.Cleanup();
 
-            if (RazerSdkCalled == 1)
-            {
-                _rzCycle = null;
-                _rzCycleCts = new CancellationTokenSource();
-                _rzCycle = new Task(() =>
+            _rzCycle = null;
+            _rzCycleCts = new CancellationTokenSource();
+            _rzCycle = new Task(() => { GlobalStepCycleEffect(interval, _rzCycleCts); }, _rzCycleCts.Token);
+
+            MemoryTasks.Add(_rzCycle);
+            MemoryTasks.Run(_rzCycle);
+
+            /*
+                if (RazerSdkCalled == 1)
                 {
-                    _razer.CycleEffect(interval, _rzCycleCts);
-                }, _rzCycleCts.Token);
-
-                MemoryTasks.Add(_rzCycle);
-                MemoryTasks.Run(_rzCycle);
-            }
-
-            if (LogitechSdkCalled == 1)
-            {
-                _logiCycle = null;
-                _logiCycleCts = new CancellationTokenSource();
-                _logiCycle = new Task(() =>
+                    _rzCycle = null;
+                    _rzCycleCts = new CancellationTokenSource();
+                    _rzCycle = new Task(() =>
+                    {
+                        //_razer.CycleEffect(interval, _rzCycleCts);
+                    }, _rzCycleCts.Token);
+    
+                    MemoryTasks.Add(_rzCycle);
+                    MemoryTasks.Run(_rzCycle);
+                }
+    
+                if (LogitechSdkCalled == 1)
                 {
-                    _logitech.CycleEffect(interval, _logiCycleCts);
-                }, _logiCycleCts.Token);
-
-                MemoryTasks.Add(_logiCycle);
-                MemoryTasks.Run(_logiCycle);
-            }
-
-            if (CorsairSdkCalled == 1)
-            {
-                _corsairCycle = null;
-                _corsairCycleCts = new CancellationTokenSource();
-                _corsairCycle = new Task(() =>
+                    _logiCycle = null;
+                    _logiCycleCts = new CancellationTokenSource();
+                    _logiCycle = new Task(() =>
+                    {
+                        _logitech.CycleEffect(interval, _logiCycleCts);
+                    }, _logiCycleCts.Token);
+    
+                    MemoryTasks.Add(_logiCycle);
+                    MemoryTasks.Run(_logiCycle);
+                }
+    
+                if (CorsairSdkCalled == 1)
                 {
-                    _corsair.CycleEffect(interval, _corsairCycleCts);
-                }, _corsairCycleCts.Token);
-
-                MemoryTasks.Add(_corsairCycle);
-                MemoryTasks.Run(_corsairCycle);
-            }
-
-            if (CoolermasterSdkCalled == 1)
-            {
-                _coolermasterCycle = null;
-                _coolermasterCycleCts = new CancellationTokenSource();
-                _coolermasterCycle = new Task(() =>
+                    _corsairCycle = null;
+                    _corsairCycleCts = new CancellationTokenSource();
+                    _corsairCycle = new Task(() =>
+                    {
+                        _corsair.CycleEffect(interval, _corsairCycleCts);
+                    }, _corsairCycleCts.Token);
+    
+                    MemoryTasks.Add(_corsairCycle);
+                    MemoryTasks.Run(_corsairCycle);
+                }
+    
+                if (CoolermasterSdkCalled == 1)
                 {
-                    _coolermaster.CycleEffect(interval, _coolermasterCycleCts);
-                }, _coolermasterCycleCts.Token);
-
-                MemoryTasks.Add(_coolermasterCycle);
-                MemoryTasks.Run(_coolermasterCycle);
-            }
-
-            if (SteelSdkCalled == 1)
-            {
-                _steelCycle = null;
-                _steelCycleCts = new CancellationTokenSource();
-                _steelCycle = new Task(() =>
+                    _coolermasterCycle = null;
+                    _coolermasterCycleCts = new CancellationTokenSource();
+                    _coolermasterCycle = new Task(() =>
+                    {
+                        _coolermaster.CycleEffect(interval, _coolermasterCycleCts);
+                    }, _coolermasterCycleCts.Token);
+    
+                    MemoryTasks.Add(_coolermasterCycle);
+                    MemoryTasks.Run(_coolermasterCycle);
+                }
+    
+                if (SteelSdkCalled == 1)
                 {
-                    _steel.CycleEffect(interval, _steelCycleCts);
-                }, _steelCycleCts.Token);
-
-                MemoryTasks.Add(_steelCycle);
-                MemoryTasks.Run(_steelCycle);
-            }
-
-            if (WootingSdkCalled == 1)
-            {
-                _wootingCycle = null;
-                _wootingCycleCts = new CancellationTokenSource();
-                _wootingCycle = new Task(() =>
+                    _steelCycle = null;
+                    _steelCycleCts = new CancellationTokenSource();
+                    _steelCycle = new Task(() =>
+                    {
+                        _steel.CycleEffect(interval, _steelCycleCts);
+                    }, _steelCycleCts.Token);
+    
+                    MemoryTasks.Add(_steelCycle);
+                    MemoryTasks.Run(_steelCycle);
+                }
+    
+                if (WootingSdkCalled == 1)
                 {
-                    _wooting.CycleEffect(interval, _wootingCycleCts);
-                }, _wootingCycleCts.Token);
-
-                MemoryTasks.Add(_wootingCycle);
-                MemoryTasks.Run(_wootingCycle);
-            }
-
+                    _wootingCycle = null;
+                    _wootingCycleCts = new CancellationTokenSource();
+                    _wootingCycle = new Task(() =>
+                    {
+                        _wooting.CycleEffect(interval, _wootingCycleCts);
+                    }, _wootingCycleCts.Token);
+    
+                    MemoryTasks.Add(_wootingCycle);
+                    MemoryTasks.Run(_wootingCycle);
+                }
+                */
             _globalCycleRunning = true;
         }
 
@@ -2323,6 +2330,10 @@ namespace Chromatics
         {
             if (!_globalCycleRunning) return;
 
+            _rzCycleCts.Cancel();
+            MemoryTasks.Remove(_rzCycle);
+
+            /*
             if (RazerSdkCalled == 1)
             {
                 _rzCycleCts.Cancel();
@@ -2358,6 +2369,131 @@ namespace Chromatics
                 _wootingCycleCts.Cancel();
                 MemoryTasks.Remove(_wootingCycle);
             }
+            */
+        }
+
+        private readonly object lockObject = new object();
+        public void GlobalStepCycleEffect(int interval, CancellationTokenSource token)
+        {
+            //if (!_KeysSingleKeyModeEnabled && !_KeysMultiKeyModeEnabled) return;
+
+            while (true)
+            {
+                lock (lockObject)
+                {
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+
+                        var col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255),
+                            (int)Math.Ceiling((double)(x * 100) / 255), 0);
+
+                        if (_KeysSingleKeyModeEnabled)
+                            GlobalApplySingleZoneLighting(col);
+
+                        if (_KeysMultiKeyModeEnabled)
+                            GlobalApplyMultiZoneLighting(col, "All");
+
+                        if (LifxSdkCalled == 1)
+                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+
+                        Color col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
+                            (int)Math.Ceiling((double)(250 * 100) / 255), 0);
+
+                        if (_KeysSingleKeyModeEnabled)
+                            GlobalApplySingleZoneLighting(col);
+
+                        if (_KeysMultiKeyModeEnabled)
+                            GlobalApplyMultiZoneLighting(col, "All");
+
+                        if (LifxSdkCalled == 1)
+                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+
+                        Color col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
+                            (int)Math.Ceiling((double)(250 * 100) / 255), 0);
+
+                        if (_KeysSingleKeyModeEnabled)
+                            GlobalApplySingleZoneLighting(col);
+
+                        if (_KeysMultiKeyModeEnabled)
+                            GlobalApplyMultiZoneLighting(col, "All");
+
+                        if (LifxSdkCalled == 1)
+                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+
+                        Color col = Color.FromArgb(0, (int)Math.Ceiling((double)(x * 100) / 255),
+                            (int)Math.Ceiling((double)(250 * 100) / 255));
+
+                        if (_KeysSingleKeyModeEnabled)
+                            GlobalApplySingleZoneLighting(col);
+
+                        if (_KeysMultiKeyModeEnabled)
+                            GlobalApplyMultiZoneLighting(col, "All");
+
+                        if (LifxSdkCalled == 1)
+                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+
+                        Color col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), 0,
+                            (int)Math.Ceiling((double)(250 * 100) / 255));
+
+                        if (_KeysSingleKeyModeEnabled)
+                            GlobalApplySingleZoneLighting(col);
+
+                        if (_KeysMultiKeyModeEnabled)
+                            GlobalApplyMultiZoneLighting(col, "All");
+
+                        if (LifxSdkCalled == 1)
+                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+
+                        Color col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255), 0,
+                            (int)Math.Ceiling((double)(x * 100) / 255));
+
+                        if (_KeysSingleKeyModeEnabled)
+                            GlobalApplySingleZoneLighting(col);
+
+                        if (_KeysMultiKeyModeEnabled)
+                            GlobalApplyMultiZoneLighting(col, "All");
+
+                        if (LifxSdkCalled == 1)
+                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                    }
+
+                    if (token.IsCancellationRequested) break;
+                }
+            }
+            Thread.Sleep(interval);
         }
 
         public void GlobalFadeAllLights(Color toColor, Color fromColor, uint interval = 20)

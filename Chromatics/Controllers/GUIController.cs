@@ -2140,6 +2140,7 @@ namespace Chromatics
             }
 
             SetKeysbase = false;
+            GlobalStopCycleEffects();
             SaveDevices();
         }
 
@@ -2166,6 +2167,7 @@ namespace Chromatics
             }
 
             SetKeysbase = false;
+            GlobalStopCycleEffects();
             SaveDevices();
         }
 

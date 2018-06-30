@@ -187,6 +187,7 @@ namespace Chromatics.DeviceInterfaces
                 foreach (var d in _LifxBulbsDat)
                     if (d.Value == mode || mode == BulbModeTypes.Unknown) //100
                     {
+                        if (mode == BulbModeTypes.Disabled) return;
                         if (_LifxStateMemory[d.Key.MacAddressName] == 0) return;
                         var state = await _client.GetLightStateAsync(d.Key);
                         var setColorTask = _client.SetColorAsync(d.Key, _col, kelvin, _transition);

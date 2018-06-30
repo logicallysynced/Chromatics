@@ -105,6 +105,7 @@ namespace Chromatics
 
             //GlobalUpdateState("static", Color.DeepSkyBlue, false);
             GlobalStopParticleEffects();
+            GlobalStopCycleEffects();
             GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
 
@@ -368,6 +369,7 @@ namespace Chromatics
 
                                 //GlobalUpdateState("static", Color.DeepSkyBlue, false);
                                 GlobalStopParticleEffects();
+                                GlobalStopCycleEffects();
                                 GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                                 
                                 //WriteConsole(ConsoleTypes.Ffxiv, @"Returning to Main Menu..");
@@ -398,6 +400,7 @@ namespace Chromatics
                             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
                             //GlobalSetWave();
                             GlobalStopParticleEffects();
+                            GlobalStopCycleEffects();
                             GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
                             
                             Attatched = 2;
@@ -634,8 +637,8 @@ namespace Chromatics
                     {
                         if (!_inCutscene)
                         {
-                            GlobalStopCycleEffects();
                             GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingCutsceneBase));
+
                             GlobalParticleEffects(
                                 new Color[]
                                 {
@@ -660,7 +663,6 @@ namespace Chromatics
                         }
 
                         GlobalStopParticleEffects();
-                        GlobalStopCycleEffects();
                     }
                 }
                 else
@@ -695,6 +697,7 @@ namespace Chromatics
                                 }, null,
                                 50);
 
+                            GlobalColorCycle();
 
                             _inVegas = true;
                         }
@@ -711,11 +714,13 @@ namespace Chromatics
                         }
 
                         GlobalStopParticleEffects();
+                        GlobalStopCycleEffects();
                     }
                 }
                 else
                 {
                     GlobalStopParticleEffects();
+                    GlobalStopCycleEffects();
                 }
 
                 if (_playerInfo != null && _playerInfo.Name != "")
