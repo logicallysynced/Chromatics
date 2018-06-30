@@ -25,6 +25,8 @@ namespace Chromatics
     partial class Chromatics
     {
         private Color _baseColor = Color.Black;
+        private Color _baseWeatherColor = Color.Black;
+        private Color _highlightWeatherColor = Color.Black;
 
         private Cooldowns.CardTypes _currentCard;
         private string _currentStatus = "";
@@ -1191,8 +1193,11 @@ namespace Chromatics
                                 var weatherMaphighlight = (string) typeof(Datastore.FfxivColorMappings)
                                     .GetField(weatherMaphighlightKey).GetValue(ColorMappings);
 
-                                baseColor = ColorTranslator.FromHtml(weatherMapbase);
-                                highlightColor = ColorTranslator.FromHtml(weatherMaphighlight);
+                                _baseWeatherColor = ColorTranslator.FromHtml(weatherMapbase);
+                                _highlightWeatherColor = ColorTranslator.FromHtml(weatherMaphighlight);
+
+                                baseColor = _baseWeatherColor;
+                                highlightColor = _highlightWeatherColor;
 
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
                                     ColorTranslator.FromHtml(weatherMapbase), false, "All");
@@ -1410,14 +1415,14 @@ namespace Chromatics
                         }
                         else
                         {
-                            GlobalApplyMapKeyLighting("W", baseColor, false);
-                            GlobalApplyMapKeyLighting("A", baseColor, false);
-                            GlobalApplyMapKeyLighting("S", baseColor, false);
-                            GlobalApplyMapKeyLighting("D", baseColor, false);
-                            GlobalApplyMapKeyLighting("LeftShift", baseColor, false);
-                            GlobalApplyMapKeyLighting("LeftControl", baseColor, false);
-                            GlobalApplyMapKeyLighting("Space", baseColor, false);
-                            GlobalApplyMapKeyLighting("LeftAlt", baseColor, false);
+                            GlobalApplyMapKeyLighting("W", _baseColor, false);
+                            GlobalApplyMapKeyLighting("A", _baseColor, false);
+                            GlobalApplyMapKeyLighting("S", _baseColor, false);
+                            GlobalApplyMapKeyLighting("D", _baseColor, false);
+                            GlobalApplyMapKeyLighting("LeftShift", _baseColor, false);
+                            GlobalApplyMapKeyLighting("LeftControl", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Space", _baseColor, false);
+                            GlobalApplyMapKeyLighting("LeftAlt", _baseColor, false);
                         }
                         
                         if (targetInfo == null)
@@ -1466,6 +1471,25 @@ namespace Chromatics
 
                             GlobalApplyMapLogoLighting("", highlightColor, false);
                             //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
+                        }
+
+                        //Check Base Weather
+                        if (ChromaticsSettings.ChromaticsSettingsReactiveWeather)
+                        {
+                            if (_baseWeatherColor != _baseColor)
+                            {
+                                _baseColor = _baseWeatherColor;
+                            }
+
+                            if (_baseWeatherColor != baseColor)
+                            {
+                                baseColor = _baseWeatherColor;
+                            }
+
+                            if (_highlightWeatherColor != highlightColor)
+                            {
+                                highlightColor = _highlightWeatherColor;
+                            }
                         }
 
 
@@ -3945,25 +3969,25 @@ namespace Chromatics
 
                                 if (_LightbarMode == LightbarMode.TargetHp || _LightbarMode == LightbarMode.EnmityTracker)
                                 {
-                                    GlobalApplyMapLightbarLighting("Lightbar19", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar18", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar17", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar16", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar15", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar14", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar13", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar12", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar11", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar10", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar9", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar8", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar7", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar6", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar5", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar4", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar3", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar2", baseColor, false, false);
-                                    GlobalApplyMapLightbarLighting("Lightbar1", baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar19", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar18", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar17", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar16", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar15", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar14", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar13", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar12", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar11", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar10", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar9", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar8", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar7", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar6", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar5", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar4", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar3", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar2", _baseColor, false, false);
+                                    GlobalApplyMapLightbarLighting("Lightbar1", _baseColor, false, false);
                                 }
 
                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -3986,11 +4010,11 @@ namespace Chromatics
                                 //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
                                 GlobalApplyMapLogoLighting("", highlightColor, false);
 
-                                GlobalApplyMapKeyLighting("Macro1", baseColor, false);
-                                GlobalApplyMapKeyLighting("Macro2", baseColor, false);
-                                GlobalApplyMapKeyLighting("Macro3", baseColor, false);
-                                GlobalApplyMapKeyLighting("Macro4", baseColor, false);
-                                GlobalApplyMapKeyLighting("Macro5", baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro1", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro2", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro4", _baseColor, false);
+                                GlobalApplyMapKeyLighting("Macro5", _baseColor, false);
                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, baseColor, 1000);
                                 GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, baseColor);
                                 GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, baseColor, "All");
@@ -4016,11 +4040,11 @@ namespace Chromatics
                         }
                         else
                         {
-                            GlobalApplyMapKeyLighting("Macro1", baseColor, false);
-                            GlobalApplyMapKeyLighting("Macro2", baseColor, false);
-                            GlobalApplyMapKeyLighting("Macro3", baseColor, false);
-                            GlobalApplyMapKeyLighting("Macro4", baseColor, false);
-                            GlobalApplyMapKeyLighting("Macro5", baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro1", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro2", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro4", _baseColor, false);
+                            GlobalApplyMapKeyLighting("Macro5", _baseColor, false);
                             GlobalUpdateBulbState(BulbModeTypes.TargetHp, baseColor, 1000);
                             GlobalApplyKeySingleLighting(DevModeTypes.TargetHp, baseColor);
                             GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp, baseColor, "All");
@@ -4696,18 +4720,18 @@ namespace Chromatics
                             {
                                 if (ChromaticsSettings.ChromaticsSettingsCastToggle)
                                 {
-                                    GlobalApplyMapKeyLighting("F1", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F2", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F3", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F4", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F5", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F6", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F7", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F8", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F9", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F10", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F11", baseColor, false);
-                                    GlobalApplyMapKeyLighting("F12", baseColor, false);
+                                    GlobalApplyMapKeyLighting("F1", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F2", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F3", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F4", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F5", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F6", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F7", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F8", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F9", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F10", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F11", _baseColor, false);
+                                    GlobalApplyMapKeyLighting("F12", _baseColor, false);
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide1", "RightSide1",
                                         baseColor, false);
@@ -4745,25 +4769,25 @@ namespace Chromatics
 
                                     if (_LightbarMode == LightbarMode.Castbar)
                                     {
-                                        GlobalApplyMapLightbarLighting("Lightbar19", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar18", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar17", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar16", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar15", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar14", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar13", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar12", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar11", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar10", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar9", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar8", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar7", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar6", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar5", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar4", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar3", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar2", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar1", baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar19", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar18", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar17", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar16", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar15", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar14", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar13", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar12", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar11", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar10", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar9", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar8", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar7", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar6", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar5", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar4", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar3", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar2", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar1", _baseColor, false, false);
                                     }
                                 }
 
@@ -4782,10 +4806,10 @@ namespace Chromatics
 
                                 if (_successcast && ChromaticsSettings.ChromaticsSettingsCastAnimate)
                                 {
-                                    GlobalRipple1(colCastcharge, 80, baseColor);
+                                    GlobalRipple1(colCastcharge, 80, _baseColor);
 
                                     if (_KeypadZone1Mode == DevMultiModeTypes.Castbar || _KeysMultiKeyMode == DevMultiModeTypes.Castbar)
-                                        GlobalMultiRipple1(colCastcharge, 200, baseColor);
+                                        GlobalMultiRipple1(colCastcharge, 200, _baseColor);
                                 }
 
                                 _lastcast = false;
@@ -6604,19 +6628,15 @@ namespace Chromatics
                                 }
                                 else
                                 {
-                                    GlobalApplyMapKeyLighting("OemTilde", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D1", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D2", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D3", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D4", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D5", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D6", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D7", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D8", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D9", baseColor, false);
-                                    GlobalApplyMapKeyLighting("D0", baseColor, false);
-                                    GlobalApplyMapKeyLighting("OemMinus", baseColor, false);
-                                    GlobalApplyMapKeyLighting("OemEquals", baseColor, false);
+                                    if (FfxivHotbar.Keybindwhitelist.Count > 0)
+                                        FfxivHotbar.Keybindwhitelist.Clear();
+
+                                    foreach (var key in FfxivHotbar.Keybindtranslation)
+                                    {
+                                        GlobalApplyMapKeyLighting(key.Value, _baseColor, false);
+                                    }
+
+                                    //SetKeysbase = false;
                                 }
                             }
 
@@ -6902,7 +6922,7 @@ namespace Chromatics
                             }
                             
                             //Job Gauges
-                            ImplementJobGauges(statEffects, baseColor);
+                            ImplementJobGauges(statEffects, _baseColor);
 
 
                             //Duty Finder Bell
@@ -6913,7 +6933,7 @@ namespace Chromatics
                                 if (!_dfpop)
                                 {
                                     ToggleGlobalFlash4(true);
-                                    GlobalFlash4(baseColor,
+                                    GlobalFlash4(_baseColor,
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), 500,
                                         DeviceEffects.GlobalKeys);
 
@@ -6968,7 +6988,7 @@ namespace Chromatics
                                     if (FfxivDutyFinder.Countdown() < 10 && !_dfcount)
                                     {
                                         ToggleGlobalFlash4(false);
-                                        GlobalFlash4(baseColor,
+                                        GlobalFlash4(_baseColor,
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), 200,
                                             DeviceEffects.GlobalKeys);
 
@@ -7034,7 +7054,7 @@ namespace Chromatics
                                     SetKeypadbase = false;
                                     SetCLbase = false;
 
-                                    GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, baseColor);
+                                    GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, _baseColor);
                                     GlobalApplyKeyMultiLighting(DevMultiModeTypes.DutyFinder, baseColor, "All");
                                     GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, baseColor, false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, baseColor, false);
@@ -7057,25 +7077,25 @@ namespace Chromatics
 
                                     if (_LightbarMode == LightbarMode.DutyFinder)
                                     {
-                                        GlobalApplyMapLightbarLighting("Lightbar19", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar18", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar17", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar16", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar15", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar14", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar13", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar12", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar11", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar10", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar9", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar8", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar7", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar6", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar5", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar4", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar3", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar2", baseColor, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar1", baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar19", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar18", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar17", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar16", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar15", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar14", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar13", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar12", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar11", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar10", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar9", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar8", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar7", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar6", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar5", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar4", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar3", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar2", _baseColor, false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar1", _baseColor, false, false);
                                     }
                                 }
                             }

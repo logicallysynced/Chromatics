@@ -1593,6 +1593,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsReactiveWeather = chk_reactiveweather.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -1611,6 +1613,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsCastToggle = chk_castchargetoggle.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -1619,6 +1623,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsCastAnimate = chk_castanimatetoggle.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -1627,6 +1633,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsGcdCountdown = chk_gcdcounttoggle.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -1635,6 +1643,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsKeyHighlights = chk_highlighttoggle.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -1643,6 +1653,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsJobGaugeToggle = chk_jobgaugetoggle.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -1651,6 +1663,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsKeybindToggle = chk_keybindtoggle.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -1659,6 +1673,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsImpactToggle = chk_impactflashtog.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -1667,6 +1683,8 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsDfBellToggle = chk_dfbelltoggle.Checked;
+            SetKeysbase = false;
+
             SaveChromaticsSettings(1);
         }
 
@@ -2501,6 +2519,7 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsCutsceneAnimation = chk_cutscenes.Checked;
+            SetKeysbase = false;
 
             SaveChromaticsSettings(1);
         }
@@ -2510,6 +2529,7 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsVegasMode = chk_vegasmode.Checked;
+            SetKeysbase = false;
 
             SaveChromaticsSettings(1);
         }

@@ -68,7 +68,6 @@ namespace Chromatics.DeviceInterfaces
                     {
                         return key;
                     }
-
                 case "Z":
                     if (_region == KeyRegion.QWERTZ)
                     {
@@ -82,7 +81,6 @@ namespace Chromatics.DeviceInterfaces
                     {
                         return key;
                     }
-
                 default:
                     return key;
             }

@@ -623,6 +623,7 @@ namespace Chromatics
                 }
                 else
                 {
+                    if (key == "Z") Console.WriteLine(@"Z send: " + col.Name);
                     _corsair.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
                 }
 
