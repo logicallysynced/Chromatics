@@ -236,7 +236,10 @@ namespace Chromatics
             {"ColorMappingJobRDMNegative", new[] {"RDM: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobRDMBlackMana", new[] { "RDM: Black Mana", "9", "Black", "White"}},
             {"ColorMappingJobRDMWhiteMana", new[] { "RDM: White Mana", "9", "Black", "White"}},
-
+            {"ColorMappingJobCrafterNegative", new[] { "Crafter: Blank Key", "9", "Black", "White"}},
+            {"ColorMappingJobCrafterInnerquiet", new[] { "Crafter: Inner Quiet Stacks", "9", "Black", "White"}},
+            {"ColorMappingJobCrafterCollectable", new[] { "Crafter: Collectables", "9", "Black", "White"}},
+            {"ColorMappingJobCrafterCrafter", new[] { "Crafter: Crafting", "9", "Black", "White"}},
             {"ColorMappingWeatherClearBase", new[] { "Clear Skies (Base)", "10", "Black", "White"}},
             {"ColorMappingWeatherClearHighlight", new[] { "Clear Skies (Highlight)", "10", "Black", "White"}},
             {"ColorMappingWeatherFairBase", new[] { "Fair Skies (Base)", "10", "Black", "White"}},

@@ -242,6 +242,10 @@ namespace Chromatics.Datastore
         public string ColorMappingJobRDMBlackMana = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingJobRDMWhiteMana = ColorTranslator.ToHtml(Color.White);
         public string ColorMappingMenuBase = ColorTranslator.ToHtml(Color.OrangeRed);
+        public string ColorMappingJobCrafterNegative = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingJobCrafterInnerquiet = ColorTranslator.ToHtml(Color.BlueViolet);
+        public string ColorMappingJobCrafterCollectable = ColorTranslator.ToHtml(Color.Gold);
+        public string ColorMappingJobCrafterCrafter = ColorTranslator.ToHtml(Color.DodgerBlue);
         public string ColorMappingMenuHighlight1 = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingMenuHighlight2 = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingMenuHighlight3 = ColorTranslator.ToHtml(Color.Red);

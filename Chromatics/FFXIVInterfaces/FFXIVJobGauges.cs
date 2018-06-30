@@ -4085,10 +4085,10 @@ namespace Chromatics
                     case Actor.Job.LTW:
                     case Actor.Job.WVR:
                         //Crafter
-                        var negcraftercol = Color.Black;
-                        var innerquietcol = Color.BlueViolet;
-                        var collectablecol = Color.Gold;
-                        var craftercol = Color.DodgerBlue;
+                        var negcraftercol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCrafterNegative);
+                        var innerquietcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCrafterInnerquiet);
+                        var collectablecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCrafterCollectable);
+                        var craftercol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCrafterCrafter);
 
                         if (statEffects.Find(i => i.StatusName == "Collectable Synthesis") != null)
                         {
