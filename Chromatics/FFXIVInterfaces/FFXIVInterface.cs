@@ -1183,24 +1183,38 @@ namespace Chromatics
 
                             if (_lastWeather > 0)
                             {
-                                var weatherMapbaseKey = _mappingPalette.First(x =>
+                                var weatherMapbaseKey = _mappingPalette.FirstOrDefault(x =>
                                     x.Value[0] == FFXIVWeather.WeatherIconName(_lastWeather) + @" (Base)").Key;
-                                var weatherMaphighlightKey = _mappingPalette.First(x =>
+                                var weatherMaphighlightKey = _mappingPalette.FirstOrDefault(x =>
                                     x.Value[0] == FFXIVWeather.WeatherIconName(_lastWeather) + @" (Highlight)").Key;
-                                
-                                var weatherMapbase = (string) typeof(Datastore.FfxivColorMappings)
-                                    .GetField(weatherMapbaseKey).GetValue(ColorMappings);
-                                var weatherMaphighlight = (string) typeof(Datastore.FfxivColorMappings)
-                                    .GetField(weatherMaphighlightKey).GetValue(ColorMappings);
 
-                                _baseWeatherColor = ColorTranslator.FromHtml(weatherMapbase);
-                                _highlightWeatherColor = ColorTranslator.FromHtml(weatherMaphighlight);
+                                if (string.IsNullOrWhiteSpace(weatherMapbaseKey) ||
+                                    string.IsNullOrWhiteSpace(weatherMaphighlightKey))
+                                {
+                                    _baseWeatherColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
+                                    _highlightWeatherColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false, "All");
+                                }
+                                else
+                                {
+                                    var weatherMapbase = (string)typeof(Datastore.FfxivColorMappings)
+                                        .GetField(weatherMapbaseKey).GetValue(ColorMappings);
+                                    var weatherMaphighlight = (string)typeof(Datastore.FfxivColorMappings)
+                                        .GetField(weatherMaphighlightKey).GetValue(ColorMappings);
+
+                                    _baseWeatherColor = ColorTranslator.FromHtml(weatherMapbase);
+                                    _highlightWeatherColor = ColorTranslator.FromHtml(weatherMaphighlight);
+
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
+                                        ColorTranslator.FromHtml(weatherMapbase), false, "All");
+                                }
+                                
 
                                 baseColor = _baseWeatherColor;
                                 highlightColor = _highlightWeatherColor;
-
-                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
-                                    ColorTranslator.FromHtml(weatherMapbase), false, "All");
+                                
                             }
                         }
                         else

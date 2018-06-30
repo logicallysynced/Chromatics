@@ -1446,6 +1446,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        private readonly object lockObject = new object();
         public void CycleEffect(int interval, CancellationTokenSource token)
         {
             if (!_corsairDeviceKeyboard) return;
@@ -1456,67 +1457,75 @@ namespace Chromatics.DeviceInterfaces
 
             while (true)
             {
-                for (var x = 0; x <= 250; x += 5)
+                lock (lockObject)
                 {
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255),
+                            (int) Math.Ceiling((double) (x * 100) / 255), 0);
+
+                        SetAllLights(col);
+
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+
+                        SetAllLights(col);
+
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+
+                        SetAllLights(col);
+
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = Color.FromArgb(0, (int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255));
+
+                        SetAllLights(col);
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255), 0,
+                            (int) Math.Ceiling((double) (250 * 100) / 255));
+
+                        SetAllLights(col);
+
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        var col = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255), 0,
+                            (int) Math.Ceiling((double) (x * 100) / 255));
+
+                        SetAllLights(col);
+
+                    }
+
                     if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    var col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255),
-                        (int)Math.Ceiling((double)(x * 100) / 255), 0);
-                    
-                    SetAllLights(col);
-
                 }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
-                        (int)Math.Ceiling((double)(250 * 100) / 255), 0);
-
-                    SetAllLights(col);
-
-                }
-                for (var x = 0; x <= 250; x += 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
-                        (int)Math.Ceiling((double)(250 * 100) / 255), 0);
-
-                    SetAllLights(col);
-
-                }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    var col = Color.FromArgb(0, (int)Math.Ceiling((double)(x * 100) / 255),
-                        (int)Math.Ceiling((double)(250 * 100) / 255));
-
-                    SetAllLights(col);
-                }
-                for (var x = 0; x <= 250; x += 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), 0,
-                        (int)Math.Ceiling((double)(250 * 100) / 255));
-
-                    SetAllLights(col);
-
-                }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    var col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255), 0,
-                        (int)Math.Ceiling((double)(x * 100) / 255));
-
-                    SetAllLights(col);
-
-                }
-                if (token.IsCancellationRequested) break;
-
             }
             Thread.Sleep(interval);
         }

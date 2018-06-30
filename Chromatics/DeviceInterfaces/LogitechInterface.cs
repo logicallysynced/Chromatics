@@ -1322,55 +1322,65 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        private readonly object lockObject = new object();
         public void CycleEffect(int interval, CancellationTokenSource token)
         {
             if (!_logitechDeviceKeyboard) return;
 
             while (true)
             {
-                for (var x = 0; x <= 250; x += 5)
+                lock (lockObject)
                 {
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        LogitechSdkWrapper.LogiLedSetLighting((int) Math.Ceiling((double) (250 * 100) / 255),
+                            (int) Math.Ceiling((double) (x * 100) / 255), 0);
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        LogitechSdkWrapper.LogiLedSetLighting((int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        LogitechSdkWrapper.LogiLedSetLighting((int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        LogitechSdkWrapper.LogiLedSetLighting(0, (int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255));
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        LogitechSdkWrapper.LogiLedSetLighting((int) Math.Ceiling((double) (x * 100) / 255), 0,
+                            (int) Math.Ceiling((double) (250 * 100) / 255));
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        LogitechSdkWrapper.LogiLedSetLighting((int) Math.Ceiling((double) (250 * 100) / 255), 0,
+                            (int) Math.Ceiling((double) (x * 100) / 255));
+                    }
+
                     if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    LogitechSdkWrapper.LogiLedSetLighting((int)Math.Ceiling((double)(250 * 100) / 255),
-                        (int)Math.Ceiling((double)(x * 100) / 255), 0);
                 }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    LogitechSdkWrapper.LogiLedSetLighting((int)Math.Ceiling((double)(x * 100) / 255),
-                        (int)Math.Ceiling((double)(250 * 100) / 255), 0);
-                }
-                for (var x = 0; x <= 250; x += 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    LogitechSdkWrapper.LogiLedSetLighting((int)Math.Ceiling((double)(x * 100) / 255),
-                        (int)Math.Ceiling((double)(250 * 100) / 255), 0);
-                }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    LogitechSdkWrapper.LogiLedSetLighting(0, (int)Math.Ceiling((double)(x * 100) / 255),
-                        (int)Math.Ceiling((double)(250 * 100) / 255));
-                }
-                for (var x = 0; x <= 250; x += 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    LogitechSdkWrapper.LogiLedSetLighting((int)Math.Ceiling((double)(x * 100) / 255), 0,
-                        (int)Math.Ceiling((double)(250 * 100) / 255));
-                }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    LogitechSdkWrapper.LogiLedSetLighting((int)Math.Ceiling((double)(250 * 100) / 255), 0,
-                        (int)Math.Ceiling((double)(x * 100) / 255));
-                }
-                if (token.IsCancellationRequested) break;
             }
             Thread.Sleep(interval);
         }

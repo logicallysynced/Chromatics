@@ -2420,6 +2420,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        private readonly object lockObject = new object();
         public void CycleEffect(int interval, CancellationTokenSource token)
         {
             if (!_isInitialized) return;
@@ -2428,72 +2429,75 @@ namespace Chromatics.DeviceInterfaces
             {
                 while (true)
                 {
-                    for (var x = 0; x <= 250; x += 5)
+                    lock (lockObject)
                     {
+                        for (var x = 0; x <= 250; x += 5)
+                        {
+                            if (token.IsCancellationRequested) break;
+                            Thread.Sleep(10);
+                            var col = new ColoreColor((int) Math.Ceiling((double) (250 * 100) / 255),
+                                (int) Math.Ceiling((double) (x * 100) / 255), 0);
+
+                            Keyboard.SetAllAsync(col);
+
+                        }
+
+                        for (var x = 250; x >= 5; x -= 5)
+                        {
+                            if (token.IsCancellationRequested) break;
+                            Thread.Sleep(10);
+                            var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255),
+                                (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+
+                            Keyboard.SetAllAsync(col);
+
+                        }
+
+                        for (var x = 0; x <= 250; x += 5)
+                        {
+                            if (token.IsCancellationRequested) break;
+                            Thread.Sleep(10);
+                            var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255),
+                                (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+
+                            Keyboard.SetAllAsync(col);
+
+                        }
+
+                        for (var x = 250; x >= 5; x -= 5)
+                        {
+                            if (token.IsCancellationRequested) break;
+                            Thread.Sleep(10);
+                            var col = new ColoreColor(0, (int) Math.Ceiling((double) (x * 100) / 255),
+                                (int) Math.Ceiling((double) (250 * 100) / 255));
+
+                            Keyboard.SetAllAsync(col);
+                        }
+
+                        for (var x = 0; x <= 250; x += 5)
+                        {
+                            if (token.IsCancellationRequested) break;
+                            Thread.Sleep(10);
+                            var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255), 0,
+                                (int) Math.Ceiling((double) (250 * 100) / 255));
+
+                            Keyboard.SetAllAsync(col);
+
+                        }
+
+                        for (var x = 250; x >= 5; x -= 5)
+                        {
+                            if (token.IsCancellationRequested) break;
+                            Thread.Sleep(10);
+                            var col = new ColoreColor((int) Math.Ceiling((double) (250 * 100) / 255), 0,
+                                (int) Math.Ceiling((double) (x * 100) / 255));
+
+                            Keyboard.SetAllAsync(col);
+
+                        }
+
                         if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
-                        var col = new ColoreColor((int) Math.Ceiling((double) (250 * 100) / 255),
-                            (int) Math.Ceiling((double) (x * 100) / 255), 0);
-
-                        Keyboard.SetAllAsync(col);
-
                     }
-
-                    for (var x = 250; x >= 5; x -= 5)
-                    {
-                        if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
-                        var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255),
-                            (int) Math.Ceiling((double) (250 * 100) / 255), 0);
-
-                        Keyboard.SetAllAsync(col);
-
-                    }
-
-                    for (var x = 0; x <= 250; x += 5)
-                    {
-                        if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
-                        var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255),
-                            (int) Math.Ceiling((double) (250 * 100) / 255), 0);
-
-                        Keyboard.SetAllAsync(col);
-
-                    }
-
-                    for (var x = 250; x >= 5; x -= 5)
-                    {
-                        if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
-                        var col = new ColoreColor(0, (int) Math.Ceiling((double) (x * 100) / 255),
-                            (int) Math.Ceiling((double) (250 * 100) / 255));
-
-                        Keyboard.SetAllAsync(col);
-                    }
-
-                    for (var x = 0; x <= 250; x += 5)
-                    {
-                        if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
-                        var col = new ColoreColor((int) Math.Ceiling((double) (x * 100) / 255), 0,
-                            (int) Math.Ceiling((double) (250 * 100) / 255));
-
-                        Keyboard.SetAllAsync(col);
-
-                    }
-
-                    for (var x = 250; x >= 5; x -= 5)
-                    {
-                        if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
-                        var col = new ColoreColor((int) Math.Ceiling((double) (250 * 100) / 255), 0,
-                            (int) Math.Ceiling((double) (x * 100) / 255));
-
-                        Keyboard.SetAllAsync(col);
-
-                    }
-
-                    if (token.IsCancellationRequested) break;
                 }
 
                 Thread.Sleep(interval);

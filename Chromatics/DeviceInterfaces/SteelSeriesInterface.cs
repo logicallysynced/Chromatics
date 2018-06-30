@@ -1382,6 +1382,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        private readonly object lockObject = new object();
         public void CycleEffect(int interval, CancellationTokenSource token)
         {
             if (!isInitialized || !_steelKeyboard)
@@ -1392,73 +1393,88 @@ namespace Chromatics.DeviceInterfaces
 
             while (true)
             {
-                for (var x = 0; x <= 250; x += 5)
+                lock (lockObject)
                 {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    foreach (var hid in KeyboardHIDs)
+                    for (var x = 0; x <= 250; x += 5)
                     {
-                        hids.Add(hid);
-                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(250 * 100) / 255), (byte)Math.Ceiling((double)(x * 100) / 255), (byte)0));
-                    }
-                }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    foreach (var hid in KeyboardHIDs)
-                    {
-                        hids.Add(hid);
-                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(x * 100) / 255), (byte)Math.Ceiling((double)(250 * 100) / 255), (byte)0));
-                    }
-                }
-                for (var x = 0; x <= 250; x += 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    foreach (var hid in KeyboardHIDs)
-                    {
-                        hids.Add(hid);
-                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(x * 100) / 255), (byte)Math.Ceiling((double)(250 * 100) / 255), (byte)0));
-                    }
-                }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    foreach (var hid in KeyboardHIDs)
-                    {
-                        hids.Add(hid);
-                        colors.Add(Tuple.Create((byte)0, (byte)Math.Ceiling((double)(x * 100) / 255), (byte)Math.Ceiling((double)(250 * 100) / 255)));
-                    }
-                }
-                for (var x = 0; x <= 250; x += 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    foreach (var hid in KeyboardHIDs)
-                    {
-                        hids.Add(hid);
-                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(x * 100) / 255), (byte)0, (byte)Math.Ceiling((double)(250 * 100) / 255)));
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        foreach (var hid in KeyboardHIDs)
+                        {
+                            hids.Add(hid);
+                            colors.Add(Tuple.Create((byte) Math.Ceiling((double) (250 * 100) / 255),
+                                (byte) Math.Ceiling((double) (x * 100) / 255), (byte) 0));
+                        }
                     }
 
-                }
-                for (var x = 250; x >= 5; x -= 5)
-                {
-                    if (token.IsCancellationRequested) break;
-                    Thread.Sleep(10);
-                    foreach (var hid in KeyboardHIDs)
+                    for (var x = 250; x >= 5; x -= 5)
                     {
-                        hids.Add(hid);
-                        colors.Add(Tuple.Create((byte)Math.Ceiling((double)(250 * 100) / 255), (byte)0, (byte)Math.Ceiling((double)(x * 100) / 255)));
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        foreach (var hid in KeyboardHIDs)
+                        {
+                            hids.Add(hid);
+                            colors.Add(Tuple.Create((byte) Math.Ceiling((double) (x * 100) / 255),
+                                (byte) Math.Ceiling((double) (250 * 100) / 255), (byte) 0));
+                        }
                     }
 
-                }
-                if (token.IsCancellationRequested) break;
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        foreach (var hid in KeyboardHIDs)
+                        {
+                            hids.Add(hid);
+                            colors.Add(Tuple.Create((byte) Math.Ceiling((double) (x * 100) / 255),
+                                (byte) Math.Ceiling((double) (250 * 100) / 255), (byte) 0));
+                        }
+                    }
 
-                EffectKeyUpdate(hids, colors);
-                hids.Clear();
-                colors.Clear();
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        foreach (var hid in KeyboardHIDs)
+                        {
+                            hids.Add(hid);
+                            colors.Add(Tuple.Create((byte) 0, (byte) Math.Ceiling((double) (x * 100) / 255),
+                                (byte) Math.Ceiling((double) (250 * 100) / 255)));
+                        }
+                    }
+
+                    for (var x = 0; x <= 250; x += 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        foreach (var hid in KeyboardHIDs)
+                        {
+                            hids.Add(hid);
+                            colors.Add(Tuple.Create((byte) Math.Ceiling((double) (x * 100) / 255), (byte) 0,
+                                (byte) Math.Ceiling((double) (250 * 100) / 255)));
+                        }
+
+                    }
+
+                    for (var x = 250; x >= 5; x -= 5)
+                    {
+                        if (token.IsCancellationRequested) break;
+                        Thread.Sleep(10);
+                        foreach (var hid in KeyboardHIDs)
+                        {
+                            hids.Add(hid);
+                            colors.Add(Tuple.Create((byte) Math.Ceiling((double) (250 * 100) / 255), (byte) 0,
+                                (byte) Math.Ceiling((double) (x * 100) / 255)));
+                        }
+
+                    }
+
+                    if (token.IsCancellationRequested) break;
+
+                    EffectKeyUpdate(hids, colors);
+                    hids.Clear();
+                    colors.Clear();
+                }
             }
             Thread.Sleep(interval);
         }

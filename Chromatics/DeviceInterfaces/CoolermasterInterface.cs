@@ -994,6 +994,7 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        private readonly object lockObject = new object();
         public void CycleEffect(int interval, CancellationTokenSource token)
         {
             if (!_coolermasterDeviceKeyboard) return;
