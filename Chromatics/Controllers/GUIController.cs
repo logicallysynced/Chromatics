@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -450,6 +451,8 @@ namespace Chromatics
             dG_mappings.Rows.Clear();
 
             DrawMappingsDict();
+            var i = 0;
+            DataGridViewRow[] dgV = new DataGridViewRow[_mappingPalette.Count];
 
             foreach (var palette in _mappingPalette)
             {
@@ -463,10 +466,16 @@ namespace Chromatics
                 paletteBtn.Style.SelectionBackColor = ColorTranslator.FromHtml(palette.Value[2]);
 
                 paletteBtn.Value = "";
+
                 paletteItem.Cells[dG_mappings.Columns["mappings_col_color"].Index] = paletteBtn;
-                dG_mappings.Rows.Add(paletteItem);
+
+                //dG_mappings.Rows.Add(paletteItem);
+                dgV[i] = paletteItem;
+                i++;
                 paletteBtn.ReadOnly = true;
             }
+
+            dG_mappings.Rows.AddRange(dgV);
 
             dG_mappings.AllowUserToAddRows = false;
             MappingGridStartup = true;
@@ -499,8 +508,12 @@ namespace Chromatics
                 DeviceGridStartup = false;
                 dG_devices.AllowUserToAddRows = true;
                 dG_devices.Rows.Clear();
-
+                
                 if (LifxSdkCalled == 1)
+                {
+                    DataGridViewRow[] dgV = new DataGridViewRow[_lifx.LifxBulbsDat.ToList().Count];
+                    var i = 0;
+
                     if (_lifx.LifxBulbs > 0)
                         foreach (var d in _lifx.LifxBulbsDat.ToList())
                         {
@@ -521,7 +534,7 @@ namespace Chromatics
                                 devname = _lifx.LifXproductids[device.Product];
                             }
 
-                            var lifxdGDevice = (DataGridViewRow)dG_devices.Rows[0].Clone();
+                            var lifxdGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
                             lifxdGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = state.Label + " (" +
                                                                                                    d.Key
                                                                                                        .MacAddressName +
@@ -575,11 +588,20 @@ namespace Chromatics
                             if (duplicate) continue;
                             */
 
-        dG_devices.Rows.Add(lifxdGDevice);
+                            //dG_devices.Rows.Add(lifxdGDevice);
+                            dgV[i] = lifxdGDevice;
+                            i++;
                             lifxdGDeviceDgc.ReadOnly = d.Value == 0 ? true : false;
                         }
 
+                    dG_devices.Rows.AddRange(dgV);
+                }
+
                 if (HueSdkCalled == 1)
+                {
+                    DataGridViewRow[] dgV = new DataGridViewRow[_hue.HueBulbsDat.ToList().Count];
+                    var i = 0;
+
                     if (_hue.HueBulbs > 0)
                         foreach (var d in _hue.HueBulbsDat.ToList())
                         {
@@ -593,7 +615,7 @@ namespace Chromatics
                             _dGmode.DisplayStyleForCurrentCellOnly = true;
                             var lState = _hue.HueStateMemory[d.Key.UniqueId];
 
-                            var huedGDevice = (DataGridViewRow)dG_devices.Rows[0].Clone();
+                            var huedGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
                             huedGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = d.Key.Name + " (" +
                                                                                                   d.Key.UniqueId +
                                                                                                   ")";
@@ -644,9 +666,14 @@ namespace Chromatics
 
                             if (duplicate) continue;
                             */
-                            dG_devices.Rows.Add(huedGDevice);
+                            //dG_devices.Rows.Add(huedGDevice);
+                            dgV[i] = huedGDevice;
+                            i++;
                             huedGDeviceDgc.ReadOnly = d.Value == 0 ? true : false;
                         }
+
+                    dG_devices.Rows.AddRange(dgV);
+                }
 
                 DeviceGridStartup = true;
                 dG_devices.AllowUserToAddRows = false;
