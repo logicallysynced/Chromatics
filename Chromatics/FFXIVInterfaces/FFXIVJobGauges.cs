@@ -18,7 +18,7 @@ namespace Chromatics
 {
     partial class Chromatics
     {
-        public void ImplementJobGauges(List<StatusEntry> statEffects, Color baseColor)
+        public void ImplementJobGauges(List<StatusItem> statEffects, Color baseColor)
         { 
             if (ChromaticsSettings.ChromaticsSettingsJobGaugeToggle)
             {

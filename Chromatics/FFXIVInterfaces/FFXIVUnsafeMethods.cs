@@ -10,7 +10,7 @@ namespace Chromatics.FFXIVInterfaces
 {
     public class FFXIVUnsafeMethods
     {
-        public void CallLcdData(ILogitechLcd sender, ActorEntity _pI, ActorEntity _tI)
+        public void CallLcdData(ILogitechLcd sender, ActorItem _pI, ActorItem _tI)
         {
             sender.DrawLCDInfo(_pI, _tI);
         }

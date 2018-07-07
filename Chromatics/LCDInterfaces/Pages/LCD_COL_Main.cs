@@ -33,8 +33,8 @@ namespace Chromatics.LCDInterfaces
             new[] { "Mana", "124.150.157.156" }
         };
         
-        public ActorEntity PlayerInfo { get; set; }
-        public ActorEntity TargetInfo { get; set; }
+        public ActorItem PlayerInfo { get; set; }
+        public ActorItem TargetInfo { get; set; }
         //public PlayerEntity PlayerEntity { get; set; }
 
         private string _jobmem = "";
@@ -46,31 +46,31 @@ namespace Chromatics.LCDInterfaces
 
             if (InvokeRequired)
             {
-                pB_job.Invoke((Action)delegate { pB_job.Visible = false; });
-                pB_buff_1.Invoke((Action)delegate { pB_buff_1.Visible = false; });
-                pB_buff_2.Invoke((Action)delegate { pB_buff_2.Visible = false; });
-                pB_buff_3.Invoke((Action)delegate { pB_buff_3.Visible = false; });
-                pB_buff_4.Invoke((Action)delegate { pB_buff_4.Visible = false; });
-                pB_buff_5.Invoke((Action)delegate { pB_buff_5.Visible = false; });
-                pB_buff_6.Invoke((Action)delegate { pB_buff_6.Visible = false; });
-                pB_buff_7.Invoke((Action)delegate { pB_buff_7.Visible = false; });
-                pB_buff_8.Invoke((Action)delegate { pB_buff_8.Visible = false; });
-                pB_buff_9.Invoke((Action)delegate { pB_buff_9.Visible = false; });
-                pB_buff_10.Invoke((Action)delegate { pB_buff_10.Visible = false; });
-                pB_buff_11.Invoke((Action)delegate { pB_buff_11.Visible = false; });
-                pB_buff_12.Invoke((Action)delegate { pB_buff_12.Visible = false; });
-                pB_debuff_1.Invoke((Action)delegate { pB_debuff_1.Visible = false; });
-                pB_debuff_2.Invoke((Action)delegate { pB_debuff_2.Visible = false; });
-                pB_debuff_3.Invoke((Action)delegate { pB_debuff_3.Visible = false; });
-                pB_debuff_4.Invoke((Action)delegate { pB_debuff_4.Visible = false; });
-                pB_debuff_5.Invoke((Action)delegate { pB_debuff_5.Visible = false; });
-                pB_debuff_6.Invoke((Action)delegate { pB_debuff_6.Visible = false; });
-                pB_debuff_7.Invoke((Action)delegate { pB_debuff_7.Visible = false; });
-                pB_debuff_8.Invoke((Action)delegate { pB_debuff_8.Visible = false; });
-                pB_debuff_9.Invoke((Action)delegate { pB_debuff_9.Visible = false; });
-                pB_debuff_10.Invoke((Action)delegate { pB_debuff_10.Visible = false; });
-                pB_debuff_11.Invoke((Action)delegate { pB_debuff_11.Visible = false; });
-                pB_debuff_12.Invoke((Action)delegate { pB_debuff_12.Visible = false; });
+                pB_job.Invoke((System.Action)delegate { pB_job.Visible = false; });
+                pB_buff_1.Invoke((System.Action)delegate { pB_buff_1.Visible = false; });
+                pB_buff_2.Invoke((System.Action)delegate { pB_buff_2.Visible = false; });
+                pB_buff_3.Invoke((System.Action)delegate { pB_buff_3.Visible = false; });
+                pB_buff_4.Invoke((System.Action)delegate { pB_buff_4.Visible = false; });
+                pB_buff_5.Invoke((System.Action)delegate { pB_buff_5.Visible = false; });
+                pB_buff_6.Invoke((System.Action)delegate { pB_buff_6.Visible = false; });
+                pB_buff_7.Invoke((System.Action)delegate { pB_buff_7.Visible = false; });
+                pB_buff_8.Invoke((System.Action)delegate { pB_buff_8.Visible = false; });
+                pB_buff_9.Invoke((System.Action)delegate { pB_buff_9.Visible = false; });
+                pB_buff_10.Invoke((System.Action)delegate { pB_buff_10.Visible = false; });
+                pB_buff_11.Invoke((System.Action)delegate { pB_buff_11.Visible = false; });
+                pB_buff_12.Invoke((System.Action)delegate { pB_buff_12.Visible = false; });
+                pB_debuff_1.Invoke((System.Action)delegate { pB_debuff_1.Visible = false; });
+                pB_debuff_2.Invoke((System.Action)delegate { pB_debuff_2.Visible = false; });
+                pB_debuff_3.Invoke((System.Action)delegate { pB_debuff_3.Visible = false; });
+                pB_debuff_4.Invoke((System.Action)delegate { pB_debuff_4.Visible = false; });
+                pB_debuff_5.Invoke((System.Action)delegate { pB_debuff_5.Visible = false; });
+                pB_debuff_6.Invoke((System.Action)delegate { pB_debuff_6.Visible = false; });
+                pB_debuff_7.Invoke((System.Action)delegate { pB_debuff_7.Visible = false; });
+                pB_debuff_8.Invoke((System.Action)delegate { pB_debuff_8.Visible = false; });
+                pB_debuff_9.Invoke((System.Action)delegate { pB_debuff_9.Visible = false; });
+                pB_debuff_10.Invoke((System.Action)delegate { pB_debuff_10.Visible = false; });
+                pB_debuff_11.Invoke((System.Action)delegate { pB_debuff_11.Visible = false; });
+                pB_debuff_12.Invoke((System.Action)delegate { pB_debuff_12.Visible = false; });
             }
             else
             {
@@ -151,7 +151,7 @@ namespace Chromatics.LCDInterfaces
             {
                 if (InvokeRequired)
                 {
-                    Invoke((Action)delegate { BackgroundImage = Properties.Resources.col_main_back_battle; });
+                    Invoke((System.Action)delegate { BackgroundImage = Properties.Resources.col_main_back_battle; });
                 }
                 else
                 {
@@ -162,7 +162,7 @@ namespace Chromatics.LCDInterfaces
             {
                 if (InvokeRequired)
                 {
-                    Invoke((Action)delegate { BackgroundImage = Properties.Resources.col_main_back; });
+                    Invoke((System.Action)delegate { BackgroundImage = Properties.Resources.col_main_back; });
                 }
                 else
                 {
@@ -189,9 +189,9 @@ namespace Chromatics.LCDInterfaces
                 
                 if (InvokeRequired)
                 {
-                    lbl_lvl.Invoke((Action)delegate { lbl_et.Text = lvl; });
-                    lbl_job.Invoke((Action)delegate { lbl_job.Text = job; });
-                    prog_hp.Invoke((Action)delegate { prog_hp.Value = hp - 1; });
+                    lbl_lvl.Invoke((System.Action)delegate { lbl_et.Text = lvl; });
+                    lbl_job.Invoke((System.Action)delegate { lbl_job.Text = job; });
+                    prog_hp.Invoke((System.Action)delegate { prog_hp.Value = hp - 1; });
                 }
                 else
                 {
@@ -326,7 +326,7 @@ namespace Chromatics.LCDInterfaces
                     {
                         if (InvokeRequired)
                         {
-                            pB_job.Invoke((Action) delegate { pB_job.ImageLocation = filepath; pB_job.Visible = true; });
+                            pB_job.Invoke((System.Action) delegate { pB_job.ImageLocation = filepath; pB_job.Visible = true; });
                         }
                         else
                         {
@@ -350,7 +350,7 @@ namespace Chromatics.LCDInterfaces
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = enviroment + @"/core/img/status/";
 
-            var statEffects = PlayerInfo?.StatusEntries;
+            var statEffects = PlayerInfo?.StatusItems;
             if (statEffects == null)
             {
                 for (var ci = 1; ci < 25; ci++)
@@ -360,7 +360,7 @@ namespace Chromatics.LCDInterfaces
 
                     if (InvokeRequired)
                     {
-                        pbx.Invoke((Action)delegate { pbx.Visible = true; });
+                        pbx.Invoke((System.Action)delegate { pbx.Visible = true; });
                     }
                     else
                     {
@@ -371,25 +371,25 @@ namespace Chromatics.LCDInterfaces
                 return;
             }
 
-            var battleActions = statEffects.Where(p => !p.IsCompanyAction).Take(24).ToList();
+            var battleSystem = statEffects.Where(p => !p.IsCompanyAction).Take(24).ToList();
 
-            //Actions
+            //System.Actions
             for (var ci = 1; ci < 25; ci++)
             {
                 var pb = ReturnBuff(ci);
                 
                 if (pb == null) continue;
 
-                if (ci <= battleActions.Count)
+                if (ci <= battleSystem.Count)
                 {
-                    var action = battleActions[ci - 1].StatusName.Replace(" ", "_").ToLower() + @".png";
+                    var action = battleSystem[ci - 1].StatusName.Replace(" ", "_").ToLower() + @".png";
 
                     var filename = path + action;
                     if (!File.Exists(filename))
                     {
                         if (InvokeRequired)
                         {
-                            pb.Invoke((Action)delegate { pb.Visible = false; });
+                            pb.Invoke((System.Action)delegate { pb.Visible = false; });
                         }
                         else
                         {
@@ -400,7 +400,7 @@ namespace Chromatics.LCDInterfaces
 
                     if (InvokeRequired)
                     {
-                        pb.Invoke((Action)delegate { pb.Visible = true; pb.ImageLocation = filename; });
+                        pb.Invoke((System.Action)delegate { pb.Visible = true; pb.ImageLocation = filename; });
                     }
                     else
                     {
@@ -413,7 +413,7 @@ namespace Chromatics.LCDInterfaces
                 {
                     if (InvokeRequired)
                     {
-                        pb.Invoke((Action)delegate { pb.Visible = false; });
+                        pb.Invoke((System.Action)delegate { pb.Visible = false; });
                     }
                     else
                     {
@@ -534,7 +534,7 @@ namespace Chromatics.LCDInterfaces
             {
                 if (InvokeRequired)
                 {
-                    lbl_et.Invoke((Action)delegate { lbl_et.Text = eorzeatime; });
+                    lbl_et.Invoke((System.Action)delegate { lbl_et.Text = eorzeatime; });
                 }
                 else
                 {
@@ -562,8 +562,8 @@ namespace Chromatics.LCDInterfaces
             {
                 if (InvokeRequired)
                 {
-                    lbl_latency.Invoke((Action)delegate { lbl_latency.Text = result; });
-                    lbl_server.Invoke((Action)delegate { lbl_server.Text = serverList[currentServer - 1][0]; });
+                    lbl_latency.Invoke((System.Action)delegate { lbl_latency.Text = result; });
+                    lbl_server.Invoke((System.Action)delegate { lbl_server.Text = serverList[currentServer - 1][0]; });
                 }
                 else
                 {

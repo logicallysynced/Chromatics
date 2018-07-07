@@ -149,7 +149,7 @@ namespace Chromatics.LCDInterfaces
     public interface ILogitechLcd
     {
         bool InitializeLcd();
-        void DrawLCDInfo(ActorEntity _pI, ActorEntity _tI);
+        void DrawLCDInfo(ActorItem _pI, ActorItem _tI);
         void StatusLCDInfo(string text);
         void ShutdownLcd();
 
@@ -284,7 +284,7 @@ namespace Chromatics.LCDInterfaces
         }
 
         
-        public void DrawLCDInfo(ActorEntity _pI, ActorEntity _tI)
+        public void DrawLCDInfo(ActorItem _pI, ActorItem _tI)
         {
             if (!startup)
             {

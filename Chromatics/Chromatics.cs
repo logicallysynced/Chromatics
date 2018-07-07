@@ -63,7 +63,8 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.4.1";
+        private readonly string _currentVersionX = "2.4.2";
+        private readonly bool _debugmode = true;
         public bool DeviceGridStartup = false;
 
         public bool EffectRunning = false;
@@ -356,6 +357,37 @@ namespace Chromatics
 
                     WriteConsole(ConsoleTypes.Ffxiv, @"Language change detected. Clearing Cache..");
                     ChromaticsSettings.ChromaticsSettingsPreviousLanguage = ChromaticsSettings.ChromaticsSettingsLanguage;
+                }
+
+                if (!ChromaticsSettings.FirstRun)
+                {
+                    if (File.Exists(enviroment + @"/signatures-x64.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/signatures-x64.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/structures-x64.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/structures-x64.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/actions.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/actions.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/statuses.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/statuses.json");
+                    }
+
+                    if (File.Exists(enviroment + @"/zones.json"))
+                    {
+                        FileSystem.DeleteFile(enviroment + @"/zones.json");
+                    }
+
+                    ChromaticsSettings.FirstRun = true;
+                    SaveChromaticsSettings(0);
                 }
             }
 
@@ -693,7 +725,13 @@ namespace Chromatics
         {
             try
             {
-                var currentVersion = _currentVersionX.Replace(".", string.Empty); //UPDATE ME
+                var currentVersion = _currentVersionX.Replace(".", string.Empty);
+
+                if (_debugmode)
+                {
+                    currentVersion = (Convert.ToInt32(currentVersion) - 1).ToString();
+                }
+
                 string newVersion;
                 var webRequest = WebRequest.Create(@"https://chromaticsffxiv.com/chromatics2/update/version.txt");
 

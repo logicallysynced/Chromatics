@@ -100,6 +100,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsDesktopNotifications = true;
         public bool ChromaticsSettingsLcdEnabled = false;
         public string FinalFantasyXivVersion = "4.31";
+        public bool FirstRun = false;
     }
 
     //Color Mapping

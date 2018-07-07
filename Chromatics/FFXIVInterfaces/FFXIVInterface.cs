@@ -49,9 +49,9 @@ namespace Chromatics
         private bool _lastcast;
         private bool _menuNotify;
 
-        private ActorEntity _playerInfo = new ActorEntity();
-        private ActorEntity _menuInfo = new ActorEntity();
-        private ConcurrentDictionary<uint, ActorEntity> _playerInfoX = new ConcurrentDictionary<uint, ActorEntity>();
+        private ActorItem _playerInfo = new ActorItem();
+        private ActorItem _menuInfo = new ActorItem();
+        private ConcurrentDictionary<uint, ActorItem> _playerInfoX = new ConcurrentDictionary<uint, ActorItem>();
 
         private bool _playgroundonce;
         private bool _successcast;
@@ -326,8 +326,8 @@ namespace Chromatics
                     if (processes11.Length == 0)
                         FfxivGameStop();
 
-                    _playerInfoX = Reader.GetActors().PCEntities;
-                    _menuInfo = ActorEntity.CurrentUser; //Reader.GetPlayerInfo().PlayerEntity;
+                    _playerInfoX = Reader.GetActors().CurrentPCs;
+                    _menuInfo = ActorItem.CurrentUser; //Reader.GetPlayerInfo().PlayerEntity;
                     
                     if (_playerInfoX.Count == 0)
                     {
@@ -586,39 +586,42 @@ namespace Chromatics
             try
             {
                 //Get Data
-                var targetInfo = new ActorEntity();
-                var targetEmnityInfo = new List<EnmityEntry>();
-                var partyInfo = new ConcurrentDictionary<uint, PartyEntity>();
-                var partyListNew = new List<uint>();
-                var partyListOld = new Dictionary<uint, uint>();
+                var targetInfo = new ActorItem();
+                var targetEmnityInfo = new List<EnmityItem>();
+                var partyInfo = new ConcurrentDictionary<uint, PartyMember>();
+                var partyListNew = new ConcurrentDictionary<uint, PartyMember>();
+                var partyListOld = new ConcurrentDictionary<uint, PartyMember>();
                 //var personalInfo = new PlayerEntity();
 
+
+                Reader.GetActors();
                 //_playerInfoX = Reader.GetActors()?.PCEntities;
-                _playerInfo = ActorEntity.CurrentUser;
-                var _playerData = Reader.GetPlayerInfo().PlayerEntity;
-                
+                _playerInfo = ActorItem.CurrentUser;
+                var _playerData = Reader.GetCurrentPlayer();
+
+
                 try
                 {
                     if (_playerInfo.Name != "" && _playerInfo.TargetType != Actor.TargetType.Unknown)
                     {
                         if (Reader.CanGetTargetInfo())
                         {
-                            targetInfo = Reader.GetTargetInfo()?.TargetEntity?.CurrentTarget;
+                            targetInfo = Reader.GetTargetInfo()?.TargetInfo?.CurrentTarget;
                         }
 
                         if (Reader.CanGetEnmityEntities())
                         {
-                            targetEmnityInfo = Reader.GetTargetInfo()?.TargetEntity?.EnmityEntries;
+                            targetEmnityInfo = Reader.GetTargetInfo()?.TargetInfo?.EnmityItems;
                         }
 
                         //Console.WriteLine(@"Name:" + targetInfo.Name);
                     }
 
 
-                    partyInfo = Reader.GetPartyMembers()?.PartyEntities;
+                    partyInfo = Reader.GetPartyMembers()?.PartyMembers;
 
-                    partyListNew = Reader.GetPartyMembers()?.NewParty;
-                    partyListOld = Reader.GetPartyMembers()?.RemovedParty;
+                    partyListNew = Reader.GetPartyMembers()?.NewPartyMembers;
+                    partyListOld = Reader.GetPartyMembers()?.RemovedPartyMembers;
 
                     //personalInfo = Reader.GetPlayerInfo()?.PlayerEntity;
 
@@ -885,7 +888,7 @@ namespace Chromatics
                                     if (partyInfo != null && i < partyInfo.Count)
                                     {
                                         //Console.WriteLine(i);
-                                        var pid = partyListNew[Convert.ToInt32(i)];
+                                        //var pid = partyListNew[i];
                                         string ptType;
                                         string ptTpcurrent;
                                         string ptTppercent;
@@ -904,7 +907,7 @@ namespace Chromatics
                                             emnitytableX.OrderBy(kvp => kvp.Value);
 
                                             //Get your index in the list
-                                            ptEmnityno = emnitytableX.FindIndex(a => a.Key == partyInfo[pid].ID)
+                                            ptEmnityno = emnitytableX.FindIndex(a => a.Key == partyInfo[i].ID)
                                                 .ToString();
                                         }
                                         else
@@ -912,7 +915,7 @@ namespace Chromatics
                                             ptEmnityno = "0";
                                         }
 
-                                        switch (partyInfo[pid].Job)
+                                        switch (partyInfo[i].Job)
                                         {
                                             case Actor.Job.FSH:
                                                 ptType = "player";
@@ -1071,11 +1074,11 @@ namespace Chromatics
                                             ptTpcurrent = "1000";
                                         }
 
-                                        datastring[i] = "1," + ptType + "," + partyInfo[pid].Name + "," +
-                                                        partyInfo[pid].HPPercent.ToString("#0%") + "," +
-                                                        partyInfo[pid].HPCurrent + "," +
-                                                        partyInfo[pid].MPPercent.ToString("#0%") + "," +
-                                                        partyInfo[pid].MPCurrent + "," + ptTppercent + "," +
+                                        datastring[i] = "1," + ptType + "," + partyInfo[i].Name + "," +
+                                                        partyInfo[i].HPPercent.ToString("#0%") + "," +
+                                                        partyInfo[i].HPCurrent + "," +
+                                                        partyInfo[i].MPPercent.ToString("#0%") + "," +
+                                                        partyInfo[i].MPCurrent + "," + ptTppercent + "," +
                                                         ptTpcurrent +
                                                         "," + ptEmnityno + "," + ptJob;
                                         //Console.WriteLine(i + @": " + datastring[i]);
@@ -1516,8 +1519,10 @@ namespace Chromatics
 
                         //if (PlayerInfo.IsClaimed)
                         //{
-                        var statEffects = _playerInfo.StatusEntries;
-
+                        
+                        
+                        var statEffects = _playerInfo.StatusItems;
+                        
                         if (statEffects.Count > 0)
                         {
                             var status = statEffects.Last();
@@ -1791,7 +1796,7 @@ namespace Chromatics
                                 }
                             //}
                         }
-
+                        
 
                         //Target
                         if (targetInfo != null)
@@ -4844,6 +4849,8 @@ namespace Chromatics
                             var polHpz = (currentHp - 0) * (65535 - 0) / (maxHp - 0) + 0;
                             var polHpz2 = (currentHp - 0) * (1.0 - 0.0) / (maxHp - 0) + 0.0;
 
+                            //Console.WriteLine(currentHp + @"/" + maxHp);
+
                             //Debug.WriteLine(polHpz2);
 
                             GlobalUpdateBulbStateBrightness(BulbModeTypes.HpTracker,
@@ -6163,25 +6170,25 @@ namespace Chromatics
                                 {
                                     FfxivHotbar.Keybindwhitelist.Clear();
 
-                                    foreach (var hotbar in hotbars.ActionEntities)
+                                    foreach (var hotbar in hotbars.ActionContainers)
                                     {
-                                        if (hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_1 ||
-                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_2 ||
-                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_3 ||
-                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_4 ||
-                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_5 ||
-                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_6 ||
-                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_7 ||
-                                            hotbar.Type == HotBarRecast.Container.CROSS_HOTBAR_8 ||
-                                            hotbar.Type == HotBarRecast.Container.CROSS_PETBAR) continue;
+                                        if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_1 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_2 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_3 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_4 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_5 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_6 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_7 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_8 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_PETBAR) continue;
 
-                                        foreach (var action in hotbar.Actions)
+                                        foreach (var action in hotbar.ActionItems)
                                         {
                                             if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) ||
                                                 string.IsNullOrEmpty(action.KeyBinds) ||
                                                 string.IsNullOrEmpty(action.ActionKey)) continue;
 
-                                            //Console.WriteLine(@"key: " + action.ActionKey);
+                                            //Console.WriteLine(action.Name);
                                             
                                             //Collect Modifier Info
                                             var modsactive = action.Modifiers.Count;
@@ -6360,7 +6367,7 @@ namespace Chromatics
                                                                 if (action.IsProcOrCombo)
                                                                 {
                                                                     //Action Proc'd
-                                                                    if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                    if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.PETBAR)
                                                                     {
                                                                         GlobalApplyMapKeyLighting(keyid,
                                                                             ColorTranslator.FromHtml(ColorMappings
@@ -6375,7 +6382,7 @@ namespace Chromatics
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                    if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.PETBAR)
                                                                     {
                                                                         if (action.CoolDownPercent > 0)
                                                                             GlobalApplyMapKeyLighting(keyid,
@@ -6405,7 +6412,7 @@ namespace Chromatics
                                                             }
                                                             else
                                                             {
-                                                                if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.PETBAR)
                                                                 {
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
@@ -6421,7 +6428,7 @@ namespace Chromatics
                                                         }
                                                         else
                                                         {
-                                                            if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                            if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.PETBAR)
                                                             {
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
@@ -6441,8 +6448,7 @@ namespace Chromatics
                                                 if (FfxivHotbar.Keybindtranslation.ContainsKey(action.ActionKey))
                                                 {
                                                     var keyid = FfxivHotbar.Keybindtranslation[action.ActionKey];
-
-
+                                                    
                                                     if (_modsactive == 0)
                                                        
                                                         if (action.Category == 49 || action.Category == 51)
@@ -6564,7 +6570,7 @@ namespace Chromatics
                                                             {
                                                                 if (action.IsProcOrCombo)
                                                                 {
-                                                                    if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                    if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.PETBAR)
                                                                     {
                                                                         //Action Proc'd
                                                                         GlobalApplyMapKeyLighting(keyid,
@@ -6581,7 +6587,7 @@ namespace Chromatics
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                    if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.PETBAR)
                                                                     {
                                                                         if (action.CoolDownPercent > 0)
                                                                             GlobalApplyMapKeyLighting(keyid,
@@ -6611,7 +6617,7 @@ namespace Chromatics
                                                             }
                                                             else
                                                             {
-                                                                if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                                if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.PETBAR)
                                                                 {
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
@@ -6627,7 +6633,7 @@ namespace Chromatics
                                                         }
                                                         else
                                                         {
-                                                            if (hotbar.Type == HotBarRecast.Container.PETBAR)
+                                                            if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.PETBAR)
                                                             {
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
@@ -6738,7 +6744,7 @@ namespace Chromatics
                             if (_LightbarMode == LightbarMode.CurrentExp)
                             {
 
-                                var _role = _playerData.WVR_CurrentEXP;
+                                var _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
                                 var _currentlvl = 0;
 
                                 var expcolempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingExpEmpty);
@@ -6748,151 +6754,151 @@ namespace Chromatics
                                 switch (_playerInfo.Job)
                                 {
                                     case Actor.Job.Unknown:
-                                        _role = _playerData.WVR_CurrentEXP;
+                                        _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
                                         _currentlvl = 0;
                                         break;
                                     case Actor.Job.GLD:
-                                        _role = _playerData.GLD_CurrentEXP;
-                                        _currentlvl = _playerData.GLD;
+                                        _role = _playerData.CurrentPlayer.GLD_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.GLD;
                                         break;
                                     case Actor.Job.PGL:
-                                        _role = _playerData.PGL_CurrentEXP;
-                                        _currentlvl = _playerData.PGL;
+                                        _role = _playerData.CurrentPlayer.PGL_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.PGL;
                                         break;
                                     case Actor.Job.MRD:
-                                        _role = _playerData.MRD_CurrentEXP;
-                                        _currentlvl = _playerData.MRD;
+                                        _role = _playerData.CurrentPlayer.MRD_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.MRD;
                                         break;
                                     case Actor.Job.LNC:
-                                        _role = _playerData.LNC_CurrentEXP;
-                                        _currentlvl = _playerData.LNC;
+                                        _role = _playerData.CurrentPlayer.LNC_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.LNC;
                                         break;
                                     case Actor.Job.ARC:
-                                        _role = _playerData.ARC_CurrentEXP;
-                                        _currentlvl = _playerData.ARC;
+                                        _role = _playerData.CurrentPlayer.ARC_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ARC;
                                         break;
                                     case Actor.Job.CNJ:
-                                        _role = _playerData.CNJ_CurrentEXP;
-                                        _currentlvl = _playerData.CNJ;
+                                        _role = _playerData.CurrentPlayer.CNJ_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.CNJ;
                                         break;
                                     case Actor.Job.THM:
-                                        _role = _playerData.THM_CurrentEXP;
-                                        _currentlvl = _playerData.THM;
+                                        _role = _playerData.CurrentPlayer.THM_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.THM;
                                         break;
                                     case Actor.Job.CPT:
-                                        _role = _playerData.CPT_CurrentEXP;
-                                        _currentlvl = _playerData.CPT;
+                                        _role = _playerData.CurrentPlayer.CPT_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.CPT;
                                         break;
                                     case Actor.Job.BSM:
-                                        _role = _playerData.BSM_CurrentEXP;
-                                        _currentlvl = _playerData.BSM;
+                                        _role = _playerData.CurrentPlayer.BSM_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.BSM;
                                         break;
                                     case Actor.Job.ARM:
-                                        _role = _playerData.ARM_CurrentEXP;
-                                        _currentlvl = _playerData.ARM;
+                                        _role = _playerData.CurrentPlayer.ARM_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ARM;
                                         break;
                                     case Actor.Job.GSM:
-                                        _role = _playerData.GSM_CurrentEXP;
-                                        _currentlvl = _playerData.GSM;
+                                        _role = _playerData.CurrentPlayer.GSM_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.GSM;
                                         break;
                                     case Actor.Job.LTW:
-                                        _role = _playerData.LTW_CurrentEXP;
-                                        _currentlvl = _playerData.LTW;
+                                        _role = _playerData.CurrentPlayer.LTW_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.LTW;
                                         break;
                                     case Actor.Job.WVR:
-                                        _role = _playerData.WVR_CurrentEXP;
-                                        _currentlvl = _playerData.WVR;
+                                        _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.WVR;
                                         break;
                                     case Actor.Job.ALC:
-                                        _role = _playerData.ALC_CurrentEXP;
-                                        _currentlvl = _playerData.ALC;
+                                        _role = _playerData.CurrentPlayer.ALC_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ALC;
                                         break;
                                     case Actor.Job.CUL:
-                                        _role = _playerData.CUL_CurrentEXP;
-                                        _currentlvl = _playerData.CUL;
+                                        _role = _playerData.CurrentPlayer.CUL_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.CUL;
                                         break;
                                     case Actor.Job.MIN:
-                                        _role = _playerData.MIN_CurrentEXP;
-                                        _currentlvl = _playerData.MIN;
+                                        _role = _playerData.CurrentPlayer.MIN_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.MIN;
                                         break;
                                     case Actor.Job.BTN:
-                                        _role = _playerData.BTN_CurrentEXP;
-                                        _currentlvl = _playerData.BTN;
+                                        _role = _playerData.CurrentPlayer.BTN_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.BTN;
                                         break;
                                     case Actor.Job.FSH:
-                                        _role = _playerData.FSH_CurrentEXP;
-                                        _currentlvl = _playerData.FSH;
+                                        _role = _playerData.CurrentPlayer.FSH_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.FSH;
                                         break;
                                     case Actor.Job.PLD:
-                                        _role = _playerData.GLD_CurrentEXP;
-                                        _currentlvl = _playerData.GLD;
+                                        _role = _playerData.CurrentPlayer.GLD_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.GLD;
                                         break;
                                     case Actor.Job.MNK:
-                                        _role = _playerData.PGL_CurrentEXP;
-                                        _currentlvl = _playerData.PGL;
+                                        _role = _playerData.CurrentPlayer.PGL_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.PGL;
                                         break;
                                     case Actor.Job.WAR:
-                                        _role = _playerData.MRD_CurrentEXP;
-                                        _currentlvl = _playerData.MRD;
+                                        _role = _playerData.CurrentPlayer.MRD_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.MRD;
                                         break;
                                     case Actor.Job.DRG:
-                                        _role = _playerData.LNC_CurrentEXP;
-                                        _currentlvl = _playerData.LNC;
+                                        _role = _playerData.CurrentPlayer.LNC_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.LNC;
                                         break;
                                     case Actor.Job.BRD:
-                                        _role = _playerData.ARC_CurrentEXP;
-                                        _currentlvl = _playerData.ARC;
+                                        _role = _playerData.CurrentPlayer.ARC_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ARC;
                                         break;
                                     case Actor.Job.WHM:
-                                        _role = _playerData.CNJ_CurrentEXP;
-                                        _currentlvl = _playerData.CNJ;
+                                        _role = _playerData.CurrentPlayer.CNJ_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.CNJ;
                                         break;
                                     case Actor.Job.BLM:
-                                        _role = _playerData.THM_CurrentEXP;
-                                        _currentlvl = _playerData.THM;
+                                        _role = _playerData.CurrentPlayer.THM_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.THM;
                                         break;
                                     case Actor.Job.ACN:
-                                        _role = _playerData.ACN_CurrentEXP;
-                                        _currentlvl = _playerData.ACN;
+                                        _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ACN;
                                         break;
                                     case Actor.Job.SMN:
-                                        _role = _playerData.ACN_CurrentEXP;
-                                        _currentlvl = _playerData.ACN;
+                                        _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ACN;
                                         break;
                                     case Actor.Job.SCH:
-                                        _role = _playerData.ACN_CurrentEXP;
-                                        _currentlvl = _playerData.ACN;
+                                        _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ACN;
                                         break;
                                     case Actor.Job.ROG:
-                                        _role = _playerData.ROG_CurrentEXP;
-                                        _currentlvl = _playerData.ROG;
+                                        _role = _playerData.CurrentPlayer.ROG_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ROG;
                                         break;
                                     case Actor.Job.NIN:
-                                        _role = _playerData.ROG_CurrentEXP;
-                                        _currentlvl = _playerData.ROG;
+                                        _role = _playerData.CurrentPlayer.ROG_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.ROG;
                                         break;
                                     case Actor.Job.MCH:
-                                        _role = _playerData.MCH_CurrentEXP;
-                                        _currentlvl = _playerData.MCH;
+                                        _role = _playerData.CurrentPlayer.MCH_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.MCH;
                                         break;
                                     case Actor.Job.DRK:
-                                        _role = _playerData.DRK_CurrentEXP;
-                                        _currentlvl = _playerData.DRK;
+                                        _role = _playerData.CurrentPlayer.DRK_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.DRK;
                                         break;
                                     case Actor.Job.AST:
-                                        _role = _playerData.AST_CurrentEXP;
-                                        _currentlvl = _playerData.AST;
+                                        _role = _playerData.CurrentPlayer.AST_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.AST;
                                         break;
                                     case Actor.Job.SAM:
-                                        _role = _playerData.SAM_CurrentEXP;
-                                        _currentlvl = _playerData.SAM;
+                                        _role = _playerData.CurrentPlayer.SAM_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.SAM;
                                         break;
                                     case Actor.Job.RDM:
-                                        _role = _playerData.RDM_CurrentEXP;
-                                        _currentlvl = _playerData.RDM;
+                                        _role = _playerData.CurrentPlayer.RDM_CurrentEXP;
+                                        _currentlvl = _playerData.CurrentPlayer.RDM;
                                         break;
                                     default:
-                                        _role = _playerData.WVR_CurrentEXP;
+                                        _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
                                         _currentlvl = 0;
                                         break;
                                 }

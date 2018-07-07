@@ -544,9 +544,7 @@ namespace Chromatics
                             lifxdGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = lState == 0
                                 ? "Disabled"
                                 : "Enabled";
-                            lifxdGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = lState == 0
-                                ? false
-                                : true;
+                            lifxdGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = lState != 0;
                             lifxdGDevice.Cells[dG_devices.Columns["col_dattype"].Index].Value = "LIFX";
                             lifxdGDevice.Cells[dG_devices.Columns["col_ID"].Index].Value = d.Key.MacAddressName;
 
@@ -624,9 +622,7 @@ namespace Chromatics
                             huedGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = lState == 0
                                 ? "Disabled"
                                 : "Enabled";
-                            huedGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = lState == 0
-                                ? false
-                                : true;
+                            huedGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = lState != 0;
                             huedGDevice.Cells[dG_devices.Columns["col_dattype"].Index].Value = "HUE";
                             huedGDevice.Cells[dG_devices.Columns["col_ID"].Index].Value = d.Key.UniqueId;
 
