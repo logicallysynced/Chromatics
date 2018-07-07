@@ -267,7 +267,7 @@ namespace Chromatics
                 }
             }
         }
-
+        
         private void SaveColorMappings(int report)
         {
             //if (report == 1)

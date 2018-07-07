@@ -103,6 +103,7 @@
             this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
+            this.chk_vegasmode = new System.Windows.Forms.CheckBox();
             this.chk_cutscenes = new System.Windows.Forms.CheckBox();
             this.chk_reactiveweather = new System.Windows.Forms.CheckBox();
             this.chk_showstats = new System.Windows.Forms.CheckBox();
@@ -168,7 +169,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_vegasmode = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -803,6 +803,7 @@
             this.dG_devices.Size = new System.Drawing.Size(961, 465);
             this.dG_devices.TabIndex = 1;
             this.dG_devices.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dG_devices_CellValueChanged);
+            this.dG_devices.CurrentCellDirtyStateChanged += new System.EventHandler(this.dG_devices_CurrentCellDirtyStateChanged);
             // 
             // col_devicename
             // 
@@ -1032,6 +1033,18 @@
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
+            // 
+            // chk_vegasmode
+            // 
+            this.chk_vegasmode.AutoSize = true;
+            this.chk_vegasmode.Location = new System.Drawing.Point(272, 218);
+            this.chk_vegasmode.Name = "chk_vegasmode";
+            this.chk_vegasmode.Size = new System.Drawing.Size(240, 21);
+            this.chk_vegasmode.TabIndex = 11;
+            this.chk_vegasmode.Text = "Enable Gold Saucer Vegas Mode";
+            this.tooltip_main.SetToolTip(this.chk_vegasmode, "Displays color scrolling effects while in the Gold Saucer.\r\n\r\nDefault: OFF");
+            this.chk_vegasmode.UseVisualStyleBackColor = true;
+            this.chk_vegasmode.CheckedChanged += new System.EventHandler(this.chk_vegasmode_CheckedChanged);
             // 
             // chk_cutscenes
             // 
@@ -1744,18 +1757,6 @@
             this.notify_master.Text = "Chromatics";
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
-            // 
-            // chk_vegasmode
-            // 
-            this.chk_vegasmode.AutoSize = true;
-            this.chk_vegasmode.Location = new System.Drawing.Point(272, 218);
-            this.chk_vegasmode.Name = "chk_vegasmode";
-            this.chk_vegasmode.Size = new System.Drawing.Size(240, 21);
-            this.chk_vegasmode.TabIndex = 11;
-            this.chk_vegasmode.Text = "Enable Gold Saucer Vegas Mode";
-            this.tooltip_main.SetToolTip(this.chk_vegasmode, "Displays color scrolling effects while in the Gold Saucer.\r\n\r\nDefault: OFF");
-            this.chk_vegasmode.UseVisualStyleBackColor = true;
-            this.chk_vegasmode.CheckedChanged += new System.EventHandler(this.chk_vegasmode_CheckedChanged);
             // 
             // Chromatics
             // 

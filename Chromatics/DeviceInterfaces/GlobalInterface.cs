@@ -2373,6 +2373,7 @@ namespace Chromatics
         }
 
         private readonly object lockObject = new object();
+        private readonly object lockCycle = new object();
         public void GlobalStepCycleEffect(int interval, CancellationTokenSource token)
         {
             //if (!_KeysSingleKeyModeEnabled && !_KeysMultiKeyModeEnabled) return;
@@ -2381,113 +2382,163 @@ namespace Chromatics
             {
                 lock (lockObject)
                 {
+                    var _lifxCycleStep = new int[6] {0, 0, 0, 0, 0, 0};
+
                     for (var x = 0; x <= 250; x += 5)
                     {
                         if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
 
-                        var col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255),
-                            (int)Math.Ceiling((double)(x * 100) / 255), 0);
+                        lock (lockCycle)
+                        {
+                            Thread.Sleep(10);
 
-                        if (_KeysSingleKeyModeEnabled)
-                            GlobalApplySingleZoneLighting(col);
+                            var col = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255),
+                                (int) Math.Ceiling((double) (x * 100) / 255), 0);
 
-                        if (_KeysMultiKeyModeEnabled)
-                            GlobalApplyMultiZoneLighting(col, "All");
+                            if (_KeysSingleKeyModeEnabled)
+                                GlobalApplySingleZoneLighting(col);
 
-                        if (LifxSdkCalled == 1)
-                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                            if (_KeysMultiKeyModeEnabled)
+                                GlobalApplyMultiZoneLighting(col, "All");
+
+                            if (LifxSdkCalled == 1 && _lifxCycleStep[0] != 1)
+                            {
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifxCycleStep[0] = 1;
+                            }
+                        }
 
                     }
 
                     for (var x = 250; x >= 5; x -= 5)
                     {
                         if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
 
-                        Color col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
-                            (int)Math.Ceiling((double)(250 * 100) / 255), 0);
+                        lock (lockCycle)
+                        {
+                            Thread.Sleep(10);
 
-                        if (_KeysSingleKeyModeEnabled)
-                            GlobalApplySingleZoneLighting(col);
+                            Color col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255),
+                                (int) Math.Ceiling((double) (250 * 100) / 255), 0);
 
-                        if (_KeysMultiKeyModeEnabled)
-                            GlobalApplyMultiZoneLighting(col, "All");
+                            if (_KeysSingleKeyModeEnabled)
+                                GlobalApplySingleZoneLighting(col);
 
-                        if (LifxSdkCalled == 1)
-                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                            if (_KeysMultiKeyModeEnabled)
+                                GlobalApplyMultiZoneLighting(col, "All");
+
+                            if (LifxSdkCalled == 1 && _lifxCycleStep[1] != 1)
+                            {
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifxCycleStep[1] = 1;
+                            }
+                        }
                     }
 
                     for (var x = 0; x <= 250; x += 5)
                     {
                         if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
 
-                        Color col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255),
-                            (int)Math.Ceiling((double)(250 * 100) / 255), 0);
+                        lock (lockCycle)
+                        {
+                            Thread.Sleep(10);
 
-                        if (_KeysSingleKeyModeEnabled)
-                            GlobalApplySingleZoneLighting(col);
+                            Color col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255),
+                                (int) Math.Ceiling((double) (250 * 100) / 255), 0);
 
-                        if (_KeysMultiKeyModeEnabled)
-                            GlobalApplyMultiZoneLighting(col, "All");
+                            if (_KeysSingleKeyModeEnabled)
+                                GlobalApplySingleZoneLighting(col);
 
-                        if (LifxSdkCalled == 1)
-                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                            if (_KeysMultiKeyModeEnabled)
+                                GlobalApplyMultiZoneLighting(col, "All");
+
+                            if (LifxSdkCalled == 1 && _lifxCycleStep[2] != 1)
+                            {
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifxCycleStep[2] = 1;
+                            }
+                        }
                     }
 
                     for (var x = 250; x >= 5; x -= 5)
                     {
                         if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
 
-                        Color col = Color.FromArgb(0, (int)Math.Ceiling((double)(x * 100) / 255),
-                            (int)Math.Ceiling((double)(250 * 100) / 255));
+                        lock (lockCycle)
+                        {
+                            Thread.Sleep(10);
 
-                        if (_KeysSingleKeyModeEnabled)
-                            GlobalApplySingleZoneLighting(col);
+                            Color col = Color.FromArgb(0, (int) Math.Ceiling((double) (x * 100) / 255),
+                                (int) Math.Ceiling((double) (250 * 100) / 255));
 
-                        if (_KeysMultiKeyModeEnabled)
-                            GlobalApplyMultiZoneLighting(col, "All");
+                            if (_KeysSingleKeyModeEnabled)
+                                GlobalApplySingleZoneLighting(col);
 
-                        if (LifxSdkCalled == 1)
-                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                            if (_KeysMultiKeyModeEnabled)
+                                GlobalApplyMultiZoneLighting(col, "All");
+
+                            if (LifxSdkCalled == 1 && _lifxCycleStep[3] != 1)
+                            {
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifxCycleStep[3] = 1;
+                            }
+                        }
                     }
 
                     for (var x = 0; x <= 250; x += 5)
                     {
                         if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
 
-                        Color col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), 0,
-                            (int)Math.Ceiling((double)(250 * 100) / 255));
+                        lock (lockCycle)
+                        {
+                            Thread.Sleep(10);
 
-                        if (_KeysSingleKeyModeEnabled)
-                            GlobalApplySingleZoneLighting(col);
+                            Color col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255), 0,
+                                (int) Math.Ceiling((double) (250 * 100) / 255));
 
-                        if (_KeysMultiKeyModeEnabled)
-                            GlobalApplyMultiZoneLighting(col, "All");
+                            if (_KeysSingleKeyModeEnabled)
+                                GlobalApplySingleZoneLighting(col);
 
-                        if (LifxSdkCalled == 1)
-                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                            if (_KeysMultiKeyModeEnabled)
+                                GlobalApplyMultiZoneLighting(col, "All");
+
+                            if (LifxSdkCalled == 1 && _lifxCycleStep[4] != 1)
+                            {
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifxCycleStep[4] = 1;
+                            }
+                        }
                     }
 
                     for (var x = 250; x >= 5; x -= 5)
                     {
                         if (token.IsCancellationRequested) break;
-                        Thread.Sleep(10);
 
-                        Color col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255), 0,
-                            (int)Math.Ceiling((double)(x * 100) / 255));
+                        lock (lockCycle)
+                        {
+                            Thread.Sleep(10);
 
-                        if (_KeysSingleKeyModeEnabled)
-                            GlobalApplySingleZoneLighting(col);
+                            Color col = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255), 0,
+                                (int) Math.Ceiling((double) (x * 100) / 255));
 
-                        if (_KeysMultiKeyModeEnabled)
-                            GlobalApplyMultiZoneLighting(col, "All");
+                            if (_KeysSingleKeyModeEnabled)
+                                GlobalApplySingleZoneLighting(col);
 
-                        if (LifxSdkCalled == 1)
-                            _lifx.LifxUpdateState(BulbModeTypes.Unknown, col, 100);
+                            if (_KeysMultiKeyModeEnabled)
+                                GlobalApplyMultiZoneLighting(col, "All");
+
+                            if (LifxSdkCalled == 1 && _lifxCycleStep[5] != 1)
+                            {
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifxCycleStep[5] = 1;
+                            }
+                        }
                     }
 
                     if (token.IsCancellationRequested) break;

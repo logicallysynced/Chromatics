@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Chromatics.Datastore;
 using CSharpAnalytics;
 using GalaSoft.MvvmLight.Ioc;
@@ -340,6 +343,8 @@ namespace Chromatics.DeviceInterfaces
             var version = await _client.GetDeviceVersionAsync(e.Device);
             var state = await _client.GetLightStateAsync(e.Device as LightBulb);
             var defaultmode = BulbModeTypes.Standby;
+
+            LoadLifxDevices();
             
             if (!_LifxModeMemory.ContainsKey(e.Device.MacAddressName))
             {
@@ -372,6 +377,51 @@ namespace Chromatics.DeviceInterfaces
                 "LIFX Bulb Found: " + state.Label + " (" + e.Device.MacAddressName + ")");
 
             Write.ResetDeviceDataGrid();
+        }
+
+        private void LoadLifxDevices()
+        {
+            var ds = new DeviceDataStore();
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = enviroment + @"/devices.chromatics";
+
+            if (File.Exists(path))
+            {
+                using (var sr = new StreamReader(path))
+                {
+                    try
+                    {
+                        var reader = new XmlSerializer(ds.GetType());
+                        var dr = (DeviceDataStore)reader.Deserialize(sr);
+                        sr.Close();
+
+                        var lifxLoad = dr.DeviceOperationLifxDevices;
+
+                        if (!string.IsNullOrEmpty(lifxLoad))
+                        {
+                            var lifxDevices = lifxLoad.Split(',');
+                            foreach (var ld in lifxDevices)
+                            {
+                                var lState = ld.Split('|');
+
+                                //BulbModeTypes LMode = BulbModeTypes.DISABLED;
+                                //LMode = LState[1].ToString();
+                                //int.TryParse(LState[1], out LMode);
+                                var lMode = (BulbModeTypes)Enum.Parse(typeof(BulbModeTypes), lState[1]);
+
+                                var lEnabled = 0;
+                                int.TryParse(lState[2], out lEnabled);
+                                _LifxModeMemory.Add(lState[0], lMode);
+                                _LifxStateMemory.Add(lState[0], lEnabled);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Write.WriteConsole(ConsoleTypes.Error, @"Error loading devices.chromatics. Error: " + ex.Message);
+                    }
+                }
+            }
         }
     }
 }

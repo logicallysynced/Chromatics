@@ -564,7 +564,7 @@ namespace Chromatics
                             lifxdGDeviceDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
 
                             lifxdGDevice.Cells[dG_devices.Columns["col_mode"].Index] = lifxdGDeviceDgc;
-
+                            
                             //Check for duplicates
 
                             /*
@@ -681,10 +681,20 @@ namespace Chromatics
             }
         }
 
+        void dG_devices_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (this.dG_devices.IsCurrentCellDirty)
+            {
+                dG_devices.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
         private void dG_devices_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (DeviceGridStartup)
             {
+                GlobalStopCycleEffects();
+
                 var editedCell = dG_devices.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 var dattype = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_dattype"].Index]
                     .Value;
@@ -707,7 +717,22 @@ namespace Chromatics
                             {
                                 _lifx.LifxBulbsDat[bulb] = _lifx.LifxModeMemory[id];
                                 _lifx.LifxStateMemory[bulb.MacAddressName] = 1;
-                                WriteConsole(ConsoleTypes.Lifx, @"Enabled LIFX Bulb " + id);
+                                WriteConsole(ConsoleTypes.Lifx, @"Enabled LIFX Bulb " + id + @" on mode " + _lifx.LifxModeMemory[id]);
+
+                                switch (_lifx.LifxModeMemory[id])
+                                {
+                                    case BulbModeTypes.Standby:
+                                        var state = _lifx.LifxBulbsRestore[bulb];
+                                        _lifx.SetColorAsync(bulb, state.Hue, state.Saturation, state.Brightness,
+                                            state.Kelvin,
+                                            TimeSpan.FromMilliseconds(1000));
+                                        WriteConsole(ConsoleTypes.Lifx, @"Restoring LIFX Bulb " + state.Label);
+                                        break;
+                                    case BulbModeTypes.DefaultColor:
+                                    case BulbModeTypes.HighlightColor:
+                                        SetKeysbase = false;
+                                        break;
+                                }
                             }
                             else
                             {
@@ -769,7 +794,24 @@ namespace Chromatics
                             var bulb = _lifx.LifxDevices[id];
                             _lifx.LifxBulbsDat[bulb] = key;
                             _lifx.LifxModeMemory[bulb.MacAddressName] = key;
+
                             WriteConsole(ConsoleTypes.Lifx, @"Updated Mode of LIFX Bulb " + id + " to " + key);
+
+                            switch (_lifx.LifxModeMemory[id])
+                            {
+                                case BulbModeTypes.Standby:
+                                    var state = _lifx.LifxBulbsRestore[bulb];
+                                    _lifx.SetColorAsync(bulb, state.Hue, state.Saturation, state.Brightness,
+                                        state.Kelvin,
+                                        TimeSpan.FromMilliseconds(1000));
+                                    WriteConsole(ConsoleTypes.Lifx, @"Restoring LIFX Bulb " + state.Label);
+                                    break;
+                                case BulbModeTypes.DefaultColor:
+                                case BulbModeTypes.HighlightColor:
+                                    SetKeysbase = false;
+                                    break;
+                            }
+                            
                         }
 
                     if (HueSdkCalled == 1 && id != null && dattype == "HUE")
