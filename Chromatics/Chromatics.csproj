@@ -172,7 +172,7 @@
       <HintPath>..\packages\Roccat-Talk.1.0.0.0\lib\net45\Roccat-Talk.dll</HintPath>
     </Reference>
     <Reference Include="Sharlayan, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sharlayan.5.0.1\lib\net462\Sharlayan.dll</HintPath>
+      <HintPath>..\packages\Sharlayan.5.0.3\lib\net462\Sharlayan.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
