@@ -2403,8 +2403,8 @@ namespace Chromatics
 
                             if (LifxSdkCalled == 1 && _lifxCycleStep[0] != 1)
                             {
-                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
-                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, interval * 2);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, interval * 2);
                                 _lifxCycleStep[0] = 1;
                             }
                         }
@@ -2430,8 +2430,8 @@ namespace Chromatics
 
                             if (LifxSdkCalled == 1 && _lifxCycleStep[1] != 1)
                             {
-                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
-                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, interval * 2);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, interval * 2);
                                 _lifxCycleStep[1] = 1;
                             }
                         }
@@ -2456,8 +2456,8 @@ namespace Chromatics
 
                             if (LifxSdkCalled == 1 && _lifxCycleStep[2] != 1)
                             {
-                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
-                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, interval * 2);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, interval * 2);
                                 _lifxCycleStep[2] = 1;
                             }
                         }
@@ -2482,8 +2482,8 @@ namespace Chromatics
 
                             if (LifxSdkCalled == 1 && _lifxCycleStep[3] != 1)
                             {
-                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
-                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, interval * 2);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, interval * 2);
                                 _lifxCycleStep[3] = 1;
                             }
                         }
@@ -2508,8 +2508,8 @@ namespace Chromatics
 
                             if (LifxSdkCalled == 1 && _lifxCycleStep[4] != 1)
                             {
-                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
-                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, interval * 2);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, interval * 2);
                                 _lifxCycleStep[4] = 1;
                             }
                         }
@@ -2534,8 +2534,8 @@ namespace Chromatics
 
                             if (LifxSdkCalled == 1 && _lifxCycleStep[5] != 1)
                             {
-                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, 5);
-                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, 5);
+                                _lifx.LifxUpdateState(BulbModeTypes.DefaultColor, col, interval * 2);
+                                _lifx.LifxUpdateState(BulbModeTypes.HighlightColor, col, interval * 2);
                                 _lifxCycleStep[5] = 1;
                             }
                         }
