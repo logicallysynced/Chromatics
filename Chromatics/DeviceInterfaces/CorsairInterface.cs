@@ -1290,47 +1290,49 @@ namespace Chromatics.DeviceInterfaces
                     _corsairFlash4Running = true;
                     _corsairFlash4Step = 0;
                     _presets4 = presets;
+                    Thread.Sleep(1);
+                    Console.WriteLine(@"Corsair Flash 4 Start");
                 }
 
-                if (_corsairFlash4Running)
-                    while (_corsairFlash2Running)
+                while (_corsairFlash4Running)
+                {
+
+                    if (cts.IsCancellationRequested)
+                        break;
+
+                    if (_corsairFlash4Step == 0)
                     {
-                        if (cts.IsCancellationRequested)
-                            break;
-
-                        if (_corsairFlash4Step == 0)
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
+                            foreach (var key in regions)
+                                if (_corsairDeviceKeyboard)
+                                    if (_corsairkeyids.ContainsKey(key))
+                                        ApplyMapKeyLighting(key, burstcol, false);
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
                         {
-                            if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
-                                foreach (var key in regions)
-                                    if (_corsairDeviceKeyboard)
-                                        if (_corsairkeyids.ContainsKey(key))
-                                            ApplyMapKeyLighting(key, burstcol, false);
-                            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
-                            {
-                                ApplyMapMouseLighting("CorsairScrollWheel", burstcol, false);
-                                ApplyMapMouseLighting("Logo", burstcol, false);
-                            }
-                            _corsairFlash4Step = 1;
-
-                            Thread.Sleep(speed);
+                            ApplyMapMouseLighting("CorsairScrollWheel", burstcol, false);
+                            ApplyMapMouseLighting("Logo", burstcol, false);
                         }
-                        else if (_corsairFlash4Step == 1)
-                        {
-                            if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
-                                foreach (var key in regions)
-                                    if (_corsairDeviceKeyboard)
-                                        if (_corsairkeyids.ContainsKey(key))
-                                            ApplyMapKeyLighting(key, _presets4[key], false);
-                            if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
-                            {
-                                ApplyMapMouseLighting("CorsairScrollWheel", _corsairScrollWheelConv, false);
-                                ApplyMapMouseLighting("Logo", _corsairLogoConv, false);
-                            }
-                            _corsairFlash4Step = 0;
+                        _corsairFlash4Step = 1;
 
-                            Thread.Sleep(speed);
-                        }
+                        Thread.Sleep(speed);
                     }
+                    else if (_corsairFlash4Step == 1)
+                    {
+                        if (_corsairDeviceKeyboard && !string.IsNullOrEmpty(CueSDK.KeyboardSDK?.KeyboardDeviceInfo?.Model))
+                            foreach (var key in regions)
+                                if (_corsairDeviceKeyboard)
+                                    if (_corsairkeyids.ContainsKey(key))
+                                        ApplyMapKeyLighting(key, _presets4[key], false);
+                        if (_corsairDeviceMouse && !string.IsNullOrEmpty(CueSDK.MouseSDK?.MouseDeviceInfo?.Model))
+                        {
+                            ApplyMapMouseLighting("CorsairScrollWheel", _corsairScrollWheelConv, false);
+                            ApplyMapMouseLighting("Logo", _corsairLogoConv, false);
+                        }
+                        _corsairFlash4Step = 0;
+
+                        Thread.Sleep(speed);
+                    }
+                }
             }
         }
 

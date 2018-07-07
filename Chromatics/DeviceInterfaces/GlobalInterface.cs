@@ -2086,7 +2086,7 @@ namespace Chromatics
                     MemoryTasks.Remove(_hueFl4);
                 }
 
-                Debug.WriteLine("Stopping Flash 4");
+                Console.WriteLine(@"Stopping Flash 4 (A)");
 
                 MemoryTasks.Cleanup();
             }

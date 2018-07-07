@@ -6957,61 +6957,122 @@ namespace Chromatics
                                 //Debug.WriteLine("DF Pop");
                                 if (!_dfpop)
                                 {
+                                    _dfpop = true;
+
                                     ToggleGlobalFlash4(true);
+
                                     GlobalFlash4(_baseColor,
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), 500,
                                         DeviceEffects.GlobalKeys);
 
-                                    GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
-                                    GlobalApplyKeyMultiLighting(DevMultiModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), "All");
-                                    GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, "All");
-                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
+                                    GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
+                                    GlobalApplyKeyMultiLighting(DevMultiModeTypes.DutyFinder,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), "All");
+                                    GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.DutyFinder,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                        "All");
+                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide2", "RightSide2",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide3", "RightSide3",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide4", "RightSide4",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide5", "RightSide5",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide6", "RightSide6",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide7", "RightSide7",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
 
-                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
-                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 14, 5, 0,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 13, 6, 1,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 12, 7, 2,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 11, 8, 3,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 10, 9, 4,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
 
                                     if (_LightbarMode == LightbarMode.DutyFinder)
                                     {
-                                        GlobalApplyMapLightbarLighting("Lightbar19", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar18", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar17", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar16", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar15", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar14", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar13", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar12", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar11", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar10", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar9", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar8", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar7", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar6", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar5", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar4", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar3", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar2", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar1", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
+                                        GlobalApplyMapLightbarLighting("Lightbar19",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar18",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar17",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar16",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar15",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar14",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar13",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar12",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar11",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar10",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar9",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar8",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar7",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar6",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar5",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar4",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar3",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar2",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
+                                        GlobalApplyMapLightbarLighting("Lightbar1",
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                            false);
                                     }
-
-                                    _dfpop = true;
                                 }
+                                /*
                                 else
                                 {
                                     if (FfxivDutyFinder.Countdown() < 10 && !_dfcount)
                                     {
+                                        _dfcount = true;
+
                                         ToggleGlobalFlash4(false);
                                         GlobalFlash4(_baseColor,
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), 200,
@@ -7061,9 +7122,10 @@ namespace Chromatics
                                             GlobalApplyMapLightbarLighting("Lightbar1", ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false, false);
                                         }
 
-                                        _dfcount = true;
+                                        
                                     }
                                 }
+                                */
                             }
                             else
                             {
