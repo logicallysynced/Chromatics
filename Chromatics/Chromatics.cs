@@ -63,7 +63,7 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.4.2";
+        private readonly string _currentVersionX = "2.4.3";
         private readonly bool _debugmode = false;
         public bool DeviceGridStartup = false;
 
