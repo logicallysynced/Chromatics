@@ -12,6 +12,19 @@ namespace Chromatics.Controllers
 {
     public class Helpers
     {
+        public static class FFXIVInterpolation
+        {
+            public static int Interpolate_Int(int current, int min, int max, int targetHigh, int targetLow)
+            {
+                return (current - min) * (targetHigh - targetLow) / (max - min) + targetLow;
+            }
+
+            public static double Interpolate_Double(double current, double min, double max, int targetHigh, int targetLow)
+            {
+                return (current - min) * (targetHigh - targetLow) / (max - min) + targetLow;
+            }
+        }
+
         public static class EnumUtil
         {
             public static IEnumerable<T> GetValues<T>()
@@ -68,6 +81,11 @@ namespace Chromatics.Controllers
                 }
             }
             return string.Join("", stack.Reverse());
+        }
+
+        public static int ToPercentage(double d)
+        {
+            return (int)(d * 100);
         }
 
         //Y = ( ( X - X1 )( Y2 - Y1) / ( X2 - X1) ) + Y1

@@ -92,6 +92,56 @@ namespace Chromatics.DeviceInterfaces.EffectLibrary
             "NumLock", "NumDivide", "NumMultiply", "Num7", "Num8", "Num9", "Num4", "Num5", "Num6", "Num1", "Num2",
             "Num3"
         };
+
+        public static readonly string[] Functions =
+        {
+            "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"
+        };
+
+        public static readonly string[] Function1 =
+        {
+            "F1", "F2", "F3", "F4"
+        };
+
+        public static readonly string[] Function2 =
+        {
+            "F5", "F6", "F7", "F8"
+        };
+
+        public static readonly string[] Function3 =
+        {
+            "F9", "F10", "F11", "F12"
+        };
+
+        public static readonly string[] Keypadzones =
+        {
+            "0", "1", "2", "3", "4"
+        };
+
+        public static readonly string[] Multikeyzones =
+        {
+            "0", "1", "2", "3", "4", "5"
+        };
+
+        public static readonly string[] MouseStripsLeft =
+        {
+            "LeftSide7", "LeftSide6", "LeftSide5", "LeftSide4", "LeftSide3", "LeftSide2", "LeftSide1"
+        };
+
+        public static readonly string[] MouseStripsRight =
+        {
+            "RightSide7", "RightSide6", "RightSide5", "RightSide4", "RightSide3", "RightSide2", "RightSide1"
+        };
+
+        public static readonly string[] LightbarZones =
+        {
+            "Lightbar1", "Lightbar2", "Lightbar3", "Lightbar4", "Lightbar5", "Lightbar6", "Lightbar7", "Lightbar8", "Lightbar9", "Lightbar10", "Lightbar11", "Lightbar12", "Lightbar13", "Lightbar14", "Lightbar15", "Lightbar16", "Lightbar17", "Lightbar18", "Lightbar19"
+        };
+
+        public static readonly string[] MacroTarget =
+        {
+            "Macro5", "Macro4", "Macro3", "Macro2", "Macro1"
+        };
     }
 
     public class ColorFader
