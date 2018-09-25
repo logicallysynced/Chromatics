@@ -40,6 +40,8 @@
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
             this.tP_keys = new System.Windows.Forms.TabPage();
+            this.cb_fkeymode = new System.Windows.Forms.ComboBox();
+            this.lbl_fkeymode = new System.Windows.Forms.Label();
             this.cb_multizonemode = new System.Windows.Forms.ComboBox();
             this.chk_keys_multimode = new System.Windows.Forms.CheckBox();
             this.cb_lightbarmode = new System.Windows.Forms.ComboBox();
@@ -103,6 +105,8 @@
             this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
+            this.lbl_hpcritical = new System.Windows.Forms.Label();
+            this.nm_criticalhp = new System.Windows.Forms.NumericUpDown();
             this.chk_vegasmode = new System.Windows.Forms.CheckBox();
             this.chk_cutscenes = new System.Windows.Forms.CheckBox();
             this.chk_reactiveweather = new System.Windows.Forms.CheckBox();
@@ -169,8 +173,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.cb_fkeymode = new System.Windows.Forms.ComboBox();
-            this.lbl_fkeymode = new System.Windows.Forms.Label();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -187,6 +189,7 @@
             this.gP_ChromaLink.SuspendLayout();
             this.tP_settings.SuspendLayout();
             this.gB_effects.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_criticalhp)).BeginInit();
             this.gB_lcc.SuspendLayout();
             this.gB_General.SuspendLayout();
             this.tP_mappings.SuspendLayout();
@@ -328,6 +331,26 @@
             this.tP_keys.Size = new System.Drawing.Size(961, 465);
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
+            // 
+            // cb_fkeymode
+            // 
+            this.cb_fkeymode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_fkeymode.FormattingEnabled = true;
+            this.cb_fkeymode.Location = new System.Drawing.Point(172, 108);
+            this.cb_fkeymode.Name = "cb_fkeymode";
+            this.cb_fkeymode.Size = new System.Drawing.Size(179, 24);
+            this.cb_fkeymode.TabIndex = 11;
+            this.tooltip_main.SetToolTip(this.cb_fkeymode, "Changes the mode for the function keys on a keyboard.");
+            this.cb_fkeymode.SelectedIndexChanged += new System.EventHandler(this.cb_fkeymode_SelectedIndexChanged);
+            // 
+            // lbl_fkeymode
+            // 
+            this.lbl_fkeymode.AutoSize = true;
+            this.lbl_fkeymode.Location = new System.Drawing.Point(14, 111);
+            this.lbl_fkeymode.Name = "lbl_fkeymode";
+            this.lbl_fkeymode.Size = new System.Drawing.Size(129, 17);
+            this.lbl_fkeymode.TabIndex = 10;
+            this.lbl_fkeymode.Text = "Function Key Mode";
             // 
             // cb_multizonemode
             // 
@@ -1019,6 +1042,8 @@
             // 
             // gB_effects
             // 
+            this.gB_effects.Controls.Add(this.lbl_hpcritical);
+            this.gB_effects.Controls.Add(this.nm_criticalhp);
             this.gB_effects.Controls.Add(this.chk_vegasmode);
             this.gB_effects.Controls.Add(this.chk_cutscenes);
             this.gB_effects.Controls.Add(this.chk_reactiveweather);
@@ -1037,6 +1062,29 @@
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
+            // 
+            // lbl_hpcritical
+            // 
+            this.lbl_hpcritical.AutoSize = true;
+            this.lbl_hpcritical.Location = new System.Drawing.Point(20, 275);
+            this.lbl_hpcritical.Name = "lbl_hpcritical";
+            this.lbl_hpcritical.Size = new System.Drawing.Size(89, 17);
+            this.lbl_hpcritical.TabIndex = 13;
+            this.lbl_hpcritical.Text = "HP Critical %";
+            // 
+            // nm_criticalhp
+            // 
+            this.nm_criticalhp.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_criticalhp.Location = new System.Drawing.Point(129, 273);
+            this.nm_criticalhp.Name = "nm_criticalhp";
+            this.nm_criticalhp.Size = new System.Drawing.Size(76, 22);
+            this.nm_criticalhp.TabIndex = 12;
+            this.tooltip_main.SetToolTip(this.nm_criticalhp, "Set the threshold percentage to change HP trackers to critical color.");
+            this.nm_criticalhp.ValueChanged += new System.EventHandler(this.nm_criticalhp_ValueChanged);
             // 
             // chk_vegasmode
             // 
@@ -1762,26 +1810,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // cb_fkeymode
-            // 
-            this.cb_fkeymode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cb_fkeymode.FormattingEnabled = true;
-            this.cb_fkeymode.Location = new System.Drawing.Point(172, 108);
-            this.cb_fkeymode.Name = "cb_fkeymode";
-            this.cb_fkeymode.Size = new System.Drawing.Size(179, 24);
-            this.cb_fkeymode.TabIndex = 11;
-            this.tooltip_main.SetToolTip(this.cb_fkeymode, "Changes the mode for the function keys on a keyboard.");
-            this.cb_fkeymode.SelectedIndexChanged += new System.EventHandler(this.cb_fkeymode_SelectedIndexChanged);
-            // 
-            // lbl_fkeymode
-            // 
-            this.lbl_fkeymode.AutoSize = true;
-            this.lbl_fkeymode.Location = new System.Drawing.Point(14, 111);
-            this.lbl_fkeymode.Name = "lbl_fkeymode";
-            this.lbl_fkeymode.Size = new System.Drawing.Size(129, 17);
-            this.lbl_fkeymode.TabIndex = 10;
-            this.lbl_fkeymode.Text = "Function Key Mode";
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1790,7 +1818,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.4.4 Beta";
+            this.Text = "Chromatics 2.4.4";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
@@ -1815,6 +1843,7 @@
             this.tP_settings.ResumeLayout(false);
             this.gB_effects.ResumeLayout(false);
             this.gB_effects.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_criticalhp)).EndInit();
             this.gB_lcc.ResumeLayout(false);
             this.gB_lcc.PerformLayout();
             this.gB_General.ResumeLayout(false);
@@ -1972,6 +2001,8 @@
         private System.Windows.Forms.CheckBox chk_vegasmode;
         private System.Windows.Forms.ComboBox cb_fkeymode;
         private System.Windows.Forms.Label lbl_fkeymode;
+        private System.Windows.Forms.Label lbl_hpcritical;
+        private System.Windows.Forms.NumericUpDown nm_criticalhp;
     }
 }
 

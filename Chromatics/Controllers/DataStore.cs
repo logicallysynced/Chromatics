@@ -94,6 +94,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsMemoryCheck = false;
         public bool ChromaticsSettingsCutsceneAnimation = true;
         public bool ChromaticsSettingsVegasMode = true;
+        public int ChromaticsSettingsCriticalHP = 10;
 
         public bool ChromaticsSettingsKeyHighlights = true;
         public bool ChromaticsSettingsLccAuto = false;

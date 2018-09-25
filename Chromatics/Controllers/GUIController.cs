@@ -1040,6 +1040,8 @@ namespace Chromatics
             chk_debugopt.Checked = ChromaticsSettings.ChromaticsSettingsDebugOpt;
             chk_disablememory.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCheck;
 
+            nm_criticalhp.Value = ChromaticsSettings.ChromaticsSettingsCriticalHP;
+
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
             chk_dev_mousepad.Checked = _deviceMousepad;
@@ -2591,7 +2593,18 @@ namespace Chromatics
             SetCLbase = false;
             SaveDevices();
         }
-        
+
+        private void nm_criticalhp_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (nm_criticalhp.Value < 0) nm_criticalhp.Value = 0;
+            if (nm_criticalhp.Value > 100) nm_criticalhp.Value = 100;
+
+            ChromaticsSettings.ChromaticsSettingsCriticalHP = (int)nm_criticalhp.Value;
+            SaveChromaticsSettings(1);
+        }
+
         private void btn_help_Click(object sender, EventArgs e)
         {
             if (Startup == false) return;

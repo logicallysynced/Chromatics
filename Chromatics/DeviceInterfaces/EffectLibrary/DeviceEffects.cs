@@ -98,6 +98,16 @@ namespace Chromatics.DeviceInterfaces.EffectLibrary
             "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"
         };
 
+        public static readonly string[] FunctionL =
+        {
+            "F1", "F2", "F3", "F4", "F5", "F6"
+        };
+
+        public static readonly string[] FunctionR =
+        {
+            "F7", "F8", "F9", "F10", "F11", "F12"
+        };
+
         public static readonly string[] Function1 =
         {
             "F1", "F2", "F3", "F4"
@@ -136,6 +146,16 @@ namespace Chromatics.DeviceInterfaces.EffectLibrary
         public static readonly string[] LightbarZones =
         {
             "Lightbar1", "Lightbar2", "Lightbar3", "Lightbar4", "Lightbar5", "Lightbar6", "Lightbar7", "Lightbar8", "Lightbar9", "Lightbar10", "Lightbar11", "Lightbar12", "Lightbar13", "Lightbar14", "Lightbar15", "Lightbar16", "Lightbar17", "Lightbar18", "Lightbar19"
+        };
+
+        public static readonly string[] LightbarZonesL =
+        {
+            "Lightbar1", "Lightbar2", "Lightbar3", "Lightbar4", "Lightbar5", "Lightbar6", "Lightbar7", "Lightbar8", "Lightbar9", "Lightbar10"
+        };
+
+        public static readonly string[] LightbarZonesR =
+        {
+            "Lightbar11", "Lightbar12", "Lightbar13", "Lightbar14", "Lightbar15", "Lightbar16", "Lightbar17", "Lightbar18", "Lightbar19"
         };
 
         public static readonly string[] MacroTarget =
