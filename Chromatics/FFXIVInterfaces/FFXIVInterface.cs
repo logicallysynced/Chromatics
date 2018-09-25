@@ -2609,17 +2609,42 @@ namespace Chromatics
 
 
                             //FKeys
-                            var HpFunction_Collection = DeviceEffects.Function1;
-                            var HpFunction_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp, HpFunction_Collection.Length, 0);
-
-                            for (int i = 0; i < HpFunction_Collection.Length; i++)
+                            if (_FKeyMode == FKeyMode.HpMpTp)
                             {
-                                if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
-                                {
-                                    break;
-                                }
+                                var HpFunction_Collection = DeviceEffects.Function1;
+                                var HpFunction_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
+                                        HpFunction_Collection.Length, 0);
 
-                                GlobalApplyMapKeyLighting(HpFunction_Collection[i], HpFunction_Interpolate > i ? colHpfull : colHpempty, false);
+                                for (int i = 0; i < HpFunction_Collection.Length; i++)
+                                {
+                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    {
+                                        break;
+                                    }
+
+                                    GlobalApplyMapKeyLighting(HpFunction_Collection[i],
+                                        HpFunction_Interpolate > i ? colHpfull : colHpempty, false);
+                                }
+                            }
+
+                            if (_FKeyMode == FKeyMode.HpTracker)
+                            {
+                                var HpFunction_Collection = DeviceEffects.Functions;
+                                var HpFunction_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
+                                        HpFunction_Collection.Length, 0);
+
+                                for (int i = 0; i < HpFunction_Collection.Length; i++)
+                                {
+                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    {
+                                        break;
+                                    }
+
+                                    GlobalApplyMapKeyLighting(HpFunction_Collection[i],
+                                        HpFunction_Interpolate > i ? colHpfull : colHpempty, false);
+                                }
                             }
 
                             //Mousepad
@@ -2686,17 +2711,42 @@ namespace Chromatics
                             GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, polMpz2);
 
                             //FKeys
-                            var MpFunction_Collection = DeviceEffects.Function2;
-                            var MpFunction_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp, MpFunction_Collection.Length, 0);
-
-                            for (int i = 0; i < MpFunction_Collection.Length; i++)
+                            if (_FKeyMode == FKeyMode.HpMpTp)
                             {
-                                if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
-                                {
-                                    break;
-                                }
+                                var MpFunction_Collection = DeviceEffects.Function2;
+                                var MpFunction_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
+                                        MpFunction_Collection.Length, 0);
 
-                                GlobalApplyMapKeyLighting(MpFunction_Collection[i], MpFunction_Interpolate > i ? colMpfull : colMpempty, false);
+                                for (int i = 0; i < MpFunction_Collection.Length; i++)
+                                {
+                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    {
+                                        break;
+                                    }
+
+                                    GlobalApplyMapKeyLighting(MpFunction_Collection[i],
+                                        MpFunction_Interpolate > i ? colMpfull : colMpempty, false);
+                                }
+                            }
+
+                            if (_FKeyMode == FKeyMode.MpTracker)
+                            {
+                                var MpFunction_Collection = DeviceEffects.Functions;
+                                var MpFunction_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
+                                        MpFunction_Collection.Length, 0);
+
+                                for (int i = 0; i < MpFunction_Collection.Length; i++)
+                                {
+                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    {
+                                        break;
+                                    }
+
+                                    GlobalApplyMapKeyLighting(MpFunction_Collection[i],
+                                        MpFunction_Interpolate > i ? colMpfull : colMpempty, false);
+                                }
                             }
 
                             //Mousepad
@@ -2762,17 +2812,42 @@ namespace Chromatics
                             GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, polTpz2);
 
                             //FKeys
-                            var TpFunction_Collection = DeviceEffects.Function3;
-                            var TpFunction_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp, TpFunction_Collection.Length, 0);
-
-                            for (int i = 0; i < TpFunction_Collection.Length; i++)
+                            if (_FKeyMode == FKeyMode.HpMpTp)
                             {
-                                if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
-                                {
-                                    break;
-                                }
+                                var TpFunction_Collection = DeviceEffects.Function3;
+                                var TpFunction_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp,
+                                        TpFunction_Collection.Length, 0);
 
-                                GlobalApplyMapKeyLighting(TpFunction_Collection[i], TpFunction_Interpolate > i ? colTpfull : colTpempty, false);
+                                for (int i = 0; i < TpFunction_Collection.Length; i++)
+                                {
+                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    {
+                                        break;
+                                    }
+
+                                    GlobalApplyMapKeyLighting(TpFunction_Collection[i],
+                                        TpFunction_Interpolate > i ? colTpfull : colTpempty, false);
+                                }
+                            }
+
+                            if (_FKeyMode == FKeyMode.TpTracker)
+                            {
+                                var TpFunction_Collection = DeviceEffects.Functions;
+                                var TpFunction_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp,
+                                        TpFunction_Collection.Length, 0);
+
+                                for (int i = 0; i < TpFunction_Collection.Length; i++)
+                                {
+                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    {
+                                        break;
+                                    }
+
+                                    GlobalApplyMapKeyLighting(TpFunction_Collection[i],
+                                        TpFunction_Interpolate > i ? colTpfull : colTpempty, false);
+                                }
                             }
 
                             //Mousepad

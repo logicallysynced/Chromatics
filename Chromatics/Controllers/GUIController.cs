@@ -91,6 +91,22 @@ namespace Chromatics
             {LightbarMode.JobGauge, "Job Gauge"}
         };
 
+        private readonly Dictionary<FKeyMode, string> _fkeyModes = new Dictionary<FKeyMode, string>
+        {
+            //Keys
+            {FKeyMode.Disabled, "Disabled"},
+            {FKeyMode.DefaultColor, "Default Color"}, //
+            {FKeyMode.HighlightColor, "Highlight Color"}, //
+            {FKeyMode.EnmityTracker, "Enmity Tracker"}, //
+            {FKeyMode.TargetHp, "Target HP"}, //
+            {FKeyMode.HpTracker, "HP Tracker"}, //
+            {FKeyMode.MpTracker, "MP Tracker"}, //
+            {FKeyMode.TpTracker, "TP Tracker"}, //
+            {FKeyMode.HpMpTp, "HP/MP/TP"}, //
+            {FKeyMode.CurrentExp, "Experience Tracker"},
+            {FKeyMode.JobGauge, "Job Gauge"}
+        };
+
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
         {
             //Keys
@@ -1062,10 +1078,16 @@ namespace Chromatics
                 cb_lightbarmode.Items.Add(item.Value);
             }
 
+            foreach (var item in _fkeyModes)
+            {
+                cb_fkeymode.Items.Add(item.Value);
+            }
+
             cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
             cb_multizonemode.SelectedItem = Helpers.ConvertDevMultiModeToCB(_KeysMultiKeyMode);
 
             cb_lightbarmode.SelectedItem = Helpers.ConvertLightbarModeToCB(_LightbarMode);
+            cb_fkeymode.SelectedItem = Helpers.ConvertFKeyModeToCB(_FKeyMode);
 
             cb_mouse_z1.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone1Mode);
             cb_mouse_z2.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone2Mode);
@@ -2262,6 +2284,21 @@ namespace Chromatics
             {
                 if ((string)cb_lightbarmode.SelectedItem != item.Value) continue;
                 _LightbarMode = Helpers.ConvertCBToLightbarMode(item.Value);
+                break;
+            }
+
+            SetKeysbase = false;
+            SaveDevices();
+        }
+
+        private void cb_fkeymode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _fkeyModes)
+            {
+                if ((string)cb_fkeymode.SelectedItem != item.Value) continue;
+                _FKeyMode = Helpers.ConvertCBToFKeyMode(item.Value);
                 break;
             }
 

@@ -67,6 +67,7 @@ namespace Chromatics.Datastore
         public string KeypadZone1Mode = "DefaultColor";
 
         public string LightbarMode = "TargetHp";
+        public string FKeyMode = "HpMpTp";
     }
 
     //Settings
@@ -99,7 +100,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsMemoryCache = false;
         public bool ChromaticsSettingsDesktopNotifications = true;
         public bool ChromaticsSettingsLcdEnabled = false;
-        public string FinalFantasyXivVersion = "4.31";
+        public string FinalFantasyXivVersion = "4.40";
         public bool FirstRun = false;
     }
 

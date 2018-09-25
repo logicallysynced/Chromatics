@@ -87,4 +87,19 @@
         CurrentExp,
         JobGauge
     }
+
+    public enum FKeyMode
+    {
+        Disabled,
+        DefaultColor,
+        HighlightColor,
+        EnmityTracker,
+        TargetHp,
+        HpTracker,
+        MpTracker,
+        TpTracker,
+        HpMpTp,
+        CurrentExp,
+        JobGauge
+    }
 }

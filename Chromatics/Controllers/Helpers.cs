@@ -474,6 +474,130 @@ namespace Chromatics.Controllers
             return "Disabled";
         }
 
+        public static string ConvertFKeyModeToString(FKeyMode mode)
+        {
+            switch (mode)
+            {
+                case FKeyMode.Disabled:
+                    return "Disabled";
+                case FKeyMode.DefaultColor:
+                    return "DefaultColor";
+                case FKeyMode.HighlightColor:
+                    return "HighlightColor";
+                case FKeyMode.EnmityTracker:
+                    return "EnmityTracker";
+                case FKeyMode.TargetHp:
+                    return "TargetHp";
+                case FKeyMode.HpTracker:
+                    return "HpTracker";
+                case FKeyMode.MpTracker:
+                    return "MpTracker";
+                case FKeyMode.TpTracker:
+                    return "TpTracker";
+                case FKeyMode.HpMpTp:
+                    return "HpMpTp";
+                case FKeyMode.CurrentExp:
+                    return "CurrentExp";
+                case FKeyMode.JobGauge:
+                    return "JobGauge";
+            }
+
+            return "HpMpTp";
+        }
+
+        public static FKeyMode ConvertStringToFKeyMode(string mode)
+        {
+            switch (mode)
+            {
+                case "Disabled":
+                    return FKeyMode.Disabled;
+                case "DefaultColor":
+                    return FKeyMode.DefaultColor;
+                case "HighlightColor":
+                    return FKeyMode.HighlightColor;
+                case "EnmityTracker":
+                    return FKeyMode.EnmityTracker;
+                case "TargetHp":
+                    return FKeyMode.TargetHp;
+                case "HpTracker":
+                    return FKeyMode.HpTracker;
+                case "MpTracker":
+                    return FKeyMode.MpTracker;
+                case "TpTracker":
+                    return FKeyMode.TpTracker;
+                case "HpMpTp":
+                    return FKeyMode.HpMpTp;
+                case "CurrentExp":
+                    return FKeyMode.CurrentExp;
+                case "JobGauge":
+                    return FKeyMode.JobGauge;
+            }
+
+            return FKeyMode.HpMpTp;
+        }
+
+        public static FKeyMode ConvertCBToFKeyMode(string mode)
+        {
+            switch (mode)
+            {
+                case "Disabled":
+                    return FKeyMode.Disabled;
+                case "Default Color":
+                    return FKeyMode.DefaultColor;
+                case "Highlight Color":
+                    return FKeyMode.HighlightColor;
+                case "Enmity Tracker":
+                    return FKeyMode.EnmityTracker;
+                case "Target HP":
+                    return FKeyMode.TargetHp;
+                case "HP Tracker":
+                    return FKeyMode.HpTracker;
+                case "MP Tracker":
+                    return FKeyMode.MpTracker;
+                case "TP Tracker":
+                    return FKeyMode.TpTracker;
+                case "HP/MP/TP":
+                    return FKeyMode.HpMpTp;
+                case "Experience Tracker":
+                    return FKeyMode.CurrentExp;
+                case "Job Gauge":
+                    return FKeyMode.JobGauge;
+            }
+
+            return FKeyMode.HpMpTp;
+        }
+
+        public static string ConvertFKeyModeToCB(FKeyMode mode)
+        {
+            switch (mode)
+            {
+                case FKeyMode.Disabled:
+                    return "Disabled";
+                case FKeyMode.DefaultColor:
+                    return "Default Color";
+                case FKeyMode.HighlightColor:
+                    return "Highlight Color";
+                case FKeyMode.EnmityTracker:
+                    return "Enmity Tracker";
+                case FKeyMode.TargetHp:
+                    return "Target HP";
+                case FKeyMode.HpTracker:
+                    return "HP Tracker";
+                case FKeyMode.MpTracker:
+                    return "MP Tracker";
+                case FKeyMode.TpTracker:
+                    return "TP Tracker";
+                case FKeyMode.HpMpTp:
+                    return "HP/MP/TP";
+                case FKeyMode.CurrentExp:
+                    return "Experience Tracker";
+                case FKeyMode.JobGauge:
+                    return "Job Gauge";
+            }
+
+            return "HpMpTp";
+        }
+
         public static readonly Dictionary<int, int> ExperienceTable = new Dictionary<int, int>()
         {
             {0, 300},

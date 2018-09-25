@@ -79,6 +79,7 @@ namespace Chromatics
             dr.KeypadZone1Mode = Helpers.ConvertDevMultiModeToString(_KeypadZone1Mode);
 
             dr.LightbarMode = Helpers.ConvertLightbarModeToString(_LightbarMode);
+            dr.FKeyMode = Helpers.ConvertFKeyModeToString(_FKeyMode);
 
             var lifxLoad = "";
             var hueLoad = "";
@@ -199,6 +200,7 @@ namespace Chromatics
                         _KeypadZone1Mode = Helpers.ConvertStringToDevMultiMode(dr.KeypadZone1Mode);
 
                         _LightbarMode = Helpers.ConvertStringToLightbarMode(dr.LightbarMode);
+                        _FKeyMode = Helpers.ConvertStringToFKeyMode(dr.FKeyMode);
 
                         var lifxLoad = dr.DeviceOperationLifxDevices;
 

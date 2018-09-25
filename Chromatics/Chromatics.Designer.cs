@@ -169,6 +169,8 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.cb_fkeymode = new System.Windows.Forms.ComboBox();
+            this.lbl_fkeymode = new System.Windows.Forms.Label();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -309,6 +311,8 @@
             // tP_keys
             // 
             this.tP_keys.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keys.Controls.Add(this.cb_fkeymode);
+            this.tP_keys.Controls.Add(this.lbl_fkeymode);
             this.tP_keys.Controls.Add(this.cb_multizonemode);
             this.tP_keys.Controls.Add(this.chk_keys_multimode);
             this.tP_keys.Controls.Add(this.cb_lightbarmode);
@@ -352,7 +356,7 @@
             // 
             this.cb_lightbarmode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_lightbarmode.FormattingEnabled = true;
-            this.cb_lightbarmode.Location = new System.Drawing.Point(172, 103);
+            this.cb_lightbarmode.Location = new System.Drawing.Point(172, 159);
             this.cb_lightbarmode.Name = "cb_lightbarmode";
             this.cb_lightbarmode.Size = new System.Drawing.Size(179, 24);
             this.cb_lightbarmode.TabIndex = 7;
@@ -362,7 +366,7 @@
             // lbl_lightbar
             // 
             this.lbl_lightbar.AutoSize = true;
-            this.lbl_lightbar.Location = new System.Drawing.Point(14, 106);
+            this.lbl_lightbar.Location = new System.Drawing.Point(14, 162);
             this.lbl_lightbar.Name = "lbl_lightbar";
             this.lbl_lightbar.Size = new System.Drawing.Size(99, 17);
             this.lbl_lightbar.TabIndex = 6;
@@ -1758,6 +1762,26 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // cb_fkeymode
+            // 
+            this.cb_fkeymode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_fkeymode.FormattingEnabled = true;
+            this.cb_fkeymode.Location = new System.Drawing.Point(172, 108);
+            this.cb_fkeymode.Name = "cb_fkeymode";
+            this.cb_fkeymode.Size = new System.Drawing.Size(179, 24);
+            this.cb_fkeymode.TabIndex = 11;
+            this.tooltip_main.SetToolTip(this.cb_fkeymode, "Changes the mode for the function keys on a keyboard.");
+            this.cb_fkeymode.SelectedIndexChanged += new System.EventHandler(this.cb_fkeymode_SelectedIndexChanged);
+            // 
+            // lbl_fkeymode
+            // 
+            this.lbl_fkeymode.AutoSize = true;
+            this.lbl_fkeymode.Location = new System.Drawing.Point(14, 111);
+            this.lbl_fkeymode.Name = "lbl_fkeymode";
+            this.lbl_fkeymode.Size = new System.Drawing.Size(129, 17);
+            this.lbl_fkeymode.TabIndex = 10;
+            this.lbl_fkeymode.Text = "Function Key Mode";
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1766,7 +1790,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.4.1 Beta";
+            this.Text = "Chromatics 2.4.4 Beta";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
@@ -1946,6 +1970,8 @@
         private System.Windows.Forms.CheckBox chk_disablememory;
         private System.Windows.Forms.CheckBox chk_cutscenes;
         private System.Windows.Forms.CheckBox chk_vegasmode;
+        private System.Windows.Forms.ComboBox cb_fkeymode;
+        private System.Windows.Forms.Label lbl_fkeymode;
     }
 }
 
