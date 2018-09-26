@@ -1800,12 +1800,8 @@ namespace Chromatics
                                 //Target HP
                                 var currentThp = targetInfo.HPCurrent;
                                 var maxThp = targetInfo.HPMax;
-                                //var polTargetHp = Helpers.LinIntDouble(0, maxThp, currentThp, 0, 5);
-                                var polTargetHp = (currentThp - 0) * (5 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx = (currentThp - 0) * ((long)65535 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx2 = (currentThp - 0) * (1.0 - 0.0) / (maxThp - 0) + 0.0;
-
-                                var polTargetHpLB = (currentThp - 0) * (19 - 0) / (maxThp - 0) + 0;
 
                                 GlobalUpdateBulbStateBrightness(BulbModeTypes.TargetHp,
                                     targetInfo.IsClaimed
@@ -3677,30 +3673,45 @@ namespace Chromatics
                                 case Actor.Job.GLD:
                                     _role = _playerData.CurrentPlayer.GLD_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.GLD;
+
+                                    if (GetACTJob() != "Gladiator")
+                                        SwitchACTJob("Gladiator");
                                     break;
                                 case Actor.Job.PGL:
                                     _role = _playerData.CurrentPlayer.PGL_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.PGL;
+                                    if (GetACTJob() != "Pugilist")
+                                        SwitchACTJob("Pugilist");
                                     break;
                                 case Actor.Job.MRD:
                                     _role = _playerData.CurrentPlayer.MRD_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.MRD;
+                                    if (GetACTJob() != "Marauder")
+                                        SwitchACTJob("Marauder");
                                     break;
                                 case Actor.Job.LNC:
                                     _role = _playerData.CurrentPlayer.LNC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.LNC;
+                                    if (GetACTJob() != "Lancer")
+                                        SwitchACTJob("Lancer");
                                     break;
                                 case Actor.Job.ARC:
                                     _role = _playerData.CurrentPlayer.ARC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ARC;
+                                    if (GetACTJob() != "Archer")
+                                        SwitchACTJob("Archer");
                                     break;
                                 case Actor.Job.CNJ:
                                     _role = _playerData.CurrentPlayer.CNJ_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.CNJ;
+                                    if (GetACTJob() != "Conjurer")
+                                        SwitchACTJob("Conjurer");
                                     break;
                                 case Actor.Job.THM:
                                     _role = _playerData.CurrentPlayer.THM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.THM;
+                                    if (GetACTJob() != "Thaumaturge")
+                                        SwitchACTJob("Thaumaturge");
                                     break;
                                 case Actor.Job.CPT:
                                     _role = _playerData.CurrentPlayer.CPT_CurrentEXP;
@@ -3749,70 +3760,104 @@ namespace Chromatics
                                 case Actor.Job.PLD:
                                     _role = _playerData.CurrentPlayer.GLD_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.GLD;
+                                    if (GetACTJob() != "Paladin")
+                                        SwitchACTJob("Paladin");
                                     break;
                                 case Actor.Job.MNK:
                                     _role = _playerData.CurrentPlayer.PGL_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.PGL;
+                                    if (GetACTJob() != "Monk")
+                                        SwitchACTJob("Monk");
                                     break;
                                 case Actor.Job.WAR:
                                     _role = _playerData.CurrentPlayer.MRD_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.MRD;
+                                    if (GetACTJob() != "Warrior")
+                                        SwitchACTJob("Warrior");
                                     break;
                                 case Actor.Job.DRG:
                                     _role = _playerData.CurrentPlayer.LNC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.LNC;
+                                    if (GetACTJob() != "Dragoon")
+                                        SwitchACTJob("Dragoon");
                                     break;
                                 case Actor.Job.BRD:
                                     _role = _playerData.CurrentPlayer.ARC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ARC;
+                                    if (GetACTJob() != "Bard")
+                                        SwitchACTJob("Bard");
                                     break;
                                 case Actor.Job.WHM:
                                     _role = _playerData.CurrentPlayer.CNJ_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.CNJ;
+                                    if (GetACTJob() != "White Mage")
+                                        SwitchACTJob("White Mage");
                                     break;
                                 case Actor.Job.BLM:
                                     _role = _playerData.CurrentPlayer.THM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.THM;
+                                    if (GetACTJob() != "Black Mage")
+                                        SwitchACTJob("Black Mage");
                                     break;
                                 case Actor.Job.ACN:
                                     _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ACN;
+                                    if (GetACTJob() != "Arcanist")
+                                        SwitchACTJob("Arcanist");
                                     break;
                                 case Actor.Job.SMN:
                                     _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ACN;
+                                    if (GetACTJob() != "Summoner")
+                                        SwitchACTJob("Summoner");
                                     break;
                                 case Actor.Job.SCH:
                                     _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ACN;
+                                    if (GetACTJob() != "Scholar")
+                                        SwitchACTJob("Scholar");
                                     break;
                                 case Actor.Job.ROG:
                                     _role = _playerData.CurrentPlayer.ROG_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ROG;
+                                    if (GetACTJob() != "Rouge")
+                                        SwitchACTJob("Rouge");
                                     break;
                                 case Actor.Job.NIN:
                                     _role = _playerData.CurrentPlayer.ROG_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ROG;
+                                    if (GetACTJob() != "Ninja")
+                                        SwitchACTJob("Ninja");
                                     break;
                                 case Actor.Job.MCH:
                                     _role = _playerData.CurrentPlayer.MCH_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.MCH;
+                                    if (GetACTJob() != "Machinist")
+                                        SwitchACTJob("Machinist");
                                     break;
                                 case Actor.Job.DRK:
                                     _role = _playerData.CurrentPlayer.DRK_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.DRK;
+                                    if (GetACTJob() != "Dark Knight")
+                                        SwitchACTJob("Dark Knight");
                                     break;
                                 case Actor.Job.AST:
                                     _role = _playerData.CurrentPlayer.AST_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.AST;
+                                    if (GetACTJob() != "Astrologian")
+                                        SwitchACTJob("Astrologian");
                                     break;
                                 case Actor.Job.SAM:
                                     _role = _playerData.CurrentPlayer.SAM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.SAM;
+                                    if (GetACTJob() != "Samurai")
+                                        SwitchACTJob("Samurai");
                                     break;
                                 case Actor.Job.RDM:
                                     _role = _playerData.CurrentPlayer.RDM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.RDM;
+                                    if (GetACTJob() != "Red Mage")
+                                        SwitchACTJob("Red Mage");
                                     break;
                                 default:
                                     _role = _playerData.CurrentPlayer.WVR_CurrentEXP;

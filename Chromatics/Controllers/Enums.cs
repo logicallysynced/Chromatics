@@ -32,6 +32,7 @@
         ChromaticsDefault,
         DutyFinder,
         StatusEffects,
+        ACTTracker,
         Unknown
     }
 
@@ -46,7 +47,8 @@
         MpTracker,
         TpTracker,
         Castbar,
-        DutyFinder
+        DutyFinder,
+        ACTTracker
     }
 
     public enum DevMultiModeTypes
@@ -62,7 +64,8 @@
         Castbar,
         DutyFinder,
         ReactiveWeather,
-        StatusEffects
+        StatusEffects,
+        ACTTracker
     }
 
     public enum KeyRegion
@@ -85,7 +88,8 @@
         Castbar,
         DutyFinder,
         CurrentExp,
-        JobGauge
+        JobGauge,
+        ACTTracker
     }
 
     public enum FKeyMode
@@ -100,6 +104,22 @@
         TpTracker,
         HpMpTp,
         CurrentExp,
-        JobGauge
+        JobGauge,
+        ACTTracker
+    }
+
+    public enum ACTMode
+    {
+        DPS,
+        HPS,
+        GroupDPS,
+        CritPrc,
+        DHPrc,
+        CritDHPrc,
+        OverhealPrc,
+        DamagePrc,
+        Timer,
+        CustomTrigger
+
     }
 }

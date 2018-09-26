@@ -95,6 +95,10 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsCutsceneAnimation = true;
         public bool ChromaticsSettingsVegasMode = true;
         public int ChromaticsSettingsCriticalHP = 10;
+        public string ChromaticsSettingsACTMode = "DPS";
+        public bool ChromaticsSettingsACTFlash = false;
+        public bool ChromaticsSettingsACTFlashCustomTrigger = false;
+        public bool ChromaticsSettingsACTFlashTimer = false;
 
         public bool ChromaticsSettingsKeyHighlights = true;
         public bool ChromaticsSettingsLccAuto = false;
@@ -103,6 +107,230 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsLcdEnabled = false;
         public string FinalFantasyXivVersion = "4.40";
         public bool FirstRun = false;
+
+        public int[][] ChromaticsSettingsACTDPS =
+        {
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 }
+        };
+
+        public int[][] ChromaticsSettingsACTHPS =
+        {
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 }
+        };
+
+        public int[][] ChromaticsSettingsACTGroupDPS =
+        {
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 }
+        };
+
+        public int[][] ChromaticsSettingsACTTargetCrit =
+        {
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 }
+        };
+
+        public int[][] ChromaticsSettingsACTTargetDH =
+        {
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 }
+        };
+
+        public int[][] ChromaticsSettingsACTTargetCritDH =
+        {
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 }
+        };
+
+        public int[][] ChromaticsSettingsACTOverheal =
+        {
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 }
+        };
+
+        public int[][] ChromaticsSettingsACTDamage =
+        {
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 }
+        };
     }
 
     //Color Mapping
@@ -256,7 +484,6 @@ namespace Chromatics.Datastore
         public string ColorMappingCutsceneHighlight1 = ColorTranslator.ToHtml(Color.White);
         public string ColorMappingCutsceneHighlight2 = ColorTranslator.ToHtml(Color.DeepSkyBlue);
         public string ColorMappingCutsceneHighlight3 = ColorTranslator.ToHtml(Color.White);
-
         public string ColorMappingWeatherClearBase = ColorTranslator.ToHtml(Color.SkyBlue);
         public string ColorMappingWeatherClearHighlight = ColorTranslator.ToHtml(Color.LightYellow);
         public string ColorMappingWeatherFairBase = ColorTranslator.ToHtml(Color.SkyBlue);
@@ -347,6 +574,15 @@ namespace Chromatics.Datastore
         public string ColorMappingWeatherQuicklevinHighlight = ColorTranslator.ToHtml(Color.Blue);
         public string ColorMappingWeatherWhitecycloneBase = ColorTranslator.ToHtml(Color.White);
         public string ColorMappingWeatherWhitecycloneHighlight = ColorTranslator.ToHtml(Color.Turquoise);
+        public string ColorMappingACTThresholdEmpty = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingACTThresholdBuild = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingACTThresholdSuccess = ColorTranslator.ToHtml(Color.Lime);
+        public string ColorMappingACTThresholdFlash = ColorTranslator.ToHtml(Color.Lime);
+        public string ColorMappingACTCustomTriggerIdle = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingACTCustomTriggerBell = ColorTranslator.ToHtml(Color.Gold);
+        public string ColorMappingACTTimerIdle = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingACTTimerBuild = ColorTranslator.ToHtml(Color.DodgerBlue);
+        public string ColorMappingACTTimerFlash = ColorTranslator.ToHtml(Color.Lime);
     }
 
     public static class DataStoreFunctions

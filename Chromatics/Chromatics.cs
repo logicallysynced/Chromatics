@@ -171,6 +171,7 @@ namespace Chromatics
 
         public LightbarMode _LightbarMode = LightbarMode.TargetHp;
         public FKeyMode _FKeyMode = FKeyMode.HpMpTp;
+        public ACTMode _ACTMode = ACTMode.DPS;
 
         //Main Thread
         public Chromatics()

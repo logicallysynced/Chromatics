@@ -118,6 +118,8 @@ namespace Chromatics.Controllers
                     return "Castbar";
                 case DevModeTypes.DutyFinder:
                     return "DutyFinder";
+                case DevModeTypes.ACTTracker:
+                    return "ACTTracker";
             }
             
             return "Disabled";
@@ -151,6 +153,8 @@ namespace Chromatics.Controllers
                     return "ReactiveWeather";
                 case DevMultiModeTypes.StatusEffects:
                     return "StatusEffects";
+                case DevMultiModeTypes.ACTTracker:
+                    return "ACTTracker";
             }
 
             return "Disabled";
@@ -180,6 +184,8 @@ namespace Chromatics.Controllers
                     return DevModeTypes.Castbar;
                 case "DutyFinder":
                     return DevModeTypes.DutyFinder;
+                case "ACTTracker":
+                    return DevModeTypes.ACTTracker;
             }
             
             return DevModeTypes.Disabled;
@@ -213,6 +219,8 @@ namespace Chromatics.Controllers
                     return DevMultiModeTypes.ReactiveWeather;
                 case "StatusEffects":
                     return DevMultiModeTypes.StatusEffects;
+                case "ACTTracker":
+                    return DevMultiModeTypes.ACTTracker;
             }
 
             return DevMultiModeTypes.Disabled;
@@ -242,6 +250,8 @@ namespace Chromatics.Controllers
                     return DevModeTypes.Castbar;
                 case "Duty Finder Bell":
                     return DevModeTypes.DutyFinder;
+                case "ACT Tracker":
+                    return DevModeTypes.ACTTracker;
             }
 
             return DevModeTypes.Disabled;
@@ -275,6 +285,8 @@ namespace Chromatics.Controllers
                     return DevMultiModeTypes.ReactiveWeather;
                 case "Status Effects":
                     return DevMultiModeTypes.StatusEffects;
+                case "ACT Tracker":
+                    return DevMultiModeTypes.ACTTracker;
             }
 
             return DevMultiModeTypes.Disabled;
@@ -304,6 +316,8 @@ namespace Chromatics.Controllers
                     return "Castbar";
                 case DevModeTypes.DutyFinder:
                     return "Duty Finder Bell";
+                case DevModeTypes.ACTTracker:
+                    return "ACT Tracker";
             }
 
             return "Disabled";
@@ -337,6 +351,8 @@ namespace Chromatics.Controllers
                     return "Reactive Weather";
                 case DevMultiModeTypes.StatusEffects:
                     return "Status Effects";
+                case DevMultiModeTypes.ACTTracker:
+                    return "ACT Tracker";
             }
 
             return "Disabled";
@@ -370,6 +386,8 @@ namespace Chromatics.Controllers
                     return "CurrentExp";
                 case LightbarMode.JobGauge:
                     return "JobGauge";
+                case LightbarMode.ACTTracker:
+                    return "ACTTracker";
             }
 
             return "Disabled";
@@ -403,6 +421,8 @@ namespace Chromatics.Controllers
                     return LightbarMode.CurrentExp;
                 case "JobGauge":
                     return LightbarMode.JobGauge;
+                case "ACTTracker":
+                    return LightbarMode.ACTTracker;
             }
 
             return LightbarMode.Disabled;
@@ -436,6 +456,8 @@ namespace Chromatics.Controllers
                     return LightbarMode.CurrentExp;
                 case "Job Gauge":
                     return LightbarMode.JobGauge;
+                case "ACT Tracker":
+                    return LightbarMode.ACTTracker;
             }
 
             return LightbarMode.Disabled;
@@ -469,6 +491,8 @@ namespace Chromatics.Controllers
                     return "Experience Tracker";
                 case LightbarMode.JobGauge:
                     return "Job Gauge";
+                case LightbarMode.ACTTracker:
+                    return "ACT Tracker";
             }
 
             return "Disabled";
@@ -500,6 +524,8 @@ namespace Chromatics.Controllers
                     return "CurrentExp";
                 case FKeyMode.JobGauge:
                     return "JobGauge";
+                case FKeyMode.ACTTracker:
+                    return "ACTTracker";
             }
 
             return "HpMpTp";
@@ -531,6 +557,8 @@ namespace Chromatics.Controllers
                     return FKeyMode.CurrentExp;
                 case "JobGauge":
                     return FKeyMode.JobGauge;
+                case "ACTTracker":
+                    return FKeyMode.ACTTracker;
             }
 
             return FKeyMode.HpMpTp;
@@ -562,6 +590,8 @@ namespace Chromatics.Controllers
                     return FKeyMode.CurrentExp;
                 case "Job Gauge":
                     return FKeyMode.JobGauge;
+                case "ACT Tracker":
+                    return FKeyMode.ACTTracker;
             }
 
             return FKeyMode.HpMpTp;
@@ -593,6 +623,8 @@ namespace Chromatics.Controllers
                     return "Experience Tracker";
                 case FKeyMode.JobGauge:
                     return "Job Gauge";
+                case FKeyMode.ACTTracker:
+                    return "ACT Tracker";
             }
 
             return "HpMpTp";

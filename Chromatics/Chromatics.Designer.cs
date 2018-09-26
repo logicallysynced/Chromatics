@@ -152,6 +152,32 @@
             this.btn_exportChromatics = new System.Windows.Forms.Button();
             this.btn_importChromatics = new System.Windows.Forms.Button();
             this.loadPaletteButton = new System.Windows.Forms.Button();
+            this.tP_act = new System.Windows.Forms.TabPage();
+            this.btn_acthelp = new System.Windows.Forms.Button();
+            this.gb_act = new System.Windows.Forms.GroupBox();
+            this.chk_actflashtimer = new System.Windows.Forms.CheckBox();
+            this.chk_actflashtrigger = new System.Windows.Forms.CheckBox();
+            this.lbl_actjob = new System.Windows.Forms.Label();
+            this.cb_actjobclass = new System.Windows.Forms.ComboBox();
+            this.nm_actdmgprc = new System.Windows.Forms.NumericUpDown();
+            this.lbl_actdmgprc = new System.Windows.Forms.Label();
+            this.nm_actoverhealprc = new System.Windows.Forms.NumericUpDown();
+            this.lbl_actoverhealprc = new System.Windows.Forms.Label();
+            this.nm_actcritdhprc = new System.Windows.Forms.NumericUpDown();
+            this.lbl_actcritdhprc = new System.Windows.Forms.Label();
+            this.nm_actdhprc = new System.Windows.Forms.NumericUpDown();
+            this.lbl_actdhprc = new System.Windows.Forms.Label();
+            this.lbl_actgroupdps = new System.Windows.Forms.Label();
+            this.nm_actcritprc = new System.Windows.Forms.NumericUpDown();
+            this.lbl_acttargetcrit = new System.Windows.Forms.Label();
+            this.nm_actgroupdps = new System.Windows.Forms.NumericUpDown();
+            this.lbl_acttargethps = new System.Windows.Forms.Label();
+            this.nm_acttargethps = new System.Windows.Forms.NumericUpDown();
+            this.lbl_acttargetdps = new System.Windows.Forms.Label();
+            this.nm_acttargetdps = new System.Windows.Forms.NumericUpDown();
+            this.chk_actflash = new System.Windows.Forms.CheckBox();
+            this.lbl_actmode = new System.Windows.Forms.Label();
+            this.cb_actmode = new System.Windows.Forms.ComboBox();
             this.tP_ARX = new System.Windows.Forms.TabPage();
             this.gB_ARX1 = new System.Windows.Forms.GroupBox();
             this.lbl_arx_actipexample = new System.Windows.Forms.Label();
@@ -194,6 +220,16 @@
             this.gB_General.SuspendLayout();
             this.tP_mappings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dG_mappings)).BeginInit();
+            this.tP_act.SuspendLayout();
+            this.gb_act.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actdmgprc)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actoverhealprc)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actcritdhprc)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actdhprc)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actcritprc)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actgroupdps)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_acttargethps)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_acttargetdps)).BeginInit();
             this.tP_ARX.SuspendLayout();
             this.gB_ARX1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -216,6 +252,7 @@
             this.tb_controlA.Controls.Add(this.tP_devicesnew);
             this.tb_controlA.Controls.Add(this.tP_settings);
             this.tb_controlA.Controls.Add(this.tP_mappings);
+            this.tb_controlA.Controls.Add(this.tP_act);
             this.tb_controlA.Controls.Add(this.tP_ARX);
             this.tb_controlA.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tb_controlA.Location = new System.Drawing.Point(0, 0);
@@ -1617,6 +1654,400 @@
             this.loadPaletteButton.UseVisualStyleBackColor = false;
             this.loadPaletteButton.Click += new System.EventHandler(this.loadPaletteButton_Click);
             // 
+            // tP_act
+            // 
+            this.tP_act.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_act.Controls.Add(this.btn_acthelp);
+            this.tP_act.Controls.Add(this.gb_act);
+            this.tP_act.Location = new System.Drawing.Point(4, 25);
+            this.tP_act.Name = "tP_act";
+            this.tP_act.Size = new System.Drawing.Size(969, 494);
+            this.tP_act.TabIndex = 6;
+            this.tP_act.Text = "ACT";
+            // 
+            // btn_acthelp
+            // 
+            this.btn_acthelp.Location = new System.Drawing.Point(858, 17);
+            this.btn_acthelp.Name = "btn_acthelp";
+            this.btn_acthelp.Size = new System.Drawing.Size(103, 33);
+            this.btn_acthelp.TabIndex = 1;
+            this.btn_acthelp.Text = "Setup Help";
+            this.tooltip_main.SetToolTip(this.btn_acthelp, "Opens a webpage with instructions on how to link ACT to Chromatics");
+            this.btn_acthelp.UseVisualStyleBackColor = true;
+            this.btn_acthelp.Click += new System.EventHandler(this.btn_acthelp_Click);
+            // 
+            // gb_act
+            // 
+            this.gb_act.Controls.Add(this.chk_actflashtimer);
+            this.gb_act.Controls.Add(this.chk_actflashtrigger);
+            this.gb_act.Controls.Add(this.lbl_actjob);
+            this.gb_act.Controls.Add(this.cb_actjobclass);
+            this.gb_act.Controls.Add(this.nm_actdmgprc);
+            this.gb_act.Controls.Add(this.lbl_actdmgprc);
+            this.gb_act.Controls.Add(this.nm_actoverhealprc);
+            this.gb_act.Controls.Add(this.lbl_actoverhealprc);
+            this.gb_act.Controls.Add(this.nm_actcritdhprc);
+            this.gb_act.Controls.Add(this.lbl_actcritdhprc);
+            this.gb_act.Controls.Add(this.nm_actdhprc);
+            this.gb_act.Controls.Add(this.lbl_actdhprc);
+            this.gb_act.Controls.Add(this.lbl_actgroupdps);
+            this.gb_act.Controls.Add(this.nm_actcritprc);
+            this.gb_act.Controls.Add(this.lbl_acttargetcrit);
+            this.gb_act.Controls.Add(this.nm_actgroupdps);
+            this.gb_act.Controls.Add(this.lbl_acttargethps);
+            this.gb_act.Controls.Add(this.nm_acttargethps);
+            this.gb_act.Controls.Add(this.lbl_acttargetdps);
+            this.gb_act.Controls.Add(this.nm_acttargetdps);
+            this.gb_act.Controls.Add(this.chk_actflash);
+            this.gb_act.Controls.Add(this.lbl_actmode);
+            this.gb_act.Controls.Add(this.cb_actmode);
+            this.gb_act.Location = new System.Drawing.Point(9, 56);
+            this.gb_act.Name = "gb_act";
+            this.gb_act.Size = new System.Drawing.Size(952, 339);
+            this.gb_act.TabIndex = 0;
+            this.gb_act.TabStop = false;
+            this.gb_act.Text = "ACT Settings";
+            // 
+            // chk_actflashtimer
+            // 
+            this.chk_actflashtimer.AutoSize = true;
+            this.chk_actflashtimer.Location = new System.Drawing.Point(21, 174);
+            this.chk_actflashtimer.Name = "chk_actflashtimer";
+            this.chk_actflashtimer.Size = new System.Drawing.Size(124, 21);
+            this.chk_actflashtimer.TabIndex = 22;
+            this.chk_actflashtimer.Text = "Flash on Timer";
+            this.tooltip_main.SetToolTip(this.chk_actflashtimer, "Flashes the keyboard whenever a timer fires.");
+            this.chk_actflashtimer.UseVisualStyleBackColor = true;
+            this.chk_actflashtimer.CheckedChanged += new System.EventHandler(this.chk_actflashtimer_CheckedChanged);
+            // 
+            // chk_actflashtrigger
+            // 
+            this.chk_actflashtrigger.AutoSize = true;
+            this.chk_actflashtrigger.Location = new System.Drawing.Point(21, 133);
+            this.chk_actflashtrigger.Name = "chk_actflashtrigger";
+            this.chk_actflashtrigger.Size = new System.Drawing.Size(185, 21);
+            this.chk_actflashtrigger.TabIndex = 21;
+            this.chk_actflashtrigger.Text = "Flash on Custom Trigger";
+            this.tooltip_main.SetToolTip(this.chk_actflashtrigger, "Flashes the keyboard whenever a custom trigger fires.");
+            this.chk_actflashtrigger.UseVisualStyleBackColor = true;
+            this.chk_actflashtrigger.CheckedChanged += new System.EventHandler(this.chk_actflashtrigger_CheckedChanged);
+            // 
+            // lbl_actjob
+            // 
+            this.lbl_actjob.AutoSize = true;
+            this.lbl_actjob.Location = new System.Drawing.Point(706, 43);
+            this.lbl_actjob.Name = "lbl_actjob";
+            this.lbl_actjob.Size = new System.Drawing.Size(69, 17);
+            this.lbl_actjob.TabIndex = 20;
+            this.lbl_actjob.Text = "Job Class";
+            // 
+            // cb_actjobclass
+            // 
+            this.cb_actjobclass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
+            this.cb_actjobclass.Enabled = false;
+            this.cb_actjobclass.FormattingEnabled = true;
+            this.cb_actjobclass.Location = new System.Drawing.Point(796, 39);
+            this.cb_actjobclass.Name = "cb_actjobclass";
+            this.cb_actjobclass.Size = new System.Drawing.Size(122, 24);
+            this.cb_actjobclass.TabIndex = 19;
+            this.cb_actjobclass.SelectedIndexChanged += new System.EventHandler(this.cb_actjobclass_SelectedIndexChanged);
+            // 
+            // nm_actdmgprc
+            // 
+            this.nm_actdmgprc.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actdmgprc.Location = new System.Drawing.Point(820, 289);
+            this.nm_actdmgprc.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_actdmgprc.Name = "nm_actdmgprc";
+            this.nm_actdmgprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actdmgprc.TabIndex = 18;
+            this.nm_actdmgprc.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actdmgprc.ValueChanged += new System.EventHandler(this.nm_actdmgprc_ValueChanged);
+            // 
+            // lbl_actdmgprc
+            // 
+            this.lbl_actdmgprc.AutoSize = true;
+            this.lbl_actdmgprc.Location = new System.Drawing.Point(728, 291);
+            this.lbl_actdmgprc.Name = "lbl_actdmgprc";
+            this.lbl_actdmgprc.Size = new System.Drawing.Size(73, 17);
+            this.lbl_actdmgprc.TabIndex = 17;
+            this.lbl_actdmgprc.Text = "Damage%";
+            // 
+            // nm_actoverhealprc
+            // 
+            this.nm_actoverhealprc.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actoverhealprc.Location = new System.Drawing.Point(820, 261);
+            this.nm_actoverhealprc.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_actoverhealprc.Name = "nm_actoverhealprc";
+            this.nm_actoverhealprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actoverhealprc.TabIndex = 16;
+            this.nm_actoverhealprc.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actoverhealprc.ValueChanged += new System.EventHandler(this.nm_actoverhealprc_ValueChanged);
+            // 
+            // lbl_actoverhealprc
+            // 
+            this.lbl_actoverhealprc.AutoSize = true;
+            this.lbl_actoverhealprc.Location = new System.Drawing.Point(728, 263);
+            this.lbl_actoverhealprc.Name = "lbl_actoverhealprc";
+            this.lbl_actoverhealprc.Size = new System.Drawing.Size(78, 17);
+            this.lbl_actoverhealprc.TabIndex = 15;
+            this.lbl_actoverhealprc.Text = "Overheal%";
+            // 
+            // nm_actcritdhprc
+            // 
+            this.nm_actcritdhprc.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actcritdhprc.Location = new System.Drawing.Point(820, 233);
+            this.nm_actcritdhprc.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_actcritdhprc.Name = "nm_actcritdhprc";
+            this.nm_actcritdhprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actcritdhprc.TabIndex = 14;
+            this.nm_actcritdhprc.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actcritdhprc.ValueChanged += new System.EventHandler(this.nm_actcritdhprc_ValueChanged);
+            // 
+            // lbl_actcritdhprc
+            // 
+            this.lbl_actcritdhprc.AutoSize = true;
+            this.lbl_actcritdhprc.Location = new System.Drawing.Point(728, 235);
+            this.lbl_actcritdhprc.Name = "lbl_actcritdhprc";
+            this.lbl_actcritdhprc.Size = new System.Drawing.Size(61, 17);
+            this.lbl_actcritdhprc.TabIndex = 13;
+            this.lbl_actcritdhprc.Text = "CritDH%";
+            // 
+            // nm_actdhprc
+            // 
+            this.nm_actdhprc.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actdhprc.Location = new System.Drawing.Point(820, 205);
+            this.nm_actdhprc.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_actdhprc.Name = "nm_actdhprc";
+            this.nm_actdhprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actdhprc.TabIndex = 12;
+            this.nm_actdhprc.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actdhprc.ValueChanged += new System.EventHandler(this.nm_actdhprc_ValueChanged);
+            // 
+            // lbl_actdhprc
+            // 
+            this.lbl_actdhprc.AutoSize = true;
+            this.lbl_actdhprc.Location = new System.Drawing.Point(728, 207);
+            this.lbl_actdhprc.Name = "lbl_actdhprc";
+            this.lbl_actdhprc.Size = new System.Drawing.Size(40, 17);
+            this.lbl_actdhprc.TabIndex = 11;
+            this.lbl_actdhprc.Text = "DH%";
+            // 
+            // lbl_actgroupdps
+            // 
+            this.lbl_actgroupdps.AutoSize = true;
+            this.lbl_actgroupdps.Location = new System.Drawing.Point(728, 151);
+            this.lbl_actgroupdps.Name = "lbl_actgroupdps";
+            this.lbl_actgroupdps.Size = new System.Drawing.Size(80, 17);
+            this.lbl_actgroupdps.TabIndex = 10;
+            this.lbl_actgroupdps.Text = "Group DPS";
+            // 
+            // nm_actcritprc
+            // 
+            this.nm_actcritprc.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actcritprc.Location = new System.Drawing.Point(820, 177);
+            this.nm_actcritprc.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_actcritprc.Name = "nm_actcritprc";
+            this.nm_actcritprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actcritprc.TabIndex = 9;
+            this.nm_actcritprc.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nm_actcritprc.ValueChanged += new System.EventHandler(this.nm_actcritprc_ValueChanged);
+            // 
+            // lbl_acttargetcrit
+            // 
+            this.lbl_acttargetcrit.AutoSize = true;
+            this.lbl_acttargetcrit.Location = new System.Drawing.Point(728, 179);
+            this.lbl_acttargetcrit.Name = "lbl_acttargetcrit";
+            this.lbl_acttargetcrit.Size = new System.Drawing.Size(41, 17);
+            this.lbl_acttargetcrit.TabIndex = 8;
+            this.lbl_acttargetcrit.Text = "Crit%";
+            // 
+            // nm_actgroupdps
+            // 
+            this.nm_actgroupdps.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.nm_actgroupdps.Location = new System.Drawing.Point(820, 149);
+            this.nm_actgroupdps.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.nm_actgroupdps.Name = "nm_actgroupdps";
+            this.nm_actgroupdps.Size = new System.Drawing.Size(98, 22);
+            this.nm_actgroupdps.TabIndex = 7;
+            this.nm_actgroupdps.Value = new decimal(new int[] {
+            25000,
+            0,
+            0,
+            0});
+            this.nm_actgroupdps.ValueChanged += new System.EventHandler(this.nm_actgroupdps_ValueChanged);
+            // 
+            // lbl_acttargethps
+            // 
+            this.lbl_acttargethps.AutoSize = true;
+            this.lbl_acttargethps.Location = new System.Drawing.Point(728, 123);
+            this.lbl_acttargethps.Name = "lbl_acttargethps";
+            this.lbl_acttargethps.Size = new System.Drawing.Size(36, 17);
+            this.lbl_acttargethps.TabIndex = 6;
+            this.lbl_acttargethps.Text = "HPS";
+            // 
+            // nm_acttargethps
+            // 
+            this.nm_acttargethps.Increment = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.nm_acttargethps.Location = new System.Drawing.Point(820, 121);
+            this.nm_acttargethps.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.nm_acttargethps.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_acttargethps.Name = "nm_acttargethps";
+            this.nm_acttargethps.Size = new System.Drawing.Size(98, 22);
+            this.nm_acttargethps.TabIndex = 5;
+            this.nm_acttargethps.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.nm_acttargethps.ValueChanged += new System.EventHandler(this.nm_acttargethps_ValueChanged);
+            // 
+            // lbl_acttargetdps
+            // 
+            this.lbl_acttargetdps.AutoSize = true;
+            this.lbl_acttargetdps.Location = new System.Drawing.Point(728, 95);
+            this.lbl_acttargetdps.Name = "lbl_acttargetdps";
+            this.lbl_acttargetdps.Size = new System.Drawing.Size(36, 17);
+            this.lbl_acttargetdps.TabIndex = 4;
+            this.lbl_acttargetdps.Text = "DPS";
+            // 
+            // nm_acttargetdps
+            // 
+            this.nm_acttargetdps.Increment = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.nm_acttargetdps.Location = new System.Drawing.Point(820, 93);
+            this.nm_acttargetdps.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.nm_acttargetdps.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_acttargetdps.Name = "nm_acttargetdps";
+            this.nm_acttargetdps.Size = new System.Drawing.Size(98, 22);
+            this.nm_acttargetdps.TabIndex = 3;
+            this.nm_acttargetdps.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.nm_acttargetdps.ValueChanged += new System.EventHandler(this.nm_acttargetdps_ValueChanged);
+            // 
+            // chk_actflash
+            // 
+            this.chk_actflash.AutoSize = true;
+            this.chk_actflash.Location = new System.Drawing.Point(21, 94);
+            this.chk_actflash.Name = "chk_actflash";
+            this.chk_actflash.Size = new System.Drawing.Size(178, 21);
+            this.chk_actflash.TabIndex = 2;
+            this.chk_actflash.Text = "Flash on ACT threshold";
+            this.tooltip_main.SetToolTip(this.chk_actflash, "Flashes the keyboard when you reach your target DPS");
+            this.chk_actflash.UseVisualStyleBackColor = true;
+            this.chk_actflash.CheckedChanged += new System.EventHandler(this.chk_actflash_CheckedChanged);
+            // 
+            // lbl_actmode
+            // 
+            this.lbl_actmode.AutoSize = true;
+            this.lbl_actmode.Location = new System.Drawing.Point(18, 46);
+            this.lbl_actmode.Name = "lbl_actmode";
+            this.lbl_actmode.Size = new System.Drawing.Size(74, 17);
+            this.lbl_actmode.TabIndex = 1;
+            this.lbl_actmode.Text = "ACT Mode";
+            // 
+            // cb_actmode
+            // 
+            this.cb_actmode.FormattingEnabled = true;
+            this.cb_actmode.Location = new System.Drawing.Point(110, 43);
+            this.cb_actmode.Name = "cb_actmode";
+            this.cb_actmode.Size = new System.Drawing.Size(164, 24);
+            this.cb_actmode.TabIndex = 0;
+            this.cb_actmode.SelectedIndexChanged += new System.EventHandler(this.cb_actmode_SelectedIndexChanged);
+            // 
             // tP_ARX
             // 
             this.tP_ARX.BackColor = System.Drawing.SystemColors.Control;
@@ -1851,6 +2282,17 @@
             this.tP_mappings.ResumeLayout(false);
             this.tP_mappings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dG_mappings)).EndInit();
+            this.tP_act.ResumeLayout(false);
+            this.gb_act.ResumeLayout(false);
+            this.gb_act.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actdmgprc)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actoverhealprc)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actcritdhprc)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actdhprc)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actcritprc)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_actgroupdps)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_acttargethps)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_acttargetdps)).EndInit();
             this.tP_ARX.ResumeLayout(false);
             this.gB_ARX1.ResumeLayout(false);
             this.gB_ARX1.PerformLayout();
@@ -2003,6 +2445,32 @@
         private System.Windows.Forms.Label lbl_fkeymode;
         private System.Windows.Forms.Label lbl_hpcritical;
         private System.Windows.Forms.NumericUpDown nm_criticalhp;
+        private System.Windows.Forms.TabPage tP_act;
+        private System.Windows.Forms.Button btn_acthelp;
+        private System.Windows.Forms.GroupBox gb_act;
+        private System.Windows.Forms.Label lbl_acttargetcrit;
+        private System.Windows.Forms.NumericUpDown nm_actgroupdps;
+        private System.Windows.Forms.Label lbl_acttargethps;
+        private System.Windows.Forms.NumericUpDown nm_acttargethps;
+        private System.Windows.Forms.Label lbl_acttargetdps;
+        private System.Windows.Forms.NumericUpDown nm_acttargetdps;
+        private System.Windows.Forms.CheckBox chk_actflash;
+        private System.Windows.Forms.Label lbl_actmode;
+        private System.Windows.Forms.ComboBox cb_actmode;
+        private System.Windows.Forms.Label lbl_actgroupdps;
+        private System.Windows.Forms.NumericUpDown nm_actcritprc;
+        private System.Windows.Forms.NumericUpDown nm_actdmgprc;
+        private System.Windows.Forms.Label lbl_actdmgprc;
+        private System.Windows.Forms.NumericUpDown nm_actoverhealprc;
+        private System.Windows.Forms.Label lbl_actoverhealprc;
+        private System.Windows.Forms.NumericUpDown nm_actcritdhprc;
+        private System.Windows.Forms.Label lbl_actcritdhprc;
+        private System.Windows.Forms.NumericUpDown nm_actdhprc;
+        private System.Windows.Forms.Label lbl_actdhprc;
+        private System.Windows.Forms.Label lbl_actjob;
+        private System.Windows.Forms.ComboBox cb_actjobclass;
+        private System.Windows.Forms.CheckBox chk_actflashtimer;
+        private System.Windows.Forms.CheckBox chk_actflashtrigger;
     }
 }
 

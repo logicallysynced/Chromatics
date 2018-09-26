@@ -37,6 +37,7 @@ namespace Chromatics
             {BulbModeTypes.TpTracker, "TP Tracker"},
             {BulbModeTypes.Castbar, "Castbar"},
             {BulbModeTypes.DutyFinder, "Duty Finder Bell"},
+            {BulbModeTypes.ACTTracker, "ACT Tracker"},
             {BulbModeTypes.ChromaticsDefault, "Chromatics Default"}
         };
 
@@ -53,7 +54,8 @@ namespace Chromatics
             {DevModeTypes.MpTracker, "MP Tracker"},
             {DevModeTypes.TpTracker, "TP Tracker"},
             {DevModeTypes.Castbar, "Castbar"},
-            {DevModeTypes.DutyFinder, "Duty Finder Bell"}
+            {DevModeTypes.DutyFinder, "Duty Finder Bell"},
+            {DevModeTypes.ACTTracker, "ACT Tracker"}
         };
 
         private readonly Dictionary<DevMultiModeTypes, string> _devModesMulti = new Dictionary<DevMultiModeTypes, string>
@@ -71,7 +73,8 @@ namespace Chromatics
             {DevMultiModeTypes.Castbar, "Castbar"},
             {DevMultiModeTypes.DutyFinder, "Duty Finder Bell"},
             {DevMultiModeTypes.ReactiveWeather, "Reactive Weather"},
-            {DevMultiModeTypes.StatusEffects, "Status Effects"}
+            {DevMultiModeTypes.StatusEffects, "Status Effects"},
+            {DevMultiModeTypes.ACTTracker, "ACT Tracker"}
         };
 
         private readonly Dictionary<LightbarMode, string> _lightbarModes = new Dictionary<LightbarMode, string>
@@ -88,7 +91,8 @@ namespace Chromatics
             {LightbarMode.Castbar, "Castbar"}, //
             {LightbarMode.DutyFinder, "Duty Finder Bell"},
             {LightbarMode.CurrentExp, "Experience Tracker"},
-            {LightbarMode.JobGauge, "Job Gauge"}
+            {LightbarMode.JobGauge, "Job Gauge"},
+            {LightbarMode.ACTTracker, "ACT Tracker"}
         };
 
         private readonly Dictionary<FKeyMode, string> _fkeyModes = new Dictionary<FKeyMode, string>
@@ -104,7 +108,51 @@ namespace Chromatics
             {FKeyMode.TpTracker, "TP Tracker"}, //
             {FKeyMode.HpMpTp, "HP/MP/TP"}, //
             {FKeyMode.CurrentExp, "Experience Tracker"},
-            {FKeyMode.JobGauge, "Job Gauge"}
+            {FKeyMode.JobGauge, "Job Gauge"},
+            {FKeyMode.ACTTracker, "ACT Tracker"}
+        };
+
+        private readonly Dictionary<ACTMode, string> _actModes = new Dictionary<ACTMode, string>
+        {
+            //Keys
+            {ACTMode.DPS, "DPS"},
+            {ACTMode.HPS, "HPS"}, //
+            {ACTMode.GroupDPS, "Group DPS"}, //
+            {ACTMode.CritPrc, "Crit %"}, //
+            {ACTMode.DHPrc, "DH %"}, //
+            {ACTMode.CritDHPrc, "Crit DH %"}, //
+            {ACTMode.OverhealPrc, "Overheal %"}, //
+            {ACTMode.DamagePrc, "Damage %"}, //
+            {ACTMode.Timer, "Timer" },
+            {ACTMode.CustomTrigger, "Custom Trigger" },
+        };
+
+        private readonly Dictionary<int, string> _actJobs = new Dictionary<int, string>
+        {
+            {0, "Paladin"}, //PLD
+            {1, "Warrior"}, //WAR
+            {2, "Dark Knight"}, //DRK
+            {3, "White Mage"}, //WHM
+            {4, "Scholar"}, //SCH
+            {5, "Astrologian"}, //AST
+            {6, "Bard"}, //BRD
+            {7, "Machinist"}, //MCH
+            {8, "Black Mage"}, //BLM
+            {9, "Summoner"}, //SMN
+            {10, "Monk"}, //MNK
+            {11, "Samurai"}, //SAM
+            {12, "Ninja"}, //NIN
+            {13, "Dragoon"}, //DRG
+            {14, "Archer"}, //ARC
+            {15, "Gladiator"}, //GLD
+            {16, "Lancer"}, //LNC
+            {17, "Marauder"}, //MRD
+            {18, "Pugilist"}, //PUG
+            {19, "Rouge"}, //ROG
+            {20, "Arcanist"}, //ARC
+            {21, "Conjurer"}, //CNJ
+            {22, "Thaumaturge"}, //THM
+            {23, "Red Mage" } //RDM
         };
 
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
@@ -346,7 +394,16 @@ namespace Chromatics
             {"ColorMappingWeatherQuicklevinBase", new[] { "Quicklevin (Base)", "10", "Black", "White"}},
             {"ColorMappingWeatherQuicklevinHighlight", new[] { "Quicklevin (Highlight)", "10", "Black", "White"}},
             {"ColorMappingWeatherWhitecycloneBase", new[] { "White Cyclone (Base)", "10", "Black", "White"}},
-            {"ColorMappingWeatherWhitecycloneHighlight", new[] { "White Cyclone (Highlight)", "10", "Black", "White"}}
+            {"ColorMappingWeatherWhitecycloneHighlight", new[] { "White Cyclone (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingACTThresholdEmpty", new[] { "ACT Threshold Empty", "11", "Black", "White"}},
+            {"ColorMappingACTThresholdBuild", new[] { "ACT Threshold Build", "11", "Black", "White"}},
+            {"ColorMappingACTThresholdSuccess", new[] { "ACT Threshold Success", "11", "Black", "White"}},
+            {"ColorMappingACTThresholdFlash", new[] { "ACT Threshold Flash", "11", "Black", "White"}},
+            {"ColorMappingACTCustomTriggerIdle", new[] { "Custom Trigger Idle", "11", "Black", "White"}},
+            {"ColorMappingACTCustomTriggerBell", new[] { "Custom Trigger Bell", "11", "Black", "White"}},
+            {"ColorMappingACTTimerIdle", new[] { "Timer Idle", "11", "Black", "White"}},
+            {"ColorMappingACTTimerBuild", new[] { "Timer Build", "11", "Black", "White"}},
+            {"ColorMappingACTTimerFlash", new[] { "Timer Flash", "11", "Black", "White"}},
         };
 
 
@@ -363,7 +420,8 @@ namespace Chromatics
             {7, "Cooldowns/Keybinds"},
             {8, "Notifications"},
             {9, "Job Gauges" },
-            {10, "Reactive Weather" }
+            {10, "Reactive Weather" },
+            {11, "ACT Triggers"}
         };
 
         public void SetFormName(string text)
@@ -1041,6 +1099,9 @@ namespace Chromatics
             chk_disablememory.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCheck;
 
             nm_criticalhp.Value = ChromaticsSettings.ChromaticsSettingsCriticalHP;
+            chk_actflash.Checked = ChromaticsSettings.ChromaticsSettingsACTFlash;
+            chk_actflashtrigger.Checked = ChromaticsSettings.ChromaticsSettingsACTFlashCustomTrigger;
+            chk_actflashtimer.Checked = ChromaticsSettings.ChromaticsSettingsACTFlashTimer;
 
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
@@ -1085,11 +1146,26 @@ namespace Chromatics
                 cb_fkeymode.Items.Add(item.Value);
             }
 
+            foreach (var item in _actModes)
+            {
+                cb_actmode.Items.Add(item.Value);
+            }
+
+            foreach (var item in _actJobs)
+            {
+                cb_actjobclass.Items.Add(item.Value);
+            }
+
             cb_singlezonemode.SelectedItem = Helpers.ConvertDevModeToCB(_KeysSingleKeyMode);
             cb_multizonemode.SelectedItem = Helpers.ConvertDevMultiModeToCB(_KeysMultiKeyMode);
 
             cb_lightbarmode.SelectedItem = Helpers.ConvertLightbarModeToCB(_LightbarMode);
             cb_fkeymode.SelectedItem = Helpers.ConvertFKeyModeToCB(_FKeyMode);
+
+
+            cb_actmode.SelectedItem = ChromaticsSettings.ChromaticsSettingsACTMode;
+            cb_actjobclass.SelectedIndex = 0;
+
 
             cb_mouse_z1.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone1Mode);
             cb_mouse_z2.SelectedItem = Helpers.ConvertDevModeToCB(_MouseZone2Mode);
@@ -2308,6 +2384,175 @@ namespace Chromatics
             SaveDevices();
         }
 
+        private void cb_actmode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _actModes)
+            {
+                if ((string)cb_actmode.SelectedItem != item.Value) continue;
+                ChromaticsSettings.ChromaticsSettingsACTMode = (string)cb_actmode.SelectedItem;
+                break;
+            }
+            
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_actflash_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTFlash = chk_actflash.Checked;
+
+            SaveChromaticsSettings(1);
+        }
+        
+        private void chk_actflashtrigger_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTFlashCustomTrigger = chk_actflashtrigger.Checked;
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_actflashtimer_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTFlashTimer = chk_actflashtimer.Checked;
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void cb_actjobclass_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            nm_acttargetdps.Value = ChromaticsSettings.ChromaticsSettingsACTDPS[cb_actjobclass.SelectedIndex][0];
+            nm_acttargethps.Value = ChromaticsSettings.ChromaticsSettingsACTHPS[cb_actjobclass.SelectedIndex][0];
+            nm_actgroupdps.Value = ChromaticsSettings.ChromaticsSettingsACTGroupDPS[cb_actjobclass.SelectedIndex][0];
+            nm_actcritprc.Value = ChromaticsSettings.ChromaticsSettingsACTTargetCrit[cb_actjobclass.SelectedIndex][0];
+            nm_actdhprc.Value = ChromaticsSettings.ChromaticsSettingsACTTargetDH[cb_actjobclass.SelectedIndex][0];
+            nm_actcritdhprc.Value = ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[cb_actjobclass.SelectedIndex][0];
+            nm_actoverhealprc.Value = ChromaticsSettings.ChromaticsSettingsACTOverheal[cb_actjobclass.SelectedIndex][0];
+            nm_actdmgprc.Value = ChromaticsSettings.ChromaticsSettingsACTDamage[cb_actjobclass.SelectedIndex][0];
+        }
+
+        public string GetACTJob()
+        {
+            var ret = "";
+            if (InvokeRequired)
+            {
+                void Del()
+                {
+                    ret = (string)cb_actjobclass.SelectedItem;
+                }
+
+                Invoke((GetJobDelegate)Del);
+            }
+            else
+            {
+                ret = (string)cb_actjobclass.SelectedItem;
+            }
+
+            return ret;
+        }
+        
+        public void SwitchACTJob(string job)
+        {
+            if (!_actJobs.ContainsValue(job)) return;
+
+            if (InvokeRequired)
+            {
+                void Del()
+                {
+                    //cb_actjobclass.
+                    cb_actjobclass.Enabled = true;
+                    cb_actjobclass.SelectedIndex = _actJobs.FirstOrDefault(x => x.Value == job).Key;
+                    cb_actjobclass.Enabled = false;
+                }
+
+                Invoke((ChangeJobDelegate)Del);
+            }
+            else
+            {
+                cb_actjobclass.Enabled = true;
+                cb_actjobclass.SelectedIndex = _actJobs.FirstOrDefault(x => x.Value == job).Key;
+                cb_actjobclass.Enabled = false;
+            }
+        }
+
+        private void nm_acttargetdps_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTDPS[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_acttargetdps.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void nm_acttargethps_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTHPS[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_acttargethps.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void nm_actgroupdps_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTGroupDPS[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_actgroupdps.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void nm_actcritprc_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTTargetCrit[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_actcritprc.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void nm_actdhprc_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTTargetDH[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_actdhprc.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void nm_actcritdhprc_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_actcritdhprc.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void nm_actoverhealprc_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTOverheal[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_actoverhealprc.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void nm_actdmgprc_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsACTDamage[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_actdmgprc.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
         private void cb_singlezonemode_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;
@@ -2626,6 +2871,13 @@ namespace Chromatics
             Process.Start("https://chromaticsffxiv.com/");
         }
 
+        private void btn_acthelp_Click(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            Process.Start("https://chromaticsffxiv.com/");
+        }
+
         private void chk_desktopnotify_CheckedChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;
@@ -2804,5 +3056,7 @@ namespace Chromatics
         private delegate void ResetGridDelegate();
         private delegate void SetFormNameDelegate();
         private delegate void ResetMappingsDelegate();
+        private delegate void ChangeJobDelegate();
+        private delegate void GetJobDelegate();
     }
 }
