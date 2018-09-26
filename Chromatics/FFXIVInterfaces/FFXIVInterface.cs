@@ -2817,21 +2817,27 @@ namespace Chromatics
                             }
 
                             //Lightbar
-                            var HpLightbar_Collection = DeviceEffects.LightbarZones;
-                            var HpLightbar_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp, HpLightbar_Collection.Length, 0);
-
-                            for (int i = 0; i < HpLightbar_Collection.Length; i++)
+                            if (_LightbarMode == LightbarMode.HpTracker)
                             {
-                                var col = colHpfull;
+                                var HpLightbar_Collection = DeviceEffects.LightbarZones;
+                                var HpLightbar_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
+                                        HpLightbar_Collection.Length, 0);
 
-                                if (polHpz2 < criticalThresh)
+                                for (int i = 0; i < HpLightbar_Collection.Length; i++)
                                 {
-                                    col = colHpcritical;
-                                }
+                                    var col = colHpfull;
 
-                                GlobalApplyMapLightbarLighting(HpLightbar_Collection[i], HpLightbar_Interpolate > i ? col : colHpempty, false, false);
+                                    if (polHpz2 < criticalThresh)
+                                    {
+                                        col = colHpcritical;
+                                    }
+
+                                    GlobalApplyMapLightbarLighting(HpLightbar_Collection[i],
+                                        HpLightbar_Interpolate > i ? col : colHpempty, false, false);
+                                }
                             }
-                            
+
                         }
 
                         //MP
@@ -2926,12 +2932,18 @@ namespace Chromatics
                             }
 
                             //Lightbar
-                            var MpLightbar_Collection = DeviceEffects.LightbarZones;
-                            var MpLightbar_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp, MpLightbar_Collection.Length, 0);
-
-                            for (int i = 0; i < MpLightbar_Collection.Length; i++)
+                            if (_LightbarMode == LightbarMode.MpTracker)
                             {
-                                GlobalApplyMapLightbarLighting(MpLightbar_Collection[i], MpLightbar_Interpolate > i ? colMpfull : colMpempty, false, false);
+                                var MpLightbar_Collection = DeviceEffects.LightbarZones;
+                                var MpLightbar_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
+                                        MpLightbar_Collection.Length, 0);
+
+                                for (int i = 0; i < MpLightbar_Collection.Length; i++)
+                                {
+                                    GlobalApplyMapLightbarLighting(MpLightbar_Collection[i],
+                                        MpLightbar_Interpolate > i ? colMpfull : colMpempty, false, false);
+                                }
                             }
                         }
 
@@ -3027,12 +3039,18 @@ namespace Chromatics
                             }
 
                             //Lightbar
-                            var TpLightbar_Collection = DeviceEffects.LightbarZones;
-                            var TpLightbar_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp, TpLightbar_Collection.Length, 0);
-
-                            for (int i = 0; i < TpLightbar_Collection.Length; i++)
+                            if (_LightbarMode == LightbarMode.TpTracker)
                             {
-                                GlobalApplyMapLightbarLighting(TpLightbar_Collection[i], TpLightbar_Interpolate > i ? colTpfull : colTpempty, false, false);
+                                var TpLightbar_Collection = DeviceEffects.LightbarZones;
+                                var TpLightbar_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp,
+                                        TpLightbar_Collection.Length, 0);
+
+                                for (int i = 0; i < TpLightbar_Collection.Length; i++)
+                                {
+                                    GlobalApplyMapLightbarLighting(TpLightbar_Collection[i],
+                                        TpLightbar_Interpolate > i ? colTpfull : colTpempty, false, false);
+                                }
                             }
 
                         }

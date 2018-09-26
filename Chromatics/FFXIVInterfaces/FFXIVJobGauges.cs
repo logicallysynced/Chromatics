@@ -2677,12 +2677,13 @@ namespace Chromatics
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
-                            var JobLightbar_CollectionA = DeviceEffects.LightbarZonesR;
+                            var JobLightbar_CollectionA = DeviceEffects.LightbarZonesR.ToList();
+                            JobLightbar_CollectionA.Reverse();
                             var JobLightbar_InterpolateA =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(blackmana, 0, 100,
-                                    JobLightbar_CollectionA.Length, 0);
+                                    JobLightbar_CollectionA.Count, 0);
 
-                            for (int i = 0; i < JobLightbar_CollectionA.Length; i++)
+                            for (int i = 0; i < JobLightbar_CollectionA.Count; i++)
                             {
                                 GlobalApplyMapLightbarLighting(JobLightbar_CollectionA[i],
                                     JobLightbar_InterpolateA > i ? blackburst : negburst, false, false);
@@ -2703,12 +2704,13 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_CollectionA = DeviceEffects.FunctionR;
+                            var JobFunction_CollectionA = DeviceEffects.FunctionR.ToList();
+                            JobFunction_CollectionA.Reverse();
                             var JobFunction_InterpolateA =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(blackmana, 0, 100,
-                                    JobFunction_CollectionA.Length, 0);
+                                    JobFunction_CollectionA.Count, 0);
 
-                            for (int i = 0; i < JobFunction_CollectionA.Length; i++)
+                            for (int i = 0; i < JobFunction_CollectionA.Count; i++)
                             {
                                 GlobalApplyMapKeyLighting(JobFunction_CollectionA[i],
                                     JobFunction_InterpolateA > i ? blackburst : negburst, false);

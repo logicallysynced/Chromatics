@@ -261,8 +261,15 @@ namespace Chromatics
         {
             //Setup References
             //Watchdog.WatchdogStartup();
-            Text = @"Chromatics " + _currentVersionX;
-
+            if (!_debugmode)
+            {
+                Text = @"Chromatics " + _currentVersionX;
+            }
+            else
+            {
+                Text = @"Chromatics " + _currentVersionX + @" (BETA)";
+            }
+            
             //Setup Event Listeners
             FormClosing += OnFormClosing;
             Resize += ChromaticsForm_Resize;
@@ -289,7 +296,14 @@ namespace Chromatics
             }
 
             //Bind
-            WriteConsole(ConsoleTypes.System, @"Starting Chromatics Version " + _currentVersionX);
+            if (!_debugmode)
+            {
+                WriteConsole(ConsoleTypes.System, @"Starting Chromatics Version " + _currentVersionX);
+            }
+            else
+            {
+                WriteConsole(ConsoleTypes.System, @"Starting Chromatics Version " + _currentVersionX + " (BETA)");
+            }
 
 
             //Load Functions
@@ -665,7 +679,7 @@ namespace Chromatics
                 }
 
                 Attatched = 1;
-                SetFormName(@"Chromatics " + _currentVersionX + @" Beta (Attached)");
+                SetFormName(@"Chromatics " + _currentVersionX + @" (Attached)");
 
                 _attachcts.Cancel();
                 
