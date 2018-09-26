@@ -1802,7 +1802,7 @@ namespace Chromatics
                                 var maxThp = targetInfo.HPMax;
                                 //var polTargetHp = Helpers.LinIntDouble(0, maxThp, currentThp, 0, 5);
                                 var polTargetHp = (currentThp - 0) * (5 - 0) / (maxThp - 0) + 0;
-                                var polTargetHpx = (currentThp - 0) * (65535 - 0) / (maxThp - 0) + 0;
+                                var polTargetHpx = (currentThp - 0) * ((long)65535 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx2 = (currentThp - 0) * (1.0 - 0.0) / (maxThp - 0) + 0.0;
 
                                 var polTargetHpLB = (currentThp - 0) * (19 - 0) / (maxThp - 0) + 0;
@@ -2477,7 +2477,7 @@ namespace Chromatics
                         var castPercentage = _playerInfo.CastingPercentage;
                         var polCastX = (castPercentage - 0) * (12 - 0) / (1.0 - 0.0) + 0;
                         var polCast = Convert.ToInt32(polCastX);
-                        var polCastZ = Convert.ToInt32((castPercentage - 0) * (65535 - 0) / (1.0 - 0.0) + 0);
+                        var polCastZ = Convert.ToInt32((castPercentage - 0) * ((long)65535 - 0) / (1.0 - 0.0) + 0);
                         //double polCastZ2 = Convert.ToInt32((castPercentage - 0) * (1.0 - 0.0) / (1.0 - 0.0) + 0.0);
 
                         //Console.WriteLine(_playerInfo.IsCasting);
@@ -2687,15 +2687,18 @@ namespace Chromatics
                         if (maxHp != 0)
                         {
                             var polHp = (currentHp - 0) * (40 - 0) / (maxHp - 0) + 0;
-                            var polHpz = (currentHp - 0) * (65535 - 0) / (maxHp - 0) + 0;
+                            var polHpz = (currentHp - 0) * ((long)65535 - 0) / (maxHp - 0) + 0; //65535
+
                             var polHpz2 = (currentHp - 0) * (1.0 - 0.0) / (maxHp - 0) + 0.0;
                             var criticalThresh = ChromaticsSettings.ChromaticsSettingsCriticalHP / 100;
 
-                            GlobalUpdateBulbStateBrightness(BulbModeTypes.HpTracker, polHp <= 10 ? colHpempty : colHpfull, (ushort)polHpz, 250);
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpcritical : colHpfull, polHpz2);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpempty : colHpfull, false, polHpz2);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= 10 ? colHpempty : colHpfull, polHpz2);
+                            GlobalUpdateBulbStateBrightness(BulbModeTypes.HpTracker, polHp <= criticalThresh ? colHpempty : colHpfull, (ushort)polHpz, 250);
+                            
+
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpcritical : colHpfull, polHpz2);
+                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, false, polHpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, false, polHpz2);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, polHpz2);
 
 
                             //FKeys
@@ -2844,7 +2847,7 @@ namespace Chromatics
                         if (maxMp != 0)
                         {
                             var polMp = (currentMp - 0) * (40 - 0) / (maxMp - 0) + 0;
-                            var polMpz = (currentMp - 0) * (65535 - 0) / (maxMp - 0) + 0;
+                            var polMpz = (currentMp - 0) * ((long)65535 - 0) / (maxMp - 0) + 0;
                             var polMpz2 = (currentMp - 0) * (1.0 - 0.0) / (maxMp - 0) + 0.0;
 
                             GlobalUpdateBulbStateBrightness(BulbModeTypes.MpTracker, colMpfull, (ushort)polMpz,
@@ -2951,7 +2954,7 @@ namespace Chromatics
                         if (maxTp != 0)
                         {
                             var polTp = (currentTp - 0) * (40 - 0) / (maxTp - 0) + 0;
-                            var polTpz = (currentTp - 0) * (65535 - 0) / (maxTp - 0) + 0;
+                            var polTpz = (currentTp - 0) * ((long)65535 - 0) / (maxTp - 0) + 0;
                             var polTpz2 = (currentTp - 0) * (1.0 - 0.0) / (maxTp - 0) + 0.0;
 
                             GlobalUpdateBulbStateBrightness(BulbModeTypes.TpTracker, colTpfull, (ushort)polTpz,
