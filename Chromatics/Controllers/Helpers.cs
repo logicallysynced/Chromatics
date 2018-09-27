@@ -23,6 +23,11 @@ namespace Chromatics.Controllers
             {
                 return (current - min) * (targetHigh - targetLow) / (max - min) + targetLow;
             }
+
+            public static long Interpolate_Long(long current, long min, long max, long targetHigh, long targetLow)
+            {
+                return (current - min) * (targetHigh - targetLow) / (max - min) + targetLow;
+            }
         }
 
         public static class EnumUtil
@@ -388,6 +393,8 @@ namespace Chromatics.Controllers
                     return "JobGauge";
                 case LightbarMode.ACTTracker:
                     return "ACTTracker";
+                case LightbarMode.ACTEnrage:
+                    return "ACTEnrage";
             }
 
             return "Disabled";
@@ -423,6 +430,8 @@ namespace Chromatics.Controllers
                     return LightbarMode.JobGauge;
                 case "ACTTracker":
                     return LightbarMode.ACTTracker;
+                case "ACTEnrage":
+                    return LightbarMode.ACTEnrage;
             }
 
             return LightbarMode.Disabled;
@@ -458,6 +467,8 @@ namespace Chromatics.Controllers
                     return LightbarMode.JobGauge;
                 case "ACT Tracker":
                     return LightbarMode.ACTTracker;
+                case "ACT Enrage":
+                    return LightbarMode.ACTEnrage;
             }
 
             return LightbarMode.Disabled;
@@ -493,6 +504,8 @@ namespace Chromatics.Controllers
                     return "Job Gauge";
                 case LightbarMode.ACTTracker:
                     return "ACT Tracker";
+                case LightbarMode.ACTEnrage:
+                    return "ACT Enrage";
             }
 
             return "Disabled";
@@ -526,6 +539,8 @@ namespace Chromatics.Controllers
                     return "JobGauge";
                 case FKeyMode.ACTTracker:
                     return "ACTTracker";
+                case FKeyMode.ACTEnrage:
+                    return "ACTEnrage";
             }
 
             return "HpMpTp";
@@ -559,6 +574,8 @@ namespace Chromatics.Controllers
                     return FKeyMode.JobGauge;
                 case "ACTTracker":
                     return FKeyMode.ACTTracker;
+                case "ACTEnrage":
+                    return FKeyMode.ACTEnrage;
             }
 
             return FKeyMode.HpMpTp;
@@ -592,6 +609,8 @@ namespace Chromatics.Controllers
                     return FKeyMode.JobGauge;
                 case "ACT Tracker":
                     return FKeyMode.ACTTracker;
+                case "ACT Enrage":
+                    return FKeyMode.ACTEnrage;
             }
 
             return FKeyMode.HpMpTp;
@@ -625,6 +644,8 @@ namespace Chromatics.Controllers
                     return "Job Gauge";
                 case FKeyMode.ACTTracker:
                     return "ACT Tracker";
+                case FKeyMode.ACTEnrage:
+                    return "ACT Enrage";
             }
 
             return "HpMpTp";

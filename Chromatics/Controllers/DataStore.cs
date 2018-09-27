@@ -583,6 +583,9 @@ namespace Chromatics.Datastore
         public string ColorMappingACTTimerIdle = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingACTTimerBuild = ColorTranslator.ToHtml(Color.DodgerBlue);
         public string ColorMappingACTTimerFlash = ColorTranslator.ToHtml(Color.Lime);
+        public string ColorMappingACTEnrageEmpty = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingACTEnrageCountdown = ColorTranslator.ToHtml(Color.DarkTurquoise);
+        public string ColorMappingACTEnrageWarning = ColorTranslator.ToHtml(Color.Red);
     }
 
     public static class DataStoreFunctions

@@ -307,6 +307,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ACTInterfaces\ACTInterface.cs" />
     <Compile Include="Chromatics.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -521,6 +522,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

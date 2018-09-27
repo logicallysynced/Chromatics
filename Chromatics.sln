@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3B183F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chromatics Updater", "Chromatics Updater\Chromatics Updater.csproj", "{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromaticsACT", "ChromaticsACT\ChromaticsACT.csproj", "{A4032535-8A7B-413F-97CA-27F2CDE063BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Chromatics|Any CPU = Chromatics|Any CPU
@@ -63,8 +65,28 @@ Global
 		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|x64.Build.0 = Release|Any CPU
 		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|x86.ActiveCfg = Release|Any CPU
 		{7882AFDE-EB89-4049-91B9-0FF4ECC2B1D7}.Release|x86.Build.0 = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Chromatics|Any CPU.ActiveCfg = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Chromatics|Any CPU.Build.0 = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Chromatics|x64.ActiveCfg = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Chromatics|x64.Build.0 = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Chromatics|x86.ActiveCfg = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Chromatics|x86.Build.0 = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Debug|x86.Build.0 = Debug|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Release|x64.ActiveCfg = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Release|x64.Build.0 = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{A4032535-8A7B-413F-97CA-27F2CDE063BA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {924FE2E0-D766-411A-BA0C-FC095EEC1A16}
 	EndGlobalSection
 EndGlobal

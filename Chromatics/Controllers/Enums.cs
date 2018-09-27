@@ -89,7 +89,8 @@
         DutyFinder,
         CurrentExp,
         JobGauge,
-        ACTTracker
+        ACTTracker,
+        ACTEnrage
     }
 
     public enum FKeyMode
@@ -105,7 +106,8 @@
         HpMpTp,
         CurrentExp,
         JobGauge,
-        ACTTracker
+        ACTTracker,
+        ACTEnrage
     }
 
     public enum ACTMode

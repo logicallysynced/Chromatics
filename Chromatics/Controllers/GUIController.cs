@@ -92,7 +92,8 @@ namespace Chromatics
             {LightbarMode.DutyFinder, "Duty Finder Bell"},
             {LightbarMode.CurrentExp, "Experience Tracker"},
             {LightbarMode.JobGauge, "Job Gauge"},
-            {LightbarMode.ACTTracker, "ACT Tracker"}
+            {LightbarMode.ACTTracker, "ACT Tracker"},
+            {LightbarMode.ACTEnrage, "ACT Enrage"}
         };
 
         private readonly Dictionary<FKeyMode, string> _fkeyModes = new Dictionary<FKeyMode, string>
@@ -109,7 +110,8 @@ namespace Chromatics
             {FKeyMode.HpMpTp, "HP/MP/TP"}, //
             {FKeyMode.CurrentExp, "Experience Tracker"},
             {FKeyMode.JobGauge, "Job Gauge"},
-            {FKeyMode.ACTTracker, "ACT Tracker"}
+            {FKeyMode.ACTTracker, "ACT Tracker"},
+            {FKeyMode.ACTEnrage, "ACT Enrage"}
         };
 
         private readonly Dictionary<ACTMode, string> _actModes = new Dictionary<ACTMode, string>
@@ -404,6 +406,9 @@ namespace Chromatics
             {"ColorMappingACTTimerIdle", new[] { "Timer Idle", "11", "Black", "White"}},
             {"ColorMappingACTTimerBuild", new[] { "Timer Build", "11", "Black", "White"}},
             {"ColorMappingACTTimerFlash", new[] { "Timer Flash", "11", "Black", "White"}},
+            {"ColorMappingACTEnrageEmpty", new[] { "Enrage Empty", "11", "Black", "White"}},
+            {"ColorMappingACTEnrageCountdown", new[] { "Enrage Countdown", "11", "Black", "White"}},
+            {"ColorMappingACTEnrageWarning", new[] { "Enrage Warning", "11", "Black", "White"}}
         };
 
 

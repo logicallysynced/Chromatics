@@ -5,10 +5,13 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chromatics.ACTInterfaces;
 using Chromatics.Datastore;
 using Chromatics.DeviceInterfaces;
 using Chromatics.LCDInterfaces;
@@ -66,6 +69,12 @@ namespace Chromatics
         private readonly string _currentVersionX = "2.4.4";
         private readonly bool _debugmode = true;
         public bool DeviceGridStartup = false;
+        private bool blockACTVersion = false;
+        private const int ACTVersionMatch = 1;
+
+        private bool threshTrigger = false;
+        private bool threshTimer = false;
+        private bool threshFlash = false;
 
         public bool EffectRunning = false;
         private CancellationTokenSource _ffxiVcts = new CancellationTokenSource();
@@ -573,9 +582,7 @@ namespace Chromatics
             if (IsAdministrator())
                 AmbienceInterface.StartAmbience();
             */
-
             
-
             var gameLanguage = "English";
 
             switch (ChromaticsSettings.ChromaticsSettingsLanguage)
