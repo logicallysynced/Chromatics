@@ -2474,10 +2474,7 @@ namespace Chromatics
 
                         //Castbar
                         var castPercentage = _playerInfo.CastingPercentage;
-                        var polCastX = (castPercentage - 0) * (12 - 0) / (1.0 - 0.0) + 0;
-                        var polCast = Convert.ToInt32(polCastX);
                         var polCastZ = (castPercentage - 0) * ((long)65535 - 0) / (1.0 - 0.0) + 0;
-                        //double polCastZ2 = Convert.ToInt32((castPercentage - 0) * (1.0 - 0.0) / (1.0 - 0.0) + 0.0);
                         
                         if (_playerInfo.IsCasting)
                         {
