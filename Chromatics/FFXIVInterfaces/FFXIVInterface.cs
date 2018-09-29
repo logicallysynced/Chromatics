@@ -3928,9 +3928,9 @@ namespace Chromatics
                                     }
                                     else
                                     {
-                                        //Process ACT Data 
-                                        //Custom Triggers
+                                        //Process ACT Data
                                         
+                                        //Custom Triggers
                                         if (ChromaticsSettings.ChromaticsSettingsACTFlashCustomTrigger)
                                         {
                                             if (_ACTData.CustomTriggerActive)
@@ -4095,7 +4095,59 @@ namespace Chromatics
                                         if (_ACTData.IsConnected)
                                         {
                                             var jobkey = _actJobs.FirstOrDefault(x => x.Value == GetACTJob()).Key;
+
+                                            //Enrage Timers
+                                            EncounterData encounter = null;
+                                            foreach (var zone in EncounterTimers.Encounters)
+                                            {
+                                                if (zone.InstanceName == _ACTData.CurrentEncounterName)
+                                                {
+                                                    encounter = zone;
+                                                    break;
+                                                }
+                                            }
+
+                                            if (encounter != null)
+                                            {
+                                                if ((encounter.BossName == "None") || _ACTData.Enemies.Contains(encounter.BossName))
+                                                {
+                                                    if (_FKeyMode == FKeyMode.ACTEnrage)
+                                                    {
+                                                        var FKACTEnrage_Collection = DeviceEffects.Functions;
+                                                        var FKACTEnrage_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.CurrentEncounterTime, 0, encounter.EnrageTimer, 0, FKACTEnrage_Collection.Length);
+                                                        var enrageTimerCol = ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageCountdown);
+
+                                                        if (FKACTEnrage_Interpolate >= (encounter.EnrageTimer - 60))
+                                                        {
+                                                            enrageTimerCol = ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageWarning);
+                                                        }
+
+                                                        for (var i2 = 0; i2 < FKACTEnrage_Collection.Length; i2++)
+                                                        {
+                                                            GlobalApplyMapKeyLighting(FKACTEnrage_Collection[i2], FKACTEnrage_Interpolate > i2 ? enrageTimerCol : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
+                                                        }
+                                                    }
+
+                                                    if (_LightbarMode == LightbarMode.ACTTracker)
+                                                    {
+                                                        var LBACTEnrage_Collection = DeviceEffects.LightbarZones;
+                                                        var LBACTEnrage_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDPS, 0, ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0], 0, LBACTEnrage_Collection.Length);
+                                                        var enrageTimerCol = ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageCountdown);
+
+                                                        if (LBACTEnrage_Interpolate >= (encounter.EnrageTimer - 60))
+                                                        {
+                                                            enrageTimerCol = ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageWarning);
+                                                        }
+
+                                                        for (var i2 = 0; i2 < LBACTEnrage_Collection.Length; i2++)
+                                                        {
+                                                            GlobalApplyMapLightbarLighting(LBACTEnrage_Collection[i2], LBACTEnrage_Interpolate > i2 ? enrageTimerCol : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
+                                                        }
+                                                    }
+                                                }
+                                            }
                                             
+
                                             //DPS Tracker
                                             if (_ACTMode == ACTMode.DPS)
                                             {
@@ -5640,8 +5692,6 @@ namespace Chromatics
                                             //Damage Tracker
                                             if (_ACTMode == ACTMode.DamagePrc)
                                             {
-                                                
-
                                                 if ((long)_ACTData.PlayerCurrentDamage >=
                                                     ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
                                                 {
@@ -5856,6 +5906,100 @@ namespace Chromatics
                                                 }
                                             }
 
+                                        }
+                                        else
+                                        {
+                                            _rzFl1Cts.Cancel();
+                                            _corsairF1Cts.Cancel();
+                                            threshFlash = false;
+
+                                            GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                (ushort)(long)65535,
+                                                250);
+
+                                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0.0);
+                                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 0.0);
+                                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 0.0);
+                                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0.0);
+
+                                            //Functions
+                                            if (_FKeyMode == FKeyMode.ACTTracker)
+                                            {
+                                                var FKACTDPS_Collection = DeviceEffects.Functions;
+
+                                                for (var i2 = 0; i2 < FKACTDPS_Collection.Length; i2++)
+                                                {
+                                                    GlobalApplyMapKeyLighting(FKACTDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                }
+                                            }
+
+                                            if (_FKeyMode == FKeyMode.ACTEnrage)
+                                            {
+                                                var FKACTEnrage_Collection = DeviceEffects.Functions;
+
+                                                for (var i2 = 0; i2 < FKACTEnrage_Collection.Length; i2++)
+                                                {
+                                                    GlobalApplyMapKeyLighting(FKACTEnrage_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
+                                                }
+                                            }
+
+                                            //Lightbar
+                                            if (_LightbarMode == LightbarMode.ACTTracker)
+                                            {
+                                                var LBACTDPS_Collection = DeviceEffects.LightbarZones;
+
+                                                for (var i2 = 0; i2 < LBACTDPS_Collection.Length; i2++)
+                                                {
+                                                    GlobalApplyMapLightbarLighting(LBACTDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                }
+                                            }
+
+                                            if (_LightbarMode == LightbarMode.ACTEnrage)
+                                            {
+                                                var LBACTEnrage_Collection = DeviceEffects.LightbarZones;
+
+                                                for (var i2 = 0; i2 < LBACTEnrage_Collection.Length; i2++)
+                                                {
+                                                    GlobalApplyMapLightbarLighting(LBACTEnrage_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
+                                                }
+                                            }
+
+                                            //Mousepad
+                                            var ACTDPSMousePadCollection = 5;
+
+                                            for (int i = 0; i < ACTDPSMousePadCollection; i++)
+                                            {
+                                                GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                            }
+
+                                            //Keypad
+                                            var ACTDPSKeypad_Collection = DeviceEffects.Keypadzones;
+
+                                            for (int i = 0; i < ACTDPSKeypad_Collection.Length; i++)
+                                            {
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, ACTDPSKeypad_Collection[i]);
+                                            }
+
+                                            //MultiKeyboard
+                                            var ACTDPSMulti_Collection = DeviceEffects.Multikeyzones;
+
+                                            for (int i = 0; i < ACTDPSMulti_Collection.Length; i++)
+                                            {
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTDPSMulti_Collection[i]);
+                                            }
+
+                                            //Mouse
+                                            var ACTDPSMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
+                                            var ACTDPSMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
+
+                                            for (int i = 0; i < ACTDPSMouseStrip_CollectionA.Length; i++)
+                                            {
+                                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                            }
                                         }
                                     }
                                 }

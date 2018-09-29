@@ -28,6 +28,7 @@ namespace ChromaticsACT
         public string CurrentEncounterName { get; set; }
         public bool CustomTriggerActive { get; set; }
         public bool TimerActive { get; set; }
+        public List<string> Enemies { get; set; }
 
         public ACTDataTemplate()
         {
@@ -45,6 +46,7 @@ namespace ChromaticsACT
             CurrentEncounterName = "";
             CustomTriggerActive = false;
             TimerActive = false;
+            Enemies = new List<string>();
         }
     }
 }

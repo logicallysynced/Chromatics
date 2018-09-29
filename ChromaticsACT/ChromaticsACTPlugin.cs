@@ -66,8 +66,6 @@ namespace ChromaticsACT
                 var preparse = cTrigger.Key;
                 var preparsearray = preparse.Split(new string[] { "|" }, StringSplitOptions.None);
                 customTriggers.Add(preparsearray[1]);
-
-                Debug.WriteLine(preparsearray[1]);
             }
 
 
@@ -219,7 +217,14 @@ namespace ChromaticsACT
                 dataStruct.CurrentEncounterTime = encTime;
                 dataStruct.CurrentEncounterName = ActiveEnconter.ZoneName;
                 
-                //Console.WriteLine(@"Name: " + dataStruct.CurrentEncounterName);
+                //Enemies
+                dataStruct.Enemies.Clear();
+                
+                foreach (var combatant in ActiveEnconter.Items)
+                {
+                    if (combatant.Value.GetColumnByName("Job") != "") continue;
+                    dataStruct.Enemies.Add(combatant.Value.Name);
+                }
              }
 
             //Custom Triggers

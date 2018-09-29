@@ -426,7 +426,7 @@ namespace Chromatics
             {8, "Notifications"},
             {9, "Job Gauges" },
             {10, "Reactive Weather" },
-            {11, "ACT Triggers"}
+            {11, "ACT"}
         };
 
         public void SetFormName(string text)
