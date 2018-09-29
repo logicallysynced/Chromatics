@@ -35,7 +35,10 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 * Displays target HP and emnity data as various effects across your devices. See how hostile an enemy is before you engage it and keep track of your hate with various alerts.
 * Animates your casting bar and displays animations when cast is successful across your devices.
 * Reactive Weather, Cutscene & Status Effect animations.
-* Job Gauge effects on Per-key RGB num-pads.
+* Job Gauge effects and bars.
+* Integrates with ACT and allows you to set target DPS/HPS/etc. goals and shows effects based on the progress towards those goals throughout the fight.
+* Displays effects on ACT custom triggers and timer warnings.
+* Displays progress of an enrage countdown during a raid or extreme primal fight.
 * Logitech ARX Support. See essential stats as a second screen on your mobile or tablet device. Requires Logitech ARX application.
 * Chromatics now supports a range of Smart LED lighting including LIFX and Philips HUE support on the way.
 * Use HTML/JavaScript to create custom views within Logitech ARX and make your own plugins or browse other's creations.
