@@ -99,7 +99,6 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsACTFlash = false;
         public bool ChromaticsSettingsACTFlashCustomTrigger = false;
         public bool ChromaticsSettingsACTFlashTimer = false;
-
         public bool ChromaticsSettingsKeyHighlights = true;
         public bool ChromaticsSettingsLccAuto = false;
         public bool ChromaticsSettingsMemoryCache = false;

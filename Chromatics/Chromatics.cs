@@ -16,6 +16,7 @@ using Chromatics.Datastore;
 using Chromatics.DeviceInterfaces;
 using Chromatics.LCDInterfaces;
 using CSharpAnalytics;
+using CSharpAnalytics.Activities;
 using Gma.System.MouseKeyHook;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
@@ -465,8 +466,7 @@ namespace Chromatics
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                 {
                     AutoMeasurement.Instance = new WinFormAutoMeasurement();
-                    AutoMeasurement.Start(new MeasurementConfiguration("UA-92921709-2"));
-                    AutoMeasurement.Client.TrackScreenView("Chromatics " + _currentVersionX);
+                    AutoMeasurement.Start(new MeasurementConfiguration("UA-92921709-2", "Chromatics", _currentVersionX));
                 }
             }
             catch (Exception ex)
