@@ -76,6 +76,13 @@ namespace Chromatics
         private bool threshTimer = false;
         private bool threshFlash = false;
 
+        private bool ChatInit = false;
+        private int ChatpreviousArrayIndex = 0;
+        private int ChatpreviousOffset = 0;
+        private bool pullCountdownRun = false;
+        private int pullCountMax = 0;
+        private int pullCountInterval = 0;
+
         public bool EffectRunning = false;
         private CancellationTokenSource _ffxiVcts = new CancellationTokenSource();
 

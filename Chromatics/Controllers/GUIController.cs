@@ -92,6 +92,7 @@ namespace Chromatics
             {LightbarMode.DutyFinder, "Duty Finder Bell"},
             {LightbarMode.CurrentExp, "Experience Tracker"},
             {LightbarMode.JobGauge, "Job Gauge"},
+            {LightbarMode.PullCountdown, "Pull Countdown"},
             {LightbarMode.ACTTracker, "ACT Tracker"},
             {LightbarMode.ACTEnrage, "ACT Enrage"}
         };
@@ -110,6 +111,7 @@ namespace Chromatics
             {FKeyMode.HpMpTp, "HP/MP/TP"}, //
             {FKeyMode.CurrentExp, "Experience Tracker"},
             {FKeyMode.JobGauge, "Job Gauge"},
+            {FKeyMode.PullCountdown, "Pull Countdown"},
             {FKeyMode.ACTTracker, "ACT Tracker"},
             {FKeyMode.ACTEnrage, "ACT Enrage"}
         };
@@ -251,6 +253,9 @@ namespace Chromatics
             {"ColorMappingKeybindDig", new[] { "Dig Keybind", "7", "Black", "White"}},
             {"ColorMappingKeybindInventory", new[] { "Inventory Keybind", "7", "Black", "White"}},
             {"ColorMappingDutyFinderBell", new[] {"Duty Finder Bell", "8", "Black", "White"}},
+            {"ColorMappingPullCountdownTick", new[] { "Pull Countdown Tick", "8", "Black", "White"}},
+            {"ColorMappingPullCountdownEmpty", new[] { "Pull Countdown Empty", "8", "Black", "White"}},
+            {"ColorMappingPullCountdownEngage", new[] { "Pull Countdown Engage", "8", "Black", "White"}},
             {"ColorMappingJobWARNegative", new[] {"WAR: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobWARWrathBurst", new[] { "WAR: Wrath (Burst)", "9", "Black", "White"}},
             {"ColorMappingJobWARWrathMax", new[] { "WAR: Wrath (Full)", "9", "Black", "White"}},

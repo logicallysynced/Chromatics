@@ -574,6 +574,9 @@ namespace Chromatics.Datastore
         public string ColorMappingWeatherQuicklevinHighlight = ColorTranslator.ToHtml(Color.Blue);
         public string ColorMappingWeatherWhitecycloneBase = ColorTranslator.ToHtml(Color.White);
         public string ColorMappingWeatherWhitecycloneHighlight = ColorTranslator.ToHtml(Color.Turquoise);
+        public string ColorMappingPullCountdownTick = ColorTranslator.ToHtml(Color.Turquoise);
+        public string ColorMappingPullCountdownEmpty = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingPullCountdownEngage = ColorTranslator.ToHtml(Color.Lime);
         public string ColorMappingACTThresholdEmpty = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingACTThresholdBuild = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingACTThresholdSuccess = ColorTranslator.ToHtml(Color.Lime);

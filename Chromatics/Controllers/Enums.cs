@@ -89,6 +89,7 @@
         DutyFinder,
         CurrentExp,
         JobGauge,
+        PullCountdown,
         ACTTracker,
         ACTEnrage
     }
@@ -106,6 +107,7 @@
         HpMpTp,
         CurrentExp,
         JobGauge,
+        PullCountdown,
         ACTTracker,
         ACTEnrage
     }

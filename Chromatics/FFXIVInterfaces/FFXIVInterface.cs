@@ -16,6 +16,7 @@ using Chromatics.Controllers;
 using System.IO;
 using System.Reflection;
 using Chromatics.ACTInterfaces;
+using System.Timers;
 
 
 /* Contains the code to read the FFXIV Memory Stream, parse the data and convert to lighting commands
@@ -364,6 +365,7 @@ namespace Chromatics
                                 SetHeadsetbase = false;
                                 SetKeypadbase = false;
                                 SetCLbase = false;
+                                ChatInit = false;
 
                                 if (LcdSdkCalled == 1)
                                 {
@@ -431,6 +433,7 @@ namespace Chromatics
                                 SetHeadsetbase = false;
                                 SetKeypadbase = false;
                                 SetCLbase = false;
+                                ChatInit = false;
                                 //GlobalUpdateState("static", Color.Red, false);
                                 //GlobalUpdateBulbState(100, System.Drawing.Color.Red, 100);
                                 //Watchdog.WatchdogGo();
@@ -3912,7 +3915,191 @@ namespace Chromatics
                             
                             //Job Gauges
                             ImplementJobGauges(statEffects, _baseColor);
-                            
+
+
+                            //Pull Countdown
+                            if (!ChatInit)
+                            {
+                                ChatpreviousArrayIndex = 0;
+                                ChatpreviousOffset = 0;
+                                ChatInit = true;
+                            }
+
+                            if (Reader.CanGetChatLog())
+                            {
+                                var ChatReadResult = Reader.GetChatLog(ChatpreviousArrayIndex, ChatpreviousOffset);
+                                ChatpreviousArrayIndex = ChatReadResult.PreviousArrayIndex;
+                                ChatpreviousOffset = ChatReadResult.PreviousOffset;
+
+                                if (pullCountdownRun)
+                                {
+                                    if (pullCountInterval == pullCountMax)
+                                    {
+                                        _rzFl1Cts.Cancel();
+                                        _corsairF1Cts.Cancel();
+
+                                        GlobalFlash1(
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEngage),
+                                            200, DeviceEffects.GlobalKeys3);
+
+                                        pullCountdownRun = false;
+                                    }
+
+                                    if (_FKeyMode == FKeyMode.PullCountdown)
+                                    {
+                                        var FKPullCount_Collection = DeviceEffects.Functions;
+                                        var FKPullCount_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(pullCountInterval, 0, pullCountMax, 0, FKPullCount_Collection.Length);
+
+                                        if (pullCountMax - pullCountInterval > FKPullCount_Collection.Length)
+                                        {
+                                            FKPullCount_Interpolate = FKPullCount_Collection.Length;
+                                        }
+
+                                        for (var i2 = 0; i2 < FKPullCount_Collection.Length; i2++)
+                                        {
+                                            GlobalApplyMapKeyLighting(FKPullCount_Collection[i2], FKPullCount_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownTick) : ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
+                                        }
+                                    }
+
+                                    if (_LightbarMode == LightbarMode.PullCountdown)
+                                    {
+                                        var LBPullCount_Collection = DeviceEffects.LightbarZones;
+                                        var LBPullCount_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(pullCountInterval, 0, pullCountMax, 0, LBPullCount_Collection.Length);
+
+                                        if (pullCountMax - pullCountInterval > LBPullCount_Collection.Length)
+                                        {
+                                            LBPullCount_Interpolate = LBPullCount_Collection.Length;
+                                        }
+
+                                        for (var i2 = 0; i2 < LBPullCount_Collection.Length; i2++)
+                                        {
+                                            GlobalApplyMapLightbarLighting(LBPullCount_Collection[i2], LBPullCount_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownTick) : ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (_FKeyMode == FKeyMode.PullCountdown)
+                                    {
+                                        var FKPullCount_Collection = DeviceEffects.Functions;
+
+                                        for (var i2 = 0; i2 < FKPullCount_Collection.Length; i2++)
+                                        {
+                                            GlobalApplyMapKeyLighting(FKPullCount_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
+                                        }
+                                    }
+
+                                    if (_LightbarMode == LightbarMode.PullCountdown)
+                                    {
+                                        var LBPullCount_Collection = DeviceEffects.LightbarZones;
+
+                                        for (var i2 = 0; i2 < LBPullCount_Collection.Length; i2++)
+                                        {
+                                            GlobalApplyMapLightbarLighting(LBPullCount_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
+                                        }
+                                    }
+
+                                    if (ChatReadResult.ChatLogItems.Count > 0)
+                                    {
+                                        var chatItem =
+                                            ChatReadResult.ChatLogItems
+                                                .LastOrDefault(); //Engage! //戦闘開始！ //À l'attaque ! //Start!
+                                        if (chatItem.Code == "00B9")
+                                        {
+                                            if (chatItem.Line.StartsWith("Battle commencing in"))
+                                            {
+                                                var pullcount = chatItem.Line.Substring(21).Split(' ')[0];
+                                                int.TryParse(pullcount, out int x);
+                                                pullCountInterval = 0;
+                                                pullCountMax = x;
+                                                
+                                                var pullTimer = new System.Timers.Timer();
+                                                pullTimer.Elapsed += new ElapsedEventHandler((source, e) =>
+                                                    {
+                                                        pullCountInterval++;
+
+                                                        if (pullCountInterval == pullCountMax)
+                                                        {
+                                                            pullTimer.Stop();
+                                                        }
+                                                    });
+                                                pullTimer.Interval = 960;
+                                                pullTimer.Start();
+
+                                                pullCountdownRun = true;
+
+                                            }
+                                            else if (chatItem.Line.StartsWith("戦闘開始まで"))
+                                            {
+                                                var pullcount = chatItem.Line.Substring(7).Split('秒')[0];
+                                                int.TryParse(pullcount, out int x);
+                                                pullCountInterval = 0;
+                                                pullCountMax = x;
+
+                                                var pullTimer = new System.Timers.Timer();
+                                                pullTimer.Elapsed += new ElapsedEventHandler((source, e) =>
+                                                {
+                                                    pullCountInterval++;
+
+                                                    if (pullCountInterval == pullCountMax)
+                                                    {
+                                                        pullTimer.Stop();
+                                                    }
+                                                });
+                                                pullTimer.Interval = 960;
+                                                pullTimer.Start();
+
+                                                pullCountdownRun = true;
+                                            }
+                                            else if (chatItem.Line.StartsWith("Début du combat dans"))
+                                            {
+                                                var pullcount = chatItem.Line.Substring(21).Split(' ')[0];
+                                                int.TryParse(pullcount, out int x);
+                                                pullCountInterval = 0;
+                                                pullCountMax = x;
+
+                                                var pullTimer = new System.Timers.Timer();
+                                                pullTimer.Elapsed += new ElapsedEventHandler((source, e) =>
+                                                {
+                                                    pullCountInterval++;
+
+                                                    if (pullCountInterval == pullCountMax)
+                                                    {
+                                                        pullTimer.Stop();
+                                                    }
+                                                });
+                                                pullTimer.Interval = 960;
+                                                pullTimer.Start();
+
+                                                pullCountdownRun = true;
+                                            }
+                                            else if (chatItem.Line.StartsWith("Noch"))
+                                            {
+                                                var pullcount = chatItem.Line.Substring(5).Split(' ')[0];
+                                                int.TryParse(pullcount, out int x);
+                                                pullCountInterval = 0;
+                                                pullCountMax = x;
+
+                                                var pullTimer = new System.Timers.Timer();
+                                                pullTimer.Elapsed += new ElapsedEventHandler((source, e) =>
+                                                {
+                                                    pullCountInterval++;
+
+                                                    if (pullCountInterval == pullCountMax)
+                                                    {
+                                                        pullTimer.Stop();
+                                                    }
+                                                });
+                                                pullTimer.Interval = 960;
+                                                pullTimer.Start();
+
+                                                pullCountdownRun = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             //ACT
                             if (!blockACTVersion)
                             {

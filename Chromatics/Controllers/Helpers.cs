@@ -391,6 +391,8 @@ namespace Chromatics.Controllers
                     return "CurrentExp";
                 case LightbarMode.JobGauge:
                     return "JobGauge";
+                case LightbarMode.PullCountdown:
+                    return "PullCountdown";
                 case LightbarMode.ACTTracker:
                     return "ACTTracker";
                 case LightbarMode.ACTEnrage:
@@ -428,6 +430,8 @@ namespace Chromatics.Controllers
                     return LightbarMode.CurrentExp;
                 case "JobGauge":
                     return LightbarMode.JobGauge;
+                case "PullCountdown":
+                    return LightbarMode.PullCountdown;
                 case "ACTTracker":
                     return LightbarMode.ACTTracker;
                 case "ACTEnrage":
@@ -465,6 +469,8 @@ namespace Chromatics.Controllers
                     return LightbarMode.CurrentExp;
                 case "Job Gauge":
                     return LightbarMode.JobGauge;
+                case "Pull Countdown":
+                    return LightbarMode.PullCountdown;
                 case "ACT Tracker":
                     return LightbarMode.ACTTracker;
                 case "ACT Enrage":
@@ -502,6 +508,8 @@ namespace Chromatics.Controllers
                     return "Experience Tracker";
                 case LightbarMode.JobGauge:
                     return "Job Gauge";
+                case LightbarMode.PullCountdown:
+                    return "Pull Countdown";
                 case LightbarMode.ACTTracker:
                     return "ACT Tracker";
                 case LightbarMode.ACTEnrage:
@@ -537,6 +545,8 @@ namespace Chromatics.Controllers
                     return "CurrentExp";
                 case FKeyMode.JobGauge:
                     return "JobGauge";
+                case FKeyMode.PullCountdown:
+                    return "PullCountdown";
                 case FKeyMode.ACTTracker:
                     return "ACTTracker";
                 case FKeyMode.ACTEnrage:
@@ -572,6 +582,8 @@ namespace Chromatics.Controllers
                     return FKeyMode.CurrentExp;
                 case "JobGauge":
                     return FKeyMode.JobGauge;
+                case "PullCountdown":
+                    return FKeyMode.PullCountdown;
                 case "ACTTracker":
                     return FKeyMode.ACTTracker;
                 case "ACTEnrage":
@@ -607,6 +619,8 @@ namespace Chromatics.Controllers
                     return FKeyMode.CurrentExp;
                 case "Job Gauge":
                     return FKeyMode.JobGauge;
+                case "Pull Countdown":
+                    return FKeyMode.PullCountdown;
                 case "ACT Tracker":
                     return FKeyMode.ACTTracker;
                 case "ACT Enrage":
@@ -642,6 +656,8 @@ namespace Chromatics.Controllers
                     return "Experience Tracker";
                 case FKeyMode.JobGauge:
                     return "Job Gauge";
+                case FKeyMode.PullCountdown:
+                    return "Pull Countdown";
                 case FKeyMode.ACTTracker:
                     return "ACT Tracker";
                 case FKeyMode.ACTEnrage:
