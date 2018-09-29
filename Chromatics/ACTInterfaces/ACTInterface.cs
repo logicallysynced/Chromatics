@@ -39,14 +39,16 @@ namespace Chromatics.ACTInterfaces
                 {
                     Console.WriteLine(@"ACT File not found: " + path);
                 }
-                
+
+                return actData.IsConnected ? actData : new ACTDataTemplate();
             }
             catch (Exception e)
             {
                 Console.WriteLine(@"Error: " + e.Message);
+                return new ACTDataTemplate();
             }
 
-            return actData.IsConnected ? actData : new ACTDataTemplate();
+            
         }
     }
 

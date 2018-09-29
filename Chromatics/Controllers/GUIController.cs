@@ -2885,7 +2885,7 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            Process.Start("https://chromaticsffxiv.com/");
+            Process.Start("https://github.com/roxaskeyheart/Chromatics/wiki/Connecting-with-Advanced-Combat-Tracker-(ACT)");
         }
 
         private void chk_desktopnotify_CheckedChanged(object sender, EventArgs e)

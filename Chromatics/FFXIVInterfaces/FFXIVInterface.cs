@@ -3982,9 +3982,14 @@ namespace Chromatics
                                     if (_FKeyMode == FKeyMode.PullCountdown)
                                     {
                                         var FKPullCount_Collection = DeviceEffects.Functions;
-
+                                        
                                         for (var i2 = 0; i2 < FKPullCount_Collection.Length; i2++)
                                         {
+                                            if (_playerInfo.IsCasting)
+                                            {
+                                                break;
+                                            }
+
                                             GlobalApplyMapKeyLighting(FKPullCount_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
                                         }
                                     }
@@ -4183,6 +4188,11 @@ namespace Chromatics
                                                     var FKACTTrigger_Collection = DeviceEffects.Functions;
                                                     for (var i2 = 0; i2 < FKACTTrigger_Collection.Length; i2++)
                                                     {
+                                                        if (_playerInfo.IsCasting)
+                                                        {
+                                                            break;
+                                                        }
+
                                                         GlobalApplyMapKeyLighting(FKACTTrigger_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false, false);
                                                     }
                                                 }
@@ -4264,6 +4274,11 @@ namespace Chromatics
                                                     var FKACTTimer_Collection = DeviceEffects.Functions;
                                                     for (var i2 = 0; i2 < FKACTTimer_Collection.Length; i2++)
                                                     {
+                                                        if (_playerInfo.IsCasting)
+                                                        {
+                                                            break;
+                                                        }
+
                                                         GlobalApplyMapKeyLighting(FKACTTimer_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false, false);
                                                     }
                                                 }
@@ -6120,6 +6135,11 @@ namespace Chromatics
 
                                                 for (var i2 = 0; i2 < FKACTDPS_Collection.Length; i2++)
                                                 {
+                                                    if (_playerInfo.IsCasting)
+                                                    {
+                                                        break;
+                                                    }
+
                                                     GlobalApplyMapKeyLighting(FKACTDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
                                                 }
                                             }
@@ -6130,6 +6150,11 @@ namespace Chromatics
 
                                                 for (var i2 = 0; i2 < FKACTEnrage_Collection.Length; i2++)
                                                 {
+                                                    if (_playerInfo.IsCasting)
+                                                    {
+                                                        break;
+                                                    }
+
                                                     GlobalApplyMapKeyLighting(FKACTEnrage_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
                                                 }
                                             }
