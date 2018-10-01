@@ -24,7 +24,7 @@ namespace Chromatics.DeviceInterfaces
         public static Logitech InitializeLogitechSdk()
         {
             Logitech logitech = null;
-            if (Process.GetProcessesByName("LCore").Length > 0)
+            if (Process.GetProcessesByName("LCore").Length > 0 || Process.GetProcessesByName("lghub").Length > 0)
             {
                 logitech = new Logitech();
                 var result = logitech.InitializeLights();

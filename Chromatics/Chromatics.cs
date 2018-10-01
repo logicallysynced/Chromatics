@@ -67,8 +67,8 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.4.4";
-        private readonly bool _debugmode = false;
+        private readonly string _currentVersionX = "2.4.5";
+        private readonly bool _debugmode = true;
         public bool DeviceGridStartup = false;
         private bool blockACTVersion = false;
         private const int ACTVersionMatch = 1;
@@ -486,7 +486,7 @@ namespace Chromatics
             InitializeSdk();
             InitDevicesGui();
 
-            if (LogitechSdkCalled == 1)
+            if (LogitechSdkCalled == 1 && Process.GetProcessesByName("LCore").Length > 0)
             {
                 if (gB_lcc.Enabled)
                 {
@@ -542,8 +542,12 @@ namespace Chromatics
             }
             else
             {
-                tooltip_main.SetToolTip(gB_lcc,
-                    "Logitech SDK not loaded. Please open LGS Software and restart Chromatics as Administrator.");
+                if (Process.GetProcessesByName("lghub").Length == 0)
+                {
+                    tooltip_main.SetToolTip(gB_lcc,
+                        "Logitech SDK not loaded. Please open LGS Software and restart Chromatics as Administrator.");
+                }
+
                 gB_lcc.Enabled = false;
             }
 
