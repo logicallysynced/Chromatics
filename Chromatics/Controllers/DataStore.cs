@@ -412,6 +412,7 @@ namespace Chromatics.Datastore
         public string ColorMappingSlow = ColorTranslator.ToHtml(Color.YellowGreen);
         public string ColorMappingStun = ColorTranslator.ToHtml(Color.Snow);
         public string ColorMappingTargetCasting = ColorTranslator.ToHtml(Color.White);
+        public string ColorMappingTargetHpFriendly = ColorTranslator.ToHtml(Color.Lime);
         public string ColorMappingTargetHpClaimed = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingTargetHpEmpty = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingTargetHpIdle = ColorTranslator.ToHtml(Color.Yellow);

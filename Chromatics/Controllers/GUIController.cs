@@ -195,6 +195,7 @@ namespace Chromatics
             {"ColorMappingEmnity4", new[] {"Max Enmity", "4", "Black", "White"}},
             {"ColorMappingNoEmnity", new[] {"No Enmity", "4", "Black", "White"}},
             {"ColorMappingTargetHpClaimed", new[] {"Target HP - Claimed", "5", "Black", "White"}},
+            {"ColorMappingTargetHpFriendly", new[] {"Target HP - Claimed", "5", "Black", "White"}},
             {"ColorMappingTargetHpIdle", new[] {"Target HP - Idle", "5", "Black", "White"}},
             {"ColorMappingTargetHpEmpty", new[] {"Target HP - Empty", "5", "Black", "White"}},
             {"ColorMappingTargetCasting", new[] {"Target Casting", "5", "Black", "White"}},
