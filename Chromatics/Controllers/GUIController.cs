@@ -2750,7 +2750,7 @@ namespace Chromatics
 
             if (RazerSdkCalled == 1)
             {
-                if (chk_dev_keypad.Checked)
+                if (chk_dev_chromalink.Checked)
                 {
                     _razerDeviceChromaLink = true;
                     _deviceCL = true;
