@@ -448,7 +448,8 @@
             this.cb_qwerty.Items.AddRange(new object[] {
             "QWERTY",
             "AZERTY",
-            "QWERTZ"});
+            "QWERTZ",
+            "ESDF"});
             this.cb_qwerty.Location = new System.Drawing.Point(172, 58);
             this.cb_qwerty.Name = "cb_qwerty";
             this.cb_qwerty.Size = new System.Drawing.Size(179, 24);
