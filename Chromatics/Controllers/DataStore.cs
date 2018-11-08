@@ -106,6 +106,9 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsLcdEnabled = false;
         public string FinalFantasyXivVersion = "4.40";
         public bool FirstRun = false;
+        public bool ChromaticsSettingsCastEnabled = false;
+        public string ChromaticsSettingsCastDevice = "";
+        public bool ChromaticsSettingsCastDFBell = false;
 
         public int[][] ChromaticsSettingsACTDPS =
         {

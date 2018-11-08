@@ -36,6 +36,7 @@ namespace Chromatics
         private string _currentStatus = "";
         private bool _dfcount;
         private bool _dfpop;
+        private bool _dfpopOnce;
         private int _hp;
         private bool _targeted;
         private bool _castalert;
@@ -6624,6 +6625,16 @@ namespace Chromatics
                             //Duty Finder Bell
                             if (FfxivDutyFinder.IsPopped())
                             {
+                                if (!_dfpopOnce)
+                                {
+                                    if (ChromaticsSettings.ChromaticsSettingsCastEnabled && ChromaticsSettings.ChromaticsSettingsCastDFBell)
+                                    {
+                                        SharpcastController.CastMedia("dfpop_notify.mp3");
+                                    }
+
+                                    _dfpopOnce = true;
+                                }
+
                                 //Debug.WriteLine("DF Pop");
                                 if (!_dfpop)
                                 {
@@ -6699,6 +6710,7 @@ namespace Chromatics
                                     SetHeadsetbase = false;
                                     SetKeypadbase = false;
                                     SetCLbase = false;
+                                    _dfpopOnce = false;
 
                                     GlobalApplyKeySingleLighting(DevModeTypes.DutyFinder, _baseColor);
                                     GlobalApplyKeyMultiLighting(DevMultiModeTypes.DutyFinder, baseColor, "All");

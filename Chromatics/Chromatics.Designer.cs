@@ -188,6 +188,11 @@
             this.lbl_arx_cb = new System.Windows.Forms.Label();
             this.cb_arx_theme = new System.Windows.Forms.ComboBox();
             this.chk_arxtoggle = new System.Windows.Forms.CheckBox();
+            this.tP_Cast = new System.Windows.Forms.TabPage();
+            this.gb_cast = new System.Windows.Forms.GroupBox();
+            this.lbl_chromecastdev = new System.Windows.Forms.Label();
+            this.cb_castdevlist = new System.Windows.Forms.ComboBox();
+            this.chk_enablecast = new System.Windows.Forms.CheckBox();
             this.mapping_colorEditorManager = new Cyotek.Windows.Forms.ColorEditorManager();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mi_effectsenable = new System.Windows.Forms.ToolStripMenuItem();
@@ -199,6 +204,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_castdfbell = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -232,6 +238,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nm_acttargetdps)).BeginInit();
             this.tP_ARX.SuspendLayout();
             this.gB_ARX1.SuspendLayout();
+            this.tP_Cast.SuspendLayout();
+            this.gb_cast.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -254,6 +262,7 @@
             this.tb_controlA.Controls.Add(this.tP_mappings);
             this.tb_controlA.Controls.Add(this.tP_act);
             this.tb_controlA.Controls.Add(this.tP_ARX);
+            this.tb_controlA.Controls.Add(this.tP_Cast);
             this.tb_controlA.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tb_controlA.Location = new System.Drawing.Point(0, 0);
             this.tb_controlA.Name = "tb_controlA";
@@ -2166,6 +2175,61 @@
             this.chk_arxtoggle.UseVisualStyleBackColor = true;
             this.chk_arxtoggle.CheckedChanged += new System.EventHandler(this.chk_arxtoggle_CheckedChanged);
             // 
+            // tP_Cast
+            // 
+            this.tP_Cast.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_Cast.Controls.Add(this.gb_cast);
+            this.tP_Cast.Location = new System.Drawing.Point(4, 25);
+            this.tP_Cast.Name = "tP_Cast";
+            this.tP_Cast.Size = new System.Drawing.Size(969, 494);
+            this.tP_Cast.TabIndex = 7;
+            this.tP_Cast.Text = "Chromecast";
+            // 
+            // gb_cast
+            // 
+            this.gb_cast.Controls.Add(this.chk_castdfbell);
+            this.gb_cast.Controls.Add(this.lbl_chromecastdev);
+            this.gb_cast.Controls.Add(this.cb_castdevlist);
+            this.gb_cast.Controls.Add(this.chk_enablecast);
+            this.gb_cast.Location = new System.Drawing.Point(8, 12);
+            this.gb_cast.Name = "gb_cast";
+            this.gb_cast.Size = new System.Drawing.Size(952, 163);
+            this.gb_cast.TabIndex = 1;
+            this.gb_cast.TabStop = false;
+            this.gb_cast.Text = "Google Cast";
+            // 
+            // lbl_chromecastdev
+            // 
+            this.lbl_chromecastdev.AutoSize = true;
+            this.lbl_chromecastdev.Location = new System.Drawing.Point(18, 85);
+            this.lbl_chromecastdev.Name = "lbl_chromecastdev";
+            this.lbl_chromecastdev.Size = new System.Drawing.Size(102, 17);
+            this.lbl_chromecastdev.TabIndex = 2;
+            this.lbl_chromecastdev.Text = "Casting Device";
+            // 
+            // cb_castdevlist
+            // 
+            this.cb_castdevlist.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_castdevlist.FormattingEnabled = true;
+            this.cb_castdevlist.Location = new System.Drawing.Point(126, 82);
+            this.cb_castdevlist.Name = "cb_castdevlist";
+            this.cb_castdevlist.Size = new System.Drawing.Size(203, 24);
+            this.cb_castdevlist.TabIndex = 1;
+            this.cb_castdevlist.SelectedIndexChanged += new System.EventHandler(this.cb_castdevlist_SelectedIndexChanged);
+            // 
+            // chk_enablecast
+            // 
+            this.chk_enablecast.AutoSize = true;
+            this.chk_enablecast.Location = new System.Drawing.Point(19, 30);
+            this.chk_enablecast.Name = "chk_enablecast";
+            this.chk_enablecast.Size = new System.Drawing.Size(125, 21);
+            this.chk_enablecast.TabIndex = 0;
+            this.chk_enablecast.Text = "Enable Casting";
+            this.chk_enablecast.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.tooltip_main.SetToolTip(this.chk_enablecast, "Enable Chromecast/Google Home alerts");
+            this.chk_enablecast.UseVisualStyleBackColor = true;
+            this.chk_enablecast.CheckedChanged += new System.EventHandler(this.chk_enablecast_CheckedChanged);
+            // 
             // mapping_colorEditorManager
             // 
             this.mapping_colorEditorManager.ColorEditor = this.colorEditor1;
@@ -2242,6 +2306,19 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // chk_castdfbell
+            // 
+            this.chk_castdfbell.AutoSize = true;
+            this.chk_castdfbell.Location = new System.Drawing.Point(530, 30);
+            this.chk_castdfbell.Name = "chk_castdfbell";
+            this.chk_castdfbell.Size = new System.Drawing.Size(178, 21);
+            this.chk_castdfbell.TabIndex = 3;
+            this.chk_castdfbell.Text = "Enable Duty Finder Bell";
+            this.chk_castdfbell.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.tooltip_main.SetToolTip(this.chk_castdfbell, "Casts an audible alert to your Chromecast or Google Home when Duty Finder pops.");
+            this.chk_castdfbell.UseVisualStyleBackColor = true;
+            this.chk_castdfbell.CheckedChanged += new System.EventHandler(this.chk_castdfbell_CheckedChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2297,6 +2374,9 @@
             this.tP_ARX.ResumeLayout(false);
             this.gB_ARX1.ResumeLayout(false);
             this.gB_ARX1.PerformLayout();
+            this.tP_Cast.ResumeLayout(false);
+            this.gb_cast.ResumeLayout(false);
+            this.gb_cast.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -2472,6 +2552,12 @@
         private System.Windows.Forms.ComboBox cb_actjobclass;
         private System.Windows.Forms.CheckBox chk_actflashtimer;
         private System.Windows.Forms.CheckBox chk_actflashtrigger;
+        private System.Windows.Forms.TabPage tP_Cast;
+        private System.Windows.Forms.GroupBox gb_cast;
+        private System.Windows.Forms.Label lbl_chromecastdev;
+        private System.Windows.Forms.ComboBox cb_castdevlist;
+        private System.Windows.Forms.CheckBox chk_enablecast;
+        private System.Windows.Forms.CheckBox chk_castdfbell;
     }
 }
 

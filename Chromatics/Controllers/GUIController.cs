@@ -1114,6 +1114,9 @@ namespace Chromatics
             chk_actflashtrigger.Checked = ChromaticsSettings.ChromaticsSettingsACTFlashCustomTrigger;
             chk_actflashtimer.Checked = ChromaticsSettings.ChromaticsSettingsACTFlashTimer;
 
+            chk_enablecast.Checked = ChromaticsSettings.ChromaticsSettingsCastEnabled;
+            chk_castdfbell.Checked = ChromaticsSettings.ChromaticsSettingsCastDFBell;
+
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
             chk_dev_mousepad.Checked = _deviceMousepad;
@@ -3019,6 +3022,75 @@ namespace Chromatics
             {
                 MessageBox.Show(@"Unable to clear cache. Are you running as Administrator? Error: " + ex.StackTrace, @"Unable to clear Cache", MessageBoxButtons.OK);
             }
+        }
+
+        private async void chk_enablecast_CheckedChanged(object sender, EventArgs e)
+        {
+            //if (Startup == false) return;
+
+            if (chk_enablecast.Checked)
+            {
+                cb_castdevlist.Enabled = true;
+                chk_castdfbell.Enabled = true;
+
+                await SharpcastController.InitSharpcastAsync();
+                var casts = SharpcastController.ReturnActiveChromecasts();
+
+                var mem = 0;
+                var i = 0;
+
+                foreach (var cast in casts)
+                {
+                    cb_castdevlist.Items.Add(cast.Value.FriendlyName);
+
+                    if (cast.Value.Id == ChromaticsSettings.ChromaticsSettingsCastDevice)
+                    {
+                        mem = i;
+                    }
+
+                    i++;
+                }
+                
+                if (cb_castdevlist.Items.Count > 0)
+                {
+                    cb_castdevlist.SelectedIndex = mem;
+                }
+            }
+            else
+            {
+                cb_castdevlist.Enabled = false;
+                chk_castdfbell.Enabled = false;
+
+                SharpcastController.EndSharpcaster();
+            }
+
+            ChromaticsSettings.ChromaticsSettingsCastEnabled = chk_enablecast.Checked;
+            SaveChromaticsSettings(1);
+        }
+
+        private void cb_castdevlist_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            var casts = SharpcastController.ReturnActiveChromecasts();
+            var lookup = casts.FirstOrDefault(x => x.Value.FriendlyName == (string)cb_castdevlist.SelectedItem).Key;
+
+            if (casts.ContainsKey(lookup))
+            {
+                ChromaticsSettings.ChromaticsSettingsCastDevice = lookup;
+                Console.WriteLine(@"Setting default cast device to " + casts[lookup].FriendlyName);
+                SharpcastController.SetActiveDevice(lookup);
+
+                SaveChromaticsSettings(1);
+            }
+        }
+
+        private void chk_castdfbell_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsCastDFBell = chk_castdfbell.Checked;
+            SaveChromaticsSettings(1);
         }
 
         private void cb_lang_SelectedIndexChanged(object sender, EventArgs e)
