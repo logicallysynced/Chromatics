@@ -487,6 +487,8 @@ namespace Chromatics
             ToggleMappingControls(false);
 
             ResetMappingsDataGrid();
+
+            dgv_iftttgrid.Rows.Add("0", "Duty Finder Bell", "Chromatics_DFBell");
         }
 
         private void ToggleMappingControls(bool toggle)
@@ -1116,6 +1118,27 @@ namespace Chromatics
 
             chk_enablecast.Checked = ChromaticsSettings.ChromaticsSettingsCastEnabled;
             chk_castdfbell.Checked = ChromaticsSettings.ChromaticsSettingsCastDFBell;
+
+            chk_enableifttt.Checked = ChromaticsSettings.ChromaticsSettingsIFTTTEnable;
+
+            if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
+            {
+                lbl_IFTTTcode.Enabled = true;
+                txt_iftttmakerurl.Enabled = true;
+                lbl_iftttmakerurlexample.Enabled = true;
+                btn_ifttthelp.Enabled = true;
+                dgv_iftttgrid.Enabled = true;
+            }
+            else
+            {
+                lbl_IFTTTcode.Enabled = false;
+                txt_iftttmakerurl.Enabled = false;
+                lbl_iftttmakerurlexample.Enabled = false;
+                btn_ifttthelp.Enabled = false;
+                dgv_iftttgrid.Enabled = false;
+            }
+
+            txt_iftttmakerurl.Text = ChromaticsSettings.ChromaticsSettingsIFTTTURL;
 
             chk_dev_keyboard.Checked = _deviceKeyboard;
             chk_dev_mouse.Checked = _deviceMouse;
@@ -3091,6 +3114,55 @@ namespace Chromatics
 
             ChromaticsSettings.ChromaticsSettingsCastDFBell = chk_castdfbell.Checked;
             SaveChromaticsSettings(1);
+        }
+
+        private void chk_enableifttt_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_enableifttt.Checked)
+            {
+                lbl_IFTTTcode.Enabled = true;
+                txt_iftttmakerurl.Enabled = true;
+                lbl_iftttmakerurlexample.Enabled = true;
+                btn_ifttthelp.Enabled = true;
+                dgv_iftttgrid.Enabled = true;
+            }
+            else
+            {
+                lbl_IFTTTcode.Enabled = false;
+                txt_iftttmakerurl.Enabled = false;
+                lbl_iftttmakerurlexample.Enabled = false;
+                btn_ifttthelp.Enabled = false;
+                dgv_iftttgrid.Enabled = false;
+            }
+
+            ChromaticsSettings.ChromaticsSettingsIFTTTEnable = chk_enableifttt.Checked;
+            SaveChromaticsSettings(1);
+        }
+
+        private void txt_iftttmakerurl_TextChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            var result = Uri.TryCreate(txt_iftttmakerurl.Text, UriKind.Absolute, out var uriResult) && uriResult.Scheme == Uri.UriSchemeHttps;
+
+            if (!result)
+            {
+                MessageBox.Show(@"The IFTTT Maker URL you provided is invalid, please check the link and try again.", @"Invalid IFTTT Maker URL", MessageBoxButtons.OK);
+                txt_iftttmakerurl.Text = "";
+                return;
+            }
+
+            ChromaticsSettings.ChromaticsSettingsIFTTTURL = txt_iftttmakerurl.Text;
+            SaveChromaticsSettings(1);
+        }
+
+        private void btn_ifttthelp_Click(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            Process.Start("https://github.com/roxaskeyheart/Chromatics/wiki/Connecting-with-IFTTT");
         }
 
         private void cb_lang_SelectedIndexChanged(object sender, EventArgs e)

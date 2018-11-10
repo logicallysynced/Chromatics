@@ -130,6 +130,9 @@
     <Reference Include="Cyotek.Windows.Forms.ColorPicker">
       <HintPath>..\Build Dependencies\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
     </Reference>
+    <Reference Include="EasyHttp, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyHttp.1.7.0\lib\net40\EasyHttp.dll</HintPath>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.4.1.0, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.4.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
     </Reference>
@@ -147,6 +150,9 @@
     </Reference>
     <Reference Include="GoogleCast, Version=1.6.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GoogleCast.1.6.7\lib\netstandard2.0\GoogleCast.dll</HintPath>
+    </Reference>
+    <Reference Include="JsonFx, Version=2.0.1209.2802, Culture=neutral, PublicKeyToken=315052dd637f8a52, processorArchitecture=MSIL">
+      <HintPath>..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
     </Reference>
     <Reference Include="LifxNet, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LifxNet.2.1.1\lib\netstandard1.3\LifxNet.dll</HintPath>

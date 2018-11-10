@@ -68,7 +68,7 @@ namespace Chromatics
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
         private readonly string _currentVersionX = "2.4.5";
-        private readonly bool _debugmode = true;
+        private readonly bool _debugmode = false;
         public bool DeviceGridStartup = false;
         private bool blockACTVersion = false;
         private const int ACTVersionMatch = 1;
@@ -828,6 +828,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
+
     }
 
     public static class ExceptionExtensions

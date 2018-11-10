@@ -17,6 +17,8 @@ using System.IO;
 using System.Reflection;
 using Chromatics.ACTInterfaces;
 using System.Timers;
+using System.Net.Http;
+using EasyHttp.Http;
 
 
 /* Contains the code to read the FFXIV Memory Stream, parse the data and convert to lighting commands
@@ -6630,6 +6632,14 @@ namespace Chromatics
                                     if (ChromaticsSettings.ChromaticsSettingsCastEnabled && ChromaticsSettings.ChromaticsSettingsCastDFBell)
                                     {
                                         SharpcastController.CastMedia("dfpop_notify.mp3");
+                                    }
+
+                                    if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
+                                    {
+                                        var http = new EasyHttp.Http.HttpClient();
+                                        var iftttcode = ChromaticsSettings.ChromaticsSettingsIFTTTURL.Replace("https://maker.ifttt.com/use/", "");
+                                        http.Post(@"https://maker.ifttt.com/trigger/Chromatics_DFBell/with/key/" + iftttcode, @"", HttpContentTypes.TextPlain);
+                                        Console.WriteLine(@"https://maker.ifttt.com/trigger/Chromatics_DFBell/with/key/" + iftttcode);
                                     }
 
                                     _dfpopOnce = true;

@@ -104,11 +104,13 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsMemoryCache = false;
         public bool ChromaticsSettingsDesktopNotifications = true;
         public bool ChromaticsSettingsLcdEnabled = false;
-        public string FinalFantasyXivVersion = "4.40";
+        public string FinalFantasyXivVersion = "4.45";
         public bool FirstRun = false;
         public bool ChromaticsSettingsCastEnabled = false;
         public string ChromaticsSettingsCastDevice = "";
         public bool ChromaticsSettingsCastDFBell = false;
+        public bool ChromaticsSettingsIFTTTEnable = false;
+        public string ChromaticsSettingsIFTTTURL = "";
 
         public int[][] ChromaticsSettingsACTDPS =
         {

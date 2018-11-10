@@ -188,11 +188,23 @@
             this.lbl_arx_cb = new System.Windows.Forms.Label();
             this.cb_arx_theme = new System.Windows.Forms.ComboBox();
             this.chk_arxtoggle = new System.Windows.Forms.CheckBox();
-            this.tP_Cast = new System.Windows.Forms.TabPage();
-            this.gb_cast = new System.Windows.Forms.GroupBox();
+            this.tP_integrate = new System.Windows.Forms.TabPage();
+            this.tC_integrations = new System.Windows.Forms.TabControl();
+            this.tP_cast = new System.Windows.Forms.TabPage();
+            this.chk_castdfbell = new System.Windows.Forms.CheckBox();
             this.lbl_chromecastdev = new System.Windows.Forms.Label();
             this.cb_castdevlist = new System.Windows.Forms.ComboBox();
             this.chk_enablecast = new System.Windows.Forms.CheckBox();
+            this.tP_ifttt = new System.Windows.Forms.TabPage();
+            this.lbl_iftttmakerurlexample = new System.Windows.Forms.Label();
+            this.lbl_IFTTTcode = new System.Windows.Forms.Label();
+            this.txt_iftttmakerurl = new System.Windows.Forms.TextBox();
+            this.dgv_iftttgrid = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_postID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_functionifttt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btn_ifttthelp = new System.Windows.Forms.Button();
+            this.chk_enableifttt = new System.Windows.Forms.CheckBox();
             this.mapping_colorEditorManager = new Cyotek.Windows.Forms.ColorEditorManager();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mi_effectsenable = new System.Windows.Forms.ToolStripMenuItem();
@@ -204,7 +216,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_castdfbell = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -238,8 +249,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nm_acttargetdps)).BeginInit();
             this.tP_ARX.SuspendLayout();
             this.gB_ARX1.SuspendLayout();
-            this.tP_Cast.SuspendLayout();
-            this.gb_cast.SuspendLayout();
+            this.tP_integrate.SuspendLayout();
+            this.tC_integrations.SuspendLayout();
+            this.tP_cast.SuspendLayout();
+            this.tP_ifttt.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -262,7 +276,7 @@
             this.tb_controlA.Controls.Add(this.tP_mappings);
             this.tb_controlA.Controls.Add(this.tP_act);
             this.tb_controlA.Controls.Add(this.tP_ARX);
-            this.tb_controlA.Controls.Add(this.tP_Cast);
+            this.tb_controlA.Controls.Add(this.tP_integrate);
             this.tb_controlA.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tb_controlA.Location = new System.Drawing.Point(0, 0);
             this.tb_controlA.Name = "tb_controlA";
@@ -2175,60 +2189,194 @@
             this.chk_arxtoggle.UseVisualStyleBackColor = true;
             this.chk_arxtoggle.CheckedChanged += new System.EventHandler(this.chk_arxtoggle_CheckedChanged);
             // 
-            // tP_Cast
+            // tP_integrate
             // 
-            this.tP_Cast.BackColor = System.Drawing.SystemColors.Control;
-            this.tP_Cast.Controls.Add(this.gb_cast);
-            this.tP_Cast.Location = new System.Drawing.Point(4, 25);
-            this.tP_Cast.Name = "tP_Cast";
-            this.tP_Cast.Size = new System.Drawing.Size(969, 494);
-            this.tP_Cast.TabIndex = 7;
-            this.tP_Cast.Text = "Chromecast";
+            this.tP_integrate.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_integrate.Controls.Add(this.tC_integrations);
+            this.tP_integrate.Location = new System.Drawing.Point(4, 25);
+            this.tP_integrate.Name = "tP_integrate";
+            this.tP_integrate.Size = new System.Drawing.Size(969, 494);
+            this.tP_integrate.TabIndex = 7;
+            this.tP_integrate.Text = "Integrations";
             // 
-            // gb_cast
+            // tC_integrations
             // 
-            this.gb_cast.Controls.Add(this.chk_castdfbell);
-            this.gb_cast.Controls.Add(this.lbl_chromecastdev);
-            this.gb_cast.Controls.Add(this.cb_castdevlist);
-            this.gb_cast.Controls.Add(this.chk_enablecast);
-            this.gb_cast.Location = new System.Drawing.Point(8, 12);
-            this.gb_cast.Name = "gb_cast";
-            this.gb_cast.Size = new System.Drawing.Size(952, 163);
-            this.gb_cast.TabIndex = 1;
-            this.gb_cast.TabStop = false;
-            this.gb_cast.Text = "Google Cast";
+            this.tC_integrations.Controls.Add(this.tP_cast);
+            this.tC_integrations.Controls.Add(this.tP_ifttt);
+            this.tC_integrations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tC_integrations.Location = new System.Drawing.Point(0, 0);
+            this.tC_integrations.Name = "tC_integrations";
+            this.tC_integrations.SelectedIndex = 0;
+            this.tC_integrations.Size = new System.Drawing.Size(969, 494);
+            this.tC_integrations.TabIndex = 4;
+            // 
+            // tP_cast
+            // 
+            this.tP_cast.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_cast.Controls.Add(this.chk_castdfbell);
+            this.tP_cast.Controls.Add(this.lbl_chromecastdev);
+            this.tP_cast.Controls.Add(this.cb_castdevlist);
+            this.tP_cast.Controls.Add(this.chk_enablecast);
+            this.tP_cast.Location = new System.Drawing.Point(4, 25);
+            this.tP_cast.Name = "tP_cast";
+            this.tP_cast.Padding = new System.Windows.Forms.Padding(3);
+            this.tP_cast.Size = new System.Drawing.Size(961, 465);
+            this.tP_cast.TabIndex = 0;
+            this.tP_cast.Text = "Google Cast";
+            // 
+            // chk_castdfbell
+            // 
+            this.chk_castdfbell.AutoSize = true;
+            this.chk_castdfbell.Location = new System.Drawing.Point(394, 15);
+            this.chk_castdfbell.Name = "chk_castdfbell";
+            this.chk_castdfbell.Size = new System.Drawing.Size(178, 21);
+            this.chk_castdfbell.TabIndex = 7;
+            this.chk_castdfbell.Text = "Enable Duty Finder Bell";
+            this.chk_castdfbell.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.tooltip_main.SetToolTip(this.chk_castdfbell, "Casts an audible alert to your Chromecast or Google Home when Duty Finder pops.");
+            this.chk_castdfbell.UseVisualStyleBackColor = true;
+            this.chk_castdfbell.CheckedChanged += new System.EventHandler(this.chk_castdfbell_CheckedChanged);
             // 
             // lbl_chromecastdev
             // 
             this.lbl_chromecastdev.AutoSize = true;
-            this.lbl_chromecastdev.Location = new System.Drawing.Point(18, 85);
+            this.lbl_chromecastdev.Location = new System.Drawing.Point(11, 59);
             this.lbl_chromecastdev.Name = "lbl_chromecastdev";
             this.lbl_chromecastdev.Size = new System.Drawing.Size(102, 17);
-            this.lbl_chromecastdev.TabIndex = 2;
+            this.lbl_chromecastdev.TabIndex = 6;
             this.lbl_chromecastdev.Text = "Casting Device";
             // 
             // cb_castdevlist
             // 
             this.cb_castdevlist.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_castdevlist.FormattingEnabled = true;
-            this.cb_castdevlist.Location = new System.Drawing.Point(126, 82);
+            this.cb_castdevlist.Location = new System.Drawing.Point(119, 56);
             this.cb_castdevlist.Name = "cb_castdevlist";
             this.cb_castdevlist.Size = new System.Drawing.Size(203, 24);
-            this.cb_castdevlist.TabIndex = 1;
+            this.cb_castdevlist.TabIndex = 5;
             this.cb_castdevlist.SelectedIndexChanged += new System.EventHandler(this.cb_castdevlist_SelectedIndexChanged);
             // 
             // chk_enablecast
             // 
             this.chk_enablecast.AutoSize = true;
-            this.chk_enablecast.Location = new System.Drawing.Point(19, 30);
+            this.chk_enablecast.Location = new System.Drawing.Point(14, 15);
             this.chk_enablecast.Name = "chk_enablecast";
             this.chk_enablecast.Size = new System.Drawing.Size(125, 21);
-            this.chk_enablecast.TabIndex = 0;
+            this.chk_enablecast.TabIndex = 4;
             this.chk_enablecast.Text = "Enable Casting";
             this.chk_enablecast.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.tooltip_main.SetToolTip(this.chk_enablecast, "Enable Chromecast/Google Home alerts");
             this.chk_enablecast.UseVisualStyleBackColor = true;
             this.chk_enablecast.CheckedChanged += new System.EventHandler(this.chk_enablecast_CheckedChanged);
+            // 
+            // tP_ifttt
+            // 
+            this.tP_ifttt.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_ifttt.Controls.Add(this.lbl_iftttmakerurlexample);
+            this.tP_ifttt.Controls.Add(this.lbl_IFTTTcode);
+            this.tP_ifttt.Controls.Add(this.txt_iftttmakerurl);
+            this.tP_ifttt.Controls.Add(this.dgv_iftttgrid);
+            this.tP_ifttt.Controls.Add(this.btn_ifttthelp);
+            this.tP_ifttt.Controls.Add(this.chk_enableifttt);
+            this.tP_ifttt.Location = new System.Drawing.Point(4, 25);
+            this.tP_ifttt.Name = "tP_ifttt";
+            this.tP_ifttt.Padding = new System.Windows.Forms.Padding(3);
+            this.tP_ifttt.Size = new System.Drawing.Size(961, 465);
+            this.tP_ifttt.TabIndex = 1;
+            this.tP_ifttt.Text = "IFTTT";
+            // 
+            // lbl_iftttmakerurlexample
+            // 
+            this.lbl_iftttmakerurlexample.AutoSize = true;
+            this.lbl_iftttmakerurlexample.Location = new System.Drawing.Point(20, 109);
+            this.lbl_iftttmakerurlexample.Name = "lbl_iftttmakerurlexample";
+            this.lbl_iftttmakerurlexample.Size = new System.Drawing.Size(326, 17);
+            this.lbl_iftttmakerurlexample.TabIndex = 16;
+            this.lbl_iftttmakerurlexample.Text = "Example: https://maker.ifttt.com/use/abcxyz123456";
+            // 
+            // lbl_IFTTTcode
+            // 
+            this.lbl_IFTTTcode.AutoSize = true;
+            this.lbl_IFTTTcode.Location = new System.Drawing.Point(20, 64);
+            this.lbl_IFTTTcode.Name = "lbl_IFTTTcode";
+            this.lbl_IFTTTcode.Size = new System.Drawing.Size(121, 17);
+            this.lbl_IFTTTcode.TabIndex = 15;
+            this.lbl_IFTTTcode.Text = "IFTTT Maker URL";
+            // 
+            // txt_iftttmakerurl
+            // 
+            this.txt_iftttmakerurl.Location = new System.Drawing.Point(23, 84);
+            this.txt_iftttmakerurl.Name = "txt_iftttmakerurl";
+            this.txt_iftttmakerurl.Size = new System.Drawing.Size(269, 22);
+            this.txt_iftttmakerurl.TabIndex = 14;
+            this.tooltip_main.SetToolTip(this.txt_iftttmakerurl, "The URL from your IFTTT webhooks applet. This can be found in the Webhooks applet" +
+        " settings.");
+            this.txt_iftttmakerurl.TextChanged += new System.EventHandler(this.txt_iftttmakerurl_TextChanged);
+            // 
+            // dgv_iftttgrid
+            // 
+            this.dgv_iftttgrid.AllowUserToAddRows = false;
+            this.dgv_iftttgrid.AllowUserToDeleteRows = false;
+            this.dgv_iftttgrid.AllowUserToResizeColumns = false;
+            this.dgv_iftttgrid.AllowUserToResizeRows = false;
+            this.dgv_iftttgrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_iftttgrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_iftttgrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn5,
+            this.col_postID,
+            this.col_functionifttt});
+            this.dgv_iftttgrid.Location = new System.Drawing.Point(382, 51);
+            this.dgv_iftttgrid.MultiSelect = false;
+            this.dgv_iftttgrid.Name = "dgv_iftttgrid";
+            this.dgv_iftttgrid.ReadOnly = true;
+            this.dgv_iftttgrid.RowHeadersVisible = false;
+            this.dgv_iftttgrid.RowTemplate.Height = 24;
+            this.dgv_iftttgrid.Size = new System.Drawing.Size(559, 402);
+            this.dgv_iftttgrid.TabIndex = 13;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.HeaderText = "ID";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.ReadOnly = true;
+            this.dataGridViewTextBoxColumn5.Visible = false;
+            // 
+            // col_postID
+            // 
+            this.col_postID.HeaderText = "Function Name";
+            this.col_postID.Name = "col_postID";
+            this.col_postID.ReadOnly = true;
+            // 
+            // col_functionifttt
+            // 
+            this.col_functionifttt.HeaderText = "IFTTT Event Name";
+            this.col_functionifttt.Name = "col_functionifttt";
+            this.col_functionifttt.ReadOnly = true;
+            // 
+            // btn_ifttthelp
+            // 
+            this.btn_ifttthelp.Location = new System.Drawing.Point(838, 12);
+            this.btn_ifttthelp.Name = "btn_ifttthelp";
+            this.btn_ifttthelp.Size = new System.Drawing.Size(103, 33);
+            this.btn_ifttthelp.TabIndex = 12;
+            this.btn_ifttthelp.Text = "Setup Help";
+            this.tooltip_main.SetToolTip(this.btn_ifttthelp, "Opens a webpage with instructions on how to link IFTTT to Chromatics");
+            this.btn_ifttthelp.UseVisualStyleBackColor = true;
+            this.btn_ifttthelp.Click += new System.EventHandler(this.btn_ifttthelp_Click);
+            // 
+            // chk_enableifttt
+            // 
+            this.chk_enableifttt.AutoSize = true;
+            this.chk_enableifttt.Location = new System.Drawing.Point(23, 19);
+            this.chk_enableifttt.Name = "chk_enableifttt";
+            this.chk_enableifttt.Size = new System.Drawing.Size(116, 21);
+            this.chk_enableifttt.TabIndex = 11;
+            this.chk_enableifttt.Text = "Enable IFTTT";
+            this.chk_enableifttt.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.tooltip_main.SetToolTip(this.chk_enableifttt, "Enable IFTTT requests to be sent to the Webhooks applet on specific in-game event" +
+        "s.");
+            this.chk_enableifttt.UseVisualStyleBackColor = true;
+            this.chk_enableifttt.CheckedChanged += new System.EventHandler(this.chk_enableifttt_CheckedChanged);
             // 
             // mapping_colorEditorManager
             // 
@@ -2306,19 +2454,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_castdfbell
-            // 
-            this.chk_castdfbell.AutoSize = true;
-            this.chk_castdfbell.Location = new System.Drawing.Point(530, 30);
-            this.chk_castdfbell.Name = "chk_castdfbell";
-            this.chk_castdfbell.Size = new System.Drawing.Size(178, 21);
-            this.chk_castdfbell.TabIndex = 3;
-            this.chk_castdfbell.Text = "Enable Duty Finder Bell";
-            this.chk_castdfbell.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.tooltip_main.SetToolTip(this.chk_castdfbell, "Casts an audible alert to your Chromecast or Google Home when Duty Finder pops.");
-            this.chk_castdfbell.UseVisualStyleBackColor = true;
-            this.chk_castdfbell.CheckedChanged += new System.EventHandler(this.chk_castdfbell_CheckedChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2327,7 +2462,7 @@
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.4.4";
+            this.Text = "Chromatics 2.4.5";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
@@ -2374,9 +2509,13 @@
             this.tP_ARX.ResumeLayout(false);
             this.gB_ARX1.ResumeLayout(false);
             this.gB_ARX1.PerformLayout();
-            this.tP_Cast.ResumeLayout(false);
-            this.gb_cast.ResumeLayout(false);
-            this.gb_cast.PerformLayout();
+            this.tP_integrate.ResumeLayout(false);
+            this.tC_integrations.ResumeLayout(false);
+            this.tP_cast.ResumeLayout(false);
+            this.tP_cast.PerformLayout();
+            this.tP_ifttt.ResumeLayout(false);
+            this.tP_ifttt.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -2552,12 +2691,23 @@
         private System.Windows.Forms.ComboBox cb_actjobclass;
         private System.Windows.Forms.CheckBox chk_actflashtimer;
         private System.Windows.Forms.CheckBox chk_actflashtrigger;
-        private System.Windows.Forms.TabPage tP_Cast;
-        private System.Windows.Forms.GroupBox gb_cast;
+        private System.Windows.Forms.TabPage tP_integrate;
+        private System.Windows.Forms.TabControl tC_integrations;
+        private System.Windows.Forms.TabPage tP_cast;
+        private System.Windows.Forms.CheckBox chk_castdfbell;
         private System.Windows.Forms.Label lbl_chromecastdev;
         private System.Windows.Forms.ComboBox cb_castdevlist;
         private System.Windows.Forms.CheckBox chk_enablecast;
-        private System.Windows.Forms.CheckBox chk_castdfbell;
+        private System.Windows.Forms.TabPage tP_ifttt;
+        private System.Windows.Forms.Label lbl_iftttmakerurlexample;
+        private System.Windows.Forms.Label lbl_IFTTTcode;
+        private System.Windows.Forms.TextBox txt_iftttmakerurl;
+        private System.Windows.Forms.DataGridView dgv_iftttgrid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_postID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_functionifttt;
+        private System.Windows.Forms.Button btn_ifttthelp;
+        private System.Windows.Forms.CheckBox chk_enableifttt;
     }
 }
 
