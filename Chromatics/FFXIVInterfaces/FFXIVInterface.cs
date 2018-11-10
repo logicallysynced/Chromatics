@@ -6636,10 +6636,7 @@ namespace Chromatics
 
                                     if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
                                     {
-                                        var http = new EasyHttp.Http.HttpClient();
-                                        var iftttcode = ChromaticsSettings.ChromaticsSettingsIFTTTURL.Replace("https://maker.ifttt.com/use/", "");
-                                        http.Post(@"https://maker.ifttt.com/trigger/Chromatics_DFBell/with/key/" + iftttcode, @"", HttpContentTypes.TextPlain);
-                                        Console.WriteLine(@"https://maker.ifttt.com/trigger/Chromatics_DFBell/with/key/" + iftttcode);
+                                        IFTTTController.FireIFTTTEvent(@"Chromatics_DFBell", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
                                     }
 
                                     _dfpopOnce = true;
