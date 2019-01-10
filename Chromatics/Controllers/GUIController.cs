@@ -156,7 +156,8 @@ namespace Chromatics
             {20, "Arcanist"}, //ARC
             {21, "Conjurer"}, //CNJ
             {22, "Thaumaturge"}, //THM
-            {23, "Red Mage" } //RDM
+            {23, "Red Mage" }, //RDM
+            {24, "Blue Mage" } //RDM
         };
 
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
