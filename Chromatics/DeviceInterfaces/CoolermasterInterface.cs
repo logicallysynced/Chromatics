@@ -387,7 +387,7 @@ namespace Chromatics.DeviceInterfaces
 
             if (_coolermasterDeviceKeyboard)
             {
-                SetAllLights(color);
+                SetLights(color);
                 ApplyKeyboardLightingSoon();
             }
         }
@@ -592,7 +592,7 @@ namespace Chromatics.DeviceInterfaces
 
                         for (var i = 0; i <= 9; i++)
                         {
-                            
+
                             if (i == 0)
                             {
                                 //Setup
@@ -717,7 +717,7 @@ namespace Chromatics.DeviceInterfaces
                 var enumerable = mappedRegion.ToList();
                 for (var i = 0; i <= 8; i++)
                 {
-                    
+
                     if (i == 0)
                     {
                         //Setup
@@ -817,7 +817,7 @@ namespace Chromatics.DeviceInterfaces
 
         public void Flash3(Color burstcol, int speed, CancellationToken cts)
         {
-           try
+            try
             {
                 if (!IsInitialized || !_coolermasterDeviceKeyboard)
                     return;
@@ -1009,8 +1009,8 @@ namespace Chromatics.DeviceInterfaces
                 {
                     if (token.IsCancellationRequested) break;
                     Thread.Sleep(10);
-                    var col = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255),
-                        (int) Math.Ceiling((double) (x * 100) / 255), 0);
+                    var col = Color.FromArgb((int)Math.Ceiling((double)(250 * 100) / 255),
+                        (int)Math.Ceiling((double)(x * 100) / 255), 0);
 
                     SetAllLights(col);
 
@@ -1149,7 +1149,7 @@ namespace Chromatics.DeviceInterfaces
 
         public void Shutdown()
         {
-            foreach(var keyboard in _keyboards)
+            foreach (var keyboard in _keyboards)
             {
                 CoolermasterSdkWrapper.SetControlDevice(keyboard);
                 CoolermasterSdkWrapper.EnableLedControl(false);
