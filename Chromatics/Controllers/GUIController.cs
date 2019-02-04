@@ -3054,6 +3054,8 @@ namespace Chromatics
 
             if (chk_enablecast.Checked)
             {
+                
+                cb_castdevlist.Items.Clear();
                 cb_castdevlist.Enabled = true;
                 chk_castdfbell.Enabled = true;
 
