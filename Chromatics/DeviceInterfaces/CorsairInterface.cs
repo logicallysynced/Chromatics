@@ -380,7 +380,7 @@ namespace Chromatics.DeviceInterfaces
                 if (cV < 2)
                 {
                     Write.WriteConsole(ConsoleTypes.Error,
-                        "Corsair device support requires CUE2 Version 2.0.0 or higher to operate. Please download the latest version of CUE2 from the Corsair website.");
+                        "Corsair device support requires CUE2 or iCUE Version 2.0.0 or higher to operate. Please download the latest version of CUE2 or iCUE from the Corsair website.");
                     return false;
                 }
 

@@ -180,7 +180,7 @@ namespace Chromatics
             }
             else
             {
-                WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. Please make sure CUE2 is running.");
+                WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. Please make sure CUE2 or iCUE is running.");
             }
 
             //WriteConsole(ConsoleTypes.CORSAIR, "Attempting to load Corsair SDK..");
