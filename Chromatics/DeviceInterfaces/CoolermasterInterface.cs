@@ -259,7 +259,7 @@ namespace Chromatics.DeviceInterfaces
             {"Macro2", new[] {0, 19}},
             {"Macro3", new[] {0, 20}},
             {"Macro4", new[] {0, 21}},
-            {"OmeTilde", new[] {1, 0}},
+            {"OemTilde", new[] {1, 0}},
             {"D1", new[] {1, 1}},
             {"D2", new[] {1, 2}},
             {"D3", new[] {1, 3}},
