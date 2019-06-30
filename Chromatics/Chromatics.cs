@@ -69,8 +69,8 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.4.8";
-        private readonly bool _debugmode = false;
+        private readonly string _currentVersionX = "2.5.0";
+        private readonly bool _debugmode = true;
         public bool DeviceGridStartup = false;
         private bool blockACTVersion = false;
         private const int ACTVersionMatch = 1;
@@ -189,7 +189,7 @@ namespace Chromatics
         public DevModeTypes _CLZone5Mode = DevModeTypes.DefaultColor;
 
         public LightbarMode _LightbarMode = LightbarMode.TargetHp;
-        public FKeyMode _FKeyMode = FKeyMode.HpMpTp;
+        public FKeyMode _FKeyMode = FKeyMode.HpMp;
         public ACTMode _ACTMode = ACTMode.DPS;
 
         //Main Thread
@@ -838,7 +838,8 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-
+        
+        
     }
 
     public static class ExceptionExtensions

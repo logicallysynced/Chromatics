@@ -103,7 +103,7 @@ namespace Chromatics
             {FKeyMode.TargetHp, "Target HP"}, //
             {FKeyMode.HpTracker, "HP Tracker"}, //
             {FKeyMode.MpTracker, "MP Tracker"}, //
-            {FKeyMode.HpMpTp, "HP/MP"}, //
+            {FKeyMode.HpMp, "HP/MP"}, //
             {FKeyMode.CurrentExp, "Experience Tracker"},
             {FKeyMode.JobGauge, "Job Gauge"},
             {FKeyMode.PullCountdown, "Pull Countdown"},
@@ -1150,6 +1150,8 @@ namespace Chromatics
             chk_dev_headset.Checked = _deviceHeadset;
             chk_dev_keypad.Checked = _deviceKeypad;
             chk_dev_chromalink.Checked = _deviceCL;
+
+            cb_pollingint.SelectedIndex = cb_pollingint.FindStringExact(ChromaticsSettings.ChromaticsSettingsPollingInterval + @"ms");
 
             foreach (var item in _devModesA)
             {
@@ -2325,7 +2327,7 @@ namespace Chromatics
             GlobalResetDevices();
             SaveDevices();
         }
-
+        
         private void chk_keys_singlemode_CheckedChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;
@@ -2377,6 +2379,20 @@ namespace Chromatics
 
             SetKeysbase = false;
             GlobalStopCycleEffects();
+            SaveDevices();
+        }
+
+        private void cb_pollingint_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            var selected = cb_pollingint.GetItemText(cb_pollingint.SelectedItem).Replace("ms", "");
+            var poll = 0;
+
+            int.TryParse(selected, out poll);
+            ChromaticsSettings.ChromaticsSettingsPollingInterval = poll;
+
+            WriteConsole(ConsoleTypes.Ffxiv, @"Changing polling interval to " + (string)cb_pollingint.SelectedItem + @".");
             SaveDevices();
         }
 

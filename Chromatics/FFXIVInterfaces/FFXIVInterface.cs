@@ -310,7 +310,7 @@ namespace Chromatics
                     }
 
                     ReadFfxivMemory();
-                    await Task.Delay(150);
+                    await Task.Delay(ChromaticsSettings.ChromaticsSettingsPollingInterval);
                     
                 }
                 */
@@ -327,7 +327,7 @@ namespace Chromatics
         {
             while (true)
             {
-                Thread.Sleep(300);
+                Thread.Sleep(ChromaticsSettings.ChromaticsSettingsPollingInterval);
 
                 if (_exit)
                 {
@@ -2903,7 +2903,7 @@ namespace Chromatics
 
 
                             //FKeys
-                            if (_FKeyMode == FKeyMode.HpMpTp)
+                            if (_FKeyMode == FKeyMode.HpMp)
                             {
                                 var HpFunction_Collection = DeviceEffects.Function1;
                                 var HpFunction_Interpolate =
@@ -3060,7 +3060,7 @@ namespace Chromatics
                             GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, polMpz2);
 
                             //FKeys
-                            if (_FKeyMode == FKeyMode.HpMpTp)
+                            if (_FKeyMode == FKeyMode.HpMp)
                             {
                                 var MpFunction_Collection = DeviceEffects.Function2;
                                 var MpFunction_Interpolate =

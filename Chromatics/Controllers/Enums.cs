@@ -100,7 +100,7 @@
         TargetHp,
         HpTracker,
         MpTracker,
-        HpMpTp,
+        HpMp,
         CurrentExp,
         JobGauge,
         PullCountdown,

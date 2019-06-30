@@ -513,7 +513,7 @@ namespace Chromatics.Controllers
                     return "HpTracker";
                 case FKeyMode.MpTracker:
                     return "MpTracker";
-                case FKeyMode.HpMpTp:
+                case FKeyMode.HpMp:
                     return "HpMpTp";
                 case FKeyMode.CurrentExp:
                     return "CurrentExp";
@@ -549,7 +549,7 @@ namespace Chromatics.Controllers
                 case "MpTracker":
                     return FKeyMode.MpTracker;
                 case "HpMpTp":
-                    return FKeyMode.HpMpTp;
+                    return FKeyMode.HpMp;
                 case "CurrentExp":
                     return FKeyMode.CurrentExp;
                 case "JobGauge":
@@ -562,7 +562,7 @@ namespace Chromatics.Controllers
                     return FKeyMode.ACTEnrage;
             }
 
-            return FKeyMode.HpMpTp;
+            return FKeyMode.HpMp;
         }
 
         public static FKeyMode ConvertCBToFKeyMode(string mode)
@@ -584,7 +584,7 @@ namespace Chromatics.Controllers
                 case "MP Tracker":
                     return FKeyMode.MpTracker;
                 case "HP/MP":
-                    return FKeyMode.HpMpTp;
+                    return FKeyMode.HpMp;
                 case "Experience Tracker":
                     return FKeyMode.CurrentExp;
                 case "Job Gauge":
@@ -597,7 +597,7 @@ namespace Chromatics.Controllers
                     return FKeyMode.ACTEnrage;
             }
 
-            return FKeyMode.HpMpTp;
+            return FKeyMode.HpMp;
         }
 
         public static string ConvertFKeyModeToCB(FKeyMode mode)
@@ -618,8 +618,8 @@ namespace Chromatics.Controllers
                     return "HP Tracker";
                 case FKeyMode.MpTracker:
                     return "MP Tracker";
-                case FKeyMode.HpMpTp:
-                    return "HP/MP/TP";
+                case FKeyMode.HpMp:
+                    return "HP/MP";
                 case FKeyMode.CurrentExp:
                     return "Experience Tracker";
                 case FKeyMode.JobGauge:

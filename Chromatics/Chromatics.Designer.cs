@@ -125,6 +125,8 @@
             this.chk_lccenable = new System.Windows.Forms.CheckBox();
             this.lb_lcc = new System.Windows.Forms.Label();
             this.gB_General = new System.Windows.Forms.GroupBox();
+            this.lbl_polling = new System.Windows.Forms.Label();
+            this.cb_pollingint = new System.Windows.Forms.ComboBox();
             this.chk_disablememory = new System.Windows.Forms.CheckBox();
             this.chk_debugopt = new System.Windows.Forms.CheckBox();
             this.lbl_lang = new System.Windows.Forms.Label();
@@ -1442,6 +1444,8 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.lbl_polling);
+            this.gB_General.Controls.Add(this.cb_pollingint);
             this.gB_General.Controls.Add(this.chk_disablememory);
             this.gB_General.Controls.Add(this.chk_debugopt);
             this.gB_General.Controls.Add(this.lbl_lang);
@@ -1459,6 +1463,40 @@
             this.gB_General.TabIndex = 0;
             this.gB_General.TabStop = false;
             this.gB_General.Text = "General";
+            // 
+            // lbl_polling
+            // 
+            this.lbl_polling.AutoSize = true;
+            this.lbl_polling.Location = new System.Drawing.Point(5, 196);
+            this.lbl_polling.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_polling.Name = "lbl_polling";
+            this.lbl_polling.Size = new System.Drawing.Size(76, 13);
+            this.lbl_polling.TabIndex = 10;
+            this.lbl_polling.Text = "Polling Interval";
+            // 
+            // cb_pollingint
+            // 
+            this.cb_pollingint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_pollingint.FormattingEnabled = true;
+            this.cb_pollingint.Items.AddRange(new object[] {
+            "100ms",
+            "150ms",
+            "200ms",
+            "250ms",
+            "300ms",
+            "350ms",
+            "400ms",
+            "450ms",
+            "500ms"});
+            this.cb_pollingint.Location = new System.Drawing.Point(95, 194);
+            this.cb_pollingint.Margin = new System.Windows.Forms.Padding(2);
+            this.cb_pollingint.Name = "cb_pollingint";
+            this.cb_pollingint.Size = new System.Drawing.Size(96, 21);
+            this.cb_pollingint.TabIndex = 9;
+            this.tooltip_main.SetToolTip(this.cb_pollingint, "Changes the rate at which Chromatics fetches FFXIV data.\r\n(Default: 300ms)\r\n\r\nNot" +
+        "e: Smaller intervals uses more system resources. May crash Chromatics if used in" +
+        "correctly.");
+            this.cb_pollingint.SelectedIndexChanged += new System.EventHandler(this.cb_pollingint_SelectedIndexChanged);
             // 
             // chk_disablememory
             // 
@@ -2620,7 +2658,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.4.5";
+            this.Text = "Chromatics 2.5.0";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
@@ -2866,6 +2904,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn col_functionifttt;
         private System.Windows.Forms.Button btn_ifttthelp;
         private System.Windows.Forms.CheckBox chk_enableifttt;
+        private System.Windows.Forms.Label lbl_polling;
+        private System.Windows.Forms.ComboBox cb_pollingint;
     }
 }
 
