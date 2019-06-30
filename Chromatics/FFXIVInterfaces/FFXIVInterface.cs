@@ -404,7 +404,7 @@ namespace Chromatics
                                 //GlobalUpdateState("static", Color.DeepSkyBlue, false);
                                 GlobalStopParticleEffects();
                                 GlobalStopCycleEffects();
-                                GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                                GlobalApplyAllDeviceLighting(Color.BlueViolet);
                                 
                                 //WriteConsole(ConsoleTypes.Ffxiv, @"Returning to Main Menu..");
                             }
@@ -435,7 +435,7 @@ namespace Chromatics
                             //GlobalSetWave();
                             GlobalStopParticleEffects();
                             GlobalStopCycleEffects();
-                            GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                            GlobalApplyAllDeviceLighting(Color.BlueViolet);
                             
                             Attatched = 2;
                             _countMainMenuHold = 0;
@@ -444,7 +444,7 @@ namespace Chromatics
                         //Game in Menu
                         else if (Attatched == 2)
                         {
-                            if (_menuInfo != null && _menuInfo.Name != "" && _catchMenuchange <= 5)
+                            if (_menuInfo != null && _menuInfo.Name != "" && !_menuInfo.Name.StartsWith("Typeid:") && _catchMenuchange <= 5)
                             //if (_catchMenuchange <= 5)
                             {
                                 //Set Game Active
@@ -514,15 +514,11 @@ namespace Chromatics
                                 //Main Menu Still Active
                                 if (_countMainMenuHold == 5)
                                 {
-                                    GlobalApplyAllDeviceLighting(
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase));
+                                    GlobalApplyAllDeviceLighting(Color.BlueViolet);
                                     GlobalParticleEffects(
                                         new Color[]
                                         {
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight1),
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight2),
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuHighlight3),
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingMenuBase)
+                                            Color.BlueViolet, Color.MediumBlue, Color.Salmon, Color.Purple
                                         }, null, 20);
                                 }
 

@@ -2335,6 +2335,7 @@ namespace Chromatics.DeviceInterfaces
 
             try
             {
+                refreshKeyGrid.Set(ToColoreCol(toColor[0]));
                 Keyboard.SetCustomAsync(refreshKeyGrid);
                 Thread.Sleep(500);
             }

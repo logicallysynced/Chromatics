@@ -577,6 +577,16 @@ namespace Chromatics.Datastore
         public string ColorMappingWeatherQuicklevinHighlight = ColorTranslator.ToHtml(Color.Blue);
         public string ColorMappingWeatherWhitecycloneBase = ColorTranslator.ToHtml(Color.White);
         public string ColorMappingWeatherWhitecycloneHighlight = ColorTranslator.ToHtml(Color.Turquoise);
+        public string ColorMappingWeatherGeostormsBase = ColorTranslator.ToHtml(Color.Aquamarine);
+        public string ColorMappingWeatherGeostormsHighlight = ColorTranslator.ToHtml(Color.MediumPurple);
+        public string ColorMappingWeatherTrueblueBase = ColorTranslator.ToHtml(Color.DodgerBlue);
+        public string ColorMappingWeatherTrueblueHighlight = ColorTranslator.ToHtml(Color.Turquoise);
+        public string ColorMappingWeatherUmbralturbulenceBase = ColorTranslator.ToHtml(Color.DodgerBlue);
+        public string ColorMappingWeatherUmbralturbulenceHighlight = ColorTranslator.ToHtml(Color.DarkTurquoise);
+        public string ColorMappingWeatherEverlastinglightBase = ColorTranslator.ToHtml(Color.Salmon);
+        public string ColorMappingWeatherEverlastinglightHighlight = ColorTranslator.ToHtml(Color.Turquoise);
+        public string ColorMappingWeatherTerminationBase = ColorTranslator.ToHtml(Color.DarkMagenta);
+        public string ColorMappingWeatherTerminationHighlight = ColorTranslator.ToHtml(Color.MediumPurple);
         public string ColorMappingPullCountdownTick = ColorTranslator.ToHtml(Color.Turquoise);
         public string ColorMappingPullCountdownEmpty = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingPullCountdownEngage = ColorTranslator.ToHtml(Color.Lime);
