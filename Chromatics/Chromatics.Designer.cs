@@ -110,7 +110,7 @@
             this.chk_vegasmode = new System.Windows.Forms.CheckBox();
             this.chk_cutscenes = new System.Windows.Forms.CheckBox();
             this.chk_reactiveweather = new System.Windows.Forms.CheckBox();
-            this.chk_showstats = new System.Windows.Forms.CheckBox();
+            this.chk_showstatuseffects = new System.Windows.Forms.CheckBox();
             this.chk_dfbelltoggle = new System.Windows.Forms.CheckBox();
             this.chk_impactflashtog = new System.Windows.Forms.CheckBox();
             this.chk_keybindtoggle = new System.Windows.Forms.CheckBox();
@@ -260,10 +260,11 @@
             // rtb_debug
             // 
             this.rtb_debug.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.rtb_debug.Location = new System.Drawing.Point(3, 116);
+            this.rtb_debug.Location = new System.Drawing.Point(2, 92);
+            this.rtb_debug.Margin = new System.Windows.Forms.Padding(2);
             this.rtb_debug.Name = "rtb_debug";
             this.rtb_debug.ReadOnly = true;
-            this.rtb_debug.Size = new System.Drawing.Size(963, 375);
+            this.rtb_debug.Size = new System.Drawing.Size(721, 305);
             this.rtb_debug.TabIndex = 1;
             this.rtb_debug.Text = "";
             this.rtb_debug.TextChanged += new System.EventHandler(this.rtb_debug_TextChanged);
@@ -279,9 +280,10 @@
             this.tb_controlA.Controls.Add(this.tP_integrate);
             this.tb_controlA.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tb_controlA.Location = new System.Drawing.Point(0, 0);
+            this.tb_controlA.Margin = new System.Windows.Forms.Padding(2);
             this.tb_controlA.Name = "tb_controlA";
             this.tb_controlA.SelectedIndex = 0;
-            this.tb_controlA.Size = new System.Drawing.Size(977, 523);
+            this.tb_controlA.Size = new System.Drawing.Size(733, 425);
             this.tb_controlA.TabIndex = 2;
             // 
             // tP_debug
@@ -292,18 +294,20 @@
             this.tP_debug.Controls.Add(this.btn_help);
             this.tP_debug.Controls.Add(this.pB_logo1);
             this.tP_debug.Controls.Add(this.rtb_debug);
-            this.tP_debug.Location = new System.Drawing.Point(4, 25);
+            this.tP_debug.Location = new System.Drawing.Point(4, 22);
+            this.tP_debug.Margin = new System.Windows.Forms.Padding(2);
             this.tP_debug.Name = "tP_debug";
-            this.tP_debug.Padding = new System.Windows.Forms.Padding(3);
-            this.tP_debug.Size = new System.Drawing.Size(969, 494);
+            this.tP_debug.Padding = new System.Windows.Forms.Padding(2);
+            this.tP_debug.Size = new System.Drawing.Size(725, 399);
             this.tP_debug.TabIndex = 0;
             this.tP_debug.Text = "Debug";
             // 
             // btn_web
             // 
-            this.btn_web.Location = new System.Drawing.Point(692, 44);
+            this.btn_web.Location = new System.Drawing.Point(519, 36);
+            this.btn_web.Margin = new System.Windows.Forms.Padding(2);
             this.btn_web.Name = "btn_web";
-            this.btn_web.Size = new System.Drawing.Size(75, 30);
+            this.btn_web.Size = new System.Drawing.Size(56, 24);
             this.btn_web.TabIndex = 5;
             this.btn_web.Text = "Website";
             this.tooltip_main.SetToolTip(this.btn_web, "Opens the Chromatics website in your default browser.");
@@ -312,9 +316,10 @@
             // 
             // btn_doc
             // 
-            this.btn_doc.Location = new System.Drawing.Point(773, 44);
+            this.btn_doc.Location = new System.Drawing.Point(580, 36);
+            this.btn_doc.Margin = new System.Windows.Forms.Padding(2);
             this.btn_doc.Name = "btn_doc";
-            this.btn_doc.Size = new System.Drawing.Size(75, 30);
+            this.btn_doc.Size = new System.Drawing.Size(56, 24);
             this.btn_doc.TabIndex = 4;
             this.btn_doc.Text = "Guide";
             this.tooltip_main.SetToolTip(this.btn_doc, "Opens the Chromatics guide in your default browser.\r\n");
@@ -323,9 +328,10 @@
             // 
             // btn_help
             // 
-            this.btn_help.Location = new System.Drawing.Point(854, 44);
+            this.btn_help.Location = new System.Drawing.Point(640, 36);
+            this.btn_help.Margin = new System.Windows.Forms.Padding(2);
             this.btn_help.Name = "btn_help";
-            this.btn_help.Size = new System.Drawing.Size(91, 30);
+            this.btn_help.Size = new System.Drawing.Size(68, 24);
             this.btn_help.TabIndex = 3;
             this.btn_help.Text = "Report Bug";
             this.tooltip_main.SetToolTip(this.btn_help, "Report a bug found in Chromatics to the developers.");
@@ -338,9 +344,10 @@
             this.pB_logo1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pB_logo1.Image = global::Chromatics.Properties.Resources.logo;
             this.pB_logo1.InitialImage = global::Chromatics.Properties.Resources.logo;
-            this.pB_logo1.Location = new System.Drawing.Point(3, 3);
+            this.pB_logo1.Location = new System.Drawing.Point(2, 2);
+            this.pB_logo1.Margin = new System.Windows.Forms.Padding(2);
             this.pB_logo1.Name = "pB_logo1";
-            this.pB_logo1.Size = new System.Drawing.Size(963, 113);
+            this.pB_logo1.Size = new System.Drawing.Size(721, 90);
             this.pB_logo1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pB_logo1.TabIndex = 2;
             this.pB_logo1.TabStop = false;
@@ -349,9 +356,10 @@
             // 
             this.tP_devicesnew.BackColor = System.Drawing.SystemColors.Control;
             this.tP_devicesnew.Controls.Add(this.tb_controldev);
-            this.tP_devicesnew.Location = new System.Drawing.Point(4, 25);
+            this.tP_devicesnew.Location = new System.Drawing.Point(4, 22);
+            this.tP_devicesnew.Margin = new System.Windows.Forms.Padding(2);
             this.tP_devicesnew.Name = "tP_devicesnew";
-            this.tP_devicesnew.Size = new System.Drawing.Size(969, 494);
+            this.tP_devicesnew.Size = new System.Drawing.Size(725, 399);
             this.tP_devicesnew.TabIndex = 5;
             this.tP_devicesnew.Text = "Devices";
             // 
@@ -366,9 +374,10 @@
             this.tb_controldev.Controls.Add(this.tP_misc);
             this.tb_controldev.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tb_controldev.Location = new System.Drawing.Point(0, 0);
+            this.tb_controldev.Margin = new System.Windows.Forms.Padding(2);
             this.tb_controldev.Name = "tb_controldev";
             this.tb_controldev.SelectedIndex = 0;
-            this.tb_controldev.Size = new System.Drawing.Size(969, 494);
+            this.tb_controldev.Size = new System.Drawing.Size(725, 399);
             this.tb_controldev.TabIndex = 0;
             // 
             // tP_keys
@@ -385,10 +394,11 @@
             this.tP_keys.Controls.Add(this.cb_singlezonemode);
             this.tP_keys.Controls.Add(this.chk_keys_singlemode);
             this.tP_keys.Controls.Add(this.chk_dev_keyboard);
-            this.tP_keys.Location = new System.Drawing.Point(4, 25);
+            this.tP_keys.Location = new System.Drawing.Point(4, 22);
+            this.tP_keys.Margin = new System.Windows.Forms.Padding(2);
             this.tP_keys.Name = "tP_keys";
-            this.tP_keys.Padding = new System.Windows.Forms.Padding(3);
-            this.tP_keys.Size = new System.Drawing.Size(961, 465);
+            this.tP_keys.Padding = new System.Windows.Forms.Padding(2);
+            this.tP_keys.Size = new System.Drawing.Size(717, 373);
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
             // 
@@ -396,9 +406,10 @@
             // 
             this.cb_fkeymode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_fkeymode.FormattingEnabled = true;
-            this.cb_fkeymode.Location = new System.Drawing.Point(172, 108);
+            this.cb_fkeymode.Location = new System.Drawing.Point(129, 88);
+            this.cb_fkeymode.Margin = new System.Windows.Forms.Padding(2);
             this.cb_fkeymode.Name = "cb_fkeymode";
-            this.cb_fkeymode.Size = new System.Drawing.Size(179, 24);
+            this.cb_fkeymode.Size = new System.Drawing.Size(135, 21);
             this.cb_fkeymode.TabIndex = 11;
             this.tooltip_main.SetToolTip(this.cb_fkeymode, "Changes the mode for the function keys on a keyboard.");
             this.cb_fkeymode.SelectedIndexChanged += new System.EventHandler(this.cb_fkeymode_SelectedIndexChanged);
@@ -406,9 +417,10 @@
             // lbl_fkeymode
             // 
             this.lbl_fkeymode.AutoSize = true;
-            this.lbl_fkeymode.Location = new System.Drawing.Point(14, 111);
+            this.lbl_fkeymode.Location = new System.Drawing.Point(10, 90);
+            this.lbl_fkeymode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_fkeymode.Name = "lbl_fkeymode";
-            this.lbl_fkeymode.Size = new System.Drawing.Size(129, 17);
+            this.lbl_fkeymode.Size = new System.Drawing.Size(99, 13);
             this.lbl_fkeymode.TabIndex = 10;
             this.lbl_fkeymode.Text = "Function Key Mode";
             // 
@@ -416,18 +428,20 @@
             // 
             this.cb_multizonemode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_multizonemode.FormattingEnabled = true;
-            this.cb_multizonemode.Location = new System.Drawing.Point(724, 61);
+            this.cb_multizonemode.Location = new System.Drawing.Point(543, 50);
+            this.cb_multizonemode.Margin = new System.Windows.Forms.Padding(2);
             this.cb_multizonemode.Name = "cb_multizonemode";
-            this.cb_multizonemode.Size = new System.Drawing.Size(175, 24);
+            this.cb_multizonemode.Size = new System.Drawing.Size(132, 21);
             this.cb_multizonemode.TabIndex = 9;
             this.cb_multizonemode.SelectedIndexChanged += new System.EventHandler(this.cb_multizonemode_SelectedIndexChanged);
             // 
             // chk_keys_multimode
             // 
             this.chk_keys_multimode.AutoSize = true;
-            this.chk_keys_multimode.Location = new System.Drawing.Point(559, 62);
+            this.chk_keys_multimode.Location = new System.Drawing.Point(419, 50);
+            this.chk_keys_multimode.Margin = new System.Windows.Forms.Padding(2);
             this.chk_keys_multimode.Name = "chk_keys_multimode";
-            this.chk_keys_multimode.Size = new System.Drawing.Size(135, 21);
+            this.chk_keys_multimode.Size = new System.Drawing.Size(106, 17);
             this.chk_keys_multimode.TabIndex = 8;
             this.chk_keys_multimode.Text = "Multi Zone Mode";
             this.tooltip_main.SetToolTip(this.chk_keys_multimode, "If your keyboard only has limited RGB zones and not per-key backlighting, please " +
@@ -439,9 +453,10 @@
             // 
             this.cb_lightbarmode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_lightbarmode.FormattingEnabled = true;
-            this.cb_lightbarmode.Location = new System.Drawing.Point(172, 159);
+            this.cb_lightbarmode.Location = new System.Drawing.Point(129, 129);
+            this.cb_lightbarmode.Margin = new System.Windows.Forms.Padding(2);
             this.cb_lightbarmode.Name = "cb_lightbarmode";
-            this.cb_lightbarmode.Size = new System.Drawing.Size(179, 24);
+            this.cb_lightbarmode.Size = new System.Drawing.Size(135, 21);
             this.cb_lightbarmode.TabIndex = 7;
             this.tooltip_main.SetToolTip(this.cb_lightbarmode, "Changes the mode for the lightbar on Corsair keyboard devices.");
             this.cb_lightbarmode.SelectedIndexChanged += new System.EventHandler(this.cb_lightbarmode_SelectedIndexChanged);
@@ -449,18 +464,20 @@
             // lbl_lightbar
             // 
             this.lbl_lightbar.AutoSize = true;
-            this.lbl_lightbar.Location = new System.Drawing.Point(14, 162);
+            this.lbl_lightbar.Location = new System.Drawing.Point(10, 132);
+            this.lbl_lightbar.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_lightbar.Name = "lbl_lightbar";
-            this.lbl_lightbar.Size = new System.Drawing.Size(99, 17);
+            this.lbl_lightbar.Size = new System.Drawing.Size(75, 13);
             this.lbl_lightbar.TabIndex = 6;
             this.lbl_lightbar.Text = "Lightbar Mode";
             // 
             // lbl_region
             // 
             this.lbl_region.AutoSize = true;
-            this.lbl_region.Location = new System.Drawing.Point(14, 61);
+            this.lbl_region.Location = new System.Drawing.Point(10, 50);
+            this.lbl_region.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_region.Name = "lbl_region";
-            this.lbl_region.Size = new System.Drawing.Size(118, 17);
+            this.lbl_region.Size = new System.Drawing.Size(89, 13);
             this.lbl_region.TabIndex = 5;
             this.lbl_region.Text = "Keyboard Region";
             // 
@@ -473,9 +490,10 @@
             "AZERTY",
             "QWERTZ",
             "ESDF"});
-            this.cb_qwerty.Location = new System.Drawing.Point(172, 58);
+            this.cb_qwerty.Location = new System.Drawing.Point(129, 47);
+            this.cb_qwerty.Margin = new System.Windows.Forms.Padding(2);
             this.cb_qwerty.Name = "cb_qwerty";
-            this.cb_qwerty.Size = new System.Drawing.Size(179, 24);
+            this.cb_qwerty.Size = new System.Drawing.Size(135, 21);
             this.cb_qwerty.TabIndex = 4;
             this.tooltip_main.SetToolTip(this.cb_qwerty, "Changes the region of Keyboard devices.");
             this.cb_qwerty.SelectedIndexChanged += new System.EventHandler(this.cb_qwerty_SelectedIndexChanged);
@@ -484,18 +502,20 @@
             // 
             this.cb_singlezonemode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_singlezonemode.FormattingEnabled = true;
-            this.cb_singlezonemode.Location = new System.Drawing.Point(724, 17);
+            this.cb_singlezonemode.Location = new System.Drawing.Point(543, 14);
+            this.cb_singlezonemode.Margin = new System.Windows.Forms.Padding(2);
             this.cb_singlezonemode.Name = "cb_singlezonemode";
-            this.cb_singlezonemode.Size = new System.Drawing.Size(175, 24);
+            this.cb_singlezonemode.Size = new System.Drawing.Size(132, 21);
             this.cb_singlezonemode.TabIndex = 2;
             this.cb_singlezonemode.SelectedIndexChanged += new System.EventHandler(this.cb_singlezonemode_SelectedIndexChanged);
             // 
             // chk_keys_singlemode
             // 
             this.chk_keys_singlemode.AutoSize = true;
-            this.chk_keys_singlemode.Location = new System.Drawing.Point(559, 18);
+            this.chk_keys_singlemode.Location = new System.Drawing.Point(419, 15);
+            this.chk_keys_singlemode.Margin = new System.Windows.Forms.Padding(2);
             this.chk_keys_singlemode.Name = "chk_keys_singlemode";
-            this.chk_keys_singlemode.Size = new System.Drawing.Size(145, 21);
+            this.chk_keys_singlemode.Size = new System.Drawing.Size(113, 17);
             this.chk_keys_singlemode.TabIndex = 1;
             this.chk_keys_singlemode.Text = "Single Zone Mode";
             this.tooltip_main.SetToolTip(this.chk_keys_singlemode, "If your keyboard only has a single or limited RGB zones and not per-key backlight" +
@@ -506,9 +526,10 @@
             // chk_dev_keyboard
             // 
             this.chk_dev_keyboard.AutoSize = true;
-            this.chk_dev_keyboard.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_keyboard.Location = new System.Drawing.Point(13, 15);
+            this.chk_dev_keyboard.Margin = new System.Windows.Forms.Padding(2);
             this.chk_dev_keyboard.Name = "chk_dev_keyboard";
-            this.chk_dev_keyboard.Size = new System.Drawing.Size(139, 21);
+            this.chk_dev_keyboard.Size = new System.Drawing.Size(107, 17);
             this.chk_dev_keyboard.TabIndex = 0;
             this.chk_dev_keyboard.Text = "Enable Keyboard";
             this.tooltip_main.SetToolTip(this.chk_dev_keyboard, "Enable keyboard devices within Chromatics.");
@@ -529,19 +550,21 @@
             this.tP_mouse.Controls.Add(this.lbl_mouse_z1);
             this.tP_mouse.Controls.Add(this.cb_mouse_z1);
             this.tP_mouse.Controls.Add(this.chk_dev_mouse);
-            this.tP_mouse.Location = new System.Drawing.Point(4, 25);
+            this.tP_mouse.Location = new System.Drawing.Point(4, 22);
+            this.tP_mouse.Margin = new System.Windows.Forms.Padding(2);
             this.tP_mouse.Name = "tP_mouse";
-            this.tP_mouse.Padding = new System.Windows.Forms.Padding(3);
-            this.tP_mouse.Size = new System.Drawing.Size(961, 465);
+            this.tP_mouse.Padding = new System.Windows.Forms.Padding(2);
+            this.tP_mouse.Size = new System.Drawing.Size(717, 373);
             this.tP_mouse.TabIndex = 1;
             this.tP_mouse.Text = "Mouse";
             // 
             // lbl_mouse_zs2
             // 
             this.lbl_mouse_zs2.AutoSize = true;
-            this.lbl_mouse_zs2.Location = new System.Drawing.Point(313, 93);
+            this.lbl_mouse_zs2.Location = new System.Drawing.Point(235, 76);
+            this.lbl_mouse_zs2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_mouse_zs2.Name = "lbl_mouse_zs2";
-            this.lbl_mouse_zs2.Size = new System.Drawing.Size(49, 17);
+            this.lbl_mouse_zs2.Size = new System.Drawing.Size(37, 13);
             this.lbl_mouse_zs2.TabIndex = 12;
             this.lbl_mouse_zs2.Text = "Strip 2";
             // 
@@ -549,9 +572,10 @@
             // 
             this.cb_mouse_zs2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_mouse_zs2.FormattingEnabled = true;
-            this.cb_mouse_zs2.Location = new System.Drawing.Point(383, 90);
+            this.cb_mouse_zs2.Location = new System.Drawing.Point(287, 73);
+            this.cb_mouse_zs2.Margin = new System.Windows.Forms.Padding(2);
             this.cb_mouse_zs2.Name = "cb_mouse_zs2";
-            this.cb_mouse_zs2.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_zs2.Size = new System.Drawing.Size(132, 21);
             this.cb_mouse_zs2.TabIndex = 11;
             this.tooltip_main.SetToolTip(this.cb_mouse_zs2, "Controls strip functionality for mouse devices which support LED strip.\r\neg. Raze" +
         "r Mamba TE, etc.\r\n");
@@ -560,9 +584,10 @@
             // lbl_mouse_zs1
             // 
             this.lbl_mouse_zs1.AutoSize = true;
-            this.lbl_mouse_zs1.Location = new System.Drawing.Point(313, 63);
+            this.lbl_mouse_zs1.Location = new System.Drawing.Point(235, 51);
+            this.lbl_mouse_zs1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_mouse_zs1.Name = "lbl_mouse_zs1";
-            this.lbl_mouse_zs1.Size = new System.Drawing.Size(49, 17);
+            this.lbl_mouse_zs1.Size = new System.Drawing.Size(37, 13);
             this.lbl_mouse_zs1.TabIndex = 10;
             this.lbl_mouse_zs1.Text = "Strip 1";
             // 
@@ -570,9 +595,10 @@
             // 
             this.cb_mouse_zs1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_mouse_zs1.FormattingEnabled = true;
-            this.cb_mouse_zs1.Location = new System.Drawing.Point(383, 60);
+            this.cb_mouse_zs1.Location = new System.Drawing.Point(287, 49);
+            this.cb_mouse_zs1.Margin = new System.Windows.Forms.Padding(2);
             this.cb_mouse_zs1.Name = "cb_mouse_zs1";
-            this.cb_mouse_zs1.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_zs1.Size = new System.Drawing.Size(132, 21);
             this.cb_mouse_zs1.TabIndex = 9;
             this.tooltip_main.SetToolTip(this.cb_mouse_zs1, "Controls strip functionality for mouse devices which support LED strip.\r\neg. Raze" +
         "r Mamba TE, etc.");
@@ -581,9 +607,10 @@
             // lbl_mouse_z3
             // 
             this.lbl_mouse_z3.AutoSize = true;
-            this.lbl_mouse_z3.Location = new System.Drawing.Point(17, 123);
+            this.lbl_mouse_z3.Location = new System.Drawing.Point(13, 100);
+            this.lbl_mouse_z3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_mouse_z3.Name = "lbl_mouse_z3";
-            this.lbl_mouse_z3.Size = new System.Drawing.Size(53, 17);
+            this.lbl_mouse_z3.Size = new System.Drawing.Size(41, 13);
             this.lbl_mouse_z3.TabIndex = 8;
             this.lbl_mouse_z3.Text = "Zone 3";
             // 
@@ -591,9 +618,10 @@
             // 
             this.cb_mouse_z3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_mouse_z3.FormattingEnabled = true;
-            this.cb_mouse_z3.Location = new System.Drawing.Point(87, 120);
+            this.cb_mouse_z3.Location = new System.Drawing.Point(65, 98);
+            this.cb_mouse_z3.Margin = new System.Windows.Forms.Padding(2);
             this.cb_mouse_z3.Name = "cb_mouse_z3";
-            this.cb_mouse_z3.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_z3.Size = new System.Drawing.Size(132, 21);
             this.cb_mouse_z3.TabIndex = 7;
             this.tooltip_main.SetToolTip(this.cb_mouse_z3, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
         "static zones are supported.\r\n");
@@ -602,9 +630,10 @@
             // lbl_mouse_z2
             // 
             this.lbl_mouse_z2.AutoSize = true;
-            this.lbl_mouse_z2.Location = new System.Drawing.Point(17, 93);
+            this.lbl_mouse_z2.Location = new System.Drawing.Point(13, 76);
+            this.lbl_mouse_z2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_mouse_z2.Name = "lbl_mouse_z2";
-            this.lbl_mouse_z2.Size = new System.Drawing.Size(53, 17);
+            this.lbl_mouse_z2.Size = new System.Drawing.Size(41, 13);
             this.lbl_mouse_z2.TabIndex = 6;
             this.lbl_mouse_z2.Text = "Zone 2";
             // 
@@ -612,9 +641,10 @@
             // 
             this.cb_mouse_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_mouse_z2.FormattingEnabled = true;
-            this.cb_mouse_z2.Location = new System.Drawing.Point(87, 90);
+            this.cb_mouse_z2.Location = new System.Drawing.Point(65, 73);
+            this.cb_mouse_z2.Margin = new System.Windows.Forms.Padding(2);
             this.cb_mouse_z2.Name = "cb_mouse_z2";
-            this.cb_mouse_z2.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_z2.Size = new System.Drawing.Size(132, 21);
             this.cb_mouse_z2.TabIndex = 5;
             this.tooltip_main.SetToolTip(this.cb_mouse_z2, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
         "static zones are supported.\r\n");
@@ -623,9 +653,10 @@
             // lbl_mouse_z1
             // 
             this.lbl_mouse_z1.AutoSize = true;
-            this.lbl_mouse_z1.Location = new System.Drawing.Point(17, 63);
+            this.lbl_mouse_z1.Location = new System.Drawing.Point(13, 51);
+            this.lbl_mouse_z1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_mouse_z1.Name = "lbl_mouse_z1";
-            this.lbl_mouse_z1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_mouse_z1.Size = new System.Drawing.Size(41, 13);
             this.lbl_mouse_z1.TabIndex = 4;
             this.lbl_mouse_z1.Text = "Zone 1";
             // 
@@ -633,9 +664,10 @@
             // 
             this.cb_mouse_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_mouse_z1.FormattingEnabled = true;
-            this.cb_mouse_z1.Location = new System.Drawing.Point(87, 60);
+            this.cb_mouse_z1.Location = new System.Drawing.Point(65, 49);
+            this.cb_mouse_z1.Margin = new System.Windows.Forms.Padding(2);
             this.cb_mouse_z1.Name = "cb_mouse_z1";
-            this.cb_mouse_z1.Size = new System.Drawing.Size(175, 24);
+            this.cb_mouse_z1.Size = new System.Drawing.Size(132, 21);
             this.cb_mouse_z1.TabIndex = 3;
             this.tooltip_main.SetToolTip(this.cb_mouse_z1, "Controls RGB functionality for various LED zones on mouse devices. \r\nUp to three " +
         "static zones are supported.\r\n");
@@ -644,9 +676,10 @@
             // chk_dev_mouse
             // 
             this.chk_dev_mouse.AutoSize = true;
-            this.chk_dev_mouse.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_mouse.Location = new System.Drawing.Point(13, 15);
+            this.chk_dev_mouse.Margin = new System.Windows.Forms.Padding(2);
             this.chk_dev_mouse.Name = "chk_dev_mouse";
-            this.chk_dev_mouse.Size = new System.Drawing.Size(120, 21);
+            this.chk_dev_mouse.Size = new System.Drawing.Size(94, 17);
             this.chk_dev_mouse.TabIndex = 1;
             this.chk_dev_mouse.Text = "Enable Mouse";
             this.tooltip_main.SetToolTip(this.chk_dev_mouse, "Enable mice devices within Chromatics.\r\n");
@@ -663,18 +696,20 @@
             this.tP_mousepad.Controls.Add(this.lbl_pad_zs1);
             this.tP_mousepad.Controls.Add(this.cb_pad_zs1);
             this.tP_mousepad.Controls.Add(this.chk_dev_mousepad);
-            this.tP_mousepad.Location = new System.Drawing.Point(4, 25);
+            this.tP_mousepad.Location = new System.Drawing.Point(4, 22);
+            this.tP_mousepad.Margin = new System.Windows.Forms.Padding(2);
             this.tP_mousepad.Name = "tP_mousepad";
-            this.tP_mousepad.Size = new System.Drawing.Size(961, 465);
+            this.tP_mousepad.Size = new System.Drawing.Size(717, 373);
             this.tP_mousepad.TabIndex = 2;
             this.tP_mousepad.Text = "Mousepad";
             // 
             // lbl_pad_zs3
             // 
             this.lbl_pad_zs3.AutoSize = true;
-            this.lbl_pad_zs3.Location = new System.Drawing.Point(17, 123);
+            this.lbl_pad_zs3.Location = new System.Drawing.Point(13, 100);
+            this.lbl_pad_zs3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_pad_zs3.Name = "lbl_pad_zs3";
-            this.lbl_pad_zs3.Size = new System.Drawing.Size(53, 17);
+            this.lbl_pad_zs3.Size = new System.Drawing.Size(41, 13);
             this.lbl_pad_zs3.TabIndex = 14;
             this.lbl_pad_zs3.Text = "Zone 3";
             // 
@@ -682,9 +717,10 @@
             // 
             this.cb_pad_zs3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_pad_zs3.FormattingEnabled = true;
-            this.cb_pad_zs3.Location = new System.Drawing.Point(87, 120);
+            this.cb_pad_zs3.Location = new System.Drawing.Point(65, 98);
+            this.cb_pad_zs3.Margin = new System.Windows.Forms.Padding(2);
             this.cb_pad_zs3.Name = "cb_pad_zs3";
-            this.cb_pad_zs3.Size = new System.Drawing.Size(175, 24);
+            this.cb_pad_zs3.Size = new System.Drawing.Size(132, 21);
             this.cb_pad_zs3.TabIndex = 13;
             this.tooltip_main.SetToolTip(this.cb_pad_zs3, "Controls RGB functionality for various LED zones on mousepad devices. \r\nUp to thr" +
         "ee static zones are supported.\r\n");
@@ -693,9 +729,10 @@
             // lbl_pad_zs2
             // 
             this.lbl_pad_zs2.AutoSize = true;
-            this.lbl_pad_zs2.Location = new System.Drawing.Point(17, 93);
+            this.lbl_pad_zs2.Location = new System.Drawing.Point(13, 76);
+            this.lbl_pad_zs2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_pad_zs2.Name = "lbl_pad_zs2";
-            this.lbl_pad_zs2.Size = new System.Drawing.Size(53, 17);
+            this.lbl_pad_zs2.Size = new System.Drawing.Size(41, 13);
             this.lbl_pad_zs2.TabIndex = 12;
             this.lbl_pad_zs2.Text = "Zone 2";
             // 
@@ -703,9 +740,10 @@
             // 
             this.cb_pad_zs2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_pad_zs2.FormattingEnabled = true;
-            this.cb_pad_zs2.Location = new System.Drawing.Point(87, 90);
+            this.cb_pad_zs2.Location = new System.Drawing.Point(65, 73);
+            this.cb_pad_zs2.Margin = new System.Windows.Forms.Padding(2);
             this.cb_pad_zs2.Name = "cb_pad_zs2";
-            this.cb_pad_zs2.Size = new System.Drawing.Size(175, 24);
+            this.cb_pad_zs2.Size = new System.Drawing.Size(132, 21);
             this.cb_pad_zs2.TabIndex = 11;
             this.tooltip_main.SetToolTip(this.cb_pad_zs2, "Controls RGB functionality for various LED zones on mousepad devices. \r\nUp to thr" +
         "ee static zones are supported.\r\n");
@@ -714,9 +752,10 @@
             // lbl_pad_zs1
             // 
             this.lbl_pad_zs1.AutoSize = true;
-            this.lbl_pad_zs1.Location = new System.Drawing.Point(17, 63);
+            this.lbl_pad_zs1.Location = new System.Drawing.Point(13, 51);
+            this.lbl_pad_zs1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_pad_zs1.Name = "lbl_pad_zs1";
-            this.lbl_pad_zs1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_pad_zs1.Size = new System.Drawing.Size(41, 13);
             this.lbl_pad_zs1.TabIndex = 10;
             this.lbl_pad_zs1.Text = "Zone 1";
             // 
@@ -724,9 +763,10 @@
             // 
             this.cb_pad_zs1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_pad_zs1.FormattingEnabled = true;
-            this.cb_pad_zs1.Location = new System.Drawing.Point(87, 60);
+            this.cb_pad_zs1.Location = new System.Drawing.Point(65, 49);
+            this.cb_pad_zs1.Margin = new System.Windows.Forms.Padding(2);
             this.cb_pad_zs1.Name = "cb_pad_zs1";
-            this.cb_pad_zs1.Size = new System.Drawing.Size(175, 24);
+            this.cb_pad_zs1.Size = new System.Drawing.Size(132, 21);
             this.cb_pad_zs1.TabIndex = 9;
             this.tooltip_main.SetToolTip(this.cb_pad_zs1, "Controls RGB functionality for various LED zones on mousepad devices. \r\nUp to thr" +
         "ee static zones are supported.\r\n");
@@ -735,9 +775,10 @@
             // chk_dev_mousepad
             // 
             this.chk_dev_mousepad.AutoSize = true;
-            this.chk_dev_mousepad.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_mousepad.Location = new System.Drawing.Point(13, 15);
+            this.chk_dev_mousepad.Margin = new System.Windows.Forms.Padding(2);
             this.chk_dev_mousepad.Name = "chk_dev_mousepad";
-            this.chk_dev_mousepad.Size = new System.Drawing.Size(144, 21);
+            this.chk_dev_mousepad.Size = new System.Drawing.Size(112, 17);
             this.chk_dev_mousepad.TabIndex = 2;
             this.chk_dev_mousepad.Text = "Enable Mousepad";
             this.tooltip_main.SetToolTip(this.chk_dev_mousepad, "Enable mousepad devices within Chromatics.");
@@ -752,18 +793,20 @@
             this.tP_headset.Controls.Add(this.lbl_headset_z1);
             this.tP_headset.Controls.Add(this.cb_headset_z1);
             this.tP_headset.Controls.Add(this.chk_dev_headset);
-            this.tP_headset.Location = new System.Drawing.Point(4, 25);
+            this.tP_headset.Location = new System.Drawing.Point(4, 22);
+            this.tP_headset.Margin = new System.Windows.Forms.Padding(2);
             this.tP_headset.Name = "tP_headset";
-            this.tP_headset.Size = new System.Drawing.Size(961, 465);
+            this.tP_headset.Size = new System.Drawing.Size(717, 373);
             this.tP_headset.TabIndex = 3;
             this.tP_headset.Text = "Headset";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 93);
+            this.label1.Location = new System.Drawing.Point(13, 76);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 17);
+            this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 14;
             this.label1.Text = "Zone 2";
             // 
@@ -771,9 +814,10 @@
             // 
             this.cb_headset_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_headset_z2.FormattingEnabled = true;
-            this.cb_headset_z2.Location = new System.Drawing.Point(87, 90);
+            this.cb_headset_z2.Location = new System.Drawing.Point(65, 73);
+            this.cb_headset_z2.Margin = new System.Windows.Forms.Padding(2);
             this.cb_headset_z2.Name = "cb_headset_z2";
-            this.cb_headset_z2.Size = new System.Drawing.Size(175, 24);
+            this.cb_headset_z2.Size = new System.Drawing.Size(132, 21);
             this.cb_headset_z2.TabIndex = 13;
             this.tooltip_main.SetToolTip(this.cb_headset_z2, "Controls RGB functionality for various LED zones on headset devices. \r\nUp to two " +
         "static zones are supported.\r\n");
@@ -782,9 +826,10 @@
             // lbl_headset_z1
             // 
             this.lbl_headset_z1.AutoSize = true;
-            this.lbl_headset_z1.Location = new System.Drawing.Point(17, 63);
+            this.lbl_headset_z1.Location = new System.Drawing.Point(13, 51);
+            this.lbl_headset_z1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_headset_z1.Name = "lbl_headset_z1";
-            this.lbl_headset_z1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_headset_z1.Size = new System.Drawing.Size(41, 13);
             this.lbl_headset_z1.TabIndex = 12;
             this.lbl_headset_z1.Text = "Zone 1";
             // 
@@ -792,9 +837,10 @@
             // 
             this.cb_headset_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_headset_z1.FormattingEnabled = true;
-            this.cb_headset_z1.Location = new System.Drawing.Point(87, 60);
+            this.cb_headset_z1.Location = new System.Drawing.Point(65, 49);
+            this.cb_headset_z1.Margin = new System.Windows.Forms.Padding(2);
             this.cb_headset_z1.Name = "cb_headset_z1";
-            this.cb_headset_z1.Size = new System.Drawing.Size(175, 24);
+            this.cb_headset_z1.Size = new System.Drawing.Size(132, 21);
             this.cb_headset_z1.TabIndex = 11;
             this.tooltip_main.SetToolTip(this.cb_headset_z1, "Controls RGB functionality for various LED zones on headset devices. \r\nUp to two " +
         "static zones are supported.\r\n");
@@ -803,9 +849,10 @@
             // chk_dev_headset
             // 
             this.chk_dev_headset.AutoSize = true;
-            this.chk_dev_headset.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_headset.Location = new System.Drawing.Point(13, 15);
+            this.chk_dev_headset.Margin = new System.Windows.Forms.Padding(2);
             this.chk_dev_headset.Name = "chk_dev_headset";
-            this.chk_dev_headset.Size = new System.Drawing.Size(131, 21);
+            this.chk_dev_headset.Size = new System.Drawing.Size(102, 17);
             this.chk_dev_headset.TabIndex = 3;
             this.chk_dev_headset.Text = "Enable Headset";
             this.tooltip_main.SetToolTip(this.chk_dev_headset, "Enable headset devices within Chromatics.\r\n");
@@ -818,18 +865,20 @@
             this.tP_keypad.Controls.Add(this.lbl_keypad_z1);
             this.tP_keypad.Controls.Add(this.cb_keypad_z1);
             this.tP_keypad.Controls.Add(this.chk_dev_keypad);
-            this.tP_keypad.Location = new System.Drawing.Point(4, 25);
+            this.tP_keypad.Location = new System.Drawing.Point(4, 22);
+            this.tP_keypad.Margin = new System.Windows.Forms.Padding(2);
             this.tP_keypad.Name = "tP_keypad";
-            this.tP_keypad.Size = new System.Drawing.Size(961, 465);
+            this.tP_keypad.Size = new System.Drawing.Size(717, 373);
             this.tP_keypad.TabIndex = 6;
             this.tP_keypad.Text = "Keypad";
             // 
             // lbl_keypad_z1
             // 
             this.lbl_keypad_z1.AutoSize = true;
-            this.lbl_keypad_z1.Location = new System.Drawing.Point(17, 63);
+            this.lbl_keypad_z1.Location = new System.Drawing.Point(13, 51);
+            this.lbl_keypad_z1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_keypad_z1.Name = "lbl_keypad_z1";
-            this.lbl_keypad_z1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_keypad_z1.Size = new System.Drawing.Size(41, 13);
             this.lbl_keypad_z1.TabIndex = 14;
             this.lbl_keypad_z1.Text = "Zone 1";
             // 
@@ -837,9 +886,10 @@
             // 
             this.cb_keypad_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_keypad_z1.FormattingEnabled = true;
-            this.cb_keypad_z1.Location = new System.Drawing.Point(87, 60);
+            this.cb_keypad_z1.Location = new System.Drawing.Point(65, 49);
+            this.cb_keypad_z1.Margin = new System.Windows.Forms.Padding(2);
             this.cb_keypad_z1.Name = "cb_keypad_z1";
-            this.cb_keypad_z1.Size = new System.Drawing.Size(175, 24);
+            this.cb_keypad_z1.Size = new System.Drawing.Size(132, 21);
             this.cb_keypad_z1.TabIndex = 13;
             this.tooltip_main.SetToolTip(this.cb_keypad_z1, "Controls RGB functionality for various LED zones on Keypad devices. \r\nUp to one s" +
         "tatic zones are supported.\r\n");
@@ -848,9 +898,10 @@
             // chk_dev_keypad
             // 
             this.chk_dev_keypad.AutoSize = true;
-            this.chk_dev_keypad.Location = new System.Drawing.Point(17, 18);
+            this.chk_dev_keypad.Location = new System.Drawing.Point(13, 15);
+            this.chk_dev_keypad.Margin = new System.Windows.Forms.Padding(2);
             this.chk_dev_keypad.Name = "chk_dev_keypad";
-            this.chk_dev_keypad.Size = new System.Drawing.Size(126, 21);
+            this.chk_dev_keypad.Size = new System.Drawing.Size(98, 17);
             this.chk_dev_keypad.TabIndex = 3;
             this.chk_dev_keypad.Text = "Enable Keypad";
             this.tooltip_main.SetToolTip(this.chk_dev_keypad, "Enable keypad devices within Chromatics.\r\n");
@@ -861,9 +912,10 @@
             // 
             this.tP_bulbs.BackColor = System.Drawing.SystemColors.Control;
             this.tP_bulbs.Controls.Add(this.dG_devices);
-            this.tP_bulbs.Location = new System.Drawing.Point(4, 25);
+            this.tP_bulbs.Location = new System.Drawing.Point(4, 22);
+            this.tP_bulbs.Margin = new System.Windows.Forms.Padding(2);
             this.tP_bulbs.Name = "tP_bulbs";
-            this.tP_bulbs.Size = new System.Drawing.Size(961, 465);
+            this.tP_bulbs.Size = new System.Drawing.Size(717, 373);
             this.tP_bulbs.TabIndex = 4;
             this.tP_bulbs.Text = "Smartbulbs";
             // 
@@ -884,11 +936,12 @@
             this.col_ID});
             this.dG_devices.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dG_devices.Location = new System.Drawing.Point(0, 0);
+            this.dG_devices.Margin = new System.Windows.Forms.Padding(2);
             this.dG_devices.MultiSelect = false;
             this.dG_devices.Name = "dG_devices";
             this.dG_devices.RowHeadersVisible = false;
             this.dG_devices.RowTemplate.Height = 24;
-            this.dG_devices.Size = new System.Drawing.Size(961, 465);
+            this.dG_devices.Size = new System.Drawing.Size(717, 373);
             this.dG_devices.TabIndex = 1;
             this.dG_devices.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dG_devices_CellValueChanged);
             this.dG_devices.CurrentCellDirtyStateChanged += new System.EventHandler(this.dG_devices_CurrentCellDirtyStateChanged);
@@ -947,9 +1000,10 @@
             // 
             this.tP_misc.BackColor = System.Drawing.SystemColors.Control;
             this.tP_misc.Controls.Add(this.gP_ChromaLink);
-            this.tP_misc.Location = new System.Drawing.Point(4, 25);
+            this.tP_misc.Location = new System.Drawing.Point(4, 22);
+            this.tP_misc.Margin = new System.Windows.Forms.Padding(2);
             this.tP_misc.Name = "tP_misc";
-            this.tP_misc.Size = new System.Drawing.Size(961, 465);
+            this.tP_misc.Size = new System.Drawing.Size(717, 373);
             this.tP_misc.TabIndex = 5;
             this.tP_misc.Text = "Misc";
             // 
@@ -966,9 +1020,11 @@
             this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z1);
             this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z1);
             this.gP_ChromaLink.Controls.Add(this.chk_dev_chromalink);
-            this.gP_ChromaLink.Location = new System.Drawing.Point(4, 3);
+            this.gP_ChromaLink.Location = new System.Drawing.Point(3, 2);
+            this.gP_ChromaLink.Margin = new System.Windows.Forms.Padding(2);
             this.gP_ChromaLink.Name = "gP_ChromaLink";
-            this.gP_ChromaLink.Size = new System.Drawing.Size(466, 241);
+            this.gP_ChromaLink.Padding = new System.Windows.Forms.Padding(2);
+            this.gP_ChromaLink.Size = new System.Drawing.Size(350, 196);
             this.gP_ChromaLink.TabIndex = 0;
             this.gP_ChromaLink.TabStop = false;
             this.gP_ChromaLink.Text = "Razer Chroma Link";
@@ -976,9 +1032,10 @@
             // lbl_chromalink_z5
             // 
             this.lbl_chromalink_z5.AutoSize = true;
-            this.lbl_chromalink_z5.Location = new System.Drawing.Point(13, 190);
+            this.lbl_chromalink_z5.Location = new System.Drawing.Point(10, 154);
+            this.lbl_chromalink_z5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z5.Name = "lbl_chromalink_z5";
-            this.lbl_chromalink_z5.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z5.Size = new System.Drawing.Size(41, 13);
             this.lbl_chromalink_z5.TabIndex = 24;
             this.lbl_chromalink_z5.Text = "Zone 5";
             // 
@@ -986,9 +1043,10 @@
             // 
             this.cb_chromalink_z5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z5.FormattingEnabled = true;
-            this.cb_chromalink_z5.Location = new System.Drawing.Point(83, 187);
+            this.cb_chromalink_z5.Location = new System.Drawing.Point(62, 152);
+            this.cb_chromalink_z5.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z5.Name = "cb_chromalink_z5";
-            this.cb_chromalink_z5.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z5.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z5.TabIndex = 23;
             this.tooltip_main.SetToolTip(this.cb_chromalink_z5, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
         "five static zones are supported.\r\n");
@@ -997,9 +1055,10 @@
             // lbl_chromalink_z4
             // 
             this.lbl_chromalink_z4.AutoSize = true;
-            this.lbl_chromalink_z4.Location = new System.Drawing.Point(13, 160);
+            this.lbl_chromalink_z4.Location = new System.Drawing.Point(10, 130);
+            this.lbl_chromalink_z4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z4.Name = "lbl_chromalink_z4";
-            this.lbl_chromalink_z4.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z4.Size = new System.Drawing.Size(41, 13);
             this.lbl_chromalink_z4.TabIndex = 22;
             this.lbl_chromalink_z4.Text = "Zone 4";
             // 
@@ -1007,9 +1066,10 @@
             // 
             this.cb_chromalink_z4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z4.FormattingEnabled = true;
-            this.cb_chromalink_z4.Location = new System.Drawing.Point(83, 157);
+            this.cb_chromalink_z4.Location = new System.Drawing.Point(62, 128);
+            this.cb_chromalink_z4.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z4.Name = "cb_chromalink_z4";
-            this.cb_chromalink_z4.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z4.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z4.TabIndex = 21;
             this.tooltip_main.SetToolTip(this.cb_chromalink_z4, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
         "five static zones are supported.\r\n");
@@ -1018,9 +1078,10 @@
             // lbl_chromalink_z3
             // 
             this.lbl_chromalink_z3.AutoSize = true;
-            this.lbl_chromalink_z3.Location = new System.Drawing.Point(13, 130);
+            this.lbl_chromalink_z3.Location = new System.Drawing.Point(10, 106);
+            this.lbl_chromalink_z3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z3.Name = "lbl_chromalink_z3";
-            this.lbl_chromalink_z3.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z3.Size = new System.Drawing.Size(41, 13);
             this.lbl_chromalink_z3.TabIndex = 20;
             this.lbl_chromalink_z3.Text = "Zone 3";
             // 
@@ -1028,9 +1089,10 @@
             // 
             this.cb_chromalink_z3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z3.FormattingEnabled = true;
-            this.cb_chromalink_z3.Location = new System.Drawing.Point(83, 127);
+            this.cb_chromalink_z3.Location = new System.Drawing.Point(62, 103);
+            this.cb_chromalink_z3.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z3.Name = "cb_chromalink_z3";
-            this.cb_chromalink_z3.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z3.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z3.TabIndex = 19;
             this.tooltip_main.SetToolTip(this.cb_chromalink_z3, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
         "five static zones are supported.\r\n");
@@ -1039,9 +1101,10 @@
             // lbl_chromalink_z2
             // 
             this.lbl_chromalink_z2.AutoSize = true;
-            this.lbl_chromalink_z2.Location = new System.Drawing.Point(13, 100);
+            this.lbl_chromalink_z2.Location = new System.Drawing.Point(10, 81);
+            this.lbl_chromalink_z2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z2.Name = "lbl_chromalink_z2";
-            this.lbl_chromalink_z2.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z2.Size = new System.Drawing.Size(41, 13);
             this.lbl_chromalink_z2.TabIndex = 18;
             this.lbl_chromalink_z2.Text = "Zone 2";
             // 
@@ -1049,9 +1112,10 @@
             // 
             this.cb_chromalink_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z2.FormattingEnabled = true;
-            this.cb_chromalink_z2.Location = new System.Drawing.Point(83, 97);
+            this.cb_chromalink_z2.Location = new System.Drawing.Point(62, 79);
+            this.cb_chromalink_z2.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z2.Name = "cb_chromalink_z2";
-            this.cb_chromalink_z2.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z2.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z2.TabIndex = 17;
             this.tooltip_main.SetToolTip(this.cb_chromalink_z2, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
         "five static zones are supported.");
@@ -1060,9 +1124,10 @@
             // lbl_chromalink_z1
             // 
             this.lbl_chromalink_z1.AutoSize = true;
-            this.lbl_chromalink_z1.Location = new System.Drawing.Point(13, 70);
+            this.lbl_chromalink_z1.Location = new System.Drawing.Point(10, 57);
+            this.lbl_chromalink_z1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z1.Name = "lbl_chromalink_z1";
-            this.lbl_chromalink_z1.Size = new System.Drawing.Size(53, 17);
+            this.lbl_chromalink_z1.Size = new System.Drawing.Size(41, 13);
             this.lbl_chromalink_z1.TabIndex = 16;
             this.lbl_chromalink_z1.Text = "Zone 1";
             // 
@@ -1070,9 +1135,10 @@
             // 
             this.cb_chromalink_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z1.FormattingEnabled = true;
-            this.cb_chromalink_z1.Location = new System.Drawing.Point(83, 67);
+            this.cb_chromalink_z1.Location = new System.Drawing.Point(62, 54);
+            this.cb_chromalink_z1.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z1.Name = "cb_chromalink_z1";
-            this.cb_chromalink_z1.Size = new System.Drawing.Size(175, 24);
+            this.cb_chromalink_z1.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z1.TabIndex = 15;
             this.tooltip_main.SetToolTip(this.cb_chromalink_z1, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
         "five static zones are supported.\r\n");
@@ -1081,9 +1147,10 @@
             // chk_dev_chromalink
             // 
             this.chk_dev_chromalink.AutoSize = true;
-            this.chk_dev_chromalink.Location = new System.Drawing.Point(13, 30);
+            this.chk_dev_chromalink.Location = new System.Drawing.Point(10, 24);
+            this.chk_dev_chromalink.Margin = new System.Windows.Forms.Padding(2);
             this.chk_dev_chromalink.Name = "chk_dev_chromalink";
-            this.chk_dev_chromalink.Size = new System.Drawing.Size(153, 21);
+            this.chk_dev_chromalink.Size = new System.Drawing.Size(118, 17);
             this.chk_dev_chromalink.TabIndex = 1;
             this.chk_dev_chromalink.Text = "Enable ChromaLink";
             this.tooltip_main.SetToolTip(this.chk_dev_chromalink, "Enable Chroma Link devices within Chromatics.");
@@ -1095,9 +1162,10 @@
             this.tP_settings.Controls.Add(this.gB_effects);
             this.tP_settings.Controls.Add(this.gB_lcc);
             this.tP_settings.Controls.Add(this.gB_General);
-            this.tP_settings.Location = new System.Drawing.Point(4, 25);
+            this.tP_settings.Location = new System.Drawing.Point(4, 22);
+            this.tP_settings.Margin = new System.Windows.Forms.Padding(2);
             this.tP_settings.Name = "tP_settings";
-            this.tP_settings.Size = new System.Drawing.Size(969, 494);
+            this.tP_settings.Size = new System.Drawing.Size(725, 399);
             this.tP_settings.TabIndex = 4;
             this.tP_settings.Text = "Settings";
             // 
@@ -1108,7 +1176,7 @@
             this.gB_effects.Controls.Add(this.chk_vegasmode);
             this.gB_effects.Controls.Add(this.chk_cutscenes);
             this.gB_effects.Controls.Add(this.chk_reactiveweather);
-            this.gB_effects.Controls.Add(this.chk_showstats);
+            this.gB_effects.Controls.Add(this.chk_showstatuseffects);
             this.gB_effects.Controls.Add(this.chk_dfbelltoggle);
             this.gB_effects.Controls.Add(this.chk_impactflashtog);
             this.gB_effects.Controls.Add(this.chk_keybindtoggle);
@@ -1117,9 +1185,11 @@
             this.gB_effects.Controls.Add(this.chk_gcdcounttoggle);
             this.gB_effects.Controls.Add(this.chk_castanimatetoggle);
             this.gB_effects.Controls.Add(this.chk_castchargetoggle);
-            this.gB_effects.Location = new System.Drawing.Point(406, 4);
+            this.gB_effects.Location = new System.Drawing.Point(304, 3);
+            this.gB_effects.Margin = new System.Windows.Forms.Padding(2);
             this.gB_effects.Name = "gB_effects";
-            this.gB_effects.Size = new System.Drawing.Size(555, 314);
+            this.gB_effects.Padding = new System.Windows.Forms.Padding(2);
+            this.gB_effects.Size = new System.Drawing.Size(416, 255);
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
@@ -1127,9 +1197,10 @@
             // lbl_hpcritical
             // 
             this.lbl_hpcritical.AutoSize = true;
-            this.lbl_hpcritical.Location = new System.Drawing.Point(20, 275);
+            this.lbl_hpcritical.Location = new System.Drawing.Point(15, 223);
+            this.lbl_hpcritical.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_hpcritical.Name = "lbl_hpcritical";
-            this.lbl_hpcritical.Size = new System.Drawing.Size(89, 17);
+            this.lbl_hpcritical.Size = new System.Drawing.Size(67, 13);
             this.lbl_hpcritical.TabIndex = 13;
             this.lbl_hpcritical.Text = "HP Critical %";
             // 
@@ -1140,9 +1211,10 @@
             0,
             0,
             0});
-            this.nm_criticalhp.Location = new System.Drawing.Point(129, 273);
+            this.nm_criticalhp.Location = new System.Drawing.Point(97, 222);
+            this.nm_criticalhp.Margin = new System.Windows.Forms.Padding(2);
             this.nm_criticalhp.Name = "nm_criticalhp";
-            this.nm_criticalhp.Size = new System.Drawing.Size(76, 22);
+            this.nm_criticalhp.Size = new System.Drawing.Size(57, 20);
             this.nm_criticalhp.TabIndex = 12;
             this.tooltip_main.SetToolTip(this.nm_criticalhp, "Set the threshold percentage to change HP trackers to critical color.");
             this.nm_criticalhp.ValueChanged += new System.EventHandler(this.nm_criticalhp_ValueChanged);
@@ -1150,9 +1222,10 @@
             // chk_vegasmode
             // 
             this.chk_vegasmode.AutoSize = true;
-            this.chk_vegasmode.Location = new System.Drawing.Point(272, 218);
+            this.chk_vegasmode.Location = new System.Drawing.Point(204, 177);
+            this.chk_vegasmode.Margin = new System.Windows.Forms.Padding(2);
             this.chk_vegasmode.Name = "chk_vegasmode";
-            this.chk_vegasmode.Size = new System.Drawing.Size(240, 21);
+            this.chk_vegasmode.Size = new System.Drawing.Size(184, 17);
             this.chk_vegasmode.TabIndex = 11;
             this.chk_vegasmode.Text = "Enable Gold Saucer Vegas Mode";
             this.tooltip_main.SetToolTip(this.chk_vegasmode, "Displays color scrolling effects while in the Gold Saucer.\r\n\r\nDefault: OFF");
@@ -1162,9 +1235,10 @@
             // chk_cutscenes
             // 
             this.chk_cutscenes.AutoSize = true;
-            this.chk_cutscenes.Location = new System.Drawing.Point(272, 181);
+            this.chk_cutscenes.Location = new System.Drawing.Point(204, 147);
+            this.chk_cutscenes.Margin = new System.Windows.Forms.Padding(2);
             this.chk_cutscenes.Name = "chk_cutscenes";
-            this.chk_cutscenes.Size = new System.Drawing.Size(210, 21);
+            this.chk_cutscenes.Size = new System.Drawing.Size(161, 17);
             this.chk_cutscenes.TabIndex = 10;
             this.chk_cutscenes.Text = "Enable Cutscene Animations";
             this.tooltip_main.SetToolTip(this.chk_cutscenes, "Shows special effects on per-key RGB keyboards during cutscenes.\r\n\r\nDefault: ON");
@@ -1174,33 +1248,36 @@
             // chk_reactiveweather
             // 
             this.chk_reactiveweather.AutoSize = true;
-            this.chk_reactiveweather.Location = new System.Drawing.Point(272, 145);
+            this.chk_reactiveweather.Location = new System.Drawing.Point(204, 118);
+            this.chk_reactiveweather.Margin = new System.Windows.Forms.Padding(2);
             this.chk_reactiveweather.Name = "chk_reactiveweather";
-            this.chk_reactiveweather.Size = new System.Drawing.Size(191, 21);
+            this.chk_reactiveweather.Size = new System.Drawing.Size(149, 17);
             this.chk_reactiveweather.TabIndex = 9;
             this.chk_reactiveweather.Text = "Enable Reactive Weather";
             this.tooltip_main.SetToolTip(this.chk_reactiveweather, "Changes device base colour based on curent in-game weather.\r\n\r\nDefault: OFF");
             this.chk_reactiveweather.UseVisualStyleBackColor = true;
             this.chk_reactiveweather.CheckedChanged += new System.EventHandler(this.chk_reactiveweather_CheckedChanged);
             // 
-            // chk_showstats
+            // chk_showstatuseffects
             // 
-            this.chk_showstats.AutoSize = true;
-            this.chk_showstats.Location = new System.Drawing.Point(272, 110);
-            this.chk_showstats.Name = "chk_showstats";
-            this.chk_showstats.Size = new System.Drawing.Size(193, 21);
-            this.chk_showstats.TabIndex = 8;
-            this.chk_showstats.Text = "Enable HP/MP/TP Display";
-            this.tooltip_main.SetToolTip(this.chk_showstats, "Displays your HP/MP/TP across your keyboard.\r\nDefault: ON");
-            this.chk_showstats.UseVisualStyleBackColor = true;
-            this.chk_showstats.CheckedChanged += new System.EventHandler(this.chk_showstats_CheckedChanged);
+            this.chk_showstatuseffects.AutoSize = true;
+            this.chk_showstatuseffects.Location = new System.Drawing.Point(204, 89);
+            this.chk_showstatuseffects.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_showstatuseffects.Name = "chk_showstatuseffects";
+            this.chk_showstatuseffects.Size = new System.Drawing.Size(128, 17);
+            this.chk_showstatuseffects.TabIndex = 8;
+            this.chk_showstatuseffects.Text = "Enable Status Effects";
+            this.tooltip_main.SetToolTip(this.chk_showstatuseffects, "Displays your HP/MP/TP across your keyboard.\r\nDefault: ON");
+            this.chk_showstatuseffects.UseVisualStyleBackColor = true;
+            this.chk_showstatuseffects.CheckedChanged += new System.EventHandler(this.chk_showstatuseffects_CheckedChanged);
             // 
             // chk_dfbelltoggle
             // 
             this.chk_dfbelltoggle.AutoSize = true;
-            this.chk_dfbelltoggle.Location = new System.Drawing.Point(272, 75);
+            this.chk_dfbelltoggle.Location = new System.Drawing.Point(204, 61);
+            this.chk_dfbelltoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_dfbelltoggle.Name = "chk_dfbelltoggle";
-            this.chk_dfbelltoggle.Size = new System.Drawing.Size(178, 21);
+            this.chk_dfbelltoggle.Size = new System.Drawing.Size(136, 17);
             this.chk_dfbelltoggle.TabIndex = 7;
             this.chk_dfbelltoggle.Text = "Enable Duty Finder Bell";
             this.tooltip_main.SetToolTip(this.chk_dfbelltoggle, "Flashes your devices when Duty Finder pops.\r\nDefault: ON");
@@ -1210,9 +1287,10 @@
             // chk_impactflashtog
             // 
             this.chk_impactflashtog.AutoSize = true;
-            this.chk_impactflashtog.Location = new System.Drawing.Point(272, 39);
+            this.chk_impactflashtog.Location = new System.Drawing.Point(204, 32);
+            this.chk_impactflashtog.Margin = new System.Windows.Forms.Padding(2);
             this.chk_impactflashtog.Name = "chk_impactflashtog";
-            this.chk_impactflashtog.Size = new System.Drawing.Size(184, 21);
+            this.chk_impactflashtog.Size = new System.Drawing.Size(143, 17);
             this.chk_impactflashtog.TabIndex = 6;
             this.chk_impactflashtog.Text = "Flash on impact/damage";
             this.tooltip_main.SetToolTip(this.chk_impactflashtog, "Flashes keyboard when damage is taken.\r\nDefault: OFF");
@@ -1222,9 +1300,10 @@
             // chk_keybindtoggle
             // 
             this.chk_keybindtoggle.AutoSize = true;
-            this.chk_keybindtoggle.Location = new System.Drawing.Point(23, 218);
+            this.chk_keybindtoggle.Location = new System.Drawing.Point(17, 177);
+            this.chk_keybindtoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_keybindtoggle.Name = "chk_keybindtoggle";
-            this.chk_keybindtoggle.Size = new System.Drawing.Size(176, 21);
+            this.chk_keybindtoggle.Size = new System.Drawing.Size(136, 17);
             this.chk_keybindtoggle.TabIndex = 5;
             this.chk_keybindtoggle.Text = "Enable Keybind Effects";
             this.tooltip_main.SetToolTip(this.chk_keybindtoggle, "Displays Cooldown status on all hotbar keybinds.\r\nDefault: ON");
@@ -1234,9 +1313,10 @@
             // chk_jobgaugetoggle
             // 
             this.chk_jobgaugetoggle.AutoSize = true;
-            this.chk_jobgaugetoggle.Location = new System.Drawing.Point(23, 181);
+            this.chk_jobgaugetoggle.Location = new System.Drawing.Point(17, 147);
+            this.chk_jobgaugetoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_jobgaugetoggle.Name = "chk_jobgaugetoggle";
-            this.chk_jobgaugetoggle.Size = new System.Drawing.Size(195, 21);
+            this.chk_jobgaugetoggle.Size = new System.Drawing.Size(150, 17);
             this.chk_jobgaugetoggle.TabIndex = 4;
             this.chk_jobgaugetoggle.Text = "Enable Job Gauge Effects";
             this.tooltip_main.SetToolTip(this.chk_jobgaugetoggle, "Displays Job Gauge effects on NumPad.\r\nDefault: ON");
@@ -1246,9 +1326,10 @@
             // chk_highlighttoggle
             // 
             this.chk_highlighttoggle.AutoSize = true;
-            this.chk_highlighttoggle.Location = new System.Drawing.Point(23, 145);
+            this.chk_highlighttoggle.Location = new System.Drawing.Point(17, 118);
+            this.chk_highlighttoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_highlighttoggle.Name = "chk_highlighttoggle";
-            this.chk_highlighttoggle.Size = new System.Drawing.Size(168, 21);
+            this.chk_highlighttoggle.Size = new System.Drawing.Size(129, 17);
             this.chk_highlighttoggle.TabIndex = 3;
             this.chk_highlighttoggle.Text = "Enable Key Highlights";
             this.tooltip_main.SetToolTip(this.chk_highlighttoggle, "Highlights common keys on Keyboard.\r\nDefault: ON");
@@ -1258,9 +1339,10 @@
             // chk_gcdcounttoggle
             // 
             this.chk_gcdcounttoggle.AutoSize = true;
-            this.chk_gcdcounttoggle.Location = new System.Drawing.Point(23, 110);
+            this.chk_gcdcounttoggle.Location = new System.Drawing.Point(17, 89);
+            this.chk_gcdcounttoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_gcdcounttoggle.Name = "chk_gcdcounttoggle";
-            this.chk_gcdcounttoggle.Size = new System.Drawing.Size(182, 21);
+            this.chk_gcdcounttoggle.Size = new System.Drawing.Size(142, 17);
             this.chk_gcdcounttoggle.TabIndex = 2;
             this.chk_gcdcounttoggle.Text = "Enable GCD Countdown";
             this.tooltip_main.SetToolTip(this.chk_gcdcounttoggle, "Displays GCD Countdown on Keyboard.\r\nDefault: ON");
@@ -1270,9 +1352,10 @@
             // chk_castanimatetoggle
             // 
             this.chk_castanimatetoggle.AutoSize = true;
-            this.chk_castanimatetoggle.Location = new System.Drawing.Point(23, 75);
+            this.chk_castanimatetoggle.Location = new System.Drawing.Point(17, 61);
+            this.chk_castanimatetoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_castanimatetoggle.Name = "chk_castanimatetoggle";
-            this.chk_castanimatetoggle.Size = new System.Drawing.Size(172, 21);
+            this.chk_castanimatetoggle.Size = new System.Drawing.Size(132, 17);
             this.chk_castanimatetoggle.TabIndex = 1;
             this.chk_castanimatetoggle.Text = "Enable Cast Animation";
             this.tooltip_main.SetToolTip(this.chk_castanimatetoggle, "Animates across the keyboard upon successful cast.\r\nDefault: ON");
@@ -1282,9 +1365,10 @@
             // chk_castchargetoggle
             // 
             this.chk_castchargetoggle.AutoSize = true;
-            this.chk_castchargetoggle.Location = new System.Drawing.Point(23, 39);
+            this.chk_castchargetoggle.Location = new System.Drawing.Point(17, 32);
+            this.chk_castchargetoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_castchargetoggle.Name = "chk_castchargetoggle";
-            this.chk_castchargetoggle.Size = new System.Drawing.Size(156, 21);
+            this.chk_castchargetoggle.Size = new System.Drawing.Size(120, 17);
             this.chk_castchargetoggle.TabIndex = 0;
             this.chk_castchargetoggle.Text = "Enable Cast Charge";
             this.tooltip_main.SetToolTip(this.chk_castchargetoggle, "Animates any spell/item casts across the Function keys.\r\nDefault: ON");
@@ -1297,18 +1381,21 @@
             this.gB_lcc.Controls.Add(this.chk_lccauto);
             this.gB_lcc.Controls.Add(this.chk_lccenable);
             this.gB_lcc.Controls.Add(this.lb_lcc);
-            this.gB_lcc.Location = new System.Drawing.Point(4, 324);
+            this.gB_lcc.Location = new System.Drawing.Point(3, 263);
+            this.gB_lcc.Margin = new System.Windows.Forms.Padding(2);
             this.gB_lcc.Name = "gB_lcc";
-            this.gB_lcc.Size = new System.Drawing.Size(957, 162);
+            this.gB_lcc.Padding = new System.Windows.Forms.Padding(2);
+            this.gB_lcc.Size = new System.Drawing.Size(718, 132);
             this.gB_lcc.TabIndex = 1;
             this.gB_lcc.TabStop = false;
             this.gB_lcc.Text = "Logitech Conflict Control";
             // 
             // btn_lccrestore
             // 
-            this.btn_lccrestore.Location = new System.Drawing.Point(811, 88);
+            this.btn_lccrestore.Location = new System.Drawing.Point(608, 72);
+            this.btn_lccrestore.Margin = new System.Windows.Forms.Padding(2);
             this.btn_lccrestore.Name = "btn_lccrestore";
-            this.btn_lccrestore.Size = new System.Drawing.Size(86, 35);
+            this.btn_lccrestore.Size = new System.Drawing.Size(64, 28);
             this.btn_lccrestore.TabIndex = 3;
             this.btn_lccrestore.Text = "Restore";
             this.tooltip_main.SetToolTip(this.btn_lccrestore, "Use this to restore LGS to its default settings in the case something goes wrong." +
@@ -1319,9 +1406,10 @@
             // chk_lccauto
             // 
             this.chk_lccauto.AutoSize = true;
-            this.chk_lccauto.Location = new System.Drawing.Point(23, 106);
+            this.chk_lccauto.Location = new System.Drawing.Point(17, 86);
+            this.chk_lccauto.Margin = new System.Windows.Forms.Padding(2);
             this.chk_lccauto.Name = "chk_lccauto";
-            this.chk_lccauto.Size = new System.Drawing.Size(158, 21);
+            this.chk_lccauto.Size = new System.Drawing.Size(124, 17);
             this.chk_lccauto.TabIndex = 2;
             this.chk_lccauto.Text = "Auto Enable/Disable";
             this.tooltip_main.SetToolTip(this.chk_lccauto, "When enabled, Chromatics will automatically enable Logitech Conflict Control when" +
@@ -1332,9 +1420,10 @@
             // chk_lccenable
             // 
             this.chk_lccenable.AutoSize = true;
-            this.chk_lccenable.Location = new System.Drawing.Point(23, 75);
+            this.chk_lccenable.Location = new System.Drawing.Point(17, 61);
+            this.chk_lccenable.Margin = new System.Windows.Forms.Padding(2);
             this.chk_lccenable.Name = "chk_lccenable";
-            this.chk_lccenable.Size = new System.Drawing.Size(231, 21);
+            this.chk_lccenable.Size = new System.Drawing.Size(177, 17);
             this.chk_lccenable.TabIndex = 1;
             this.chk_lccenable.Text = "Enable Logitech Conflict Control";
             this.tooltip_main.SetToolTip(this.chk_lccenable, "Enable/Disable Logitech Conflict Control.");
@@ -1344,9 +1433,10 @@
             // lb_lcc
             // 
             this.lb_lcc.AutoSize = true;
-            this.lb_lcc.Location = new System.Drawing.Point(7, 22);
+            this.lb_lcc.Location = new System.Drawing.Point(5, 18);
+            this.lb_lcc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_lcc.Name = "lb_lcc";
-            this.lb_lcc.Size = new System.Drawing.Size(905, 34);
+            this.lb_lcc.Size = new System.Drawing.Size(677, 26);
             this.lb_lcc.TabIndex = 0;
             this.lb_lcc.Text = resources.GetString("lb_lcc.Text");
             // 
@@ -1361,9 +1451,11 @@
             this.gB_General.Controls.Add(this.chk_desktopnotify);
             this.gB_General.Controls.Add(this.chk_startupenable);
             this.gB_General.Controls.Add(this.chk_memorycache);
-            this.gB_General.Location = new System.Drawing.Point(4, 4);
+            this.gB_General.Location = new System.Drawing.Point(3, 3);
+            this.gB_General.Margin = new System.Windows.Forms.Padding(2);
             this.gB_General.Name = "gB_General";
-            this.gB_General.Size = new System.Drawing.Size(396, 314);
+            this.gB_General.Padding = new System.Windows.Forms.Padding(2);
+            this.gB_General.Size = new System.Drawing.Size(297, 255);
             this.gB_General.TabIndex = 0;
             this.gB_General.TabStop = false;
             this.gB_General.Text = "General";
@@ -1371,9 +1463,10 @@
             // chk_disablememory
             // 
             this.chk_disablememory.AutoSize = true;
-            this.chk_disablememory.Location = new System.Drawing.Point(23, 182);
+            this.chk_disablememory.Location = new System.Drawing.Point(17, 148);
+            this.chk_disablememory.Margin = new System.Windows.Forms.Padding(2);
             this.chk_disablememory.Name = "chk_disablememory";
-            this.chk_disablememory.Size = new System.Drawing.Size(174, 21);
+            this.chk_disablememory.Size = new System.Drawing.Size(135, 17);
             this.chk_disablememory.TabIndex = 8;
             this.chk_disablememory.Text = "Disable Memory Check";
             this.tooltip_main.SetToolTip(this.chk_disablememory, "Disable the automatic process that checks if Chromatics is using more memory than" +
@@ -1384,9 +1477,10 @@
             // chk_debugopt
             // 
             this.chk_debugopt.AutoSize = true;
-            this.chk_debugopt.Location = new System.Drawing.Point(23, 154);
+            this.chk_debugopt.Location = new System.Drawing.Point(17, 125);
+            this.chk_debugopt.Margin = new System.Windows.Forms.Padding(2);
             this.chk_debugopt.Name = "chk_debugopt";
-            this.chk_debugopt.Size = new System.Drawing.Size(225, 21);
+            this.chk_debugopt.Size = new System.Drawing.Size(172, 17);
             this.chk_debugopt.TabIndex = 7;
             this.chk_debugopt.Text = "Send debug data automatically";
             this.tooltip_main.SetToolTip(this.chk_debugopt, "Opts-in to automatic debug & analytics to improve app stability. No personal info" +
@@ -1397,9 +1491,10 @@
             // lbl_lang
             // 
             this.lbl_lang.AutoSize = true;
-            this.lbl_lang.Location = new System.Drawing.Point(7, 277);
+            this.lbl_lang.Location = new System.Drawing.Point(5, 225);
+            this.lbl_lang.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_lang.Name = "lbl_lang";
-            this.lbl_lang.Size = new System.Drawing.Size(114, 17);
+            this.lbl_lang.Size = new System.Drawing.Size(86, 13);
             this.lbl_lang.TabIndex = 6;
             this.lbl_lang.Text = "Game Language";
             // 
@@ -1414,18 +1509,20 @@
             "French",
             "German",
             "Korean"});
-            this.cb_lang.Location = new System.Drawing.Point(127, 275);
+            this.cb_lang.Location = new System.Drawing.Point(95, 223);
+            this.cb_lang.Margin = new System.Windows.Forms.Padding(2);
             this.cb_lang.Name = "cb_lang";
-            this.cb_lang.Size = new System.Drawing.Size(127, 24);
+            this.cb_lang.Size = new System.Drawing.Size(96, 21);
             this.cb_lang.TabIndex = 5;
             this.tooltip_main.SetToolTip(this.cb_lang, "Change the language to match the game language.\r\n(Requires Chromatics restart)");
             this.cb_lang.SelectedIndexChanged += new System.EventHandler(this.cb_lang_SelectedIndexChanged);
             // 
             // btn_ffxivcachereset
             // 
-            this.btn_ffxivcachereset.Location = new System.Drawing.Point(280, 272);
+            this.btn_ffxivcachereset.Location = new System.Drawing.Point(210, 221);
+            this.btn_ffxivcachereset.Margin = new System.Windows.Forms.Padding(2);
             this.btn_ffxivcachereset.Name = "btn_ffxivcachereset";
-            this.btn_ffxivcachereset.Size = new System.Drawing.Size(98, 28);
+            this.btn_ffxivcachereset.Size = new System.Drawing.Size(74, 23);
             this.btn_ffxivcachereset.TabIndex = 4;
             this.btn_ffxivcachereset.Text = "Clear Cache";
             this.tooltip_main.SetToolTip(this.btn_ffxivcachereset, "Use this to restore LGS to its default settings in the case something goes wrong." +
@@ -1436,9 +1533,10 @@
             // chk_lcdtoggle
             // 
             this.chk_lcdtoggle.AutoSize = true;
-            this.chk_lcdtoggle.Location = new System.Drawing.Point(23, 126);
+            this.chk_lcdtoggle.Location = new System.Drawing.Point(17, 102);
+            this.chk_lcdtoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_lcdtoggle.Name = "chk_lcdtoggle";
-            this.chk_lcdtoggle.Size = new System.Drawing.Size(162, 21);
+            this.chk_lcdtoggle.Size = new System.Drawing.Size(125, 17);
             this.chk_lcdtoggle.TabIndex = 4;
             this.chk_lcdtoggle.Text = "Enable LCD Displays";
             this.tooltip_main.SetToolTip(this.chk_lcdtoggle, "Toggles Logitech LCD screens. Requires LGS.\r\nDefault: ON");
@@ -1448,9 +1546,10 @@
             // chk_desktopnotify
             // 
             this.chk_desktopnotify.AutoSize = true;
-            this.chk_desktopnotify.Location = new System.Drawing.Point(23, 96);
+            this.chk_desktopnotify.Location = new System.Drawing.Point(17, 78);
+            this.chk_desktopnotify.Margin = new System.Windows.Forms.Padding(2);
             this.chk_desktopnotify.Name = "chk_desktopnotify";
-            this.chk_desktopnotify.Size = new System.Drawing.Size(201, 21);
+            this.chk_desktopnotify.Size = new System.Drawing.Size(157, 17);
             this.chk_desktopnotify.TabIndex = 3;
             this.chk_desktopnotify.Text = "Show Desktop Notifications";
             this.tooltip_main.SetToolTip(this.chk_desktopnotify, "Toggles whether to show desktop notifications.\r\nDefault: ON");
@@ -1460,9 +1559,10 @@
             // chk_startupenable
             // 
             this.chk_startupenable.AutoSize = true;
-            this.chk_startupenable.Location = new System.Drawing.Point(23, 68);
+            this.chk_startupenable.Location = new System.Drawing.Point(17, 55);
+            this.chk_startupenable.Margin = new System.Windows.Forms.Padding(2);
             this.chk_startupenable.Name = "chk_startupenable";
-            this.chk_startupenable.Size = new System.Drawing.Size(170, 21);
+            this.chk_startupenable.Size = new System.Drawing.Size(133, 17);
             this.chk_startupenable.TabIndex = 2;
             this.chk_startupenable.Text = "Run on Windows Start";
             this.tooltip_main.SetToolTip(this.chk_startupenable, "Toggles whether to start Chromatics automatically with Windows.\r\nDefault: OFF");
@@ -1472,9 +1572,10 @@
             // chk_memorycache
             // 
             this.chk_memorycache.AutoSize = true;
-            this.chk_memorycache.Location = new System.Drawing.Point(23, 39);
+            this.chk_memorycache.Location = new System.Drawing.Point(17, 32);
+            this.chk_memorycache.Margin = new System.Windows.Forms.Padding(2);
             this.chk_memorycache.Name = "chk_memorycache";
-            this.chk_memorycache.Size = new System.Drawing.Size(137, 21);
+            this.chk_memorycache.Size = new System.Drawing.Size(108, 17);
             this.chk_memorycache.TabIndex = 0;
             this.chk_memorycache.Text = "Use Local Cache";
             this.tooltip_main.SetToolTip(this.chk_memorycache, "Toggles whether to use cached chromatics files for processing FFXIV data. Having " +
@@ -1499,9 +1600,10 @@
             this.tP_mappings.Controls.Add(this.btn_exportChromatics);
             this.tP_mappings.Controls.Add(this.btn_importChromatics);
             this.tP_mappings.Controls.Add(this.loadPaletteButton);
-            this.tP_mappings.Location = new System.Drawing.Point(4, 25);
+            this.tP_mappings.Location = new System.Drawing.Point(4, 22);
+            this.tP_mappings.Margin = new System.Windows.Forms.Padding(2);
             this.tP_mappings.Name = "tP_mappings";
-            this.tP_mappings.Size = new System.Drawing.Size(969, 494);
+            this.tP_mappings.Size = new System.Drawing.Size(725, 399);
             this.tP_mappings.TabIndex = 2;
             this.tP_mappings.Text = "Color Palette";
             // 
@@ -1509,10 +1611,9 @@
             // 
             this.btn_palette_undo.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_palette_undo.Image = global::Chromatics.Properties.Resources.ret_arrow;
-            this.btn_palette_undo.Location = new System.Drawing.Point(890, 260);
-            this.btn_palette_undo.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_palette_undo.Location = new System.Drawing.Point(668, 211);
             this.btn_palette_undo.Name = "btn_palette_undo";
-            this.btn_palette_undo.Size = new System.Drawing.Size(31, 28);
+            this.btn_palette_undo.Size = new System.Drawing.Size(23, 23);
             this.btn_palette_undo.TabIndex = 26;
             this.btn_palette_undo.UseVisualStyleBackColor = false;
             this.btn_palette_undo.Click += new System.EventHandler(this.btn_palette_undo_Click);
@@ -1520,9 +1621,10 @@
             // lbl_cat
             // 
             this.lbl_cat.AutoSize = true;
-            this.lbl_cat.Location = new System.Drawing.Point(8, 453);
+            this.lbl_cat.Location = new System.Drawing.Point(6, 368);
+            this.lbl_cat.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_cat.Name = "lbl_cat";
-            this.lbl_cat.Size = new System.Drawing.Size(69, 17);
+            this.lbl_cat.Size = new System.Drawing.Size(52, 13);
             this.lbl_cat.TabIndex = 25;
             this.lbl_cat.Text = "Category:";
             // 
@@ -1530,9 +1632,10 @@
             // 
             this.cb_palette_categories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_palette_categories.FormattingEnabled = true;
-            this.cb_palette_categories.Location = new System.Drawing.Point(91, 450);
+            this.cb_palette_categories.Location = new System.Drawing.Point(68, 366);
+            this.cb_palette_categories.Margin = new System.Windows.Forms.Padding(2);
             this.cb_palette_categories.Name = "cb_palette_categories";
-            this.cb_palette_categories.Size = new System.Drawing.Size(147, 24);
+            this.cb_palette_categories.Size = new System.Drawing.Size(111, 21);
             this.cb_palette_categories.TabIndex = 24;
             this.cb_palette_categories.SelectedIndexChanged += new System.EventHandler(this.cb_palette_categories_SelectedIndexChanged);
             // 
@@ -1551,7 +1654,8 @@
             this.mappings_col_cat,
             this.mappings_col_type,
             this.mappings_col_color});
-            this.dG_mappings.Location = new System.Drawing.Point(4, 4);
+            this.dG_mappings.Location = new System.Drawing.Point(3, 3);
+            this.dG_mappings.Margin = new System.Windows.Forms.Padding(2);
             this.dG_mappings.MultiSelect = false;
             this.dG_mappings.Name = "dG_mappings";
             this.dG_mappings.RowHeadersVisible = false;
@@ -1559,7 +1663,7 @@
             this.dG_mappings.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dG_mappings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dG_mappings.ShowCellErrors = false;
-            this.dG_mappings.Size = new System.Drawing.Size(321, 436);
+            this.dG_mappings.Size = new System.Drawing.Size(241, 354);
             this.dG_mappings.TabIndex = 0;
             this.dG_mappings.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dG_mappings_RowPrePaint);
             this.dG_mappings.SelectionChanged += new System.EventHandler(this.dG_mappings_SelectionChanged);
@@ -1593,63 +1697,66 @@
             // 
             // previewPanel
             // 
-            this.previewPanel.Location = new System.Drawing.Point(678, 433);
+            this.previewPanel.Location = new System.Drawing.Point(508, 352);
+            this.previewPanel.Margin = new System.Windows.Forms.Padding(2);
             this.previewPanel.Name = "previewPanel";
-            this.previewPanel.Size = new System.Drawing.Size(282, 42);
+            this.previewPanel.Size = new System.Drawing.Size(212, 34);
             this.previewPanel.TabIndex = 4;
             // 
             // colorEditor1
             // 
-            this.colorEditor1.Location = new System.Drawing.Point(684, 5);
-            this.colorEditor1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.colorEditor1.Location = new System.Drawing.Point(513, 4);
             this.colorEditor1.Name = "colorEditor1";
             this.colorEditor1.ShowAlphaChannel = false;
-            this.colorEditor1.Size = new System.Drawing.Size(276, 284);
+            this.colorEditor1.Size = new System.Drawing.Size(207, 231);
             this.colorEditor1.TabIndex = 3;
             // 
             // colorGrid1
             // 
             this.colorGrid1.AutoAddColors = false;
             this.colorGrid1.EditMode = Cyotek.Windows.Forms.ColorEditingMode.Both;
-            this.colorGrid1.Location = new System.Drawing.Point(331, 335);
+            this.colorGrid1.Location = new System.Drawing.Point(248, 272);
+            this.colorGrid1.Margin = new System.Windows.Forms.Padding(2);
             this.colorGrid1.Name = "colorGrid1";
+            this.colorGrid1.Padding = new System.Windows.Forms.Padding(4);
             this.colorGrid1.Palette = Cyotek.Windows.Forms.ColorPalette.Paint;
             this.colorGrid1.SelectedCellStyle = Cyotek.Windows.Forms.ColorGridSelectedCellStyle.Standard;
-            this.colorGrid1.Size = new System.Drawing.Size(247, 120);
+            this.colorGrid1.Size = new System.Drawing.Size(245, 118);
             this.colorGrid1.TabIndex = 2;
             // 
             // colorWheel1
             // 
             this.colorWheel1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.colorWheel1.Location = new System.Drawing.Point(331, 3);
+            this.colorWheel1.Location = new System.Drawing.Point(248, 2);
+            this.colorWheel1.Margin = new System.Windows.Forms.Padding(2);
             this.colorWheel1.Name = "colorWheel1";
-            this.colorWheel1.Size = new System.Drawing.Size(319, 285);
+            this.colorWheel1.Size = new System.Drawing.Size(239, 232);
             this.colorWheel1.TabIndex = 1;
             // 
             // lightnessColorSlider
             // 
-            this.lightnessColorSlider.Location = new System.Drawing.Point(331, 296);
-            this.lightnessColorSlider.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.lightnessColorSlider.Location = new System.Drawing.Point(248, 240);
+            this.lightnessColorSlider.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.lightnessColorSlider.Name = "lightnessColorSlider";
-            this.lightnessColorSlider.Size = new System.Drawing.Size(319, 32);
+            this.lightnessColorSlider.Size = new System.Drawing.Size(239, 26);
             this.lightnessColorSlider.TabIndex = 21;
             // 
             // screenColorPicker1
             // 
             this.screenColorPicker1.Color = System.Drawing.Color.Empty;
             this.screenColorPicker1.Image = global::Chromatics.Properties.Resources.eyedropper;
-            this.screenColorPicker1.Location = new System.Drawing.Point(678, 295);
+            this.screenColorPicker1.Location = new System.Drawing.Point(508, 240);
+            this.screenColorPicker1.Margin = new System.Windows.Forms.Padding(2);
             this.screenColorPicker1.Name = "screenColorPicker1";
-            this.screenColorPicker1.Size = new System.Drawing.Size(282, 132);
+            this.screenColorPicker1.Size = new System.Drawing.Size(212, 107);
             // 
             // btn_exportChromatics
             // 
             this.btn_exportChromatics.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_exportChromatics.Image = global::Chromatics.Properties.Resources.palette_save;
-            this.btn_exportChromatics.Location = new System.Drawing.Point(293, 447);
-            this.btn_exportChromatics.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_exportChromatics.Location = new System.Drawing.Point(220, 363);
             this.btn_exportChromatics.Name = "btn_exportChromatics";
-            this.btn_exportChromatics.Size = new System.Drawing.Size(31, 28);
+            this.btn_exportChromatics.Size = new System.Drawing.Size(23, 23);
             this.btn_exportChromatics.TabIndex = 23;
             this.btn_exportChromatics.UseVisualStyleBackColor = false;
             this.btn_exportChromatics.Click += new System.EventHandler(this.btn_exportChromatics_Click);
@@ -1658,10 +1765,9 @@
             // 
             this.btn_importChromatics.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_importChromatics.Image = global::Chromatics.Properties.Resources.palette_load;
-            this.btn_importChromatics.Location = new System.Drawing.Point(256, 447);
-            this.btn_importChromatics.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_importChromatics.Location = new System.Drawing.Point(192, 363);
             this.btn_importChromatics.Name = "btn_importChromatics";
-            this.btn_importChromatics.Size = new System.Drawing.Size(31, 28);
+            this.btn_importChromatics.Size = new System.Drawing.Size(23, 23);
             this.btn_importChromatics.TabIndex = 22;
             this.btn_importChromatics.UseVisualStyleBackColor = false;
             this.btn_importChromatics.Click += new System.EventHandler(this.btn_importChromatics_Click);
@@ -1670,10 +1776,9 @@
             // 
             this.loadPaletteButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.loadPaletteButton.Image = global::Chromatics.Properties.Resources.palette_load;
-            this.loadPaletteButton.Location = new System.Drawing.Point(929, 260);
-            this.loadPaletteButton.Margin = new System.Windows.Forms.Padding(4);
+            this.loadPaletteButton.Location = new System.Drawing.Point(697, 211);
             this.loadPaletteButton.Name = "loadPaletteButton";
-            this.loadPaletteButton.Size = new System.Drawing.Size(31, 28);
+            this.loadPaletteButton.Size = new System.Drawing.Size(23, 23);
             this.loadPaletteButton.TabIndex = 6;
             this.loadPaletteButton.UseVisualStyleBackColor = false;
             this.loadPaletteButton.Click += new System.EventHandler(this.loadPaletteButton_Click);
@@ -1683,17 +1788,19 @@
             this.tP_act.BackColor = System.Drawing.SystemColors.Control;
             this.tP_act.Controls.Add(this.btn_acthelp);
             this.tP_act.Controls.Add(this.gb_act);
-            this.tP_act.Location = new System.Drawing.Point(4, 25);
+            this.tP_act.Location = new System.Drawing.Point(4, 22);
+            this.tP_act.Margin = new System.Windows.Forms.Padding(2);
             this.tP_act.Name = "tP_act";
-            this.tP_act.Size = new System.Drawing.Size(969, 494);
+            this.tP_act.Size = new System.Drawing.Size(725, 399);
             this.tP_act.TabIndex = 6;
             this.tP_act.Text = "ACT";
             // 
             // btn_acthelp
             // 
-            this.btn_acthelp.Location = new System.Drawing.Point(858, 17);
+            this.btn_acthelp.Location = new System.Drawing.Point(644, 14);
+            this.btn_acthelp.Margin = new System.Windows.Forms.Padding(2);
             this.btn_acthelp.Name = "btn_acthelp";
-            this.btn_acthelp.Size = new System.Drawing.Size(103, 33);
+            this.btn_acthelp.Size = new System.Drawing.Size(77, 27);
             this.btn_acthelp.TabIndex = 1;
             this.btn_acthelp.Text = "Setup Help";
             this.tooltip_main.SetToolTip(this.btn_acthelp, "Opens a webpage with instructions on how to link ACT to Chromatics");
@@ -1725,9 +1832,11 @@
             this.gb_act.Controls.Add(this.chk_actflash);
             this.gb_act.Controls.Add(this.lbl_actmode);
             this.gb_act.Controls.Add(this.cb_actmode);
-            this.gb_act.Location = new System.Drawing.Point(9, 56);
+            this.gb_act.Location = new System.Drawing.Point(7, 46);
+            this.gb_act.Margin = new System.Windows.Forms.Padding(2);
             this.gb_act.Name = "gb_act";
-            this.gb_act.Size = new System.Drawing.Size(952, 339);
+            this.gb_act.Padding = new System.Windows.Forms.Padding(2);
+            this.gb_act.Size = new System.Drawing.Size(714, 275);
             this.gb_act.TabIndex = 0;
             this.gb_act.TabStop = false;
             this.gb_act.Text = "ACT Settings";
@@ -1735,9 +1844,10 @@
             // chk_actflashtimer
             // 
             this.chk_actflashtimer.AutoSize = true;
-            this.chk_actflashtimer.Location = new System.Drawing.Point(21, 174);
+            this.chk_actflashtimer.Location = new System.Drawing.Point(16, 141);
+            this.chk_actflashtimer.Margin = new System.Windows.Forms.Padding(2);
             this.chk_actflashtimer.Name = "chk_actflashtimer";
-            this.chk_actflashtimer.Size = new System.Drawing.Size(124, 21);
+            this.chk_actflashtimer.Size = new System.Drawing.Size(95, 17);
             this.chk_actflashtimer.TabIndex = 22;
             this.chk_actflashtimer.Text = "Flash on Timer";
             this.tooltip_main.SetToolTip(this.chk_actflashtimer, "Flashes the keyboard whenever a timer fires.");
@@ -1747,9 +1857,10 @@
             // chk_actflashtrigger
             // 
             this.chk_actflashtrigger.AutoSize = true;
-            this.chk_actflashtrigger.Location = new System.Drawing.Point(21, 133);
+            this.chk_actflashtrigger.Location = new System.Drawing.Point(16, 108);
+            this.chk_actflashtrigger.Margin = new System.Windows.Forms.Padding(2);
             this.chk_actflashtrigger.Name = "chk_actflashtrigger";
-            this.chk_actflashtrigger.Size = new System.Drawing.Size(185, 21);
+            this.chk_actflashtrigger.Size = new System.Drawing.Size(140, 17);
             this.chk_actflashtrigger.TabIndex = 21;
             this.chk_actflashtrigger.Text = "Flash on Custom Trigger";
             this.tooltip_main.SetToolTip(this.chk_actflashtrigger, "Flashes the keyboard whenever a custom trigger fires.");
@@ -1759,9 +1870,10 @@
             // lbl_actjob
             // 
             this.lbl_actjob.AutoSize = true;
-            this.lbl_actjob.Location = new System.Drawing.Point(706, 43);
+            this.lbl_actjob.Location = new System.Drawing.Point(530, 35);
+            this.lbl_actjob.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_actjob.Name = "lbl_actjob";
-            this.lbl_actjob.Size = new System.Drawing.Size(69, 17);
+            this.lbl_actjob.Size = new System.Drawing.Size(52, 13);
             this.lbl_actjob.TabIndex = 20;
             this.lbl_actjob.Text = "Job Class";
             // 
@@ -1770,9 +1882,10 @@
             this.cb_actjobclass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.cb_actjobclass.Enabled = false;
             this.cb_actjobclass.FormattingEnabled = true;
-            this.cb_actjobclass.Location = new System.Drawing.Point(796, 39);
+            this.cb_actjobclass.Location = new System.Drawing.Point(597, 32);
+            this.cb_actjobclass.Margin = new System.Windows.Forms.Padding(2);
             this.cb_actjobclass.Name = "cb_actjobclass";
-            this.cb_actjobclass.Size = new System.Drawing.Size(122, 24);
+            this.cb_actjobclass.Size = new System.Drawing.Size(92, 20);
             this.cb_actjobclass.TabIndex = 19;
             this.cb_actjobclass.SelectedIndexChanged += new System.EventHandler(this.cb_actjobclass_SelectedIndexChanged);
             // 
@@ -1783,14 +1896,15 @@
             0,
             0,
             0});
-            this.nm_actdmgprc.Location = new System.Drawing.Point(820, 289);
+            this.nm_actdmgprc.Location = new System.Drawing.Point(615, 235);
+            this.nm_actdmgprc.Margin = new System.Windows.Forms.Padding(2);
             this.nm_actdmgprc.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nm_actdmgprc.Name = "nm_actdmgprc";
-            this.nm_actdmgprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actdmgprc.Size = new System.Drawing.Size(74, 20);
             this.nm_actdmgprc.TabIndex = 18;
             this.nm_actdmgprc.Value = new decimal(new int[] {
             10,
@@ -1802,9 +1916,10 @@
             // lbl_actdmgprc
             // 
             this.lbl_actdmgprc.AutoSize = true;
-            this.lbl_actdmgprc.Location = new System.Drawing.Point(728, 291);
+            this.lbl_actdmgprc.Location = new System.Drawing.Point(546, 236);
+            this.lbl_actdmgprc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_actdmgprc.Name = "lbl_actdmgprc";
-            this.lbl_actdmgprc.Size = new System.Drawing.Size(73, 17);
+            this.lbl_actdmgprc.Size = new System.Drawing.Size(55, 13);
             this.lbl_actdmgprc.TabIndex = 17;
             this.lbl_actdmgprc.Text = "Damage%";
             // 
@@ -1815,14 +1930,15 @@
             0,
             0,
             0});
-            this.nm_actoverhealprc.Location = new System.Drawing.Point(820, 261);
+            this.nm_actoverhealprc.Location = new System.Drawing.Point(615, 212);
+            this.nm_actoverhealprc.Margin = new System.Windows.Forms.Padding(2);
             this.nm_actoverhealprc.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nm_actoverhealprc.Name = "nm_actoverhealprc";
-            this.nm_actoverhealprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actoverhealprc.Size = new System.Drawing.Size(74, 20);
             this.nm_actoverhealprc.TabIndex = 16;
             this.nm_actoverhealprc.Value = new decimal(new int[] {
             10,
@@ -1834,9 +1950,10 @@
             // lbl_actoverhealprc
             // 
             this.lbl_actoverhealprc.AutoSize = true;
-            this.lbl_actoverhealprc.Location = new System.Drawing.Point(728, 263);
+            this.lbl_actoverhealprc.Location = new System.Drawing.Point(546, 214);
+            this.lbl_actoverhealprc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_actoverhealprc.Name = "lbl_actoverhealprc";
-            this.lbl_actoverhealprc.Size = new System.Drawing.Size(78, 17);
+            this.lbl_actoverhealprc.Size = new System.Drawing.Size(58, 13);
             this.lbl_actoverhealprc.TabIndex = 15;
             this.lbl_actoverhealprc.Text = "Overheal%";
             // 
@@ -1847,14 +1964,15 @@
             0,
             0,
             0});
-            this.nm_actcritdhprc.Location = new System.Drawing.Point(820, 233);
+            this.nm_actcritdhprc.Location = new System.Drawing.Point(615, 189);
+            this.nm_actcritdhprc.Margin = new System.Windows.Forms.Padding(2);
             this.nm_actcritdhprc.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nm_actcritdhprc.Name = "nm_actcritdhprc";
-            this.nm_actcritdhprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actcritdhprc.Size = new System.Drawing.Size(74, 20);
             this.nm_actcritdhprc.TabIndex = 14;
             this.nm_actcritdhprc.Value = new decimal(new int[] {
             10,
@@ -1866,9 +1984,10 @@
             // lbl_actcritdhprc
             // 
             this.lbl_actcritdhprc.AutoSize = true;
-            this.lbl_actcritdhprc.Location = new System.Drawing.Point(728, 235);
+            this.lbl_actcritdhprc.Location = new System.Drawing.Point(546, 191);
+            this.lbl_actcritdhprc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_actcritdhprc.Name = "lbl_actcritdhprc";
-            this.lbl_actcritdhprc.Size = new System.Drawing.Size(61, 17);
+            this.lbl_actcritdhprc.Size = new System.Drawing.Size(46, 13);
             this.lbl_actcritdhprc.TabIndex = 13;
             this.lbl_actcritdhprc.Text = "CritDH%";
             // 
@@ -1879,14 +1998,15 @@
             0,
             0,
             0});
-            this.nm_actdhprc.Location = new System.Drawing.Point(820, 205);
+            this.nm_actdhprc.Location = new System.Drawing.Point(615, 167);
+            this.nm_actdhprc.Margin = new System.Windows.Forms.Padding(2);
             this.nm_actdhprc.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nm_actdhprc.Name = "nm_actdhprc";
-            this.nm_actdhprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actdhprc.Size = new System.Drawing.Size(74, 20);
             this.nm_actdhprc.TabIndex = 12;
             this.nm_actdhprc.Value = new decimal(new int[] {
             10,
@@ -1898,18 +2018,20 @@
             // lbl_actdhprc
             // 
             this.lbl_actdhprc.AutoSize = true;
-            this.lbl_actdhprc.Location = new System.Drawing.Point(728, 207);
+            this.lbl_actdhprc.Location = new System.Drawing.Point(546, 168);
+            this.lbl_actdhprc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_actdhprc.Name = "lbl_actdhprc";
-            this.lbl_actdhprc.Size = new System.Drawing.Size(40, 17);
+            this.lbl_actdhprc.Size = new System.Drawing.Size(31, 13);
             this.lbl_actdhprc.TabIndex = 11;
             this.lbl_actdhprc.Text = "DH%";
             // 
             // lbl_actgroupdps
             // 
             this.lbl_actgroupdps.AutoSize = true;
-            this.lbl_actgroupdps.Location = new System.Drawing.Point(728, 151);
+            this.lbl_actgroupdps.Location = new System.Drawing.Point(546, 123);
+            this.lbl_actgroupdps.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_actgroupdps.Name = "lbl_actgroupdps";
-            this.lbl_actgroupdps.Size = new System.Drawing.Size(80, 17);
+            this.lbl_actgroupdps.Size = new System.Drawing.Size(61, 13);
             this.lbl_actgroupdps.TabIndex = 10;
             this.lbl_actgroupdps.Text = "Group DPS";
             // 
@@ -1920,14 +2042,15 @@
             0,
             0,
             0});
-            this.nm_actcritprc.Location = new System.Drawing.Point(820, 177);
+            this.nm_actcritprc.Location = new System.Drawing.Point(615, 144);
+            this.nm_actcritprc.Margin = new System.Windows.Forms.Padding(2);
             this.nm_actcritprc.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nm_actcritprc.Name = "nm_actcritprc";
-            this.nm_actcritprc.Size = new System.Drawing.Size(98, 22);
+            this.nm_actcritprc.Size = new System.Drawing.Size(74, 20);
             this.nm_actcritprc.TabIndex = 9;
             this.nm_actcritprc.Value = new decimal(new int[] {
             10,
@@ -1939,9 +2062,10 @@
             // lbl_acttargetcrit
             // 
             this.lbl_acttargetcrit.AutoSize = true;
-            this.lbl_acttargetcrit.Location = new System.Drawing.Point(728, 179);
+            this.lbl_acttargetcrit.Location = new System.Drawing.Point(546, 145);
+            this.lbl_acttargetcrit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_acttargetcrit.Name = "lbl_acttargetcrit";
-            this.lbl_acttargetcrit.Size = new System.Drawing.Size(41, 17);
+            this.lbl_acttargetcrit.Size = new System.Drawing.Size(30, 13);
             this.lbl_acttargetcrit.TabIndex = 8;
             this.lbl_acttargetcrit.Text = "Crit%";
             // 
@@ -1952,14 +2076,15 @@
             0,
             0,
             0});
-            this.nm_actgroupdps.Location = new System.Drawing.Point(820, 149);
+            this.nm_actgroupdps.Location = new System.Drawing.Point(615, 121);
+            this.nm_actgroupdps.Margin = new System.Windows.Forms.Padding(2);
             this.nm_actgroupdps.Maximum = new decimal(new int[] {
             99999,
             0,
             0,
             0});
             this.nm_actgroupdps.Name = "nm_actgroupdps";
-            this.nm_actgroupdps.Size = new System.Drawing.Size(98, 22);
+            this.nm_actgroupdps.Size = new System.Drawing.Size(74, 20);
             this.nm_actgroupdps.TabIndex = 7;
             this.nm_actgroupdps.Value = new decimal(new int[] {
             25000,
@@ -1971,9 +2096,10 @@
             // lbl_acttargethps
             // 
             this.lbl_acttargethps.AutoSize = true;
-            this.lbl_acttargethps.Location = new System.Drawing.Point(728, 123);
+            this.lbl_acttargethps.Location = new System.Drawing.Point(546, 100);
+            this.lbl_acttargethps.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_acttargethps.Name = "lbl_acttargethps";
-            this.lbl_acttargethps.Size = new System.Drawing.Size(36, 17);
+            this.lbl_acttargethps.Size = new System.Drawing.Size(29, 13);
             this.lbl_acttargethps.TabIndex = 6;
             this.lbl_acttargethps.Text = "HPS";
             // 
@@ -1984,7 +2110,8 @@
             0,
             0,
             0});
-            this.nm_acttargethps.Location = new System.Drawing.Point(820, 121);
+            this.nm_acttargethps.Location = new System.Drawing.Point(615, 98);
+            this.nm_acttargethps.Margin = new System.Windows.Forms.Padding(2);
             this.nm_acttargethps.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -1996,7 +2123,7 @@
             0,
             0});
             this.nm_acttargethps.Name = "nm_acttargethps";
-            this.nm_acttargethps.Size = new System.Drawing.Size(98, 22);
+            this.nm_acttargethps.Size = new System.Drawing.Size(74, 20);
             this.nm_acttargethps.TabIndex = 5;
             this.nm_acttargethps.Value = new decimal(new int[] {
             5000,
@@ -2008,9 +2135,10 @@
             // lbl_acttargetdps
             // 
             this.lbl_acttargetdps.AutoSize = true;
-            this.lbl_acttargetdps.Location = new System.Drawing.Point(728, 95);
+            this.lbl_acttargetdps.Location = new System.Drawing.Point(546, 77);
+            this.lbl_acttargetdps.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_acttargetdps.Name = "lbl_acttargetdps";
-            this.lbl_acttargetdps.Size = new System.Drawing.Size(36, 17);
+            this.lbl_acttargetdps.Size = new System.Drawing.Size(29, 13);
             this.lbl_acttargetdps.TabIndex = 4;
             this.lbl_acttargetdps.Text = "DPS";
             // 
@@ -2021,7 +2149,8 @@
             0,
             0,
             0});
-            this.nm_acttargetdps.Location = new System.Drawing.Point(820, 93);
+            this.nm_acttargetdps.Location = new System.Drawing.Point(615, 76);
+            this.nm_acttargetdps.Margin = new System.Windows.Forms.Padding(2);
             this.nm_acttargetdps.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -2033,7 +2162,7 @@
             0,
             0});
             this.nm_acttargetdps.Name = "nm_acttargetdps";
-            this.nm_acttargetdps.Size = new System.Drawing.Size(98, 22);
+            this.nm_acttargetdps.Size = new System.Drawing.Size(74, 20);
             this.nm_acttargetdps.TabIndex = 3;
             this.nm_acttargetdps.Value = new decimal(new int[] {
             5000,
@@ -2045,9 +2174,10 @@
             // chk_actflash
             // 
             this.chk_actflash.AutoSize = true;
-            this.chk_actflash.Location = new System.Drawing.Point(21, 94);
+            this.chk_actflash.Location = new System.Drawing.Point(16, 76);
+            this.chk_actflash.Margin = new System.Windows.Forms.Padding(2);
             this.chk_actflash.Name = "chk_actflash";
-            this.chk_actflash.Size = new System.Drawing.Size(178, 21);
+            this.chk_actflash.Size = new System.Drawing.Size(136, 17);
             this.chk_actflash.TabIndex = 2;
             this.chk_actflash.Text = "Flash on ACT threshold";
             this.tooltip_main.SetToolTip(this.chk_actflash, "Flashes the keyboard when you reach your target DPS");
@@ -2057,18 +2187,20 @@
             // lbl_actmode
             // 
             this.lbl_actmode.AutoSize = true;
-            this.lbl_actmode.Location = new System.Drawing.Point(18, 46);
+            this.lbl_actmode.Location = new System.Drawing.Point(14, 37);
+            this.lbl_actmode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_actmode.Name = "lbl_actmode";
-            this.lbl_actmode.Size = new System.Drawing.Size(74, 17);
+            this.lbl_actmode.Size = new System.Drawing.Size(58, 13);
             this.lbl_actmode.TabIndex = 1;
             this.lbl_actmode.Text = "ACT Mode";
             // 
             // cb_actmode
             // 
             this.cb_actmode.FormattingEnabled = true;
-            this.cb_actmode.Location = new System.Drawing.Point(110, 43);
+            this.cb_actmode.Location = new System.Drawing.Point(82, 35);
+            this.cb_actmode.Margin = new System.Windows.Forms.Padding(2);
             this.cb_actmode.Name = "cb_actmode";
-            this.cb_actmode.Size = new System.Drawing.Size(164, 24);
+            this.cb_actmode.Size = new System.Drawing.Size(124, 21);
             this.cb_actmode.TabIndex = 0;
             this.cb_actmode.SelectedIndexChanged += new System.EventHandler(this.cb_actmode_SelectedIndexChanged);
             // 
@@ -2076,9 +2208,10 @@
             // 
             this.tP_ARX.BackColor = System.Drawing.SystemColors.Control;
             this.tP_ARX.Controls.Add(this.gB_ARX1);
-            this.tP_ARX.Location = new System.Drawing.Point(4, 25);
+            this.tP_ARX.Location = new System.Drawing.Point(4, 22);
+            this.tP_ARX.Margin = new System.Windows.Forms.Padding(2);
             this.tP_ARX.Name = "tP_ARX";
-            this.tP_ARX.Size = new System.Drawing.Size(969, 494);
+            this.tP_ARX.Size = new System.Drawing.Size(725, 399);
             this.tP_ARX.TabIndex = 3;
             this.tP_ARX.Text = "ARX";
             // 
@@ -2092,9 +2225,11 @@
             this.gB_ARX1.Controls.Add(this.lbl_arx_cb);
             this.gB_ARX1.Controls.Add(this.cb_arx_theme);
             this.gB_ARX1.Controls.Add(this.chk_arxtoggle);
-            this.gB_ARX1.Location = new System.Drawing.Point(9, 14);
+            this.gB_ARX1.Location = new System.Drawing.Point(7, 11);
+            this.gB_ARX1.Margin = new System.Windows.Forms.Padding(2);
             this.gB_ARX1.Name = "gB_ARX1";
-            this.gB_ARX1.Size = new System.Drawing.Size(952, 163);
+            this.gB_ARX1.Padding = new System.Windows.Forms.Padding(2);
+            this.gB_ARX1.Size = new System.Drawing.Size(714, 132);
             this.gB_ARX1.TabIndex = 0;
             this.gB_ARX1.TabStop = false;
             this.gB_ARX1.Text = "ARX Control";
@@ -2102,26 +2237,29 @@
             // lbl_arx_actipexample
             // 
             this.lbl_arx_actipexample.AutoSize = true;
-            this.lbl_arx_actipexample.Location = new System.Drawing.Point(374, 111);
+            this.lbl_arx_actipexample.Location = new System.Drawing.Point(280, 90);
+            this.lbl_arx_actipexample.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_arx_actipexample.Name = "lbl_arx_actipexample";
-            this.lbl_arx_actipexample.Size = new System.Drawing.Size(201, 17);
+            this.lbl_arx_actipexample.Size = new System.Drawing.Size(156, 13);
             this.lbl_arx_actipexample.TabIndex = 7;
             this.lbl_arx_actipexample.Text = "Example: http://127.0.0.1:8085";
             // 
             // lbl_arx_actip
             // 
             this.lbl_arx_actip.AutoSize = true;
-            this.lbl_arx_actip.Location = new System.Drawing.Point(221, 89);
+            this.lbl_arx_actip.Location = new System.Drawing.Point(166, 72);
+            this.lbl_arx_actip.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_arx_actip.Name = "lbl_arx_actip";
-            this.lbl_arx_actip.Size = new System.Drawing.Size(146, 17);
+            this.lbl_arx_actip.Size = new System.Drawing.Size(113, 13);
             this.lbl_arx_actip.TabIndex = 6;
             this.lbl_arx_actip.Text = "ACT Web Server URL";
             // 
             // txt_arx_actip
             // 
-            this.txt_arx_actip.Location = new System.Drawing.Point(373, 86);
+            this.txt_arx_actip.Location = new System.Drawing.Point(280, 70);
+            this.txt_arx_actip.Margin = new System.Windows.Forms.Padding(2);
             this.txt_arx_actip.Name = "txt_arx_actip";
-            this.txt_arx_actip.Size = new System.Drawing.Size(235, 22);
+            this.txt_arx_actip.Size = new System.Drawing.Size(177, 20);
             this.txt_arx_actip.TabIndex = 5;
             this.tooltip_main.SetToolTip(this.txt_arx_actip, "The URL for ACT\'s Web Server. You can find this in ACT under Options > Output Dis" +
         "play > ACT Web Server.");
@@ -2130,9 +2268,10 @@
             // lb_arx_mode
             // 
             this.lb_arx_mode.AutoSize = true;
-            this.lb_arx_mode.Location = new System.Drawing.Point(626, 31);
+            this.lb_arx_mode.Location = new System.Drawing.Point(470, 25);
+            this.lb_arx_mode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_arx_mode.Name = "lb_arx_mode";
-            this.lb_arx_mode.Size = new System.Drawing.Size(99, 17);
+            this.lb_arx_mode.Size = new System.Drawing.Size(76, 13);
             this.lb_arx_mode.TabIndex = 4;
             this.lb_arx_mode.Text = "ARX Template";
             // 
@@ -2144,18 +2283,20 @@
             "Player HUD",
             "Party List",
             "ACT"});
-            this.cb_arx_mode.Location = new System.Drawing.Point(740, 28);
+            this.cb_arx_mode.Location = new System.Drawing.Point(555, 23);
+            this.cb_arx_mode.Margin = new System.Windows.Forms.Padding(2);
             this.cb_arx_mode.Name = "cb_arx_mode";
-            this.cb_arx_mode.Size = new System.Drawing.Size(158, 24);
+            this.cb_arx_mode.Size = new System.Drawing.Size(120, 21);
             this.cb_arx_mode.TabIndex = 3;
             this.cb_arx_mode.SelectedIndexChanged += new System.EventHandler(this.cb_arx_mode_SelectedIndexChanged);
             // 
             // lbl_arx_cb
             // 
             this.lbl_arx_cb.AutoSize = true;
-            this.lbl_arx_cb.Location = new System.Drawing.Point(278, 30);
+            this.lbl_arx_cb.Location = new System.Drawing.Point(208, 24);
+            this.lbl_arx_cb.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_arx_cb.Name = "lbl_arx_cb";
-            this.lbl_arx_cb.Size = new System.Drawing.Size(84, 17);
+            this.lbl_arx_cb.Size = new System.Drawing.Size(65, 13);
             this.lbl_arx_cb.TabIndex = 2;
             this.lbl_arx_cb.Text = "ARX Theme";
             // 
@@ -2169,9 +2310,10 @@
             "Grey",
             "Black",
             "Day/Night"});
-            this.cb_arx_theme.Location = new System.Drawing.Point(373, 27);
+            this.cb_arx_theme.Location = new System.Drawing.Point(280, 22);
+            this.cb_arx_theme.Margin = new System.Windows.Forms.Padding(2);
             this.cb_arx_theme.Name = "cb_arx_theme";
-            this.cb_arx_theme.Size = new System.Drawing.Size(158, 24);
+            this.cb_arx_theme.Size = new System.Drawing.Size(120, 21);
             this.cb_arx_theme.TabIndex = 1;
             this.cb_arx_theme.SelectedIndexChanged += new System.EventHandler(this.cb_arx_theme_SelectedIndexChanged);
             // 
@@ -2180,9 +2322,10 @@
             this.chk_arxtoggle.AutoSize = true;
             this.chk_arxtoggle.Checked = true;
             this.chk_arxtoggle.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chk_arxtoggle.Location = new System.Drawing.Point(19, 30);
+            this.chk_arxtoggle.Location = new System.Drawing.Point(14, 24);
+            this.chk_arxtoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_arxtoggle.Name = "chk_arxtoggle";
-            this.chk_arxtoggle.Size = new System.Drawing.Size(106, 21);
+            this.chk_arxtoggle.Size = new System.Drawing.Size(84, 17);
             this.chk_arxtoggle.TabIndex = 0;
             this.chk_arxtoggle.Text = "Enable ARX";
             this.tooltip_main.SetToolTip(this.chk_arxtoggle, "Enable Logitech ARX web server.");
@@ -2193,9 +2336,10 @@
             // 
             this.tP_integrate.BackColor = System.Drawing.SystemColors.Control;
             this.tP_integrate.Controls.Add(this.tC_integrations);
-            this.tP_integrate.Location = new System.Drawing.Point(4, 25);
+            this.tP_integrate.Location = new System.Drawing.Point(4, 22);
+            this.tP_integrate.Margin = new System.Windows.Forms.Padding(2);
             this.tP_integrate.Name = "tP_integrate";
-            this.tP_integrate.Size = new System.Drawing.Size(969, 494);
+            this.tP_integrate.Size = new System.Drawing.Size(725, 399);
             this.tP_integrate.TabIndex = 7;
             this.tP_integrate.Text = "Integrations";
             // 
@@ -2205,9 +2349,10 @@
             this.tC_integrations.Controls.Add(this.tP_ifttt);
             this.tC_integrations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tC_integrations.Location = new System.Drawing.Point(0, 0);
+            this.tC_integrations.Margin = new System.Windows.Forms.Padding(2);
             this.tC_integrations.Name = "tC_integrations";
             this.tC_integrations.SelectedIndex = 0;
-            this.tC_integrations.Size = new System.Drawing.Size(969, 494);
+            this.tC_integrations.Size = new System.Drawing.Size(725, 399);
             this.tC_integrations.TabIndex = 4;
             // 
             // tP_cast
@@ -2217,19 +2362,21 @@
             this.tP_cast.Controls.Add(this.lbl_chromecastdev);
             this.tP_cast.Controls.Add(this.cb_castdevlist);
             this.tP_cast.Controls.Add(this.chk_enablecast);
-            this.tP_cast.Location = new System.Drawing.Point(4, 25);
+            this.tP_cast.Location = new System.Drawing.Point(4, 22);
+            this.tP_cast.Margin = new System.Windows.Forms.Padding(2);
             this.tP_cast.Name = "tP_cast";
-            this.tP_cast.Padding = new System.Windows.Forms.Padding(3);
-            this.tP_cast.Size = new System.Drawing.Size(961, 465);
+            this.tP_cast.Padding = new System.Windows.Forms.Padding(2);
+            this.tP_cast.Size = new System.Drawing.Size(717, 373);
             this.tP_cast.TabIndex = 0;
             this.tP_cast.Text = "Google Cast";
             // 
             // chk_castdfbell
             // 
             this.chk_castdfbell.AutoSize = true;
-            this.chk_castdfbell.Location = new System.Drawing.Point(394, 15);
+            this.chk_castdfbell.Location = new System.Drawing.Point(296, 12);
+            this.chk_castdfbell.Margin = new System.Windows.Forms.Padding(2);
             this.chk_castdfbell.Name = "chk_castdfbell";
-            this.chk_castdfbell.Size = new System.Drawing.Size(178, 21);
+            this.chk_castdfbell.Size = new System.Drawing.Size(136, 17);
             this.chk_castdfbell.TabIndex = 7;
             this.chk_castdfbell.Text = "Enable Duty Finder Bell";
             this.chk_castdfbell.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -2240,9 +2387,10 @@
             // lbl_chromecastdev
             // 
             this.lbl_chromecastdev.AutoSize = true;
-            this.lbl_chromecastdev.Location = new System.Drawing.Point(11, 59);
+            this.lbl_chromecastdev.Location = new System.Drawing.Point(8, 48);
+            this.lbl_chromecastdev.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromecastdev.Name = "lbl_chromecastdev";
-            this.lbl_chromecastdev.Size = new System.Drawing.Size(102, 17);
+            this.lbl_chromecastdev.Size = new System.Drawing.Size(79, 13);
             this.lbl_chromecastdev.TabIndex = 6;
             this.lbl_chromecastdev.Text = "Casting Device";
             // 
@@ -2250,18 +2398,20 @@
             // 
             this.cb_castdevlist.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_castdevlist.FormattingEnabled = true;
-            this.cb_castdevlist.Location = new System.Drawing.Point(119, 56);
+            this.cb_castdevlist.Location = new System.Drawing.Point(89, 46);
+            this.cb_castdevlist.Margin = new System.Windows.Forms.Padding(2);
             this.cb_castdevlist.Name = "cb_castdevlist";
-            this.cb_castdevlist.Size = new System.Drawing.Size(203, 24);
+            this.cb_castdevlist.Size = new System.Drawing.Size(153, 21);
             this.cb_castdevlist.TabIndex = 5;
             this.cb_castdevlist.SelectedIndexChanged += new System.EventHandler(this.cb_castdevlist_SelectedIndexChanged);
             // 
             // chk_enablecast
             // 
             this.chk_enablecast.AutoSize = true;
-            this.chk_enablecast.Location = new System.Drawing.Point(14, 15);
+            this.chk_enablecast.Location = new System.Drawing.Point(10, 12);
+            this.chk_enablecast.Margin = new System.Windows.Forms.Padding(2);
             this.chk_enablecast.Name = "chk_enablecast";
-            this.chk_enablecast.Size = new System.Drawing.Size(125, 21);
+            this.chk_enablecast.Size = new System.Drawing.Size(97, 17);
             this.chk_enablecast.TabIndex = 4;
             this.chk_enablecast.Text = "Enable Casting";
             this.chk_enablecast.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -2278,36 +2428,40 @@
             this.tP_ifttt.Controls.Add(this.dgv_iftttgrid);
             this.tP_ifttt.Controls.Add(this.btn_ifttthelp);
             this.tP_ifttt.Controls.Add(this.chk_enableifttt);
-            this.tP_ifttt.Location = new System.Drawing.Point(4, 25);
+            this.tP_ifttt.Location = new System.Drawing.Point(4, 22);
+            this.tP_ifttt.Margin = new System.Windows.Forms.Padding(2);
             this.tP_ifttt.Name = "tP_ifttt";
-            this.tP_ifttt.Padding = new System.Windows.Forms.Padding(3);
-            this.tP_ifttt.Size = new System.Drawing.Size(961, 465);
+            this.tP_ifttt.Padding = new System.Windows.Forms.Padding(2);
+            this.tP_ifttt.Size = new System.Drawing.Size(717, 373);
             this.tP_ifttt.TabIndex = 1;
             this.tP_ifttt.Text = "IFTTT";
             // 
             // lbl_iftttmakerurlexample
             // 
             this.lbl_iftttmakerurlexample.AutoSize = true;
-            this.lbl_iftttmakerurlexample.Location = new System.Drawing.Point(20, 109);
+            this.lbl_iftttmakerurlexample.Location = new System.Drawing.Point(15, 89);
+            this.lbl_iftttmakerurlexample.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_iftttmakerurlexample.Name = "lbl_iftttmakerurlexample";
-            this.lbl_iftttmakerurlexample.Size = new System.Drawing.Size(326, 17);
+            this.lbl_iftttmakerurlexample.Size = new System.Drawing.Size(254, 13);
             this.lbl_iftttmakerurlexample.TabIndex = 16;
             this.lbl_iftttmakerurlexample.Text = "Example: https://maker.ifttt.com/use/abcxyz123456";
             // 
             // lbl_IFTTTcode
             // 
             this.lbl_IFTTTcode.AutoSize = true;
-            this.lbl_IFTTTcode.Location = new System.Drawing.Point(20, 64);
+            this.lbl_IFTTTcode.Location = new System.Drawing.Point(15, 52);
+            this.lbl_IFTTTcode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_IFTTTcode.Name = "lbl_IFTTTcode";
-            this.lbl_IFTTTcode.Size = new System.Drawing.Size(121, 17);
+            this.lbl_IFTTTcode.Size = new System.Drawing.Size(95, 13);
             this.lbl_IFTTTcode.TabIndex = 15;
             this.lbl_IFTTTcode.Text = "IFTTT Maker URL";
             // 
             // txt_iftttmakerurl
             // 
-            this.txt_iftttmakerurl.Location = new System.Drawing.Point(23, 84);
+            this.txt_iftttmakerurl.Location = new System.Drawing.Point(17, 68);
+            this.txt_iftttmakerurl.Margin = new System.Windows.Forms.Padding(2);
             this.txt_iftttmakerurl.Name = "txt_iftttmakerurl";
-            this.txt_iftttmakerurl.Size = new System.Drawing.Size(269, 22);
+            this.txt_iftttmakerurl.Size = new System.Drawing.Size(203, 20);
             this.txt_iftttmakerurl.TabIndex = 14;
             this.tooltip_main.SetToolTip(this.txt_iftttmakerurl, "The URL from your IFTTT webhooks applet. This can be found in the Webhooks applet" +
         " settings.");
@@ -2325,13 +2479,14 @@
             this.dataGridViewTextBoxColumn5,
             this.col_postID,
             this.col_functionifttt});
-            this.dgv_iftttgrid.Location = new System.Drawing.Point(382, 51);
+            this.dgv_iftttgrid.Location = new System.Drawing.Point(286, 41);
+            this.dgv_iftttgrid.Margin = new System.Windows.Forms.Padding(2);
             this.dgv_iftttgrid.MultiSelect = false;
             this.dgv_iftttgrid.Name = "dgv_iftttgrid";
             this.dgv_iftttgrid.ReadOnly = true;
             this.dgv_iftttgrid.RowHeadersVisible = false;
             this.dgv_iftttgrid.RowTemplate.Height = 24;
-            this.dgv_iftttgrid.Size = new System.Drawing.Size(559, 402);
+            this.dgv_iftttgrid.Size = new System.Drawing.Size(419, 327);
             this.dgv_iftttgrid.TabIndex = 13;
             // 
             // dataGridViewTextBoxColumn5
@@ -2355,9 +2510,10 @@
             // 
             // btn_ifttthelp
             // 
-            this.btn_ifttthelp.Location = new System.Drawing.Point(838, 12);
+            this.btn_ifttthelp.Location = new System.Drawing.Point(628, 10);
+            this.btn_ifttthelp.Margin = new System.Windows.Forms.Padding(2);
             this.btn_ifttthelp.Name = "btn_ifttthelp";
-            this.btn_ifttthelp.Size = new System.Drawing.Size(103, 33);
+            this.btn_ifttthelp.Size = new System.Drawing.Size(77, 27);
             this.btn_ifttthelp.TabIndex = 12;
             this.btn_ifttthelp.Text = "Setup Help";
             this.tooltip_main.SetToolTip(this.btn_ifttthelp, "Opens a webpage with instructions on how to link IFTTT to Chromatics");
@@ -2367,9 +2523,10 @@
             // chk_enableifttt
             // 
             this.chk_enableifttt.AutoSize = true;
-            this.chk_enableifttt.Location = new System.Drawing.Point(23, 19);
+            this.chk_enableifttt.Location = new System.Drawing.Point(17, 15);
+            this.chk_enableifttt.Margin = new System.Windows.Forms.Padding(2);
             this.chk_enableifttt.Name = "chk_enableifttt";
-            this.chk_enableifttt.Size = new System.Drawing.Size(116, 21);
+            this.chk_enableifttt.Size = new System.Drawing.Size(92, 17);
             this.chk_enableifttt.TabIndex = 11;
             this.chk_enableifttt.Text = "Enable IFTTT";
             this.chk_enableifttt.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -2399,7 +2556,7 @@
             this.mi_updatecheck,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(231, 166);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(196, 142);
             // 
             // mi_effectsenable
             // 
@@ -2407,44 +2564,44 @@
             this.mi_effectsenable.CheckOnClick = true;
             this.mi_effectsenable.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mi_effectsenable.Name = "mi_effectsenable";
-            this.mi_effectsenable.Size = new System.Drawing.Size(230, 26);
+            this.mi_effectsenable.Size = new System.Drawing.Size(195, 22);
             this.mi_effectsenable.Text = "Toggle Lighting Effects";
             // 
             // mi_arxenable
             // 
             this.mi_arxenable.CheckOnClick = true;
             this.mi_arxenable.Name = "mi_arxenable";
-            this.mi_arxenable.Size = new System.Drawing.Size(230, 26);
+            this.mi_arxenable.Size = new System.Drawing.Size(195, 22);
             this.mi_arxenable.Text = "Enable Arx";
             // 
             // mi_winstart
             // 
             this.mi_winstart.CheckOnClick = true;
             this.mi_winstart.Name = "mi_winstart";
-            this.mi_winstart.Size = new System.Drawing.Size(230, 26);
+            this.mi_winstart.Size = new System.Drawing.Size(195, 22);
             this.mi_winstart.Text = "Enable on Startup";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(227, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(192, 6);
             // 
             // mi_showwindow
             // 
             this.mi_showwindow.Name = "mi_showwindow";
-            this.mi_showwindow.Size = new System.Drawing.Size(230, 26);
+            this.mi_showwindow.Size = new System.Drawing.Size(195, 22);
             this.mi_showwindow.Text = "Show Window";
             // 
             // mi_updatecheck
             // 
             this.mi_updatecheck.Name = "mi_updatecheck";
-            this.mi_updatecheck.Size = new System.Drawing.Size(230, 26);
+            this.mi_updatecheck.Size = new System.Drawing.Size(195, 22);
             this.mi_updatecheck.Text = "Check for Updates";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(230, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // notify_master
@@ -2456,11 +2613,12 @@
             // 
             // Chromatics
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(977, 523);
+            this.ClientSize = new System.Drawing.Size(733, 425);
             this.Controls.Add(this.tb_controlA);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Chromatics";
             this.Text = "Chromatics 2.4.5";
             this.tb_controlA.ResumeLayout(false);
@@ -2644,7 +2802,7 @@
         private System.Windows.Forms.CheckBox chk_dev_chromalink;
         private System.Windows.Forms.CheckBox chk_desktopnotify;
         private System.Windows.Forms.CheckBox chk_lcdtoggle;
-        private System.Windows.Forms.CheckBox chk_showstats;
+        private System.Windows.Forms.CheckBox chk_showstatuseffects;
         private System.Windows.Forms.Button btn_ffxivcachereset;
         private System.Windows.Forms.Label lbl_lang;
         private System.Windows.Forms.ComboBox cb_lang;

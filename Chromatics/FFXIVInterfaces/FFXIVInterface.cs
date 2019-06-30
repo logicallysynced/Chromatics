@@ -294,14 +294,14 @@ namespace Chromatics
             try
             {
                 
-                /*
+                
                 FfxivThread = new Thread(new ThreadStart(CallThreadFFXIVAttach));
                 FfxivThread.Start();
                 FfxivThread.Join();
                 ct.Cancel();
-                */
                 
                 
+                /*
                 while (!ct.IsCancellationRequested && !_exit)
                 {
                     if (_exit)
@@ -313,6 +313,7 @@ namespace Chromatics
                     await Task.Delay(150);
                     
                 }
+                */
                 
                 
             }
@@ -1557,281 +1558,284 @@ namespace Chromatics
                         
                         
                         var statEffects = _playerInfo.StatusItems;
-                        
-                        if (statEffects.Count > 0)
+
+                        if (ChromaticsSettings.ChromaticsSettingsStatusEffectToggle)
                         {
-                            var status = statEffects.Last();
-                            if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name)
-                                if (_currentStatus != status.StatusName)
-                                {
-                                    if (status.StatusName == "Bind")
+                            if (statEffects.Count > 0)
+                            {
+                                var status = statEffects.Last();
+                                if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name)
+                                    if (_currentStatus != status.StatusName)
                                     {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBind);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Petrification")
-                                    {
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPetrification);
-                                        //GlobalUpdateState("static", _baseColor, false);
-                                        GlobalApplyAllKeyLighting(_baseColor);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Old")
-                                    {
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
-                                        //GlobalUpdateState("static", _baseColor, false);
-                                        GlobalApplyAllKeyLighting(_baseColor);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Slow")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Stun")
-                                    {
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingStun);
-                                        //GlobalUpdateState("static", _baseColor, false);
-                                        GlobalApplyAllKeyLighting(_baseColor);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Silence")
-                                    {
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSilence);
-                                        //GlobalUpdateState("static", _baseColor, false);
-                                        GlobalApplyAllKeyLighting(_baseColor);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Poison")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Pollen")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Pox")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPox), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPox);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Paralysis")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis),
-                                            100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Leaden")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Incapacitation")
-                                    {
-                                        GlobalRipple2(
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation),
-                                            100);
-                                        _baseColor =
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Dropsy")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Amnesia")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia),
-                                            100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Bleed")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Misery")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Sleep")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Daze")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Heavy")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Infirmary")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary),
-                                            100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Burns")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns), 100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Deep Freeze")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze),
-                                            100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else if (status.StatusName == "Damage Down")
-                                    {
-                                        GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown),
-                                            100);
-                                        _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-                                    }
-                                    else
-                                    {
-                                        _baseColor = baseColor;
-                                        //GlobalUpdateState("static", _baseColor, false);
-                                        GlobalApplyAllKeyLighting(_baseColor);
-                                        GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                            _baseColor, false, "All");
-
-                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("Space", highlightColor, false);
-
-                                        if (targetInfo == null)
+                                        if (status.StatusName == "Bind")
                                         {
-                                            GlobalApplyMapKeyLighting("PrintScreen",
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapKeyLighting("Scroll",
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapKeyLighting("Pause",
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-
-                                            GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                250);
-
-                                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
-
-                                            GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker,
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), "All");
-
-                                            GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
-                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
-
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-
-                                            GlobalApplyMapKeyLighting("Macro16",
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapKeyLighting("Macro17",
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                            GlobalApplyMapKeyLighting("Macro18",
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-
-                                            GlobalApplyMapLogoLighting("", highlightColor, false);
-                                            //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBind);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
                                         }
+                                        else if (status.StatusName == "Petrification")
+                                        {
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPetrification);
+                                            //GlobalUpdateState("static", _baseColor, false);
+                                            GlobalApplyAllKeyLighting(_baseColor);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Old")
+                                        {
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
+                                            //GlobalUpdateState("static", _baseColor, false);
+                                            GlobalApplyAllKeyLighting(_baseColor);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Slow")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Stun")
+                                        {
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingStun);
+                                            //GlobalUpdateState("static", _baseColor, false);
+                                            GlobalApplyAllKeyLighting(_baseColor);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Silence")
+                                        {
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSilence);
+                                            //GlobalUpdateState("static", _baseColor, false);
+                                            GlobalApplyAllKeyLighting(_baseColor);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Poison")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Pollen")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Pox")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPox), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPox);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Paralysis")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis),
+                                                100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Leaden")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Incapacitation")
+                                        {
+                                            GlobalRipple2(
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation),
+                                                100);
+                                            _baseColor =
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Dropsy")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Amnesia")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia),
+                                                100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Bleed")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Misery")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Sleep")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Daze")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Heavy")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Infirmary")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary),
+                                                100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Burns")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns), 100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Deep Freeze")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze),
+                                                100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else if (status.StatusName == "Damage Down")
+                                        {
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown),
+                                                100);
+                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+                                        }
+                                        else
+                                        {
+                                            _baseColor = baseColor;
+                                            //GlobalUpdateState("static", _baseColor, false);
+                                            GlobalApplyAllKeyLighting(_baseColor);
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                _baseColor, false, "All");
+    
+                                            GlobalApplyMapKeyLighting("W", highlightColor, false);
+                                            GlobalApplyMapKeyLighting("A", highlightColor, false);
+                                            GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                            GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                            GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
+                                            GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
+                                            GlobalApplyMapKeyLighting("Space", highlightColor, false);
+    
+                                            if (targetInfo == null)
+                                            {
+                                                GlobalApplyMapKeyLighting("PrintScreen",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapKeyLighting("Scroll",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapKeyLighting("Pause",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+    
+                                                GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    250);
+    
+                                                GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+    
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), "All");
+    
+                                                GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+    
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+    
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+    
+                                                GlobalApplyMapKeyLighting("Macro16",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapKeyLighting("Macro17",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                GlobalApplyMapKeyLighting("Macro18",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+    
+                                                GlobalApplyMapLogoLighting("", highlightColor, false);
+                                                //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
+                                            }
+                                        }
+    
+                                        _currentStatus = status.StatusName;
                                     }
-
-                                    _currentStatus = status.StatusName;
-                                }
-                            //}
+                                //}
+                            }
                         }
-                        
+
 
                         //Target
                         if (targetInfo != null)
@@ -6643,6 +6647,7 @@ namespace Chromatics
 
                         }
                         
+
                         GlobalKeyboardUpdate();
                         MemoryTasks.Cleanup();
                     }

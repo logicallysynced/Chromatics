@@ -152,7 +152,7 @@ namespace Chromatics
             {21, "Conjurer"}, //CNJ
             {22, "Thaumaturge"}, //THM
             {23, "Red Mage" }, //RDM
-            {24, "Blue Mage" } //RDM
+            {24, "Blue Mage" }, //BLM
         };
 
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
@@ -174,8 +174,6 @@ namespace Chromatics
             {"ColorMappingHpLoss", new[] {"HP Loss", "2", "Black", "White"}},
             {"ColorMappingMpFull", new[] {"MP Full", "2", "Black", "White"}},
             {"ColorMappingMpEmpty", new[] {"MP Empty", "2", "Black", "White"}},
-            {"ColorMappingTpFull", new[] {"TP Full", "2", "Black", "White"}},
-            {"ColorMappingTpEmpty", new[] {"TP Empty", "2", "Black", "White"}},
             {"ColorMappingGpFull", new[] {"GP Full", "2", "Black", "White"}},
             {"ColorMappingGpEmpty", new[] {"GP Empty", "2", "Black", "White"}},
             {"ColorMappingCpFull", new[] {"CP Full", "2", "Black", "White"}},
@@ -399,6 +397,16 @@ namespace Chromatics
             {"ColorMappingWeatherQuicklevinHighlight", new[] { "Quicklevin (Highlight)", "10", "Black", "White"}},
             {"ColorMappingWeatherWhitecycloneBase", new[] { "White Cyclone (Base)", "10", "Black", "White"}},
             {"ColorMappingWeatherWhitecycloneHighlight", new[] { "White Cyclone (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherGeostormsBase", new[] { "Geostorms (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherGeostormsHighlight", new[] { "Geostorms (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherTrueblueBase", new[] { "True Blue (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherTrueblueHighlight", new[] { "True Blue (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherUmbralturbulenceBase", new[] { "Umbral Turbulence (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherUmbralturbulenceHighlight", new[] { "Umbral Turbulence (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherEverlastinglightBase", new[] { "Everlasting Light (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherEverlastinglightHighlight", new[] { "Everlasting Light (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherTerminationBase", new[] { "Termination (Base)", "10", "Black", "White"}},
+            {"ColorMappingWeatherTerminationHighlight", new[] { "Termination (Highlight)", "10", "Black", "White"}},
             {"ColorMappingACTThresholdEmpty", new[] { "ACT Threshold Empty", "11", "Black", "White"}},
             {"ColorMappingACTThresholdBuild", new[] { "ACT Threshold Build", "11", "Black", "White"}},
             {"ColorMappingACTThresholdSuccess", new[] { "ACT Threshold Success", "11", "Black", "White"}},
@@ -1098,7 +1106,7 @@ namespace Chromatics
             chk_highlighttoggle.Checked = ChromaticsSettings.ChromaticsSettingsKeyHighlights;
             chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettingsImpactToggle;
             chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettingsDfBellToggle;
-            chk_showstats.Checked = ChromaticsSettings.ChromaticsSettingsShowStats;
+            chk_showstatuseffects.Checked = ChromaticsSettings.ChromaticsSettingsStatusEffectToggle;
 
             chk_lcdtoggle.Checked = ChromaticsSettings.ChromaticsSettingsLcdEnabled;
             cb_lang.SelectedIndex = ChromaticsSettings.ChromaticsSettingsLanguage;
@@ -2979,11 +2987,12 @@ namespace Chromatics
             SaveChromaticsSettings(1);
         }
 
-        private void chk_showstats_CheckedChanged(object sender, EventArgs e)
+
+        private void chk_showstatuseffects_CheckedChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;
 
-            ChromaticsSettings.ChromaticsSettingsShowStats = chk_showstats.Checked;
+            ChromaticsSettings.ChromaticsSettingsStatusEffectToggle = chk_showstatuseffects.Checked;
             SetKeysbase = false;
             SaveChromaticsSettings(1);
         }
