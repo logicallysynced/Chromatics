@@ -2912,7 +2912,7 @@ namespace Chromatics
 
                                 for (int i = 0; i < HpFunction_Collection.Length; i++)
                                 {
-                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    if (_playerInfo.IsCasting)
                                     {
                                         break;
                                     }
@@ -2938,7 +2938,7 @@ namespace Chromatics
 
                                 for (int i = 0; i < HpFunction_Collection.Length; i++)
                                 {
-                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    if (_playerInfo.IsCasting)
                                     {
                                         break;
                                     }
@@ -3069,7 +3069,7 @@ namespace Chromatics
 
                                 for (int i = 0; i < MpFunction_Collection.Length; i++)
                                 {
-                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    if (_playerInfo.IsCasting)
                                     {
                                         break;
                                     }
@@ -3088,7 +3088,7 @@ namespace Chromatics
 
                                 for (int i = 0; i < MpFunction_Collection.Length; i++)
                                 {
-                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
+                                    if (_playerInfo.IsCasting)
                                     {
                                         break;
                                     }
