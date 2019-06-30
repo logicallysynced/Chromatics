@@ -421,8 +421,6 @@ namespace Chromatics.Datastore
         public string ColorMappingTargetHpClaimed = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingTargetHpEmpty = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingTargetHpIdle = ColorTranslator.ToHtml(Color.Yellow);
-        public string ColorMappingTpEmpty = ColorTranslator.ToHtml(Color.Black);
-        public string ColorMappingTpFull = ColorTranslator.ToHtml(Color.Yellow);
         public string ColorMappingExpEmpty = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingExpFull = ColorTranslator.ToHtml(Color.Yellow);
         public string ColorMappingJobWARNegative = ColorTranslator.ToHtml(Color.Black);

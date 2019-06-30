@@ -293,6 +293,15 @@ namespace Chromatics
         {
             try
             {
+                
+                /*
+                FfxivThread = new Thread(new ThreadStart(CallThreadFFXIVAttach));
+                FfxivThread.Start();
+                FfxivThread.Join();
+                ct.Cancel();
+                */
+                
+                
                 while (!ct.IsCancellationRequested && !_exit)
                 {
                     if (_exit)
@@ -301,13 +310,30 @@ namespace Chromatics
                     }
 
                     ReadFfxivMemory();
-                    await Task.Delay(300);
+                    await Task.Delay(150);
                     
                 }
+                
+                
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void CallThreadFFXIVAttach()
+        {
+            while (true)
+            {
+                Thread.Sleep(300);
+
+                if (_exit)
+                {
+                    break;
+                }
+
+                ReadFfxivMemory();
             }
         }
 
@@ -755,11 +781,8 @@ namespace Chromatics
                         var currentHp = 0;
                         var maxMp = 0;
                         var currentMp = 0;
-                        var maxTp = 0;
-                        var currentTp = 0;
                         var hpPerc = _playerInfo.HPPercent;
                         var mpPerc = _playerInfo.MPPercent;
-                        var tpPerc = _playerInfo.TPPercent;
                         var cClass = "battle";
 
                         //Console.WriteLine(_playerInfo.Name);
@@ -775,8 +798,6 @@ namespace Chromatics
                         var colHpcritical = ColorTranslator.FromHtml(ColorMappings.ColorMappingHpCritical);
                         var colMpfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingMpFull);
                         var colMpempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingMpEmpty);
-                        var colTpfull = ColorTranslator.FromHtml(ColorMappings.ColorMappingTpFull);
-                        var colTpempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingTpEmpty);
                         var colCastcharge = ColorTranslator.FromHtml(ColorMappings.ColorMappingCastChargeFull);
                         var colCastempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingCastChargeEmpty);
 
@@ -800,8 +821,6 @@ namespace Chromatics
                             currentHp = _playerInfo.HPCurrent;
                             maxMp = _playerInfo.CPMax;
                             currentMp = _playerInfo.CPCurrent;
-                            maxTp = _playerInfo.TPMax;
-                            currentTp = _playerInfo.TPCurrent;
                             mpPerc = _playerInfo.CPPercent;
                             cClass = "craft";
 
@@ -815,8 +834,6 @@ namespace Chromatics
                             currentHp = _playerInfo.HPCurrent;
                             maxMp = _playerInfo.GPMax;
                             currentMp = _playerInfo.GPCurrent;
-                            maxTp = _playerInfo.TPMax;
-                            currentTp = _playerInfo.TPCurrent;
                             mpPerc = _playerInfo.GPPercent;
                             cClass = "gather";
 
@@ -829,8 +846,6 @@ namespace Chromatics
                             currentHp = _playerInfo.HPCurrent;
                             maxMp = _playerInfo.MPMax;
                             currentMp = _playerInfo.MPCurrent;
-                            maxTp = _playerInfo.TPMax;
-                            currentTp = _playerInfo.TPCurrent;
                             mpPerc = _playerInfo.MPPercent;
                             cClass = "battle";
 
@@ -860,7 +875,6 @@ namespace Chromatics
                             if (ArxState == 1)
                             {
                                 hpPerc = _playerInfo.HPPercent;
-                                tpPerc = _playerInfo.TPPercent;
 
                                 var arxHudmd = "normal";
                                 double targetPercent = 0;
@@ -882,7 +896,7 @@ namespace Chromatics
                                         targetEngaged = 1;
                                 }
 
-                                _arx.ArxUpdateFfxivStats(hpPerc, mpPerc, tpPerc, currentHp, currentMp, currentTp,
+                                    _arx.ArxUpdateFfxivStats(hpPerc, mpPerc, 0, currentHp, currentMp, 0,
                                     _playerInfo.MapID, cClass, arxHudmd, targetPercent, targetHpcurrent,
                                     targetHpmax,
                                     targetName, targetEngaged);
@@ -899,8 +913,6 @@ namespace Chromatics
                                         //Console.WriteLine(i);
                                         //var pid = partyListNew[i];
                                         string ptType;
-                                        string ptTpcurrent;
-                                        string ptTppercent;
                                         string ptEmnityno;
                                         string ptJob;
 
@@ -1071,24 +1083,14 @@ namespace Chromatics
                                                 ptJob = "Chocobo";
                                                 break;
                                         }
-
-                                        if (i == 0)
-                                        {
-                                            ptTppercent = tpPerc.ToString("#0%");
-                                            ptTpcurrent = currentTp.ToString();
-                                        }
-                                        else
-                                        {
-                                            ptTppercent = "100%";
-                                            ptTpcurrent = "1000";
-                                        }
+                                        
 
                                         datastring[i] = "1," + ptType + "," + partyInfo[i].Name + "," +
                                                         partyInfo[i].HPPercent.ToString("#0%") + "," +
                                                         partyInfo[i].HPCurrent + "," +
                                                         partyInfo[i].MPPercent.ToString("#0%") + "," +
-                                                        partyInfo[i].MPCurrent + "," + ptTppercent + "," +
-                                                        ptTpcurrent +
+                                                        partyInfo[i].MPCurrent + "," + 0 + "," +
+                                                        0 +
                                                         "," + ptEmnityno + "," + ptJob;
                                         //Console.WriteLine(i + @": " + datastring[i]);
                                     }
@@ -1104,7 +1106,6 @@ namespace Chromatics
                             else if (ArxState == 100)
                             {
                                 hpPerc = _playerInfo.HPPercent;
-                                tpPerc = _playerInfo.TPPercent;
 
                                 var hpMax = _playerInfo.HPMax;
                                 var mpMax = _playerInfo.MPMax;
@@ -1145,7 +1146,7 @@ namespace Chromatics
                                         targetEngaged = 1;
                                 }
 
-                                _arx.ArxUpdateFfxivPlugin(hpPerc, mpPerc, tpPerc, currentHp, currentMp, currentTp,
+                                _arx.ArxUpdateFfxivPlugin(hpPerc, mpPerc, 0, currentHp, currentMp, 0,
                                     _playerInfo.MapID, cClass, arxHudmd, targetPercent, targetHpcurrent,
                                     targetHpmax,
                                     targetName, targetEngaged, hpMax, mpMax, playerposX, playerposY, playerposZ,
@@ -3149,114 +3150,7 @@ namespace Chromatics
                                 }
                             }
                         }
-
-                        //TP
-                        if (maxTp != 0)
-                        {
-                            var polTp = (currentTp - 0) * (40 - 0) / (maxTp - 0) + 0;
-                            var polTpz = (currentTp - 0) * ((long)65535 - 0) / (maxTp - 0) + 0;
-                            var polTpz2 = (currentTp - 0) * (1.0 - 0.0) / (maxTp - 0) + 0.0;
-
-                            GlobalUpdateBulbStateBrightness(BulbModeTypes.TpTracker, colTpfull, (ushort)polTpz,
-                                250);
-
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, polTpz2);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, false, polTpz2);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, false, polTpz2);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TpTracker, colTpempty, colTpfull, polTpz2);
-
-                            //FKeys
-                            if (_FKeyMode == FKeyMode.HpMpTp)
-                            {
-                                var TpFunction_Collection = DeviceEffects.Function3;
-                                var TpFunction_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp,
-                                        TpFunction_Collection.Length, 0);
-
-                                for (int i = 0; i < TpFunction_Collection.Length; i++)
-                                {
-                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
-                                    {
-                                        break;
-                                    }
-
-                                    GlobalApplyMapKeyLighting(TpFunction_Collection[i],
-                                        TpFunction_Interpolate > i ? colTpfull : colTpempty, false);
-                                }
-                            }
-
-                            if (_FKeyMode == FKeyMode.TpTracker)
-                            {
-                                var TpFunction_Collection = DeviceEffects.Functions;
-                                var TpFunction_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp,
-                                        TpFunction_Collection.Length, 0);
-
-                                for (int i = 0; i < TpFunction_Collection.Length; i++)
-                                {
-                                    if (_playerInfo.IsCasting || !ChromaticsSettings.ChromaticsSettingsShowStats)
-                                    {
-                                        break;
-                                    }
-
-                                    GlobalApplyMapKeyLighting(TpFunction_Collection[i],
-                                        TpFunction_Interpolate > i ? colTpfull : colTpempty, false);
-                                }
-                            }
-
-                            //Mousepad
-                            var TpMousePadCollection = 5;
-                            var TpMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp, TpMousePadCollection, 0);
-
-                            for (int i = 0; i < TpMousePadCollection; i++)
-                            {
-                                GlobalApplyMapPadLighting(DevModeTypes.TpTracker, 10 + i, 9 - i, 4 - i, TpMousePad_Interpolate > i ? colTpfull : colTpempty, false);
-                            }
-
-                            //Keypad
-                            var TpKeypad_Collection = DeviceEffects.Keypadzones;
-                            var TpKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp, TpKeypad_Collection.Length, 0);
-
-                            for (int i = 0; i < TpKeypad_Collection.Length; i++)
-                            {
-                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.TpTracker, TpKeypad_Interpolate > i ? colTpfull : colTpempty, false, TpKeypad_Collection[i]);
-                            }
-
-                            //MultiKeyboard
-                            var TpMulti_Collection = DeviceEffects.Multikeyzones;
-                            var TpMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp, TpMulti_Collection.Length, 0);
-
-                            for (int i = 0; i < TpMulti_Collection.Length; i++)
-                            {
-                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.TpTracker, TpMulti_Interpolate > i ? colTpfull : colTpempty, TpMulti_Collection[i]);
-                            }
-
-                            //Mouse
-                            var TpMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
-                            var TpMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
-                            var TpMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp, TpMouseStrip_CollectionA.Length, 0);
-
-                            for (int i = 0; i < TpMouseStrip_CollectionA.Length; i++)
-                            {
-                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, TpMouseStrip_CollectionA[i], TpMouseStrip_CollectionB[i], TpMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
-                            }
-
-                            //Lightbar
-                            if (_LightbarMode == LightbarMode.TpTracker)
-                            {
-                                var TpLightbar_Collection = DeviceEffects.LightbarZones;
-                                var TpLightbar_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentTp, 0, maxTp,
-                                        TpLightbar_Collection.Length, 0);
-
-                                for (int i = 0; i < TpLightbar_Collection.Length; i++)
-                                {
-                                    GlobalApplyMapLightbarLighting(TpLightbar_Collection[i],
-                                        TpLightbar_Interpolate > i ? colTpfull : colTpempty, false, false);
-                                }
-                            }
-
-                        }
+                        
 
                         //Action Alerts
                         if (ChromaticsSettings.ChromaticsSettingsImpactToggle)
@@ -4960,7 +4854,7 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTDPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
@@ -4969,7 +4863,7 @@ namespace Chromatics
 
                                                     for (int i = 0; i < ACTDPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ACTDPSMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
 
@@ -5181,7 +5075,7 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTHPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTHPSMouseStrip_CollectionA[i], ACTHPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTHPSMouseStrip_CollectionA[i], ACTHPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
@@ -5190,7 +5084,7 @@ namespace Chromatics
 
                                                     for (int i = 0; i < ACTHPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTHPSMouseStrip_CollectionA[i], ACTHPSMouseStrip_CollectionB[i], ACTHPSMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTHPSMouseStrip_CollectionA[i], ACTHPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -5403,7 +5297,7 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTGroupDPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTGroupDPSMouseStrip_CollectionA[i], ACTGroupDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTGroupDPSMouseStrip_CollectionA[i], ACTGroupDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
@@ -5412,7 +5306,7 @@ namespace Chromatics
 
                                                     for (int i = 0; i < ACTGroupDPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTGroupDPSMouseStrip_CollectionA[i], ACTGroupDPSMouseStrip_CollectionB[i], ACTGroupDPSMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTGroupDPSMouseStrip_CollectionA[i], ACTGroupDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -5623,7 +5517,7 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTCritMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTCritMouseStrip_CollectionA[i], ACTCritMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTCritMouseStrip_CollectionA[i], ACTCritMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
@@ -5632,7 +5526,7 @@ namespace Chromatics
 
                                                     for (int i = 0; i < ACTCritMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTCritMouseStrip_CollectionA[i], ACTCritMouseStrip_CollectionB[i], ACTCritMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTCritMouseStrip_CollectionA[i], ACTCritMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -5842,7 +5736,7 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTDHMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTDHMouseStrip_CollectionA[i], ACTDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDHMouseStrip_CollectionA[i], ACTDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
@@ -5851,7 +5745,7 @@ namespace Chromatics
 
                                                     for (int i = 0; i < ACTDHMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTDHMouseStrip_CollectionA[i], ACTDHMouseStrip_CollectionB[i], ACTDHMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDHMouseStrip_CollectionA[i], ACTDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -6063,7 +5957,7 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTCritDHMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTCritDHMouseStrip_CollectionA[i], ACTCritDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTCritDHMouseStrip_CollectionA[i], ACTCritDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
@@ -6072,7 +5966,7 @@ namespace Chromatics
 
                                                     for (int i = 0; i < ACTCritDHMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTCritDHMouseStrip_CollectionA[i], ACTCritDHMouseStrip_CollectionB[i], ACTCritDHMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTCritDHMouseStrip_CollectionA[i], ACTCritDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -6284,7 +6178,7 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTOverhealMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTOverhealMouseStrip_CollectionA[i], ACTOverhealMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTOverhealMouseStrip_CollectionA[i], ACTOverhealMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
@@ -6293,7 +6187,7 @@ namespace Chromatics
 
                                                     for (int i = 0; i < ACTOverhealMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTOverhealMouseStrip_CollectionA[i], ACTOverhealMouseStrip_CollectionB[i], ACTOverhealMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTOverhealMouseStrip_CollectionA[i], ACTOverhealMouseStrip_CollectionB[i],  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -6501,7 +6395,7 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTDamageMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTDamageMouseStrip_CollectionA[i], ACTDamageMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDamageMouseStrip_CollectionA[i], ACTDamageMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
@@ -6510,7 +6404,7 @@ namespace Chromatics
 
                                                     for (int i = 0; i < ACTDamageMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTDamageMouseStrip_CollectionA[i], ACTDamageMouseStrip_CollectionB[i], ACTDamageMouseStrip_Interpolate > i ? colTpfull : colTpempty, false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDamageMouseStrip_CollectionA[i], ACTDamageMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -6617,7 +6511,7 @@ namespace Chromatics
 
                                             for (int i = 0; i < ACTDPSMouseStrip_CollectionA.Length; i++)
                                             {
-                                                GlobalApplyStripMouseLighting(DevModeTypes.TpTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
                                             }
                                         }
                                     }

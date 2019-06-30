@@ -32,6 +32,8 @@ namespace Chromatics
         private ILogitechLcd _lcd;
         private Task _call;
         public Task MemoryTask;
+        public Thread FfxivThread;
+
         private bool _allowClose;
         private bool _allowVisible = true;
         private bool _exit;
@@ -67,7 +69,7 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.4.7";
+        private readonly string _currentVersionX = "2.4.8";
         private readonly bool _debugmode = false;
         public bool DeviceGridStartup = false;
         private bool blockACTVersion = false;
@@ -173,7 +175,7 @@ namespace Chromatics
         public DevModeTypes _MouseStrip2Mode = DevModeTypes.MpTracker;
 
         public DevModeTypes _PadZone1Mode = DevModeTypes.HpTracker;
-        public DevModeTypes _PadZone2Mode = DevModeTypes.TpTracker;
+        public DevModeTypes _PadZone2Mode = DevModeTypes.Castbar;
         public DevModeTypes _PadZone3Mode = DevModeTypes.MpTracker;
 
         public DevModeTypes _HeadsetZone1Mode = DevModeTypes.DefaultColor;
@@ -627,6 +629,7 @@ namespace Chromatics
             WriteConsole(ConsoleTypes.Ffxiv, @"Game Language set to " + gameLanguage + @".");
 
             //Split off MemoryReader to a Task 
+            
             MemoryTask = new Task(() =>
             {
                 _call = CallFfxivAttach(_attachcts.Token);
@@ -634,6 +637,13 @@ namespace Chromatics
 
             MemoryTasks.Add(MemoryTask);
             MemoryTasks.Run(MemoryTask);
+
+
+            /*
+            var ffxivThread = new Thread(new ThreadStart(CallThreadFFXIVAttach));
+            ffxivThread.Start();
+            ffxivThread.Join();
+            */
         }
 
         private void LoadArxPlugins()

@@ -117,8 +117,6 @@ namespace Chromatics.Controllers
                     return "HpTracker";
                 case DevModeTypes.MpTracker:
                     return "MpTracker";
-                case DevModeTypes.TpTracker:
-                    return "TpTracker";
                 case DevModeTypes.Castbar:
                     return "Castbar";
                 case DevModeTypes.DutyFinder:
@@ -148,8 +146,6 @@ namespace Chromatics.Controllers
                     return "HpTracker";
                 case DevMultiModeTypes.MpTracker:
                     return "MpTracker";
-                case DevMultiModeTypes.TpTracker:
-                    return "TpTracker";
                 case DevMultiModeTypes.Castbar:
                     return "Castbar";
                 case DevMultiModeTypes.DutyFinder:
@@ -183,8 +179,6 @@ namespace Chromatics.Controllers
                     return DevModeTypes.HpTracker;
                 case "MpTracker":
                     return DevModeTypes.MpTracker;
-                case "TpTracker":
-                    return DevModeTypes.TpTracker;
                 case "Castbar":
                     return DevModeTypes.Castbar;
                 case "DutyFinder":
@@ -214,8 +208,6 @@ namespace Chromatics.Controllers
                     return DevMultiModeTypes.HpTracker;
                 case "MpTracker":
                     return DevMultiModeTypes.MpTracker;
-                case "TpTracker":
-                    return DevMultiModeTypes.TpTracker;
                 case "Castbar":
                     return DevMultiModeTypes.Castbar;
                 case "DutyFinder":
@@ -249,8 +241,6 @@ namespace Chromatics.Controllers
                     return DevModeTypes.HpTracker;
                 case "MP Tracker":
                     return DevModeTypes.MpTracker;
-                case "TP Tracker":
-                    return DevModeTypes.TpTracker;
                 case "Castbar":
                     return DevModeTypes.Castbar;
                 case "Duty Finder Bell":
@@ -280,8 +270,6 @@ namespace Chromatics.Controllers
                     return DevMultiModeTypes.HpTracker;
                 case "MP Tracker":
                     return DevMultiModeTypes.MpTracker;
-                case "TP Tracker":
-                    return DevMultiModeTypes.TpTracker;
                 case "Castbar":
                     return DevMultiModeTypes.Castbar;
                 case "Duty Finder Bell":
@@ -315,8 +303,6 @@ namespace Chromatics.Controllers
                     return "HP Tracker";
                 case DevModeTypes.MpTracker:
                     return "MP Tracker";
-                case DevModeTypes.TpTracker:
-                    return "TP Tracker";
                 case DevModeTypes.Castbar:
                     return "Castbar";
                 case DevModeTypes.DutyFinder:
@@ -346,8 +332,6 @@ namespace Chromatics.Controllers
                     return "HP Tracker";
                 case DevMultiModeTypes.MpTracker:
                     return "MP Tracker";
-                case DevMultiModeTypes.TpTracker:
-                    return "TP Tracker";
                 case DevMultiModeTypes.Castbar:
                     return "Castbar";
                 case DevMultiModeTypes.DutyFinder:
@@ -381,8 +365,6 @@ namespace Chromatics.Controllers
                     return "HpTracker";
                 case LightbarMode.MpTracker:
                     return "MpTracker";
-                case LightbarMode.TpTracker:
-                    return "TpTracker";
                 case LightbarMode.Castbar:
                     return "Castbar";
                 case LightbarMode.DutyFinder:
@@ -420,8 +402,6 @@ namespace Chromatics.Controllers
                     return LightbarMode.HpTracker;
                 case "MpTracker":
                     return LightbarMode.MpTracker;
-                case "TpTracker":
-                    return LightbarMode.TpTracker;
                 case "Castbar":
                     return LightbarMode.Castbar;
                 case "DutyFinder":
@@ -459,8 +439,6 @@ namespace Chromatics.Controllers
                     return LightbarMode.HpTracker;
                 case "MP Tracker":
                     return LightbarMode.MpTracker;
-                case "TP Tracker":
-                    return LightbarMode.TpTracker;
                 case "Castbar":
                     return LightbarMode.Castbar;
                 case "Duty Finder Bell":
@@ -498,8 +476,6 @@ namespace Chromatics.Controllers
                     return "HP Tracker";
                 case LightbarMode.MpTracker:
                     return "MP Tracker";
-                case LightbarMode.TpTracker:
-                    return "TP Tracker";
                 case LightbarMode.Castbar:
                     return "Castbar";
                 case LightbarMode.DutyFinder:
@@ -537,8 +513,6 @@ namespace Chromatics.Controllers
                     return "HpTracker";
                 case FKeyMode.MpTracker:
                     return "MpTracker";
-                case FKeyMode.TpTracker:
-                    return "TpTracker";
                 case FKeyMode.HpMpTp:
                     return "HpMpTp";
                 case FKeyMode.CurrentExp:
@@ -574,8 +548,6 @@ namespace Chromatics.Controllers
                     return FKeyMode.HpTracker;
                 case "MpTracker":
                     return FKeyMode.MpTracker;
-                case "TpTracker":
-                    return FKeyMode.TpTracker;
                 case "HpMpTp":
                     return FKeyMode.HpMpTp;
                 case "CurrentExp":
@@ -611,9 +583,7 @@ namespace Chromatics.Controllers
                     return FKeyMode.HpTracker;
                 case "MP Tracker":
                     return FKeyMode.MpTracker;
-                case "TP Tracker":
-                    return FKeyMode.TpTracker;
-                case "HP/MP/TP":
+                case "HP/MP":
                     return FKeyMode.HpMpTp;
                 case "Experience Tracker":
                     return FKeyMode.CurrentExp;
@@ -648,8 +618,6 @@ namespace Chromatics.Controllers
                     return "HP Tracker";
                 case FKeyMode.MpTracker:
                     return "MP Tracker";
-                case FKeyMode.TpTracker:
-                    return "TP Tracker";
                 case FKeyMode.HpMpTp:
                     return "HP/MP/TP";
                 case FKeyMode.CurrentExp:

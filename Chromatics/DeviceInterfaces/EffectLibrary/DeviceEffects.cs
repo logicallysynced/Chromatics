@@ -110,12 +110,12 @@ namespace Chromatics.DeviceInterfaces.EffectLibrary
 
         public static readonly string[] Function1 =
         {
-            "F1", "F2", "F3", "F4"
+            "F1", "F2", "F3", "F4", "F5", "F6"
         };
 
         public static readonly string[] Function2 =
         {
-            "F5", "F6", "F7", "F8"
+            "F7", "F8", "F9", "F10", "F11", "F12"
         };
 
         public static readonly string[] Function3 =

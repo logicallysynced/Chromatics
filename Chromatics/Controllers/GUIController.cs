@@ -34,7 +34,6 @@ namespace Chromatics
             {BulbModeTypes.StatusEffects, "Status Effects"},
             {BulbModeTypes.HpTracker, "HP Tracker"},
             {BulbModeTypes.MpTracker, "MP Tracker"},
-            {BulbModeTypes.TpTracker, "TP Tracker"},
             {BulbModeTypes.Castbar, "Castbar"},
             {BulbModeTypes.DutyFinder, "Duty Finder Bell"},
             {BulbModeTypes.ACTTracker, "ACT Tracker"},
@@ -52,7 +51,6 @@ namespace Chromatics
             {DevModeTypes.TargetHp, "Target HP"},
             {DevModeTypes.HpTracker, "HP Tracker"},
             {DevModeTypes.MpTracker, "MP Tracker"},
-            {DevModeTypes.TpTracker, "TP Tracker"},
             {DevModeTypes.Castbar, "Castbar"},
             {DevModeTypes.DutyFinder, "Duty Finder Bell"},
             {DevModeTypes.ACTTracker, "ACT Tracker"}
@@ -69,7 +67,6 @@ namespace Chromatics
             {DevMultiModeTypes.TargetHp, "Target HP"},
             {DevMultiModeTypes.HpTracker, "HP Tracker"},
             {DevMultiModeTypes.MpTracker, "MP Tracker"},
-            {DevMultiModeTypes.TpTracker, "TP Tracker"},
             {DevMultiModeTypes.Castbar, "Castbar"},
             {DevMultiModeTypes.DutyFinder, "Duty Finder Bell"},
             {DevMultiModeTypes.ReactiveWeather, "Reactive Weather"},
@@ -87,7 +84,6 @@ namespace Chromatics
             {LightbarMode.TargetHp, "Target HP"}, //
             {LightbarMode.HpTracker, "HP Tracker"}, //
             {LightbarMode.MpTracker, "MP Tracker"}, //
-            {LightbarMode.TpTracker, "TP Tracker"}, //
             {LightbarMode.Castbar, "Castbar"}, //
             {LightbarMode.DutyFinder, "Duty Finder Bell"},
             {LightbarMode.CurrentExp, "Experience Tracker"},
@@ -107,8 +103,7 @@ namespace Chromatics
             {FKeyMode.TargetHp, "Target HP"}, //
             {FKeyMode.HpTracker, "HP Tracker"}, //
             {FKeyMode.MpTracker, "MP Tracker"}, //
-            {FKeyMode.TpTracker, "TP Tracker"}, //
-            {FKeyMode.HpMpTp, "HP/MP/TP"}, //
+            {FKeyMode.HpMpTp, "HP/MP"}, //
             {FKeyMode.CurrentExp, "Experience Tracker"},
             {FKeyMode.JobGauge, "Job Gauge"},
             {FKeyMode.PullCountdown, "Pull Countdown"},
