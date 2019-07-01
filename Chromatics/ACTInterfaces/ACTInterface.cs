@@ -72,7 +72,6 @@ namespace Chromatics.ACTInterfaces
             {new EncounterData {InstanceName = "Thok ast Thok (Extreme)", BossName = "Ravana" ,EnrageTimer = 475 } },
             {new EncounterData {InstanceName = "Containment Bay (P1T6)", BossName = "Sophia" ,EnrageTimer = 910 } },
             {new EncounterData {InstanceName = "Containment Bay (S1T7)", BossName = "Sephirot" ,EnrageTimer = 1027 } }, //
-
             {new EncounterData {InstanceName = "Alexander - The Fist Of The Father (Savage)", BossName = "Oppressor" ,EnrageTimer = 510 } },
             {new EncounterData {InstanceName = "Alexander - The Cuff Of The Father (Savage)", BossName = "None" ,EnrageTimer = 630 } },
             {new EncounterData {InstanceName = "Alexander - The Arm Of The Father (Savage)", BossName = "Living Liquid" ,EnrageTimer = 765 } },
@@ -85,27 +84,26 @@ namespace Chromatics.ACTInterfaces
             {new EncounterData {InstanceName = "Alexander - The Breath Of The Creator (Savage)", BossName = "Lamebrix Strikebocks" ,EnrageTimer = 510 } },
             {new EncounterData {InstanceName = "Alexander - The Heart Of The Creator (Savage)", BossName = "Cruise Chaser" ,EnrageTimer = 670 } },
             {new EncounterData {InstanceName = "Alexander - The Soul Of The Creator (Savage)", BossName = "Alexander Prime" ,EnrageTimer = 730 } },
-
             {new EncounterData {InstanceName = "Deltascape V1.0 (Savage)", BossName = "Alte Roite" ,EnrageTimer = 579 } },
             {new EncounterData {InstanceName = "Deltascape V2.0 (Savage)", BossName = "Catastrophe" ,EnrageTimer = 630 } },
             {new EncounterData {InstanceName = "Deltascape V3.0 (Savage)", BossName = "Halicarnassus" ,EnrageTimer = 690 } },
             {new EncounterData {InstanceName = "Deltascape V4.0 (Savage)", BossName = "Exdeath" ,EnrageTimer = 290 } }, //507
             {new EncounterData {InstanceName = "Deltascape V4.0 (Savage)", BossName = "Neo Exdeath" ,EnrageTimer = 766 } },
-
             {new EncounterData {InstanceName = "Sigmascape V1.0 (Savage)", BossName = "Phantom Train" ,EnrageTimer = 579 } },
             {new EncounterData {InstanceName = "Sigmascape V2.0 (Savage)", BossName = "Chadarnook" ,EnrageTimer = 641 } },
             {new EncounterData {InstanceName = "Sigmascape V3.0 (Savage)", BossName = "Guardian" ,EnrageTimer = 726 } },
             {new EncounterData {InstanceName = "Sigmascape V4.0 (Savage)", BossName = "Kefka" ,EnrageTimer = 408 } },
             {new EncounterData {InstanceName = "Sigmascape V4.0 (Savage)", BossName = "Kefka" ,EnrageTimer = 640 } },
-
             {new EncounterData {InstanceName = "Alphascape V1.0 (Savage)", BossName = "Chaos" ,EnrageTimer = 579 } },
             {new EncounterData {InstanceName = "Alphascape V2.0 (Savage)", BossName = "Midgarsormr" ,EnrageTimer = 715 } },
             {new EncounterData {InstanceName = "Alphascape V3.0 (Savage)", BossName = "Omega" ,EnrageTimer = 781 } },
             {new EncounterData {InstanceName = "Alphascape V4.0 (Savage)", BossName = "Omega-M" ,EnrageTimer = 480 } },
             {new EncounterData {InstanceName = "Alphascape V4.0 (Savage)", BossName = "Omega" ,EnrageTimer = 640 } }, //
-
             {new EncounterData {InstanceName = "The Unending Coil of Bahamut (Ultimate)", BossName = "None" ,EnrageTimer = 1413 } }, //
-            {new EncounterData {InstanceName = "The Weapon's Refrain (Ultimate)", BossName = "None" ,EnrageTimer = 1600 } } //
+            {new EncounterData {InstanceName = "The Weapon's Refrain (Ultimate)", BossName = "None" ,EnrageTimer = 1600 } }, //
+
+            {new EncounterData {InstanceName = "The Crown Of The Immaculate (Extreme)", BossName = "Innocence" ,EnrageTimer = 690 } }, //
+            {new EncounterData {InstanceName = "The Dancing Plague (Extreme)", BossName = "Titania" ,EnrageTimer = 650 } } //
         };
     }
 
