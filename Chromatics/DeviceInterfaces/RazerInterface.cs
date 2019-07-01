@@ -355,7 +355,7 @@ namespace Chromatics.DeviceInterfaces
             _razerDeviceMousepad = deviceMousepad;
             _razerDeviceHeadset = deviceHeadset;
             _razerDeviceChromaLink = deviceChromaLink;
-            _razerDeathstalker = Keyboard.IsDeathstalkerConnected;
+            //_razerDeathstalker = Keyboard.IsDeathstalkerConnected;
 
         }
 
