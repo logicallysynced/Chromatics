@@ -4413,7 +4413,13 @@ namespace Chromatics
                                 {
                                     var _ACTData = ACTInterface.FetchActData();
 
-                                    if (_ACTData.Version != ACTVersionMatch)
+                                    if (_ACTData.Version == 0)
+                                    {
+                                        blockACTVersion = true;
+                                        WriteConsole(ConsoleTypes.Error,
+                                            "ACT Data file not found. To use ACT functionality, please enable the Chromatics plugin in ACT and restart Chromatics.");
+                                    }
+                                    else if (_ACTData.Version != ACTVersionMatch)
                                     {
                                         blockACTVersion = true;
                                         WriteConsole(ConsoleTypes.Error,

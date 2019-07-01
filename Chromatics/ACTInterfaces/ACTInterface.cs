@@ -5,13 +5,17 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Chromatics.Datastore;
+using GalaSoft.MvvmLight.Ioc;
 using Newtonsoft.Json;
 
 namespace Chromatics.ACTInterfaces
 {
     public class ACTInterface
     {
+        private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
+
         public static ACTDataTemplate FetchActData()
         {
             return ReadActDataFile();
@@ -34,17 +38,20 @@ namespace Chromatics.ACTInterfaces
                         var json = r.ReadToEnd();
                         actData = JsonConvert.DeserializeObject<ACTDataTemplate>(json);
                     }
+
                 }
                 else
                 {
-                    Console.WriteLine(@"ACT File not found: " + path);
+                    var ret = new ACTDataTemplate();
+                    ret.Version = 0;
+                    return ret;
                 }
 
                 return actData.IsConnected ? actData : new ACTDataTemplate();
             }
             catch (Exception e)
             {
-                Console.WriteLine(@"Error: " + e.Message);
+                Write.WriteConsole(ConsoleTypes.Error ,@"Error: " + e.Message);
                 return new ACTDataTemplate();
             }
 
