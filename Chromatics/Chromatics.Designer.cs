@@ -192,7 +192,11 @@
             this.chk_arxtoggle = new System.Windows.Forms.CheckBox();
             this.tP_integrate = new System.Windows.Forms.TabPage();
             this.tC_integrations = new System.Windows.Forms.TabControl();
+            this.Events = new System.Windows.Forms.TabPage();
+            this.cb_alarmclock = new System.Windows.Forms.ComboBox();
+            this.chk_enabletimebell = new System.Windows.Forms.CheckBox();
             this.tP_cast = new System.Windows.Forms.TabPage();
+            this.btn_casttest = new System.Windows.Forms.Button();
             this.chk_castdfbell = new System.Windows.Forms.CheckBox();
             this.lbl_chromecastdev = new System.Windows.Forms.Label();
             this.cb_castdevlist = new System.Windows.Forms.ComboBox();
@@ -253,6 +257,7 @@
             this.gB_ARX1.SuspendLayout();
             this.tP_integrate.SuspendLayout();
             this.tC_integrations.SuspendLayout();
+            this.Events.SuspendLayout();
             this.tP_cast.SuspendLayout();
             this.tP_ifttt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).BeginInit();
@@ -2383,6 +2388,7 @@
             // 
             // tC_integrations
             // 
+            this.tC_integrations.Controls.Add(this.Events);
             this.tC_integrations.Controls.Add(this.tP_cast);
             this.tC_integrations.Controls.Add(this.tP_ifttt);
             this.tC_integrations.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2393,9 +2399,96 @@
             this.tC_integrations.Size = new System.Drawing.Size(725, 399);
             this.tC_integrations.TabIndex = 4;
             // 
+            // Events
+            // 
+            this.Events.BackColor = System.Drawing.SystemColors.Control;
+            this.Events.Controls.Add(this.cb_alarmclock);
+            this.Events.Controls.Add(this.chk_enabletimebell);
+            this.Events.Location = new System.Drawing.Point(4, 22);
+            this.Events.Name = "Events";
+            this.Events.Size = new System.Drawing.Size(717, 373);
+            this.Events.TabIndex = 2;
+            this.Events.Text = "Events";
+            // 
+            // cb_alarmclock
+            // 
+            this.cb_alarmclock.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_alarmclock.FormattingEnabled = true;
+            this.cb_alarmclock.Items.AddRange(new object[] {
+            "12:00 AM",
+            "12:30 AM",
+            "1:00 AM",
+            "1:30 AM",
+            "2:00 AM",
+            "2:30 AM",
+            "3:00 AM",
+            "3:30 AM",
+            "4:00 AM",
+            "4:30 AM",
+            "5:00 AM",
+            "5:30 AM",
+            "6:00 AM",
+            "6:30 AM",
+            "7:00 AM",
+            "7:30 AM",
+            "8:00 AM",
+            "8:30 AM",
+            "9:00 AM",
+            "9:30 AM",
+            "10:00 AM",
+            "10:30 AM",
+            "11:00 AM",
+            "11:30 AM",
+            "12:00 PM",
+            "12:30 PM",
+            "1:00 PM",
+            "1:30 PM",
+            "2:00 PM",
+            "2:30 PM",
+            "3:00 PM",
+            "3:30 PM",
+            "4:00 PM",
+            "4:30 PM",
+            "5:00 PM",
+            "5:30 PM",
+            "6:00 PM",
+            "6:30 PM",
+            "7:00 PM",
+            "7:30 PM",
+            "8:00 PM",
+            "8:30 PM",
+            "9:00 PM",
+            "9:30 PM",
+            "10:00 PM",
+            "10:30 PM",
+            "11:00 PM",
+            "11:30 PM"});
+            this.cb_alarmclock.Location = new System.Drawing.Point(156, 19);
+            this.cb_alarmclock.Margin = new System.Windows.Forms.Padding(2);
+            this.cb_alarmclock.Name = "cb_alarmclock";
+            this.cb_alarmclock.Size = new System.Drawing.Size(110, 21);
+            this.cb_alarmclock.TabIndex = 11;
+            this.cb_alarmclock.SelectedIndexChanged += new System.EventHandler(this.Cb_alarmclock_SelectedIndexChanged);
+            // 
+            // chk_enabletimebell
+            // 
+            this.chk_enabletimebell.AutoSize = true;
+            this.chk_enabletimebell.Location = new System.Drawing.Point(16, 21);
+            this.chk_enabletimebell.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_enabletimebell.Name = "chk_enabletimebell";
+            this.chk_enabletimebell.Size = new System.Drawing.Size(118, 17);
+            this.chk_enabletimebell.TabIndex = 10;
+            this.chk_enabletimebell.Text = "Enable Alarm Clock";
+            this.chk_enabletimebell.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.tooltip_main.SetToolTip(this.chk_enabletimebell, "Casts an audible alert to your Chromecast or Google Home when the specified Eorze" +
+        "a Time occurs");
+            this.chk_enabletimebell.UseVisualStyleBackColor = true;
+            this.chk_enabletimebell.CheckedChanged += new System.EventHandler(this.Chk_enabletimebell_CheckedChanged);
+            // 
             // tP_cast
             // 
             this.tP_cast.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_cast.Controls.Add(this.btn_casttest);
             this.tP_cast.Controls.Add(this.chk_castdfbell);
             this.tP_cast.Controls.Add(this.lbl_chromecastdev);
             this.tP_cast.Controls.Add(this.cb_castdevlist);
@@ -2407,6 +2500,18 @@
             this.tP_cast.Size = new System.Drawing.Size(717, 373);
             this.tP_cast.TabIndex = 0;
             this.tP_cast.Text = "Google Cast";
+            // 
+            // btn_casttest
+            // 
+            this.btn_casttest.Location = new System.Drawing.Point(176, 83);
+            this.btn_casttest.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_casttest.Name = "btn_casttest";
+            this.btn_casttest.Size = new System.Drawing.Size(66, 27);
+            this.btn_casttest.TabIndex = 13;
+            this.btn_casttest.Text = "Test";
+            this.tooltip_main.SetToolTip(this.btn_casttest, "Tests streaming to the Google Cast device.");
+            this.btn_casttest.UseVisualStyleBackColor = true;
+            this.btn_casttest.Click += new System.EventHandler(this.Btn_casttest_Click);
             // 
             // chk_castdfbell
             // 
@@ -2707,6 +2812,8 @@
             this.gB_ARX1.PerformLayout();
             this.tP_integrate.ResumeLayout(false);
             this.tC_integrations.ResumeLayout(false);
+            this.Events.ResumeLayout(false);
+            this.Events.PerformLayout();
             this.tP_cast.ResumeLayout(false);
             this.tP_cast.PerformLayout();
             this.tP_ifttt.ResumeLayout(false);
@@ -2906,6 +3013,10 @@
         private System.Windows.Forms.CheckBox chk_enableifttt;
         private System.Windows.Forms.Label lbl_polling;
         private System.Windows.Forms.ComboBox cb_pollingint;
+        private System.Windows.Forms.TabPage Events;
+        private System.Windows.Forms.ComboBox cb_alarmclock;
+        private System.Windows.Forms.CheckBox chk_enabletimebell;
+        private System.Windows.Forms.Button btn_casttest;
     }
 }
 

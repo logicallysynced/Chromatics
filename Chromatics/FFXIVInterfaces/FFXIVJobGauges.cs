@@ -850,6 +850,8 @@ namespace Chromatics
                             var songremain = Cooldowns.SongTimeRemaining;
                             var polSong = (songremain - 0) * (50 - 0) / (30 - 0) + 0;
 
+                            Console.WriteLine(songremain);
+
                             switch (Cooldowns.Song)
                             {
                                 case Cooldowns.BardSongs.ArmysPaeon:
@@ -871,6 +873,8 @@ namespace Chromatics
                                 case Cooldowns.BardSongs.WanderersMinuet:
                                     burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDMinuet);
                                     negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
+
+                                    //Console.WriteLine(Cooldowns.RepertoireStacks);
 
                                     switch (Cooldowns.RepertoireStacks)
                                     {

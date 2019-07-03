@@ -53,7 +53,7 @@ namespace Chromatics.Datastore
         public string MouseStrip2Mode = "MpTracker";
 
         public string PadZone1Mode = "HpTracker";
-        public string PadZone2Mode = "TpTracker";
+        public string PadZone2Mode = "MpTracker";
         public string PadZone3Mode = "MpTracker";
 
         public string CLZone1Mode = "DefaultColor";
@@ -109,6 +109,8 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsCastEnabled = false;
         public string ChromaticsSettingsCastDevice = "";
         public bool ChromaticsSettingsCastDFBell = false;
+        public bool ChromaticsSettingsCastAlarmBell = false;
+        public string ChromaticsSettingsCastAlarmTime = "12:00 AM";
         public bool ChromaticsSettingsIFTTTEnable = false;
         public string ChromaticsSettingsIFTTTURL = "";
         public int ChromaticsSettingsPollingInterval = 300;

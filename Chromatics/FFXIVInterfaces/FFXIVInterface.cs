@@ -48,6 +48,7 @@ namespace Chromatics
         private bool _inVegas;
         private int _catchMenuchange;
         private int _countMainMenuHold;
+        private int _currentET;
 
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
@@ -6650,6 +6651,49 @@ namespace Chromatics
                                 }
                             }
 
+                            //Eorzea Time Alarm
+                            if (ChromaticsSettings.ChromaticsSettingsCastAlarmBell)
+                            {
+                                if (_currentET != FFXIVHelpers.FetchEorzeaTime().Minute)
+                                { 
+                                    var timeLock = ChromaticsSettings.ChromaticsSettingsCastAlarmTime.Split(' ');
+                                    var setHour = Int32.Parse(timeLock[0].Split(':')[0]);
+                                    var setMinute = Int32.Parse(timeLock[0].Split(':')[1]);
+
+                                    if (setHour == 12 && timeLock[1] == "AM")
+                                    {
+                                        setHour = 0;
+                                    }
+                                    
+                                    if (timeLock[1] == "PM")
+                                    {
+                                        setHour = setHour + 12;
+                                    }
+
+                                    if (setHour == 24 && timeLock[1] == "PM")
+                                    {
+                                        setHour = 12;
+                                    }
+
+                                    Console.WriteLine(setHour + ":" + setMinute + "/" + FFXIVHelpers.FetchEorzeaTime().Hour + ":" + FFXIVHelpers.FetchEorzeaTime().Minute);
+
+                                    
+                                    if (FFXIVHelpers.FetchEorzeaTime().Hour == setHour && FFXIVHelpers.FetchEorzeaTime().Minute == setMinute)
+                                    {
+                                        if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
+                                        {
+                                            SharpcastController.CastMedia("alarmbell.mp3");
+                                        }
+
+                                        if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
+                                        {
+                                            IFTTTController.FireIFTTTEvent(@"Chromatics_Alarm", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
+                                        }
+                                    }
+
+                                    _currentET = FFXIVHelpers.FetchEorzeaTime().Minute;
+                                }
+                            }
 
                         }
                         

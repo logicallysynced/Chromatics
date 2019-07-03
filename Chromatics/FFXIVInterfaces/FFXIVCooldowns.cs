@@ -1704,7 +1704,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[5];
             }
         }
 
@@ -1718,7 +1718,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[5];
             }
         }
 
@@ -1732,7 +1732,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[8];
+                return RawResourceData[6];
             }
         }
 
@@ -1768,7 +1768,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[5];
             }
         }
 
@@ -1801,7 +1801,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(6);
+                return GetTimer(5);
             }
         }
 
@@ -1813,7 +1813,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[8];
+                return RawResourceData[6];
             }
         }
 
@@ -1854,7 +1854,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(6);
+                return GetTimer(5);
             }
         }
 
@@ -1900,7 +1900,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(6);
+                return GetTimer(5);
             }
         }
 
@@ -1940,11 +1940,11 @@ namespace Chromatics.FFXIVInterfaces
                 CheckCache();
 
                 
-                if (RawResourceData[9] == 5)
+                if (RawResourceData[8] == 5)
                     return BardSongs.MagesBallad;
-                if (RawResourceData[9] == 10)
+                if (RawResourceData[8] == 10)
                     return BardSongs.ArmysPaeon;
-                if (RawResourceData[9] == 15)
+                if (RawResourceData[8] == 15)
                     return BardSongs.WanderersMinuet;
                 
 
@@ -1960,7 +1960,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(6);
+                return GetTimer(5);
             }
         }
 
@@ -1972,7 +1972,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[8];
+                return RawResourceData[6];
             }
         }
 
@@ -2010,7 +2010,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(8);
+                return GetTimer(6);
             }
         }
 
@@ -2150,7 +2150,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
                 
-                return RawResourceData[6];
+                return RawResourceData[5];
             }
         }
         
@@ -2187,7 +2187,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(6);
+                return GetTimer(5);
             }
         }
 
@@ -2276,7 +2276,7 @@ namespace Chromatics.FFXIVInterfaces
                 if (RawResourceData[10] == 0)
                     return 0;
 
-                return RawResourceData[8];
+                return RawResourceData[6];
             }
         }
 
@@ -2288,7 +2288,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[9];
+                return RawResourceData[8];
             }
         }
 
@@ -2302,7 +2302,7 @@ namespace Chromatics.FFXIVInterfaces
 
                 // if we have gauss barrel on, return the actual cooldown timer
                 if (RawResourceData[10] > 0)
-                    return GetTimer(6);
+                    return GetTimer(5);
 
                 // Otherwise, return whichever has more time
                 return 0;
@@ -2322,7 +2322,7 @@ namespace Chromatics.FFXIVInterfaces
                     return CooldownType0Remaining;
 
                 // Otherwise, return whichever has more time
-                return Math.Max(CooldownType0Remaining, GetTimer(6));
+                return Math.Max(CooldownType0Remaining, GetTimer(5));
             }
         }
 
@@ -2375,7 +2375,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[5];
             }
         }
 
@@ -2466,26 +2466,27 @@ namespace Chromatics.FFXIVInterfaces
                         {
                             //PluginController.debug("Initializing cooldowns...");
 
-                            /*
+                            
                             _sList = new List<Signature>
                             {
                                 new Signature
                                 {
                                     Key = "CLASSRESOURCES",
                                     PointerPath = new List<long>
-                                {
-                                    //0x178BDAA
-                                    //0x1806742
-                                    //0x18087C9
-                                    //0x18087C2
-                                    //0x18AC4B2
-                                    //0x18AD4B2
-                                    0x18FAFFA
-                                }
+                                    {
+                                        //0x178BDAA
+                                        //0x1806742
+                                        //0x18087C9
+                                        //0x18087C2
+                                        //0x18AC4B2
+                                        //0x18AD4B2
+                                        0x1B2D4BC
+                                    }
                                 }
                             };
-                            */
                             
+                            
+                            /*
                             _sList = new List<Signature>
                             {
                                 new Signature
@@ -2500,6 +2501,7 @@ namespace Chromatics.FFXIVInterfaces
                                     }
                                 }
                             };
+                            */
 
                             Scanner.Instance.LoadOffsets(_sList);
 

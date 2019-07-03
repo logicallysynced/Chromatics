@@ -405,6 +405,7 @@
     <Compile Include="DeviceInterfaces\SteelSeriesLibs\GameSenseSDK.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesLibs\USBHIDCodes.cs" />
     <Compile Include="DeviceInterfaces\WootingInterface.cs" />
+    <Compile Include="FFXIVInterfaces\FFXIVFateFinder.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVMenu.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVJobGauges.cs">
       <SubType>Form</SubType>

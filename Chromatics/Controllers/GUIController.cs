@@ -493,6 +493,7 @@ namespace Chromatics
             ResetMappingsDataGrid();
 
             dgv_iftttgrid.Rows.Add("0", "Duty Finder Bell", "Chromatics_DFBell");
+            dgv_iftttgrid.Rows.Add("1", "Eorzea Time Alarm", "Chromatics_Alarm");
         }
 
         private void ToggleMappingControls(bool toggle)
@@ -1122,6 +1123,27 @@ namespace Chromatics
 
             chk_enablecast.Checked = ChromaticsSettings.ChromaticsSettingsCastEnabled;
             chk_castdfbell.Checked = ChromaticsSettings.ChromaticsSettingsCastDFBell;
+            chk_enabletimebell.Checked = ChromaticsSettings.ChromaticsSettingsCastAlarmBell;
+            cb_alarmclock.SelectedIndex = cb_alarmclock.FindStringExact(ChromaticsSettings.ChromaticsSettingsCastAlarmTime);
+
+            if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
+            {
+                chk_castdfbell.Enabled = true;
+                cb_castdevlist.Enabled = true;
+                lbl_chromecastdev.Enabled = true;
+
+                if (cb_castdevlist.Items.Count > 0)
+                {
+                    btn_casttest.Enabled = true;
+                }
+            }
+            else
+            {
+                chk_castdfbell.Enabled = false;
+                cb_castdevlist.Enabled = false;
+                lbl_chromecastdev.Enabled = false;
+                btn_casttest.Enabled = false;
+            }
 
             chk_enableifttt.Checked = ChromaticsSettings.ChromaticsSettingsIFTTTEnable;
 
@@ -3078,6 +3100,12 @@ namespace Chromatics
                 cb_castdevlist.Items.Clear();
                 cb_castdevlist.Enabled = true;
                 chk_castdfbell.Enabled = true;
+                lbl_chromecastdev.Enabled = true;
+
+                if (cb_castdevlist.Items.Count > 0)
+                {
+                    btn_casttest.Enabled = true;
+                }
 
                 await SharpcastController.InitSharpcastAsync();
                 var casts = SharpcastController.ReturnActiveChromecasts();
@@ -3106,6 +3134,8 @@ namespace Chromatics
             {
                 cb_castdevlist.Enabled = false;
                 chk_castdfbell.Enabled = false;
+                btn_casttest.Enabled = false;
+                lbl_chromecastdev.Enabled = false;
 
                 SharpcastController.EndSharpcaster();
             }
@@ -3126,6 +3156,7 @@ namespace Chromatics
                 ChromaticsSettings.ChromaticsSettingsCastDevice = lookup;
                 Console.WriteLine(@"Setting default cast device to " + casts[lookup].FriendlyName);
                 SharpcastController.SetActiveDevice(lookup);
+                btn_casttest.Enabled = true;
 
                 SaveChromaticsSettings(1);
             }
@@ -3137,6 +3168,37 @@ namespace Chromatics
 
             ChromaticsSettings.ChromaticsSettingsCastDFBell = chk_castdfbell.Checked;
             SaveChromaticsSettings(1);
+        }
+
+        private void Chk_enabletimebell_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            if (chk_enabletimebell.Checked)
+            {
+                cb_alarmclock.Enabled = true;
+            }
+            else
+            {
+                cb_alarmclock.Enabled = false;
+            }
+
+            ChromaticsSettings.ChromaticsSettingsCastAlarmBell = chk_enabletimebell.Checked;
+            SaveChromaticsSettings(1);
+        }
+
+        private void Cb_alarmclock_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsCastAlarmTime = this.cb_alarmclock.GetItemText(this.cb_alarmclock.SelectedItem);
+            SaveChromaticsSettings(1);
+        }
+
+        private void Btn_casttest_Click(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+            SharpcastController.CastMedia("dfpop_notify.mp3");
         }
 
         private void chk_enableifttt_CheckedChanged(object sender, EventArgs e)
