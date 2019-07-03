@@ -4194,7 +4194,7 @@ namespace Chromatics
                                 if (_LightbarMode == LightbarMode.CurrentExp)
                                 {
                                     var LBExp_Collection = DeviceEffects.LightbarZones;
-                                    var LBExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0, Helpers.ExperienceTable[_currentlvl], LBExp_Collection.Length, 0);
+                                    var LBExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0, FFXIVHelpers.ExperienceTable[_currentlvl], LBExp_Collection.Length, 0);
 
                                     for (var i = 0; i < LBExp_Collection.Length; i++)
                                     {
@@ -4205,7 +4205,7 @@ namespace Chromatics
                                 if (_FKeyMode == FKeyMode.CurrentExp)
                                 {
                                     var FKExp_Collection = DeviceEffects.Functions;
-                                    var FKExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0, Helpers.ExperienceTable[_currentlvl], FKExp_Collection.Length, 0);
+                                    var FKExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0, FFXIVHelpers.ExperienceTable[_currentlvl], FKExp_Collection.Length, 0);
 
                                     for (var i2 = 0; i2 < FKExp_Collection.Length; i2++)
                                     {
@@ -4410,7 +4410,6 @@ namespace Chromatics
                                 if (ChatReadResult.ChatLogItems.Count > 0)
                                 {
                                     var srankItem = ChatReadResult.ChatLogItems.LastOrDefault();
-                                    Console.WriteLine(srankItem.Line);
 
                                     if (srankItem.Line == "You sense the presence of a powerful mark...")
                                     {
