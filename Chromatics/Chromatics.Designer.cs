@@ -223,6 +223,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_castreadycheck = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -2489,6 +2490,7 @@
             // tP_cast
             // 
             this.tP_cast.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_cast.Controls.Add(this.chk_castreadycheck);
             this.tP_cast.Controls.Add(this.chk_castsrank);
             this.tP_cast.Controls.Add(this.btn_casttest);
             this.tP_cast.Controls.Add(this.chk_castdfbell);
@@ -2771,6 +2773,21 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // chk_castreadycheck
+            // 
+            this.chk_castreadycheck.AutoSize = true;
+            this.chk_castreadycheck.Location = new System.Drawing.Point(296, 44);
+            this.chk_castreadycheck.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_castreadycheck.Name = "chk_castreadycheck";
+            this.chk_castreadycheck.Size = new System.Drawing.Size(151, 17);
+            this.chk_castreadycheck.TabIndex = 15;
+            this.chk_castreadycheck.Text = "Enable Ready Check Alert";
+            this.chk_castreadycheck.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.tooltip_main.SetToolTip(this.chk_castreadycheck, "Casts an audible alert to your Chromecast or Google Home when a Ready Check is se" +
+        "nt.");
+            this.chk_castreadycheck.UseVisualStyleBackColor = true;
+            this.chk_castreadycheck.CheckedChanged += new System.EventHandler(this.Chk_castreadycheck_CheckedChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3035,6 +3052,7 @@
         private System.Windows.Forms.CheckBox chk_enabletimebell;
         private System.Windows.Forms.Button btn_casttest;
         private System.Windows.Forms.CheckBox chk_castsrank;
+        private System.Windows.Forms.CheckBox chk_castreadycheck;
     }
 }
 

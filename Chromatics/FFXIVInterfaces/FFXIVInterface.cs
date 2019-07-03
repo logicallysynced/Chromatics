@@ -4406,12 +4406,13 @@ namespace Chromatics
                                     }
                                 }
 
-                                //S Rank Bell
+                                
                                 if (ChatReadResult.ChatLogItems.Count > 0)
                                 {
-                                    var srankItem = ChatReadResult.ChatLogItems.LastOrDefault();
+                                    var castChatAlert = ChatReadResult.ChatLogItems.LastOrDefault();
 
-                                    if (srankItem.Line == "You sense the presence of a powerful mark...")
+                                    //S Rank Bell
+                                    if (castChatAlert.Line == "You sense the presence of a powerful mark...")
                                     {
                                         if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
                                         {
@@ -4424,6 +4425,23 @@ namespace Chromatics
                                         if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
                                         {
                                             IFTTTController.FireIFTTTEvent(@"Chromatics_SRankAlert", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
+                                        }
+                                    }
+
+                                    //Ready Check Alert
+                                    if (castChatAlert.Line.EndsWith("commenced a ready check."))
+                                    {
+                                        if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
+                                        {
+                                            if (ChromaticsSettings.ChromaticsSettingsCastReadyCheckAlert)
+                                            {
+                                                SharpcastController.CastMedia("readycheck.mp3");
+                                            }
+                                        }
+
+                                        if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
+                                        {
+                                            IFTTTController.FireIFTTTEvent(@"Chromatics_ReadyCheck", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
                                         }
                                     }
                                 }

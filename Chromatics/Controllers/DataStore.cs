@@ -112,6 +112,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsCastAlarmBell = false;
         public string ChromaticsSettingsCastAlarmTime = "12:00 AM";
         public bool ChromaticsSettingsCastSRankAlert = false;
+        public bool ChromaticsSettingsCastReadyCheckAlert = false;
         public bool ChromaticsSettingsIFTTTEnable = false;
         public string ChromaticsSettingsIFTTTURL = "";
         public int ChromaticsSettingsPollingInterval = 300;
