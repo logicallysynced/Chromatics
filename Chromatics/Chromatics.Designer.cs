@@ -196,6 +196,7 @@
             this.cb_alarmclock = new System.Windows.Forms.ComboBox();
             this.chk_enabletimebell = new System.Windows.Forms.CheckBox();
             this.tP_cast = new System.Windows.Forms.TabPage();
+            this.chk_castsrank = new System.Windows.Forms.CheckBox();
             this.btn_casttest = new System.Windows.Forms.Button();
             this.chk_castdfbell = new System.Windows.Forms.CheckBox();
             this.lbl_chromecastdev = new System.Windows.Forms.Label();
@@ -2488,6 +2489,7 @@
             // tP_cast
             // 
             this.tP_cast.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_cast.Controls.Add(this.chk_castsrank);
             this.tP_cast.Controls.Add(this.btn_casttest);
             this.tP_cast.Controls.Add(this.chk_castdfbell);
             this.tP_cast.Controls.Add(this.lbl_chromecastdev);
@@ -2500,6 +2502,21 @@
             this.tP_cast.Size = new System.Drawing.Size(717, 373);
             this.tP_cast.TabIndex = 0;
             this.tP_cast.Text = "Google Cast";
+            // 
+            // chk_castsrank
+            // 
+            this.chk_castsrank.AutoSize = true;
+            this.chk_castsrank.Location = new System.Drawing.Point(482, 12);
+            this.chk_castsrank.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_castsrank.Name = "chk_castsrank";
+            this.chk_castsrank.Size = new System.Drawing.Size(122, 17);
+            this.chk_castsrank.TabIndex = 14;
+            this.chk_castsrank.Text = "Enable S Rank Alert";
+            this.chk_castsrank.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.tooltip_main.SetToolTip(this.chk_castsrank, "Casts an audible alert to your Chromecast or Google Home when an S Rank spawns in" +
+        " a zone.\r\nNote: You must already be in the zone for the alert to trigger.");
+            this.chk_castsrank.UseVisualStyleBackColor = true;
+            this.chk_castsrank.CheckedChanged += new System.EventHandler(this.Chk_castsrank_CheckedChanged);
             // 
             // btn_casttest
             // 
@@ -3017,6 +3034,7 @@
         private System.Windows.Forms.ComboBox cb_alarmclock;
         private System.Windows.Forms.CheckBox chk_enabletimebell;
         private System.Windows.Forms.Button btn_casttest;
+        private System.Windows.Forms.CheckBox chk_castsrank;
     }
 }
 

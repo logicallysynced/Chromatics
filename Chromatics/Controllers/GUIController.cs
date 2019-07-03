@@ -494,6 +494,7 @@ namespace Chromatics
 
             dgv_iftttgrid.Rows.Add("0", "Duty Finder Bell", "Chromatics_DFBell");
             dgv_iftttgrid.Rows.Add("1", "Eorzea Time Alarm", "Chromatics_Alarm");
+            dgv_iftttgrid.Rows.Add("2", "S Rank Alert", "Chromatics_SRankAlert");
         }
 
         private void ToggleMappingControls(bool toggle)
@@ -1125,12 +1126,14 @@ namespace Chromatics
             chk_castdfbell.Checked = ChromaticsSettings.ChromaticsSettingsCastDFBell;
             chk_enabletimebell.Checked = ChromaticsSettings.ChromaticsSettingsCastAlarmBell;
             cb_alarmclock.SelectedIndex = cb_alarmclock.FindStringExact(ChromaticsSettings.ChromaticsSettingsCastAlarmTime);
+            chk_castsrank.Checked = ChromaticsSettings.ChromaticsSettingsCastSRankAlert;
 
             if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
             {
                 chk_castdfbell.Enabled = true;
                 cb_castdevlist.Enabled = true;
                 lbl_chromecastdev.Enabled = true;
+                chk_castsrank.Enabled = true;
 
                 if (cb_castdevlist.Items.Count > 0)
                 {
@@ -1143,6 +1146,7 @@ namespace Chromatics
                 cb_castdevlist.Enabled = false;
                 lbl_chromecastdev.Enabled = false;
                 btn_casttest.Enabled = false;
+                chk_castsrank.Enabled = false;
             }
 
             chk_enableifttt.Checked = ChromaticsSettings.ChromaticsSettingsIFTTTEnable;
@@ -3101,6 +3105,7 @@ namespace Chromatics
                 cb_castdevlist.Enabled = true;
                 chk_castdfbell.Enabled = true;
                 lbl_chromecastdev.Enabled = true;
+                chk_castsrank.Enabled = true;
 
                 if (cb_castdevlist.Items.Count > 0)
                 {
@@ -3136,6 +3141,7 @@ namespace Chromatics
                 chk_castdfbell.Enabled = false;
                 btn_casttest.Enabled = false;
                 lbl_chromecastdev.Enabled = false;
+                chk_castsrank.Enabled = false;
 
                 SharpcastController.EndSharpcaster();
             }
@@ -3161,7 +3167,15 @@ namespace Chromatics
                 SaveChromaticsSettings(1);
             }
         }
+        
+        private void Chk_castsrank_CheckedChanged(object sender, EventArgs e)
+        {
+           if (Startup == false) return;
+           ChromaticsSettings.ChromaticsSettingsCastSRankAlert = chk_castsrank.Checked;
 
+            SaveChromaticsSettings(1);
+        }
+        
         private void chk_castdfbell_CheckedChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;

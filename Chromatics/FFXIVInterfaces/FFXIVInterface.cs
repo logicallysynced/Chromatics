@@ -4405,6 +4405,30 @@ namespace Chromatics
                                         }
                                     }
                                 }
+
+                                //S Rank Bell
+                                if (ChatReadResult.ChatLogItems.Count > 0)
+                                {
+                                    var srankItem = ChatReadResult.ChatLogItems.LastOrDefault();
+                                    Console.WriteLine(srankItem.Line);
+
+                                    if (srankItem.Line == "You sense the presence of a powerful mark...")
+                                    {
+                                        if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
+                                        {
+                                            if (ChromaticsSettings.ChromaticsSettingsCastSRankAlert)
+                                            {
+                                                SharpcastController.CastMedia("srankalert.mp3");
+                                            }
+                                        }
+
+                                        if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
+                                        {
+                                            IFTTTController.FireIFTTTEvent(@"Chromatics_SRankAlert", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
+                                        }
+                                    }
+                                }
+                                
                             }
 
                             //ACT
@@ -6675,8 +6699,6 @@ namespace Chromatics
                                         setHour = 12;
                                     }
 
-                                    Console.WriteLine(setHour + ":" + setMinute + "/" + FFXIVHelpers.FetchEorzeaTime().Hour + ":" + FFXIVHelpers.FetchEorzeaTime().Minute);
-
                                     
                                     if (FFXIVHelpers.FetchEorzeaTime().Hour == setHour && FFXIVHelpers.FetchEorzeaTime().Minute == setMinute)
                                     {
@@ -6694,6 +6716,7 @@ namespace Chromatics
                                     _currentET = FFXIVHelpers.FetchEorzeaTime().Minute;
                                 }
                             }
+
 
                         }
                         
