@@ -194,6 +194,8 @@ namespace Chromatics.DeviceInterfaces
         void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
         void CycleEffect(int interval, CancellationTokenSource token);
+        Color GetCurrentKeyColor(string key);
+        Color GetCurrentMouseColor(string region);
     }
 
     public class CoolermasterLib : ICoolermasterSdk
@@ -232,6 +234,12 @@ namespace Chromatics.DeviceInterfaces
         private static bool _coolermasterFlash4Running;
         private static Dictionary<string, Color> _flashpresets4 = new Dictionary<string, Color>();
         private static readonly object CoolermasterFlash4 = new object();
+        private static Dictionary<string, Color> mouseMappings = new Dictionary<string, Color>
+        {
+            {"MouseFront", Color.Black },
+            {"MouseScroll", Color.Black },
+            {"MouseSide", Color.Black }
+        };
 
         public bool IsInitialized { get; set; } = false;
 
@@ -416,9 +424,23 @@ namespace Chromatics.DeviceInterfaces
             ApplyKeyboardLightingSoon();
         }
 
-        public void ApplyMapMouseLighting(string region, Color col, bool clear)
+        public Color GetCurrentKeyColor(string key)
         {
             if (!IsInitialized || !_coolermasterDeviceKeyboard)
+                return Color.Black;
+
+            if (!KeyMappings.ContainsKey(key))
+            {
+                Debug.WriteLine($"Unknown key: '{key}'");
+                return Color.Black;
+            }
+
+            return GetKeyColor(key).Value;
+        }
+
+        public void ApplyMapMouseLighting(string region, Color col, bool clear)
+        {
+            if (!IsInitialized || !_coolermasterDeviceMouse)
                 return;
 
             foreach (var mouseDevice in _mice)
@@ -432,19 +454,45 @@ namespace Chromatics.DeviceInterfaces
                         CoolermasterSdkWrapper.SetLedColor(0, 1, col.R, col.G, col.B, mouseDevice);
                         CoolermasterSdkWrapper.SetLedColor(0, 2, col.R, col.G, col.B, mouseDevice);
                         CoolermasterSdkWrapper.SetLedColor(0, 3, col.R, col.G, col.B, mouseDevice);
+
+                        mouseMappings["MouseFront"] = col;
+                        mouseMappings["MouseScroll"] = col;
+                        mouseMappings["MouseSide"] = col;
+
                         break;
                     case "MouseFront":
                         CoolermasterSdkWrapper.SetLedColor(0, 0, col.R, col.G, col.B, mouseDevice);
+                        mouseMappings["MouseFront"] = col;
                         break;
                     case "MouseScroll":
                         CoolermasterSdkWrapper.SetLedColor(0, 1, col.R, col.G, col.B, mouseDevice);
+                        mouseMappings["MouseScroll"] = col;
                         break;
                     case "MouseSide":
                         CoolermasterSdkWrapper.SetLedColor(0, 2, col.R, col.G, col.B, mouseDevice);
                         CoolermasterSdkWrapper.SetLedColor(0, 3, col.R, col.G, col.B, mouseDevice);
+                        mouseMappings["MouseSide"] = col;
                         break;
                 }
             }
+        }
+
+        public Color GetCurrentMouseColor(string region)
+        {
+            if (!IsInitialized || !_coolermasterDeviceMouse)
+                return Color.Black;
+
+            switch (region)
+                {
+                    case "MouseFront":
+                        return mouseMappings["MouseFront"];
+                    case "MouseScroll":
+                        return mouseMappings["MouseScroll"];
+                    case "MouseSide":
+                        return mouseMappings["MouseSide"];
+                    default:
+                        return Color.Black;
+                }
         }
 
         public Task Ripple1(Color burstcol, int speed)

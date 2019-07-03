@@ -88,6 +88,10 @@ namespace Chromatics.DeviceInterfaces
         void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
         void FadeColourAll(Color toColor, Color fromColor, uint interval);
         void CycleEffect(int interval, CancellationTokenSource token);
+        Color GetCurrentKeyColor(string key);
+        Color GetCurrentMouseColor(string region);
+        Color GetCurrentPadColor(int region);
+
     }
 
     public class RazerLib : IRazerSdk
@@ -599,6 +603,80 @@ namespace Chromatics.DeviceInterfaces
                     Write.WriteConsole(ConsoleTypes.Error, @"Razer Keyboard (" + key + "): " + ex.Message);
                     CheckRazerEx(ex);
                 }
+        }
+
+        public Color GetCurrentKeyColor(string key)
+        {
+            if (!_isInitialized) return Color.Black;
+
+            if (_razerDeviceKeyboard)
+            {
+                try
+                {
+                    if (Enum.IsDefined(typeof(Key), key))
+                    {
+                        var keyid = (Key) Enum.Parse(typeof(Key), key);
+                        return FromColoreCol(Keyboard[keyid]);
+                    }
+
+                    return Color.Black;
+                }
+                catch (Exception ex)
+                {
+                    Write.WriteConsole(ConsoleTypes.Error, @"Razer Keyboard (" + key + "): " + ex.Message);
+                    CheckRazerEx(ex);
+                    return Color.Black;
+                }
+            }
+
+            return Color.Black;
+        }
+
+        public Color GetCurrentMouseColor(string region)
+        {
+            if (!_isInitialized) return Color.Black;
+
+            //Send Lighting
+            if (_razerDeviceMouse)
+                try
+                {
+                    if (!Enum.IsDefined(typeof(GridLed), region)) return Color.Black;
+                    
+                    var regionid = (GridLed)Enum.Parse(typeof(GridLed), region);
+
+                    return FromColoreCol(_mouseGrid[regionid]);
+                        
+
+                }
+                catch (Exception ex)
+                {
+                    CheckRazerEx(ex);
+                    Write.WriteConsole(ConsoleTypes.Error, @"Razer Mouse (" + region + "): " + ex.Message);
+                    return Color.Black;
+                }
+
+            return Color.Black;
+        }
+
+        public Color GetCurrentPadColor(int region)
+        {
+            if (!_isInitialized) return Color.Black;
+
+            try
+            {
+                if (_razerDeviceMousepad)
+                {
+                    return FromColoreCol(_mousepadGrid[region]);
+                }
+
+                return Color.Black;
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+                Write.WriteConsole(ConsoleTypes.Error, @"Razer Mousepad (" + region + "): " + ex.Message);
+                return Color.Black;
+            }
         }
 
         public void ApplyMapLogoLighting(string key, Color col, bool clear)

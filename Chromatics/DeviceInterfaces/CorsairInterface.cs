@@ -75,6 +75,9 @@ namespace Chromatics.DeviceInterfaces
         void Flash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
         void CycleEffect(int interval, CancellationTokenSource token);
+        Color GetCurrentKeyColor(string key);
+        Color GetCurrentMouseColor(string region);
+        Color GetCurrentPadColor(string region);
     }
 
     public class CorsairLib : ICorsairSdk
@@ -538,6 +541,19 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        public Color GetCurrentKeyColor(string key)
+        {
+            if (pause) return Color.Black;
+
+            if (_corsairkeyids.ContainsKey(key))
+            {
+                var _key = _corsairkeyids[key];
+                return _corsairKeyboardIndvBrush.CorsairGetColorReference(_key);
+            }
+
+            return Color.Black;
+        }
+
         public void ApplyMapMouseLighting(string region, Color col, bool clear)
         {
             if (pause) return;
@@ -546,6 +562,19 @@ namespace Chromatics.DeviceInterfaces
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.MouseSDK[_corsairkeyids[region]] != null)
                         _corsairMouseIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[region], col);
+        }
+
+        public Color GetCurrentMouseColor(string region)
+        {
+            if (pause) return Color.Black;
+
+            if (_corsairkeyids.ContainsKey(region))
+            {
+                var _key = _corsairkeyids[region];
+                return _corsairMouseIndvBrush.CorsairGetColorReference(_key);
+            }
+
+            return Color.Black;
         }
 
         public void ApplyMapLogoLighting(string key, Color col, bool clear)
@@ -562,6 +591,19 @@ namespace Chromatics.DeviceInterfaces
                 if (_corsairkeyids.ContainsKey(region))
                     if (CueSDK.MousematSDK[_corsairkeyids[region]] != null)
                         _corsairMousepadIndvBrush.CorsairApplyMapKeyLighting(_corsairkeyids[region], col);
+        }
+
+        public Color GetCurrentPadColor(string region)
+        {
+            if (pause) return Color.Black;
+
+            if (_corsairkeyids.ContainsKey(region))
+            {
+                var _key = _corsairkeyids[region];
+                return _corsairMousepadIndvBrush.CorsairGetColorReference(_key);
+            }
+
+            return Color.Black;
         }
 
         public void ApplyMapStandLighting(string region, Color col, bool clear)

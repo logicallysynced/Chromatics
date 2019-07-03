@@ -60,6 +60,7 @@ namespace Chromatics.DeviceInterfaces
         void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
         void CycleEffect(int interval, CancellationTokenSource token);
+        Color GetCurrentKeyColor(string key);
     }
 
     public class WootingLib : IWootingSdk
@@ -310,6 +311,15 @@ namespace Chromatics.DeviceInterfaces
                 Write.WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK error while updating key. EX: " + ex);
             }
 
+        }
+
+        public Color GetCurrentKeyColor(string key)
+        {
+            if (!isInitialized) return Color.Black;
+            if (!_wootingKeyboard) return Color.Black;
+            if (!prevKeyboard.ContainsKey(key)) return Color.Black;
+
+            return prevKeyboard[key];
         }
 
         public Task Ripple1(Color burstcol, int speed, Color baseColor)

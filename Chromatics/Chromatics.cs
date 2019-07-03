@@ -171,7 +171,7 @@ namespace Chromatics
         public DevModeTypes _MouseZone1Mode = DevModeTypes.DefaultColor;
         public DevModeTypes _MouseZone2Mode = DevModeTypes.EnmityTracker;
         public DevModeTypes _MouseZone3Mode = DevModeTypes.DefaultColor;
-        public DevModeTypes _MouseStrip1Mode = DevModeTypes.HpTracker;
+        public DevModeTypes _MouseStrip1Mode = DevModeTypes.HpTracker; 
         public DevModeTypes _MouseStrip2Mode = DevModeTypes.MpTracker;
 
         public DevModeTypes _PadZone1Mode = DevModeTypes.HpTracker;

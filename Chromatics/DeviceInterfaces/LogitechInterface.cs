@@ -220,6 +220,9 @@ namespace Chromatics.DeviceInterfaces
         void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
         void CycleEffect(int interval, CancellationTokenSource token);
+        Color GetCurrentKeyColor(string key);
+        Color GetCurrentMouseColor(string region);
+        Color GetCurrentPadColor(string region);
     }
 
     public class Logitech : ILogitechSdk
@@ -246,6 +249,24 @@ namespace Chromatics.DeviceInterfaces
         private bool _logitechDeviceMousepad = true;
         private bool _logitechDeviceSpeakers = true;
 
+        private static Dictionary<KeyboardNames, Color> keyMappings = new Dictionary<KeyboardNames, Color>();
+        
+        private static Dictionary<string, Color> mouseMappings = new Dictionary<string, Color>
+        {
+            {"0", Color.Black },
+            {"1", Color.Black },
+            {"2", Color.Black },
+            {"3", Color.Black },
+        };
+
+        private static Dictionary<string, Color> padMappings = new Dictionary<string, Color>
+        {
+            {"0", Color.Black },
+            {"1", Color.Black },
+            {"2", Color.Black },
+            {"3", Color.Black },
+        };
+
         public void ApplyMapKeyLighting(string key, Color color, bool clear, [Optional] bool bypasswhitelist)
         {
             LogitechSdkWrapper.LogiLedSetTargetDevice(LogitechSdkWrapper.LogiDevicetypePerkeyRgb);
@@ -260,10 +281,17 @@ namespace Chromatics.DeviceInterfaces
             //StopEffects();
 
             if (Enum.TryParse(key, out keyName))
+            {
                 LogitechSdkWrapper.LogiLedSetLightingForKeyWithScanCode((int) keyName,
                     (int) Math.Ceiling((double) (color.R * 100) / 255),
                     (int) Math.Ceiling((double) (color.G * 100) / 255),
                     (int) Math.Ceiling((double) (color.B * 100) / 255));
+
+                if (keyMappings.ContainsKey(keyName))
+                {
+                    keyMappings[keyName] = color;
+                }
+            }
         }
 
         public void SetAllLights(Color color)
@@ -271,6 +299,11 @@ namespace Chromatics.DeviceInterfaces
             LogitechSdkWrapper.LogiLedSetLighting((int) Math.Ceiling((double) (color.R * 100) / 255),
                 (int) Math.Ceiling((double) (color.G * 100) / 255),
                 (int) Math.Ceiling((double) (color.B * 100) / 255));
+
+            foreach (var key in keyMappings)
+            {
+                keyMappings[key.Key] = color;
+            }
         }
 
         public void ApplyMapSingleLighting(Color color)
@@ -344,8 +377,33 @@ namespace Chromatics.DeviceInterfaces
                         (int)Math.Ceiling((double)(color.B * 100) / 255));
                     break;
             }
+        }
 
-            
+        public Color GetCurrentKeyColor(string key)
+        {
+            if (!_logitechDeviceKeyboard)
+                return Color.Black;
+
+            try
+            {
+                KeyboardNames keyName;
+                if (Enum.TryParse(key, out keyName))
+                {
+                    if (keyMappings.ContainsKey(keyName))
+                    {
+                        return keyMappings[keyName];
+                    }
+
+                    return Color.Black;
+                }
+
+                return Color.Black;
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, @"(" + key + "): " + ex.Message);
+                return Color.Black;
+            }
         }
 
         public void ApplyMapMouseLighting(string key, Color color)
@@ -376,6 +434,19 @@ namespace Chromatics.DeviceInterfaces
                         (int)Math.Ceiling((double)(color.B * 100) / 255));
                     break;
             }
+        }
+
+        public Color GetCurrentMouseColor(string region)
+        {
+            if (!_logitechDeviceMouse)
+                return Color.Black;
+
+            if (mouseMappings.ContainsKey(region))
+            {
+                return mouseMappings[region];
+            }
+
+            return Color.Black;
         }
 
         public void ApplyMapHeadsetLighting(string key, Color color)
@@ -438,6 +509,19 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        public Color GetCurrentPadColor(string region)
+        {
+            if (!_logitechDeviceMousepad)
+                return Color.Black;
+
+            if (padMappings.ContainsKey(region))
+            {
+                return padMappings[region];
+            }
+
+            return Color.Black;
+        }
+
         public void ApplyMapPadSpeakers(string key, Color color)
         {
             if (!_logitechDeviceSpeakers)
@@ -495,6 +579,14 @@ namespace Chromatics.DeviceInterfaces
             var result = true;
             try
             {
+                foreach (KeyboardNames key in Enum.GetValues(typeof(KeyboardNames)))
+                {
+                    if (!keyMappings.ContainsKey(key))
+                    {
+                        keyMappings.Add(key, Color.Black);
+                    }
+                }
+
                 LogitechSdkWrapper.LogiLedInit();
             }
             catch (Exception)
@@ -520,6 +612,11 @@ namespace Chromatics.DeviceInterfaces
                 LogitechSdkWrapper.LogiLedSetLighting((int) Math.Ceiling((double) (color.R * 100) / 255),
                     (int) Math.Ceiling((double) (color.G * 100) / 255),
                     (int) Math.Ceiling((double) (color.B * 100) / 255));
+
+            foreach (var key in keyMappings)
+            {
+                keyMappings[key.Key] = color;
+            }
         }
 
         public void StopEffects()

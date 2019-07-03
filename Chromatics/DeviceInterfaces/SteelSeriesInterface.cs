@@ -82,6 +82,8 @@ namespace Chromatics.DeviceInterfaces
         void SingleFlash4(Color burstcol, int speed, CancellationToken cts, string[] regions);
         void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50);
         void CycleEffect(int interval, CancellationTokenSource token);
+        Color GetCurrentKeyColor(string key);
+        Color GetCurrentMouseColor(string region);
     }
 
     public class SteelLib : ISteelSdk
@@ -505,6 +507,17 @@ namespace Chromatics.DeviceInterfaces
             
         }
 
+        public Color GetCurrentKeyColor(string key)
+        {
+            if (!isInitialized) return Color.Black;
+            if (!_steelKeyboard) return Color.Black;
+
+            var keyid = GetHIDCode(key);
+            if (!prevKeyboard.ContainsKey(keyid)) return Color.Black;
+
+            return prevKeyboard[keyid];
+        }
+
         public void ApplyMapMouseLighting(string key, Color col)
         {
             if (!isInitialized) return;
@@ -575,6 +588,23 @@ namespace Chromatics.DeviceInterfaces
                 Write.WriteConsole(ConsoleTypes.Steel, @"SteelSeries GameSense SDK, error when updating mouse. EX: " + ex);
             }
             
+        }
+        public Color GetCurrentMouseColor(string region)
+        {
+            if (!isInitialized) return Color.Black;
+            if (!_steelMouse) return Color.Black;
+
+            switch (region)
+            {
+                case "MouseFront":
+                    return prevMouseFront;
+                case "MouseScroll":
+                    return prevMouseScroll;
+                case "MouseLogo":
+                    return prevMouseLogo;
+                default:
+                    return Color.Black;
+            }
         }
 
         public void ApplyMapHeadsetLighting(Color col)
