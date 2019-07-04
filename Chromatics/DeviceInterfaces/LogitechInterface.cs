@@ -286,11 +286,6 @@ namespace Chromatics.DeviceInterfaces
                     (int) Math.Ceiling((double) (color.R * 100) / 255),
                     (int) Math.Ceiling((double) (color.G * 100) / 255),
                     (int) Math.Ceiling((double) (color.B * 100) / 255));
-
-                if (keyMappings.ContainsKey(keyName))
-                {
-                    keyMappings[keyName] = color;
-                }
             }
         }
 
@@ -300,10 +295,6 @@ namespace Chromatics.DeviceInterfaces
                 (int) Math.Ceiling((double) (color.G * 100) / 255),
                 (int) Math.Ceiling((double) (color.B * 100) / 255));
 
-            foreach (var key in keyMappings)
-            {
-                keyMappings[key.Key] = color;
-            }
         }
 
         public void ApplyMapSingleLighting(Color color)
@@ -613,10 +604,6 @@ namespace Chromatics.DeviceInterfaces
                     (int) Math.Ceiling((double) (color.G * 100) / 255),
                     (int) Math.Ceiling((double) (color.B * 100) / 255));
 
-            foreach (var key in keyMappings)
-            {
-                keyMappings[key.Key] = color;
-            }
         }
 
         public void StopEffects()
