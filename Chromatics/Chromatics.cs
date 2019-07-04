@@ -289,6 +289,8 @@ namespace Chromatics
             {
                 Text = @"Chromatics " + _currentVersionX + @" (BETA)";
             }
+
+            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             
             //Setup Event Listeners
             FormClosing += OnFormClosing;

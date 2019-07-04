@@ -297,6 +297,7 @@ namespace Chromatics
                 
                 
                 FfxivThread = new Thread(new ThreadStart(CallThreadFFXIVAttach));
+                FfxivThread.Priority = ThreadPriority.Lowest;
                 FfxivThread.Start();
                 FfxivThread.Join();
                 ct.Cancel();
@@ -1214,6 +1215,7 @@ namespace Chromatics
                                 var weatherMaphighlightKey = _mappingPalette.FirstOrDefault(x =>
                                     x.Value[0] == FFXIVWeather.WeatherIconName(_lastWeather) + @" (Highlight)").Key;
 
+
                                 if (string.IsNullOrWhiteSpace(weatherMapbaseKey) ||
                                     string.IsNullOrWhiteSpace(weatherMaphighlightKey))
                                 {
@@ -1229,7 +1231,7 @@ namespace Chromatics
                                         .GetField(weatherMapbaseKey).GetValue(ColorMappings);
                                     var weatherMaphighlight = (string)typeof(Datastore.FfxivColorMappings)
                                         .GetField(weatherMaphighlightKey).GetValue(ColorMappings);
-
+                                    
                                     _baseWeatherColor = ColorTranslator.FromHtml(weatherMapbase);
                                     _highlightWeatherColor = ColorTranslator.FromHtml(weatherMaphighlight);
 
@@ -1575,9 +1577,12 @@ namespace Chromatics
                             if (statEffects.Count > 0)
                             {
                                 var status = statEffects.Last();
-                                if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name)
+                                if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name && !FFXIVHelpers.IsCompanyAction(status.StatusName))
+                                { 
                                     if (_currentStatus != status.StatusName)
                                     {
+                                        //Console.WriteLine(status.StatusName);
+
                                         if (status.StatusName == "Bind")
                                         {
                                             GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind), 100);
@@ -1776,20 +1781,82 @@ namespace Chromatics
                                         }
                                         else
                                         {
+                                            
                                             _baseColor = baseColor;
                                             //GlobalUpdateState("static", _baseColor, false);
                                             GlobalApplyAllKeyLighting(_baseColor);
                                             GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
                                                 _baseColor, false, "All");
+
+                                            statEffects.Clear();
     
-                                            GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                            GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                            GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                            GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                            GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
-                                            GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
-                                            GlobalApplyMapKeyLighting("Space", highlightColor, false);
+                                            if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
+                                            {
+                                                switch (ChromaticsSettings.ChromaticsSettingsQwertyMode)
+                                                {
+                                                    case KeyRegion.QWERTY:
+                                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("E", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("F", _baseColor, false);
+                                                        break;
+                                                    case KeyRegion.AZERTY:
+                                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("E", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("F", _baseColor, false);
+                                                        break;
+                                                    case KeyRegion.QWERTZ:
+                                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("E", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("F", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                                        break;
+                                                    case KeyRegion.ESDF:
+                                                        GlobalApplyMapKeyLighting("E", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("F", highlightColor, false);
+                                                        GlobalApplyMapKeyLighting("W", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("A", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                                        break;
+                                                }
+
+                                                GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
+                                                GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
+                                                GlobalApplyMapKeyLighting("Space", highlightColor, false);
+                                                GlobalApplyMapKeyLighting("LeftAlt", highlightColor, false);
+                                            }
+                                            else
+                                            {
+                                                GlobalApplyMapKeyLighting("W", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("A", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("S", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("D", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("E", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("F", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("LeftShift", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("LeftControl", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("Space", _baseColor, false);
+                                                GlobalApplyMapKeyLighting("LeftAlt", _baseColor, false);
+                                            }
     
                                             if (targetInfo == null)
                                             {
@@ -1839,14 +1906,15 @@ namespace Chromatics
                                                 GlobalApplyMapLogoLighting("", highlightColor, false);
                                                 //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
                                             }
+                                            
                                         }
     
                                         _currentStatus = status.StatusName;
                                     }
-                                //}
+                                }
                             }
                         }
-
+                        
 
                         //Target
                         if (targetInfo != null)
@@ -3182,8 +3250,10 @@ namespace Chromatics
 
                         //DX11 Effects
 
+                        
                         if (IsDx11)
                         {
+                            
                             Cooldowns.RefreshData();
 
                             //Hotbars        
@@ -3894,7 +3964,7 @@ namespace Chromatics
                                     //SetKeysbase = false;
                                 }
                             }
-
+                            
 
                             //Cooldowns
                             

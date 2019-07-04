@@ -30,6 +30,49 @@ namespace Chromatics.FFXIVInterfaces
             return ToEorzeaTime(DateTime.Now);
         }
 
+        public static bool IsCompanyAction(string action)
+        {
+            switch(action)
+            {
+                case "The Heat Of Battle":
+                    return true;
+                case "Meat And Mead":
+                    return true;
+                case "Earth And Water":
+                    return true;
+                case "Helping Hand":
+                    return true;
+                case "A Man's Best Friend":
+                    return true;
+                case "Mark Up":
+                    return true;
+                case "Seal Sweetener":
+                    return true;
+                case "Jackpot":
+                    return true;
+                case "Brave New World":
+                    return true;
+                case "Live Of The Land":
+                    return true;
+                case "What You See":
+                    return true;
+                case "Eat From The Hand":
+                    return true;
+                case "In Control":
+                    return true;
+                case "That Which Binds Us":
+                    return true;
+                case "Proper Care":
+                    return true;
+                case "Back On Your Feet":
+                    return true;
+                case "Reduced Rates":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public static readonly Dictionary<int, int> ExperienceTable = new Dictionary<int, int>()
         {
             {0, 300},
