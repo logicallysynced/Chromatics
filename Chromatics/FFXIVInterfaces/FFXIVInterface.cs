@@ -565,6 +565,7 @@ namespace Chromatics
             //Check for crash
             GlobalCheckCrash();
 
+            /*
             if (!ChromaticsSettings.ChromaticsSettingsMemoryCheck)
             {
                 if (xi > xi_interval)
@@ -613,6 +614,7 @@ namespace Chromatics
                     xi_interval = xi_bench;
                 }
             }
+            */
 
             if (HoldReader) return;
             
@@ -1075,6 +1077,14 @@ namespace Chromatics
                                             case Actor.Job.RDM:
                                                 ptType = "player";
                                                 ptJob = "Red_Mage";
+                                                break;
+                                            case Actor.Job.DNC:
+                                                ptType = "player";
+                                                ptJob = "Dancer";
+                                                break;
+                                            case Actor.Job.GNB:
+                                                ptType = "player";
+                                                ptJob = "Gunbreaker";
                                                 break;
                                             default:
                                                 ptType = "unknown";
@@ -4162,6 +4172,18 @@ namespace Chromatics
                                     if (GetACTJob() != "Red Mage")
                                         SwitchACTJob("Red Mage");
                                     break;
+                                case Actor.Job.DNC:
+                                    _role = _playerData.CurrentPlayer.DNC_CurrentEXP;
+                                    _currentlvl = _playerData.CurrentPlayer.DNC;
+                                    if (GetACTJob() != "Dancer")
+                                        SwitchACTJob("Dancer");
+                                    break;
+                                case Actor.Job.GNB:
+                                    _role = _playerData.CurrentPlayer.GNB_CurrentEXP;
+                                    _currentlvl = _playerData.CurrentPlayer.GNB;
+                                    if (GetACTJob() != "Gunbreaker")
+                                        SwitchACTJob("Gunbreaker");
+                                    break;
                                 default:
                                     _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
                                     _currentlvl = 0;
@@ -4220,6 +4242,7 @@ namespace Chromatics
 
 
                             //Pull Countdown
+                            
                             if (!ChatInit)
                             {
                                 ChatpreviousArrayIndex = 0;
@@ -4447,7 +4470,7 @@ namespace Chromatics
                                 }
                                 
                             }
-
+                            
                             //ACT
                             if (!blockACTVersion)
                             {

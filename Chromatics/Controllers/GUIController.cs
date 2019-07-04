@@ -153,6 +153,8 @@ namespace Chromatics
             {22, "Thaumaturge"}, //THM
             {23, "Red Mage" }, //RDM
             {24, "Blue Mage" }, //BLM
+            {25, "Dancer" }, //DNC
+            {26, "Gunbreaker" }, //GNB
         };
 
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>

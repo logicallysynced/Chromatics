@@ -310,6 +310,12 @@ namespace Chromatics.LCDInterfaces
                     case Actor.Job.RDM:
                         ptJob = "Red_Mage";
                         break;
+                    case Actor.Job.DNC:
+                        ptJob = "Dancer";
+                        break;
+                    case Actor.Job.GNB:
+                        ptJob = "Gunbreaker";
+                        break;
                     default:
                         ptJob = "Chocobo";
                         break;
