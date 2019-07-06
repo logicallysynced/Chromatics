@@ -708,7 +708,12 @@ namespace Chromatics
                 //Console.WriteLine("Attached");
                 //rtb_debug.Invoke((Action)delegate { rtb_debug.AppendText("Attached" + Environment.NewLine); });
                 WriteConsole(ConsoleTypes.Ffxiv, "Attached to FFXIV");
-                ReInitializeSdk();
+
+                if (ChromaticsSettings.ChromaticsSettingsReleaseDevices)
+                {
+                    ReInitializeSdk();
+                }
+                
                 _gameNotify = false;
                 notify_master.Text = @"Attached to FFXIV";
                 _gameStop = false;
@@ -859,7 +864,6 @@ namespace Chromatics
 
         private delegate void BlinkDelegate();
 
-        
     }
 
     public static class ExceptionExtensions

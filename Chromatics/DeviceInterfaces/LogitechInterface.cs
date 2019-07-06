@@ -189,6 +189,8 @@ namespace Chromatics.DeviceInterfaces
     public interface ILogitechSdk
     {
         bool InitializeLights();
+
+        void ShutdownSdk();
         void SetLights(Color color);
         void StopEffects();
         void SetWave(Color col);
@@ -266,6 +268,19 @@ namespace Chromatics.DeviceInterfaces
             {"2", Color.Black },
             {"3", Color.Black },
         };
+
+        public void ShutdownSdk()
+        {
+            try
+            {
+                LogitechSdkWrapper.LogiLedShutdown();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
+        }
 
         public void ApplyMapKeyLighting(string key, Color color, bool clear, [Optional] bool bypasswhitelist)
         {

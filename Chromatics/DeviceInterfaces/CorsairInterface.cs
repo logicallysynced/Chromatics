@@ -53,6 +53,7 @@ namespace Chromatics.DeviceInterfaces
     {
         bool InitializeSdk();
 
+        void ShutdownSdk();
         void ResetCorsairDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
             bool deviceHeadset, Color basecol);
 
@@ -415,6 +416,23 @@ namespace Chromatics.DeviceInterfaces
                 Write.WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. EX: " + ex.Message);
                 return false;
             }
+        }
+
+        public void ShutdownSdk()
+        {
+            try
+            {
+                if (CueSDK.IsInitialized)
+                {
+                    CueSDK.Reinitialize();
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. EX: " + ex.Message);
+                throw;
+            }
+            
         }
 
         public void ResetCorsairDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,

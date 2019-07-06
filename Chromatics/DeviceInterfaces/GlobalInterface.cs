@@ -475,14 +475,14 @@ namespace Chromatics
 
             if (LogitechSdkCalled == 1)
             {
-                //_logitech.ShutdownSdk();
+                _logitech.ShutdownSdk();
                 _logitech = null;
                 LogitechSdkCalled = 0;
             }
 
             if (CorsairSdkCalled == 1)
             {
-                //_corsair.ShutdownSdk();
+                _corsair.ShutdownSdk();
                 _corsair = null;
                 CorsairSdkCalled = 0;
             }

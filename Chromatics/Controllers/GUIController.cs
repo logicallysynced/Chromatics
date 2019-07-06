@@ -1113,6 +1113,7 @@ namespace Chromatics
             chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettingsDfBellToggle;
             chk_showstatuseffects.Checked = ChromaticsSettings.ChromaticsSettingsStatusEffectToggle;
             chk_enablebulbextraeffect.Checked = ChromaticsSettings.ChromaticsSettingsExtraBulbEffects;
+            chk_releasedevices.Checked = ChromaticsSettings.ChromaticsSettingsReleaseDevices;
 
             chk_lcdtoggle.Checked = ChromaticsSettings.ChromaticsSettingsLcdEnabled;
             cb_lang.SelectedIndex = ChromaticsSettings.ChromaticsSettingsLanguage;
@@ -2648,6 +2649,15 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsExtraBulbEffects = chk_enablebulbextraeffect.Checked;
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void Chk_releasedevices_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsReleaseDevices = chk_releasedevices.Checked;
 
             SaveChromaticsSettings(1);
         }

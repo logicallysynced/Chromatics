@@ -116,6 +116,7 @@ namespace Chromatics.Datastore
         public string ChromaticsSettingsIFTTTURL = "";
         public int ChromaticsSettingsPollingInterval = 300;
         public bool ChromaticsSettingsExtraBulbEffects = false;
+        public bool ChromaticsSettingsReleaseDevices = false;
 
         public int[][] ChromaticsSettingsACTDPS =
         {

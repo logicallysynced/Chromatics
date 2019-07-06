@@ -82,6 +82,7 @@
             this.cb_keypad_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_keypad = new System.Windows.Forms.CheckBox();
             this.tP_bulbs = new System.Windows.Forms.TabPage();
+            this.chk_enablebulbextraeffect = new System.Windows.Forms.CheckBox();
             this.dG_devices = new System.Windows.Forms.DataGridView();
             this.col_devicename = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_devicetype = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -223,7 +224,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_enablebulbextraeffect = new System.Windows.Forms.CheckBox();
+            this.chk_releasedevices = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -929,6 +930,19 @@
             this.tP_bulbs.TabIndex = 4;
             this.tP_bulbs.Text = "Smartbulbs";
             // 
+            // chk_enablebulbextraeffect
+            // 
+            this.chk_enablebulbextraeffect.AutoSize = true;
+            this.chk_enablebulbextraeffect.Location = new System.Drawing.Point(542, 6);
+            this.chk_enablebulbextraeffect.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_enablebulbextraeffect.Name = "chk_enablebulbextraeffect";
+            this.chk_enablebulbextraeffect.Size = new System.Drawing.Size(170, 17);
+            this.chk_enablebulbextraeffect.TabIndex = 8;
+            this.chk_enablebulbextraeffect.Text = "Enable extra Smartbulb effects";
+            this.tooltip_main.SetToolTip(this.chk_enablebulbextraeffect, "Enables Menu, cutscene and vegas mode effects on Smartbulbs.\r\nDefault: OFF");
+            this.chk_enablebulbextraeffect.UseVisualStyleBackColor = true;
+            this.chk_enablebulbextraeffect.CheckedChanged += new System.EventHandler(this.Chk_enablebulbextraeffect_CheckedChanged);
+            // 
             // dG_devices
             // 
             this.dG_devices.AllowUserToDeleteRows = false;
@@ -1453,6 +1467,7 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.chk_releasedevices);
             this.gB_General.Controls.Add(this.lbl_polling);
             this.gB_General.Controls.Add(this.cb_pollingint);
             this.gB_General.Controls.Add(this.chk_debugopt);
@@ -2775,18 +2790,18 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_enablebulbextraeffect
+            // chk_releasedevices
             // 
-            this.chk_enablebulbextraeffect.AutoSize = true;
-            this.chk_enablebulbextraeffect.Location = new System.Drawing.Point(542, 6);
-            this.chk_enablebulbextraeffect.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_enablebulbextraeffect.Name = "chk_enablebulbextraeffect";
-            this.chk_enablebulbextraeffect.Size = new System.Drawing.Size(170, 17);
-            this.chk_enablebulbextraeffect.TabIndex = 8;
-            this.chk_enablebulbextraeffect.Text = "Enable extra Smartbulb effects";
-            this.tooltip_main.SetToolTip(this.chk_enablebulbextraeffect, "Enables Menu, cutscene and vegas mode effects on Smartbulbs.\r\nDefault: OFF");
-            this.chk_enablebulbextraeffect.UseVisualStyleBackColor = true;
-            this.chk_enablebulbextraeffect.CheckedChanged += new System.EventHandler(this.Chk_enablebulbextraeffect_CheckedChanged);
+            this.chk_releasedevices.AutoSize = true;
+            this.chk_releasedevices.Location = new System.Drawing.Point(17, 147);
+            this.chk_releasedevices.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_releasedevices.Name = "chk_releasedevices";
+            this.chk_releasedevices.Size = new System.Drawing.Size(214, 17);
+            this.chk_releasedevices.TabIndex = 11;
+            this.chk_releasedevices.Text = "Release devices on game close (BETA)";
+            this.tooltip_main.SetToolTip(this.chk_releasedevices, "Releases the device SDK\'s upon detecting FFXIV closing.\r\nDefault: OFF");
+            this.chk_releasedevices.UseVisualStyleBackColor = true;
+            this.chk_releasedevices.CheckedChanged += new System.EventHandler(this.Chk_releasedevices_CheckedChanged);
             // 
             // Chromatics
             // 
@@ -3054,6 +3069,7 @@
         private System.Windows.Forms.CheckBox chk_castsrank;
         private System.Windows.Forms.CheckBox chk_castreadycheck;
         private System.Windows.Forms.CheckBox chk_enablebulbextraeffect;
+        private System.Windows.Forms.CheckBox chk_releasedevices;
     }
 }
 
