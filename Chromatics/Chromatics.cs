@@ -158,6 +158,14 @@ namespace Chromatics
         public bool Startup;
         public int State = 0;
 
+        private bool razerFirstSet = false;
+        private bool logitechFirstSet = false;
+        private bool corsairFirstSet = false;
+        private bool coolermasterFirstSet = false;
+        private bool steelFirstSet = false;
+        private bool wootingFirstSet = false;
+        private bool lifxFirstSet = false;
+
         private bool _deviceKeyboard = true;
         private bool _deviceMouse = true;
         private bool _deviceMousepad = true;
@@ -700,6 +708,7 @@ namespace Chromatics
                 //Console.WriteLine("Attached");
                 //rtb_debug.Invoke((Action)delegate { rtb_debug.AppendText("Attached" + Environment.NewLine); });
                 WriteConsole(ConsoleTypes.Ffxiv, "Attached to FFXIV");
+                ReInitializeSdk();
                 _gameNotify = false;
                 notify_master.Text = @"Attached to FFXIV";
                 _gameStop = false;

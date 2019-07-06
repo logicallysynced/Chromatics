@@ -129,134 +129,161 @@ namespace Chromatics
 
         public void InitializeSdk()
         {
-            WriteConsole(ConsoleTypes.Razer, @"Attempting to load Razer SDK..");
-            _razer = RazerInterface.InitializeRazerSdk();
-            if (_razer != null)
+            if (RazerSdkCalled == 0)
             {
-                RazerSdk = true;
-                RazerSdkCalled = 1;
-                //WriteConsole(ConsoleTypes.Razer, @"Razer SDK Loaded");
-                _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-
-                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                WriteConsole(ConsoleTypes.Razer, @"Attempting to load Razer SDK..");
+                _razer = RazerInterface.InitializeRazerSdk();
+                if (_razer != null)
                 {
-                    AutoMeasurement.Client.TrackScreenView("Razer");
-                }
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.Razer, @"Razer SDK failed to load.");
-            }
+                    RazerSdk = true;
+                    RazerSdkCalled = 1;
+                    razerFirstSet = true;
+                    //WriteConsole(ConsoleTypes.Razer, @"Razer SDK Loaded");
+                    _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
 
-            WriteConsole(ConsoleTypes.Logitech, @"Attempting to load Logitech SDK..");
-            _logitech = LogitechInterface.InitializeLogitechSdk();
-            if (_logitech != null)
-            {
-                LogitechSdk = true;
-                LogitechSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Logitech, @"Logitech SDK Loaded");
-
-                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
-                {
-                    AutoMeasurement.Client.TrackScreenView("Logitech");
-                }
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.Logitech, @"Logitech SDK failed to load. Please make sure LGS is running.");
-            }
-
-            WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
-            _corsair = CorsairInterface.InitializeCorsairSdk();
-            if (_corsair != null)
-            {
-                CorsairSdk = true;
-                CorsairSdkCalled = 1;
-                //WriteConsole(ConsoleTypes.Corsair, @"Corsair SDK Loaded");
-
-                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
-                {
-                    AutoMeasurement.Client.TrackScreenView("Corsair");
-                }
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. Please make sure CUE2 or iCUE is running.");
-            }
-
-            //WriteConsole(ConsoleTypes.CORSAIR, "Attempting to load Corsair SDK..");
-            _coolermaster = CoolermasterInterface.InitializeCoolermasterSdk();
-            if (_coolermaster != null)
-            {
-                CoolermasterSdk = true;
-                CoolermasterSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK Loaded");
-
-                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
-                {
-                    AutoMeasurement.Client.TrackScreenView("Coolermaster");
-                }
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK failed to load.");
-            }
-
-            WriteConsole(ConsoleTypes.Steel, @"Attempting to load SteelSeries GameSense SDK..");
-            _steel = SteelSeriesInterface.InitializeSteelSdk();
-            if (_steel != null)
-            {
-                SteelSdk = true;
-                SteelSdkCalled = 1;
-                
-                WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK Loaded.");
-
-                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
-                {
-                    AutoMeasurement.Client.TrackScreenView("SteelSeries");
-                }
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
-            }
-
-            _wooting = WootingInterface.InitializeWootingSdk();
-            if (_wooting != null)
-            {
-                WootingSdk = true;
-                WootingSdkCalled = 1;
-                WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK Loaded");
-
-                if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
-                {
-                    AutoMeasurement.Client.TrackScreenView("Wooting");
-                }
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK failed to load.");
-            }
-
-            //Load LIFX SDK
-            _lifx = LifxInterface.InitializeLifxsdk();
-            if (_lifx != null)
-            {
-                LifxSdk = true;
-                LifxSdkCalled = 1;
-                //WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Loaded");
-
-                if (_lifx.LifxBulbs > 0)
-                {
                     if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                     {
-                        AutoMeasurement.Client.TrackScreenView("LIFX");
+                        AutoMeasurement.Client.TrackScreenView("Razer");
                     }
                 }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Razer, @"Razer SDK failed to load.");
+                }
             }
-            else
+
+            if (LogitechSdkCalled == 0)
             {
-                WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK failed to load.");
+                WriteConsole(ConsoleTypes.Logitech, @"Attempting to load Logitech SDK..");
+                _logitech = LogitechInterface.InitializeLogitechSdk();
+                if (_logitech != null)
+                {
+                    LogitechSdk = true;
+                    LogitechSdkCalled = 1;
+                    logitechFirstSet = true;
+                    WriteConsole(ConsoleTypes.Logitech, @"Logitech SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Logitech");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Logitech, @"Logitech SDK failed to load. Please make sure LGS is running.");
+                }
+            }
+
+            if (CorsairSdkCalled == 0)
+            {
+                WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
+                _corsair = CorsairInterface.InitializeCorsairSdk();
+                if (_corsair != null)
+                {
+                    CorsairSdk = true;
+                    CorsairSdkCalled = 1;
+                    corsairFirstSet = true;
+                    //WriteConsole(ConsoleTypes.Corsair, @"Corsair SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Corsair");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. Please make sure CUE2 or iCUE is running.");
+                }
+            }
+
+            if (CoolermasterSdkCalled == 0)
+            {
+                _coolermaster = CoolermasterInterface.InitializeCoolermasterSdk();
+                if (_coolermaster != null)
+                {
+                    CoolermasterSdk = true;
+                    CoolermasterSdkCalled = 1;
+                    coolermasterFirstSet = true;
+                    WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Coolermaster");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK failed to load.");
+                }
+            }
+
+            if (SteelSdkCalled == 0)
+            {
+                WriteConsole(ConsoleTypes.Steel, @"Attempting to load SteelSeries GameSense SDK..");
+                _steel = SteelSeriesInterface.InitializeSteelSdk();
+                if (_steel != null)
+                {
+                    SteelSdk = true;
+                    SteelSdkCalled = 1;
+                    steelFirstSet = true;
+                
+                    WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK Loaded.");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("SteelSeries");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
+                }
+            }
+
+            if (WootingSdkCalled == 0)
+            {
+                _wooting = WootingInterface.InitializeWootingSdk();
+                if (_wooting != null)
+                {
+                    WootingSdk = true;
+                    WootingSdkCalled = 1;
+                    wootingFirstSet = true;
+                    WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Wooting");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK failed to load.");
+                }
+            }
+
+            if (LifxSdkCalled == 0)
+            {
+                //Load LIFX SDK
+                _lifx = LifxInterface.InitializeLifxsdk();
+                if (_lifx != null)
+                {
+                    LifxSdk = true;
+                    LifxSdkCalled = 1;
+                    lifxFirstSet = true;
+                    //WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Loaded");
+
+                    if (_lifx.LifxBulbs > 0)
+                    {
+                        if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                        {
+                            AutoMeasurement.Client.TrackScreenView("LIFX");
+                        }
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK failed to load.");
+                }
             }
 
 
@@ -280,6 +307,161 @@ namespace Chromatics
             //InitializeLIFXSDK();
             ResetDeviceDataGrid();
             //GlobalResetDevices();
+        }
+
+        public void ReInitializeSdk()
+        {
+            if (RazerSdkCalled == 0 && razerFirstSet)
+            {
+                WriteConsole(ConsoleTypes.Razer, @"Attempting to load Razer SDK..");
+                _razer = RazerInterface.InitializeRazerSdk();
+                if (_razer != null)
+                {
+                    RazerSdk = true;
+                    RazerSdkCalled = 1;
+                    //WriteConsole(ConsoleTypes.Razer, @"Razer SDK Loaded");
+                    _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Razer");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Razer, @"Razer SDK failed to load.");
+                }
+            }
+
+            if (LogitechSdkCalled == 0 && logitechFirstSet)
+            {
+                WriteConsole(ConsoleTypes.Logitech, @"Attempting to load Logitech SDK..");
+                _logitech = LogitechInterface.InitializeLogitechSdk();
+                if (_logitech != null)
+                {
+                    LogitechSdk = true;
+                    LogitechSdkCalled = 1;
+                    WriteConsole(ConsoleTypes.Logitech, @"Logitech SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Logitech");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Logitech, @"Logitech SDK failed to load. Please make sure LGS is running.");
+                }
+            }
+
+            if (CorsairSdkCalled == 0 && corsairFirstSet)
+            {
+                WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
+                _corsair = CorsairInterface.InitializeCorsairSdk();
+                if (_corsair != null)
+                {
+                    CorsairSdk = true;
+                    CorsairSdkCalled = 1;
+                    //WriteConsole(ConsoleTypes.Corsair, @"Corsair SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Corsair");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Corsair, @"CUE SDK failed to load. Please make sure CUE2 or iCUE is running.");
+                }
+            }
+
+            if (CoolermasterSdkCalled == 0 && coolermasterFirstSet)
+            {
+                _coolermaster = CoolermasterInterface.InitializeCoolermasterSdk();
+                if (_coolermaster != null)
+                {
+                    CoolermasterSdk = true;
+                    CoolermasterSdkCalled = 1;
+                    WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Coolermaster");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Coolermaster, @"Coolermaster SDK failed to load.");
+                }
+            }
+
+            if (SteelSdkCalled == 0 && steelFirstSet)
+            {
+                WriteConsole(ConsoleTypes.Steel, @"Attempting to load SteelSeries GameSense SDK..");
+                _steel = SteelSeriesInterface.InitializeSteelSdk();
+                if (_steel != null)
+                {
+                    SteelSdk = true;
+                    SteelSdkCalled = 1;
+                
+                    WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK Loaded.");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("SteelSeries");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
+                }
+            }
+
+            if (WootingSdkCalled == 0 && wootingFirstSet)
+            {
+                _wooting = WootingInterface.InitializeWootingSdk();
+                if (_wooting != null)
+                {
+                    WootingSdk = true;
+                    WootingSdkCalled = 1;
+                    WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Wooting");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK failed to load.");
+                }
+            }
+
+            if (LifxSdkCalled == 0 && lifxFirstSet)
+            {
+                //Load LIFX SDK
+                _lifx = LifxInterface.InitializeLifxsdk();
+                if (_lifx != null)
+                {
+                    LifxSdk = true;
+                    LifxSdkCalled = 1;
+                    //WriteConsole(ConsoleTypes.LIFX, "LIFX SDK Loaded");
+
+                    if (_lifx.LifxBulbs > 0)
+                    {
+                        if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                        {
+                            AutoMeasurement.Client.TrackScreenView("LIFX");
+                        }
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK failed to load.");
+                }
+            }
+            
+            //ResetDeviceDataGrid();
         }
 
         public void ShutDownDevices()

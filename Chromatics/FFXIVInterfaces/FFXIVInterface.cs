@@ -115,6 +115,8 @@ namespace Chromatics
             GlobalStopParticleEffects();
             GlobalStopCycleEffects();
             GlobalApplyAllDeviceLighting(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+
+            ShutDownDevices();
             
             //GlobalUpdateState("wave", Color.Magenta, false, Color.MediumSeaGreen, true, 40);
 
