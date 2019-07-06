@@ -1118,7 +1118,6 @@ namespace Chromatics
 
             chk_reactiveweather.Checked = ChromaticsSettings.ChromaticsSettingsReactiveWeather;
             chk_debugopt.Checked = ChromaticsSettings.ChromaticsSettingsDebugOpt;
-            chk_disablememory.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCheck;
 
             nm_criticalhp.Value = ChromaticsSettings.ChromaticsSettingsCriticalHP;
             chk_actflash.Checked = ChromaticsSettings.ChromaticsSettingsACTFlash;
@@ -3044,15 +3043,7 @@ namespace Chromatics
             SetKeysbase = false;
             SaveChromaticsSettings(1);
         }
-
-        private void chk_disablememory_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Startup == false) return;
-
-            ChromaticsSettings.ChromaticsSettingsMemoryCheck = chk_disablememory.Checked;
-            SaveChromaticsSettings(1);
-        }
-
+        
         private void btn_ffxivcachereset_Click(object sender, EventArgs e)
         {
             var cacheReset =

@@ -127,7 +127,6 @@
             this.gB_General = new System.Windows.Forms.GroupBox();
             this.lbl_polling = new System.Windows.Forms.Label();
             this.cb_pollingint = new System.Windows.Forms.ComboBox();
-            this.chk_disablememory = new System.Windows.Forms.CheckBox();
             this.chk_debugopt = new System.Windows.Forms.CheckBox();
             this.lbl_lang = new System.Windows.Forms.Label();
             this.cb_lang = new System.Windows.Forms.ComboBox();
@@ -1454,7 +1453,6 @@
             // 
             this.gB_General.Controls.Add(this.lbl_polling);
             this.gB_General.Controls.Add(this.cb_pollingint);
-            this.gB_General.Controls.Add(this.chk_disablememory);
             this.gB_General.Controls.Add(this.chk_debugopt);
             this.gB_General.Controls.Add(this.lbl_lang);
             this.gB_General.Controls.Add(this.cb_lang);
@@ -1505,20 +1503,6 @@
         "e: Smaller intervals uses more system resources. May crash Chromatics if used in" +
         "correctly.");
             this.cb_pollingint.SelectedIndexChanged += new System.EventHandler(this.cb_pollingint_SelectedIndexChanged);
-            // 
-            // chk_disablememory
-            // 
-            this.chk_disablememory.AutoSize = true;
-            this.chk_disablememory.Location = new System.Drawing.Point(17, 148);
-            this.chk_disablememory.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_disablememory.Name = "chk_disablememory";
-            this.chk_disablememory.Size = new System.Drawing.Size(135, 17);
-            this.chk_disablememory.TabIndex = 8;
-            this.chk_disablememory.Text = "Disable Memory Check";
-            this.tooltip_main.SetToolTip(this.chk_disablememory, "Disable the automatic process that checks if Chromatics is using more memory than" +
-        " it should.\r\nDefault: ON");
-            this.chk_disablememory.UseVisualStyleBackColor = true;
-            this.chk_disablememory.CheckedChanged += new System.EventHandler(this.chk_disablememory_CheckedChanged);
             // 
             // chk_debugopt
             // 
@@ -2996,7 +2980,6 @@
         private System.Windows.Forms.ComboBox cb_headset_z2;
         private System.Windows.Forms.ComboBox cb_multizonemode;
         private System.Windows.Forms.CheckBox chk_keys_multimode;
-        private System.Windows.Forms.CheckBox chk_disablememory;
         private System.Windows.Forms.CheckBox chk_cutscenes;
         private System.Windows.Forms.CheckBox chk_vegasmode;
         private System.Windows.Forms.ComboBox cb_fkeymode;

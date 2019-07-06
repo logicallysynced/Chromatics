@@ -566,57 +566,6 @@ namespace Chromatics
             //Check for crash
             GlobalCheckCrash();
 
-            /*
-            if (!ChromaticsSettings.ChromaticsSettingsMemoryCheck)
-            {
-                if (xi > xi_interval)
-                {
-                    //Console.WriteLine(@"Ping");
-                    using (var proc = Process.GetCurrentProcess())
-                    {
-
-                        if (proc.PrivateMemorySize64 / 1024 > 153600)
-                        {
-                            WriteConsole(ConsoleTypes.Error,
-                                "Chromatics exceeded maximum memory size. Pausing execution (Memory Size: " +
-                                proc.PrivateMemorySize64 / 1024 + "MB).");
-                            SetFormName(@"Chromatics " + _currentVersionX + @" (Paused)");
-                            HoldReader = true;
-                            xi_interval = xi_scan;
-                        }
-                        else
-                        {
-                            if (HoldReader && xi_interval == xi_scan)
-                            {
-                                WriteConsole(ConsoleTypes.Ffxiv,
-                                    "Resuming Execution (Memory Size: " + proc.PrivateMemorySize64 / 1024 + "MB)..");
-                                SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
-                                HoldReader = false;
-                                xi_interval = xi_bench;
-                            }
-                        }
-                    }
-
-                    xi = 0;
-                }
-                else
-                {
-                    xi++;
-                }
-            }
-            else
-            {
-                if (HoldReader && xi_interval == xi_scan)
-                {
-                    WriteConsole(ConsoleTypes.Ffxiv,
-                        "Resuming Execution..");
-                    SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
-                    HoldReader = false;
-                    xi_interval = xi_bench;
-                }
-            }
-            */
-
             if (HoldReader) return;
             
             try
