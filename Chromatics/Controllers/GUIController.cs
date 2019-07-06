@@ -1112,6 +1112,7 @@ namespace Chromatics
             chk_impactflashtog.Checked = ChromaticsSettings.ChromaticsSettingsImpactToggle;
             chk_dfbelltoggle.Checked = ChromaticsSettings.ChromaticsSettingsDfBellToggle;
             chk_showstatuseffects.Checked = ChromaticsSettings.ChromaticsSettingsStatusEffectToggle;
+            chk_enablebulbextraeffect.Checked = ChromaticsSettings.ChromaticsSettingsExtraBulbEffects;
 
             chk_lcdtoggle.Checked = ChromaticsSettings.ChromaticsSettingsLcdEnabled;
             cb_lang.SelectedIndex = ChromaticsSettings.ChromaticsSettingsLanguage;
@@ -1130,6 +1131,7 @@ namespace Chromatics
             cb_alarmclock.SelectedIndex = cb_alarmclock.FindStringExact(ChromaticsSettings.ChromaticsSettingsCastAlarmTime);
             chk_castsrank.Checked = ChromaticsSettings.ChromaticsSettingsCastSRankAlert;
             chk_castreadycheck.Checked = ChromaticsSettings.ChromaticsSettingsCastReadyCheckAlert;
+                       
 
             if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
             {
@@ -2637,6 +2639,15 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsACTDamage[cb_actjobclass.SelectedIndex][0] = Convert.ToInt32(nm_actdmgprc.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void Chk_enablebulbextraeffect_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsExtraBulbEffects = chk_enablebulbextraeffect.Checked;
 
             SaveChromaticsSettings(1);
         }

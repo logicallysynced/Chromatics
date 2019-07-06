@@ -841,7 +841,6 @@ namespace Chromatics
 
         private delegate void BlinkDelegate();
 
-
         
     }
 

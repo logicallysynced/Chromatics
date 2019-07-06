@@ -223,6 +223,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_enablebulbextraeffect = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -919,6 +920,7 @@
             // tP_bulbs
             // 
             this.tP_bulbs.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_bulbs.Controls.Add(this.chk_enablebulbextraeffect);
             this.tP_bulbs.Controls.Add(this.dG_devices);
             this.tP_bulbs.Location = new System.Drawing.Point(4, 22);
             this.tP_bulbs.Margin = new System.Windows.Forms.Padding(2);
@@ -942,14 +944,14 @@
             this.col_mode,
             this.col_dattype,
             this.col_ID});
-            this.dG_devices.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dG_devices.Location = new System.Drawing.Point(0, 0);
+            this.dG_devices.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dG_devices.Location = new System.Drawing.Point(0, 27);
             this.dG_devices.Margin = new System.Windows.Forms.Padding(2);
             this.dG_devices.MultiSelect = false;
             this.dG_devices.Name = "dG_devices";
             this.dG_devices.RowHeadersVisible = false;
             this.dG_devices.RowTemplate.Height = 24;
-            this.dG_devices.Size = new System.Drawing.Size(717, 373);
+            this.dG_devices.Size = new System.Drawing.Size(717, 346);
             this.dG_devices.TabIndex = 1;
             this.dG_devices.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dG_devices_CellValueChanged);
             this.dG_devices.CurrentCellDirtyStateChanged += new System.EventHandler(this.dG_devices_CurrentCellDirtyStateChanged);
@@ -2773,6 +2775,19 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // chk_enablebulbextraeffect
+            // 
+            this.chk_enablebulbextraeffect.AutoSize = true;
+            this.chk_enablebulbextraeffect.Location = new System.Drawing.Point(542, 6);
+            this.chk_enablebulbextraeffect.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_enablebulbextraeffect.Name = "chk_enablebulbextraeffect";
+            this.chk_enablebulbextraeffect.Size = new System.Drawing.Size(170, 17);
+            this.chk_enablebulbextraeffect.TabIndex = 8;
+            this.chk_enablebulbextraeffect.Text = "Enable extra Smartbulb effects";
+            this.tooltip_main.SetToolTip(this.chk_enablebulbextraeffect, "Enables Menu, cutscene and vegas mode effects on Smartbulbs.\r\nDefault: OFF");
+            this.chk_enablebulbextraeffect.UseVisualStyleBackColor = true;
+            this.chk_enablebulbextraeffect.CheckedChanged += new System.EventHandler(this.Chk_enablebulbextraeffect_CheckedChanged);
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2800,6 +2815,7 @@
             this.tP_keypad.ResumeLayout(false);
             this.tP_keypad.PerformLayout();
             this.tP_bulbs.ResumeLayout(false);
+            this.tP_bulbs.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).EndInit();
             this.tP_misc.ResumeLayout(false);
             this.gP_ChromaLink.ResumeLayout(false);
@@ -3037,6 +3053,7 @@
         private System.Windows.Forms.Button btn_casttest;
         private System.Windows.Forms.CheckBox chk_castsrank;
         private System.Windows.Forms.CheckBox chk_castreadycheck;
+        private System.Windows.Forms.CheckBox chk_enablebulbextraeffect;
     }
 }
 
