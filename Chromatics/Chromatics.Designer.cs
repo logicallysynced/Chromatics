@@ -196,6 +196,7 @@
             this.cb_alarmclock = new System.Windows.Forms.ComboBox();
             this.chk_enabletimebell = new System.Windows.Forms.CheckBox();
             this.tP_cast = new System.Windows.Forms.TabPage();
+            this.chk_castreadycheck = new System.Windows.Forms.CheckBox();
             this.chk_castsrank = new System.Windows.Forms.CheckBox();
             this.btn_casttest = new System.Windows.Forms.Button();
             this.chk_castdfbell = new System.Windows.Forms.CheckBox();
@@ -223,7 +224,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_castreadycheck = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1276,7 +1276,8 @@
             this.chk_showstatuseffects.Size = new System.Drawing.Size(128, 17);
             this.chk_showstatuseffects.TabIndex = 8;
             this.chk_showstatuseffects.Text = "Enable Status Effects";
-            this.tooltip_main.SetToolTip(this.chk_showstatuseffects, "Displays your HP/MP/TP across your keyboard.\r\nDefault: ON");
+            this.tooltip_main.SetToolTip(this.chk_showstatuseffects, "Changes color theme based on various status effects inflicted on your character.\r" +
+        "\nDefault: ON");
             this.chk_showstatuseffects.UseVisualStyleBackColor = true;
             this.chk_showstatuseffects.CheckedChanged += new System.EventHandler(this.chk_showstatuseffects_CheckedChanged);
             // 
@@ -2505,6 +2506,21 @@
             this.tP_cast.TabIndex = 0;
             this.tP_cast.Text = "Google Cast";
             // 
+            // chk_castreadycheck
+            // 
+            this.chk_castreadycheck.AutoSize = true;
+            this.chk_castreadycheck.Location = new System.Drawing.Point(296, 44);
+            this.chk_castreadycheck.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_castreadycheck.Name = "chk_castreadycheck";
+            this.chk_castreadycheck.Size = new System.Drawing.Size(151, 17);
+            this.chk_castreadycheck.TabIndex = 15;
+            this.chk_castreadycheck.Text = "Enable Ready Check Alert";
+            this.chk_castreadycheck.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.tooltip_main.SetToolTip(this.chk_castreadycheck, "Casts an audible alert to your Chromecast or Google Home when a Ready Check is se" +
+        "nt.");
+            this.chk_castreadycheck.UseVisualStyleBackColor = true;
+            this.chk_castreadycheck.CheckedChanged += new System.EventHandler(this.Chk_castreadycheck_CheckedChanged);
+            // 
             // chk_castsrank
             // 
             this.chk_castsrank.AutoSize = true;
@@ -2772,21 +2788,6 @@
             this.notify_master.Text = "Chromatics";
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
-            // 
-            // chk_castreadycheck
-            // 
-            this.chk_castreadycheck.AutoSize = true;
-            this.chk_castreadycheck.Location = new System.Drawing.Point(296, 44);
-            this.chk_castreadycheck.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_castreadycheck.Name = "chk_castreadycheck";
-            this.chk_castreadycheck.Size = new System.Drawing.Size(151, 17);
-            this.chk_castreadycheck.TabIndex = 15;
-            this.chk_castreadycheck.Text = "Enable Ready Check Alert";
-            this.chk_castreadycheck.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.tooltip_main.SetToolTip(this.chk_castreadycheck, "Casts an audible alert to your Chromecast or Google Home when a Ready Check is se" +
-        "nt.");
-            this.chk_castreadycheck.UseVisualStyleBackColor = true;
-            this.chk_castreadycheck.CheckedChanged += new System.EventHandler(this.Chk_castreadycheck_CheckedChanged);
             // 
             // Chromatics
             // 
