@@ -28,6 +28,7 @@ namespace Chromatics.Controllers
             {
                 return (current - min) * (targetHigh - targetLow) / (max - min) + targetLow;
             }
+
         }
 
         public static class EnumUtil

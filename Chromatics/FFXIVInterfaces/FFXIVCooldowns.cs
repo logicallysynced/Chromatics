@@ -2590,8 +2590,11 @@ namespace Chromatics.FFXIVInterfaces
                 return 0;
 
             CheckCache();
+            var bit = Math.Max(BitConverter.ToUInt16(RawResourceData, i) / 100f - CurrentTimeshift, 0);
 
-            return Math.Max(BitConverter.ToUInt16(RawResourceData, i) / 1000f - CurrentTimeshift, 0);
+            if (bit > 1.0) bit = 1;
+
+            return bit;
         }
 
         public static byte GetRaw(int i)
@@ -2626,7 +2629,7 @@ namespace Chromatics.FFXIVInterfaces
             // MCH: Overheat timer (countdown from 10 seconds, 1000 = 1 second). Also the timer for when Gauss Barrel can be turned back on after overheat.
             // Monk: Greased Lightning timer
             // AST: Card timer
-            [MarshalAs(UnmanagedType.I2)] [FieldOffset(0x6)] // B0
+            [MarshalAs(UnmanagedType.I2)] [FieldOffset(0x5)] // B0
             public readonly short resource1;
 
             // Ninja: 0 most of the time. 1 briefly after casting huton
@@ -2634,13 +2637,13 @@ namespace Chromatics.FFXIVInterfaces
             // BLM: Combine resource2 and resource3 into an astral fire timer (ugly)
             // Monk: Greased Lightning Stacks
             // Bard: Song Repertoire stacks
-            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x8)] // B2
+            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x6)] // B2
             public readonly byte resource2;
 
             // Bard: 15 = Wanderer's Minuet, 10 = Army's Paeon, 5 = Mage's Ballad, Anything else = nothing. May be a bit mask.
             // MCH: Ammo count
             // BLM: Combine resource2 and resource3 into an astral fire timer (ugly)
-            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x9)] // B3
+            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x8)] // B3
             public readonly byte resource3;
 
             // MCH: Gauss barrel (bool)

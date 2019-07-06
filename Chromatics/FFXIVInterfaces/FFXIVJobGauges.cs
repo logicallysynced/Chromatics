@@ -588,9 +588,8 @@ namespace Chromatics
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int((int)greaseRemaining, 0, 16,
-                                    JobLightbar_Collection.Length, 0);
+                            var JobLightbar_Interpolate = ((int)greaseRemaining - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+                            
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
@@ -603,9 +602,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int((int)greaseRemaining, 0, 16,
-                                    JobFunction_Collection.Length, 0);
+                            var JobFunction_Interpolate = ((int)greaseRemaining - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -692,15 +689,13 @@ namespace Chromatics
                         var burstdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
                         var negdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGNegative);
                         var bloodremain = Cooldowns.BloodOfTheDragonTimeRemaining;
-                        var polBlood = (bloodremain - 0) * (50 - 0) / (30 - 0) + 0;
+                        var polBlood = (bloodremain - 0) * (50 - 0) / (1.0 - 0) + 0;
 
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int((int)bloodremain, 0, 30,
-                                    JobLightbar_Collection.Length, 0);
+                            var JobLightbar_Interpolate = ((int)bloodremain - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
@@ -713,9 +708,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int((int)bloodremain, 0, 30,
-                                    JobFunction_Collection.Length, 0);
+                            var JobFunction_Interpolate = ((int)bloodremain - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -848,9 +841,9 @@ namespace Chromatics
                         if (Cooldowns.Song != Cooldowns.BardSongs.None)
                         {
                             var songremain = Cooldowns.SongTimeRemaining;
-                            var polSong = (songremain - 0) * (50 - 0) / (30 - 0) + 0;
+                            var polSong = (songremain - 0) * (50 - 0) / (1.0 - 0) + 0;
 
-                            Console.WriteLine(songremain);
+                            Console.WriteLine(polSong);
 
                             switch (Cooldowns.Song)
                             {
@@ -901,15 +894,18 @@ namespace Chromatics
                                     }
 
                                     break;
+                                default:
+                                    GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                    GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                    GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
+                                    break;
                             }
 
                             //Lightbar
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                var JobLightbar_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int((int)songremain, 0, 30,
-                                        JobLightbar_Collection.Length, 0);
+                                var JobLightbar_Interpolate = ((int)songremain - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
 
                                 for (int i = 0; i < JobLightbar_Collection.Length; i++)
                                 {
@@ -922,9 +918,7 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
                                 var JobFunction_Collection = DeviceEffects.Functions;
-                                var JobFunction_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int((int)songremain, 0, 30,
-                                        JobFunction_Collection.Length, 0);
+                                var JobFunction_Interpolate = ((int)songremain - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
                                 {
@@ -1264,15 +1258,15 @@ namespace Chromatics
 
                         if (Cooldowns.EnochianActive)
                         {
-                            var enochtime = (Cooldowns.EnochianTimeRemaining - 0) * (40 - 0) / (30 - 0) + 0;
+                            var enochtime = (Cooldowns.EnochianTimeRemaining - 0) * (40 - 0) / (1.0 - 0) + 0;
 
                             //Lightbar
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                var JobLightbar_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int((int)Cooldowns.EnochianTimeRemaining, 0, 30,
-                                        JobLightbar_Collection.Length, 0);
+                                var JobLightbar_Interpolate = ((int)Cooldowns.EnochianTimeRemaining - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+
+                                
 
                                 for (int i = 0; i < JobLightbar_Collection.Length; i++)
                                 {
@@ -1285,9 +1279,7 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
                                 var JobFunction_Collection = DeviceEffects.Functions;
-                                var JobFunction_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int((int)Cooldowns.EnochianTimeRemaining, 0, 30,
-                                        JobFunction_Collection.Length, 0);
+                                var JobFunction_Interpolate = ((int)Cooldowns.EnochianTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
                                 {
@@ -1409,9 +1401,9 @@ namespace Chromatics
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int((int)Cooldowns.BloodOfTheDragonTimeRemaining, 0, 16,
-                                    JobLightbar_Collection.Length, 0);
+                            var JobLightbar_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+
+                            
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
@@ -1424,9 +1416,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int((int)Cooldowns.BloodOfTheDragonTimeRemaining, 0, 16,
-                                    JobFunction_Collection.Length, 0);
+                            var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1692,16 +1682,14 @@ namespace Chromatics
                         var hutoncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHuton);
 
                         var hutonremain = Cooldowns.HutonTimeRemaining;
-                        var polHuton = (hutonremain - 0) * (50 - 0) / (70 - 0) + 0;
+                        var polHuton = (hutonremain - 0) * (50 - 0) / (1.0 - 0) + 0;
 
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int((int)hutonremain, 0, 70,
-                                    JobLightbar_Collection.Length, 0);
-
+                            var JobLightbar_Interpolate = ((int)hutonremain - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+                            
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
                                 GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
@@ -1713,9 +1701,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int((int)hutonremain, 0, 70,
-                                    JobFunction_Collection.Length, 0);
+                            var JobFunction_Interpolate = ((int)hutonremain - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -2330,9 +2316,9 @@ namespace Chromatics
                                 if (_LightbarMode == LightbarMode.JobGauge)
                                 {
                                     var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                    var JobLightbar_Interpolate =
-                                        Helpers.FFXIVInterpolation.Interpolate_Int((int)mchoverheat, 0, 10,
-                                            JobLightbar_Collection.Length, 0);
+                                    var JobLightbar_Interpolate = ((int)mchoverheat - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+
+                                    
 
                                     for (int i = 0; i < JobLightbar_Collection.Length; i++)
                                     {
@@ -2345,9 +2331,7 @@ namespace Chromatics
                                 if (_FKeyMode == FKeyMode.JobGauge)
                                 {
                                     var JobFunction_Collection = DeviceEffects.Functions;
-                                    var JobFunction_Interpolate =
-                                        Helpers.FFXIVInterpolation.Interpolate_Int((int)mchoverheat, 0, 10,
-                                            JobFunction_Collection.Length, 0);
+                                    var JobFunction_Interpolate = ((int)mchoverheat - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                                     for (int i = 0; i < JobFunction_Collection.Length; i++)
                                     {
