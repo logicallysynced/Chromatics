@@ -285,16 +285,46 @@ namespace Chromatics
         public void ShutDownDevices()
         {
             if (RazerSdkCalled == 1)
+            {
                 _razer.ShutdownSdk();
+                _razer = null;
+                RazerSdkCalled = 0;
+            }
+
+            if (LogitechSdkCalled == 1)
+            {
+                //_logitech.ShutdownSdk();
+                _logitech = null;
+                LogitechSdkCalled = 0;
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                //_corsair.ShutdownSdk();
+                _corsair = null;
+                CorsairSdkCalled = 0;
+            }
 
             if (CoolermasterSdkCalled == 1)
+            {
                 _coolermaster.Shutdown();
+                _coolermaster = null;
+                CoolermasterSdkCalled = 0;
+            }
 
             if (SteelSdkCalled == 1)
+            {
                 _steel.Shutdown();
+                _steel = null;
+                SteelSdkCalled = 0;
+            }
 
             if (WootingSdkCalled == 1)
+            {
                 _wooting.Shutdown();
+                _wooting = null;
+                WootingSdkCalled = 0;
+            }
         }
 
         public void GlobalCheckCrash()

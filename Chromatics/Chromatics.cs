@@ -100,6 +100,7 @@ namespace Chromatics
         public bool Init = false;
         public bool IsDx11 = false;
         private bool _keyAlt;
+        private bool _gameStop = true;
 
         private bool _keyCtrl;
         private bool _keyShift;
@@ -678,8 +679,15 @@ namespace Chromatics
         {
             while (!ct.IsCancellationRequested)
             {
-                await Task.Delay(2500, ct);
-                AttachFfxiv();
+                if (_gameStop)
+                {
+                    await Task.Delay(2500, ct);
+                    AttachFfxiv();
+                }
+                else
+                {
+                    await Task.Delay(5000, ct);
+                }
             }
         }
 
@@ -694,6 +702,7 @@ namespace Chromatics
                 WriteConsole(ConsoleTypes.Ffxiv, "Attached to FFXIV");
                 _gameNotify = false;
                 notify_master.Text = @"Attached to FFXIV";
+                _gameStop = false;
 
                 if (ChromaticsSettings.ChromaticsSettingsDesktopNotifications)
                 {
@@ -712,7 +721,7 @@ namespace Chromatics
                 Attatched = 1;
                 SetFormName(@"Chromatics " + _currentVersionX + @" (Attached)");
 
-                _attachcts.Cancel();
+                //_attachcts.Cancel();
                 
                 MemoryTasks.Remove(MemoryTask);
                 MemoryTask = null;

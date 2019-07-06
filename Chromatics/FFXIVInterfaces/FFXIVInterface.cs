@@ -76,7 +76,7 @@ namespace Chromatics
 
             HoldReader = true;
             _ffxiVcts.Cancel();
-            _attachcts.Cancel();
+            //_attachcts.Cancel();
 
             if (ArxSdkCalled == 1 && ArxState == 0)
                 _arx.ArxSetIndex("info.html");
@@ -121,7 +121,9 @@ namespace Chromatics
             //Debug.WriteLine("Resetting..");
 
             MemoryTasks.Remove(MemoryTask);
+            _gameStop = true;
 
+            /*
             _attachcts = new CancellationTokenSource();
 
             MemoryTask = new Task(() =>
@@ -131,6 +133,7 @@ namespace Chromatics
 
             MemoryTasks.Add(MemoryTask);
             MemoryTasks.Run(MemoryTask);
+            */
         }
 
         /* Attatch to FFXIV process after determining if running DX9 or DX11.
@@ -332,7 +335,7 @@ namespace Chromatics
             {
                 Thread.Sleep(ChromaticsSettings.ChromaticsSettingsPollingInterval);
 
-                if (_exit)
+                if (_exit || _gameStop)
                 {
                     break;
                 }
@@ -462,7 +465,7 @@ namespace Chromatics
                             //if (_catchMenuchange <= 5)
                             {
                                 //Set Game Active
-                                WriteConsole(ConsoleTypes.Ffxiv, @"Game Running (" + _menuInfo.Name + ")");
+                                WriteConsole(ConsoleTypes.Ffxiv, @"Game Running");
                                 SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
 
 
