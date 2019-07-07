@@ -405,7 +405,7 @@ namespace Chromatics
             {"ColorMappingWeatherTrueblueHighlight", new[] { "True Blue (Highlight)", "10", "Black", "White"}},
             {"ColorMappingWeatherUmbralturbulenceBase", new[] { "Umbral Turbulence (Base)", "10", "Black", "White"}},
             {"ColorMappingWeatherUmbralturbulenceHighlight", new[] { "Umbral Turbulence (Highlight)", "10", "Black", "White"}},
-            {"ColorMappingWeatherEverlastinglightBase", new[] { "Everlasting Light (Highlight)", "10", "Black", "White"}},
+            {"ColorMappingWeatherEverlastinglightBase", new[] { "Everlasting Light (Base)", "10", "Black", "White"}},
             {"ColorMappingWeatherEverlastinglightHighlight", new[] { "Everlasting Light (Highlight)", "10", "Black", "White"}},
             {"ColorMappingWeatherTerminationBase", new[] { "Termination (Base)", "10", "Black", "White"}},
             {"ColorMappingWeatherTerminationHighlight", new[] { "Termination (Highlight)", "10", "Black", "White"}},
