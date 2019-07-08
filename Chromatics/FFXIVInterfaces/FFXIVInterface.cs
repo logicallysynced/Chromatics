@@ -3398,12 +3398,13 @@ namespace Chromatics
                         {
                             
                             Cooldowns.RefreshData();
+                            Sharlayan.Models.ReadResults.ActionResult hotbars = null;
 
                             //Hotbars        
 
                             if (Reader.CanGetActions())
                             {
-                                var hotbars = Reader.GetActions();
+                                hotbars = Reader.GetActions();
 
                                 if (ChromaticsSettings.ChromaticsSettingsKeybindToggle)
                                 {
@@ -4451,7 +4452,7 @@ namespace Chromatics
                             
                             
                             //Job Gauges
-                            ImplementJobGauges(statEffects, _baseColor);
+                            ImplementJobGauges(statEffects, _baseColor, hotbars);
 
 
                             //Pull Countdown

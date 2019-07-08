@@ -143,11 +143,17 @@ namespace Chromatics.Datastore
             new[] { 5000 },
             new[] { 5000 },
             new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
             new[] { 5000 }
         };
 
         public int[][] ChromaticsSettingsACTHPS =
         {
+            new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
             new[] { 5000 },
             new[] { 5000 },
             new[] { 5000 },
@@ -199,11 +205,17 @@ namespace Chromatics.Datastore
             new[] { 25000 },
             new[] { 25000 },
             new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
+            new[] { 25000 },
             new[] { 25000 }
         };
 
         public int[][] ChromaticsSettingsACTTargetCrit =
         {
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
@@ -255,11 +267,17 @@ namespace Chromatics.Datastore
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 }
         };
 
         public int[][] ChromaticsSettingsACTTargetCritDH =
         {
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
@@ -311,11 +329,17 @@ namespace Chromatics.Datastore
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 }
         };
 
         public int[][] ChromaticsSettingsACTDamage =
         {
+            new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
@@ -348,7 +372,6 @@ namespace Chromatics.Datastore
     {
         public string ColorMappingAmnesia = ColorTranslator.ToHtml(Color.Snow);
         public string ColorMappingBaseColor = ColorTranslator.ToHtml(Color.DodgerBlue);
-
         public string ColorMappingBind = ColorTranslator.ToHtml(Color.BlueViolet);
         public string ColorMappingBleed = ColorTranslator.ToHtml(Color.IndianRed);
         public string ColorMappingBurns = ColorTranslator.ToHtml(Color.OrangeRed);
@@ -481,6 +504,13 @@ namespace Chromatics.Datastore
         public string ColorMappingJobRDMNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobRDMBlackMana = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingJobRDMWhiteMana = ColorTranslator.ToHtml(Color.White);
+        public string ColorMappingJobDNCNegative = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingJobDNCEntrechat = ColorTranslator.ToHtml(Color.Blue);
+        public string ColorMappingJobDNCPirouette = ColorTranslator.ToHtml(Color.Yellow);
+        public string ColorMappingJobDNCEmboite = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingJobDNCJete = ColorTranslator.ToHtml(Color.Lime);
+        public string ColorMappingJobDNCStandardFinish = ColorTranslator.ToHtml(Color.Aquamarine);
+        public string ColorMappingJobDNCTechnicalFinish = ColorTranslator.ToHtml(Color.MediumVioletRed);
         public string ColorMappingMenuBase = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingJobCrafterNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobCrafterInnerquiet = ColorTranslator.ToHtml(Color.BlueViolet);
