@@ -312,6 +312,8 @@ namespace Chromatics
             {"ColorMappingJobDNCJete", new[] { "DNC: Jete", "9", "Black", "White"}},
             {"ColorMappingJobDNCStandardFinish", new[] { "DNC: Standard Finish", "9", "Black", "White"}},
             {"ColorMappingJobDNCTechnicalFinish", new[] { "DNC: Technical Finish", "9", "Black", "White"}},
+            {"ColorMappingJobGNBNegative", new[] { "GNB: Blank Key", "9", "Black", "White"}},
+            {"ColorMappingJobGNBRoyalGuard", new[] { "GNB: Royal Guard", "9", "Black", "White"}},
             {"ColorMappingJobCrafterNegative", new[] { "Crafter: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobCrafterInnerquiet", new[] { "Crafter: Inner Quiet Stacks", "9", "Black", "White"}},
             {"ColorMappingJobCrafterCollectable", new[] { "Crafter: Collectables", "9", "Black", "White"}},

@@ -511,6 +511,8 @@ namespace Chromatics.Datastore
         public string ColorMappingJobDNCJete = ColorTranslator.ToHtml(Color.Lime);
         public string ColorMappingJobDNCStandardFinish = ColorTranslator.ToHtml(Color.Aquamarine);
         public string ColorMappingJobDNCTechnicalFinish = ColorTranslator.ToHtml(Color.MediumVioletRed);
+        public string ColorMappingJobGNBNegative = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingJobGNBRoyalGuard = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingMenuBase = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingJobCrafterNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobCrafterInnerquiet = ColorTranslator.ToHtml(Color.BlueViolet);

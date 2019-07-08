@@ -3347,6 +3347,190 @@ namespace Chromatics
                         }
 
                         break;
+                    case Actor.Job.GNB:
+                        if (statEffects.Find(i => i.StatusName == "Royal Guard") != null)
+                        {
+                            GlobalApplyMapKeyLighting("NumLock",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard), false);
+                            GlobalApplyMapKeyLighting("NumDivide",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard), false);
+                            GlobalApplyMapKeyLighting("NumMultiply",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard), false);
+                            GlobalApplyMapKeyLighting("NumSubtract",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard), false);
+                            GlobalApplyMapKeyLighting("Num7",
+                                    ColorTranslator.FromHtml(ColorMappings
+                                        .ColorMappingJobGNBRoyalGuard),
+                                    false);
+                            GlobalApplyMapKeyLighting("Num8",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("Num9",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("Num6",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("Num5",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("Num4",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("Num3",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("Num2",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("Num1",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("Num0",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("NumAdd",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("NumEnter",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+                            GlobalApplyMapKeyLighting("NumDecimal",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBRoyalGuard),
+                                false);
+
+                            if (_FKeyMode == FKeyMode.JobGauge)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Functions.ToList();
+
+                                for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        ColorTranslator.FromHtml(ColorMappings
+                                            .ColorMappingJobGNBRoyalGuard), false);
+                                }
+                            }
+
+                            if (_LightbarMode == LightbarMode.JobGauge)
+                            {
+                                var Lightbar_Collection = DeviceEffects.LightbarZones.ToList();
+
+                                for (int i = 0; i < Lightbar_Collection.Count; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(Lightbar_Collection[i],
+                                        ColorTranslator.FromHtml(ColorMappings
+                                            .ColorMappingJobGNBRoyalGuard), false);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            GlobalApplyMapKeyLighting("NumLock",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative), false);
+                            GlobalApplyMapKeyLighting("NumDivide",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative), false);
+                            GlobalApplyMapKeyLighting("NumMultiply",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative), false);
+                            GlobalApplyMapKeyLighting("NumSubtract",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative), false);
+                            GlobalApplyMapKeyLighting("Num7",
+                                    ColorTranslator.FromHtml(ColorMappings
+                                        .ColorMappingJobGNBNegative),
+                                    false);
+                            GlobalApplyMapKeyLighting("Num8",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("Num9",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("Num6",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("Num5",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("Num4",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("Num3",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("Num2",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("Num1",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("Num0",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("NumAdd",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("NumEnter",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+                            GlobalApplyMapKeyLighting("NumDecimal",
+                                ColorTranslator.FromHtml(ColorMappings
+                                    .ColorMappingJobGNBNegative),
+                                false);
+
+                            if (_FKeyMode == FKeyMode.JobGauge)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Functions.ToList();
+
+                                for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        ColorTranslator.FromHtml(ColorMappings
+                                            .ColorMappingJobGNBNegative), false);
+                                }
+                            }
+
+                            if (_LightbarMode == LightbarMode.JobGauge)
+                            {
+                                var Lightbar_Collection = DeviceEffects.LightbarZones.ToList();
+
+                                for (int i = 0; i < Lightbar_Collection.Count; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(Lightbar_Collection[i],
+                                        ColorTranslator.FromHtml(ColorMappings
+                                            .ColorMappingJobGNBNegative), false);
+                                }
+                            }
+                        }
+                        break;
                     case Actor.Job.ALC:
                     case Actor.Job.ARM:
                     case Actor.Job.BSM:
