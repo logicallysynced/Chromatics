@@ -3124,7 +3124,9 @@ namespace Chromatics
                             //FKeys
                             if (_FKeyMode == FKeyMode.HpMp)
                             {
-                                var HpFunction_Collection = DeviceEffects.Function1;
+                                var HpFunction_Collection = DeviceEffects.FunctionL;
+                                
+
                                 var HpFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
                                         HpFunction_Collection.Length, 0);
@@ -3284,7 +3286,8 @@ namespace Chromatics
                             //FKeys
                             if (_FKeyMode == FKeyMode.HpMp)
                             {
-                                var MpFunction_Collection = DeviceEffects.Function2;
+                                var MpFunction_Collection = DeviceEffects.FunctionR;
+                                
                                 var MpFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
                                         MpFunction_Collection.Length, 0);
