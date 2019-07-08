@@ -196,6 +196,7 @@ namespace Chromatics
         public DevModeTypes _CLZone3Mode = DevModeTypes.DefaultColor;
         public DevModeTypes _CLZone4Mode = DevModeTypes.DefaultColor;
         public DevModeTypes _CLZone5Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _CLZone6Mode = DevModeTypes.DefaultColor;
 
         public LightbarMode _LightbarMode = LightbarMode.TargetHp;
         public FKeyMode _FKeyMode = FKeyMode.HpMp;

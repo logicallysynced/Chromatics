@@ -61,6 +61,7 @@ namespace Chromatics.Datastore
         public string CLZone3Mode = "DefaultColor";
         public string CLZone4Mode = "DefaultColor";
         public string CLZone5Mode = "DefaultColor";
+        public string CLZone6Mode = "DefaultColor";
 
         public string HeadsetZone1Mode = "DefaultColor";
         public string HeadsetZone2Mode = "HighlightColor";

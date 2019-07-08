@@ -74,6 +74,7 @@ namespace Chromatics
             dr.CLZone3Mode = Helpers.ConvertDevModeToString(_CLZone3Mode);
             dr.CLZone4Mode = Helpers.ConvertDevModeToString(_CLZone4Mode);
             dr.CLZone5Mode = Helpers.ConvertDevModeToString(_CLZone5Mode);
+            dr.CLZone6Mode = Helpers.ConvertDevModeToString(_CLZone6Mode);
 
             dr.HeadsetZone1Mode = Helpers.ConvertDevModeToString(_HeadsetZone1Mode);
             dr.KeypadZone1Mode = Helpers.ConvertDevMultiModeToString(_KeypadZone1Mode);
@@ -195,6 +196,7 @@ namespace Chromatics
                         _CLZone3Mode = Helpers.ConvertStringToDevMode(dr.CLZone3Mode);
                         _CLZone4Mode = Helpers.ConvertStringToDevMode(dr.CLZone4Mode);
                         _CLZone5Mode = Helpers.ConvertStringToDevMode(dr.CLZone5Mode);
+                        _CLZone6Mode = Helpers.ConvertStringToDevMode(dr.CLZone6Mode);
 
                         _HeadsetZone1Mode = Helpers.ConvertStringToDevMode(dr.HeadsetZone1Mode);
                         _KeypadZone1Mode = Helpers.ConvertStringToDevMultiMode(dr.KeypadZone1Mode);

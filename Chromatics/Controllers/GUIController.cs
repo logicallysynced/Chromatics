@@ -1214,6 +1214,7 @@ namespace Chromatics
                 cb_chromalink_z3.Items.Add(item.Value);
                 cb_chromalink_z4.Items.Add(item.Value);
                 cb_chromalink_z5.Items.Add(item.Value);
+                cb_chromalink_z6.Items.Add(item.Value);
             }
 
             foreach (var item in _devModesMulti)
@@ -1269,6 +1270,7 @@ namespace Chromatics
             cb_chromalink_z3.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone3Mode);
             cb_chromalink_z4.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone4Mode);
             cb_chromalink_z5.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone5Mode);
+            cb_chromalink_z6.SelectedItem = Helpers.ConvertDevModeToCB(_CLZone6Mode);
 
             chk_keys_singlemode.Checked = _KeysSingleKeyModeEnabled;
             cb_singlezonemode.Enabled = _KeysSingleKeyModeEnabled;
@@ -2950,6 +2952,21 @@ namespace Chromatics
             {
                 if ((string)cb_chromalink_z5.SelectedItem != item.Value) continue;
                 _CLZone5Mode = Helpers.ConvertCBToDevMode(item.Value);
+                break;
+            }
+
+            SetCLbase = false;
+            SaveDevices();
+        }
+
+        private void cb_chromalink_z6_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            foreach (var item in _devModesA)
+            {
+                if ((string)cb_chromalink_z6.SelectedItem != item.Value) continue;
+                _CLZone6Mode = Helpers.ConvertCBToDevMode(item.Value);
                 break;
             }
 

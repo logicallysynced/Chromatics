@@ -565,7 +565,7 @@ namespace Chromatics
 
             if (CorsairSdkCalled == 1)
                 _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
-                    _corsairDeviceMousepad, _corsairDeviceHeadset, baseColor);
+                    _corsairDeviceMousepad, _corsairDeviceHeadset, _razerDeviceChromaLink, baseColor);
 
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse, baseColor);
@@ -1141,14 +1141,16 @@ namespace Chromatics
             if (mode == _HeadsetZone2Mode)
             {
                 if (RazerSdkCalled == 1)
-                    //
+                {
+                    _razer.ApplyMapHeadsetLighting(col, clear);
+                }
 
                 if (LogitechSdkCalled == 1)
                 {
                     _logitech.ApplyMapHeadsetLighting("1", col);
                     _logitech.ApplyMapPadSpeakers("1", col);
                     _logitech.ApplyMapPadSpeakers("3", col);
-                    }
+                }
 
                 if (CorsairSdkCalled == 1)
                 {
@@ -1230,7 +1232,7 @@ namespace Chromatics
         public void GlobalApplyMapChromaLinkLighting(DevModeTypes mode, Color col)
         {
             if (mode == DevModeTypes.Disabled) return;
-            if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode) return;
+            if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
 
             
             
@@ -1238,37 +1240,52 @@ namespace Chromatics
             {
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 0);
+
+                if (CorsairSdkCalled == 1)
+                    _corsair.ApplyMapOtherLighting(col, 1);
             }
 
             if (mode == _CLZone2Mode)
             {
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 1);
+
+                if (CorsairSdkCalled == 1)
+                    _corsair.ApplyMapOtherLighting(col, 2);
             }
 
             if (mode == _CLZone3Mode)
             {
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 2);
+
+                if (CorsairSdkCalled == 1)
+                    _corsair.ApplyMapOtherLighting(col, 3);
             }
 
             if (mode == _CLZone4Mode)
             {
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 3);
+
+                if (CorsairSdkCalled == 1)
+                    _corsair.ApplyMapOtherLighting(col, 4);
             }
 
             if (mode == _CLZone5Mode)
             {
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 4);
+
+                if (CorsairSdkCalled == 1)
+                    _corsair.ApplyMapOtherLighting(col, 5);
             }
         }
 
         public void GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, double val)
         {
             if (mode == DevModeTypes.Disabled) return;
-            if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode) return;
+            if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
 
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);

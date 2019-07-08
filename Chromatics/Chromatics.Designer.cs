@@ -93,6 +93,8 @@
             this.col_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tP_misc = new System.Windows.Forms.TabPage();
             this.gP_ChromaLink = new System.Windows.Forms.GroupBox();
+            this.lbl_chromalink_z6 = new System.Windows.Forms.Label();
+            this.cb_chromalink_z6 = new System.Windows.Forms.ComboBox();
             this.lbl_chromalink_z5 = new System.Windows.Forms.Label();
             this.cb_chromalink_z5 = new System.Windows.Forms.ComboBox();
             this.lbl_chromalink_z4 = new System.Windows.Forms.Label();
@@ -126,6 +128,7 @@
             this.chk_lccenable = new System.Windows.Forms.CheckBox();
             this.lb_lcc = new System.Windows.Forms.Label();
             this.gB_General = new System.Windows.Forms.GroupBox();
+            this.chk_releasedevices = new System.Windows.Forms.CheckBox();
             this.lbl_polling = new System.Windows.Forms.Label();
             this.cb_pollingint = new System.Windows.Forms.ComboBox();
             this.chk_debugopt = new System.Windows.Forms.CheckBox();
@@ -224,7 +227,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_releasedevices = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1033,6 +1035,8 @@
             // 
             // gP_ChromaLink
             // 
+            this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z6);
+            this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z6);
             this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z5);
             this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z5);
             this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z4);
@@ -1048,10 +1052,34 @@
             this.gP_ChromaLink.Margin = new System.Windows.Forms.Padding(2);
             this.gP_ChromaLink.Name = "gP_ChromaLink";
             this.gP_ChromaLink.Padding = new System.Windows.Forms.Padding(2);
-            this.gP_ChromaLink.Size = new System.Drawing.Size(350, 196);
+            this.gP_ChromaLink.Size = new System.Drawing.Size(350, 232);
             this.gP_ChromaLink.TabIndex = 0;
             this.gP_ChromaLink.TabStop = false;
-            this.gP_ChromaLink.Text = "Razer Chroma Link";
+            this.gP_ChromaLink.Text = "ChromaLink/Other Devices";
+            // 
+            // lbl_chromalink_z6
+            // 
+            this.lbl_chromalink_z6.AutoSize = true;
+            this.lbl_chromalink_z6.Location = new System.Drawing.Point(10, 179);
+            this.lbl_chromalink_z6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_chromalink_z6.Name = "lbl_chromalink_z6";
+            this.lbl_chromalink_z6.Size = new System.Drawing.Size(41, 13);
+            this.lbl_chromalink_z6.TabIndex = 26;
+            this.lbl_chromalink_z6.Text = "Zone 6";
+            // 
+            // cb_chromalink_z6
+            // 
+            this.cb_chromalink_z6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_chromalink_z6.FormattingEnabled = true;
+            this.cb_chromalink_z6.Location = new System.Drawing.Point(62, 177);
+            this.cb_chromalink_z6.Margin = new System.Windows.Forms.Padding(2);
+            this.cb_chromalink_z6.Name = "cb_chromalink_z6";
+            this.cb_chromalink_z6.Size = new System.Drawing.Size(132, 21);
+            this.cb_chromalink_z6.TabIndex = 25;
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z6, "Controls RGB functionality for various LED zones on Chromalink or other devices. " +
+        "\r\nUp to five static zones are supported.\r\n\r\nCommander Pro Zone 6\r\nLightning Node" +
+        " Zone 6\r\nMemory Module 6");
+            this.cb_chromalink_z6.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z6_SelectedIndexChanged);
             // 
             // lbl_chromalink_z5
             // 
@@ -1072,8 +1100,7 @@
             this.cb_chromalink_z5.Name = "cb_chromalink_z5";
             this.cb_chromalink_z5.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z5.TabIndex = 23;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z5, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
-        "five static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z5, resources.GetString("cb_chromalink_z5.ToolTip"));
             this.cb_chromalink_z5.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z5_SelectedIndexChanged);
             // 
             // lbl_chromalink_z4
@@ -1095,8 +1122,7 @@
             this.cb_chromalink_z4.Name = "cb_chromalink_z4";
             this.cb_chromalink_z4.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z4.TabIndex = 21;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z4, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
-        "five static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z4, resources.GetString("cb_chromalink_z4.ToolTip"));
             this.cb_chromalink_z4.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z4_SelectedIndexChanged);
             // 
             // lbl_chromalink_z3
@@ -1118,8 +1144,7 @@
             this.cb_chromalink_z3.Name = "cb_chromalink_z3";
             this.cb_chromalink_z3.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z3.TabIndex = 19;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z3, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
-        "five static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z3, resources.GetString("cb_chromalink_z3.ToolTip"));
             this.cb_chromalink_z3.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z3_SelectedIndexChanged);
             // 
             // lbl_chromalink_z2
@@ -1141,8 +1166,7 @@
             this.cb_chromalink_z2.Name = "cb_chromalink_z2";
             this.cb_chromalink_z2.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z2.TabIndex = 17;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z2, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
-        "five static zones are supported.");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z2, resources.GetString("cb_chromalink_z2.ToolTip"));
             this.cb_chromalink_z2.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z2_SelectedIndexChanged);
             // 
             // lbl_chromalink_z1
@@ -1164,8 +1188,7 @@
             this.cb_chromalink_z1.Name = "cb_chromalink_z1";
             this.cb_chromalink_z1.Size = new System.Drawing.Size(132, 21);
             this.cb_chromalink_z1.TabIndex = 15;
-            this.tooltip_main.SetToolTip(this.cb_chromalink_z1, "Controls RGB functionality for various LED zones on Chroma Link devices. \r\nUp to " +
-        "five static zones are supported.\r\n");
+            this.tooltip_main.SetToolTip(this.cb_chromalink_z1, resources.GetString("cb_chromalink_z1.ToolTip"));
             this.cb_chromalink_z1.SelectedIndexChanged += new System.EventHandler(this.cb_chromalink_z1_SelectedIndexChanged);
             // 
             // chk_dev_chromalink
@@ -1174,10 +1197,10 @@
             this.chk_dev_chromalink.Location = new System.Drawing.Point(10, 24);
             this.chk_dev_chromalink.Margin = new System.Windows.Forms.Padding(2);
             this.chk_dev_chromalink.Name = "chk_dev_chromalink";
-            this.chk_dev_chromalink.Size = new System.Drawing.Size(118, 17);
+            this.chk_dev_chromalink.Size = new System.Drawing.Size(130, 17);
             this.chk_dev_chromalink.TabIndex = 1;
-            this.chk_dev_chromalink.Text = "Enable ChromaLink";
-            this.tooltip_main.SetToolTip(this.chk_dev_chromalink, "Enable Chroma Link devices within Chromatics.");
+            this.chk_dev_chromalink.Text = "Enable Other Devices";
+            this.tooltip_main.SetToolTip(this.chk_dev_chromalink, "Enable other devices such as Razer ChromaLink or Corsair GPU/RAM/etc.");
             this.chk_dev_chromalink.UseVisualStyleBackColor = true;
             this.chk_dev_chromalink.CheckedChanged += new System.EventHandler(this.chk_dev_chromalink_CheckedChanged);
             // 
@@ -1486,6 +1509,19 @@
             this.gB_General.TabIndex = 0;
             this.gB_General.TabStop = false;
             this.gB_General.Text = "General";
+            // 
+            // chk_releasedevices
+            // 
+            this.chk_releasedevices.AutoSize = true;
+            this.chk_releasedevices.Location = new System.Drawing.Point(17, 148);
+            this.chk_releasedevices.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_releasedevices.Name = "chk_releasedevices";
+            this.chk_releasedevices.Size = new System.Drawing.Size(214, 17);
+            this.chk_releasedevices.TabIndex = 11;
+            this.chk_releasedevices.Text = "Release devices on game close (BETA)";
+            this.tooltip_main.SetToolTip(this.chk_releasedevices, "Releases the device SDK\'s upon detecting FFXIV closing.\r\nDefault: OFF");
+            this.chk_releasedevices.UseVisualStyleBackColor = true;
+            this.chk_releasedevices.CheckedChanged += new System.EventHandler(this.Chk_releasedevices_CheckedChanged);
             // 
             // lbl_polling
             // 
@@ -2790,19 +2826,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_releasedevices
-            // 
-            this.chk_releasedevices.AutoSize = true;
-            this.chk_releasedevices.Location = new System.Drawing.Point(17, 147);
-            this.chk_releasedevices.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_releasedevices.Name = "chk_releasedevices";
-            this.chk_releasedevices.Size = new System.Drawing.Size(214, 17);
-            this.chk_releasedevices.TabIndex = 11;
-            this.chk_releasedevices.Text = "Release devices on game close (BETA)";
-            this.tooltip_main.SetToolTip(this.chk_releasedevices, "Releases the device SDK\'s upon detecting FFXIV closing.\r\nDefault: OFF");
-            this.chk_releasedevices.UseVisualStyleBackColor = true;
-            this.chk_releasedevices.CheckedChanged += new System.EventHandler(this.Chk_releasedevices_CheckedChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3070,6 +3093,8 @@
         private System.Windows.Forms.CheckBox chk_castreadycheck;
         private System.Windows.Forms.CheckBox chk_enablebulbextraeffect;
         private System.Windows.Forms.CheckBox chk_releasedevices;
+        private System.Windows.Forms.Label lbl_chromalink_z6;
+        private System.Windows.Forms.ComboBox cb_chromalink_z6;
     }
 }
 

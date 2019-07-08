@@ -1,0 +1,3197 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CUE.NET</name>
+    </assembly>
+    <members>
+        <member name="T:CUE.NET.Brushes.ConicalGradientBrush">
+            <summary>
+            Represents a brush drawing a conical gradient.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.ConicalGradientBrush.Origin">
+            <summary>
+            Gets or sets the origin (radian-angle) the brush is drawn to. (default: -π/2)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.ConicalGradientBrush.Center">
+            <summary>
+            Gets or sets the center point (as percentage in the range [0..1]) of the gradient drawn by the brush. (default: 0.5f, 0.5f)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.ConicalGradientBrush.Gradient">
+            <summary>
+            Gets or sets the gradient drawn by the brush. If null it will default to full transparent.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.ConicalGradientBrush.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.ConicalGradientBrush"/> class.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.ConicalGradientBrush.#ctor(CUE.NET.Gradients.IGradient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.ConicalGradientBrush"/> class.
+            </summary>
+            <param name="gradient">The gradient drawn by the brush.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.ConicalGradientBrush.#ctor(System.Drawing.PointF,CUE.NET.Gradients.IGradient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.ConicalGradientBrush"/> class.
+            </summary>
+            <param name="center">The center point (as percentage in the range [0..1]).</param>
+            <param name="gradient">The gradient drawn by the brush.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.ConicalGradientBrush.#ctor(System.Drawing.PointF,System.Single,CUE.NET.Gradients.IGradient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.ConicalGradientBrush"/> class.
+            </summary>
+            <param name="center">The center point (as percentage in the range [0..1]).</param>
+            <param name="origin">The origin (radian-angle) the brush is drawn to.</param>
+            <param name="gradient">The gradient drawn by the brush.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.ConicalGradientBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)">
+            <summary>
+            Gets the color at an specific point assuming the brush is drawn into the given rectangle.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTarget">The target (key/point) from which the color should be taken.</param>
+            <returns>The color at the specified point.</returns>
+        </member>
+        <member name="T:CUE.NET.Brushes.IGradientBrush">
+            <summary>
+            Represents a basic gradient-brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.IGradientBrush.Gradient">
+            <summary>
+            Gets the gradient used by this <see cref="T:CUE.NET.Brushes.IGradientBrush"/>.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Brushes.ImageBrush">
+            <summary>
+            Represents a brush drawing an image.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Brushes.ImageBrush.ScaleMode">
+            <summary>
+            Contains a list of available image-scale modes.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Brushes.ImageBrush.ScaleMode.Stretch">
+            <summary>
+            Stretches the image to fit inside the target rectangle.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Brushes.ImageBrush.InterpolationMode">
+            <summary>
+            Contains a list of available image-interpolation modes.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Brushes.ImageBrush.InterpolationMode.PixelPerfect">
+            <summary>
+            Selects the pixel closest to the target point.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.ImageBrush.Image">
+            <summary>
+            Gets or sets the image drawn by the brush. If null it will default to full transparent.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.ImageBrush.ImageScaleMode">
+            <summary>
+            Gets or sets the <see cref="T:CUE.NET.Brushes.ImageBrush.ScaleMode" /> used to scale the image if needed.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.ImageBrush.ImageInterpolationMode">
+            <summary>
+            Gets or sets the <see cref="T:CUE.NET.Brushes.ImageBrush.InterpolationMode" /> used to interpolate the image if needed.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.ImageBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)">
+            <summary>
+            Gets the color at an specific point assuming the brush is drawn into the given rectangle.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTarget">The target (key/point) from which the color should be taken.</param>
+            <returns>The color at the specified point.</returns>
+        </member>
+        <member name="T:CUE.NET.Brushes.ProfileBrush">
+            <summary>
+            Represents a brush drawing the lighting of a CUE profile.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.ProfileBrush.#ctor(System.Collections.Generic.Dictionary{CUE.NET.Devices.Generic.Enums.CorsairLedId,CUE.NET.Devices.Generic.CorsairColor})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.ProfileBrush"/> class.
+            </summary>
+            <param name="keyLights">The light settings of the CUE profile.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.ProfileBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)">
+            <summary>
+            Gets the color at an specific point assuming the brush is drawn into the given rectangle.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTarget">The target (key/point) from which the color should be taken.</param>
+            <returns>The color at the specified point.</returns>
+        </member>
+        <member name="T:CUE.NET.Brushes.BrushRenderTarget">
+            <summary>
+            Represents a single target of a brush render.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.BrushRenderTarget.LedId">
+            <summary>
+            Gets the ID of the target-LED.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.BrushRenderTarget.Rectangle">
+            <summary>
+            Gets the rectangle representing the area to render the target-LED.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.BrushRenderTarget.Point">
+            <summary>
+            Gets the point representing the position to render the target-LED.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.BrushRenderTarget.#ctor(CUE.NET.Devices.Generic.Enums.CorsairLedId,System.Drawing.RectangleF)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.BrushRenderTarget"/> class.
+            </summary>
+            <param name="ledId">The ID of the target-LED.</param>
+            <param name="rectangle">The rectangle representing the area to render the target-LED.</param>
+        </member>
+        <member name="T:CUE.NET.Brushes.AbstractBrush">
+            <summary>
+            Represents a basic brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.AbstractBrush.BrushCalculationMode">
+            <summary>
+            Gets or sets the calculation mode used for the rectangle/points used for color-selection in brushes.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.AbstractBrush.Brightness">
+            <summary>
+            Gets or sets the overall percentage brightness of the brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.AbstractBrush.Opacity">
+            <summary>
+            Gets or sets the overall percentage opacity of the brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.AbstractBrush.ColorCorrections">
+            <summary>
+            Gets a list of <see cref="T:CUE.NET.ColorCorrection.IColorCorrection"/> used to correct the colors of the brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.AbstractBrush.RenderedRectangle">
+            <summary>
+            Gets the Rectangle used in the last render pass.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.AbstractBrush.RenderedTargets">
+            <summary>
+            Gets a dictionary containing all colors for points calculated in the last render pass.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.AbstractBrush.EffectTarget">
+            <summary>
+            Gets the strongly-typed target used for the effect.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.AbstractBrush.#ctor(System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.AbstractBrush"/> class.
+            </summary>
+            <param name="brightness">The overall percentage brightness of the brush. (default: 1f)</param>
+            <param name="opacity">The overall percentage opacity of the brush. (default: 1f)</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.AbstractBrush.PerformRender(System.Drawing.RectangleF,System.Collections.Generic.IEnumerable{CUE.NET.Brushes.BrushRenderTarget})">
+            <summary>
+            Performas the render pass of the brush and calculates the raw colors for all requested points.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTargets">The targets (keys/points) of which the color should be calculated.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.AbstractBrush.PerformFinalize">
+            <summary>
+            Performs the finalize pass of the brush and calculates the final colors for all previously calculated points.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.AbstractBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)">
+            <summary>
+            Gets the color at an specific point assuming the brush is drawn into the given rectangle.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTarget">The target (key/point) from which the color should be taken.</param>
+            <returns>The color at the specified point.</returns>
+        </member>
+        <member name="M:CUE.NET.Brushes.AbstractBrush.FinalizeColor(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Finalizes the color by appliing the overall brightness and opacity.<br/>
+            This method should always be the last call of a <see cref="M:CUE.NET.Brushes.AbstractBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)" /> implementation.
+            If you overwrite this method please make sure that you never return the same color-object twice to prevent reference-issues!
+            </summary>
+            <param name="color">The color to finalize.</param>
+            <returns>The finalized color.</returns>
+        </member>
+        <member name="T:CUE.NET.Brushes.IBrush">
+            <summary>
+            Represents a basic brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.IBrush.BrushCalculationMode">
+            <summary>
+            Gets or sets the calculation mode used for the rectangle/points used for color-selection in brushes.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.IBrush.Brightness">
+            <summary>
+            Gets or sets the overall percentage brightness of the brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.IBrush.Opacity">
+            <summary>
+            Gets or sets the overall percentage opacity of the brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.IBrush.ColorCorrections">
+            <summary>
+            Gets a list of color-corrections used to correct the colors of the brush.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.IBrush.RenderedRectangle">
+            <summary>
+            Gets the Rectangle used in the last render pass.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.IBrush.RenderedTargets">
+            <summary>
+            Gets a dictionary containing all colors for points calculated in the last render pass.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.IBrush.PerformRender(System.Drawing.RectangleF,System.Collections.Generic.IEnumerable{CUE.NET.Brushes.BrushRenderTarget})">
+            <summary>
+            Performas the render pass of the brush and calculates the raw colors for all requested points.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTargets">The targets (keys/points) of which the color should be calculated.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.IBrush.PerformFinalize">
+            <summary>
+            Performs the finalize pass of the brush and calculates the final colors for all previously calculated points.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Brushes.LinearGradientBrush">
+            <summary>
+            Represents a brush drawing a linear gradient.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.LinearGradientBrush.StartPoint">
+            <summary>
+            Gets or sets the start point (as percentage in the range [0..1]) of the gradient drawn by the brush. (default: 0f, 0.5f)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.LinearGradientBrush.EndPoint">
+            <summary>
+            Gets or sets the end point (as percentage in the range [0..1]) of the gradient drawn by the brush. (default: 1f, 0.5f)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.LinearGradientBrush.Gradient">
+            <summary>
+            Gets or sets the gradient drawn by the brush. If null it will default to full transparent.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.LinearGradientBrush.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.LinearGradientBrush"/> class.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.LinearGradientBrush.#ctor(CUE.NET.Gradients.IGradient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.LinearGradientBrush"/> class.
+            </summary>
+            <param name="gradient">The gradient drawn by the brush.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.LinearGradientBrush.#ctor(System.Drawing.PointF,System.Drawing.PointF,CUE.NET.Gradients.IGradient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.LinearGradientBrush"/> class.
+            </summary>
+            <param name="startPoint">The start point (as percentage in the range [0..1]).</param>
+            <param name="endPoint">The end point (as percentage in the range [0..1]).</param>
+            <param name="gradient">The gradient drawn by the brush.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.LinearGradientBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)">
+            <summary>
+            Gets the color at an specific point assuming the brush is drawn into the given rectangle.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTarget">The target (key/point) from which the color should be taken.</param>
+            <returns>The color at the specified point.</returns>
+        </member>
+        <member name="T:CUE.NET.Brushes.RadialGradientBrush">
+            <summary>
+            Represents a brush drawing a radial gradient around a center point.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.RadialGradientBrush.Center">
+            <summary>
+            Gets or sets the center point (as percentage in the range [0..1]) around which the brush should be drawn.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.RadialGradientBrush.Gradient">
+            <summary>
+            Gets or sets the gradient drawn by the brush. If null it will default to full transparent.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.RadialGradientBrush.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.RadialGradientBrush"/> class.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.RadialGradientBrush.#ctor(CUE.NET.Gradients.IGradient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.RadialGradientBrush"/> class.
+            </summary>
+            <param name="gradient">The gradient drawn by the brush.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.RadialGradientBrush.#ctor(System.Drawing.PointF,CUE.NET.Gradients.IGradient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.RadialGradientBrush"/> class.
+            </summary>
+            <param name="center">The center point (as percentage in the range [0..1]).</param>
+            <param name="gradient">The gradient drawn by the brush.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.RadialGradientBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)">
+            <summary>
+            Gets the color at an specific point assuming the brush is drawn into the given rectangle.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTarget">The target (key/point) from which the color should be taken.</param>
+            <returns>The color at the specified point.</returns>
+        </member>
+        <member name="T:CUE.NET.Brushes.RandomColorBrush">
+            <summary>
+            Represents a brush drawing random colors.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.RandomColorBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)">
+            <summary>
+            Gets the color at an specific point assuming the brush is drawn into the given rectangle.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTarget">The target (key/point) from which the color should be taken.</param>
+            <returns>The color at the specified point.</returns>
+        </member>
+        <member name="T:CUE.NET.Brushes.SolidColorBrush">
+            <summary>
+            Represents a brush drawing only a single color.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Brushes.SolidColorBrush.Color">
+            <summary>
+            Gets or sets the color drawn by the brush.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Brushes.SolidColorBrush.#ctor(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Brushes.SolidColorBrush"/> class.
+            </summary>
+            <param name="color">The color drawn by the brush.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.SolidColorBrush.GetColorAtPoint(System.Drawing.RectangleF,CUE.NET.Brushes.BrushRenderTarget)">
+            <summary>
+            Gets the color at an specific point assuming the brush is drawn into the given rectangle.
+            </summary>
+            <param name="rectangle">The rectangle in which the brush should be drawn.</param>
+            <param name="renderTarget">The target (key/point) from which the color should be taken.</param>
+            <returns>The color at the specified point.</returns>
+        </member>
+        <member name="M:CUE.NET.Brushes.SolidColorBrush.op_Explicit(System.Drawing.Color)~CUE.NET.Brushes.SolidColorBrush">
+            <summary>
+            Converts a <see cref="P:CUE.NET.Brushes.SolidColorBrush.Color" /> to a <see cref="T:CUE.NET.Brushes.SolidColorBrush" />.
+            </summary>
+            <param name="color">The <see cref="P:CUE.NET.Brushes.SolidColorBrush.Color"/> to convert.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.SolidColorBrush.op_Implicit(CUE.NET.Brushes.SolidColorBrush)~System.Drawing.Color">
+            <summary>
+            Converts a <see cref="T:CUE.NET.Brushes.SolidColorBrush" /> to a <see cref="P:CUE.NET.Brushes.SolidColorBrush.Color" />.
+            </summary>
+            <param name="brush">The <see cref="P:CUE.NET.Brushes.SolidColorBrush.Color"/> to convert.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.SolidColorBrush.op_Explicit(CUE.NET.Devices.Generic.CorsairColor)~CUE.NET.Brushes.SolidColorBrush">
+            <summary>
+            Converts a <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> to a <see cref="T:CUE.NET.Brushes.SolidColorBrush" />.
+            </summary>
+            <param name="color">The <see cref="P:CUE.NET.Brushes.SolidColorBrush.Color"/> to convert.</param>
+        </member>
+        <member name="M:CUE.NET.Brushes.SolidColorBrush.op_Implicit(CUE.NET.Brushes.SolidColorBrush)~CUE.NET.Devices.Generic.CorsairColor">
+            <summary>
+            Converts a <see cref="T:CUE.NET.Brushes.SolidColorBrush" /> to a <see cref="T:CUE.NET.Devices.Generic.CorsairColor" />.
+            </summary>
+            <param name="brush">The <see cref="P:CUE.NET.Brushes.SolidColorBrush.Color"/> to convert.</param>
+        </member>
+        <member name="T:CUE.NET.ColorCorrection.GammaCorrection">
+            <summary>
+            Represents a gamma-color-correction.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.ColorCorrection.GammaCorrection.R">
+            <summary>
+            Gets or sets the gamma-value of the color 'red' used for color-correction.
+            Values greater than one will make colors brighter, values less than one will make colors darker. 
+            </summary>
+        </member>
+        <member name="P:CUE.NET.ColorCorrection.GammaCorrection.G">
+            <summary>
+            Gets or sets the gamma-value of the color 'green' used for color-correction.
+            Values greater than one will make colors brighter, values less than one will make colors darker. 
+            </summary>
+        </member>
+        <member name="P:CUE.NET.ColorCorrection.GammaCorrection.B">
+            <summary>
+            Gets or sets the gamma-value of the color 'blue' used for color-correction.
+            Values greater than one will make colors brighter, values less than one will make colors darker. 
+            </summary>
+        </member>
+        <member name="M:CUE.NET.ColorCorrection.GammaCorrection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.ColorCorrection.GammaCorrection"/> class using the default-value 1f (no correction) for all colors.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.ColorCorrection.GammaCorrection.#ctor(System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.ColorCorrection.GammaCorrection"/> class.
+            </summary>
+            <param name="gamma">The gamma-value for all colors used for color-correction.
+            Values greater than one will make colors brighter, values less than one will make colors darker.</param>
+        </member>
+        <member name="M:CUE.NET.ColorCorrection.GammaCorrection.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.ColorCorrection.GammaCorrection"/> class.
+            </summary>
+            <param name="r">The gamma-value for the color 'red' used for color-correction.
+            Values greater than one will make colors brighter, values less than one will make colors darker.</param>
+            <param name="g">The gamma-value for the color 'green' used for color-correction. Values
+            greater than one will make colors brighter, values less than one will make colors darker.</param>
+            <param name="b">The gamma-value for the color 'blue' used for color-correction. Values
+            greater than one will make colors brighter, values less than one will make colors darker.</param>
+        </member>
+        <member name="M:CUE.NET.ColorCorrection.GammaCorrection.ApplyTo(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Applies the gamma-correction to the given color. 
+            </summary>
+            <param name="color">The color to correct.</param>
+        </member>
+        <member name="M:CUE.NET.ColorCorrection.GammaCorrection.op_Implicit(System.Single)~CUE.NET.ColorCorrection.GammaCorrection">
+            <summary>
+            Converts a <see cref="T:System.Single" /> to a <see cref="T:CUE.NET.ColorCorrection.GammaCorrection" /> using the same value for all colors.
+            </summary>
+            <param name="gamma">The float-value to convert.</param>
+        </member>
+        <member name="T:CUE.NET.ColorCorrection.IColorCorrection">
+            <summary>
+            Represents generic color-correction.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.ColorCorrection.IColorCorrection.ApplyTo(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Applies the color-correction to the given color. 
+            </summary>
+            <param name="color">The color to correct.</param>
+        </member>
+        <member name="T:CUE.NET.CueSDK">
+            <summary>
+            Static entry point to work with the Corsair-SDK.
+            </summary>
+            <summary>
+            Static entry point to work with the Corsair-SDK.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.UpdateFrequency">
+            <summary>
+            Gets or sets the update-frequency in seconds. (Calculate by using '1f / updates per second')
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.UpdateMode">
+            <summary>
+            Gets or sets the update-mode for the device.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.CueSDK.CheckUpdateLoop">
+            <summary>
+            Checks if automatic updates should occur and starts/stops the update-loop if needed.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the requested update-mode is not available.</exception>
+        </member>
+        <member name="P:CUE.NET.CueSDK.PossibleX86NativePaths">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x86 applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.PossibleX64NativePaths">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x64 applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.IsInitialized">
+            <summary>
+            Indicates if the SDK is initialized and ready to use.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.LoadedArchitecture">
+            <summary>
+            Gets the loaded architecture (x64/x86).
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.ProtocolDetails">
+            <summary>
+            Gets the protocol details for the current SDK-connection.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.HasExclusiveAccess">
+            <summary>
+            Gets whether the application has exclusive access to the SDK or not.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.LastError">
+            <summary>
+            Gets the last error documented by CUE.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.InitializedDevices">
+            <summary>
+            Gets all initialized devices managed by the CUE-SDK.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.KeyboardSDK">
+            <summary>
+            Gets the managed representation of a keyboard managed by the CUE-SDK.
+            Note that currently only one connected keyboard is supported.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.MouseSDK">
+            <summary>
+            Gets the managed representation of a mouse managed by the CUE-SDK.
+            Note that currently only one connected mouse is supported.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.HeadsetSDK">
+            <summary>
+            Gets the managed representation of a headset managed by the CUE-SDK.
+            Note that currently only one connected headset is supported.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.MousematSDK">
+            <summary>
+            Gets the managed representation of a mousemat managed by the CUE-SDK.
+            Note that currently only one connected mousemat is supported.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.CueSDK.HeadsetStandSDK">
+            <summary>
+            Gets the managed representation of a headset stand managed by the CUE-SDK.
+            Note that currently only one connected headset stand is supported.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.CueSDK.KeyPressed">
+            <summary>
+            Occurs when the SDK reports that a key is pressed.
+            Notice that right now only G- (keyboard) and M- (mouse) keys are supported.
+            
+            To enable this event <see cref="M:CUE.NET.CueSDK.EnableKeypressCallback"/> needs to be called.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.CueSDK.IsSDKAvailable(System.Nullable{CUE.NET.Devices.Generic.Enums.CorsairDeviceType})">
+            <summary>
+            Checks if the SDK for the provided <see cref="T:CUE.NET.Devices.Generic.Enums.CorsairDeviceType"/> is available or checks if CUE is installed and SDK supported enabled if null is provided.
+            </summary>
+            <param name="sdkType">The <see cref="T:CUE.NET.Devices.Generic.Enums.CorsairDeviceType"/> to check or null to check for general SDK availability.</param>
+            <returns>The availability of the provided <see cref="T:CUE.NET.Devices.Generic.Enums.CorsairDeviceType"/>.</returns>
+        </member>
+        <member name="M:CUE.NET.CueSDK.Initialize(System.Boolean)">
+            <summary>
+            Initializes the CUE-SDK. This method should be called exactly ONE time, before anything else is done.
+            </summary>
+            <param name="exclusiveAccess">Specifies whether the application should request exclusive access or not.</param>
+            <exception cref="T:CUE.NET.Exceptions.WrapperException">Thrown if the SDK is already initialized, the SDK is not compatible to CUE or if CUE returns unknown devices.</exception>
+            <exception cref="T:CUE.NET.Exceptions.CUEException">Thrown if the CUE-SDK provides an error.</exception>
+        </member>
+        <member name="M:CUE.NET.CueSDK.EnableKeypressCallback">
+            <summary>
+            Enables the keypress-callback.
+            This method needs to be called to enable the <see cref="E:CUE.NET.CueSDK.KeyPressed"/>-event.
+            
+            WARNING: AFTER THIS METHOD IS CALLED IT'S NO LONGER POSSIBLE TO REINITIALIZE THE SDK!
+            </summary>
+        </member>
+        <member name="M:CUE.NET.CueSDK.Reset">
+            <summary>
+            Resets the colors of all devices back to the last saved color-data. (If there wasn't a manual save, that's the data from the time the SDK was initialized.)
+            </summary>
+        </member>
+        <member name="M:CUE.NET.CueSDK.Reinitialize">
+            <summary>
+            Reinitialize the CUE-SDK and temporarily hand back full control to CUE.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.CueSDK.Reinitialize(System.Boolean)">
+            <summary>
+            Reinitialize the CUE-SDK and temporarily hand back full control to CUE.
+            </summary>
+            <param name="exclusiveAccess">Specifies whether the application should request exclusive access or not.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.CommanderPro.CorsairCommanderPro">
+            <summary>
+            Represents the SDK for a corsair CommanderPro stand.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.CommanderPro.CorsairCommanderPro.CommanderProDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the CommanderPro stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.CommanderPro.CorsairCommanderPro.#ctor(CUE.NET.Devices.CommanderPro.CorsairCommanderProDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.CommanderPro.CorsairCommanderPro"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the CommanderPro stand</param>
+        </member>
+        <member name="M:CUE.NET.Devices.CommanderPro.CorsairCommanderPro.Initialize">
+            <summary>
+            Initializes the CommanderPro stand.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.CommanderPro.CorsairCommanderProDeviceInfo">
+            <summary>
+            Represents specific information for a CUE headset stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.CommanderPro.CorsairCommanderProDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.CommanderPro.CorsairCommanderProDeviceInfo" />.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Cooler.CorsairCooler">
+            <summary>
+            Represents the SDK for a corsair Cooler stand.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Cooler.CorsairCooler.CoolerDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the Cooler stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Cooler.CorsairCooler.#ctor(CUE.NET.Devices.Cooler.CorsairCoolerDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Cooler.CorsairCooler"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the Cooler stand</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Cooler.CorsairCooler.Initialize">
+            <summary>
+            Initializes the Cooler stand.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Cooler.CorsairCoolerDeviceInfo">
+            <summary>
+            Represents specific information for a CUE headset stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Cooler.CorsairCoolerDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.Cooler.CorsairCoolerDeviceInfo" />.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.CorsairColor">
+            <summary>
+            Represents an ARGB (alpha, red, green, blue) color used by CUE.NET.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairColor.Transparent">
+            <summary>
+            Gets an transparent color [A: 0, R: 0, G: 0, B: 0]
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairColor.A">
+            <summary>
+            Gets or sets the alpha component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairColor.R">
+            <summary>
+            Gets or sets the red component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairColor.G">
+            <summary>
+            Gets or sets the green component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairColor.B">
+            <summary>
+            Gets or sets the blue component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> class.
+            The class created by this constructor equals <see cref="P:CUE.NET.Devices.Generic.CorsairColor.Transparent"/>.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> class using only RGB-Values. 
+            Alpha defaults to 255.
+            </summary>
+            <param name="r">The red component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.</param>
+            <param name="g">The green component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.</param>
+            <param name="b">The blue component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.#ctor(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> class using ARGB-values.
+            </summary>
+            <param name="a">The alpha component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.</param>
+            <param name="r">The red component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.</param>
+            <param name="g">The green component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.</param>
+            <param name="b">The blue component value of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.#ctor(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> class by cloning a existing <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>.
+            </summary>
+            <param name="color">The <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> the values are copied from.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.ToString">
+            <summary>
+            Converts the individual byte-values of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> to a human-readable string.
+            </summary>
+            <returns>A string that contains the individual byte-values of this <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/>. For example "[A: 255, R: 255, G: 0, B: 0]".</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.Equals(System.Object)">
+            <summary>
+            Tests whether the specified object is a <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> and is equivalent to this <see cref="T:CUE.NET.Devices.Generic.CorsairColor" />.
+            </summary>
+            <param name="obj">The object to test.</param>
+            <returns>true if <paramref name="obj" /> is a <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> equivalent to this <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> ; otherwise, false.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.GetHashCode">
+            <summary>
+            Returns a hash code for this <see cref="T:CUE.NET.Devices.Generic.CorsairColor" />.
+            </summary>
+            <returns>An integer value that specifies the hash code for this <see cref="T:CUE.NET.Devices.Generic.CorsairColor" />.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.op_Equality(CUE.NET.Devices.Generic.CorsairColor,CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Returns a value that indicates whether two specified <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> are equal.
+            </summary>
+            <param name="color1">The first <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> color to compare.</param>
+            <param name="color2">The second <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> color to compare.</param>
+            <returns>true if <paramref name="color1" /> and <paramref name="color2" /> are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.op_Inequality(CUE.NET.Devices.Generic.CorsairColor,CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Returns a value that indicates whether two specified <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> are equal.
+            </summary>
+            <param name="color1">The first <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> color to compare.</param>
+            <param name="color2">The second <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> color to compare.</param>
+            <returns>true if <paramref name="color1" /> and <paramref name="color2" /> are not equal; otherwise, false.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.op_Implicit(System.Drawing.Color)~CUE.NET.Devices.Generic.CorsairColor">
+            <summary>
+            Converts a <see cref="T:System.Drawing.Color" /> to a <see cref="T:CUE.NET.Devices.Generic.CorsairColor" />.
+            </summary>
+            <param name="color">The <see cref="T:System.Drawing.Color"/> to convert.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairColor.op_Implicit(CUE.NET.Devices.Generic.CorsairColor)~System.Drawing.Color">
+            <summary>
+            Converts a <see cref="T:CUE.NET.Devices.Generic.CorsairColor" /> to a <see cref="T:System.Drawing.Color" />.
+            </summary>
+            <param name="color">The <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> to convert.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.Enums.CorsairAccessMode">
+            <summary>
+            Contains list of available SDK access modes.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.Enums.CorsairDeviceCaps">
+            <summary>
+            Contains list of device capabilities
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.CorsairDeviceCaps.None">
+            <summary>
+            For devices that do not support any SDK functions
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.CorsairDeviceCaps.Lighting">
+            <summary>
+            For devices that has controlled lighting
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.Enums.CorsairDeviceType">
+            <summary>
+            Contains list of available device types.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.Enums.CorsairKeyId">
+            <summary>
+            Contains list of all KeyIds available for all corsair devices.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.Enums.CorsairLedId">
+            <summary>
+            Contains list of all LEDs available for all corsair devices.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.Enums.UpdateMode">
+            <summary>
+            Contains list of available update modes.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.UpdateMode.Manual">
+            <summary>
+            The device will not perform automatic updates. Updates will only occur if <see cref="M:CUE.NET.Devices.ICueDevice.Update(System.Boolean,System.Boolean)" /> is called.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.UpdateMode.Continuous">
+            <summary>
+            The device will perform automatic updates at the rate set in <see cref="P:CUE.NET.CueSDK.UpdateFrequency" />.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.Enums.CorsairError">
+            <summary>
+            Shared list of all errors which could happen during calling of Corsair* functions.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.CorsairError.Success">
+            <summary>
+            If previously called function completed successfully.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.CorsairError.ServerNotFound">
+            <summary>
+            CUE is not running or was shut down or third-party control is disabled in CUE settings. (runtime error)
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.CorsairError.NoControl">
+            <summary>
+            If some other client has or took over exclusive control. (runtime error)
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.CorsairError.ProtocolHandshakeMissing">
+            <summary>
+            If developer did not perform protocol handshake. (developer error)
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.CorsairError.IncompatibleProtocol">
+            <summary>
+            If developer is calling the function that is not supported by the server (either because protocol has broken by server or client or because the function is new and server is too old.
+            Check CorsairProtocolDetails for details). (developer error)
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Generic.Enums.CorsairError.InvalidArguments">
+            <summary>
+            If developer supplied invalid arguments to the function (for specifics look at function descriptions). (developer error)
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.EventArgs.ExceptionEventArgs">
+            <summary>
+            Represents the information supplied with an <see cref="E:CUE.NET.Devices.ICueDevice.Exception"/>-event.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.EventArgs.ExceptionEventArgs.Exception">
+            <summary>
+            Gets the exception which is responsible for the event-call.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.EventArgs.ExceptionEventArgs.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.EventArgs.ExceptionEventArgs"/> class.
+            </summary>
+            <param name="exception">The exception which is responsible for the event-call.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.EventArgs.LedsUpdatedEventArgs">
+            <summary>
+            Represents the information supplied with an <see cref="E:CUE.NET.Devices.ICueDevice.LedsUpdated"/>-event.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.EventArgs.LedsUpdatedEventArgs.UpdatedLeds">
+            <summary>
+            Gets a list of <see cref="T:CUE.NET.Devices.Generic.LedUpateRequest"/> from the updated leds.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.EventArgs.LedsUpdatedEventArgs.#ctor(System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.LedUpateRequest})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.EventArgs.LedsUpdatedEventArgs"/> class.
+            </summary>
+            <param name="updatedLeds">The updated leds.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.EventArgs.LedsUpdatingEventArgs">
+            <summary>
+            Represents the information supplied with an <see cref="E:CUE.NET.Devices.ICueDevice.LedsUpdating"/>-event.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.EventArgs.LedsUpdatingEventArgs.UpdatingLeds">
+            <summary>
+            Gets a list of <see cref="T:CUE.NET.Devices.Generic.LedUpateRequest"/> from the updating leds.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.EventArgs.LedsUpdatingEventArgs.#ctor(System.Collections.Generic.ICollection{CUE.NET.Devices.Generic.LedUpateRequest})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.EventArgs.LedsUpdatingEventArgs"/> class.
+            </summary>
+            <param name="updatingLeds">The updating leds.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.EventArgs.UpdatedEventArgs">
+            <summary>
+            Represents the information supplied with an <see cref="E:CUE.NET.Devices.ICueDevice.Updated"/>-event.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.EventArgs.UpdatingEventArgs">
+            <summary>
+            Represents the information supplied with an <see cref="E:CUE.NET.Devices.ICueDevice.Updating"/>-event.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.EventArgs.UpdatingEventArgs.DeltaTime">
+            <summary>
+            Gets the elapsed time (in seconds) sonce the last update.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.EventArgs.UpdatingEventArgs.#ctor(System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.EventArgs.UpdatingEventArgs"/> class.
+            </summary>
+            <param name="deltaTime">The elapsed time (in seconds) sonce the last update.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.LedUpateRequest">
+            <summary>
+            Represents a request to update a led.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.LedUpateRequest.LedId">
+            <summary>
+            Gets the id of the led to update.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.LedUpateRequest.Color">
+            <summary>
+            Gets the requested color of the led.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.LedUpateRequest.#ctor(CUE.NET.Devices.Generic.Enums.CorsairLedId,CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.LedUpateRequest"/> class.
+            </summary>
+            <param name="ledId">The id of the led to update.</param>
+            <param name="color">The requested color of the led.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.AbstractCueDevice">
+            <summary>
+            Represents a generic CUE-device. (keyboard, mouse, headset, ...)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.DeviceInfo">
+            <summary>
+            Gets generic information provided by CUE for the device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.DeviceRectangle">
+            <summary>
+            Gets the rectangle containing all LEDs of the device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.LedMapping">
+            <summary>
+            Gets a dictionary containing all LEDs of the device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.Leds">
+            <summary>
+            Gets a read-only collection containing the LEDs of the device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.LedGroups">
+            <summary>
+            Gets a list of attached ledgroups.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.Brush">
+            <summary>
+            Gets or sets the background brush of the keyboard.
+            If this is null the last saved color-data is used as background.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.ZIndex">
+            <summary>
+            Gets or sets the z-index of the background brush of the keyboard.<br />
+            This value has absolutely no effect.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.Item(CUE.NET.Devices.Generic.Enums.CorsairLedId)">
+            <summary>
+            Gets the <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> with the specified ID.
+            </summary>
+            <param name="ledId">The ID of the LED to get.</param>
+            <returns>The LED with the specified ID or null if no LED is found.</returns>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.Item(System.Drawing.PointF)">
+            <summary>
+            Gets the <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> at the given physical location.
+            </summary>
+            <param name="location">The point to get the location from.</param>
+            <returns>The LED at the given point or null if no location is found.</returns>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.Item(System.Drawing.RectangleF,System.Single)">
+            <summary>
+            Gets a list of <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> inside the given rectangle.
+            </summary>
+            <param name="referenceRect">The rectangle to check.</param>
+            <param name="minOverlayPercentage">The minimal percentage overlay a location must have with the <see cref="T:System.Drawing.Rectangle" /> to be taken into the list.</param>
+            <returns></returns>
+        </member>
+        <member name="E:CUE.NET.Devices.Generic.AbstractCueDevice.Exception">
+            <summary>
+            Occurs when a catched exception is thrown inside the device.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.Devices.Generic.AbstractCueDevice.Updating">
+            <summary>
+            Occurs when the device starts updating.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.Devices.Generic.AbstractCueDevice.Updated">
+            <summary>
+            Occurs when the device update is done.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.Devices.Generic.AbstractCueDevice.LedsUpdating">
+            <summary>
+            Occurs when the device starts to update the leds.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.Devices.Generic.AbstractCueDevice.LedsUpdated">
+            <summary>
+            Occurs when the device updated the leds.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.#ctor(CUE.NET.Devices.IDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.AbstractCueDevice"/> class.
+            </summary>
+            <param name="info">The generic information provided by CUE for the device.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.Initialize">
+            <summary>
+            Initializes the device.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.InitializeLed(CUE.NET.Devices.Generic.Enums.CorsairLedId,System.Drawing.RectangleF)">
+            <summary>
+            Initializes the LED-Object with the specified id.
+            </summary>
+            <param name="ledId">The LED-Id to initialize.</param>
+            <param name="ledRectangle">The rectangle representing the position of the LED to initialize.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.ResetLeds">
+            <summary>
+            Resets all loaded LEDs back to default.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.Update(System.Boolean,System.Boolean)">
+            <summary>
+            Performs an update for all dirty keys, or all keys if flushLeds is set to true.
+            </summary>
+            <param name="flushLeds">Specifies whether all keys (including clean ones) should be updated.</param>
+            <param name="noRender">Only updates the hardware-leds skippin effects and the render-pass. Only use this if you know what that means!</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.DeviceUpdate">
+            <summary>
+            Performs device specific updates.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.Render(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Renders a ledgroup.
+            </summary>
+            <param name="ledGroup">The led group to render.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.SyncColors">
+            <inheritdoc />
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.SaveColors">
+            <inheritdoc />
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.RestoreColors">
+            <inheritdoc />
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.AttachLedGroup(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Attaches the given ledgroup.
+            </summary>
+            <param name="ledGroup">The ledgroup to attach.</param>
+            <returns><c>true</c> if the ledgroup could be attached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.DetachLedGroup(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Detaches the given ledgroup.
+            </summary>
+            <param name="ledGroup">The ledgroup to detached.</param>
+            <returns><c>true</c> if the ledgroup could be detached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.GetLeds">
+            <summary>
+            Gets a list containing all LEDs of this group.
+            </summary>
+            <returns>The list containing all LEDs of this group.</returns>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.AbstractCueDevice.Effects">
+            <summary>
+            Gets a list of all active effects of this target.
+            For this device this is always null.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.UpdateEffects">
+            <summary>
+            NOT IMPLEMENTED: Effects can't be applied directly to the device. Add it to the Brush or create a ledgroup instead.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.AddEffect(CUE.NET.Effects.IEffect{CUE.NET.Groups.ILedGroup})">
+            <summary>
+            NOT IMPLEMENTED: Effects can't be applied directly to the device. Add it to the Brush or create a ledgroup instead.
+            </summary>
+            <param name="effect">The effect to add.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.RemoveEffect(CUE.NET.Effects.IEffect{CUE.NET.Groups.ILedGroup})">
+            <summary>
+            NOT IMPLEMENTED: Effects can't be applied directly to the device. Add it to the Brush or create a ledgroup instead.
+            </summary>
+            <param name="effect">The effect to remove.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.OnException(System.Exception)">
+            <summary>
+            Handles the needed event-calls for an exception.
+            </summary>
+            <param name="ex">The exception previously thrown.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.OnUpdating">
+            <summary>
+            Handles the needed event-calls before updating.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.OnUpdated">
+            <summary>
+            Handles the needed event-calls after an update.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.OnLedsUpdating(System.Collections.Generic.ICollection{CUE.NET.Devices.Generic.LedUpateRequest})">
+            <summary>
+            Handles the needed event-calls before the leds are updated.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.OnLedsUpdated(System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.LedUpateRequest})">
+            <summary>
+            Handles the needed event-calls after the leds are updated.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates over all LEDs of the device.
+            </summary>
+            <returns>An enumerator for all LEDs of the device.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.AbstractCueDevice.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates over all LEDs of the device.
+            </summary>
+            <returns>An enumerator for all LEDs of the device.</returns>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.CorsairLed">
+            <summary>
+            Represents a single LED of a CUE-device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairLed.Device">
+            <summary>
+            Gets the Device this <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/> is associated with.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairLed.Id">
+            <summary>
+            Gets the key-ID of the Led.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairLed.LedRectangle">
+            <summary>
+            Gets a rectangle representing the physical location of the led.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairLed.IsDirty">
+            <summary>
+            Indicates whether the LED has changed an internal state.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairLed.RequestedColor">
+            <summary>
+            Gets the Color the LED should be set to on the next update.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairLed.Color">
+            <summary>
+            Gets the current color of the LED. Sets the <see cref="P:CUE.NET.Devices.Generic.CorsairLed.RequestedColor" /> for the next update. />.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairLed.IsLocked">
+            <summary>
+            Gets or sets if the color of this LED can be changed.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairLed.#ctor(CUE.NET.Devices.ICueDevice,CUE.NET.Devices.Generic.Enums.CorsairLedId,System.Drawing.RectangleF)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/> class.
+            </summary>
+            <param name="device">The <see cref="T:CUE.NET.Devices.ICueDevice"/> the <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/> is associated with.</param>
+            <param name="id">The <see cref="T:CUE.NET.Devices.Generic.Enums.CorsairLedId"/> of the <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/>.</param>
+            <param name="ledRectangle">The rectangle representing the physical location of the <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/>.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairLed.ToString">
+            <summary>
+            Converts the Id and the <see cref="P:CUE.NET.Devices.Generic.CorsairLed.Color"/> of this <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/> to a human-readable string.
+            </summary>
+            <returns>A string that contains the Id and the <see cref="P:CUE.NET.Devices.Generic.CorsairLed.Color"/> of this <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/>. For example "Enter [A: 255, R: 255, G: 0, B: 0]".</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairLed.Update">
+            <summary>
+            Updates the LED to the requested color.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairLed.Reset">
+            <summary>
+            Resets the LED back to default
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairLed.op_Implicit(CUE.NET.Devices.Generic.CorsairLed)~CUE.NET.Devices.Generic.Enums.CorsairLedId">
+            <summary>
+            Converts a <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> to a <see cref="T:CUE.NET.Devices.Generic.Enums.CorsairLedId" />.
+            </summary>
+            <param name="led">The <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/> to convert.</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairLed.op_Implicit(CUE.NET.Devices.Generic.CorsairLed)~CUE.NET.Devices.Generic.CorsairColor">
+            <summary>
+            Converts a <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> to a <see cref="T:CUE.NET.Devices.Generic.CorsairColor" />.
+            </summary>
+            <param name="led">The <see cref="T:CUE.NET.Devices.Generic.CorsairLed"/> to convert.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.GenericDeviceInfo">
+            <summary>
+            Represents generic information about a CUE device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.GenericDeviceInfo.Type">
+            <summary>
+            Gets the device type. (<see cref="T:CUE.NET.Devices.Generic.Enums.CorsairDeviceType" />)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.GenericDeviceInfo.Model">
+            <summary>
+            Gets the device model (like “K95RGB”).
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.GenericDeviceInfo.CapsMask">
+            <summary>
+            Get a flag that describes device capabilities. (<see cref="T:CUE.NET.Devices.Generic.Enums.CorsairDeviceCaps" />)
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.GenericDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.Generic.GenericDeviceInfo"/>.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Generic.CorsairProtocolDetails">
+            <summary>
+            Managed wrapper for CorsairProtocolDetails.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairProtocolDetails.SdkVersion">
+            <summary>
+            String containing version of SDK(like “1.0.0.1”).
+            Always contains valid value even if there was no CUE found.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairProtocolDetails.ServerVersion">
+            <summary>
+            String containing version of CUE(like “1.0.0.1”) or NULL if CUE was not found.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairProtocolDetails.SdkProtocolVersion">
+            <summary>
+            Integer that specifies version of protocol that is implemented by current SDK.
+            Numbering starts from 1.
+            Always contains valid value even if there was no CUE found.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairProtocolDetails.ServerProtocolVersion">
+            <summary>
+            Integer that specifies version of protocol that is implemented by CUE.
+            Numbering starts from 1.
+            If CUE was not found then this value will be 0.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Generic.CorsairProtocolDetails.BreakingChanges">
+            <summary>
+            Boolean that specifies if there were breaking changes between version of protocol implemented by server and client.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Generic.CorsairProtocolDetails.#ctor(CUE.NET.Native._CorsairProtocolDetails)">
+            <summary>
+            Internal constructor of managed CorsairProtocolDetails.
+            </summary>
+            <param name="nativeDetails">The native CorsairProtocolDetails-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.HeadsetStand.CorsairHeadsetStand">
+            <summary>
+            Represents the SDK for a corsair headset stand.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.HeadsetStand.CorsairHeadsetStand.HeadsetStandDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the headset stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.HeadsetStand.CorsairHeadsetStand.#ctor(CUE.NET.Devices.HeadsetStand.CorsairHeadsetStandDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.HeadsetStand.CorsairHeadsetStand"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the headset stand</param>
+        </member>
+        <member name="M:CUE.NET.Devices.HeadsetStand.CorsairHeadsetStand.Initialize">
+            <summary>
+            Initializes the headset stand.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.HeadsetStand.CorsairHeadsetStandDeviceInfo">
+            <summary>
+            Represents specific information for a CUE headset stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.HeadsetStand.CorsairHeadsetStandDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.HeadsetStand.CorsairHeadsetStandDeviceInfo" />.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.HeadsetStand.Enums.CorsairHeadsetStandLedId">
+            <summary>
+            Contains list of all LEDs available for corsair headset stands.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Keyboard.Enums.BrushCalculationMode">
+            <summary>
+            Contains a list of all brush calculation modes.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Keyboard.Enums.BrushCalculationMode.Relative">
+            <summary>
+            The calculation rectangle for brushes will be the rectangle around the ledgroup the brush is applied to.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Keyboard.Enums.BrushCalculationMode.Absolute">
+            <summary>
+            The calculation rectangle for brushes will always be the whole keyboard.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Keyboard.Enums.CorsairKeyboardKeyId">
+            <summary>
+            Contains list of all LEDs available for corsair keyboards.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Keyboard.Enums.CorsairLogicalKeyboardLayout">
+            <summary>
+            Contains list of available logical layouts for keyboards.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Keyboard.Enums.CorsairKeyboardLedId">
+            <summary>
+            Contains list of all LEDs available for corsair keyboards.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Keyboard.Enums.CorsairPhysicalKeyboardLayout">
+            <summary>
+            Contains list of available physical layouts for keyboards.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Keyboard.Enums.CorsairPhysicalKeyboardLayout.US">
+            <summary>
+            US-Keyboard
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Keyboard.Enums.CorsairPhysicalKeyboardLayout.UK">
+            <summary>
+            UK-Keyboard
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Keyboard.Enums.CorsairPhysicalKeyboardLayout.BR">
+            <summary>
+            BR-Keyboard
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Keyboard.Enums.CorsairPhysicalKeyboardLayout.JP">
+            <summary>
+            JP-Keyboard
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Keyboard.Enums.CorsairPhysicalKeyboardLayout.KR">
+            <summary>
+            KR-Keyboard
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Keyboard.CorsairKeyboard">
+            <summary>
+            Represents the SDK for a corsair keyboard.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Keyboard.CorsairKeyboard.KeyboardDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the keyboard.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Keyboard.CorsairKeyboard.Item(System.Char)">
+            <summary>
+            Gets the <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> representing the given character by calling the SDK-method 'CorsairGetLedIdForKeyName'.<br />
+            Note that this currently only works for letters.
+            </summary>
+            <param name="key">The character of the key.</param>
+            <returns>The led representing the given character or null if no led is found.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.Keyboard.CorsairKeyboard.#ctor(CUE.NET.Devices.Keyboard.CorsairKeyboardDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Keyboard.CorsairKeyboard"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the keyboard</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Keyboard.CorsairKeyboard.Initialize">
+            <summary>
+            Initializes the keyboard.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Keyboard.CorsairKeyboardDeviceInfo">
+            <summary>
+            Represents specific information for a CUE keyboard.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Keyboard.CorsairKeyboardDeviceInfo.PhysicalLayout">
+            <summary>
+            Gets the physical layout of the keyboard.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Keyboard.CorsairKeyboardDeviceInfo.LogicalLayout">
+            <summary>
+            Gets the logical layout of the keyboard as set in CUE settings.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Keyboard.CorsairKeyboardDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed CorsairDeviceInfo.
+            </summary>
+            <param name="nativeInfo">The native CorsairDeviceInfo-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.LightingNodePro.CorsairLightingNodePro">
+            <summary>
+            Represents the SDK for a corsair Lighting Node Pro stand.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.LightingNodePro.CorsairLightingNodePro.LightingNodeProDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the Lighting Node Pro stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.LightingNodePro.CorsairLightingNodePro.#ctor(CUE.NET.Devices.LightingNodePro.CorsairLightingNodeProDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.LightingNodePro.CorsairLightingNodePro"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the Lighting Node Pro stand</param>
+        </member>
+        <member name="M:CUE.NET.Devices.LightingNodePro.CorsairLightingNodePro.Initialize">
+            <summary>
+            Initializes the Lighting Node Pro stand.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.LightingNodePro.CorsairLightingNodeProDeviceInfo">
+            <summary>
+            Represents specific information for a CUE headset stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.LightingNodePro.CorsairLightingNodeProDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.LightingNodePro.CorsairLightingNodeProDeviceInfo" />.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.MemoryModule.CorsairMemoryModule">
+            <summary>
+            Represents the SDK for a corsair headset stand.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.MemoryModule.CorsairMemoryModule.MemoryModuleDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the headset stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.MemoryModule.CorsairMemoryModule.#ctor(CUE.NET.Devices.MemoryModule.CorsairMemoryModuleDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.MemoryModule.CorsairMemoryModule"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the headset stand</param>
+        </member>
+        <member name="M:CUE.NET.Devices.MemoryModule.CorsairMemoryModule.Initialize">
+            <summary>
+            Initializes the Memory Module
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.MemoryModule.CorsairMemoryModuleDeviceInfo">
+            <summary>
+            Represents specific information for a CUE headset stand.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.MemoryModule.CorsairMemoryModuleDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.MemoryModule.CorsairMemoryModuleDeviceInfo" />.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Mouse.Enums.CorsairMouseKeyId">
+            <summary>
+            Contains list of all LEDs available for corsair mice.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Mouse.Enums.CorsairMouseLedId">
+            <summary>
+            Contains list of all LEDs available for corsair mice.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Mouse.Enums.CorsairPhysicalMouseLayout">
+            <summary>
+            Contains list of available physical layouts for mice.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Mouse.Enums.CorsairPhysicalMouseLayout.Zones1">
+            <summary>
+            Zone1-Mouse
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Mouse.Enums.CorsairPhysicalMouseLayout.Zones2">
+            <summary>
+            Zone2-Mouse
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Mouse.Enums.CorsairPhysicalMouseLayout.Zones3">
+            <summary>
+            Zone3-Mouse
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Devices.Mouse.Enums.CorsairPhysicalMouseLayout.Zones4">
+            <summary>
+            Zone4-Mouse
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Mouse.CorsairMouseDeviceInfo">
+            <summary>
+            Represents specific information for a CUE mouse.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Mouse.CorsairMouseDeviceInfo.PhysicalLayout">
+            <summary>
+            Gets the physical layout of the mouse.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Mouse.CorsairMouseDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.Mouse.CorsairMouseDeviceInfo" />.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Mouse.CorsairMouse">
+            <summary>
+            Represents the SDK for a corsair mouse.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Mouse.CorsairMouse.MouseDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the mouse.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Mouse.CorsairMouse.#ctor(CUE.NET.Devices.Mouse.CorsairMouseDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Mouse.CorsairMouse"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the mouse</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Mouse.CorsairMouse.Initialize">
+            <summary>
+            Initializes the mouse.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Mousemat.CorsairMousemat">
+            <summary>
+            Represents the SDK for a corsair mousemat.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Mousemat.CorsairMousemat.MousematDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the mousemat.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Mousemat.CorsairMousemat.#ctor(CUE.NET.Devices.Mousemat.CorsairMousematDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Mousemat.CorsairMousemat"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the mousemat</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Mousemat.CorsairMousemat.Initialize">
+            <summary>
+            Initializes the mousemat.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Mousemat.CorsairMousematDeviceInfo">
+            <summary>
+            Represents specific information for a CUE Mousemat.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Mousemat.CorsairMousematDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.Mousemat.CorsairMousematDeviceInfo" />.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.Mousemat.Enums.CorsairMousematLedId">
+            <summary>
+            Contains list of all LEDs available for corsair mousemats.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Headset.Enums.CorsairHeadsetLedId">
+            <summary>
+            Contains list of all LEDs available for corsair headsets.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Headset.CorsairHeadset">
+            <summary>
+            Represents the SDK for a corsair headset.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.Headset.CorsairHeadset.HeadsetDeviceInfo">
+            <summary>
+            Gets specific information provided by CUE for the headset.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Headset.CorsairHeadset.#ctor(CUE.NET.Devices.Headset.CorsairHeadsetDeviceInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Devices.Headset.CorsairHeadset"/> class.
+            </summary>
+            <param name="info">The specific information provided by CUE for the headset</param>
+        </member>
+        <member name="M:CUE.NET.Devices.Headset.CorsairHeadset.Initialize">
+            <summary>
+            Initializes the the headset.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.Headset.CorsairHeadsetDeviceInfo">
+            <summary>
+            Represents specific information for a CUE headset.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.Headset.CorsairHeadsetDeviceInfo.#ctor(CUE.NET.Native._CorsairDeviceInfo)">
+            <summary>
+            Internal constructor of managed <see cref="T:CUE.NET.Devices.Headset.CorsairHeadsetDeviceInfo" />.
+            </summary>
+            <param name="nativeInfo">The native <see cref="T:CUE.NET.Native._CorsairDeviceInfo" />-struct</param>
+        </member>
+        <member name="T:CUE.NET.Devices.IDeviceInfo">
+            <summary>
+            Represents generic device information.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.IDeviceInfo.Type">
+            <summary>
+            Gets the device type.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.IDeviceInfo.Model">
+            <summary>
+            Gets the device model (like “K95RGB”).
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.IDeviceInfo.CapsMask">
+            <summary>
+            Gets flags, which describe device capabilities.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Devices.ExceptionEventHandler">
+            <summary>
+            Represents the event-handler of the Exception-event.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The arguments provided by the event.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.UpdatingEventHandler">
+            <summary>
+            Represents the event-handler of the Updating-event.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The arguments provided by the event.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.UpdatedEventHandler">
+            <summary>
+            Represents the event-handler of the Updated-event.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The arguments provided by the event.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.LedsUpdatingEventHandler">
+            <summary>
+            Represents the event-handler of the LedsUpdating-event.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The arguments provided by the event.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.LedsUpdatedEventHandler">
+            <summary>
+            Represents the event-handler of the LedsUpdated-event.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="args">The arguments provided by the event.</param>
+        </member>
+        <member name="T:CUE.NET.Devices.ICueDevice">
+            <summary>
+            Represents a generic cue device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.ICueDevice.DeviceInfo">
+            <summary>
+            Gets generic information provided by CUE for the device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.ICueDevice.DeviceRectangle">
+            <summary>
+            Gets the rectangle containing all LEDs of the device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.ICueDevice.Leds">
+            <summary>
+            Gets a read-only collection containing the LEDs of the device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Devices.ICueDevice.Item(CUE.NET.Devices.Generic.Enums.CorsairLedId)">
+            <summary>
+            Gets the <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> with the specified ID.
+            </summary>
+            <param name="ledId">The ID of the LED to get.</param>
+            <returns>The LED with the specified ID or null if no LED is found.</returns>
+        </member>
+        <member name="P:CUE.NET.Devices.ICueDevice.Item(System.Drawing.PointF)">
+            <summary>
+            Gets the <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> at the given physical location.
+            </summary>
+            <param name="location">The point to get the location from.</param>
+            <returns>The LED at the given point or null if no location is found.</returns>
+        </member>
+        <member name="P:CUE.NET.Devices.ICueDevice.Item(System.Drawing.RectangleF,System.Single)">
+            <summary>
+            Gets a list of <see cref="T:CUE.NET.Devices.Generic.CorsairLed" /> inside the given rectangle.
+            </summary>
+            <param name="referenceRect">The rectangle to check.</param>
+            <param name="minOverlayPercentage">The minimal percentage overlay a location must have with the <see cref="T:System.Drawing.Rectangle" /> to be taken into the list.</param>
+            <returns></returns>
+        </member>
+        <member name="E:CUE.NET.Devices.ICueDevice.Exception">
+            <summary>
+            Occurs when a catched exception is thrown inside the device.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.Devices.ICueDevice.Updating">
+            <summary>
+            Occurs when the device starts updating.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.Devices.ICueDevice.Updated">
+            <summary>
+            Occurs when the device update is done.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.Devices.ICueDevice.LedsUpdating">
+            <summary>
+            Occurs when the device starts to update the leds.
+            </summary>
+        </member>
+        <member name="E:CUE.NET.Devices.ICueDevice.LedsUpdated">
+            <summary>
+            Occurs when the device updated the leds.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.ICueDevice.Initialize">
+            <summary>
+            Initializes the device.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.ICueDevice.Update(System.Boolean,System.Boolean)">
+            <summary>
+            Performs an update for all dirty keys, or all keys if flushLeds is set to true.
+            </summary>
+            <param name="flushLeds">Specifies whether all keys (including clean ones) should be updated.</param>
+            <param name="noRender">Only updates the hardware-leds skippin effects and the render-pass. Only use this if you know what that means!</param>
+        </member>
+        <member name="M:CUE.NET.Devices.ICueDevice.SyncColors">
+            <summary>
+            Reads the currently active colors from the device and sync them with the internal state.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.ICueDevice.SaveColors">
+            <summary>
+            Saves the currently active colors from the device.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.ICueDevice.RestoreColors">
+            <summary>
+            Restores the last saved colors.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Devices.ICueDevice.AttachLedGroup(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Attaches the given ledgroup.
+            </summary>
+            <param name="ledGroup">The ledgroup to attach.</param>
+            <returns><c>true</c> if the ledgroup could be attached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Devices.ICueDevice.DetachLedGroup(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Detaches the given ledgroup.
+            </summary>
+            <param name="ledGroup">The ledgroup to detached.</param>
+            <returns><c>true</c> if the ledgroup could be detached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="T:CUE.NET.Effects.AbstractLedGroupEffect`1">
+            <summary>
+            Represents a basic effect targeting an <see cref="T:CUE.NET.Groups.ILedGroup"/>.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.AbstractLedGroupEffect`1.IsDone">
+            <summary>
+            Gets or sets if this effect has finished all of his work.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.AbstractLedGroupEffect`1.LedGroup">
+            <summary>
+            Gets the <see cref="T:CUE.NET.Groups.ILedGroup"/> this effect is targeting.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractLedGroupEffect`1.Update(System.Single)">
+            <summary>
+            Updates the effect.
+            </summary>
+            <param name="deltaTime">The elapsed time (in seconds) since the last update.</param>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractLedGroupEffect`1.CanBeAppliedTo(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Checks if the effect can be applied to the target object.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Effects.IEffectTarget`1"/> this effect is attached to.</param>
+            <returns><c>true</c> if the effect can be attached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractLedGroupEffect`1.OnAttach(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Hook which is called when the effect is attached to a device.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Groups.ILedGroup"/> this effect is attached to.</param>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractLedGroupEffect`1.OnDetach(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Hook which is called when the effect is detached from a device.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Groups.ILedGroup"/> this effect is detached from.</param>
+        </member>
+        <member name="T:CUE.NET.Effects.AbstractLedGroupEffect">
+            <summary>
+            Represents a basic effect targeting an <see cref="T:CUE.NET.Groups.ILedGroup"/>.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Effects.AbstractBrushEffect`1">
+            <summary>
+            Represents a basic effect targeting an <see cref="T:CUE.NET.Brushes.IBrush"/>.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.AbstractBrushEffect`1.IsDone">
+            <summary>
+            Gets or sets if this effect has finished all of his work.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.AbstractBrushEffect`1.Brush">
+            <summary>
+            Gets the <see cref="T:CUE.NET.Brushes.IBrush"/> this effect is targeting.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractBrushEffect`1.Update(System.Single)">
+            <summary>
+            Updates the effect.
+            </summary>
+            <param name="deltaTime">The elapsed time (in seconds) since the last update.</param>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractBrushEffect`1.CanBeAppliedTo(CUE.NET.Brushes.IBrush)">
+            <summary>
+            Checks if the effect can be applied to the target object.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Effects.IEffectTarget`1"/> this effect is attached to.</param>
+            <returns><c>true</c> if the effect can be attached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractBrushEffect`1.OnAttach(CUE.NET.Brushes.IBrush)">
+            <summary>
+            Hook which is called when the effect is attached to a device.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Brushes.IBrush"/> this effect is attached to.</param>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractBrushEffect`1.OnDetach(CUE.NET.Brushes.IBrush)">
+            <summary>
+            Hook which is called when the effect is detached from a device.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Brushes.IBrush"/> this effect is detached from.</param>
+        </member>
+        <member name="T:CUE.NET.Effects.AbstractBrushEffect">
+            <summary>
+            Represents a basic effect targeting an <see cref="T:CUE.NET.Brushes.IBrush"/>.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Effects.AbstractEffectTarget`1">
+            <summary>
+            Represents an generic effect-target.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:CUE.NET.Effects.AbstractEffectTarget`1.EffectTimes">
+            <summary>
+            Gets a list of <see cref="T:CUE.NET.Effects.EffectTimeContainer"/> storing the attached effects.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.AbstractEffectTarget`1.Effects">
+            <summary>
+            Gets all <see cref="T:CUE.NET.Effects.IEffect`1" /> attached to this target.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.AbstractEffectTarget`1.EffectTarget">
+            <summary>
+            Gets the strongly-typed target used for the effect.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractEffectTarget`1.UpdateEffects">
+            <summary>
+            Updates all effects added to this target.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractEffectTarget`1.AddEffect(CUE.NET.Effects.IEffect{`0})">
+            <summary>
+            Adds an affect.
+            </summary>
+            <param name="effect">The effect to add.</param>
+        </member>
+        <member name="M:CUE.NET.Effects.AbstractEffectTarget`1.RemoveEffect(CUE.NET.Effects.IEffect{`0})">
+            <summary>
+            Removes an effect
+            </summary>
+            <param name="effect">The effect to remove.</param>
+        </member>
+        <member name="T:CUE.NET.Effects.IEffectTarget`1">
+            <summary>
+            Represents a basic effect-target.
+            </summary>
+            <typeparam name="T">The type this target represents.</typeparam>
+        </member>
+        <member name="P:CUE.NET.Effects.IEffectTarget`1.Effects">
+            <summary>
+            Gets a list of all active effects of this target.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.IEffectTarget`1.UpdateEffects">
+            <summary>
+            Updates all effects added to this target.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.IEffectTarget`1.AddEffect(CUE.NET.Effects.IEffect{`0})">
+            <summary>
+            Adds an affect.
+            </summary>
+            <param name="effect">The effect to add.</param>
+        </member>
+        <member name="M:CUE.NET.Effects.IEffectTarget`1.RemoveEffect(CUE.NET.Effects.IEffect{`0})">
+            <summary>
+            Removes an effect
+            </summary>
+            <param name="effect">The effect to remove.</param>
+        </member>
+        <member name="T:CUE.NET.Effects.MoveGradientEffect">
+            <summary>
+            Represents an effect which allows to move an gradient by modifying his offset.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.MoveGradientEffect.Direction">
+            <summary>
+            Gets or sets the direction the gradient is moved.
+            True leads to an offset-increment (normaly moving to the right), false to an offset-decrement (normaly moving to the left).
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.MoveGradientEffect.Speed">
+            <summary>
+            Gets or sets the speed of the movement in units per second.
+            The meaning of units differs for the different gradients, but 360 units will always be one complete cycle:
+              LinearGradient: 360 unit = 1 offset.
+              RainbowGradient: 1 unit = 1 degree.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.MoveGradientEffect.#ctor(System.Single,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="speed"></param>
+            <param name="direction"></param>
+        </member>
+        <member name="M:CUE.NET.Effects.MoveGradientEffect.Update(System.Single)">
+            <summary>
+            Updates the effect.
+            </summary>
+            <param name="deltaTime">The elapsed time (in seconds) since the last update.</param>
+        </member>
+        <member name="T:CUE.NET.Effects.FlashEffect">
+            <summary>
+            Represents an effect which allows to flash an brush by modifying his opacity.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.FlashEffect.Attack">
+            <summary>
+            Gets or sets the attack-time (in seconds) of the effect. (default: 0.2f)<br />
+            This is close to a synthesizer envelope. (See <see href="http://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope" />  as reference)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.FlashEffect.Decay">
+            <summary>
+            Gets or sets the decay-time (in seconds) of the effect. (default: 0f)<br />
+            This is close to a synthesizer envelope. (See <see href="http://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope" /> as reference)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.FlashEffect.Sustain">
+            <summary>
+            Gets or sets the sustain-time (in seconds) of the effect. (default: 0.3f)<br />
+            This is close to a synthesizer envelope. (See <see href="http://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope" /> as reference)<br />
+            Note that this value for naming reasons represents the time NOT the level.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.FlashEffect.Release">
+            <summary>
+            Gets or sets the release-time (in seconds) of the effect. (default: 0.2f)<br />
+            This is close to a synthesizer envelope. (See <see href="http://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope" /> as reference)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.FlashEffect.AttackValue">
+            <summary>
+            Gets or sets the level to which the oppacity (percentage) should raise in the attack-cycle. (default: 1f);
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.FlashEffect.SustainValue">
+            <summary>
+            Gets or sets the level at which the oppacity (percentage) should stay in the sustain-cycle. (default: 1f);
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.FlashEffect.Interval">
+            <summary>
+            Gets or sets the interval (in seconds) in which the effect should repeat (if repetition is enabled). (default: 1f)
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.FlashEffect.Repetitions">
+            <summary>
+            Gets or sets the amount of repetitions the effect should do until it's finished. Zero means infinite. (default: 0)
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.FlashEffect.Update(System.Single)">
+            <summary>
+            Updates the effect.
+            </summary>
+            <param name="deltaTime">The elapsed time (in seconds) since the last update.</param>
+        </member>
+        <member name="M:CUE.NET.Effects.FlashEffect.OnAttach(CUE.NET.Brushes.IBrush)">
+            <summary>
+            Resets the effect.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Effects.IEffect">
+            <summary>
+            Represents a basic effect.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.IEffect.IsDone">
+            <summary>
+            Gets if this effect has finished all of his work.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.IEffect.Update(System.Single)">
+            <summary>
+            Updates the effect.
+            </summary>
+            <param name="deltaTime">The elapsed time (in seconds) since the last update.</param>
+        </member>
+        <member name="T:CUE.NET.Effects.IEffect`1">
+            <summary>
+            Represents a basic effect.
+            </summary>
+            <typeparam name="T">The type of <see cref="T:CUE.NET.Effects.IEffectTarget`1"/> this effect can be attached to.</typeparam>
+        </member>
+        <member name="M:CUE.NET.Effects.IEffect`1.CanBeAppliedTo(`0)">
+            <summary>
+            Checks if the effect can be applied to the target object.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Effects.IEffectTarget`1"/> this effect is attached to.</param>
+            <returns><c>true</c> if the effect can be attached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Effects.IEffect`1.OnAttach(`0)">
+            <summary>
+            Hook which is called when the effect is attached to a device.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Effects.IEffectTarget`1"/> this effect is attached to.</param>
+        </member>
+        <member name="M:CUE.NET.Effects.IEffect`1.OnDetach(`0)">
+            <summary>
+            Hook which is called when the effect is detached from a device.
+            </summary>
+            <param name="target">The <see cref="T:CUE.NET.Effects.IEffectTarget`1"/> this effect is detached from.</param>
+        </member>
+        <member name="T:CUE.NET.Effects.EffectTimeContainer">
+            <summary>
+            Represents a wrapped effect with additional time information.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.EffectTimeContainer.Effect">
+            <summary>
+            Gets or sets the wrapped effect.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Effects.EffectTimeContainer.TicksAtLastUpdate">
+            <summary>
+            Gets or sets the tick-count from the last time the effect was updated.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Effects.EffectTimeContainer.#ctor(CUE.NET.Effects.IEffect,System.Int64)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Effects.EffectTimeContainer"/> class.
+            </summary>
+            <param name="effect">The wrapped effect.</param>
+            <param name="ticksAtLastUpdate">The tick-count from the last time the effect was updated.</param>
+        </member>
+        <member name="T:CUE.NET.EventArgs.KeyPressedEventArgs">
+            <summary>
+             Represents the data provided by the <see cref="E:CUE.NET.CueSDK.KeyPressed"/>-event.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.EventArgs.KeyPressedEventArgs.KeyId">
+            <summary>
+            Gets the id of the key.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.EventArgs.KeyPressedEventArgs.IsPressed">
+            <summary>
+            Gets the current status of the key (true = pressed, flase = released).
+            </summary>
+        </member>
+        <member name="M:CUE.NET.EventArgs.KeyPressedEventArgs.#ctor(CUE.NET.Devices.Generic.Enums.CorsairKeyId,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.EventArgs.KeyPressedEventArgs"/> class.
+            </summary>
+            <param name="keyId">The id of the key.</param>
+            <param name="isPressed">The current status of the key (true = pressed, flase = released).</param>
+        </member>
+        <member name="T:CUE.NET.Gradients.AbstractGradient">
+            <summary>
+            Represents a basic gradient.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Gradients.AbstractGradient.GradientStops">
+            <summary>
+            Gets a list of the stops used by this gradient.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Gradients.AbstractGradient.WrapGradient">
+            <summary>
+            Gets or sets if the Gradient wraps around if there isn't a second stop to take.
+            Example: There is a stop at offset 0f, 0.5f and 0.75f. 
+            Without wrapping offset 1f will be calculated the same as 0.75f. With wrapping it would be the same as 0f.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Gradients.AbstractGradient.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Gradients.AbstractGradient"/> class.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Gradients.AbstractGradient.#ctor(CUE.NET.Gradients.GradientStop[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Gradients.AbstractGradient"/> class.
+            </summary>
+            <param name="gradientStops">The stops with which the gradient should be initialized.</param>
+        </member>
+        <member name="M:CUE.NET.Gradients.AbstractGradient.#ctor(System.Boolean,CUE.NET.Gradients.GradientStop[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Gradients.AbstractGradient"/> class.
+            </summary>
+            <param name="wrapGradient">Specifies whether the gradient should wrapp or not (see <see cref="P:CUE.NET.Gradients.AbstractGradient.WrapGradient"/> for an example of what this means).</param>
+            <param name="gradientStops">The stops with which the gradient should be initialized.</param>
+        </member>
+        <member name="M:CUE.NET.Gradients.AbstractGradient.ClipOffset(System.Single)">
+            <summary>
+            Clips the offset and ensures, that it is inside the bounds of the stop list.
+            </summary>
+            <param name="offset"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CUE.NET.Gradients.AbstractGradient.GetColor(System.Single)">
+            <summary>
+            Gets the color of the gradient on the specified offset.
+            </summary>
+            <param name="offset">The percentage offset to take the color from.</param>
+            <returns>The color at the specific offset.</returns>
+        </member>
+        <member name="T:CUE.NET.Gradients.GradientStop">
+            <summary>
+            Represents a stop on a gradient.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Gradients.GradientStop.Offset">
+            <summary>
+            Gets or sets the percentage offset to place this stop. This should be inside the range of [0..1] but it's not necessary.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Gradients.GradientStop.Color">
+            <summary>
+            Gets or sets the color of the stop.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Gradients.GradientStop.#ctor(System.Single,CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Gradients.GradientStop"/> class.
+            </summary>
+            <param name="offset">The percentage offset to place this stop.</param>
+            <param name="color">The color of the stop.</param>
+        </member>
+        <member name="T:CUE.NET.Gradients.IGradient">
+            <summary>
+            Represents a basic gradient.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Gradients.IGradient.GetColor(System.Single)">
+            <summary>
+            Gets the color of the gradient on the specified offset.
+            </summary>
+            <param name="offset">The percentage offset to take the color from.</param>
+            <returns>The color at the specific offset.</returns>
+        </member>
+        <member name="T:CUE.NET.Gradients.RainbowGradient">
+            <summary>
+            Represents a rainbow gradient which circles through all colors of the HUE-color-space.<br />
+            See <see href="http://upload.wikimedia.org/wikipedia/commons/a/ad/HueScale.svg" /> as reference.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Gradients.RainbowGradient.StartHue">
+            <summary>
+            Gets or sets the hue (in degrees) to start from.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Gradients.RainbowGradient.EndHue">
+            <summary>
+            Gets or sets the hue (in degrees) to end the with.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Gradients.RainbowGradient.#ctor(System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Gradients.RainbowGradient"/> class.
+            </summary>
+            <param name="startHue">The hue (in degrees) to start from (default: 0)</param>
+            <param name="endHue">The hue (in degrees) to end with (default: 360)</param>
+        </member>
+        <member name="M:CUE.NET.Gradients.RainbowGradient.GetColor(System.Single)">
+            <summary>
+            Gets the color on the rainbow at the given offset.
+            </summary>
+            <param name="offset">The percentage offset to take the color from.</param>
+            <returns>The color at the specific offset.</returns>
+        </member>
+        <member name="T:CUE.NET.Gradients.LinearGradient">
+            <summary>
+            Represents a linear interpolated gradient with n stops.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Gradients.LinearGradient.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Gradients.LinearGradient"/> class.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Gradients.LinearGradient.#ctor(CUE.NET.Gradients.GradientStop[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Gradients.LinearGradient"/> class.
+            </summary>
+            <param name="gradientStops">The stops with which the gradient should be initialized.</param>
+        </member>
+        <member name="M:CUE.NET.Gradients.LinearGradient.#ctor(System.Boolean,CUE.NET.Gradients.GradientStop[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Gradients.AbstractGradient"/> class.
+            </summary>
+            <param name="wrapGradient">Specifies whether the gradient should wrapp or not (see <see cref="P:CUE.NET.Gradients.AbstractGradient.WrapGradient"/> for an example of what this means).</param>
+            <param name="gradientStops">The stops with which the gradient should be initialized.</param>
+        </member>
+        <member name="M:CUE.NET.Gradients.LinearGradient.GetColor(System.Single)">
+            <summary>
+            Gets the linear interpolated color at the given offset.
+            </summary>
+            <param name="offset">The percentage offset to take the color from.</param>
+            <returns>The color at the specific offset.</returns>
+        </member>
+        <member name="T:CUE.NET.Groups.AbstractLedGroup">
+            <summary>
+            Represents a basic ledgroup.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.AbstractLedGroup.EffectTarget">
+            <summary>
+            Gets the strongly-typed target used for the effect.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.AbstractLedGroup.Device">
+            <summary>
+            Gets the device this ledgroup belongs to.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.AbstractLedGroup.Brush">
+            <summary>
+            Gets or sets the brush which should be drawn over this group.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.AbstractLedGroup.ZIndex">
+            <summary>
+            Gets or sets the z-index of this ledgroup to allow ordering them before drawing. (lowest first) (default: 0)
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Groups.AbstractLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.AbstractLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="autoAttach">Specifies whether this group should be automatically attached or not.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.AbstractLedGroup.GetLeds">
+            <summary>
+            Gets a list containing all LEDs of this group.
+            </summary>
+            <returns>The list containing all LEDs of this group.</returns>
+        </member>
+        <member name="T:CUE.NET.Groups.ILedGroup">
+            <summary>
+            Represents a basic led-group.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.ILedGroup.Brush">
+            <summary>
+            Gets or sets the brush which should be drawn over this group.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.ILedGroup.ZIndex">
+            <summary>
+            Gets or sets the z-index of this ledgroup to allow ordering them before drawing. (lowest first) (default: 0)
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Groups.ILedGroup.GetLeds">
+            <summary>
+            Gets a list containing all LEDs of this group.
+            </summary>
+            <returns>The list containing all LEDs of this group.</returns>
+        </member>
+        <member name="T:CUE.NET.Groups.RectangleLedGroup">
+            <summary>
+            Represents a ledgroup containing LEDs which physically lay inside a rectangle.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.RectangleLedGroup.Rectangle">
+            <summary>
+            Gets or sets the rectangle the LEDs should be taken from.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.RectangleLedGroup.MinOverlayPercentage">
+            <summary>
+            Gets or sets the minimal percentage overlay a LED must have with the <see cref="P:CUE.NET.Groups.RectangleLedGroup.Rectangle" /> to be taken into the ledgroup.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Groups.RectangleLedGroup.#ctor(CUE.NET.Devices.ICueDevice,CUE.NET.Devices.Generic.Enums.CorsairLedId,CUE.NET.Devices.Generic.Enums.CorsairLedId,System.Single,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.RectangleLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="fromLed">They ID of the first LED to calculate the rectangle of this ledgroup from.</param>
+            <param name="toLed">They ID of the second LED to calculate the rectangle of this ledgroup from.</param>
+            <param name="minOverlayPercentage">(optional) The minimal percentage overlay a LED must have with the <see cref="P:CUE.NET.Groups.RectangleLedGroup.Rectangle" /> to be taken into the ledgroup. (default: 0.5f)</param>
+            <param name="autoAttach">(optional) Specifies whether this group should be automatically attached or not. (default: true)</param>
+        </member>
+        <member name="M:CUE.NET.Groups.RectangleLedGroup.#ctor(CUE.NET.Devices.ICueDevice,CUE.NET.Devices.Generic.CorsairLed,CUE.NET.Devices.Generic.CorsairLed,System.Single,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.RectangleLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="fromLed">They first LED to calculate the rectangle of this ledgroup from.</param>
+            <param name="toLed">They second LED to calculate the rectangle of this ledgroup from.</param>
+            <param name="minOverlayPercentage">(optional) The minimal percentage overlay a LED must have with the <see cref="P:CUE.NET.Groups.RectangleLedGroup.Rectangle" /> to be taken into the ledgroup. (default: 0.5f)</param>
+            <param name="autoAttach">(optional) Specifies whether this group should be automatically attached or not. (default: true)</param>
+        </member>
+        <member name="M:CUE.NET.Groups.RectangleLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Drawing.PointF,System.Drawing.PointF,System.Single,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.RectangleLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="fromPoint">They first point to calculate the rectangle of this ledgroup from.</param>
+            <param name="toPoint">They second point to calculate the rectangle of this ledgroup from.</param>
+            <param name="minOverlayPercentage">(optional) The minimal percentage overlay a LED must have with the <see cref="P:CUE.NET.Groups.RectangleLedGroup.Rectangle" /> to be taken into the ledgroup. (default: 0.5f)</param>
+            <param name="autoAttach">(optional) Specifies whether this group should be automatically attached or not. (default: true)</param>
+        </member>
+        <member name="M:CUE.NET.Groups.RectangleLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Drawing.RectangleF,System.Single,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.RectangleLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="rectangle">The rectangle of this ledgroup.</param>
+            <param name="minOverlayPercentage">(optional) The minimal percentage overlay a LED must have with the <see cref="P:CUE.NET.Groups.RectangleLedGroup.Rectangle" /> to be taken into the ledgroup. (default: 0.5f)</param>
+            <param name="autoAttach">(optional) Specifies whether this group should be automatically attached or not. (default: true)</param>
+        </member>
+        <member name="M:CUE.NET.Groups.RectangleLedGroup.GetLeds">
+            <summary>
+            Gets a list containing all LEDs of this group.
+            </summary>
+            <returns>The list containing all LEDs of this group.</returns>
+        </member>
+        <member name="T:CUE.NET.Groups.ListLedGroup">
+            <summary>
+            Represents a ledgroup containing arbitrary LEDs.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.ListLedGroup.EffectTarget">
+            <summary>
+            Gets the strongly-typed target used for the effect.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Groups.ListLedGroup.GroupLeds">
+            <summary>
+            Gets the list containing the LEDs of this ledgroup.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="autoAttach">Specifies whether this ledgroup should be automatically attached or not.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,CUE.NET.Devices.Generic.CorsairLed[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="leds">The initial LEDs of this ledgroup.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.CorsairLed})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="leds">The initial LEDs of this ledgroup.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Boolean,System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.CorsairLed})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="autoAttach">Specifies whether this ledgroup should be automatically attached or not.</param>
+            <param name="leds">The initial LEDs of this ledgroup.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Boolean,CUE.NET.Devices.Generic.CorsairLed[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="autoAttach">Specifies whether this ledgroup should be automatically attached or not.</param>
+            <param name="leds">The initial LEDs of this ledgroup.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,CUE.NET.Devices.Generic.Enums.CorsairLedId[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="leds">The IDs of the initial LEDs of this ledgroup.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.Enums.CorsairLedId})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="leds">The IDs of the initial LEDs of this ledgroup.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Boolean,CUE.NET.Devices.Generic.Enums.CorsairLedId[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="autoAttach">Specifies whether this ledgroup should be automatically attached or not.</param>
+            <param name="leds">The IDs of the initial LEDs of this ledgroup.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.#ctor(CUE.NET.Devices.ICueDevice,System.Boolean,System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.Enums.CorsairLedId})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Groups.ListLedGroup"/> class.
+            </summary>
+            <param name="device">The device this ledgroup belongs to.</param>
+            <param name="autoAttach">Specifies whether this ledgroup should be automatically attached or not.</param>
+            <param name="leds">The IDs of the initial LEDs of this ledgroup.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.AddLed(CUE.NET.Devices.Generic.CorsairLed[])">
+            <summary>
+            Adds the given LED(s) to the ledgroup.
+            </summary>
+            <param name="leds">The LED(s) to add.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.AddLed(CUE.NET.Devices.Generic.Enums.CorsairLedId[])">
+            <summary>
+            Adds the given LED(s) to the ledgroup.
+            </summary>
+            <param name="ledIds">The ID(s) of the LED(s) to add.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.AddLeds(System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.CorsairLed})">
+            <summary>
+            Adds the given LEDs to the ledgroup.
+            </summary>
+            <param name="leds">The LEDs to add.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.AddLeds(System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.Enums.CorsairLedId})">
+            <summary>
+            Adds the given LEDs to the ledgroup.
+            </summary>
+            <param name="ledIds">The IDs of the LEDs to add.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.RemoveLed(CUE.NET.Devices.Generic.CorsairLed[])">
+            <summary>
+            Removes the given LED(s) from the ledgroup.
+            </summary>
+            <param name="leds">The LED(s) to remove.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.RemoveLed(CUE.NET.Devices.Generic.Enums.CorsairLedId[])">
+            <summary>
+            Removes the given LED(s) from the ledgroup.
+            </summary>
+            <param name="ledIds">The ID(s) of the LED(s) to remove.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.RemoveLeds(System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.CorsairLed})">
+            <summary>
+            Removes the given LEDs from the ledgroup.
+            </summary>
+            <param name="leds">The LEDs to remove.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.RemoveLeds(System.Collections.Generic.IEnumerable{CUE.NET.Devices.Generic.Enums.CorsairLedId})">
+            <summary>
+            Removes the given LEDs from the ledgroup.
+            </summary>
+            <param name="ledIds">The IDs of the LEDs to remove.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.ContainsLed(CUE.NET.Devices.Generic.CorsairLed)">
+            <summary>
+            Checks if a given LED is contained by this ledgroup.
+            </summary>
+            <param name="led">The LED which should be checked.</param>
+            <returns><c>true</c> if the LED is contained by this ledgroup; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.ContainsLed(CUE.NET.Devices.Generic.Enums.CorsairLedId)">
+            <summary>
+            Checks if a given LED is contained by this ledgroup.
+            </summary>
+            <param name="ledId">The ID of the LED which should be checked.</param>
+            <returns><c>true</c> if the LED is contained by this ledgroup; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.MergeLeds(CUE.NET.Groups.ILedGroup)">
+            <summary>
+            Merges the LEDs from the given ledgroup in this ledgroup. 
+            </summary>
+            <param name="groupToMerge">The ledgroup to merge.</param>
+        </member>
+        <member name="M:CUE.NET.Groups.ListLedGroup.GetLeds">
+            <summary>
+            Gets a list containing the LEDs from this group.
+            </summary>
+            <returns>The list containing the LEDs.</returns>
+        </member>
+        <member name="T:CUE.NET.Groups.Extensions.LedGroupExtension">
+            <summary>
+            Offers some extensions and helper-methods for ledgroup related things.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Groups.Extensions.LedGroupExtension.ToListLedGroup(CUE.NET.Groups.AbstractLedGroup)">
+            <summary>
+            Converts the given <see cref="T:CUE.NET.Groups.AbstractLedGroup" /> to a <see cref="T:CUE.NET.Groups.ListLedGroup" />.
+            </summary>
+            <param name="ledGroup">The <see cref="T:CUE.NET.Groups.AbstractLedGroup" /> to convert.</param>
+            <returns>The converted <see cref="T:CUE.NET.Groups.ListLedGroup" />.</returns>
+        </member>
+        <member name="M:CUE.NET.Groups.Extensions.LedGroupExtension.Exclude(CUE.NET.Groups.AbstractLedGroup,CUE.NET.Devices.Generic.Enums.CorsairLedId[])">
+            <summary>
+            Returns a new <see cref="T:CUE.NET.Groups.ListLedGroup" /> which contains all LEDs from the given ledgroup excluding the specified ones.
+            </summary>
+            <param name="ledGroup">The base ledgroup.</param>
+            <param name="ledIds">The ids of the LEDs to exclude.</param>
+            <returns>The new <see cref="T:CUE.NET.Groups.ListLedGroup" />.</returns>
+        </member>
+        <member name="M:CUE.NET.Groups.Extensions.LedGroupExtension.Exclude(CUE.NET.Groups.AbstractLedGroup,CUE.NET.Devices.Generic.CorsairLed[])">
+            <summary>
+            Returns a new <see cref="T:CUE.NET.Groups.ListLedGroup" /> which contains all LEDs from the given ledgroup excluding the specified ones.
+            </summary>
+            <param name="ledGroup">The base ledgroup.</param>
+            <param name="ledIds">The LEDs to exclude.</param>
+            <returns>The new <see cref="T:CUE.NET.Groups.ListLedGroup" />.</returns>
+        </member>
+        <member name="M:CUE.NET.Groups.Extensions.LedGroupExtension.Attach(CUE.NET.Groups.AbstractLedGroup)">
+            <summary>
+            Attaches the given ledgroup to the device.
+            </summary>
+            <param name="ledGroup">The ledgroup to attach.</param>
+            <returns><c>true</c> if the ledgroup could be attached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CUE.NET.Groups.Extensions.LedGroupExtension.Detach(CUE.NET.Groups.AbstractLedGroup)">
+            <summary>
+            Detaches the given ledgroup from the device.
+            </summary>
+            <param name="ledGroup">The ledgroup to attach.</param>
+            <returns><c>true</c> if the ledgroup could be detached; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="T:CUE.NET.Exceptions.CUEException">
+            <summary>
+            Represents an exception thrown by the CUE.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Exceptions.CUEException.Error">
+            <summary>
+            Gets the <see cref="T:CUE.NET.Devices.Generic.Enums.CorsairError" /> provided by CUE.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Exceptions.CUEException.#ctor(CUE.NET.Devices.Generic.Enums.CorsairError)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Exceptions.CUEException"/> class.
+            </summary>
+            <param name="error">The <see cref="T:CUE.NET.Devices.Generic.Enums.CorsairError" /> provided by CUE, which leads to this exception.</param>
+        </member>
+        <member name="T:CUE.NET.Exceptions.WrapperException">
+            <summary>
+            Represents an exception thrown by this SDK-Wrapper.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Exceptions.WrapperException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CUE.NET.Exceptions.WrapperException"/> class.
+            </summary>
+            <param name="message">The message which describes the reason of throwing this exception.</param>
+            <param name="innerException">Optional inner exception, which lead to this exception.</param>
+        </member>
+        <member name="T:CUE.NET.Helper.ColorHelper">
+            <summary>
+            Offers some extensions and helper-methods for color related things.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.GetFloatA(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Converts the alpha-value of the <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> to a float value in the range [0..1].
+            </summary>
+            <param name="color">The color to take the alpha-value from.</param>
+            <returns>The float-value in the range of [0..1]</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.GetFloatR(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Converts the red-value of the <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> to a float value in the range [0..1].
+            </summary>
+            <param name="color">The color to take the red-value from.</param>
+            <returns>The float-value in the range of [0..1]</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.GetFloatG(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Converts the green-value of the <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> to a float value in the range [0..1].
+            </summary>
+            <param name="color">The color to take the green-value from.</param>
+            <returns>The float-value in the range of [0..1]</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.GetFloatB(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Converts the blue-value of the <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> to a float value in the range [0..1].
+            </summary>
+            <param name="color">The color to take the blue-value from.</param>
+            <returns>The float-value in the range of [0..1]</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.CreateColorFromFloat(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Creates a <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> object from the respective rgb-float-values in the range [0..1].
+            </summary>
+            <param name="a">The alpha-value in the range [0..1].</param>
+            <param name="r">The red-value in the range [0..1].</param>
+            <param name="g">The green-value in the range [0..1].</param>
+            <param name="b">The blue-value in the range [0..1].</param>
+            <returns>The color-object created representing the given values.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.GetIntColorFromFloat(System.Single)">
+            <summary>
+            Converts the given float-value to a integer-color in the range [0..255].
+            </summary>
+            <param name="f">The float color-value</param>
+            <returns>The integer-value int the range [0..255].</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.Blend(CUE.NET.Devices.Generic.CorsairColor,CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Blends two colors.
+            </summary>
+            <param name="bg">The background-color.</param>
+            <param name="fg">The foreground-color</param>
+            <returns>The resulting color.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.GetHSVHue(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Gets the hue-value (HSV-color space) of the color.
+            </summary>
+            <param name="color">The color to take the hue from.</param>
+            <returns>The hue-value (HSV-color space) of the color.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.GetHSVSaturation(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Gets the saturation-value (HSV-color space) of the color.
+            </summary>
+            <param name="color">The color to take the saturation from.</param>
+            <returns>The saturation-value (HSV-color space) of the color.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.GetHSVValue(CUE.NET.Devices.Generic.CorsairColor)">
+            <summary>
+            Gets the value-value (HSV-color space) of the color.
+            </summary>
+            <param name="color">The color to take the value from.</param>
+            <returns>The value-value (HSV-color space) of the color.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.ColorHelper.ColorFromHSV(System.Single,System.Single,System.Single,System.Byte)">
+            <summary>
+            Creates a <see cref="T:CUE.NET.Devices.Generic.CorsairColor"/> object from the respective hsv-float-values in the range [0..1].
+            </summary>
+            <param name="hue">The hue of the color.</param>
+            <param name="saturation">The saturation of the color.</param>
+            <param name="value">The value of the color.</param>
+            <param name="alpha">The alpha of the color.</param>
+            <returns>The color-object created representing the given values.</returns>
+        </member>
+        <member name="T:CUE.NET.Helper.GradientHelper">
+            <summary>
+            Offers some extensions and helper-methods for gradient related things.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Helper.GradientHelper.CalculateLinearGradientOffset(System.Drawing.PointF,System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            Calculates the offset of an given point on an gradient.
+            </summary>
+            <param name="startPoint">The start point of the gradient.</param>
+            <param name="endPoint">The end point of the gradient.</param>
+            <param name="point">The point on the gradient to which the offset is calculated.</param>
+            <returns>The offset of the point on the gradient.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.GradientHelper.CalculateDistance(System.Drawing.PointF,System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            Returns the signed magnitude of a point on a vector.
+            </summary>
+            <param name="point">The point on the vector of which the magnitude should be calculated.</param>
+            <param name="origin">The origin of the vector.</param>
+            <param name="direction">The direction of the vector.</param>
+            <returns>The signed magnitude of a point on a vector.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.GradientHelper.CalculateDistance(System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            Calculated the distance between two points.
+            </summary>
+            <param name="point1">The first point.</param>
+            <param name="point2">The second point.</param>
+            <returns>The distance between the two points.</returns>
+        </member>
+        <member name="T:CUE.NET.Helper.RectangleHelper">
+            <summary>
+            Offers some extensions and helper-methods for rectangle related things.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Helper.RectangleHelper.Move(System.Drawing.RectangleF,System.Single,System.Single)">
+            <summary>
+            Moves a rectangle by a adding an offset.
+            </summary>
+            <param name="rectangle">The rectangle.</param>
+            <param name="offsetX">The offset for the x-value</param>
+            <param name="offsetY">The offset for the y-value</param>
+            <returns>The moved rectangle.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.RectangleHelper.GetCenter(System.Drawing.RectangleF,System.Single,System.Single)">
+            <summary>
+            Calculates the center-point of a rectangle adding an offset.
+            </summary>
+            <param name="rectangle">The rectangle.</param>
+            <param name="offsetX">The offset for the x-value</param>
+            <param name="offsetY">The offset for the y-value</param>
+            <returns>The center point of the rectangle.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.RectangleHelper.CreateRectangleFromPoints(System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            Creates a rectangle from two corner points.
+            </summary>
+            <param name="point1">The first point.</param>
+            <param name="point2">The second points.</param>
+            <returns>The rectangle created from the two points.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.RectangleHelper.CreateRectangleFromRectangles(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+            <summary>
+            Creates a rectangle containing two other rectangles.
+            </summary>
+            <param name="rectangle1">The first rectangle.</param>
+            <param name="rectangle2">The second rectangle.</param>
+            <returns>The rectangle created from the two rectangles.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.RectangleHelper.CreateRectangleFromRectangles(System.Collections.Generic.IEnumerable{System.Drawing.RectangleF})">
+            <summary>
+            Creates a rectangle containing n other rectangles.
+            </summary>
+            <param name="rectangles">The list of rectangles.</param>
+            <returns>The rectangle created from the rectangles.</returns>
+        </member>
+        <member name="M:CUE.NET.Helper.RectangleHelper.CalculateIntersectPercentage(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+            <summary>
+            Calculates the percentage of the intersection of two rectangles.
+            </summary>
+            <param name="rect">The rectangle from which the percentage should be calculated.</param>
+            <param name="referenceRect">The intersecting rectangle.</param>
+            <returns>The percentage of the intersection.</returns>
+        </member>
+        <member name="T:CUE.NET.Native._CorsairDeviceInfo">
+            <summary>
+            CUE-SDK: contains information about device
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairDeviceInfo.type">
+            <summary>
+            CUE-SDK: enum describing device type
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairDeviceInfo.model">
+            <summary>
+            CUE-SDK: null - terminated device model(like “K95RGB”)
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairDeviceInfo.physicalLayout">
+            <summary>
+            CUE-SDK: enum describing physical layout of the keyboard or mouse
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairDeviceInfo.logicalLayout">
+            <summary>
+            CUE-SDK: enum describing logical layout of the keyboard as set in CUE settings
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairDeviceInfo.capsMask">
+            <summary>
+            CUE-SDK: mask that describes device capabilities, formed as logical “or” of CorsairDeviceCaps enum values
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairDeviceInfo.ledsCount">
+            <summary>
+            CUE-SDK: number of controllable LEDs on the device
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Native._CorsairLedColor">
+            <summary>
+            CUE-SDK: contains information about led and its color
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedColor.ledId">
+            <summary>
+            CUE-SDK: identifier of LED to set
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedColor.r">
+            <summary>
+            CUE-SDK: red   brightness[0..255]
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedColor.g">
+            <summary>
+            CUE-SDK: green brightness[0..255]
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedColor.b">
+            <summary>
+            CUE-SDK: blue  brightness[0..255]
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Native._CorsairLedPosition">
+            <summary>
+            CUE-SDK: contains led id and position of led rectangle.Most of the keys are rectangular.
+            In case if key is not rectangular(like Enter in ISO / UK layout) it returns the smallest rectangle that fully contains the key
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedPosition.ledId">
+            <summary>
+            CUE-SDK: identifier of led
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedPosition.top">
+            <summary>
+            CUE-SDK: values in mm
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedPosition.left">
+            <summary>
+            CUE-SDK: values in mm
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedPosition.height">
+            <summary>
+            CUE-SDK: values in mm
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedPosition.width">
+            <summary>
+            CUE-SDK: values in mm
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Native._CorsairLedPositions">
+            <summary>
+            CUE-SDK: contains number of leds and arrays with their positions
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedPositions.numberOfLed">
+            <summary>
+            CUE-SDK: integer value.Number of elements in following array
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairLedPositions.pLedPosition">
+            <summary>
+            CUE-SDK: array of led positions
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Native._CorsairProtocolDetails">
+            <summary>
+            CUE-SDK: contains information about SDK and CUE versions
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairProtocolDetails.sdkVersion">
+            <summary>
+            CUE-SDK: null - terminated string containing version of SDK(like “1.0.0.1”). Always contains valid value even if there was no CUE found
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairProtocolDetails.serverVersion">
+            <summary>
+            CUE-SDK: null - terminated string containing version of CUE(like “1.0.0.1”) or NULL if CUE was not found.
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairProtocolDetails.sdkProtocolVersion">
+            <summary>
+            CUE-SDK: integer number that specifies version of protocol that is implemented by current SDK.
+            Numbering starts from 1. Always contains valid value even if there was no CUE found
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairProtocolDetails.serverProtocolVersion">
+            <summary>
+            CUE-SDK: integer number that specifies version of protocol that is implemented by CUE.
+            Numbering starts from 1. If CUE was not found then this value will be 0
+            </summary>
+        </member>
+        <member name="F:CUE.NET.Native._CorsairProtocolDetails.breakingChanges">
+            <summary>
+            CUE-SDK: boolean value that specifies if there were breaking changes between version of protocol implemented by server and client
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Native._CUESDK.LoadedArchitecture">
+            <summary>
+            Gets the loaded architecture (x64/x86).
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.Reload">
+            <summary>
+            Reloads the SDK.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairSetLedsColors(System.Int32,System.IntPtr)">
+            <summary>
+            CUE-SDK: set specified leds to some colors. The color is retained until changed by successive calls. This function does not take logical layout into account.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairGetLedsColors(System.Int32,System.IntPtr)">
+            <summary>
+            CUE-SDK: get current color for the list of requested LEDs.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairGetDeviceCount">
+            <summary>
+            CUE-SDK: returns number of connected Corsair devices that support lighting control.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairGetDeviceInfo(System.Int32)">
+            <summary>
+            CUE-SDK: returns information about device at provided index.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairGetLedPositions">
+            <summary>
+            CUE-SDK: provides list of keyboard LEDs with their physical positions.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairGetLedPositionsByDeviceIndex(System.Int32)">
+            <summary>
+            CUE-SDK: provides list of keyboard or mousemat LEDs with their physical positions.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairGetLedIdForKeyName(System.Char)">
+            <summary>
+            CUE-SDK: retrieves led id for key name taking logical layout into account.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairRequestControl(CUE.NET.Devices.Generic.Enums.CorsairAccessMode)">
+            <summary>
+            CUE-SDK: requestes control using specified access mode.
+            By default client has shared control over lighting so there is no need to call CorsairRequestControl unless client requires exclusive control.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairReleaseControl(CUE.NET.Devices.Generic.Enums.CorsairAccessMode)">
+            <summary>
+            CUE-SDK: releases previously requested control for specified access mode.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairPerformProtocolHandshake">
+            <summary>
+            CUE-SDK: checks file and protocol version of CUE to understand which of SDK functions can be used with this version of CUE.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Native._CUESDK.CorsairGetLastError">
+            <summary>
+            CUE-SDK: returns last error that occured while using any of Corsair* functions.
+            </summary>
+        </member>
+        <member name="T:CUE.NET.Profiles.CueProfile">
+            <summary>
+            Represents a CUE profile.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfile.Id">
+            <summary>
+            Gets the Id of the profile.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfile.Name">
+            <summary>
+            Gets the Name of the profile.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfile.Modes">
+            <summary>
+            Returns a list of strings containing the name of all modes available.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfile.Item(System.String)">
+            <summary>
+            Returns the <see cref="T:CUE.NET.Brushes.ProfileBrush"/> for the given mode.
+            </summary>
+            <param name="mode">The mode to select.</param>
+            <returns>The <see cref="T:CUE.NET.Brushes.ProfileBrush"/> of the given mode.</returns>
+        </member>
+        <member name="M:CUE.NET.Profiles.CueProfile.Load(System.String)">
+            <summary>
+            Loads a CUE profile from the given file.
+            </summary>
+            <param name="file">The profile-file.</param>
+            <returns>The loaded <see cref="T:CUE.NET.Profiles.CueProfile" /> or null.</returns>
+        </member>
+        <member name="T:CUE.NET.Profiles.CueProfileDevice">
+            <summary>
+            Represents a device of a CUE profile.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfileDevice.Name">
+            <summary>
+            The name of the device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfileDevice.Modes">
+            <summary>
+            Returns a list of strings containing the name of all modes available for this device.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfileDevice.Item(System.String)">
+            <summary>
+            Returns the <see cref="T:CUE.NET.Brushes.ProfileBrush"/> for the given mode.
+            </summary>
+            <param name="mode">The mode to select.</param>
+            <returns>The <see cref="T:CUE.NET.Brushes.ProfileBrush"/> of the given mode.</returns>
+        </member>
+        <member name="M:CUE.NET.Profiles.CueProfileDevice.Load(System.Xml.Linq.XElement)">
+            <summary>
+            Loads a device of a CUE profile from the given XML-node.
+            </summary>
+            <param name="deviceRoot">The node containing the device.</param>
+            <returns>The loaded <see cref="T:CUE.NET.Profiles.CueProfileDevice" /> or null.</returns>
+        </member>
+        <member name="T:CUE.NET.Profiles.CueProfileMode">
+            <summary>
+            Represents a mode of a CUE profile.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfileMode.Name">
+            <summary>
+            Gets the name of the mode.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Profiles.CueProfileMode.op_Implicit(CUE.NET.Profiles.CueProfileMode)~CUE.NET.Brushes.ProfileBrush">
+            <summary>
+            Converts a <see cref="T:CUE.NET.Profiles.CueProfileMode" /> to a <see cref="T:CUE.NET.Brushes.ProfileBrush" />.
+            </summary>
+            <param name="profile">The profile mode to convert.</param>
+        </member>
+        <member name="M:CUE.NET.Profiles.CueProfileMode.Load(System.Xml.Linq.XElement)">
+            <summary>
+            Loads a mode of a CUE profile from the given XML-node.
+            </summary>
+            <param name="modeRoot">The node containing the mode.</param>
+            <returns>The loaded <see cref="T:CUE.NET.Profiles.CueProfileMode" /> or null.</returns>
+        </member>
+        <member name="T:CUE.NET.Profiles.CueProfiles">
+            <summary>
+            Represents the SDK for CUE profiles.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfiles.ProfileNames">
+            <summary>
+            Gets a list containing the names of all existing profiles.
+            </summary>
+        </member>
+        <member name="P:CUE.NET.Profiles.CueProfiles.ProfileIds">
+            <summary>
+            Gets a list containing the ids of all existing profiles.
+            </summary>
+        </member>
+        <member name="M:CUE.NET.Profiles.CueProfiles.LoadProfileByName(System.String)">
+            <summary>
+            Loads the profile with the given name.
+            </summary>
+            <param name="name">The name (the one given in CUE, not the filename) of the profile.</param>
+            <returns>The loaded <see cref="T:CUE.NET.Profiles.CueProfile" /> or null if it couldn't be loaded.</returns>
+        </member>
+        <member name="M:CUE.NET.Profiles.CueProfiles.LoadProfileByID(System.String)">
+            <summary>
+            Loads the profile with the given id.
+            </summary>
+            <param name="id">The id of the profile.</param>
+            <returns>The loaded <see cref="T:CUE.NET.Profiles.CueProfile" /> or null if it couldn't be loaded.</returns>
+        </member>
+    </members>
+</doc>
