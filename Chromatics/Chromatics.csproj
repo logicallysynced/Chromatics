@@ -388,6 +388,7 @@
     <Compile Include="DeviceInterfaces\AmbienceInterface.cs" />
     <Compile Include="DeviceInterfaces\AmbienceLibs\AmbInterop.cs" />
     <Compile Include="DeviceInterfaces\AmbienceLibs\AmbMirror.cs" />
+    <Compile Include="DeviceInterfaces\AsusInterface.cs" />
     <Compile Include="DeviceInterfaces\CoolermasterInterface.cs" />
     <Compile Include="DeviceInterfaces\CorsairInterface.cs" />
     <Compile Include="DeviceInterfaces\CorsairLibs\CorsairLibs.cs" />
@@ -583,6 +584,17 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="AuraServiceLib">
+      <Guid>{F1AA5209-5217-4B82-BA7E-A68198999AFA}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
