@@ -3006,6 +3006,14 @@ namespace Chromatics
             Process.Start("https://chromaticsffxiv.com/");
         }
 
+        private void Btn_dumplog_Click(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            var log = rtb_debug.Text.Replace("\n", Environment.NewLine);
+            ExportDebugLog(log);
+        }
+
         private void btn_acthelp_Click(object sender, EventArgs e)
         {
             if (Startup == false) return;

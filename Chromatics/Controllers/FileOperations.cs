@@ -526,5 +526,191 @@ namespace Chromatics
                 }
             }
         }
+
+        private void ExportDebugLog(string log)
+        {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var SettingsPath = enviroment + @"/settings.chromatics";
+            var DevicesPath = enviroment + @"/devices.chromatics";
+            var MappingsPath = enviroment + @"/mappings.chromatics";
+            var ACTPath = enviroment + @"/actdata.chromatics";
+
+            var datenow = DateTime.UtcNow;
+
+            var save = new SaveFileDialog();
+            save.AddExtension = true;
+            save.AutoUpgradeEnabled = true;
+            save.CheckFileExists = false;
+            save.CheckPathExists = true;
+            save.CreatePrompt = false;
+            save.DefaultExt = "txt";
+            save.DereferenceLinks = true;
+            save.FileName = "chromaticsdebug_" + datenow.Hour + datenow.Minute + datenow.Second + datenow.Day + datenow.Month + datenow.Year;
+            save.Filter = "Chromatics Debug Log|*.txt";
+            save.FilterIndex = 1;
+            save.InitialDirectory = "";
+            save.OverwritePrompt = true;
+            save.RestoreDirectory = false;
+            save.ShowHelp = false;
+            save.SupportMultiDottedExtensions = false;
+            save.Title = "Export Debug Log";
+            save.ValidateNames = true;
+            
+
+            if (save.ShowDialog() == DialogResult.OK)
+            {
+                WriteConsole(ConsoleTypes.System, @"Exporting Debug Log..");
+
+
+                try
+                {
+                    using (var sw = new StreamWriter(save.FileName, false))
+                    {
+                        sw.Write("======DEBUG LOG=====");
+                        sw.WriteLine();
+                        sw.Write("Exported Time: " + datenow.Hour + ":" + datenow.Minute + ":" + datenow.Second + " " + datenow.Day + "/" + datenow.Month + "/" + datenow.Year);
+                        sw.WriteLine();
+                        sw.WriteLine();
+                        sw.Write(log);
+                        sw.WriteLine();
+                        sw.WriteLine();
+                        sw.WriteLine();
+
+                        sw.Write("======CHROMATICS SETTINGS=====");
+                        sw.WriteLine();
+                        sw.WriteLine();
+                        
+                        if (File.Exists(SettingsPath))
+                        {
+                            //Read Device Save
+                            using (var sr = new StreamReader(SettingsPath))
+                            {
+                                try
+                                {
+                                    sw.Write(sr.ReadToEnd());
+                                    sr.Close();
+                                    sw.WriteLine();
+                                }
+                                catch (Exception ex)
+                                {
+                                    sw.Write("Exception occurred while reading settings.chromatics. Exception: " +
+                                             ex.Message);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sw.Write("settings.chromatics does not exist or is missing from Chromatics directory.");
+                        }
+
+                        sw.WriteLine();
+                        sw.WriteLine();
+
+
+                        sw.Write("======CHROMATICS DEVICES=====");
+                        sw.WriteLine();
+                        sw.WriteLine();
+                        
+                        if (File.Exists(DevicesPath))
+                        {
+                            //Read Device Save
+                            using (var sr = new StreamReader(DevicesPath))
+                            {
+                                try
+                                {
+                                    sw.Write(sr.ReadToEnd());
+                                    sr.Close();
+                                    sw.WriteLine();
+                                }
+                                catch (Exception ex)
+                                {
+                                    sw.Write("Exception occurred while reading devices.chromatics. Exception: " +
+                                             ex.Message);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sw.Write("devices.chromatics does not exist or is missing from Chromatics directory.");
+                        }
+
+                        sw.WriteLine();
+                        sw.WriteLine();
+
+
+                        sw.Write("======CHROMATICS MAPPINGS=====");
+                        sw.WriteLine();
+                        sw.WriteLine();
+                        
+                        if (File.Exists(MappingsPath))
+                        {
+                            //Read Device Save
+                            using (var sr = new StreamReader(MappingsPath))
+                            {
+                                try
+                                {
+                                    sw.Write(sr.ReadToEnd());
+                                    sr.Close();
+                                    sw.WriteLine();
+                                }
+                                catch (Exception ex)
+                                {
+                                    sw.Write("Exception occurred while reading mappings.chromatics. Exception: " +
+                                             ex.Message);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sw.Write("mappings.chromatics does not exist or is missing from Chromatics directory.");
+                        }
+
+                        sw.WriteLine();
+                        sw.WriteLine();
+
+                        sw.Write("======CHROMATICS ACTDATA=====");
+                        sw.WriteLine();
+                        sw.WriteLine();
+                        
+                        if (File.Exists(ACTPath))
+                        {
+                            //Read Device Save
+                            using (var sr = new StreamReader(ACTPath))
+                            {
+                                try
+                                {
+                                    sw.Write(sr.ReadToEnd());
+                                    sr.Close();
+                                    sw.WriteLine();
+                                }
+                                catch (Exception ex)
+                                {
+                                    sw.Write("Exception occurred while reading actdata.chromatics. Exception: " +
+                                             ex.Message);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sw.Write("actdata.chromatics does not exist or is missing from Chromatics directory.");
+                        }
+
+                        sw.WriteLine();
+                        sw.WriteLine();
+
+
+                        sw.WriteLine();
+                        sw.Close();
+                    }
+
+                    WriteConsole(ConsoleTypes.System, @"Success. Exported Debug Log to " + save.FileName + ".");
+                    save.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    WriteConsole(ConsoleTypes.Error, @"Error exporting Debug Log. Error: " + ex.Message);
+                }
+            }
+        }
     }
 }

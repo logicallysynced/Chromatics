@@ -25,6 +25,8 @@ namespace Chromatics.DeviceInterfaces
         public static Asus InitializeAsusSdk()
         {
             Asus Asus = null;
+
+            
             Asus = new Asus();
             var result = Asus.InitializeLights();
             if (!result)

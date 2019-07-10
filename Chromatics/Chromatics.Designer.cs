@@ -33,6 +33,7 @@
             this.rtb_debug = new System.Windows.Forms.RichTextBox();
             this.tb_controlA = new System.Windows.Forms.TabControl();
             this.tP_debug = new System.Windows.Forms.TabPage();
+            this.btn_dumplog = new System.Windows.Forms.Button();
             this.btn_web = new System.Windows.Forms.Button();
             this.btn_doc = new System.Windows.Forms.Button();
             this.btn_help = new System.Windows.Forms.Button();
@@ -301,6 +302,7 @@
             // tP_debug
             // 
             this.tP_debug.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_debug.Controls.Add(this.btn_dumplog);
             this.tP_debug.Controls.Add(this.btn_web);
             this.tP_debug.Controls.Add(this.btn_doc);
             this.tP_debug.Controls.Add(this.btn_help);
@@ -314,9 +316,21 @@
             this.tP_debug.TabIndex = 0;
             this.tP_debug.Text = "Debug";
             // 
+            // btn_dumplog
+            // 
+            this.btn_dumplog.Location = new System.Drawing.Point(636, 36);
+            this.btn_dumplog.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_dumplog.Name = "btn_dumplog";
+            this.btn_dumplog.Size = new System.Drawing.Size(69, 24);
+            this.btn_dumplog.TabIndex = 6;
+            this.btn_dumplog.Text = "Export Log";
+            this.tooltip_main.SetToolTip(this.btn_dumplog, "Exports the debug log to a text file for debugging purposes.");
+            this.btn_dumplog.UseVisualStyleBackColor = true;
+            this.btn_dumplog.Click += new System.EventHandler(this.Btn_dumplog_Click);
+            // 
             // btn_web
             // 
-            this.btn_web.Location = new System.Drawing.Point(519, 36);
+            this.btn_web.Location = new System.Drawing.Point(442, 36);
             this.btn_web.Margin = new System.Windows.Forms.Padding(2);
             this.btn_web.Name = "btn_web";
             this.btn_web.Size = new System.Drawing.Size(56, 24);
@@ -328,7 +342,7 @@
             // 
             // btn_doc
             // 
-            this.btn_doc.Location = new System.Drawing.Point(580, 36);
+            this.btn_doc.Location = new System.Drawing.Point(503, 36);
             this.btn_doc.Margin = new System.Windows.Forms.Padding(2);
             this.btn_doc.Name = "btn_doc";
             this.btn_doc.Size = new System.Drawing.Size(56, 24);
@@ -340,7 +354,7 @@
             // 
             // btn_help
             // 
-            this.btn_help.Location = new System.Drawing.Point(640, 36);
+            this.btn_help.Location = new System.Drawing.Point(563, 36);
             this.btn_help.Margin = new System.Windows.Forms.Padding(2);
             this.btn_help.Name = "btn_help";
             this.btn_help.Size = new System.Drawing.Size(68, 24);
@@ -3095,6 +3109,7 @@
         private System.Windows.Forms.CheckBox chk_releasedevices;
         private System.Windows.Forms.Label lbl_chromalink_z6;
         private System.Windows.Forms.ComboBox cb_chromalink_z6;
+        private System.Windows.Forms.Button btn_dumplog;
     }
 }
 
