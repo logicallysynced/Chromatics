@@ -14,6 +14,7 @@
         Coolermaster,
         Roccat,
         Wooting,
+        Asus,
         Error
     }
 

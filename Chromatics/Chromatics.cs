@@ -69,8 +69,8 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.5.0";
-        private readonly bool _debugmode = false;
+        private readonly string _currentVersionX = "2.5.1";
+        private readonly bool _debugmode = true;
         public bool DeviceGridStartup = false;
         private bool blockACTVersion = false;
         private const int ACTVersionMatch = 1;
@@ -142,6 +142,12 @@ namespace Chromatics
         public bool WootingSdk = false;
         public int WootingSdkCalled = 0;
 
+        private bool _asusDeviceKeyboard = true;
+        private bool _asusDeviceMouse = true;
+        private bool _asusDeviceHeadset = true;
+        public bool AsusSdk = false;
+        public int AsusSdkCalled = 0;
+
         private readonly RegistryKey _rkApp =
             Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
@@ -165,6 +171,7 @@ namespace Chromatics
         private bool steelFirstSet = false;
         private bool wootingFirstSet = false;
         private bool lifxFirstSet = false;
+        private bool AsusFirstSet = false;
 
         private bool _deviceKeyboard = true;
         private bool _deviceMouse = true;
@@ -240,6 +247,8 @@ namespace Chromatics
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.RosyBrown; });
                     else if (type == ConsoleTypes.Wooting)
                         rtb_debug.Invoke((Action)delegate { rtb_debug.SelectionColor = Color.Green; });
+                    else if (type == ConsoleTypes.Asus)
+                        rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.OrangeRed; });
                     else if (type == ConsoleTypes.Error)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Red; });
                     else rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Black; });
@@ -260,6 +269,7 @@ namespace Chromatics
                     else if (type == ConsoleTypes.Coolermaster) rtb_debug.SelectionColor = Color.DarkBlue;
                     else if (type == ConsoleTypes.Roccat) rtb_debug.SelectionColor = Color.RosyBrown;
                     else if (type == ConsoleTypes.Wooting) rtb_debug.SelectionColor = Color.Green;
+                    else if (type == ConsoleTypes.Asus) rtb_debug.SelectionColor = Color.OrangeRed;
                     else if (type == ConsoleTypes.Error) rtb_debug.SelectionColor = Color.Red;
                     else rtb_debug.SelectionColor = Color.Black;
 

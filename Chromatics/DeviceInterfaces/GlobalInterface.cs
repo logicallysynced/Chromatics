@@ -58,6 +58,16 @@ namespace Chromatics
         private CancellationTokenSource _wootingFl4Cts = new CancellationTokenSource();
         private Task _wootingFlash;
 
+        private IAsusSdk _asus;
+        private CancellationTokenSource _asusFl1Cts = new CancellationTokenSource();
+        private Task _asusFl2;
+        private CancellationTokenSource _asusFl2Cts = new CancellationTokenSource();
+        private Task _asusFl3;
+        private CancellationTokenSource _asusFl3Cts = new CancellationTokenSource();
+        private Task _asusFl4;
+        private CancellationTokenSource _asusFl4Cts = new CancellationTokenSource();
+        private Task _asusFlash;
+
         private Task _hueFl4;
 
         //private IRoccatSdk _roccat;
@@ -100,6 +110,8 @@ namespace Chromatics
         private CancellationTokenSource _steelPartCts = new CancellationTokenSource();
         private Task _wootingPart;
         private CancellationTokenSource _wootingPartCts = new CancellationTokenSource();
+        private Task _asusPart;
+        private CancellationTokenSource _asusPartCts = new CancellationTokenSource();
 
         private bool _globalCycleRunning;
         private Task _rzCycle;
@@ -114,6 +126,8 @@ namespace Chromatics
         private CancellationTokenSource _steelCycleCts = new CancellationTokenSource();
         private Task _wootingCycle;
         private CancellationTokenSource _wootingCycleCts = new CancellationTokenSource();
+        private Task _asusCycle;
+        private CancellationTokenSource _asusCycleCts = new CancellationTokenSource();
 
         //Send a continuous flash effect to a Keyboard
         private bool _globalFlash2Running;
@@ -258,6 +272,28 @@ namespace Chromatics
                 else
                 {
                     WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK failed to load.");
+                }
+            }
+
+            if (AsusSdkCalled == 0)
+            {
+                WriteConsole(ConsoleTypes.Asus, @"Attempting to load Asus Aura SDK..");
+                _asus = AsusInterface.InitializeAsusSdk();
+                if (_asus != null)
+                {
+                    AsusSdk = true;
+                    AsusSdkCalled = 1;
+                    AsusFirstSet = true;
+                    WriteConsole(ConsoleTypes.Asus, @"Asus Aura SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Asus");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Asus, @"Asus Aura SDK failed to load.");
                 }
             }
 
@@ -437,6 +473,26 @@ namespace Chromatics
                 }
             }
 
+            if (AsusSdkCalled == 0 && AsusFirstSet)
+            {
+                _asus = AsusInterface.InitializeAsusSdk();
+                if (_asus != null)
+                {
+                    AsusSdk = true;
+                    AsusSdkCalled = 1;
+                    WriteConsole(ConsoleTypes.Asus, @"Asus Aura SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Asus");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Asus, @"Asus Aura SDK failed to load.");
+                }
+            }
+
             if (LifxSdkCalled == 0 && lifxFirstSet)
             {
                 //Load LIFX SDK
@@ -507,6 +563,13 @@ namespace Chromatics
                 _wooting = null;
                 WootingSdkCalled = 0;
             }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asus.ShutdownSdk();
+                _asus = null;
+                AsusSdkCalled = 0;
+            }
         }
 
         public void GlobalCheckCrash()
@@ -575,6 +638,9 @@ namespace Chromatics
 
             if (WootingSdkCalled == 1)
                 _wooting.ResetWootingDevices(_steelDeviceKeyboard, baseColor);
+
+            if (AsusSdkCalled == 1)
+                _asus.ResetAsusDevices(_asusDeviceKeyboard, _asusDeviceMouse, _asusDeviceHeadset, baseColor);
 
             //ResetDeviceDataGrid();
         }
@@ -661,6 +727,9 @@ namespace Chromatics
 
                 if (WootingSdkCalled == 1)
                     _wooting.DeviceUpdate();
+
+                if (AsusSdkCalled == 1)
+                    _asus.DeviceUpdate();
             }
         }
 
@@ -699,6 +768,11 @@ namespace Chromatics
             {
                 _wooting.SetAllLights(col);
             }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asus.SetAllLights(col);
+            }
         }
 
         public void GlobalApplyAllKeyLighting(Color col)
@@ -726,6 +800,11 @@ namespace Chromatics
             {
                 _wooting.SetLights(col);
             }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asus.SetLights(col);
+            }
         }
 
         public void GlobalApplySingleZoneLighting(Color col)
@@ -750,6 +829,9 @@ namespace Chromatics
 
             if (WootingSdkCalled == 1)
                 _wooting.ApplyMapSingleLighting(col);
+
+            if (AsusSdkCalled == 1)
+                _asus.ApplyMapSingleLighting(col);
         }
 
         public void GlobalApplyMultiZoneLighting(Color col, string region)
@@ -774,6 +856,9 @@ namespace Chromatics
 
             if (WootingSdkCalled == 1)
                 _wooting.ApplyMapMultiLighting(col, region);
+
+            if (AsusSdkCalled == 1)
+                _asus.ApplyMapMultiLighting(col, region);
         }
 
         //Send a lighting command to a specific Keyboard LED
@@ -893,6 +978,11 @@ namespace Chromatics
                     _wooting.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
                 }
             }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asus.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
+            }
         }
 
         public void GlobalApplyMapLightbarLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
@@ -962,6 +1052,11 @@ namespace Chromatics
             {
                 //
             }
+
+            if (AsusSdkCalled == 1)
+            {
+                //
+            }
         }
 
         //Send a lighting command to a specific Mouse LED
@@ -996,6 +1091,11 @@ namespace Chromatics
                 {
                     _steel.ApplyMapMouseLighting("MouseFront", col);
                 }
+
+                if (AsusSdkCalled == 1)
+                {
+                    _asus.ApplyMapMouseLighting("MouseFront", col);
+                }
             }
 
             //Scroll
@@ -1021,6 +1121,11 @@ namespace Chromatics
                 {
                     _steel.ApplyMapMouseLighting("MouseScroll", col);
                 }
+
+                if (AsusSdkCalled == 1)
+                {
+                    _asus.ApplyMapMouseLighting("MouseScroll", col);
+                }
             }
 
             //Other
@@ -1045,6 +1150,11 @@ namespace Chromatics
                 if (SteelSdkCalled == 1)
                 {
                     _steel.ApplyMapMouseLighting("MouseLogo", col);
+                }
+
+                if (AsusSdkCalled == 1)
+                {
+                    _asus.ApplyMapMouseLighting("MouseSide", col);
                 }
 
             }
@@ -1136,6 +1246,11 @@ namespace Chromatics
                     _steel.ApplyMapHeadsetLighting(col);
                 }
 
+                if (AsusSdkCalled == 1)
+                {
+                    _asus.ApplyMapHeadsetLighting("1", col);
+                }
+
             }
 
             if (mode == _HeadsetZone2Mode)
@@ -1165,6 +1280,11 @@ namespace Chromatics
                 if (SteelSdkCalled == 1)
                 {
                     //
+                }
+
+                if (AsusSdkCalled == 1)
+                {
+                    _asus.ApplyMapHeadsetLighting("2", col);
                 }
 
             }
@@ -1618,6 +1738,13 @@ namespace Chromatics
                 MemoryTasks.Add(rippleTask);
                 MemoryTasks.Run(rippleTask);
             }
+
+            if (AsusSdkCalled == 1)
+            {
+                var rippleTask = _asus.Ripple1(burstcol, speed, baseColor);
+                MemoryTasks.Add(rippleTask);
+                MemoryTasks.Run(rippleTask);
+            }
         }
 
         public void GlobalMultiRipple1(Color burstcol, int speed, Color baseColor)
@@ -1657,6 +1784,11 @@ namespace Chromatics
             }
 
             if (WootingSdkCalled == 1)
+            {
+                //
+            }
+
+            if (AsusSdkCalled == 1)
             {
                 //
             }
@@ -1711,6 +1843,13 @@ namespace Chromatics
                 MemoryTasks.Add(rippleTask2);
                 MemoryTasks.Run(rippleTask2);
             }
+
+            if (AsusSdkCalled == 1)
+            {
+                var rippleTask2 = _asus.Ripple2(burstcol, speed);
+                MemoryTasks.Add(rippleTask2);
+                MemoryTasks.Run(rippleTask2);
+            }
         }
 
         public void GlobalMultiRipple2(Color burstcol, int speed)
@@ -1750,6 +1889,11 @@ namespace Chromatics
             }
 
             if (WootingSdkCalled == 1)
+            {
+                //
+            }
+
+            if (AsusSdkCalled == 1)
             {
                 //
             }
@@ -1862,6 +2006,21 @@ namespace Chromatics
                 MemoryTasks.Add(_wootingFlash);
                 MemoryTasks.Run(_wootingFlash);
             }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asusFlash = null;
+                _asusFl1Cts = new CancellationTokenSource();
+
+                _asusFlash = new Task(() =>
+                {
+                    HoldReader = true;
+                    _asus.Flash1(burstcol, speed, regions);
+                    HoldReader = false;
+                }, _asusFl1Cts.Token);
+                MemoryTasks.Add(_asusFlash);
+                MemoryTasks.Run(_asusFlash);
+            }
         }
 
         public void GlobalFlash2(Color burstcol, int speed, string[] template)
@@ -1954,6 +2113,17 @@ namespace Chromatics
                     MemoryTasks.Run(_wootingFl2);
                 }
 
+                if (AsusSdkCalled == 1)
+                {
+                    _asusFl2 = null;
+                    _asusFl2Cts = new CancellationTokenSource();
+                    _asusFl2 =
+                        new Task(() => { _asus.Flash2(burstcol, speed, _asusFl2Cts.Token, template); },
+                            _asusFl2Cts.Token);
+                    MemoryTasks.Add(_asusFl2);
+                    MemoryTasks.Run(_asusFl2);
+                }
+
                 _globalFlash2Running = true;
             }
         }
@@ -1998,6 +2168,12 @@ namespace Chromatics
                 {
                     _wootingFl2Cts.Cancel();
                     MemoryTasks.Remove(_wootingFl2);
+                }
+
+                if (AsusSdkCalled == 1)
+                {
+                    _asusFl2Cts.Cancel();
+                    MemoryTasks.Remove(_asusFl2);
                 }
 
                 //Debug.WriteLine("Stopping Flash 2");
@@ -2079,6 +2255,17 @@ namespace Chromatics
                     MemoryTasks.Run(_wootingFl3);
                 }
 
+                if (AsusSdkCalled == 1)
+                {
+                    _asusFl3 = null;
+                    _asusFl3Cts = new CancellationTokenSource();
+                    _asusFl3 =
+                        new Task(() => { _asus.Flash3(burstcol, speed, _asusFl3Cts.Token); },
+                            _steelFl3Cts.Token);
+                    MemoryTasks.Add(_asusFl3);
+                    MemoryTasks.Run(_asusFl3);
+                }
+
                 _globalFlash3Running = true;
             }
         }
@@ -2128,6 +2315,12 @@ namespace Chromatics
                 {
                     _wootingFl3Cts.Cancel();
                     MemoryTasks.Remove(_wootingFl3);
+                }
+
+                if (AsusSdkCalled == 1)
+                {
+                    _asusFl3Cts.Cancel();
+                    MemoryTasks.Remove(_asusFl3);
                 }
 
                 //Debug.WriteLine("Stopping Flash 3");
@@ -2233,6 +2426,18 @@ namespace Chromatics
                         MemoryTasks.Add(_wootingFl4);
                         MemoryTasks.Run(_wootingFl4);
                     }
+
+                    if (AsusSdkCalled == 1)
+                    {
+                        _asusFl4 = null;
+                        _asusFl4Cts = new CancellationTokenSource();
+                        _asusFl4 =
+                            new Task(
+                                () => { _asus.Flash4(burstcol, speed, _asusFl4Cts.Token, template); },
+                                _asusFl4Cts.Token);
+                        MemoryTasks.Add(_asusFl4);
+                        MemoryTasks.Run(_asusFl4);
+                    }
                 }
 
                 if (LifxSdkCalled == 1)
@@ -2301,6 +2506,12 @@ namespace Chromatics
                     {
                         _wootingFl4Cts.Cancel();
                         MemoryTasks.Remove(_wootingFl4);
+                    }
+
+                    if (AsusSdkCalled == 1)
+                    {
+                        _asusFl4Cts.Cancel();
+                        MemoryTasks.Remove(_asusFl4);
                     }
                 }
 
@@ -2416,6 +2627,19 @@ namespace Chromatics
                 MemoryTasks.Run(_wootingPart);
             }
 
+            if (AsusSdkCalled == 1)
+            {
+                _asusPart = null;
+                _asusPartCts = new CancellationTokenSource();
+                _asusPart = new Task(() =>
+                {
+                    _asus.ParticleEffect(toColor, regions, interval, _asusPartCts, speed);
+                }, _asusPartCts.Token);
+
+                MemoryTasks.Add(_asusPart);
+                MemoryTasks.Run(_asusPart);
+            }
+
             _globalParticleRunning = true;
         }
 
@@ -2457,6 +2681,12 @@ namespace Chromatics
             {
                 _wootingPartCts.Cancel();
                 MemoryTasks.Remove(_wootingPart);
+            }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asusPartCts.Cancel();
+                MemoryTasks.Remove(_asusPart);
             }
 
         }
