@@ -293,7 +293,7 @@ namespace Chromatics
                 }
                 else
                 {
-                    WriteConsole(ConsoleTypes.Asus, @"Asus Aura SDK failed to load.");
+                    WriteConsole(ConsoleTypes.Asus, @"Asus Aura SDK failed to load. Please make sure AURA is installed but NOT running.");
                 }
             }
 

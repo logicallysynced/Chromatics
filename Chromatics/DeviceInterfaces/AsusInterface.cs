@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -25,13 +26,17 @@ namespace Chromatics.DeviceInterfaces
         public static Asus InitializeAsusSdk()
         {
             Asus Asus = null;
+            var programFiles = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
+            var programFilesX86 = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%");
 
+            if (File.Exists(programFiles + @"\ASUS\AuraSDK\AuraSdk_x64.dll") || File.Exists(programFilesX86 + @"\ASUS\AuraSDK\AuraSdk_x64.dll"))
+            {
+                Asus = new Asus();
+                var result = Asus.InitializeLights();
+                if (!result)
+                    return null;
+            }
             
-            Asus = new Asus();
-            var result = Asus.InitializeLights();
-            if (!result)
-                return null;
-
             return Asus;
         }
     }
@@ -107,6 +112,10 @@ namespace Chromatics.DeviceInterfaces
         private bool _AsusDeviceMousepad = true;
         private bool _AsusDeviceSpeakers = true;
 
+        private bool _keyConnected = false;
+        private bool _mouseConnected = false;
+        private bool _headsetConnected = false;
+
         private static readonly object AsusRipple1 = new object();
         private static readonly object AsusRipple2 = new object();
         private static readonly object AsusFlash1 = new object();
@@ -122,114 +131,121 @@ namespace Chromatics.DeviceInterfaces
         private static Dictionary<string, Color> _flashpresets4 = new Dictionary<string, Color>();
         private static readonly object AsusFlash4 = new object();
 
-        private readonly Dictionary<string, int> _asuskeyids = new Dictionary<string, int>
+        private readonly Dictionary<string, ushort> _asuskeyids = new Dictionary<string, ushort>
         {
             //Keys
-            {"F1", 0x003B},
-            {"F2", 0x003C},
-            {"F3", 0x003D},
-            {"F4", 0x003E},
-            {"F5", 0x003F},
-            {"F6", 0x0040},
-            {"F7", 0x0041},
-            {"F8", 0x0042},
-            {"F9", 0x0043},
-            {"F10", 0x0044},
-            {"F11", 0x0057},
-            {"F12", 0x0058},
-            {"D1", 0x0002},
-            {"D2", 0x0003},
-            {"D3", 0x0004},
-            {"D4", 0x0005},
-            {"D5", 0x0006},
-            {"D6", 0x0007},
-            {"D7", 0x0008},
-            {"D8", 0x0009},
-            {"D9", 0x000A},
-            {"D0", 0x000B},
-            {"A", 0x001E},
-            {"B", 0x0030},
-            {"C", 0x002E},
-            {"D", 0x0020},
-            {"E", 0x0012},
-            {"F", 0x0021},
-            {"G", 0x0022},
-            {"H", 0x0023},
-            {"I", 0x0017},
-            {"J", 0x0024},
-            {"K", 0x0025},
-            {"L", 0x0026},
-            {"M", 0x0032},
-            {"N", 0x0031},
-            {"O", 0x0018},
-            {"P", 0x0019},
-            {"Q", 0x0010},
-            {"R", 0x0013},
-            {"S", 0x001F},
-            {"T", 0x0014},
-            {"U", 0x0016},
-            {"V", 0x002F},
-            {"W", 0x0011},
-            {"X", 0x002D},
-            {"Y", 0x0015},
-            {"Z", 0x002C},
-            {"NumLock", 0x0045},
-            {"Num0", 0x0052},
-            {"Num1", 0x004F},
-            {"Num2", 0x0050},
-            {"Num3", 0x0051},
-            {"Num4", 0x004B},
-            {"Num5", 0x004C},
-            {"Num6", 0x004D},
-            {"Num7", 0x0047},
-            {"Num8", 0x0048},
-            {"Num9", 0x0049},
-            {"NumDivide", 0x00B5},
-            {"NumMultiply", 0x0037},
-            {"NumSubtract", 0x004A},
-            {"NumAdd", 0x004E},
-            {"NumEnter", 0x009C},
-            {"NumDecimal", 0x0053},
-            {"PrintScreen", 0x00B7},
-            {"Scroll", 0x0046},
-            {"Pause", 0x00C5},
-            {"Insert", 0x00D2},
-            {"Home", 0x00C7},
-            {"PageUp", 0x00C9},
-            {"PageDown", 0x00D1},
-            {"Delete", 0x00D3},
-            {"End", 0x00CF},
-            {"Up", 0x00C8},
-            {"Left", 0x00CB},
-            {"Right", 0x00CD},
-            {"Down", 0x00D0},
-            {"Tab", 0x000F},
-            {"CapsLock", 0x003A},
-            {"Backspace", 0x000E},
-            {"Enter", 0x001C},
-            {"LeftControl", 0x001D},
-            {"LeftWindows", 0x00DB},
-            {"LeftAlt", 0x0038},
-            {"Space", 0x0039},
-            {"RightControl", 0x009D},
-            {"Function", 0x0100},
-            {"RightAlt", 0x00B8},
-            {"RightMenu", 0x00DD},
-            {"LeftShift", 0x002A},
-            {"RightShift", 0x0036},
-            {"OemTilde", 0x0029},
-            {"OemMinus", 0x000C},
-            {"OemEquals", 0x000D},
-            {"OemLeftBracket", 0x001A},
-            {"OemRightBracket", 0x001B},
-            {"OemSlash", 0x0035},
-            {"OemSemicolon", 0x0027},
-            {"OemApostrophe", 0x0028},
-            {"OemComma", 0x0033},
-            {"OemPeriod", 0x0034},
-            {"OemBackslash", 0x002B},
-            {"Escape", 0x0001}
+            {"F1", 59},
+            {"F2", 60},
+            {"F3", 61},
+            {"F4", 62},
+            {"F5", 63},
+            {"F6", 64},
+            {"F7", 65},
+            {"F8", 66},
+            {"F9", 67},
+            {"F10", 68},
+            {"F11", 87},
+            {"F12", 88},
+            {"D1", 2},
+            {"D2", 3},
+            {"D3", 4},
+            {"D4", 5},
+            {"D5", 6},
+            {"D6", 7},
+            {"D7", 8},
+            {"D8", 9},
+            {"D9", 10},
+            {"D0", 11},
+            {"A", 30},
+            {"B", 48},
+            {"C", 46},
+            {"D", 32},
+            {"E", 18},
+            {"F", 33},
+            {"G", 34},
+            {"H", 35},
+            {"I", 23},
+            {"J", 36},
+            {"K", 37},
+            {"L", 38},
+            {"M", 50},
+            {"N", 49},
+            {"O", 24},
+            {"P", 25},
+            {"Q", 16},
+            {"R", 19},
+            {"S", 31},
+            {"T", 20},
+            {"U", 22},
+            {"V", 47},
+            {"W", 17},
+            {"X", 45},
+            {"Y", 21},
+            {"Z", 44},
+            {"NumLock", 69},
+            {"Num0", 82},
+            {"Num1", 79},
+            {"Num2", 80},
+            {"Num3", 81},
+            {"Num4", 75},
+            {"Num5", 76},
+            {"Num6", 77},
+            {"Num7", 71},
+            {"Num8", 72},
+            {"Num9", 73},
+            {"NumDivide", 181},
+            {"NumMultiply", 55},
+            {"NumSubtract", 74},
+            {"NumAdd", 78},
+            {"NumEnter", 156},
+            {"NumDecimal", 83},
+            {"PrintScreen", 183},
+            {"Scroll", 70},
+            {"Pause", 197},
+            {"Insert", 210},
+            {"Home", 199},
+            {"PageUp", 201},
+            {"PageDown", 209},
+            {"Delete", 211},
+            {"End", 207},
+            {"Up", 200},
+            {"Left", 203},
+            {"Right", 205},
+            {"Down", 208},
+            {"Tab", 15},
+            {"CapsLock", 58},
+            {"Backspace", 14},
+            {"Enter", 28},
+            {"LeftControl", 29},
+            {"LeftWindows", 219},
+            {"LeftAlt", 56},
+            {"Space", 57},
+            {"RightControl", 157},
+            {"Function", 256},
+            {"RightAlt", 184},
+            {"RightMenu", 221},
+            {"LeftShift", 42},
+            {"RightShift", 54},
+            {"OemTilde", 41},
+            {"OemMinus", 12},
+            {"OemEquals", 13},
+            {"OemLeftBracket", 26},
+            {"OemRightBracket", 27},
+            {"OemSlash", 53},
+            {"OemSemicolon", 39},
+            {"OemApostrophe", 40},
+            {"OemComma", 51},
+            {"OemPeriod", 52},
+            {"OemBackslash", 43},
+            {"Escape", 1},
+            {"EurPound", 3},
+            {"JpnYen", 2},
+            {"Logo", 257},
+            {"EffectLeft", 258},
+            {"EffectRight", 259}
         };
+
+        private Dictionary<ushort, IAuraRgbKey> _idToKey = new Dictionary<ushort, IAuraRgbKey>();
 
         private Dictionary<string, Color> prevKeyboard = new Dictionary<string, Color>();
 
@@ -251,6 +267,16 @@ namespace Chromatics.DeviceInterfaces
             {"3", Color.Black },
         };
 
+        private void SetRgbLight(IAuraRgbLight rgbKey, Color color)
+        {
+            lock (rgbKey)
+            {
+                rgbKey.Red = color.R;
+                rgbKey.Green = color.G;
+                rgbKey.Blue = color.B;
+            }
+        }
+
         public bool InitializeLights()
         {
             var result = true;
@@ -263,6 +289,8 @@ namespace Chromatics.DeviceInterfaces
                         prevKeyboard.Add(hid.Key, Color.Black);
                     }
                 }
+
+                
 
                 sdk = new AuraSdk();
                 
@@ -277,22 +305,39 @@ namespace Chromatics.DeviceInterfaces
                 
                 foreach (IAuraSyncDevice dev in devices)
                 {
-                    if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Keyboard || dev.Type == (int)AsusSdkWrapper.DeviceTypes.Notebook || dev.Type == (int)AsusSdkWrapper.DeviceTypes.NotebookZones) //Keyboard
+                    if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Keyboard || dev.Type == (int)AsusSdkWrapper.DeviceTypes.Notebook) //Keyboard
                     {
                         //_AsusDeviceKeyboard = true;
                         devconnected = true;
+                        _keyConnected = true;
+
+                        var _keyboard = (IAuraKeyboard)dev;
+
+                        foreach (IAuraRgbKey key in _keyboard.Keys)
+                        {
+                            if (_idToKey.ContainsKey(key.Code))
+                            {
+                                _idToKey[key.Code] = key;
+                            }
+                            else
+                            {
+                                _idToKey.Add(key.Code, key);
+                            }
+                        }
                     }
 
                     if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Mouse) //Mouse
                     {
                         //_AsusDeviceMouse = true;
                         devconnected = true;
+                        _mouseConnected = true;
                     }
 
                     if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Headset) //Headset
                     {
                         //_AsusDeviceHeadset = true;
                         devconnected = true;
+                        _headsetConnected = true;
                     }
                 }
 
@@ -337,9 +382,13 @@ namespace Chromatics.DeviceInterfaces
                 var devices = sdk.Enumerate((int)AsusSdkWrapper.DeviceTypes.All);
                 foreach (IAuraSyncDevice dev in devices)
                 {
-                    if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Keyboard || dev.Type == (int)AsusSdkWrapper.DeviceTypes.Notebook || dev.Type == (int)AsusSdkWrapper.DeviceTypes.NotebookZones) //Keyboard
+                    if (_keyConnected)
                     {
-                        dev.Apply();
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Keyboard ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.Notebook) //Keyboard
+                        {
+                            dev.Apply();
+                        }
                     }
 
                     if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Mouse) //Mouse
@@ -362,7 +411,7 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapKeyLighting(string key, Color color, bool clear, [Optional] bool bypasswhitelist)
         {
-            if (!_AsusDeviceKeyboard)
+            if (!_AsusDeviceKeyboard || !_keyConnected)
                 return;
 
             if (FfxivHotbar.Keybindwhitelist.Contains(key) && !bypasswhitelist)
@@ -372,29 +421,26 @@ namespace Chromatics.DeviceInterfaces
             {
                 if (_asuskeyids.ContainsKey(key))
                 {
+                    var keyString = _asuskeyids[key];
+
+                    if (!_idToKey.ContainsKey(keyString))
+                    {
+                        return;
+                    }
+
                     if (prevKeyboard.ContainsKey(key))
                     {
                         if (prevKeyboard[key] == color)
                             return;
                     }
 
-                    var devices = sdk.Enumerate((int)AsusSdkWrapper.DeviceTypes.All);
-                    foreach (IAuraSyncDevice dev in devices)
-                    {
-                        if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Keyboard || dev.Type == (int)AsusSdkWrapper.DeviceTypes.Notebook) //Keyboard
-                        {
-                            if (dev.Lights[_asuskeyids[key]] != null)
-                            {
-                                dev.Lights[_asuskeyids[key]].Red = color.R;
-                                dev.Lights[_asuskeyids[key]].Green = color.G;
-                                dev.Lights[_asuskeyids[key]].Blue = color.B;
+                    var keyId = _idToKey[_asuskeyids[key]];
+                    
+                    SetRgbLight(keyId, color);
 
-                                if (prevKeyboard.ContainsKey(key))
-                                {
-                                    prevKeyboard[key] = color;
-                                }
-                            }
-                        }
+                    if (prevKeyboard.ContainsKey(key))
+                    {
+                        prevKeyboard[key] = color;
                     }
                 }
             }
@@ -405,35 +451,71 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public void SetAllLights(Color color)
+        public void SetLights(Color color)
         {
+            if (!_AsusDeviceKeyboard || !_keyConnected)
+                return;
+
             try
             {
-                if (_AsusDeviceKeyboard)
+                foreach (var keyId in _idToKey)
                 {
-                    var devices = sdk.Enumerate((int)AsusSdkWrapper.DeviceTypes.All);
-                    foreach (IAuraSyncDevice dev in devices)
+                    if (!_asuskeyids.ContainsValue(keyId.Key))
                     {
-                        if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Keyboard || dev.Type == (int)AsusSdkWrapper.DeviceTypes.Notebook) //Keyboard
-                        {
-                            foreach (var key in _asuskeyids)
-                            {
-                                if (prevKeyboard.ContainsKey(key.Key))
-                                {
-                                    if (prevKeyboard[key.Key] == color)
-                                        continue;
-                                }
+                        continue;
+                    }
 
-                                dev.Lights[key.Value].Red = color.R;
-                                dev.Lights[key.Value].Green = color.G;
-                                dev.Lights[key.Value].Blue = color.B;
+                    var keyString = _asuskeyids.FirstOrDefault(x => x.Value == keyId.Key);
 
-                                if (prevKeyboard.ContainsKey(key.Key))
-                                {
-                                    prevKeyboard[key.Key] = color;
-                                }
-                            }
-                        }
+                    if (prevKeyboard.ContainsKey(keyString.Key))
+                    {
+                        if (prevKeyboard[keyString.Key] == color)
+                            continue;
+                    }
+
+                    SetRgbLight(keyId.Value, color);
+
+                    if (prevKeyboard.ContainsKey(keyString.Key))
+                    {
+                        prevKeyboard[keyString.Key] = color;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, @"Asus: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Internal Error: " + ex.StackTrace);
+            }
+
+        }
+
+        public void SetAllLights(Color color)
+        {
+            if (!_AsusDeviceKeyboard || !_keyConnected)
+                return;
+
+            try
+            {
+                foreach (var keyId in _idToKey)
+                {
+                    if (!_asuskeyids.ContainsValue(keyId.Key))
+                    {
+                        continue;
+                    }
+
+                    var keyString = _asuskeyids.FirstOrDefault(x => x.Value == keyId.Key);
+
+                    if (prevKeyboard.ContainsKey(keyString.Key))
+                    {
+                        if (prevKeyboard[keyString.Key] == color)
+                            continue;
+                    }
+
+                    SetRgbLight(keyId.Value, color);
+
+                    if (prevKeyboard.ContainsKey(keyString.Key))
+                    {
+                        prevKeyboard[keyString.Key] = color;
                     }
                 }
             }
@@ -535,47 +617,6 @@ namespace Chromatics.DeviceInterfaces
 
         }
         
-        public void SetLights(Color color)
-        {
-            try
-            {
-                if (_AsusDeviceKeyboard)
-                {
-                    var devices = sdk.Enumerate((int)AsusSdkWrapper.DeviceTypes.All);
-                    foreach (IAuraSyncDevice dev in devices)
-                    {
-                        if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Keyboard || dev.Type == (int)AsusSdkWrapper.DeviceTypes.Notebook) //Keyboard
-                        {
-                            foreach (var key in _asuskeyids)
-                            {
-                                if (prevKeyboard.ContainsKey(key.Key))
-                                {
-                                    if (prevKeyboard[key.Key] == color)
-                                        continue;
-                                }
-
-                                dev.Lights[key.Value].Red = color.R;
-                                dev.Lights[key.Value].Green = color.G;
-                                dev.Lights[key.Value].Blue = color.B;
-
-                                if (prevKeyboard.ContainsKey(key.Key))
-                                {
-                                    prevKeyboard[key.Key] = color;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Write.WriteConsole(ConsoleTypes.Error, @"Asus: " + ex.Message);
-                Write.WriteConsole(ConsoleTypes.Error, @"Internal Error: " + ex.StackTrace);
-            }
-
-        }
-
-
         public Task Ripple1(Color burstcol, int speed, Color baseColor)
         {
             return new Task(() =>
