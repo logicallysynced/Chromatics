@@ -4355,7 +4355,7 @@ namespace Chromatics
                             }
 
 
-                            if (_currentlvl == 70)
+                            if (_currentlvl == 80)
                             {
                                 if (_LightbarMode == LightbarMode.CurrentExp)
                                 {
@@ -4397,6 +4397,8 @@ namespace Chromatics
                                     {
                                         GlobalApplyMapKeyLighting(FKExp_Collection[i2], FKExp_Interpolate > i2 ? expcolfull : expcolempty, false, false);
                                     }
+
+                                    Console.WriteLine(_role + "/" + FFXIVHelpers.ExperienceTable[_currentlvl]);
                                 }
                             }
                             
