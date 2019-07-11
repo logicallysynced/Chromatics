@@ -267,7 +267,7 @@ namespace Chromatics.DeviceInterfaces
             {"3", Color.Black },
         };
 
-        private void SetRgbLight(IAuraRgbLight rgbKey, Color color)
+        private void SetRgbLight(IAuraRgbKey rgbKey, Color color)
         {
             lock (rgbKey)
             {
@@ -289,11 +289,9 @@ namespace Chromatics.DeviceInterfaces
                         prevKeyboard.Add(hid.Key, Color.Black);
                     }
                 }
-
                 
-
                 sdk = new AuraSdk();
-                
+
                 if (sdk == null)
                 {
                     return false;
@@ -311,7 +309,9 @@ namespace Chromatics.DeviceInterfaces
                         devconnected = true;
                         _keyConnected = true;
 
-                        var _keyboard = (IAuraKeyboard)dev;
+
+                        var _keyboard = (IAuraSyncKeyboard) dev;
+
 
                         foreach (IAuraRgbKey key in _keyboard.Keys)
                         {
@@ -625,8 +625,6 @@ namespace Chromatics.DeviceInterfaces
                     return;
 
                 var presets = new Dictionary<string, Color>();
-                List<string> hids = new List<string>();
-                List<Color> colors = new List<Color>();
 
                 for (var i = 0; i <= 9; i++)
                 {
@@ -653,17 +651,7 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
-                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
-                            if (pos > -1)
-                            {
-                                hids.Add(key);
-                                colors.Add(burstcol);
-                            }
-                            else
-                            {
-                                hids.Add(key);
-                                colors.Add(presets[key]);
-                            }
+                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
                         }
                     }
                     else if (i == 2)
@@ -672,17 +660,7 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
-                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
-                            if (pos > -1)
-                            {
-                                hids.Add(key);
-                                colors.Add(burstcol);
-                            }
-                            else
-                            {
-                                hids.Add(key);
-                                colors.Add(presets[key]);
-                            }
+                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
                         }
                     }
                     else if (i == 3)
@@ -691,17 +669,7 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
-                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
-                            if (pos > -1)
-                            {
-                                hids.Add(key);
-                                colors.Add(burstcol);
-                            }
-                            else
-                            {
-                                hids.Add(key);
-                                colors.Add(presets[key]);
-                            }
+                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
                         }
                     }
                     else if (i == 4)
@@ -710,17 +678,7 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
-                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
-                            if (pos > -1)
-                            {
-                                hids.Add(key);
-                                colors.Add(burstcol);
-                            }
-                            else
-                            {
-                                hids.Add(key);
-                                colors.Add(presets[key]);
-                            }
+                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
                         }
                     }
                     else if (i == 5)
@@ -729,17 +687,7 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
-                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
-                            if (pos > -1)
-                            {
-                                hids.Add(key);
-                                colors.Add(burstcol);
-                            }
-                            else
-                            {
-                                hids.Add(key);
-                                colors.Add(presets[key]);
-                            }
+                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
                         }
                     }
                     else if (i == 6)
@@ -748,17 +696,7 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
-                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
-                            if (pos > -1)
-                            {
-                                hids.Add(key);
-                                colors.Add(burstcol);
-                            }
-                            else
-                            {
-                                hids.Add(key);
-                                colors.Add(presets[key]);
-                            }
+                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
                         }
                     }
                     else if (i == 7)
@@ -767,17 +705,7 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
-                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
-                            if (pos > -1)
-                            {
-                                hids.Add(key);
-                                colors.Add(burstcol);
-                            }
-                            else
-                            {
-                                hids.Add(key);
-                                colors.Add(presets[key]);
-                            }
+                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
                         }
                     }
                     else if (i == 8)
@@ -786,17 +714,7 @@ namespace Chromatics.DeviceInterfaces
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
                             var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
-                            //ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
-                            if (pos > -1)
-                            {
-                                hids.Add(key);
-                                colors.Add(burstcol);
-                            }
-                            else
-                            {
-                                hids.Add(key);
-                                colors.Add(presets[key]);
-                            }
+                            ApplyMapKeyLighting(key, pos > -1 ? burstcol : presets[key], true);
                         }
                     }
                     else if (i == 9)
@@ -805,37 +723,10 @@ namespace Chromatics.DeviceInterfaces
 
                         foreach (var key in DeviceEffects.GlobalKeys)
                         {
-                            hids.Add(key);
-                            colors.Add(burstcol);
-                            //ApplyMapKeyLighting(key, presets[key], true);
+                            ApplyMapKeyLighting(key, presets[key], true);
                         }
 
-                        hids.Add("D1");
-                        colors.Add(baseColor);
-                        hids.Add("D2");
-                        colors.Add(baseColor);
-                        hids.Add("D3");
-                        colors.Add(baseColor);
-                        hids.Add("D4");
-                        colors.Add(baseColor);
-                        hids.Add("D5");
-                        colors.Add(baseColor);
-                        hids.Add("D6");
-                        colors.Add(baseColor);
-                        hids.Add("D7");
-                        colors.Add(baseColor);
-                        hids.Add("D8");
-                        colors.Add(baseColor);
-                        hids.Add("D9");
-                        colors.Add(baseColor);
-                        hids.Add("D0");
-                        colors.Add(baseColor);
-                        hids.Add("OemMinus");
-                        colors.Add(baseColor);
-                        hids.Add("OemEquals");
-                        colors.Add(baseColor);
-
-                        /*
+                        
                         ApplyMapKeyLighting("D1", baseColor, true);
                         ApplyMapKeyLighting("D2", baseColor, true);
                         ApplyMapKeyLighting("D3", baseColor, true);
@@ -848,7 +739,6 @@ namespace Chromatics.DeviceInterfaces
                         ApplyMapKeyLighting("D0", baseColor, true);
                         ApplyMapKeyLighting("OemMinus", baseColor, true);
                         ApplyMapKeyLighting("OemEquals", baseColor, true);
-                        */
 
                         presets.Clear();
                     }
@@ -859,8 +749,6 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                     DeviceUpdate();
-                    hids.Clear();
-                    colors.Clear();
                 }
             });
         }
@@ -878,8 +766,6 @@ namespace Chromatics.DeviceInterfaces
                 {
                     var previousValues = new Dictionary<string, Color>();
                     var enumerable = safeKeys.ToList();
-                    List<string> hids = new List<string>();
-                    List<Color> colors = new List<Color>();
 
                     for (var i = 0; i <= 9; i++)
                     {
@@ -909,9 +795,7 @@ namespace Chromatics.DeviceInterfaces
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
                                 if (pos > -1)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                             }
                         }
@@ -923,9 +807,7 @@ namespace Chromatics.DeviceInterfaces
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
                                 if (pos > -1)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                             }
                         }
@@ -937,9 +819,7 @@ namespace Chromatics.DeviceInterfaces
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
                                 if (pos > -1)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                             }
                         }
@@ -951,9 +831,7 @@ namespace Chromatics.DeviceInterfaces
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
                                 if (pos > -1)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                             }
                         }
@@ -965,9 +843,7 @@ namespace Chromatics.DeviceInterfaces
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
                                 if (pos > -1)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                             }
                         }
@@ -979,9 +855,7 @@ namespace Chromatics.DeviceInterfaces
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
                                 if (pos > -1)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                             }
                         }
@@ -993,9 +867,7 @@ namespace Chromatics.DeviceInterfaces
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
                                 if (pos > -1)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                             }
                         }
@@ -1007,9 +879,7 @@ namespace Chromatics.DeviceInterfaces
                                 var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
                                 if (pos > -1)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                             }
                         }
@@ -1019,9 +889,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in previousValues.Keys)
                             {
-                                hids.Add(key);
-                                colors.Add(previousValues[key]);
-                                //ApplyMapKeyLighting(key, previousValues[key], true);
+                                ApplyMapKeyLighting(key, previousValues[key], true);
                             }
 
                             previousValues.Clear();
@@ -1033,8 +901,6 @@ namespace Chromatics.DeviceInterfaces
                         }
 
                         DeviceUpdate();
-                        hids.Clear();
-                        colors.Clear();
                     }
                 }
             });
@@ -1058,8 +924,6 @@ namespace Chromatics.DeviceInterfaces
                     return;
 
                 var previousValues = new Dictionary<string, Color>();
-                List<string> hids = new List<string>();
-                List<Color> colors = new List<Color>();
 
                 for (var i = 0; i <= 8; i++)
                 {
@@ -1081,9 +945,7 @@ namespace Chromatics.DeviceInterfaces
                         //Step 1, 3, 5, 7
                         foreach (var key in regions)
                         {
-                            hids.Add(key);
-                            colors.Add(burstcol);
-                            //ApplyMapKeyLighting(key, burstcol, true);
+                            ApplyMapKeyLighting(key, burstcol, true);
                         }
                     }
                     else if (i % 2 == 0)
@@ -1091,9 +953,7 @@ namespace Chromatics.DeviceInterfaces
                         //Step 2, 4, 6, 8
                         foreach (var key in regions)
                         {
-                            hids.Add(key);
-                            colors.Add(previousValues[key]);
-                            //ApplyMapKeyLighting(key, previousValues[key], true);
+                            ApplyMapKeyLighting(key, previousValues[key], true);
                         }
                     }
 
@@ -1103,8 +963,6 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                     DeviceUpdate();
-                    hids.Clear();
-                    colors.Clear();
                 }
             }
         }
@@ -1119,8 +977,6 @@ namespace Chromatics.DeviceInterfaces
                 lock (AsusFlash2)
                 {
                     var previousValues = new Dictionary<string, Color>();
-                    List<string> hids = new List<string>();
-                    List<Color> colors = new List<Color>();
 
                     if (!_asusFlash2Running)
                     {
@@ -1147,9 +1003,7 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 foreach (var key in regions)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                                 
                                 _asusFlash2Step = 1;
@@ -1158,17 +1012,13 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 foreach (var key in regions)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(_flashpresets[key]);
-                                    //ApplyMapKeyLighting(key, _flashpresets[key], true);
+                                    ApplyMapKeyLighting(key, _flashpresets[key], true);
                                 }
                                 
                                 _asusFlash2Step = 0;
                             }
 
                             DeviceUpdate();
-                            hids.Clear();
-                            colors.Clear();
                             Thread.Sleep(speed);
                         }
                 }
@@ -1192,9 +1042,6 @@ namespace Chromatics.DeviceInterfaces
                     _asusFlash3Running = true;
                     _asusFlash3Step = 0;
 
-                    List<string> hids = new List<string>();
-                    List<Color> colors = new List<Color>();
-
                     if (_asusFlash3Running == false)
                     {
                         //
@@ -1212,9 +1059,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     if (prevKeyboard.ContainsKey(key))
                                     {
-                                        hids.Add(key);
-                                        colors.Add(burstcol);
-                                        //ApplyMapKeyLighting(key, burstcol, true);
+                                        ApplyMapKeyLighting(key, burstcol, true);
                                     }
                                         
                                 }
@@ -1228,9 +1073,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     if (prevKeyboard.ContainsKey(key))
                                     {
-                                        hids.Add(key);
-                                        colors.Add(Color.Black);
-                                        //ApplyMapKeyLighting(key, Color.Black, true);
+                                        ApplyMapKeyLighting(key, Color.Black, true);
                                     }
                                 }
                                 
@@ -1238,8 +1081,6 @@ namespace Chromatics.DeviceInterfaces
                             }
 
                             DeviceUpdate();
-                            hids.Clear();
-                            colors.Clear();
                             Thread.Sleep(speed);
                         }
                     }
@@ -1261,8 +1102,6 @@ namespace Chromatics.DeviceInterfaces
                 lock (AsusFlash4)
                 {
                     var flashpresets = new Dictionary<string, Color>();
-                    List<string> hids = new List<string>();
-                    List<Color> colors = new List<Color>();
 
                     if (!_asusFlash4Running)
                     {
@@ -1288,9 +1127,7 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 foreach (var key in regions)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(burstcol);
-                                    //ApplyMapKeyLighting(key, burstcol, true);
+                                    ApplyMapKeyLighting(key, burstcol, true);
                                 }
                                 
                                 _asusFlash4Step = 1;
@@ -1299,17 +1136,13 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 foreach (var key in regions)
                                 {
-                                    hids.Add(key);
-                                    colors.Add(_flashpresets4[key]);
-                                    //ApplyMapKeyLighting(key, _flashpresets4[key], true);
+                                    ApplyMapKeyLighting(key, _flashpresets4[key], true);
                                 }
                                 
                                 _asusFlash4Step = 0;
                             }
 
                             DeviceUpdate();
-                            hids.Clear();
-                            colors.Clear();
 
                             Thread.Sleep(speed);
                         }
@@ -1338,12 +1171,11 @@ namespace Chromatics.DeviceInterfaces
 
         public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50)
         {
-            if (!isInitialized || !_AsusDeviceKeyboard) return;
+            if (!isInitialized || !_keyConnected) return;
             if (cts.IsCancellationRequested) return;
-            
-            Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
 
-            //Keyboard.SetCustomAsync(refreshKeyGrid);
+            Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
+            
             Thread.Sleep(500);
 
             while (true)
@@ -1368,32 +1200,22 @@ namespace Chromatics.DeviceInterfaces
 
                     var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
 
-                    List<string> hids = new List<string>();
-                    List<Color> colors = new List<Color>();
-
                     foreach (var key in _regions)
                     {
                         if (cts.IsCancellationRequested) return;
-                        if (!colorFaderDict.ContainsKey(key)) continue;
 
                         foreach (var color in colorFaderDict[key].Fade())
                         {
                             if (cts.IsCancellationRequested) return;
 
-                            if (prevKeyboard.ContainsKey(key))
-                            {
-                                hids.Add(key);
-                                colors.Add(color);
-                            }
+                            ApplyMapKeyLighting(key, color, false);
                         }
 
                         DeviceUpdate();
-                        hids.Clear();
-                        colors.Clear();
-
                         Thread.Sleep(speed);
                     }
                 });
+
 
                 Thread.Sleep(colorFaderDict.Count * speed);
             }
@@ -1404,10 +1226,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (!isInitialized || !_AsusDeviceKeyboard)
                 return;
-
-            List<string> hids = new List<string>();
-            List<Color> colors = new List<Color>();
-
+            
             while (true)
             {
                 lock (lockObject)
@@ -1416,80 +1235,66 @@ namespace Chromatics.DeviceInterfaces
                     {
                         if (token.IsCancellationRequested) break;
                         Thread.Sleep(10);
-                        foreach (var hid in _asuskeyids)
-                        {
-                            hids.Add(hid.Key);
-                            colors.Add(Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), (int)Math.Ceiling((double)(250 * 100) / 255), (int)0));
-                        }
+                        
+                        var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), (int)Math.Ceiling((double)(250 * 100) / 255), (int)0);
+
+                        SetAllLights(col);
                     }
 
                     for (var x = 250; x >= 5; x -= 5)
                     {
                         if (token.IsCancellationRequested) break;
                         Thread.Sleep(10);
-                        foreach (var hid in _asuskeyids)
-                        {
-                            hids.Add(hid.Key);
-                            
-                            colors.Add(Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), (int)Math.Ceiling((double)(250 * 100) / 255), (int)0));
-                        }
+                        
+                        var col = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), (int)Math.Ceiling((double)(250 * 100) / 255), (int)0);
+
+                        SetAllLights(col);
                     }
 
                     for (var x = 0; x <= 250; x += 5)
                     {
                         if (token.IsCancellationRequested) break;
                         Thread.Sleep(10);
-                        foreach (var hid in _asuskeyids)
-                        {
-                            hids.Add(hid.Key);
-                            
-                            colors.Add(Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), (int)Math.Ceiling((double)(250 * 100) / 255), (int)0));
-                        }
+                        
+                        var color = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), (int)Math.Ceiling((double)(250 * 100) / 255), (int)0);
+
+                        SetAllLights(color);
                     }
 
                     for (var x = 250; x >= 5; x -= 5)
                     {
                         if (token.IsCancellationRequested) break;
                         Thread.Sleep(10);
-                        foreach (var hid in _asuskeyids)
-                        {
-                            hids.Add(hid.Key);
-                            
-                            colors.Add(Color.FromArgb((int)0, (int)Math.Ceiling((double)(x * 100) / 255), (int)Math.Ceiling((double)(250 * 100) / 255)));
-                        }
+
+                        var color = Color.FromArgb((int) 0, (int) Math.Ceiling((double) (x * 100) / 255),
+                            (int) Math.Ceiling((double) (250 * 100) / 255));
+
+                        SetAllLights(color);
                     }
 
                     for (var x = 0; x <= 250; x += 5)
                     {
                         if (token.IsCancellationRequested) break;
                         Thread.Sleep(10);
-                        foreach (var hid in _asuskeyids)
-                        {
-                            hids.Add(hid.Key);
+                        var color = Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), (int)0, (int)Math.Ceiling((double)(250 * 100) / 255));
 
-                            colors.Add(Color.FromArgb((int)Math.Ceiling((double)(x * 100) / 255), (int)0, (int)Math.Ceiling((double)(250 * 100) / 255)));
-                        }
-
+                        SetAllLights(color);
                     }
 
                     for (var x = 250; x >= 5; x -= 5)
                     {
                         if (token.IsCancellationRequested) break;
                         Thread.Sleep(10);
-                        foreach (var hid in _asuskeyids)
-                        {
-                            hids.Add(hid.Key);
-                            
-                            colors.Add(Color.FromArgb((int)Math.Ceiling((double) (250 * 100) / 255), (int)0, (int)Math.Ceiling((double) (x * 100) / 255)));
-                        }
 
+                        var color = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255), (int) 0,
+                            (int) Math.Ceiling((double) (x * 100) / 255));
+
+                        SetAllLights(color);
                     }
 
                     if (token.IsCancellationRequested) break;
 
                     DeviceUpdate();
-                    hids.Clear();
-                    colors.Clear();
                 }
             }
             Thread.Sleep(interval);
