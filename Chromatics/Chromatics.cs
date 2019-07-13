@@ -93,6 +93,15 @@ namespace Chromatics
         //private Timer _gameResetCatch;
         public bool HoldReader = false;
 
+        public bool _SDKRazer = true;
+        public bool _SDKLogitech = true;
+        public bool _SDKCorsair = true;
+        public bool _SDKCooler = true;
+        public bool _SDKSteelSeries = true;
+        public bool _SDKWooting = true;
+        public bool _SDKAsus = true;
+        public bool _SDKLifx = true;
+
         private string _hueDefault = "";
         public bool HueRescan = false;
         public bool HueSdk = false;
@@ -874,7 +883,6 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-
         
     }
 

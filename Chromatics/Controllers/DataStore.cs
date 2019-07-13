@@ -69,6 +69,15 @@ namespace Chromatics.Datastore
 
         public string LightbarMode = "TargetHp";
         public string FKeyMode = "HpMpTp";
+
+        public bool SDKRazer = true;
+        public bool SDKLogitech = true;
+        public bool SDKCorsair = true;
+        public bool SDKCooler = true;
+        public bool SDKSteelSeries = true;
+        public bool SDKWooting = true;
+        public bool SDKAsus = true;
+        public bool SDKLifx = true;
     }
 
     //Settings

@@ -53,6 +53,15 @@ namespace Chromatics
             dr.DeviceOperationKeypad = _deviceKeypad;
             dr.DeviceOperationCL = _deviceCL;
 
+            dr.SDKRazer = _SDKRazer;
+            dr.SDKLogitech = _SDKLogitech;
+            dr.SDKCorsair = _SDKCorsair;
+            dr.SDKCooler = _SDKCooler;
+            dr.SDKSteelSeries = _SDKSteelSeries;
+            dr.SDKWooting = _SDKWooting;
+            dr.SDKAsus = _SDKAsus;
+            dr.SDKLifx = _SDKLifx;
+
             dr.KeysSingleKeyModeEnabled = _KeysSingleKeyModeEnabled;
             dr.KeySingleKeyMode = Helpers.ConvertDevModeToString(_KeysSingleKeyMode);
 
@@ -175,6 +184,15 @@ namespace Chromatics
                         _deviceKeypad = dr.DeviceOperationKeypad;
                         _deviceCL = dr.DeviceOperationCL;
 
+                        _SDKRazer = dr.SDKRazer;
+                        _SDKLogitech = dr.SDKLogitech;
+                        _SDKCorsair = dr.SDKCorsair;
+                        _SDKCooler = dr.SDKCooler;
+                        _SDKSteelSeries = dr.SDKSteelSeries;
+                        _SDKWooting = dr.SDKWooting;
+                        _SDKAsus = dr.SDKAsus;
+                        _SDKLifx = dr.SDKLifx;
+                        
                         _KeysSingleKeyModeEnabled = dr.KeysSingleKeyModeEnabled;
                         _KeysSingleKeyMode = Helpers.ConvertStringToDevMode(dr.KeySingleKeyMode);
 

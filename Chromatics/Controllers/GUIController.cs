@@ -1141,7 +1141,15 @@ namespace Chromatics
             cb_alarmclock.SelectedIndex = cb_alarmclock.FindStringExact(ChromaticsSettings.ChromaticsSettingsCastAlarmTime);
             chk_castsrank.Checked = ChromaticsSettings.ChromaticsSettingsCastSRankAlert;
             chk_castreadycheck.Checked = ChromaticsSettings.ChromaticsSettingsCastReadyCheckAlert;
-                       
+
+            chk_sdk_razer.Checked = _SDKRazer;
+            chk_sdk_logi.Checked = _SDKLogitech;
+            chk_sdk_corsair.Checked = _SDKCorsair;
+            chk_sdk_cooler.Checked = _SDKCooler;
+            chk_sdk_steel.Checked = _SDKSteelSeries;
+            chk_sdk_wooting.Checked = _SDKWooting;
+            chk_sdk_asus.Checked = _SDKAsus;
+            chk_sdk_lifx.Checked = _SDKLifx;
 
             if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
             {
@@ -1283,6 +1291,7 @@ namespace Chromatics
         {
             if (RazerSdkCalled == 1)
             {
+
                 _razerDeviceKeyboard = _deviceKeyboard;
                 _razerDeviceMouse = _deviceMouse;
                 _razerDeviceMousepad = _deviceMousepad;
@@ -3333,6 +3342,70 @@ namespace Chromatics
             if (Startup == false) return;
 
             Process.Start("https://github.com/roxaskeyheart/Chromatics/wiki/Connecting-with-IFTTT");
+        }
+
+        private void Chk_sdk_razer_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKRazer = chk_sdk_razer.Checked;
+            SaveDevices();
+        }
+
+        private void Chk_sdk_logi_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKLogitech = chk_sdk_logi.Checked;
+            SaveDevices();
+        }
+
+        private void Chk_sdk_corsair_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKCorsair = chk_sdk_corsair.Checked;
+            SaveDevices();
+        }
+
+        private void Chk_sdk_cooler_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKCooler = chk_sdk_cooler.Checked;
+            SaveDevices();
+        }
+
+        private void Chk_sdk_steel_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKSteelSeries = chk_sdk_steel.Checked;
+            SaveDevices();
+        }
+
+        private void Chk_sdk_wooting_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKWooting = chk_sdk_wooting.Checked;
+            SaveDevices();
+        }
+
+        private void Chk_sdk_asus_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKAsus = chk_sdk_asus.Checked;
+            SaveDevices();
+        }
+
+        private void Chk_sdk_lifx_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKLifx = chk_sdk_lifx.Checked;
+            SaveDevices();
         }
 
         private void cb_lang_SelectedIndexChanged(object sender, EventArgs e)

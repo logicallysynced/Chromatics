@@ -143,7 +143,7 @@ namespace Chromatics
 
         public void InitializeSdk()
         {
-            if (RazerSdkCalled == 0)
+            if (_SDKRazer && RazerSdkCalled == 0)
             {
                 WriteConsole(ConsoleTypes.Razer, @"Attempting to load Razer SDK..");
                 _razer = RazerInterface.InitializeRazerSdk();
@@ -166,7 +166,7 @@ namespace Chromatics
                 }
             }
 
-            if (LogitechSdkCalled == 0)
+            if (_SDKLogitech && LogitechSdkCalled == 0)
             {
                 WriteConsole(ConsoleTypes.Logitech, @"Attempting to load Logitech SDK..");
                 _logitech = LogitechInterface.InitializeLogitechSdk();
@@ -188,7 +188,7 @@ namespace Chromatics
                 }
             }
 
-            if (CorsairSdkCalled == 0)
+            if (_SDKCorsair && CorsairSdkCalled == 0)
             {
                 WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
                 _corsair = CorsairInterface.InitializeCorsairSdk();
@@ -210,7 +210,7 @@ namespace Chromatics
                 }
             }
 
-            if (CoolermasterSdkCalled == 0)
+            if (_SDKCooler && CoolermasterSdkCalled == 0)
             {
                 _coolermaster = CoolermasterInterface.InitializeCoolermasterSdk();
                 if (_coolermaster != null)
@@ -231,7 +231,7 @@ namespace Chromatics
                 }
             }
 
-            if (SteelSdkCalled == 0)
+            if (_SDKSteelSeries && SteelSdkCalled == 0)
             {
                 WriteConsole(ConsoleTypes.Steel, @"Attempting to load SteelSeries GameSense SDK..");
                 _steel = SteelSeriesInterface.InitializeSteelSdk();
@@ -254,7 +254,7 @@ namespace Chromatics
                 }
             }
 
-            if (WootingSdkCalled == 0)
+            if (_SDKWooting && WootingSdkCalled == 0)
             {
                 _wooting = WootingInterface.InitializeWootingSdk();
                 if (_wooting != null)
@@ -275,7 +275,7 @@ namespace Chromatics
                 }
             }
 
-            if (AsusSdkCalled == 0)
+            if (_SDKAsus && AsusSdkCalled == 0)
             {
                 WriteConsole(ConsoleTypes.Asus, @"Attempting to load Asus Aura SDK..");
                 _asus = AsusInterface.InitializeAsusSdk();
@@ -297,7 +297,7 @@ namespace Chromatics
                 }
             }
 
-            if (LifxSdkCalled == 0)
+            if (_SDKLifx && LifxSdkCalled == 0)
             {
                 //Load LIFX SDK
                 _lifx = LifxInterface.InitializeLifxsdk();
@@ -347,7 +347,7 @@ namespace Chromatics
 
         public void ReInitializeSdk()
         {
-            if (RazerSdkCalled == 0 && razerFirstSet)
+            if (_SDKRazer && RazerSdkCalled == 0 && razerFirstSet)
             {
                 WriteConsole(ConsoleTypes.Razer, @"Attempting to load Razer SDK..");
                 _razer = RazerInterface.InitializeRazerSdk();
@@ -369,7 +369,7 @@ namespace Chromatics
                 }
             }
 
-            if (LogitechSdkCalled == 0 && logitechFirstSet)
+            if (_SDKLogitech && LogitechSdkCalled == 0 && logitechFirstSet)
             {
                 WriteConsole(ConsoleTypes.Logitech, @"Attempting to load Logitech SDK..");
                 _logitech = LogitechInterface.InitializeLogitechSdk();
@@ -390,7 +390,7 @@ namespace Chromatics
                 }
             }
 
-            if (CorsairSdkCalled == 0 && corsairFirstSet)
+            if (_SDKCorsair && CorsairSdkCalled == 0 && corsairFirstSet)
             {
                 WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
                 _corsair = CorsairInterface.InitializeCorsairSdk();
@@ -411,7 +411,7 @@ namespace Chromatics
                 }
             }
 
-            if (CoolermasterSdkCalled == 0 && coolermasterFirstSet)
+            if (_SDKCooler && CoolermasterSdkCalled == 0 && coolermasterFirstSet)
             {
                 _coolermaster = CoolermasterInterface.InitializeCoolermasterSdk();
                 if (_coolermaster != null)
@@ -431,7 +431,7 @@ namespace Chromatics
                 }
             }
 
-            if (SteelSdkCalled == 0 && steelFirstSet)
+            if (_SDKSteelSeries && SteelSdkCalled == 0 && steelFirstSet)
             {
                 WriteConsole(ConsoleTypes.Steel, @"Attempting to load SteelSeries GameSense SDK..");
                 _steel = SteelSeriesInterface.InitializeSteelSdk();
@@ -453,7 +453,7 @@ namespace Chromatics
                 }
             }
 
-            if (WootingSdkCalled == 0 && wootingFirstSet)
+            if (_SDKWooting && WootingSdkCalled == 0 && wootingFirstSet)
             {
                 _wooting = WootingInterface.InitializeWootingSdk();
                 if (_wooting != null)
@@ -473,7 +473,7 @@ namespace Chromatics
                 }
             }
 
-            if (AsusSdkCalled == 0 && AsusFirstSet)
+            if (_SDKAsus && AsusSdkCalled == 0 && AsusFirstSet)
             {
                 _asus = AsusInterface.InitializeAsusSdk();
                 if (_asus != null)
@@ -493,7 +493,7 @@ namespace Chromatics
                 }
             }
 
-            if (LifxSdkCalled == 0 && lifxFirstSet)
+            if (_SDKLifx && LifxSdkCalled == 0 && lifxFirstSet)
             {
                 //Load LIFX SDK
                 _lifx = LifxInterface.InitializeLifxsdk();

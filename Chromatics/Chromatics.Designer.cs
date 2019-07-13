@@ -107,6 +107,16 @@
             this.lbl_chromalink_z1 = new System.Windows.Forms.Label();
             this.cb_chromalink_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
+            this.tP_adv = new System.Windows.Forms.TabPage();
+            this.gb_sdkcontrol = new System.Windows.Forms.GroupBox();
+            this.chk_sdk_lifx = new System.Windows.Forms.CheckBox();
+            this.chk_sdk_asus = new System.Windows.Forms.CheckBox();
+            this.chk_sdk_wooting = new System.Windows.Forms.CheckBox();
+            this.chk_sdk_steel = new System.Windows.Forms.CheckBox();
+            this.chk_sdk_cooler = new System.Windows.Forms.CheckBox();
+            this.chk_sdk_corsair = new System.Windows.Forms.CheckBox();
+            this.chk_sdk_logi = new System.Windows.Forms.CheckBox();
+            this.chk_sdk_razer = new System.Windows.Forms.CheckBox();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
             this.lbl_hpcritical = new System.Windows.Forms.Label();
@@ -242,6 +252,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).BeginInit();
             this.tP_misc.SuspendLayout();
             this.gP_ChromaLink.SuspendLayout();
+            this.tP_adv.SuspendLayout();
+            this.gb_sdkcontrol.SuspendLayout();
             this.tP_settings.SuspendLayout();
             this.gB_effects.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nm_criticalhp)).BeginInit();
@@ -398,6 +410,7 @@
             this.tb_controldev.Controls.Add(this.tP_keypad);
             this.tb_controldev.Controls.Add(this.tP_bulbs);
             this.tb_controldev.Controls.Add(this.tP_misc);
+            this.tb_controldev.Controls.Add(this.tP_adv);
             this.tb_controldev.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tb_controldev.Location = new System.Drawing.Point(0, 0);
             this.tb_controldev.Margin = new System.Windows.Forms.Padding(2);
@@ -1045,7 +1058,7 @@
             this.tP_misc.Name = "tP_misc";
             this.tP_misc.Size = new System.Drawing.Size(717, 373);
             this.tP_misc.TabIndex = 5;
-            this.tP_misc.Text = "Misc";
+            this.tP_misc.Text = "Other";
             // 
             // gP_ChromaLink
             // 
@@ -1217,6 +1230,147 @@
             this.tooltip_main.SetToolTip(this.chk_dev_chromalink, "Enable other devices such as Razer ChromaLink or Corsair GPU/RAM/etc.");
             this.chk_dev_chromalink.UseVisualStyleBackColor = true;
             this.chk_dev_chromalink.CheckedChanged += new System.EventHandler(this.chk_dev_chromalink_CheckedChanged);
+            // 
+            // tP_adv
+            // 
+            this.tP_adv.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_adv.Controls.Add(this.gb_sdkcontrol);
+            this.tP_adv.Location = new System.Drawing.Point(4, 22);
+            this.tP_adv.Name = "tP_adv";
+            this.tP_adv.Size = new System.Drawing.Size(717, 373);
+            this.tP_adv.TabIndex = 7;
+            this.tP_adv.Text = "Advanced";
+            // 
+            // gb_sdkcontrol
+            // 
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_lifx);
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_asus);
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_wooting);
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_steel);
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_cooler);
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_corsair);
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_logi);
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_razer);
+            this.gb_sdkcontrol.Location = new System.Drawing.Point(3, 2);
+            this.gb_sdkcontrol.Margin = new System.Windows.Forms.Padding(2);
+            this.gb_sdkcontrol.Name = "gb_sdkcontrol";
+            this.gb_sdkcontrol.Padding = new System.Windows.Forms.Padding(2);
+            this.gb_sdkcontrol.Size = new System.Drawing.Size(377, 232);
+            this.gb_sdkcontrol.TabIndex = 1;
+            this.gb_sdkcontrol.TabStop = false;
+            this.gb_sdkcontrol.Text = "SDK Control";
+            // 
+            // chk_sdk_lifx
+            // 
+            this.chk_sdk_lifx.AutoSize = true;
+            this.chk_sdk_lifx.Location = new System.Drawing.Point(225, 24);
+            this.chk_sdk_lifx.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_lifx.Name = "chk_sdk_lifx";
+            this.chk_sdk_lifx.Size = new System.Drawing.Size(109, 17);
+            this.chk_sdk_lifx.TabIndex = 8;
+            this.chk_sdk_lifx.Text = "Enable LIFX SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_lifx, "Enable/Disable the LIFX SDK from loading when Chromatics starts.\r\n(Requires App R" +
+        "estart)");
+            this.chk_sdk_lifx.UseVisualStyleBackColor = true;
+            this.chk_sdk_lifx.CheckedChanged += new System.EventHandler(this.Chk_sdk_lifx_CheckedChanged);
+            // 
+            // chk_sdk_asus
+            // 
+            this.chk_sdk_asus.AutoSize = true;
+            this.chk_sdk_asus.Location = new System.Drawing.Point(10, 155);
+            this.chk_sdk_asus.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_asus.Name = "chk_sdk_asus";
+            this.chk_sdk_asus.Size = new System.Drawing.Size(110, 17);
+            this.chk_sdk_asus.TabIndex = 7;
+            this.chk_sdk_asus.Text = "Enable Asus SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_asus, "Enable/Disable the Asus SDK from loading when Chromatics starts.\r\n(Requires App R" +
+        "estart)");
+            this.chk_sdk_asus.UseVisualStyleBackColor = true;
+            this.chk_sdk_asus.CheckedChanged += new System.EventHandler(this.Chk_sdk_asus_CheckedChanged);
+            // 
+            // chk_sdk_wooting
+            // 
+            this.chk_sdk_wooting.AutoSize = true;
+            this.chk_sdk_wooting.Location = new System.Drawing.Point(10, 134);
+            this.chk_sdk_wooting.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_wooting.Name = "chk_sdk_wooting";
+            this.chk_sdk_wooting.Size = new System.Drawing.Size(127, 17);
+            this.chk_sdk_wooting.TabIndex = 6;
+            this.chk_sdk_wooting.Text = "Enable Wooting SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_wooting, "Enable/Disable the Wooting SDK from loading when Chromatics starts.\r\n(Requires Ap" +
+        "p Restart)");
+            this.chk_sdk_wooting.UseVisualStyleBackColor = true;
+            this.chk_sdk_wooting.CheckedChanged += new System.EventHandler(this.Chk_sdk_wooting_CheckedChanged);
+            // 
+            // chk_sdk_steel
+            // 
+            this.chk_sdk_steel.AutoSize = true;
+            this.chk_sdk_steel.Location = new System.Drawing.Point(10, 113);
+            this.chk_sdk_steel.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_steel.Name = "chk_sdk_steel";
+            this.chk_sdk_steel.Size = new System.Drawing.Size(140, 17);
+            this.chk_sdk_steel.TabIndex = 5;
+            this.chk_sdk_steel.Text = "Enable SteelSeries SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_steel, "Enable/Disable the SteelSeries SDK from loading when Chromatics starts.\r\n(Require" +
+        "s App Restart)");
+            this.chk_sdk_steel.UseVisualStyleBackColor = true;
+            this.chk_sdk_steel.CheckedChanged += new System.EventHandler(this.Chk_sdk_steel_CheckedChanged);
+            // 
+            // chk_sdk_cooler
+            // 
+            this.chk_sdk_cooler.AutoSize = true;
+            this.chk_sdk_cooler.Location = new System.Drawing.Point(10, 92);
+            this.chk_sdk_cooler.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_cooler.Name = "chk_sdk_cooler";
+            this.chk_sdk_cooler.Size = new System.Drawing.Size(148, 17);
+            this.chk_sdk_cooler.TabIndex = 4;
+            this.chk_sdk_cooler.Text = "Enable Coolermaster SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_cooler, "Enable/Disable the Coolermaster SDK from loading when Chromatics starts.\r\n(Requir" +
+        "es App Restart)");
+            this.chk_sdk_cooler.UseVisualStyleBackColor = true;
+            this.chk_sdk_cooler.CheckedChanged += new System.EventHandler(this.Chk_sdk_cooler_CheckedChanged);
+            // 
+            // chk_sdk_corsair
+            // 
+            this.chk_sdk_corsair.AutoSize = true;
+            this.chk_sdk_corsair.Location = new System.Drawing.Point(10, 70);
+            this.chk_sdk_corsair.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_corsair.Name = "chk_sdk_corsair";
+            this.chk_sdk_corsair.Size = new System.Drawing.Size(119, 17);
+            this.chk_sdk_corsair.TabIndex = 3;
+            this.chk_sdk_corsair.Text = "Enable Corsair SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_corsair, "Enable/Disable the Corsair SDK from loading when Chromatics starts.\r\n(Requires Ap" +
+        "p Restart)");
+            this.chk_sdk_corsair.UseVisualStyleBackColor = true;
+            this.chk_sdk_corsair.CheckedChanged += new System.EventHandler(this.Chk_sdk_corsair_CheckedChanged);
+            // 
+            // chk_sdk_logi
+            // 
+            this.chk_sdk_logi.AutoSize = true;
+            this.chk_sdk_logi.Location = new System.Drawing.Point(10, 47);
+            this.chk_sdk_logi.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_logi.Name = "chk_sdk_logi";
+            this.chk_sdk_logi.Size = new System.Drawing.Size(128, 17);
+            this.chk_sdk_logi.TabIndex = 2;
+            this.chk_sdk_logi.Text = "Enable Logitech SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_logi, "Enable/Disable the Logitech SDK from loading when Chromatics starts.\r\n(Requires A" +
+        "pp Restart)");
+            this.chk_sdk_logi.UseVisualStyleBackColor = true;
+            this.chk_sdk_logi.CheckedChanged += new System.EventHandler(this.Chk_sdk_logi_CheckedChanged);
+            // 
+            // chk_sdk_razer
+            // 
+            this.chk_sdk_razer.AutoSize = true;
+            this.chk_sdk_razer.Location = new System.Drawing.Point(10, 24);
+            this.chk_sdk_razer.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_razer.Name = "chk_sdk_razer";
+            this.chk_sdk_razer.Size = new System.Drawing.Size(115, 17);
+            this.chk_sdk_razer.TabIndex = 1;
+            this.chk_sdk_razer.Text = "Enable Razer SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_razer, "Enable/Disable the Razer SDK from loading when Chromatics starts.\r\n(Requires App " +
+        "Restart)");
+            this.chk_sdk_razer.UseVisualStyleBackColor = true;
+            this.chk_sdk_razer.CheckedChanged += new System.EventHandler(this.Chk_sdk_razer_CheckedChanged);
             // 
             // tP_settings
             // 
@@ -2872,6 +3026,9 @@
             this.tP_misc.ResumeLayout(false);
             this.gP_ChromaLink.ResumeLayout(false);
             this.gP_ChromaLink.PerformLayout();
+            this.tP_adv.ResumeLayout(false);
+            this.gb_sdkcontrol.ResumeLayout(false);
+            this.gb_sdkcontrol.PerformLayout();
             this.tP_settings.ResumeLayout(false);
             this.gB_effects.ResumeLayout(false);
             this.gB_effects.PerformLayout();
@@ -3110,6 +3267,16 @@
         private System.Windows.Forms.Label lbl_chromalink_z6;
         private System.Windows.Forms.ComboBox cb_chromalink_z6;
         private System.Windows.Forms.Button btn_dumplog;
+        private System.Windows.Forms.TabPage tP_adv;
+        private System.Windows.Forms.GroupBox gb_sdkcontrol;
+        private System.Windows.Forms.CheckBox chk_sdk_lifx;
+        private System.Windows.Forms.CheckBox chk_sdk_asus;
+        private System.Windows.Forms.CheckBox chk_sdk_wooting;
+        private System.Windows.Forms.CheckBox chk_sdk_steel;
+        private System.Windows.Forms.CheckBox chk_sdk_cooler;
+        private System.Windows.Forms.CheckBox chk_sdk_corsair;
+        private System.Windows.Forms.CheckBox chk_sdk_logi;
+        private System.Windows.Forms.CheckBox chk_sdk_razer;
     }
 }
 
