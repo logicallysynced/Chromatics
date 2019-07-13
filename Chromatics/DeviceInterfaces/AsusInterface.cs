@@ -247,6 +247,12 @@ namespace Chromatics.DeviceInterfaces
 
         private Dictionary<ushort, IAuraRgbKey> _idToKey = new Dictionary<ushort, IAuraRgbKey>();
 
+        private Dictionary<int, IAuraRgbLight> _idToMouse = new Dictionary<int, IAuraRgbLight>();
+        private int MouseLedCount = 0;
+
+        private Dictionary<int, IAuraRgbLight> _idToHeadset = new Dictionary<int, IAuraRgbLight>();
+        private int HeadsetLedCount = 0;
+
         private Dictionary<string, Color> prevKeyboard = new Dictionary<string, Color>();
 
         private static Dictionary<string, Color> keyMappings = new Dictionary<string, Color>();
@@ -268,6 +274,16 @@ namespace Chromatics.DeviceInterfaces
         };
 
         private void SetRgbLight(IAuraRgbKey rgbKey, Color color)
+        {
+            lock (rgbKey)
+            {
+                rgbKey.Red = color.R;
+                rgbKey.Green = color.G;
+                rgbKey.Blue = color.B;
+            }
+        }
+
+        private void SetRgbOtherLight(IAuraRgbLight rgbKey, Color color)
         {
             lock (rgbKey)
             {
@@ -331,6 +347,30 @@ namespace Chromatics.DeviceInterfaces
                         //_AsusDeviceMouse = true;
                         devconnected = true;
                         _mouseConnected = true;
+
+                        var i = 0;
+                        var y = 0;
+                        var idToMouse = new Dictionary<int, IAuraRgbLight>();
+
+                        foreach (IAuraRgbLight light in dev.Lights)
+                        {
+                            if (!idToMouse.ContainsKey(i) && !_idToMouse.ContainsKey(i))
+                            {
+                                idToMouse.Add(i, light);
+                                MouseLedCount++;
+                            }
+                        }
+
+                        foreach (var mouselight in idToMouse)
+                        {
+                            if (y < MouseLedCount)
+                            {
+                                if (!_idToMouse.ContainsKey(y))
+                                    _idToMouse.Add(mouselight.Key, mouselight.Value);
+                            }
+
+                            y++;
+                        }
                     }
 
                     if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Headset) //Headset
@@ -338,6 +378,30 @@ namespace Chromatics.DeviceInterfaces
                         //_AsusDeviceHeadset = true;
                         devconnected = true;
                         _headsetConnected = true;
+
+                        var i = 0;
+                        var y = 0;
+                        var idToHeadset = new Dictionary<int, IAuraRgbLight>();
+
+                        foreach (IAuraRgbLight light in dev.Lights)
+                        {
+                            if (_idToHeadset.ContainsKey(i) && !_idToHeadset.ContainsKey(i))
+                            {
+                                idToHeadset.Add(i, light);
+                                HeadsetLedCount++;
+                            }
+                        }
+
+                        foreach (var headsetlight in idToHeadset)
+                        {
+                            if (y < HeadsetLedCount)
+                            {
+                                if (!_idToHeadset.ContainsKey(y))
+                                    _idToHeadset.Add(headsetlight.Key, headsetlight.Value);
+                            }
+
+                            y++;
+                        }
                     }
                 }
 
@@ -391,14 +455,20 @@ namespace Chromatics.DeviceInterfaces
                         }
                     }
 
-                    if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Mouse) //Mouse
+                    if (_mouseConnected)
                     {
-                        dev.Apply();
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Mouse) //Mouse
+                        {
+                            dev.Apply();
+                        }
                     }
 
-                    if (dev.Type == (int)AsusSdkWrapper.DeviceTypes.Headset) //Headset
+                    if (_headsetConnected)
                     {
-                        dev.Apply();
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Headset) //Headset
+                        {
+                            dev.Apply();
+                        }
                     }
                 }
             }
@@ -411,6 +481,8 @@ namespace Chromatics.DeviceInterfaces
 
         public void ApplyMapKeyLighting(string key, Color color, bool clear, [Optional] bool bypasswhitelist)
         {
+            if (!isInitialized) return;
+
             if (!_AsusDeviceKeyboard || !_keyConnected)
                 return;
 
@@ -453,31 +525,33 @@ namespace Chromatics.DeviceInterfaces
 
         public void SetLights(Color color)
         {
-            if (!_AsusDeviceKeyboard || !_keyConnected)
-                return;
-
+            if (!isInitialized) return;
+            
             try
             {
-                foreach (var keyId in _idToKey)
+                if (_AsusDeviceKeyboard && _keyConnected)
                 {
-                    if (!_asuskeyids.ContainsValue(keyId.Key))
+                    foreach (var keyId in _idToKey)
                     {
-                        continue;
-                    }
-
-                    var keyString = _asuskeyids.FirstOrDefault(x => x.Value == keyId.Key);
-
-                    if (prevKeyboard.ContainsKey(keyString.Key))
-                    {
-                        if (prevKeyboard[keyString.Key] == color)
+                        if (!_asuskeyids.ContainsValue(keyId.Key))
+                        {
                             continue;
-                    }
+                        }
 
-                    SetRgbLight(keyId.Value, color);
+                        var keyString = _asuskeyids.FirstOrDefault(x => x.Value == keyId.Key);
 
-                    if (prevKeyboard.ContainsKey(keyString.Key))
-                    {
-                        prevKeyboard[keyString.Key] = color;
+                        if (prevKeyboard.ContainsKey(keyString.Key))
+                        {
+                            if (prevKeyboard[keyString.Key] == color)
+                                continue;
+                        }
+
+                        SetRgbLight(keyId.Value, color);
+
+                        if (prevKeyboard.ContainsKey(keyString.Key))
+                        {
+                            prevKeyboard[keyString.Key] = color;
+                        }
                     }
                 }
             }
@@ -491,31 +565,49 @@ namespace Chromatics.DeviceInterfaces
 
         public void SetAllLights(Color color)
         {
-            if (!_AsusDeviceKeyboard || !_keyConnected)
-                return;
+            if (!isInitialized) return;
 
             try
             {
-                foreach (var keyId in _idToKey)
+                if (_AsusDeviceKeyboard || _keyConnected)
                 {
-                    if (!_asuskeyids.ContainsValue(keyId.Key))
+                    foreach (var keyId in _idToKey)
                     {
-                        continue;
-                    }
-
-                    var keyString = _asuskeyids.FirstOrDefault(x => x.Value == keyId.Key);
-
-                    if (prevKeyboard.ContainsKey(keyString.Key))
-                    {
-                        if (prevKeyboard[keyString.Key] == color)
+                        if (!_asuskeyids.ContainsValue(keyId.Key))
+                        {
                             continue;
+                        }
+
+                        var keyString = _asuskeyids.FirstOrDefault(x => x.Value == keyId.Key);
+
+                        if (prevKeyboard.ContainsKey(keyString.Key))
+                        {
+                            if (prevKeyboard[keyString.Key] == color)
+                                continue;
+                        }
+
+                        SetRgbLight(keyId.Value, color);
+
+                        if (prevKeyboard.ContainsKey(keyString.Key))
+                        {
+                            prevKeyboard[keyString.Key] = color;
+                        }
                     }
-
-                    SetRgbLight(keyId.Value, color);
-
-                    if (prevKeyboard.ContainsKey(keyString.Key))
+                }
+                
+                if (_AsusDeviceMouse && _mouseConnected)
+                {
+                    foreach (var light in _idToMouse)
                     {
-                        prevKeyboard[keyString.Key] = color;
+                        SetRgbOtherLight(light.Value, color);
+                    }
+                }
+
+                if (_AsusDeviceHeadset && _headsetConnected)
+                {
+                    foreach (var light in _idToHeadset)
+                    {
+                        SetRgbOtherLight(light.Value, color);
                     }
                 }
             }
@@ -558,34 +650,44 @@ namespace Chromatics.DeviceInterfaces
         
         public void ApplyMapMouseLighting(string key, Color color)
         {
-            if (!_AsusDeviceMouse)
-                return;
+            if (!isInitialized) return;
 
+            if (!_AsusDeviceMouse || _mouseConnected)
+                return;
 
             switch (key)
             {
-                case "0":
+                case "Logo":
+                    if (_idToMouse.ContainsKey(0))
+                        SetRgbOtherLight(_idToMouse[0], color);
                     break;
-                case "1":
+                case "ScrollWheel":
+                    if (_idToMouse.ContainsKey(1))
+                        SetRgbOtherLight(_idToMouse[1], color);
                     break;
-                case "2":
+                case "FrontLight":
+                    if (_idToMouse.ContainsKey(2))
+                        SetRgbOtherLight(_idToMouse[2], color);
                     break;
             }
         }
         
         public void ApplyMapHeadsetLighting(string key, Color color)
         {
-            if (!_AsusDeviceHeadset)
+            if (!isInitialized) return;
+
+            if (!_AsusDeviceHeadset || _headsetConnected)
                 return;
-
-
+            
             switch (key)
             {
                 case "0":
+                    if (_idToHeadset.ContainsKey(0))
+                        SetRgbOtherLight(_idToHeadset[0], color);
                     break;
                 case "1":
-                    break;
-                case "2":
+                    if (_idToHeadset.ContainsKey(1))
+                        SetRgbOtherLight(_idToHeadset[1], color);
                     break;
             }
         }

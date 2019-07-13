@@ -1094,7 +1094,7 @@ namespace Chromatics
 
                 if (AsusSdkCalled == 1)
                 {
-                    _asus.ApplyMapMouseLighting("MouseFront", col);
+                    _asus.ApplyMapMouseLighting("Logo", col);
                 }
             }
 
@@ -1124,7 +1124,7 @@ namespace Chromatics
 
                 if (AsusSdkCalled == 1)
                 {
-                    _asus.ApplyMapMouseLighting("MouseScroll", col);
+                    _asus.ApplyMapMouseLighting("ScrollWheel", col);
                 }
             }
 
@@ -1154,7 +1154,7 @@ namespace Chromatics
 
                 if (AsusSdkCalled == 1)
                 {
-                    _asus.ApplyMapMouseLighting("MouseSide", col);
+                    _asus.ApplyMapMouseLighting("FrontLight", col);
                 }
 
             }
@@ -1248,7 +1248,7 @@ namespace Chromatics
 
                 if (AsusSdkCalled == 1)
                 {
-                    _asus.ApplyMapHeadsetLighting("1", col);
+                    _asus.ApplyMapHeadsetLighting("0", col);
                 }
 
             }
@@ -1284,7 +1284,7 @@ namespace Chromatics
 
                 if (AsusSdkCalled == 1)
                 {
-                    _asus.ApplyMapHeadsetLighting("2", col);
+                    _asus.ApplyMapHeadsetLighting("1", col);
                 }
 
             }
