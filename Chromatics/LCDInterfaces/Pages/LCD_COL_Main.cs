@@ -316,6 +316,9 @@ namespace Chromatics.LCDInterfaces
                     case Actor.Job.GNB:
                         ptJob = "Gunbreaker";
                         break;
+                    case Actor.Job.BLU:
+                        ptJob = "Bluemage";
+                        break;
                     default:
                         ptJob = "Chocobo";
                         break;

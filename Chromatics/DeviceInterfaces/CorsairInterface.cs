@@ -1980,9 +1980,7 @@ namespace Chromatics.DeviceInterfaces
                             foreach (var key in _coolerZ1.GetRange(x6, z6))
                             {
                                 if (x6 > 150) continue;
-
-                                Console.WriteLine("Z6: " + x6 + "/" + z6);
-
+                                
                                 if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
                                     _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(key, cc);

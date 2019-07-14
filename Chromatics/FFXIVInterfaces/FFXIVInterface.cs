@@ -1070,6 +1070,10 @@ namespace Chromatics
                                                 ptType = "player";
                                                 ptJob = "Gunbreaker";
                                                 break;
+                                            case Actor.Job.BLU:
+                                                ptType = "player";
+                                                ptJob = "Bluemage";
+                                                break;
                                             default:
                                                 ptType = "unknown";
                                                 ptJob = "Chocobo";
@@ -4348,6 +4352,10 @@ namespace Chromatics
                                     _role = _playerData.CurrentPlayer.GNB_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.GNB;
                                     break;
+                                case Actor.Job.BLU:
+                                    _role = _playerData.CurrentPlayer.BLU_CurrentEXP;
+                                    _currentlvl = _playerData.CurrentPlayer.BLU;
+                                    break;
                                 default:
                                     _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
                                     _currentlvl = 0;
@@ -4398,7 +4406,6 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting(FKExp_Collection[i2], FKExp_Interpolate > i2 ? expcolfull : expcolempty, false, false);
                                     }
 
-                                    Console.WriteLine(_role + "/" + FFXIVHelpers.ExperienceTable[_currentlvl]);
                                 }
                             }
                             
@@ -4764,6 +4771,10 @@ namespace Chromatics
                                             case Actor.Job.GNB:
                                                 if (!blockACTVersion && GetACTJob() != "Gunbreaker")
                                                     SwitchACTJob("Gunbreaker");
+                                                break;
+                                            case Actor.Job.BLU:
+                                                if (!blockACTVersion && GetACTJob() != "Bluemage")
+                                                    SwitchACTJob("Bluemage");
                                                 break;
                                         }
                                         
