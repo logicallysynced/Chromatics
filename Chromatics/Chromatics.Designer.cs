@@ -79,6 +79,8 @@
             this.cb_headset_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_headset = new System.Windows.Forms.CheckBox();
             this.tP_keypad = new System.Windows.Forms.TabPage();
+            this.chk_keypad_binds = new System.Windows.Forms.CheckBox();
+            this.dgv_keypad_binds = new System.Windows.Forms.DataGridView();
             this.lbl_keypad_z1 = new System.Windows.Forms.Label();
             this.cb_keypad_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_keypad = new System.Windows.Forms.CheckBox();
@@ -245,6 +247,9 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -255,6 +260,7 @@
             this.tP_mousepad.SuspendLayout();
             this.tP_headset.SuspendLayout();
             this.tP_keypad.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_keypad_binds)).BeginInit();
             this.tP_bulbs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).BeginInit();
             this.tP_misc.SuspendLayout();
@@ -914,6 +920,8 @@
             // tP_keypad
             // 
             this.tP_keypad.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keypad.Controls.Add(this.chk_keypad_binds);
+            this.tP_keypad.Controls.Add(this.dgv_keypad_binds);
             this.tP_keypad.Controls.Add(this.lbl_keypad_z1);
             this.tP_keypad.Controls.Add(this.cb_keypad_z1);
             this.tP_keypad.Controls.Add(this.chk_dev_keypad);
@@ -923,6 +931,43 @@
             this.tP_keypad.Size = new System.Drawing.Size(717, 373);
             this.tP_keypad.TabIndex = 6;
             this.tP_keypad.Text = "Keypad";
+            // 
+            // chk_keypad_binds
+            // 
+            this.chk_keypad_binds.AutoSize = true;
+            this.chk_keypad_binds.Location = new System.Drawing.Point(295, 15);
+            this.chk_keypad_binds.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_keypad_binds.Name = "chk_keypad_binds";
+            this.chk_keypad_binds.Size = new System.Drawing.Size(105, 17);
+            this.chk_keypad_binds.TabIndex = 16;
+            this.chk_keypad_binds.Text = "Enable Keybinds";
+            this.tooltip_main.SetToolTip(this.chk_keypad_binds, "Show keybinds on Razer Keypads. Overwrites Zone 1 selection.\r\n");
+            this.chk_keypad_binds.UseVisualStyleBackColor = true;
+            this.chk_keypad_binds.CheckedChanged += new System.EventHandler(this.Chk_keypad_binds_CheckedChanged);
+            // 
+            // dgv_keypad_binds
+            // 
+            this.dgv_keypad_binds.AllowUserToAddRows = false;
+            this.dgv_keypad_binds.AllowUserToDeleteRows = false;
+            this.dgv_keypad_binds.AllowUserToResizeColumns = false;
+            this.dgv_keypad_binds.AllowUserToResizeRows = false;
+            this.dgv_keypad_binds.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_keypad_binds.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_keypad_binds.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3});
+            this.dgv_keypad_binds.Location = new System.Drawing.Point(295, 49);
+            this.dgv_keypad_binds.Margin = new System.Windows.Forms.Padding(2);
+            this.dgv_keypad_binds.MultiSelect = false;
+            this.dgv_keypad_binds.Name = "dgv_keypad_binds";
+            this.dgv_keypad_binds.RowHeadersVisible = false;
+            this.dgv_keypad_binds.RowTemplate.Height = 24;
+            this.dgv_keypad_binds.Size = new System.Drawing.Size(419, 321);
+            this.dgv_keypad_binds.TabIndex = 15;
+            this.tooltip_main.SetToolTip(this.dgv_keypad_binds, "Maps Keypad keys to keybinds. To use this, match each key to the keybind (without" +
+        " modifier) you have assigned in FFXIV.");
+            this.dgv_keypad_binds.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnKeypadBindChanged);
             // 
             // lbl_keypad_z1
             // 
@@ -3175,6 +3220,27 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "ID";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.FillWeight = 50.76142F;
+            this.dataGridViewTextBoxColumn2.HeaderText = "Keypad Key";
+            this.dataGridViewTextBoxColumn2.MaxInputLength = 2;
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.FillWeight = 149.2386F;
+            this.dataGridViewTextBoxColumn3.HeaderText = "Keybind";
+            this.dataGridViewTextBoxColumn3.MaxInputLength = 1;
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3201,6 +3267,7 @@
             this.tP_headset.PerformLayout();
             this.tP_keypad.ResumeLayout(false);
             this.tP_keypad.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_keypad_binds)).EndInit();
             this.tP_bulbs.ResumeLayout(false);
             this.tP_bulbs.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).EndInit();
@@ -3471,6 +3538,11 @@
         private System.Windows.Forms.NumericUpDown nm_ledcount_z4;
         private System.Windows.Forms.NumericUpDown nm_ledcount_z3;
         private System.Windows.Forms.NumericUpDown nm_ledcount_z2;
+        private System.Windows.Forms.CheckBox chk_keypad_binds;
+        private System.Windows.Forms.DataGridView dgv_keypad_binds;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
     }
 }
 

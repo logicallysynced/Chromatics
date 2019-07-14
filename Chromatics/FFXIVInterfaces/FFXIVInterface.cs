@@ -3522,6 +3522,289 @@ namespace Chromatics
                                                 modKey == Modifiers.CTRL_ALT ||
                                                 modKey == Modifiers.CTRL_ALT_SHIFT || modKey == Modifiers.CTRL_SHIFT)
                                             {
+                                                //Keypads
+                                                if (_EnableKeypadBinds)
+                                                {
+                                                    
+                                                    if (action.Category == 49 || action.Category == 51)
+                                                    {
+                                                        if (!action.IsAvailable || !action.InRange ||
+                                                            _playerInfo.IsCasting || action.CoolDownPercent > 0)
+                                                        {
+                                                            foreach (var bind in _KeyBindMap)
+                                                            {
+                                                                if (action.ActionKey == bind.Value)
+                                                                {
+                                                                    GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarNotAvailable), false);
+                                                                }
+                                                            }
+
+                                                            continue;
+                                                        }
+
+                                                        switch (action.Name)
+                                                        {
+                                                            case "Map":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindMap), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Aether Currents":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindAetherCurrents), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Signs":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindSigns), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Waymarks":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindWaymarks), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Record Ready Check":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindRecordReadyCheck), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Ready Check":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindReadyCheck), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Countdown":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindCountdown), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Emotes":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindEmotes), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Linkshells":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindLinkshells), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Cross-world Linkshell":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindCrossWorldLS), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Contacts":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindContacts), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Sprint":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindSprint), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Teleport":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindTeleport), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Return":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindReturn), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Limit Break":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindLimitBreak), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Duty Action":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDutyAction), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Repair":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindRepair), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Dig":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDig), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Inventory":
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindInventory), false);
+                                                                    }
+                                                                }
+                                                                break;
+                                                        }
+
+                                                        continue;
+                                                    }
+
+                                                    if (action.IsAvailable || !_playerInfo.IsCasting)
+                                                    {
+                                                        if (action.InRange)
+                                                        {
+                                                            if (action.IsProcOrCombo)
+                                                            {
+                                                                //Action Proc'd
+                                                                foreach (var bind in _KeyBindMap)
+                                                                {
+                                                                    if (action.ActionKey == bind.Value)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarProc), false);
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (action.CoolDownPercent > 0)
+                                                                    foreach (var bind in _KeyBindMap)
+                                                                    {
+                                                                        if (action.ActionKey == bind.Value)
+                                                                        {
+                                                                            GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingHotbarCd), false);
+                                                                        }
+                                                                    }
+                                                                else
+                                                                    foreach (var bind in _KeyBindMap)
+                                                                    {
+                                                                        if (action.ActionKey == bind.Value)
+                                                                        {
+                                                                            GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingHotbarReady), false);
+                                                                        }
+                                                                    }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            foreach (var bind in _KeyBindMap)
+                                                            {
+                                                                if (action.ActionKey == bind.Value)
+                                                                {
+                                                                    GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarOutRange), false);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (var bind in _KeyBindMap)
+                                                        {
+                                                            if (action.ActionKey == bind.Value)
+                                                            {
+                                                                GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingHotbarNotAvailable), false);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                
+
+                                                //Keyboards
                                                 if (ChromaticsSettings.ChromaticsSettingsQwertyMode == KeyRegion.AZERTY)
                                                 {
                                                     if (FfxivHotbar.KeybindtranslationAZERTY.ContainsKey(
@@ -4046,6 +4329,14 @@ namespace Chromatics
                                     foreach (var key in FfxivHotbar.Keybindtranslation)
                                     {
                                         GlobalApplyMapKeyLighting(key.Value, _baseColor, false);
+                                    }
+
+                                    if (_EnableKeypadBinds)
+                                    {
+                                        foreach (var bind in _KeyBindMap)
+                                        {
+                                            GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], _baseColor, false);
+                                        }
                                     }
 
                                     //SetKeysbase = false;

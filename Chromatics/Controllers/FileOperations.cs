@@ -92,6 +92,28 @@ namespace Chromatics
             dr.CLZone5Mode = Helpers.ConvertDevModeToString(_CLZone5Mode);
             dr.CLZone6Mode = Helpers.ConvertDevModeToString(_CLZone6Mode);
 
+            dr.EnableKeypadBinds = _EnableKeypadBinds;
+            dr.KeypadZ1Bind = _KeyBindMap[1];
+            dr.KeypadZ2Bind = _KeyBindMap[2];
+            dr.KeypadZ3Bind = _KeyBindMap[3];
+            dr.KeypadZ4Bind = _KeyBindMap[4];
+            dr.KeypadZ5Bind = _KeyBindMap[5];
+            dr.KeypadZ6Bind = _KeyBindMap[6];
+            dr.KeypadZ7Bind = _KeyBindMap[7];
+            dr.KeypadZ8Bind = _KeyBindMap[8];
+            dr.KeypadZ9Bind = _KeyBindMap[9];
+            dr.KeypadZ10Bind = _KeyBindMap[10];
+            dr.KeypadZ11Bind = _KeyBindMap[11];
+            dr.KeypadZ12Bind = _KeyBindMap[12];
+            dr.KeypadZ13Bind = _KeyBindMap[13];
+            dr.KeypadZ14Bind = _KeyBindMap[14];
+            dr.KeypadZ15Bind = _KeyBindMap[15];
+            dr.KeypadZ16Bind = _KeyBindMap[16];
+            dr.KeypadZ17Bind = _KeyBindMap[17];
+            dr.KeypadZ18Bind = _KeyBindMap[18];
+            dr.KeypadZ19Bind = _KeyBindMap[19];
+            dr.KeypadZ20Bind = _KeyBindMap[20];
+
             dr.HeadsetZone1Mode = Helpers.ConvertDevModeToString(_HeadsetZone1Mode);
             dr.KeypadZone1Mode = Helpers.ConvertDevMultiModeToString(_KeypadZone1Mode);
 
@@ -229,6 +251,69 @@ namespace Chromatics
                         _CLZone4Mode = Helpers.ConvertStringToDevMode(dr.CLZone4Mode);
                         _CLZone5Mode = Helpers.ConvertStringToDevMode(dr.CLZone5Mode);
                         _CLZone6Mode = Helpers.ConvertStringToDevMode(dr.CLZone6Mode);
+
+                        _EnableKeypadBinds = dr.EnableKeypadBinds;
+
+                        if (!_KeyBindMap.ContainsKey(1))
+                            _KeyBindMap.Add(1, dr.KeypadZ1Bind);
+
+                        if (!_KeyBindMap.ContainsKey(2))
+                            _KeyBindMap.Add(2, dr.KeypadZ2Bind);
+
+                        if (!_KeyBindMap.ContainsKey(3))
+                            _KeyBindMap.Add(3, dr.KeypadZ3Bind);
+
+                        if (!_KeyBindMap.ContainsKey(4))
+                            _KeyBindMap.Add(4, dr.KeypadZ4Bind);
+
+                        if (!_KeyBindMap.ContainsKey(5))
+                            _KeyBindMap.Add(5, dr.KeypadZ5Bind);
+
+                        if (!_KeyBindMap.ContainsKey(6))
+                            _KeyBindMap.Add(6, dr.KeypadZ6Bind);
+
+                        if (!_KeyBindMap.ContainsKey(7))
+                            _KeyBindMap.Add(7, dr.KeypadZ7Bind);
+
+                        if (!_KeyBindMap.ContainsKey(8))
+                            _KeyBindMap.Add(8, dr.KeypadZ8Bind);
+
+                        if (!_KeyBindMap.ContainsKey(9))
+                            _KeyBindMap.Add(9, dr.KeypadZ9Bind);
+
+                        if (!_KeyBindMap.ContainsKey(10))
+                            _KeyBindMap.Add(10, dr.KeypadZ10Bind);
+
+                        if (!_KeyBindMap.ContainsKey(11))
+                            _KeyBindMap.Add(11, dr.KeypadZ11Bind);
+
+                        if (!_KeyBindMap.ContainsKey(12))
+                            _KeyBindMap.Add(12, dr.KeypadZ12Bind);
+
+                        if (!_KeyBindMap.ContainsKey(13))
+                            _KeyBindMap.Add(13, dr.KeypadZ13Bind);
+
+                        if (!_KeyBindMap.ContainsKey(14))
+                            _KeyBindMap.Add(14, dr.KeypadZ14Bind);
+
+                        if (!_KeyBindMap.ContainsKey(15))
+                            _KeyBindMap.Add(15, dr.KeypadZ15Bind);
+
+                        if (!_KeyBindMap.ContainsKey(16))
+                            _KeyBindMap.Add(16, dr.KeypadZ16Bind);
+
+                        if (!_KeyBindMap.ContainsKey(17))
+                            _KeyBindMap.Add(17, dr.KeypadZ17Bind);
+
+                        if (!_KeyBindMap.ContainsKey(18))
+                            _KeyBindMap.Add(18, dr.KeypadZ18Bind);
+
+                        if (!_KeyBindMap.ContainsKey(19))
+                            _KeyBindMap.Add(19, dr.KeypadZ19Bind);
+
+                        if (!_KeyBindMap.ContainsKey(20))
+                            _KeyBindMap.Add(20, dr.KeypadZ20Bind);
+
 
                         _HeadsetZone1Mode = Helpers.ConvertStringToDevMode(dr.HeadsetZone1Mode);
                         _KeypadZone1Mode = Helpers.ConvertStringToDevMultiMode(dr.KeypadZone1Mode);

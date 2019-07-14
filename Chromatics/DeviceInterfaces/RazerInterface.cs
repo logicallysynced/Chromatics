@@ -72,6 +72,7 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapPadLighting(int region, Color col, bool clear);
         void ApplyMapHeadsetLighting(Color col, bool clear);
         void ApplyMapKeypadLighting(Color col, bool clear, string region);
+        void ApplyMapKeypadLightingZone(Color col, bool clear, int column, int row);
         void ApplyMapChromaLinkLighting(Color col, int pos);
         void SetWave();
         Task Ripple1(Color burstcol, int speed);
@@ -767,6 +768,34 @@ namespace Chromatics.DeviceInterfaces
             {
                 CheckRazerEx(ex);
                 Write.WriteConsole(ConsoleTypes.Error, @"Razer Headset: " + ex.Message);
+            }
+        }
+        
+        public void ApplyMapKeypadLightingZone(Color col, bool clear, int column, int row)
+        {
+            if (!_isInitialized) return;
+
+            if (column < 0 || row < 0) return;
+            if (column > 4 || row > 3) return;
+            
+            uint rzCol = ToColoreCol(col);
+            
+            try
+            {
+                if (_razerDeviceKeypad)
+                {
+                    if (Keypad[row, column].Value != rzCol)
+                    {
+                        Keypad[row, column] = rzCol;
+                    }
+                    
+                }
+                    
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, @"Razer Keypad: " + ex.Message);
+                CheckRazerEx(ex);
             }
         }
 

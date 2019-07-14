@@ -165,6 +165,32 @@ namespace Chromatics
         public bool AsusSdk = false;
         public int AsusSdkCalled = 0;
 
+        public bool _EnableKeypadBinds = false;
+        /*
+        public string _KeypadZ1Bind = "1";
+        public string _KeypadZ2Bind = "2";
+        public string _KeypadZ3Bind = "3";
+        public string _KeypadZ4Bind = "4";
+        public string _KeypadZ5Bind = "5";
+        public string _KeypadZ6Bind = "6";
+        public string _KeypadZ7Bind = "7";
+        public string _KeypadZ8Bind = "8";
+        public string _KeypadZ9Bind = "9";
+        public string _KeypadZ10Bind = "10";
+        public string _KeypadZ11Bind = "11";
+        public string _KeypadZ12Bind = "12";
+        public string _KeypadZ13Bind = "13";
+        public string _KeypadZ14Bind = "14";
+        public string _KeypadZ15Bind = "15";
+        public string _KeypadZ16Bind = "16";
+        public string _KeypadZ17Bind = "17";
+        public string _KeypadZ18Bind = "18";
+        public string _KeypadZ19Bind = "19";
+        public string _KeypadZ20Bind = "20";
+        */
+
+        public Dictionary<int, string> _KeyBindMap = new Dictionary<int, string>();
+
         private readonly RegistryKey _rkApp =
             Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
@@ -891,6 +917,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
+
         
     }
 

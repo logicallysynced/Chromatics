@@ -85,6 +85,28 @@ namespace Chromatics.Datastore
         public bool SDKWooting = true;
         public bool SDKAsus = true;
         public bool SDKLifx = true;
+
+        public bool EnableKeypadBinds = false;
+        public string KeypadZ1Bind = "1";
+        public string KeypadZ2Bind = "2";
+        public string KeypadZ3Bind = "3";
+        public string KeypadZ4Bind = "4";
+        public string KeypadZ5Bind = "5";
+        public string KeypadZ6Bind = "6";
+        public string KeypadZ7Bind = "7";
+        public string KeypadZ8Bind = "8";
+        public string KeypadZ9Bind = "9";
+        public string KeypadZ10Bind = "10";
+        public string KeypadZ11Bind = "11";
+        public string KeypadZ12Bind = "12";
+        public string KeypadZ13Bind = "13";
+        public string KeypadZ14Bind = "14";
+        public string KeypadZ15Bind = "15";
+        public string KeypadZ16Bind = "16";
+        public string KeypadZ17Bind = "17";
+        public string KeypadZ18Bind = "18";
+        public string KeypadZ19Bind = "19";
+        public string KeypadZ20Bind = "20";
     }
 
     //Settings

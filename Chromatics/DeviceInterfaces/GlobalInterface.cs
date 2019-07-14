@@ -1305,7 +1305,7 @@ namespace Chromatics
         public void GlobalApplyMapKeypadLighting(DevMultiModeTypes mode, Color col, bool clear, string region)
         {
             
-            if (mode == DevMultiModeTypes.Disabled) return;
+            if (mode == DevMultiModeTypes.Disabled || _EnableKeypadBinds) return;
             if (mode != _KeypadZone1Mode) return;
 
             //Logo
@@ -1333,6 +1333,36 @@ namespace Chromatics
                 {
                     //
                 }
+            }
+            
+        }
+
+        public void GlobalApplyMapKeypadBINDLighting(int row, int column, Color col, bool clear)
+        {
+            
+            if (!_EnableKeypadBinds) return;
+
+            if (RazerSdkCalled == 1)
+                _razer.ApplyMapKeypadLightingZone(col, clear, column, row);
+
+            if (LogitechSdkCalled == 1)
+            {
+                //
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                //
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                //
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                //
             }
             
         }

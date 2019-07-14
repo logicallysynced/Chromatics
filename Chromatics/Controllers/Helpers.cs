@@ -31,6 +31,58 @@ namespace Chromatics.Controllers
 
         }
 
+        public static class DeviceHelpers
+        {
+            public static int[] RazerKeypadCoordinates(int key)
+            {
+                switch (key)
+                {
+                    case 1:
+                        return new int[] {0, 0};
+                    case 2:
+                        return new int[] {0, 1};
+                    case 3:
+                        return new int[] {0, 2};
+                    case 4:
+                        return new int[] {0, 3};
+                    case 5:
+                        return new int[] {0, 4};
+                    case 6:
+                        return new int[] {1, 0};
+                    case 7:
+                        return new int[] {1, 1};
+                    case 8:
+                        return new int[] {1, 2};
+                    case 9:
+                        return new int[] {1, 3};
+                    case 10:
+                        return new int[] {1, 4};
+                    case 11:
+                        return new int[] {2, 0};
+                    case 12:
+                        return new int[] {2, 1};
+                    case 13:
+                        return new int[] {2, 2};
+                    case 14:
+                        return new int[] {2, 3};
+                    case 15:
+                        return new int[] {2, 4};
+                    case 16:
+                        return new int[] {3, 0};
+                    case 17:
+                        return new int[] {3, 1};
+                    case 18:
+                        return new int[] {3, 2};
+                    case 19:
+                        return new int[] {3, 3};
+                    case 20:
+                        return new int[] {3, 4};
+                    default:
+                        return new int[] {0, 0};
+                }
+            }
+        }
+
         public static class EnumUtil
         {
             public static IEnumerable<T> GetValues<T>()
