@@ -70,6 +70,13 @@ namespace Chromatics.Datastore
         public string LightbarMode = "TargetHp";
         public string FKeyMode = "HpMpTp";
 
+        public int ChromaLinkLEDCountZ1 = 10;
+        public int ChromaLinkLEDCountZ2 = 10;
+        public int ChromaLinkLEDCountZ3 = 10;
+        public int ChromaLinkLEDCountZ4 = 10;
+        public int ChromaLinkLEDCountZ5 = 10;
+        public int ChromaLinkLEDCountZ6 = 10;
+
         public bool SDKRazer = true;
         public bool SDKLogitech = true;
         public bool SDKCorsair = true;

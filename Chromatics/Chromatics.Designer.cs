@@ -94,6 +94,13 @@
             this.col_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tP_misc = new System.Windows.Forms.TabPage();
             this.gP_ChromaLink = new System.Windows.Forms.GroupBox();
+            this.nm_ledcount_z6 = new System.Windows.Forms.NumericUpDown();
+            this.nm_ledcount_z5 = new System.Windows.Forms.NumericUpDown();
+            this.nm_ledcount_z4 = new System.Windows.Forms.NumericUpDown();
+            this.nm_ledcount_z3 = new System.Windows.Forms.NumericUpDown();
+            this.nm_ledcount_z2 = new System.Windows.Forms.NumericUpDown();
+            this.nm_ledcount_z1 = new System.Windows.Forms.NumericUpDown();
+            this.lbl_ledcon_z1 = new System.Windows.Forms.Label();
             this.lbl_chromalink_z6 = new System.Windows.Forms.Label();
             this.cb_chromalink_z6 = new System.Windows.Forms.ComboBox();
             this.lbl_chromalink_z5 = new System.Windows.Forms.Label();
@@ -252,6 +259,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dG_devices)).BeginInit();
             this.tP_misc.SuspendLayout();
             this.gP_ChromaLink.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z1)).BeginInit();
             this.tP_adv.SuspendLayout();
             this.gb_sdkcontrol.SuspendLayout();
             this.tP_settings.SuspendLayout();
@@ -1062,6 +1075,13 @@
             // 
             // gP_ChromaLink
             // 
+            this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z6);
+            this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z5);
+            this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z4);
+            this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z3);
+            this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z2);
+            this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z1);
+            this.gP_ChromaLink.Controls.Add(this.lbl_ledcon_z1);
             this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z6);
             this.gP_ChromaLink.Controls.Add(this.cb_chromalink_z6);
             this.gP_ChromaLink.Controls.Add(this.lbl_chromalink_z5);
@@ -1079,10 +1099,171 @@
             this.gP_ChromaLink.Margin = new System.Windows.Forms.Padding(2);
             this.gP_ChromaLink.Name = "gP_ChromaLink";
             this.gP_ChromaLink.Padding = new System.Windows.Forms.Padding(2);
-            this.gP_ChromaLink.Size = new System.Drawing.Size(350, 232);
+            this.gP_ChromaLink.Size = new System.Drawing.Size(330, 232);
             this.gP_ChromaLink.TabIndex = 0;
             this.gP_ChromaLink.TabStop = false;
             this.gP_ChromaLink.Text = "ChromaLink/Other Devices";
+            // 
+            // nm_ledcount_z6
+            // 
+            this.nm_ledcount_z6.Location = new System.Drawing.Point(222, 177);
+            this.nm_ledcount_z6.Margin = new System.Windows.Forms.Padding(2);
+            this.nm_ledcount_z6.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z6.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z6.Name = "nm_ledcount_z6";
+            this.nm_ledcount_z6.Size = new System.Drawing.Size(57, 20);
+            this.nm_ledcount_z6.TabIndex = 39;
+            this.tooltip_main.SetToolTip(this.nm_ledcount_z6, "Set the LED count for Corsair Devices.");
+            this.nm_ledcount_z6.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z6.ValueChanged += new System.EventHandler(this.Nm_ledcount_z6_ValueChanged);
+            // 
+            // nm_ledcount_z5
+            // 
+            this.nm_ledcount_z5.Location = new System.Drawing.Point(222, 151);
+            this.nm_ledcount_z5.Margin = new System.Windows.Forms.Padding(2);
+            this.nm_ledcount_z5.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z5.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z5.Name = "nm_ledcount_z5";
+            this.nm_ledcount_z5.Size = new System.Drawing.Size(57, 20);
+            this.nm_ledcount_z5.TabIndex = 37;
+            this.tooltip_main.SetToolTip(this.nm_ledcount_z5, "Set the LED count for Corsair Devices.");
+            this.nm_ledcount_z5.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z5.ValueChanged += new System.EventHandler(this.Nm_ledcount_z5_ValueChanged);
+            // 
+            // nm_ledcount_z4
+            // 
+            this.nm_ledcount_z4.Location = new System.Drawing.Point(222, 127);
+            this.nm_ledcount_z4.Margin = new System.Windows.Forms.Padding(2);
+            this.nm_ledcount_z4.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z4.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z4.Name = "nm_ledcount_z4";
+            this.nm_ledcount_z4.Size = new System.Drawing.Size(57, 20);
+            this.nm_ledcount_z4.TabIndex = 35;
+            this.tooltip_main.SetToolTip(this.nm_ledcount_z4, "Set the LED count for Corsair Devices.");
+            this.nm_ledcount_z4.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z4.ValueChanged += new System.EventHandler(this.Nm_ledcount_z4_ValueChanged);
+            // 
+            // nm_ledcount_z3
+            // 
+            this.nm_ledcount_z3.Location = new System.Drawing.Point(222, 103);
+            this.nm_ledcount_z3.Margin = new System.Windows.Forms.Padding(2);
+            this.nm_ledcount_z3.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z3.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z3.Name = "nm_ledcount_z3";
+            this.nm_ledcount_z3.Size = new System.Drawing.Size(57, 20);
+            this.nm_ledcount_z3.TabIndex = 33;
+            this.tooltip_main.SetToolTip(this.nm_ledcount_z3, "Set the LED count for Corsair Devices.");
+            this.nm_ledcount_z3.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z3.ValueChanged += new System.EventHandler(this.Nm_ledcount_z3_ValueChanged);
+            // 
+            // nm_ledcount_z2
+            // 
+            this.nm_ledcount_z2.Location = new System.Drawing.Point(222, 79);
+            this.nm_ledcount_z2.Margin = new System.Windows.Forms.Padding(2);
+            this.nm_ledcount_z2.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z2.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z2.Name = "nm_ledcount_z2";
+            this.nm_ledcount_z2.Size = new System.Drawing.Size(57, 20);
+            this.nm_ledcount_z2.TabIndex = 31;
+            this.tooltip_main.SetToolTip(this.nm_ledcount_z2, "Set the LED count for Corsair Devices.");
+            this.nm_ledcount_z2.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z2.ValueChanged += new System.EventHandler(this.Nm_ledcount_z2_ValueChanged);
+            // 
+            // nm_ledcount_z1
+            // 
+            this.nm_ledcount_z1.Location = new System.Drawing.Point(222, 54);
+            this.nm_ledcount_z1.Margin = new System.Windows.Forms.Padding(2);
+            this.nm_ledcount_z1.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z1.Name = "nm_ledcount_z1";
+            this.nm_ledcount_z1.Size = new System.Drawing.Size(57, 20);
+            this.nm_ledcount_z1.TabIndex = 29;
+            this.tooltip_main.SetToolTip(this.nm_ledcount_z1, "Set the LED count for Corsair Devices.");
+            this.nm_ledcount_z1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_ledcount_z1.ValueChanged += new System.EventHandler(this.Nm_ledcount_z1_ValueChanged);
+            // 
+            // lbl_ledcon_z1
+            // 
+            this.lbl_ledcon_z1.AutoSize = true;
+            this.lbl_ledcon_z1.Location = new System.Drawing.Point(220, 27);
+            this.lbl_ledcon_z1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_ledcon_z1.Name = "lbl_ledcon_z1";
+            this.lbl_ledcon_z1.Size = new System.Drawing.Size(59, 13);
+            this.lbl_ledcon_z1.TabIndex = 28;
+            this.lbl_ledcon_z1.Text = "LED Count";
+            this.tooltip_main.SetToolTip(this.lbl_ledcon_z1, "Sets the LED count connected to Corsair devices.");
             // 
             // lbl_chromalink_z6
             // 
@@ -3026,6 +3207,12 @@
             this.tP_misc.ResumeLayout(false);
             this.gP_ChromaLink.ResumeLayout(false);
             this.gP_ChromaLink.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z1)).EndInit();
             this.tP_adv.ResumeLayout(false);
             this.gb_sdkcontrol.ResumeLayout(false);
             this.gb_sdkcontrol.PerformLayout();
@@ -3277,6 +3464,13 @@
         private System.Windows.Forms.CheckBox chk_sdk_corsair;
         private System.Windows.Forms.CheckBox chk_sdk_logi;
         private System.Windows.Forms.CheckBox chk_sdk_razer;
+        private System.Windows.Forms.NumericUpDown nm_ledcount_z1;
+        private System.Windows.Forms.Label lbl_ledcon_z1;
+        private System.Windows.Forms.NumericUpDown nm_ledcount_z6;
+        private System.Windows.Forms.NumericUpDown nm_ledcount_z5;
+        private System.Windows.Forms.NumericUpDown nm_ledcount_z4;
+        private System.Windows.Forms.NumericUpDown nm_ledcount_z3;
+        private System.Windows.Forms.NumericUpDown nm_ledcount_z2;
     }
 }
 

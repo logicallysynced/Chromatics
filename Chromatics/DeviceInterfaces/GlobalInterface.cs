@@ -191,7 +191,7 @@ namespace Chromatics
             if (_SDKCorsair && CorsairSdkCalled == 0)
             {
                 WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
-                _corsair = CorsairInterface.InitializeCorsairSdk();
+                _corsair = CorsairInterface.InitializeCorsairSdk(Color.BlueViolet);
                 if (_corsair != null)
                 {
                     CorsairSdk = true;
@@ -393,7 +393,7 @@ namespace Chromatics
             if (_SDKCorsair && CorsairSdkCalled == 0 && corsairFirstSet)
             {
                 WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
-                _corsair = CorsairInterface.InitializeCorsairSdk();
+                _corsair = CorsairInterface.InitializeCorsairSdk(Color.BlueViolet);
                 if (_corsair != null)
                 {
                     CorsairSdk = true;
@@ -1362,7 +1362,7 @@ namespace Chromatics
                     _razer.ApplyMapChromaLinkLighting(col, 0);
 
                 if (CorsairSdkCalled == 1)
-                    _corsair.ApplyMapOtherLighting(col, 1);
+                    _corsair.ApplyMapOtherLighting(col, 1, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
             }
 
             if (mode == _CLZone2Mode)
@@ -1371,7 +1371,7 @@ namespace Chromatics
                     _razer.ApplyMapChromaLinkLighting(col, 1);
 
                 if (CorsairSdkCalled == 1)
-                    _corsair.ApplyMapOtherLighting(col, 2);
+                    _corsair.ApplyMapOtherLighting(col, 2, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
             }
 
             if (mode == _CLZone3Mode)
@@ -1380,7 +1380,7 @@ namespace Chromatics
                     _razer.ApplyMapChromaLinkLighting(col, 2);
 
                 if (CorsairSdkCalled == 1)
-                    _corsair.ApplyMapOtherLighting(col, 3);
+                    _corsair.ApplyMapOtherLighting(col, 3, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
             }
 
             if (mode == _CLZone4Mode)
@@ -1389,7 +1389,7 @@ namespace Chromatics
                     _razer.ApplyMapChromaLinkLighting(col, 3);
 
                 if (CorsairSdkCalled == 1)
-                    _corsair.ApplyMapOtherLighting(col, 4);
+                    _corsair.ApplyMapOtherLighting(col, 4, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
             }
 
             if (mode == _CLZone5Mode)
@@ -1398,7 +1398,13 @@ namespace Chromatics
                     _razer.ApplyMapChromaLinkLighting(col, 4);
 
                 if (CorsairSdkCalled == 1)
-                    _corsair.ApplyMapOtherLighting(col, 5);
+                    _corsair.ApplyMapOtherLighting(col, 5, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+            }
+
+            if (mode == _CLZone6Mode)
+            {
+                if (CorsairSdkCalled == 1)
+                    _corsair.ApplyMapOtherLighting(col, 6, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
             }
         }
 

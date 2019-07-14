@@ -53,6 +53,13 @@ namespace Chromatics
             dr.DeviceOperationKeypad = _deviceKeypad;
             dr.DeviceOperationCL = _deviceCL;
 
+            dr.ChromaLinkLEDCountZ1 = _ChromaLinkLEDCountZ1;
+            dr.ChromaLinkLEDCountZ2 = _ChromaLinkLEDCountZ2;
+            dr.ChromaLinkLEDCountZ3 = _ChromaLinkLEDCountZ3;
+            dr.ChromaLinkLEDCountZ4 = _ChromaLinkLEDCountZ4;
+            dr.ChromaLinkLEDCountZ5 = _ChromaLinkLEDCountZ5;
+            dr.ChromaLinkLEDCountZ6 = _ChromaLinkLEDCountZ6;
+
             dr.SDKRazer = _SDKRazer;
             dr.SDKLogitech = _SDKLogitech;
             dr.SDKCorsair = _SDKCorsair;
@@ -183,6 +190,13 @@ namespace Chromatics
                         _deviceHeadset = dr.DeviceOperationHeadset;
                         _deviceKeypad = dr.DeviceOperationKeypad;
                         _deviceCL = dr.DeviceOperationCL;
+
+                        _ChromaLinkLEDCountZ1 = dr.ChromaLinkLEDCountZ1;
+                        _ChromaLinkLEDCountZ2 = dr.ChromaLinkLEDCountZ2;
+                        _ChromaLinkLEDCountZ3 = dr.ChromaLinkLEDCountZ3;
+                        _ChromaLinkLEDCountZ4 = dr.ChromaLinkLEDCountZ4;
+                        _ChromaLinkLEDCountZ5 = dr.ChromaLinkLEDCountZ5;
+                        _ChromaLinkLEDCountZ6 = dr.ChromaLinkLEDCountZ6;
 
                         _SDKRazer = dr.SDKRazer;
                         _SDKLogitech = dr.SDKLogitech;

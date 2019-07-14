@@ -1142,6 +1142,13 @@ namespace Chromatics
             chk_castsrank.Checked = ChromaticsSettings.ChromaticsSettingsCastSRankAlert;
             chk_castreadycheck.Checked = ChromaticsSettings.ChromaticsSettingsCastReadyCheckAlert;
 
+            nm_ledcount_z1.Value = _ChromaLinkLEDCountZ1;
+            nm_ledcount_z2.Value = _ChromaLinkLEDCountZ2;
+            nm_ledcount_z3.Value = _ChromaLinkLEDCountZ3;
+            nm_ledcount_z4.Value = _ChromaLinkLEDCountZ4;
+            nm_ledcount_z5.Value = _ChromaLinkLEDCountZ5;
+            nm_ledcount_z6.Value = _ChromaLinkLEDCountZ6;
+
             chk_sdk_razer.Checked = _SDKRazer;
             chk_sdk_logi.Checked = _SDKLogitech;
             chk_sdk_corsair.Checked = _SDKCorsair;
@@ -3406,6 +3413,60 @@ namespace Chromatics
 
             _SDKLifx = chk_sdk_lifx.Checked;
             SaveDevices();
+        }
+
+        private void Nm_ledcount_z1_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _ChromaLinkLEDCountZ1 = Convert.ToInt32(nm_ledcount_z1.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void Nm_ledcount_z2_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _ChromaLinkLEDCountZ2 = Convert.ToInt32(nm_ledcount_z2.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void Nm_ledcount_z3_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _ChromaLinkLEDCountZ3 = Convert.ToInt32(nm_ledcount_z3.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void Nm_ledcount_z4_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _ChromaLinkLEDCountZ4 = Convert.ToInt32(nm_ledcount_z4.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void Nm_ledcount_z5_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _ChromaLinkLEDCountZ5 = Convert.ToInt32(nm_ledcount_z5.Value);
+
+            SaveChromaticsSettings(1);
+        }
+
+        private void Nm_ledcount_z6_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _ChromaLinkLEDCountZ6 = (int)nm_ledcount_z6.Value;
+
+            SaveChromaticsSettings(1);
         }
 
         private void cb_lang_SelectedIndexChanged(object sender, EventArgs e)

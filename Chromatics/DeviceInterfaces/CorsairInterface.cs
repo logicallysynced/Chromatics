@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using Chromatics.CorsairLibs;
 using Chromatics.DeviceInterfaces.EffectLibrary;
 using Chromatics.FFXIVInterfaces;
@@ -27,14 +28,14 @@ namespace Chromatics.DeviceInterfaces
 {
     public class CorsairInterface
     {
-        public static CorsairLib InitializeCorsairSdk()
+        public static CorsairLib InitializeCorsairSdk(Color baseColor)
         {
             CorsairLib corsair = null;
             if (Process.GetProcessesByName("CUE").Length > 0 || Process.GetProcessesByName("iCUE").Length > 0)
             {
                 corsair = new CorsairLib();
 
-                var corsairstat = corsair.InitializeSdk();
+                var corsairstat = corsair.InitializeSdk(baseColor);
 
                 if (!corsairstat)
                     return null;
@@ -51,7 +52,7 @@ namespace Chromatics.DeviceInterfaces
 
     public interface ICorsairSdk
     {
-        bool InitializeSdk();
+        bool InitializeSdk(Color baseColor);
 
         void ShutdownSdk();
         void ResetCorsairDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
@@ -67,7 +68,7 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapPadLighting(string region, Color col, bool clear);
         void ApplyMapHeadsetLighting(Color col, bool clear);
         void ApplyMapStandLighting(string region, Color col, bool clear);
-        void ApplyMapOtherLighting(Color col, int pos);
+        void ApplyMapOtherLighting(Color col, int pos, int z1, int z2, int z3, int z4, int z5, int z6);
 
         Task Ripple1(Color burstcol, int speed, Color baseColor);
         Task Ripple2(Color burstcol, int speed);
@@ -106,36 +107,7 @@ namespace Chromatics.DeviceInterfaces
         private readonly CancellationTokenSource _ccts = new CancellationTokenSource();
 
         #region Effect Steps
-
-        private readonly List<CorsairLedId> _test = new List<CorsairLedId>
-        {
-            { CorsairLedId.DIY1_1 },
-            { CorsairLedId.DIY1_2 },
-            { CorsairLedId.DIY1_3 },
-            { CorsairLedId.DIY1_4 },
-            { CorsairLedId.DIY1_5 },
-            { CorsairLedId.DIY1_6 },
-            { CorsairLedId.DIY1_7 },
-            { CorsairLedId.DIY1_8 },
-            { CorsairLedId.DIY1_9 },
-            { CorsairLedId.DIY1_10 },
-            { CorsairLedId.DIY1_11 },
-            { CorsairLedId.DIY1_12 },
-            { CorsairLedId.DIY1_13 },
-            { CorsairLedId.DIY1_14 },
-            { CorsairLedId.DIY1_15 },
-            { CorsairLedId.DIY1_16 },
-            { CorsairLedId.DIY1_17 },
-            { CorsairLedId.DIY1_18 },
-            { CorsairLedId.DIY1_19 },
-            { CorsairLedId.DIY1_20 },
-            { CorsairLedId.DIY1_21 },
-            { CorsairLedId.DIY1_22 },
-            { CorsairLedId.DIY1_23 },
-            { CorsairLedId.DIY1_24 },
-            { CorsairLedId.DIY1_25 },
-        };
-
+        
         private readonly List<CorsairLedId> _diyZ1 = new List<CorsairLedId>
         {
             { CorsairLedId.DIY1_1 },
@@ -163,60 +135,6 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.DIY1_23 },
             { CorsairLedId.DIY1_24 },
             { CorsairLedId.DIY1_25 },
-            { CorsairLedId.DIY2_1 },
-            { CorsairLedId.DIY2_2 },
-            { CorsairLedId.DIY2_3 },
-            { CorsairLedId.DIY2_4 },
-            { CorsairLedId.DIY2_5 },
-            { CorsairLedId.DIY2_6 },
-            { CorsairLedId.DIY2_7 },
-            { CorsairLedId.DIY2_8 },
-            { CorsairLedId.DIY2_9 },
-            { CorsairLedId.DIY2_10 },
-            { CorsairLedId.DIY2_11 },
-            { CorsairLedId.DIY2_12 },
-            { CorsairLedId.DIY2_13 },
-            { CorsairLedId.DIY2_14 },
-            { CorsairLedId.DIY2_15 },
-            { CorsairLedId.DIY2_16 },
-            { CorsairLedId.DIY2_17 },
-            { CorsairLedId.DIY2_18 },
-            { CorsairLedId.DIY2_19 },
-            { CorsairLedId.DIY2_20 },
-            { CorsairLedId.DIY2_21 },
-            { CorsairLedId.DIY2_22 },
-            { CorsairLedId.DIY2_23 },
-            { CorsairLedId.DIY2_24 },
-            { CorsairLedId.DIY2_25 },
-            { CorsairLedId.DIY3_1 },
-            { CorsairLedId.DIY3_2 },
-            { CorsairLedId.DIY3_3 },
-            { CorsairLedId.DIY3_4 },
-            { CorsairLedId.DIY3_5 },
-            { CorsairLedId.DIY3_6 },
-            { CorsairLedId.DIY3_7 },
-            { CorsairLedId.DIY3_8 },
-            { CorsairLedId.DIY3_9 },
-            { CorsairLedId.DIY3_10 },
-            { CorsairLedId.DIY3_11 },
-            { CorsairLedId.DIY3_12 },
-            { CorsairLedId.DIY3_13 },
-            { CorsairLedId.DIY3_14 },
-            { CorsairLedId.DIY3_15 },
-            { CorsairLedId.DIY3_16 },
-            { CorsairLedId.DIY3_17 },
-            { CorsairLedId.DIY3_18 },
-            { CorsairLedId.DIY3_19 },
-            { CorsairLedId.DIY3_20 },
-            { CorsairLedId.DIY3_21 },
-            { CorsairLedId.DIY3_22 },
-            { CorsairLedId.DIY3_23 },
-            { CorsairLedId.DIY3_24 },
-            { CorsairLedId.DIY3_25 },
-        };
-
-        private readonly List<CorsairLedId> _diyZ2 = new List<CorsairLedId>
-        {
             { CorsairLedId.DIY1_26 },
             { CorsairLedId.DIY1_27 },
             { CorsairLedId.DIY1_28 },
@@ -242,60 +160,6 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.DIY1_48 },
             { CorsairLedId.DIY1_49 },
             { CorsairLedId.DIY1_50 },
-            { CorsairLedId.DIY2_26 },
-            { CorsairLedId.DIY2_27 },
-            { CorsairLedId.DIY2_28 },
-            { CorsairLedId.DIY2_29 },
-            { CorsairLedId.DIY2_30 },
-            { CorsairLedId.DIY2_31 },
-            { CorsairLedId.DIY2_32 },
-            { CorsairLedId.DIY2_33 },
-            { CorsairLedId.DIY2_34 },
-            { CorsairLedId.DIY2_35 },
-            { CorsairLedId.DIY2_36 },
-            { CorsairLedId.DIY2_37 },
-            { CorsairLedId.DIY2_38 },
-            { CorsairLedId.DIY2_39 },
-            { CorsairLedId.DIY2_40 },
-            { CorsairLedId.DIY2_41 },
-            { CorsairLedId.DIY2_42 },
-            { CorsairLedId.DIY2_43 },
-            { CorsairLedId.DIY2_44 },
-            { CorsairLedId.DIY2_45 },
-            { CorsairLedId.DIY2_46 },
-            { CorsairLedId.DIY2_47 },
-            { CorsairLedId.DIY2_48 },
-            { CorsairLedId.DIY2_49 },
-            { CorsairLedId.DIY2_50 },
-            { CorsairLedId.DIY3_26 },
-            { CorsairLedId.DIY3_27 },
-            { CorsairLedId.DIY3_28 },
-            { CorsairLedId.DIY3_29 },
-            { CorsairLedId.DIY3_30 },
-            { CorsairLedId.DIY3_31 },
-            { CorsairLedId.DIY3_32 },
-            { CorsairLedId.DIY3_33 },
-            { CorsairLedId.DIY3_34 },
-            { CorsairLedId.DIY3_35 },
-            { CorsairLedId.DIY3_36 },
-            { CorsairLedId.DIY3_37 },
-            { CorsairLedId.DIY3_38 },
-            { CorsairLedId.DIY3_39 },
-            { CorsairLedId.DIY3_40 },
-            { CorsairLedId.DIY3_41 },
-            { CorsairLedId.DIY3_42 },
-            { CorsairLedId.DIY3_43 },
-            { CorsairLedId.DIY3_44 },
-            { CorsairLedId.DIY3_45 },
-            { CorsairLedId.DIY3_46 },
-            { CorsairLedId.DIY3_47 },
-            { CorsairLedId.DIY3_48 },
-            { CorsairLedId.DIY3_49 },
-            { CorsairLedId.DIY3_50 },
-        };
-
-        private readonly List<CorsairLedId> _diyZ3 = new List<CorsairLedId>
-        {
             { CorsairLedId.DIY1_51 },
             { CorsairLedId.DIY1_52 },
             { CorsairLedId.DIY1_53 },
@@ -321,60 +185,6 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.DIY1_73 },
             { CorsairLedId.DIY1_74 },
             { CorsairLedId.DIY1_75 },
-            { CorsairLedId.DIY2_51 },
-            { CorsairLedId.DIY2_52 },
-            { CorsairLedId.DIY2_53 },
-            { CorsairLedId.DIY2_54 },
-            { CorsairLedId.DIY2_55 },
-            { CorsairLedId.DIY2_56 },
-            { CorsairLedId.DIY2_57 },
-            { CorsairLedId.DIY2_58 },
-            { CorsairLedId.DIY2_59 },
-            { CorsairLedId.DIY2_60 },
-            { CorsairLedId.DIY2_61 },
-            { CorsairLedId.DIY2_62 },
-            { CorsairLedId.DIY2_63 },
-            { CorsairLedId.DIY2_64 },
-            { CorsairLedId.DIY2_65 },
-            { CorsairLedId.DIY2_66 },
-            { CorsairLedId.DIY2_67 },
-            { CorsairLedId.DIY2_68 },
-            { CorsairLedId.DIY2_69 },
-            { CorsairLedId.DIY2_70 },
-            { CorsairLedId.DIY2_71 },
-            { CorsairLedId.DIY2_72 },
-            { CorsairLedId.DIY2_73 },
-            { CorsairLedId.DIY2_74 },
-            { CorsairLedId.DIY2_75 },
-            { CorsairLedId.DIY3_51 },
-            { CorsairLedId.DIY3_52 },
-            { CorsairLedId.DIY3_53 },
-            { CorsairLedId.DIY3_54 },
-            { CorsairLedId.DIY3_55 },
-            { CorsairLedId.DIY3_56 },
-            { CorsairLedId.DIY3_57 },
-            { CorsairLedId.DIY3_58 },
-            { CorsairLedId.DIY3_59 },
-            { CorsairLedId.DIY3_60 },
-            { CorsairLedId.DIY3_61 },
-            { CorsairLedId.DIY3_62 },
-            { CorsairLedId.DIY3_63 },
-            { CorsairLedId.DIY3_64 },
-            { CorsairLedId.DIY3_65 },
-            { CorsairLedId.DIY3_66 },
-            { CorsairLedId.DIY3_67 },
-            { CorsairLedId.DIY3_68 },
-            { CorsairLedId.DIY3_69 },
-            { CorsairLedId.DIY3_70 },
-            { CorsairLedId.DIY3_71 },
-            { CorsairLedId.DIY3_72 },
-            { CorsairLedId.DIY3_73 },
-            { CorsairLedId.DIY3_74 },
-            { CorsairLedId.DIY3_75 },
-        };
-
-        private readonly List<CorsairLedId> _diyZ4 = new List<CorsairLedId>
-        {
             { CorsairLedId.DIY1_76 },
             { CorsairLedId.DIY1_77 },
             { CorsairLedId.DIY1_78 },
@@ -400,60 +210,6 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.DIY1_98 },
             { CorsairLedId.DIY1_99 },
             { CorsairLedId.DIY1_100 },
-            { CorsairLedId.DIY2_76 },
-            { CorsairLedId.DIY2_77 },
-            { CorsairLedId.DIY2_78 },
-            { CorsairLedId.DIY2_79 },
-            { CorsairLedId.DIY2_80 },
-            { CorsairLedId.DIY2_81 },
-            { CorsairLedId.DIY2_82 },
-            { CorsairLedId.DIY2_83 },
-            { CorsairLedId.DIY2_84 },
-            { CorsairLedId.DIY2_85 },
-            { CorsairLedId.DIY2_86 },
-            { CorsairLedId.DIY2_87 },
-            { CorsairLedId.DIY2_88 },
-            { CorsairLedId.DIY2_89 },
-            { CorsairLedId.DIY2_90 },
-            { CorsairLedId.DIY2_91 },
-            { CorsairLedId.DIY2_92 },
-            { CorsairLedId.DIY2_93 },
-            { CorsairLedId.DIY2_94 },
-            { CorsairLedId.DIY2_95 },
-            { CorsairLedId.DIY2_96 },
-            { CorsairLedId.DIY2_97 },
-            { CorsairLedId.DIY2_98 },
-            { CorsairLedId.DIY2_99 },
-            { CorsairLedId.DIY2_100 },
-            { CorsairLedId.DIY3_76 },
-            { CorsairLedId.DIY3_77 },
-            { CorsairLedId.DIY3_78 },
-            { CorsairLedId.DIY3_79 },
-            { CorsairLedId.DIY3_80 },
-            { CorsairLedId.DIY3_81 },
-            { CorsairLedId.DIY3_82 },
-            { CorsairLedId.DIY3_83 },
-            { CorsairLedId.DIY3_84 },
-            { CorsairLedId.DIY3_85 },
-            { CorsairLedId.DIY3_86 },
-            { CorsairLedId.DIY3_87 },
-            { CorsairLedId.DIY3_88 },
-            { CorsairLedId.DIY3_89 },
-            { CorsairLedId.DIY3_90 },
-            { CorsairLedId.DIY3_91 },
-            { CorsairLedId.DIY3_92 },
-            { CorsairLedId.DIY3_93 },
-            { CorsairLedId.DIY3_94 },
-            { CorsairLedId.DIY3_95 },
-            { CorsairLedId.DIY3_96 },
-            { CorsairLedId.DIY3_97 },
-            { CorsairLedId.DIY3_98 },
-            { CorsairLedId.DIY3_99 },
-            { CorsairLedId.DIY3_100 },
-        };
-
-        private readonly List<CorsairLedId> _diyZ5 = new List<CorsairLedId>
-        {
             { CorsairLedId.DIY1_101 },
             { CorsairLedId.DIY1_102 },
             { CorsairLedId.DIY1_103 },
@@ -479,6 +235,135 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.DIY1_123 },
             { CorsairLedId.DIY1_124 },
             { CorsairLedId.DIY1_125 },
+            { CorsairLedId.DIY1_126 },
+            { CorsairLedId.DIY1_127 },
+            { CorsairLedId.DIY1_128 },
+            { CorsairLedId.DIY1_129 },
+            { CorsairLedId.DIY1_130 },
+            { CorsairLedId.DIY1_131 },
+            { CorsairLedId.DIY1_132 },
+            { CorsairLedId.DIY1_133 },
+            { CorsairLedId.DIY1_134 },
+            { CorsairLedId.DIY1_135 },
+            { CorsairLedId.DIY1_136 },
+            { CorsairLedId.DIY1_137 },
+            { CorsairLedId.DIY1_138 },
+            { CorsairLedId.DIY1_139 },
+            { CorsairLedId.DIY1_140 },
+            { CorsairLedId.DIY1_141 },
+            { CorsairLedId.DIY1_142 },
+            { CorsairLedId.DIY1_143 },
+            { CorsairLedId.DIY1_144 },
+            { CorsairLedId.DIY1_145 },
+            { CorsairLedId.DIY1_146 },
+            { CorsairLedId.DIY1_147 },
+            { CorsairLedId.DIY1_148 },
+            { CorsairLedId.DIY1_149 },
+            { CorsairLedId.DIY1_150 }
+        };
+
+        private readonly List<CorsairLedId> _diyZ2 = new List<CorsairLedId>
+        {
+            { CorsairLedId.DIY2_1 },
+            { CorsairLedId.DIY2_2 },
+            { CorsairLedId.DIY2_3 },
+            { CorsairLedId.DIY2_4 },
+            { CorsairLedId.DIY2_5 },
+            { CorsairLedId.DIY2_6 },
+            { CorsairLedId.DIY2_7 },
+            { CorsairLedId.DIY2_8 },
+            { CorsairLedId.DIY2_9 },
+            { CorsairLedId.DIY2_10 },
+            { CorsairLedId.DIY2_11 },
+            { CorsairLedId.DIY2_12 },
+            { CorsairLedId.DIY2_13 },
+            { CorsairLedId.DIY2_14 },
+            { CorsairLedId.DIY2_15 },
+            { CorsairLedId.DIY2_16 },
+            { CorsairLedId.DIY2_17 },
+            { CorsairLedId.DIY2_18 },
+            { CorsairLedId.DIY2_19 },
+            { CorsairLedId.DIY2_20 },
+            { CorsairLedId.DIY2_21 },
+            { CorsairLedId.DIY2_22 },
+            { CorsairLedId.DIY2_23 },
+            { CorsairLedId.DIY2_24 },
+            { CorsairLedId.DIY2_25 },
+            { CorsairLedId.DIY2_26 },
+            { CorsairLedId.DIY2_27 },
+            { CorsairLedId.DIY2_28 },
+            { CorsairLedId.DIY2_29 },
+            { CorsairLedId.DIY2_30 },
+            { CorsairLedId.DIY2_31 },
+            { CorsairLedId.DIY2_32 },
+            { CorsairLedId.DIY2_33 },
+            { CorsairLedId.DIY2_34 },
+            { CorsairLedId.DIY2_35 },
+            { CorsairLedId.DIY2_36 },
+            { CorsairLedId.DIY2_37 },
+            { CorsairLedId.DIY2_38 },
+            { CorsairLedId.DIY2_39 },
+            { CorsairLedId.DIY2_40 },
+            { CorsairLedId.DIY2_41 },
+            { CorsairLedId.DIY2_42 },
+            { CorsairLedId.DIY2_43 },
+            { CorsairLedId.DIY2_44 },
+            { CorsairLedId.DIY2_45 },
+            { CorsairLedId.DIY2_46 },
+            { CorsairLedId.DIY2_47 },
+            { CorsairLedId.DIY2_48 },
+            { CorsairLedId.DIY2_49 },
+            { CorsairLedId.DIY2_50 },
+            { CorsairLedId.DIY2_51 },
+            { CorsairLedId.DIY2_52 },
+            { CorsairLedId.DIY2_53 },
+            { CorsairLedId.DIY2_54 },
+            { CorsairLedId.DIY2_55 },
+            { CorsairLedId.DIY2_56 },
+            { CorsairLedId.DIY2_57 },
+            { CorsairLedId.DIY2_58 },
+            { CorsairLedId.DIY2_59 },
+            { CorsairLedId.DIY2_60 },
+            { CorsairLedId.DIY2_61 },
+            { CorsairLedId.DIY2_62 },
+            { CorsairLedId.DIY2_63 },
+            { CorsairLedId.DIY2_64 },
+            { CorsairLedId.DIY2_65 },
+            { CorsairLedId.DIY2_66 },
+            { CorsairLedId.DIY2_67 },
+            { CorsairLedId.DIY2_68 },
+            { CorsairLedId.DIY2_69 },
+            { CorsairLedId.DIY2_70 },
+            { CorsairLedId.DIY2_71 },
+            { CorsairLedId.DIY2_72 },
+            { CorsairLedId.DIY2_73 },
+            { CorsairLedId.DIY2_74 },
+            { CorsairLedId.DIY2_75 },
+            { CorsairLedId.DIY2_76 },
+            { CorsairLedId.DIY2_77 },
+            { CorsairLedId.DIY2_78 },
+            { CorsairLedId.DIY2_79 },
+            { CorsairLedId.DIY2_80 },
+            { CorsairLedId.DIY2_81 },
+            { CorsairLedId.DIY2_82 },
+            { CorsairLedId.DIY2_83 },
+            { CorsairLedId.DIY2_84 },
+            { CorsairLedId.DIY2_85 },
+            { CorsairLedId.DIY2_86 },
+            { CorsairLedId.DIY2_87 },
+            { CorsairLedId.DIY2_88 },
+            { CorsairLedId.DIY2_89 },
+            { CorsairLedId.DIY2_90 },
+            { CorsairLedId.DIY2_91 },
+            { CorsairLedId.DIY2_92 },
+            { CorsairLedId.DIY2_93 },
+            { CorsairLedId.DIY2_94 },
+            { CorsairLedId.DIY2_95 },
+            { CorsairLedId.DIY2_96 },
+            { CorsairLedId.DIY2_97 },
+            { CorsairLedId.DIY2_98 },
+            { CorsairLedId.DIY2_99 },
+            { CorsairLedId.DIY2_100 },
             { CorsairLedId.DIY2_101 },
             { CorsairLedId.DIY2_102 },
             { CorsairLedId.DIY2_103 },
@@ -504,6 +389,135 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.DIY2_123 },
             { CorsairLedId.DIY2_124 },
             { CorsairLedId.DIY2_125 },
+            { CorsairLedId.DIY2_126 },
+            { CorsairLedId.DIY2_127 },
+            { CorsairLedId.DIY2_128 },
+            { CorsairLedId.DIY2_129 },
+            { CorsairLedId.DIY2_130 },
+            { CorsairLedId.DIY2_131 },
+            { CorsairLedId.DIY2_132 },
+            { CorsairLedId.DIY2_133 },
+            { CorsairLedId.DIY2_134 },
+            { CorsairLedId.DIY2_135 },
+            { CorsairLedId.DIY2_136 },
+            { CorsairLedId.DIY2_137 },
+            { CorsairLedId.DIY2_138 },
+            { CorsairLedId.DIY2_139 },
+            { CorsairLedId.DIY2_140 },
+            { CorsairLedId.DIY2_141 },
+            { CorsairLedId.DIY2_142 },
+            { CorsairLedId.DIY2_143 },
+            { CorsairLedId.DIY2_144 },
+            { CorsairLedId.DIY2_145 },
+            { CorsairLedId.DIY2_146 },
+            { CorsairLedId.DIY2_147 },
+            { CorsairLedId.DIY2_148 },
+            { CorsairLedId.DIY2_149 },
+            { CorsairLedId.DIY2_150 }
+        };
+
+        private readonly List<CorsairLedId> _diyZ3 = new List<CorsairLedId>
+        {
+            { CorsairLedId.DIY3_1 },
+            { CorsairLedId.DIY3_2 },
+            { CorsairLedId.DIY3_3 },
+            { CorsairLedId.DIY3_4 },
+            { CorsairLedId.DIY3_5 },
+            { CorsairLedId.DIY3_6 },
+            { CorsairLedId.DIY3_7 },
+            { CorsairLedId.DIY3_8 },
+            { CorsairLedId.DIY3_9 },
+            { CorsairLedId.DIY3_10 },
+            { CorsairLedId.DIY3_11 },
+            { CorsairLedId.DIY3_12 },
+            { CorsairLedId.DIY3_13 },
+            { CorsairLedId.DIY3_14 },
+            { CorsairLedId.DIY3_15 },
+            { CorsairLedId.DIY3_16 },
+            { CorsairLedId.DIY3_17 },
+            { CorsairLedId.DIY3_18 },
+            { CorsairLedId.DIY3_19 },
+            { CorsairLedId.DIY3_20 },
+            { CorsairLedId.DIY3_21 },
+            { CorsairLedId.DIY3_22 },
+            { CorsairLedId.DIY3_23 },
+            { CorsairLedId.DIY3_24 },
+            { CorsairLedId.DIY3_25 },
+            { CorsairLedId.DIY3_26 },
+            { CorsairLedId.DIY3_27 },
+            { CorsairLedId.DIY3_28 },
+            { CorsairLedId.DIY3_29 },
+            { CorsairLedId.DIY3_30 },
+            { CorsairLedId.DIY3_31 },
+            { CorsairLedId.DIY3_32 },
+            { CorsairLedId.DIY3_33 },
+            { CorsairLedId.DIY3_34 },
+            { CorsairLedId.DIY3_35 },
+            { CorsairLedId.DIY3_36 },
+            { CorsairLedId.DIY3_37 },
+            { CorsairLedId.DIY3_38 },
+            { CorsairLedId.DIY3_39 },
+            { CorsairLedId.DIY3_40 },
+            { CorsairLedId.DIY3_41 },
+            { CorsairLedId.DIY3_42 },
+            { CorsairLedId.DIY3_43 },
+            { CorsairLedId.DIY3_44 },
+            { CorsairLedId.DIY3_45 },
+            { CorsairLedId.DIY3_46 },
+            { CorsairLedId.DIY3_47 },
+            { CorsairLedId.DIY3_48 },
+            { CorsairLedId.DIY3_49 },
+            { CorsairLedId.DIY3_50 },
+            { CorsairLedId.DIY3_51 },
+            { CorsairLedId.DIY3_52 },
+            { CorsairLedId.DIY3_53 },
+            { CorsairLedId.DIY3_54 },
+            { CorsairLedId.DIY3_55 },
+            { CorsairLedId.DIY3_56 },
+            { CorsairLedId.DIY3_57 },
+            { CorsairLedId.DIY3_58 },
+            { CorsairLedId.DIY3_59 },
+            { CorsairLedId.DIY3_60 },
+            { CorsairLedId.DIY3_61 },
+            { CorsairLedId.DIY3_62 },
+            { CorsairLedId.DIY3_63 },
+            { CorsairLedId.DIY3_64 },
+            { CorsairLedId.DIY3_65 },
+            { CorsairLedId.DIY3_66 },
+            { CorsairLedId.DIY3_67 },
+            { CorsairLedId.DIY3_68 },
+            { CorsairLedId.DIY3_69 },
+            { CorsairLedId.DIY3_70 },
+            { CorsairLedId.DIY3_71 },
+            { CorsairLedId.DIY3_72 },
+            { CorsairLedId.DIY3_73 },
+            { CorsairLedId.DIY3_74 },
+            { CorsairLedId.DIY3_75 },
+            { CorsairLedId.DIY3_76 },
+            { CorsairLedId.DIY3_77 },
+            { CorsairLedId.DIY3_78 },
+            { CorsairLedId.DIY3_79 },
+            { CorsairLedId.DIY3_80 },
+            { CorsairLedId.DIY3_81 },
+            { CorsairLedId.DIY3_82 },
+            { CorsairLedId.DIY3_83 },
+            { CorsairLedId.DIY3_84 },
+            { CorsairLedId.DIY3_85 },
+            { CorsairLedId.DIY3_86 },
+            { CorsairLedId.DIY3_87 },
+            { CorsairLedId.DIY3_88 },
+            { CorsairLedId.DIY3_89 },
+            { CorsairLedId.DIY3_90 },
+            { CorsairLedId.DIY3_91 },
+            { CorsairLedId.DIY3_92 },
+            { CorsairLedId.DIY3_93 },
+            { CorsairLedId.DIY3_94 },
+            { CorsairLedId.DIY3_95 },
+            { CorsairLedId.DIY3_96 },
+            { CorsairLedId.DIY3_97 },
+            { CorsairLedId.DIY3_98 },
+            { CorsairLedId.DIY3_99 },
+            { CorsairLedId.DIY3_100 },
             { CorsairLedId.DIY3_101 },
             { CorsairLedId.DIY3_102 },
             { CorsairLedId.DIY3_103 },
@@ -529,60 +543,6 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.DIY3_123 },
             { CorsairLedId.DIY3_124 },
             { CorsairLedId.DIY3_125 },
-        };
-
-        private readonly List<CorsairLedId> _diyZ6 = new List<CorsairLedId>
-        {
-            { CorsairLedId.DIY1_126 },
-            { CorsairLedId.DIY1_127 },
-            { CorsairLedId.DIY1_128 },
-            { CorsairLedId.DIY1_129 },
-            { CorsairLedId.DIY1_130 },
-            { CorsairLedId.DIY1_131 },
-            { CorsairLedId.DIY1_132 },
-            { CorsairLedId.DIY1_133 },
-            { CorsairLedId.DIY1_134 },
-            { CorsairLedId.DIY1_135 },
-            { CorsairLedId.DIY1_136 },
-            { CorsairLedId.DIY1_137 },
-            { CorsairLedId.DIY1_138 },
-            { CorsairLedId.DIY1_139 },
-            { CorsairLedId.DIY1_140 },
-            { CorsairLedId.DIY1_141 },
-            { CorsairLedId.DIY1_142 },
-            { CorsairLedId.DIY1_143 },
-            { CorsairLedId.DIY1_144 },
-            { CorsairLedId.DIY1_145 },
-            { CorsairLedId.DIY1_146 },
-            { CorsairLedId.DIY1_147 },
-            { CorsairLedId.DIY1_148 },
-            { CorsairLedId.DIY1_149 },
-            { CorsairLedId.DIY1_150 },
-            { CorsairLedId.DIY2_126 },
-            { CorsairLedId.DIY2_127 },
-            { CorsairLedId.DIY2_128 },
-            { CorsairLedId.DIY2_129 },
-            { CorsairLedId.DIY2_130 },
-            { CorsairLedId.DIY2_131 },
-            { CorsairLedId.DIY2_132 },
-            { CorsairLedId.DIY2_133 },
-            { CorsairLedId.DIY2_134 },
-            { CorsairLedId.DIY2_135 },
-            { CorsairLedId.DIY2_136 },
-            { CorsairLedId.DIY2_137 },
-            { CorsairLedId.DIY2_138 },
-            { CorsairLedId.DIY2_139 },
-            { CorsairLedId.DIY2_140 },
-            { CorsairLedId.DIY2_141 },
-            { CorsairLedId.DIY2_142 },
-            { CorsairLedId.DIY2_143 },
-            { CorsairLedId.DIY2_144 },
-            { CorsairLedId.DIY2_145 },
-            { CorsairLedId.DIY2_146 },
-            { CorsairLedId.DIY2_147 },
-            { CorsairLedId.DIY2_148 },
-            { CorsairLedId.DIY2_149 },
-            { CorsairLedId.DIY2_150 },
             { CorsairLedId.DIY3_126 },
             { CorsairLedId.DIY3_127 },
             { CorsairLedId.DIY3_128 },
@@ -607,7 +567,7 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.DIY3_147 },
             { CorsairLedId.DIY3_148 },
             { CorsairLedId.DIY3_149 },
-            { CorsairLedId.DIY3_150 },
+            { CorsairLedId.DIY3_150 }
         };
 
         private readonly List<CorsairLedId> _coolerZ1 = new List<CorsairLedId>
@@ -636,11 +596,7 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.Cooler_22 },
             { CorsairLedId.Cooler_23 },
             { CorsairLedId.Cooler_24 },
-            { CorsairLedId.Cooler_25 }
-        };
-
-        private readonly List<CorsairLedId> _coolerZ2 = new List<CorsairLedId>
-        {
+            { CorsairLedId.Cooler_25 },
             { CorsairLedId.Cooler_26 },
             { CorsairLedId.Cooler_27 },
             { CorsairLedId.Cooler_28 },
@@ -665,11 +621,7 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.Cooler_47 },
             { CorsairLedId.Cooler_48 },
             { CorsairLedId.Cooler_49 },
-            { CorsairLedId.Cooler_50 }
-        };
-
-        private readonly List<CorsairLedId> _coolerZ3 = new List<CorsairLedId>
-        {
+            { CorsairLedId.Cooler_50 },
             { CorsairLedId.Cooler_51 },
             { CorsairLedId.Cooler_52 },
             { CorsairLedId.Cooler_53 },
@@ -694,11 +646,7 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.Cooler_72 },
             { CorsairLedId.Cooler_73 },
             { CorsairLedId.Cooler_74 },
-            { CorsairLedId.Cooler_75 }
-        };
-
-        private readonly List<CorsairLedId> _coolerZ4 = new List<CorsairLedId>
-        {
+            { CorsairLedId.Cooler_75 },
             { CorsairLedId.Cooler_76 },
             { CorsairLedId.Cooler_77 },
             { CorsairLedId.Cooler_78 },
@@ -723,11 +671,7 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.Cooler_97 },
             { CorsairLedId.Cooler_98 },
             { CorsairLedId.Cooler_99 },
-            { CorsairLedId.Cooler_100 }
-        };
-
-        private readonly List<CorsairLedId> _coolerZ5 = new List<CorsairLedId>
-        {
+            { CorsairLedId.Cooler_100 },
             { CorsairLedId.Cooler_101 },
             { CorsairLedId.Cooler_102 },
             { CorsairLedId.Cooler_103 },
@@ -752,11 +696,7 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.Cooler_122 },
             { CorsairLedId.Cooler_123 },
             { CorsairLedId.Cooler_124 },
-            { CorsairLedId.Cooler_125 }
-        };
-
-        private readonly List<CorsairLedId> _coolerZ6 = new List<CorsairLedId>
-        {
+            { CorsairLedId.Cooler_125 },
             { CorsairLedId.Cooler_126 },
             { CorsairLedId.Cooler_127 },
             { CorsairLedId.Cooler_128 },
@@ -998,6 +938,19 @@ namespace Chromatics.DeviceInterfaces
         private KeyMapBrush _corsairStandIndvBrush;
         private ListLedGroup _corsairStandIndvLed;
 
+        private KeyMapBrush _corsairCommanderIndvBrush;
+        private ListLedGroup _corsairCommanderIndvLed;
+        private ListLedGroup _corsairCommanderAllLed;
+        private KeyMapBrush _corsairLEDIndvBrush;
+        private ListLedGroup _corsairLEDIndvLed;
+        private ListLedGroup _corsairLEDAllLed;
+        private KeyMapBrush _corsairMemoryIndvBrush;
+        private ListLedGroup _corsairMemoryIndvLed;
+        private ListLedGroup _corsairMemoryAllLed;
+        private KeyMapBrush _corsairCoolerIndvBrush;
+        private ListLedGroup _corsairCoolerIndvLed;
+        private ListLedGroup _corsairCoolerAllLed;
+
         private bool _corsairDeviceHeadset = true;
         private bool _corsairDeviceKeyboard = true;
         private bool _corsairDeviceKeypad = true;
@@ -1014,7 +967,7 @@ namespace Chromatics.DeviceInterfaces
 
         private bool pause;
 
-        public bool InitializeSdk()
+        public bool InitializeSdk(Color baseColor)
         {
             try
             {
@@ -1026,7 +979,7 @@ namespace Chromatics.DeviceInterfaces
                 _corsairAllKeyboardLed.ZIndex = 1;
                 _corsairKeyboardIndvLed.ZIndex = 10;
                 _corsairKeyboardIndvLed.Brush = _corsairKeyboardIndvBrush;
-                _corsairAllKeyboardLed.Brush = (SolidColorBrush) Color.Black;
+                _corsairAllKeyboardLed.Brush = (SolidColorBrush) baseColor;
                 
 
                 _corsairMouseIndvBrush = new KeyMapBrush();
@@ -1035,7 +988,7 @@ namespace Chromatics.DeviceInterfaces
                 _corsairAllMouseLed.ZIndex = 1;
                 _corsairMouseIndvLed.ZIndex = 10;
                 _corsairMouseIndvLed.Brush = _corsairMouseIndvBrush;
-                _corsairAllMouseLed.Brush = (SolidColorBrush) Color.Black;
+                _corsairAllMouseLed.Brush = (SolidColorBrush) baseColor;
 
                 _corsairStandIndvBrush = new KeyMapBrush();
                 _corsairStandIndvLed = new ListLedGroup(CueSDK.HeadsetStandSDK, CueSDK.HeadsetStandSDK);
@@ -1043,7 +996,7 @@ namespace Chromatics.DeviceInterfaces
                 _corsairAllStandLed.ZIndex = 1;
                 _corsairStandIndvLed.ZIndex = 10;
                 _corsairStandIndvLed.Brush = _corsairStandIndvBrush;
-                _corsairAllStandLed.Brush = (SolidColorBrush) Color.Black;
+                _corsairAllStandLed.Brush = (SolidColorBrush) baseColor;
 
                 _corsairMousepadIndvBrush = new KeyMapBrush();
                 _corsairMousepadIndvLed = new ListLedGroup(CueSDK.MousematSDK, CueSDK.MousematSDK);
@@ -1051,11 +1004,43 @@ namespace Chromatics.DeviceInterfaces
                 _corsairAllMousepadLed.ZIndex = 1;
                 _corsairMousepadIndvLed.ZIndex = 10;
                 _corsairMousepadIndvLed.Brush = _corsairMousepadIndvBrush;
-                _corsairAllMousepadLed.Brush = (SolidColorBrush) Color.Black;
+                _corsairAllMousepadLed.Brush = (SolidColorBrush) baseColor;
 
                 _corsairAllHeadsetLed = new ListLedGroup(CueSDK.HeadsetSDK, CueSDK.HeadsetSDK);
                 _corsairAllHeadsetLed.ZIndex = 1;
-                _corsairAllHeadsetLed.Brush = (SolidColorBrush) Color.Black;
+                _corsairAllHeadsetLed.Brush = (SolidColorBrush) baseColor;
+
+                _corsairCommanderIndvBrush = new KeyMapBrush();
+                _corsairCommanderIndvLed = new ListLedGroup(CueSDK.CommanderProSDK, CueSDK.CommanderProSDK);
+                _corsairCommanderAllLed = new ListLedGroup(CueSDK.CommanderProSDK, CueSDK.CommanderProSDK);
+                _corsairCommanderAllLed.ZIndex = 1;
+                _corsairCommanderIndvLed.ZIndex = 10;
+                _corsairCommanderIndvLed.Brush = _corsairCommanderIndvBrush;
+                _corsairCommanderAllLed.Brush = (SolidColorBrush) baseColor;
+
+                _corsairLEDIndvBrush = new KeyMapBrush();
+                _corsairLEDIndvLed = new ListLedGroup(CueSDK.LightingNodeProSDK, CueSDK.LightingNodeProSDK);
+                _corsairLEDAllLed = new ListLedGroup(CueSDK.LightingNodeProSDK, CueSDK.LightingNodeProSDK);
+                _corsairLEDAllLed.ZIndex = 1;
+                _corsairLEDIndvLed.ZIndex = 10;
+                _corsairLEDIndvLed.Brush = _corsairLEDIndvBrush;
+                _corsairLEDAllLed.Brush = (SolidColorBrush) baseColor;
+
+                _corsairMemoryIndvBrush = new KeyMapBrush();
+                _corsairMemoryIndvLed = new ListLedGroup(CueSDK.MemoryModuleSDK, CueSDK.MemoryModuleSDK);
+                _corsairMemoryAllLed = new ListLedGroup(CueSDK.MemoryModuleSDK, CueSDK.MemoryModuleSDK);
+                _corsairMemoryAllLed.ZIndex = 1;
+                _corsairMemoryIndvLed.ZIndex = 10;
+                _corsairMemoryIndvLed.Brush = _corsairMemoryIndvBrush;
+                _corsairMemoryAllLed.Brush = (SolidColorBrush) baseColor;
+
+                _corsairCoolerIndvBrush = new KeyMapBrush();
+                _corsairCoolerIndvLed = new ListLedGroup(CueSDK.CoolerSDK, CueSDK.CoolerSDK);
+                _corsairCoolerAllLed = new ListLedGroup(CueSDK.CoolerSDK, CueSDK.CoolerSDK);
+                _corsairCoolerAllLed.ZIndex = 1;
+                _corsairCoolerIndvLed.ZIndex = 10;
+                _corsairCoolerIndvLed.Brush = _corsairCoolerIndvBrush;
+                _corsairCoolerAllLed.Brush = (SolidColorBrush) baseColor;
 
                 var corsairver = CueSDK.ProtocolDetails.ServerVersion.Split('.');
                 var cV = int.Parse(corsairver[0]);
@@ -1134,6 +1119,14 @@ namespace Chromatics.DeviceInterfaces
             if (_corsairDeviceHeadset)
                 _corsairAllStandLed.Brush = (SolidColorBrush)basecol;
 
+            if (_corsairOtherDevices)
+            {
+                _corsairCommanderAllLed.Brush = (SolidColorBrush) basecol;
+                _corsairLEDAllLed.Brush = (SolidColorBrush) basecol;
+                _corsairMemoryAllLed.Brush = (SolidColorBrush) basecol;
+                _corsairCoolerAllLed.Brush = (SolidColorBrush) basecol;
+            }
+
             _corsairDeviceKeyboard = deviceKeyboard;
             _corsairDeviceKeypad = deviceKeypad;
             _corsairDeviceMouse = deviceMouse;
@@ -1211,11 +1204,38 @@ namespace Chromatics.DeviceInterfaces
 
             if (_corsairOtherDevices)
             {
+                if (!string.IsNullOrEmpty(CueSDK.CommanderProSDK?.CommanderProDeviceInfo?.Model))
+                {
+                    _corsairCommanderAllLed.Brush = (SolidColorBrush) color;
+                    CueSDK.CommanderProSDK?.Update(true);
+                    Console.WriteLine(CueSDK.CommanderProSDK?.CommanderProDeviceInfo?.Model);
+                }
+
+                if (!string.IsNullOrEmpty(CueSDK.LightingNodeProSDK?.LightingNodeProDeviceInfo?.Model))
+                {
+                    _corsairLEDAllLed.Brush = (SolidColorBrush) color;
+                    CueSDK.LightingNodeProSDK?.Update(true);
+                }
+
+                if (!string.IsNullOrEmpty(CueSDK.MemoryModuleSDK?.MemoryModuleDeviceInfo?.Model))
+                {
+                    _corsairMemoryAllLed.Brush = (SolidColorBrush) color;
+                    CueSDK.MemoryModuleSDK?.Update(true);
+                }
+
+                if (!string.IsNullOrEmpty(CueSDK.CoolerSDK?.CoolerDeviceInfo?.Model))
+                {
+                    _corsairCoolerAllLed.Brush = (SolidColorBrush) color;
+                    CueSDK.CoolerSDK?.Update(true);
+                }
+
+                /*
                 ApplyMapOtherLighting(color, 1);
                 ApplyMapOtherLighting(color, 2);
                 ApplyMapOtherLighting(color, 3);
                 ApplyMapOtherLighting(color, 4);
                 ApplyMapOtherLighting(color, 5);
+                */
             }
         }
 
@@ -1347,7 +1367,7 @@ namespace Chromatics.DeviceInterfaces
             CueSDK.HeadsetSDK[CorsairLedId.RightLogo].Color = cc;
         }
 
-        public void ApplyMapOtherLighting(Color col, int pos)
+        public void ApplyMapOtherLighting(Color col, int pos, int z1, int z2, int z3, int z4, int z5, int z6)
         {
             try
             {
@@ -1355,166 +1375,519 @@ namespace Chromatics.DeviceInterfaces
 
                 if (!_corsairOtherDevices) return;
                 var cc = new CorsairColor(col);
+                var disable = new CorsairColor(Color.Black);
 
                 
                 //Commander Pro
+                
                 if (!string.IsNullOrEmpty(CueSDK.CommanderProSDK?.CommanderProDeviceInfo?.Model))
                 {
-
                     switch (pos)
                     {
                         case 1:
-                            foreach (var led in _diyZ1)
+                            var x1 = 0;
+                            var y1 = 0;
+                            var t1 = 0;
+                            
+                            foreach (var key in _diyZ1.GetRange(x1, z1))
                             {
-                                if (CueSDK.CommanderProSDK[led] != null)
+                                if (x1 > 150) continue;
+                                
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CommanderProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CommanderProSDK[led].Color = cc;
-                                    }
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x1++;
+                            }
+                            
+                            foreach (var key in _diyZ2.GetRange(y1, z1))
+                            {
+                                if (y1 > 150) continue;
+                                
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y1++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t1, z1))
+                            {
+                                if (t1 > 150) continue;
+                                
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t1++;
                             }
 
                             break;
                         case 2:
-                            foreach (var led in _diyZ2)
+                            var x2 = z1;
+                            var y2 = z1;
+                            var t2 = z1;
+
+                            foreach (var key in _diyZ1.GetRange(x2, z2))
                             {
-                                if (CueSDK.CommanderProSDK[led] != null)
+                                if (x2 > 150) continue;
+                                
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CommanderProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CommanderProSDK[led].Color = cc;
-                                    }
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x2++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y2, z2))
+                            {
+                                if (y2 > 150) continue;
+                                
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y2++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t2, z2))
+                            {
+                                if (t2 > 150) continue;
+                                
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t2++;
                             }
                             break;
                         case 3:
-                            foreach (var led in _diyZ3)
+                            var x3 = z1+z2;
+                            var y3 = z1+z2;
+                            var t3 = z1+z2;
+
+                            foreach (var key in _diyZ1.GetRange(x3, z3))
                             {
-                                if (CueSDK.CommanderProSDK[led] != null)
+                                if (x3 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CommanderProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CommanderProSDK[led].Color = cc;
-                                    }
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x3++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y3, z3))
+                            {
+                                if (y3 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y3++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t3, z3))
+                            {
+                                if (t3 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t3++;
                             }
                             break;
                         case 4:
-                            foreach (var led in _diyZ4)
+                            var x4 = z1+z2+z3;
+                            var y4 = z1+z2+z3;
+                            var t4 = z1+z2+z3;
+
+                            foreach (var key in _diyZ1.GetRange(x4, z4))
                             {
-                                if (CueSDK.CommanderProSDK[led] != null)
+                                if (x4 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CommanderProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CommanderProSDK[led].Color = cc;
-                                    }
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x4++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y4, z4))
+                            {
+                                if (y4 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y4++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t4, z4))
+                            {
+                                if (t4 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t4++;
                             }
                             break;
                         case 5:
-                            foreach (var led in _diyZ5)
+                            var x5 = z1+z2+z3+z4;
+                            var y5 = z1+z2+z3+z4;
+                            var t5 = z1+z2+z3+z4;
+
+                            foreach (var key in _diyZ1.GetRange(x5, z5))
                             {
-                                if (CueSDK.CommanderProSDK[led] != null)
+                                if (x5 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CommanderProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CommanderProSDK[led].Color = cc;
-                                    }
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x5++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y5, z5))
+                            {
+                                if (y5 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y5++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t5, z5))
+                            {
+                                if (t5 > 150) continue;
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t5++;
                             }
                             break;
                         case 6:
-                            foreach (var led in _diyZ6)
+                            var x6 = z1+z2+z3+z4+z5;
+                            var y6 = z1+z2+z3+z4+z5;
+                            var t6 = z1+z2+z3+z4+z5;
+
+                            foreach (var key in _diyZ1.GetRange(x6, z6))
                             {
-                                if (CueSDK.CommanderProSDK[led] != null)
+                                if (x6 > 150) continue;
+
+                                Console.WriteLine("Z6: " + x6 + "/" + z6);
+
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CommanderProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CommanderProSDK[led].Color = cc;
-                                    }
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x6++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y6, z6))
+                            {
+                                if (y6 > 150) continue;
+                                
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y6++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t6, z6))
+                            {
+                                if (t6 > 150) continue;
+                                
+                                if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t6++;
                             }
                             break;
                     }
                 }
-                
+
                 //Lighting Node
                 if (!string.IsNullOrEmpty(CueSDK.LightingNodeProSDK?.LightingNodeProDeviceInfo?.Model))
                 {
                     switch (pos)
                     {
                         case 1:
-                            foreach (var led in _diyZ1)
+                            var x1 = 0;
+                            var y1 = 0;
+                            var t1 = 0;
+                            
+                            foreach (var key in _diyZ1.GetRange(x1, z1))
                             {
-                                if (CueSDK.LightingNodeProSDK[led] != null)
+                                if (x1 > 150) continue;
+                                
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.LightingNodeProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.LightingNodeProSDK[led].Color = cc;
-                                    }
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x1++;
+                            }
+                            
+                            foreach (var key in _diyZ2.GetRange(y1, z1))
+                            {
+                                if (y1 > 150) continue;
+                                
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y1++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t1, z1))
+                            {
+                                if (t1 > 150) continue;
+                                
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t1++;
                             }
 
                             break;
                         case 2:
-                            foreach (var led in _diyZ2)
+                            var x2 = z1;
+                            var y2 = z1;
+                            var t2 = z1;
+
+                            foreach (var key in _diyZ1.GetRange(x2, z2))
                             {
-                                if (CueSDK.LightingNodeProSDK[led] != null)
+                                if (x2 > 150) continue;
+                                
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.LightingNodeProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.LightingNodeProSDK[led].Color = cc;
-                                    }
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x2++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y2, z2))
+                            {
+                                if (y2 > 150) continue;
+                                
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y2++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t2, z2))
+                            {
+                                if (t2 > 150) continue;
+                                
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t2++;
                             }
                             break;
                         case 3:
-                            foreach (var led in _diyZ3)
+                            var x3 = z1+z2;
+                            var y3 = z1+z2;
+                            var t3 = z1+z2;
+
+                            foreach (var key in _diyZ1.GetRange(x3, z3))
                             {
-                                if (CueSDK.LightingNodeProSDK[led] != null)
+                                if (x3 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.LightingNodeProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.LightingNodeProSDK[led].Color = cc;
-                                    }
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x3++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y3, z3))
+                            {
+                                if (y3 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y3++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t3, z3))
+                            {
+                                if (t3 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t3++;
                             }
                             break;
                         case 4:
-                            foreach (var led in _diyZ4)
+                            var x4 = z1+z2+z3;
+                            var y4 = z1+z2+z3;
+                            var t4 = z1+z2+z3;
+
+                            foreach (var key in _diyZ1.GetRange(x4, z4))
                             {
-                                if (CueSDK.LightingNodeProSDK[led] != null)
+                                if (x4 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.LightingNodeProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.LightingNodeProSDK[led].Color = cc;
-                                    }
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x4++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y4, z4))
+                            {
+                                if (y4 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y4++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t4, z4))
+                            {
+                                if (t4 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t4++;
                             }
                             break;
                         case 5:
-                            foreach (var led in _diyZ5)
+                            var x5 = z1+z2+z3+z4;
+                            var y5 = z1+z2+z3+z4;
+                            var t5 = z1+z2+z3+z4;
+
+                            foreach (var key in _diyZ1.GetRange(x5, z5))
                             {
-                                if (CueSDK.LightingNodeProSDK[led] != null)
+                                if (x5 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.LightingNodeProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.LightingNodeProSDK[led].Color = cc;
-                                    }
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x5++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y5, z5))
+                            {
+                                if (y5 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y5++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t5, z5))
+                            {
+                                if (t5 > 150) continue;
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t5++;
                             }
                             break;
                         case 6:
-                            foreach (var led in _diyZ6)
+                            var x6 = z1+z2+z3+z4+z5;
+                            var y6 = z1+z2+z3+z4+z5;
+                            var t6 = z1+z2+z3+z4+z5;
+
+                            foreach (var key in _diyZ1.GetRange(x6, z6))
                             {
-                                if (CueSDK.LightingNodeProSDK[led] != null)
+                                if (x6 > 150) continue;
+
+                                Console.WriteLine("Z6: " + x6 + "/" + z6);
+
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.LightingNodeProSDK[led].Color != cc)
-                                    {
-                                        CueSDK.LightingNodeProSDK[led].Color = cc;
-                                    }
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x6++;
+                            }
+
+                            foreach (var key in _diyZ2.GetRange(y6, z6))
+                            {
+                                if (y6 > 150) continue;
+                                
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                y6++;
+                            }
+
+                            foreach (var key in _diyZ3.GetRange(t6, z6))
+                            {
+                                if (t6 > 150) continue;
+                                
+                                if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
+                                {
+                                    _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);
+                                }
+
+                                t6++;
                             }
                             break;
                     }
@@ -1526,76 +1899,96 @@ namespace Chromatics.DeviceInterfaces
                     switch (pos)
                     {
                         case 1:
-                            foreach (var led in _coolerZ1)
+                            var x1 = 0;
+                            
+                            foreach (var key in _coolerZ1.GetRange(x1, z1))
                             {
-                                if (CueSDK.CoolerSDK[led] != null)
+                                if (x1 > 150) continue;
+                                
+                                if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CoolerSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CoolerSDK[led].Color = cc;
-                                    }
+                                    _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x1++;
                             }
 
                             break;
                         case 2:
-                            foreach (var led in _coolerZ2)
+                            var x2 = z1;
+
+                            foreach (var key in _coolerZ1.GetRange(x2, z2))
                             {
-                                if (CueSDK.CoolerSDK[led] != null)
+                                if (x2 > 150) continue;
+                                
+                                if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CoolerSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CoolerSDK[led].Color = cc;
-                                    }
+                                    _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x2++;
                             }
                             break;
                         case 3:
-                            foreach (var led in _coolerZ3)
+                            var x3 = z1+z2;
+
+                            foreach (var key in _coolerZ1.GetRange(x3, z3))
                             {
-                                if (CueSDK.CoolerSDK[led] != null)
+                                if (x3 > 150) continue;
+
+                                if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CoolerSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CoolerSDK[led].Color = cc;
-                                    }
+                                    _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x3++;
                             }
                             break;
                         case 4:
-                            foreach (var led in _coolerZ4)
+                            var x4 = z1+z2+z3;
+
+                            foreach (var key in _coolerZ1.GetRange(x4, z4))
                             {
-                                if (CueSDK.CoolerSDK[led] != null)
+                                if (x4 > 150) continue;
+
+                                if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CoolerSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CoolerSDK[led].Color = cc;
-                                    }
+                                    _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x4++;
                             }
                             break;
                         case 5:
-                            foreach (var led in _coolerZ5)
+                            var x5 = z1+z2+z3+z4;
+
+                            foreach (var key in _coolerZ1.GetRange(x5, z5))
                             {
-                                if (CueSDK.CoolerSDK[led] != null)
+                                if (x5 > 150) continue;
+
+                                if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CoolerSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CoolerSDK[led].Color = cc;
-                                    }
+                                    _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x5++;
                             }
                             break;
                         case 6:
-                            foreach (var led in _coolerZ6)
+                            var x6 = z1+z2+z3+z4+z5;
+
+                            foreach (var key in _coolerZ1.GetRange(x6, z6))
                             {
-                                if (CueSDK.CoolerSDK[led] != null)
+                                if (x6 > 150) continue;
+
+                                Console.WriteLine("Z6: " + x6 + "/" + z6);
+
+                                if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
-                                    if (CueSDK.CoolerSDK[led].Color != cc)
-                                    {
-                                        CueSDK.CoolerSDK[led].Color = cc;
-                                    }
+                                    _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(key, cc);
                                 }
+
+                                x6++;
                             }
                             break;
                     }
@@ -1607,46 +2000,46 @@ namespace Chromatics.DeviceInterfaces
                     switch (pos)
                     {
                         case 1:
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_1].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_1].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_1) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_1, cc);
 
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_2].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_2].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_2) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_2, cc);
                             break;
                         case 2:
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_3].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_3].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_3) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_3, cc);
 
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_4].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_4].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_4) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_4, cc);
                             break;
                         case 3:
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_5].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_5].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_5) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_5, cc);
 
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_6].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_6].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_6) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_6, cc);
                             break;
                         case 4:
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_7].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_7].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_7) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_7, cc);
 
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_8].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_8].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_8) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_8, cc);
                             break;
                         case 5:
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_9].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_9].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_9) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_9, cc);
 
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_10].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_10].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_10) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_10, cc);
                             break;
                         case 6:
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_11].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_11].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_11) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_11, cc);
 
-                            if (CueSDK.MemoryModuleSDK[CorsairLedId.RAM_12].Color != null)
-                                CueSDK.MemoryModuleSDK[CorsairLedId.RAM_12].Color = cc;
+                            if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_12) != cc)
+                                _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_12, cc);
                             break;
                     }
                 }

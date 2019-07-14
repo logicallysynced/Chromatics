@@ -102,6 +102,13 @@ namespace Chromatics
         public bool _SDKAsus = true;
         public bool _SDKLifx = true;
 
+        public int _ChromaLinkLEDCountZ1 = 10;
+        public int _ChromaLinkLEDCountZ2 = 10;
+        public int _ChromaLinkLEDCountZ3 = 10;
+        public int _ChromaLinkLEDCountZ4 = 10;
+        public int _ChromaLinkLEDCountZ5 = 10;
+        public int _ChromaLinkLEDCountZ6 = 10;
+
         private string _hueDefault = "";
         public bool HueRescan = false;
         public bool HueSdk = false;
