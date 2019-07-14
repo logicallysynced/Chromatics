@@ -148,7 +148,8 @@ Up to five static zones are supported.
 ChromaLink Zone 5
 Commander Pro Zone 5
 Lightning Node Zone 5
-Memory Module 5</value>
+Memory Module 5
+Asus Microphone</value>
   </data>
   <data name="cb_chromalink_z4.ToolTip" xml:space="preserve">
     <value>Controls RGB functionality for various LED zones on Chromalink or other devices. 
@@ -157,7 +158,8 @@ Up to five static zones are supported.
 ChromaLink Zone 4
 Commander Pro Zone 4
 Lightning Node Zone 4
-Memory Module 4</value>
+Memory Module 4
+Asus RAM</value>
   </data>
   <data name="cb_chromalink_z3.ToolTip" xml:space="preserve">
     <value>Controls RGB functionality for various LED zones on Chromalink or other devices. 
@@ -166,7 +168,8 @@ Up to five static zones are supported.
 ChromaLink Zone 3
 Commander Pro Zone 3
 Lightning Node Zone 3
-Memory Module 3</value>
+Memory Module 3
+Asus Graphics</value>
   </data>
   <data name="cb_chromalink_z2.ToolTip" xml:space="preserve">
     <value>Controls RGB functionality for various LED zones on Chromalink or other devices. 
@@ -175,7 +178,8 @@ Up to five static zones are supported.
 ChromaLink Zone 2
 Commander Pro Zone 2
 Lightning Node Zone 2
-Memory Module 2</value>
+Memory Module 2
+Asus Motherboard</value>
   </data>
   <data name="cb_chromalink_z1.ToolTip" xml:space="preserve">
     <value>Controls RGB functionality for various LED zones on Chromalink or other devices. 
@@ -185,7 +189,8 @@ ChromaLink Zone 1
 Commander Pro Zone 1
 Lightning Node Zone 1
 Memory Module 1
-Cooler</value>
+Cooler
+Asus Chassis/Display</value>
   </data>
   <data name="lb_lcc.Text" xml:space="preserve">
     <value>Logitech Conflict Control prevents LGS from communicating with FFXIV natively so that Chromatics can send LED commands.

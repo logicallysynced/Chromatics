@@ -640,7 +640,7 @@ namespace Chromatics
                 _wooting.ResetWootingDevices(_steelDeviceKeyboard, baseColor);
 
             if (AsusSdkCalled == 1)
-                _asus.ResetAsusDevices(_asusDeviceKeyboard, _asusDeviceMouse, _asusDeviceHeadset, baseColor);
+                _asus.ResetAsusDevices(_asusDeviceKeyboard, _asusDeviceMouse, _asusDeviceHeadset, _asusDeviceOther, baseColor);
 
             //ResetDeviceDataGrid();
         }
@@ -1363,6 +1363,9 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapOtherLighting(col, 1, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+
+                if (AsusSdkCalled == 1)
+                    _asus.ApplyMapOtherLighting(1, col);
             }
 
             if (mode == _CLZone2Mode)
@@ -1372,6 +1375,9 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapOtherLighting(col, 2, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+
+                if (AsusSdkCalled == 1)
+                    _asus.ApplyMapOtherLighting(2, col);
             }
 
             if (mode == _CLZone3Mode)
@@ -1381,6 +1387,9 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapOtherLighting(col, 3, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+
+                if (AsusSdkCalled == 1)
+                    _asus.ApplyMapOtherLighting(3, col);
             }
 
             if (mode == _CLZone4Mode)
@@ -1390,6 +1399,9 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapOtherLighting(col, 4, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+
+                if (AsusSdkCalled == 1)
+                    _asus.ApplyMapOtherLighting(4, col);
             }
 
             if (mode == _CLZone5Mode)
@@ -1399,12 +1411,16 @@ namespace Chromatics
 
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapOtherLighting(col, 5, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+
+                if (AsusSdkCalled == 1)
+                    _asus.ApplyMapOtherLighting(5, col);
             }
 
             if (mode == _CLZone6Mode)
             {
                 if (CorsairSdkCalled == 1)
                     _corsair.ApplyMapOtherLighting(col, 6, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+
             }
         }
 

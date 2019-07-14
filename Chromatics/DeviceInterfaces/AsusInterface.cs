@@ -75,13 +75,14 @@ namespace Chromatics.DeviceInterfaces
 
         void ShutdownSdk();
         void SetLights(Color color);
-        void ResetAsusDevices(bool AsusDeviceKeyboard, bool AsusDeviceMouse, bool AsusDeviceHeadset, Color basecol);
+        void ResetAsusDevices(bool AsusDeviceKeyboard, bool AsusDeviceMouse, bool AsusDeviceHeadset, bool AsusDeviceOther, Color basecol);
         void SetAllLights(Color col);
         void ApplyMapSingleLighting(Color col);
         void ApplyMapMultiLighting(Color col, string region);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string key, Color col);
         void ApplyMapHeadsetLighting(string key, Color col);
+        void ApplyMapOtherLighting(int pos, Color col);
         Task Ripple1(Color burstcol, int speed, Color baseColor);
         Task Ripple2(Color burstcol, int speed);
         Task MultiRipple1(Color burstcol, int speed);
@@ -111,10 +112,12 @@ namespace Chromatics.DeviceInterfaces
         private bool _AsusDeviceHeadset = true;
         private bool _AsusDeviceMousepad = true;
         private bool _AsusDeviceSpeakers = true;
+        private bool _AsusDeviceOtherDevices = true;
 
         private bool _keyConnected = false;
         private bool _mouseConnected = false;
         private bool _headsetConnected = false;
+        private bool _otherConnected = false;
 
         private static readonly object AsusRipple1 = new object();
         private static readonly object AsusRipple2 = new object();
@@ -253,6 +256,17 @@ namespace Chromatics.DeviceInterfaces
         private Dictionary<int, IAuraRgbLight> _idToHeadset = new Dictionary<int, IAuraRgbLight>();
         private int HeadsetLedCount = 0;
 
+        private Dictionary<int, IAuraRgbLight> _idToZ1 = new Dictionary<int, IAuraRgbLight>();
+        private Dictionary<int, IAuraRgbLight> _idToZ2 = new Dictionary<int, IAuraRgbLight>();
+        private Dictionary<int, IAuraRgbLight> _idToZ3 = new Dictionary<int, IAuraRgbLight>();
+        private Dictionary<int, IAuraRgbLight> _idToZ4 = new Dictionary<int, IAuraRgbLight>();
+        private Dictionary<int, IAuraRgbLight> _idToZ5 = new Dictionary<int, IAuraRgbLight>();
+        private int Z1LedCount = 0;
+        private int Z2LedCount = 0;
+        private int Z3LedCount = 0;
+        private int Z4LedCount = 0;
+        private int Z5LedCount = 0;
+
         private Dictionary<string, Color> prevKeyboard = new Dictionary<string, Color>();
 
         private static Dictionary<string, Color> keyMappings = new Dictionary<string, Color>();
@@ -385,7 +399,7 @@ namespace Chromatics.DeviceInterfaces
 
                         foreach (IAuraRgbLight light in dev.Lights)
                         {
-                            if (_idToHeadset.ContainsKey(i) && !_idToHeadset.ContainsKey(i))
+                            if (!idToHeadset.ContainsKey(i) && !_idToHeadset.ContainsKey(i))
                             {
                                 idToHeadset.Add(i, light);
                                 HeadsetLedCount++;
@@ -398,6 +412,165 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 if (!_idToHeadset.ContainsKey(y))
                                     _idToHeadset.Add(headsetlight.Key, headsetlight.Value);
+                            }
+
+                            y++;
+                        }
+                    }
+
+                    //Zone 1 - Chassis/Display
+                    if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Chassis ||
+                        dev.Type == (int) AsusSdkWrapper.DeviceTypes.AIO ||
+                        dev.Type == (int) AsusSdkWrapper.DeviceTypes.Display ||
+                        dev.Type == (int) AsusSdkWrapper.DeviceTypes.Projector)
+                    {
+                        devconnected = true;
+                        _otherConnected = true;
+
+                        var i = 0;
+                        var y = 0;
+                        var idToZ1 = new Dictionary<int, IAuraRgbLight>();
+
+                        foreach (IAuraRgbLight light in dev.Lights)
+                        {
+                            if (!idToZ1.ContainsKey(i) && !_idToZ1.ContainsKey(i))
+                            {
+                                idToZ1.Add(i, light);
+                                Z1LedCount++;
+                            }
+                        }
+
+                        foreach (var zonelight in idToZ1)
+                        {
+                            if (y < Z1LedCount)
+                            {
+                                if (!_idToZ1.ContainsKey(y))
+                                    _idToZ1.Add(zonelight.Key, zonelight.Value);
+                            }
+
+                            y++;
+                        }
+                    }
+
+                    //Zone 2 - Motherboard
+                    if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Motherboard ||
+                        dev.Type == (int) AsusSdkWrapper.DeviceTypes.MotherboardLED)
+                    {
+                        devconnected = true;
+                        _otherConnected = true;
+
+                        var i = 0;
+                        var y = 0;
+                        var idToZ2 = new Dictionary<int, IAuraRgbLight>();
+
+                        foreach (IAuraRgbLight light in dev.Lights)
+                        {
+                            if (!idToZ2.ContainsKey(i) && !_idToZ2.ContainsKey(i))
+                            {
+                                idToZ2.Add(i, light);
+                                Z2LedCount++;
+                            }
+                        }
+
+                        foreach (var zonelight in idToZ2)
+                        {
+                            if (y < Z2LedCount)
+                            {
+                                if (!_idToZ2.ContainsKey(y))
+                                    _idToZ2.Add(zonelight.Key, zonelight.Value);
+                            }
+
+                            y++;
+                        }
+                    }
+
+                    //Zone 3 - Graphics
+                    if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.VGA)
+                    {
+                        devconnected = true;
+                        _otherConnected = true;
+
+                        var i = 0;
+                        var y = 0;
+                        var idToZ3 = new Dictionary<int, IAuraRgbLight>();
+
+                        foreach (IAuraRgbLight light in dev.Lights)
+                        {
+                            if (!idToZ3.ContainsKey(i) && !_idToZ3.ContainsKey(i))
+                            {
+                                idToZ3.Add(i, light);
+                                Z3LedCount++;
+                            }
+                        }
+
+                        foreach (var zonelight in idToZ3)
+                        {
+                            if (y < Z3LedCount)
+                            {
+                                if (!_idToZ3.ContainsKey(y))
+                                    _idToZ3.Add(zonelight.Key, zonelight.Value);
+                            }
+
+                            y++;
+                        }
+                    }
+
+                    //Zone 4 - RAM/Devices
+                    if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.BDD || dev.Type == (int) AsusSdkWrapper.DeviceTypes.DRAM)
+                    {
+                        devconnected = true;
+                        _otherConnected = true;
+
+                        var i = 0;
+                        var y = 0;
+                        var idToZ4 = new Dictionary<int, IAuraRgbLight>();
+
+                        foreach (IAuraRgbLight light in dev.Lights)
+                        {
+                            if (!idToZ4.ContainsKey(i) && !_idToZ4.ContainsKey(i))
+                            {
+                                idToZ4.Add(i, light);
+                                Z4LedCount++;
+                            }
+                        }
+
+                        foreach (var zonelight in idToZ4)
+                        {
+                            if (y < Z4LedCount)
+                            {
+                                if (!_idToZ4.ContainsKey(y))
+                                    _idToZ4.Add(zonelight.Key, zonelight.Value);
+                            }
+
+                            y++;
+                        }
+                    }
+
+                    //Zone 5 - Microphone
+                    if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Microphone)
+                    {
+                        devconnected = true;
+                        _otherConnected = true;
+
+                        var i = 0;
+                        var y = 0;
+                        var idToZ5 = new Dictionary<int, IAuraRgbLight>();
+
+                        foreach (IAuraRgbLight light in dev.Lights)
+                        {
+                            if (!idToZ5.ContainsKey(i) && !_idToZ5.ContainsKey(i))
+                            {
+                                idToZ5.Add(i, light);
+                                Z5LedCount++;
+                            }
+                        }
+
+                        foreach (var zonelight in idToZ5)
+                        {
+                            if (y < Z5LedCount)
+                            {
+                                if (!_idToZ5.ContainsKey(y))
+                                    _idToZ5.Add(zonelight.Key, zonelight.Value);
                             }
 
                             y++;
@@ -466,6 +639,25 @@ namespace Chromatics.DeviceInterfaces
                     if (_headsetConnected)
                     {
                         if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Headset) //Headset
+                        {
+                            dev.Apply();
+                        }
+                    }
+
+                    if (_otherConnected)
+                    {
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Chassis ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.AIO ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.Display ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.Projector ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.AIO ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.BDD ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.DRAM ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.Microphone ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.Motherboard ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.MotherboardLED ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.VGA ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.HDD)
                         {
                             dev.Apply();
                         }
@@ -610,6 +802,81 @@ namespace Chromatics.DeviceInterfaces
                         SetRgbOtherLight(light.Value, color);
                     }
                 }
+
+                if  (_AsusDeviceOtherDevices && _otherConnected)
+                {
+                    foreach (var light in _idToZ1)
+                    {
+                        SetRgbOtherLight(light.Value, color);
+                    }
+
+                    foreach (var light in _idToZ2)
+                    {
+                        SetRgbOtherLight(light.Value, color);
+                    }
+
+                    foreach (var light in _idToZ3)
+                    {
+                        SetRgbOtherLight(light.Value, color);
+                    }
+
+                    foreach (var light in _idToZ4)
+                    {
+                        SetRgbOtherLight(light.Value, color);
+                    }
+
+                    foreach (var light in _idToZ5)
+                    {
+                        SetRgbOtherLight(light.Value, color);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Error, @"Asus: " + ex.Message);
+                Write.WriteConsole(ConsoleTypes.Error, @"Internal Error: " + ex.StackTrace);
+            }
+        }
+
+        public void ApplyMapOtherLighting(int pos, Color color)
+        {
+            if (!isInitialized || !_AsusDeviceOtherDevices) return;
+
+            try
+            {
+                switch (pos)
+                {
+                    case 1:
+                        foreach (var light in _idToZ1)
+                        {
+                            SetRgbOtherLight(light.Value, color);
+                        }
+                        break;
+                    case 2:
+                        foreach (var light in _idToZ2)
+                        {
+                            SetRgbOtherLight(light.Value, color);
+                        }
+                        break;
+                    case 3:
+                        foreach (var light in _idToZ3)
+                        {
+                            SetRgbOtherLight(light.Value, color);
+                        }
+                        break;
+                    case 4:
+                        foreach (var light in _idToZ4)
+                        {
+                            SetRgbOtherLight(light.Value, color);
+                        }
+                        break;
+                    case 5:
+                        foreach (var light in _idToZ5)
+                        {
+                            SetRgbOtherLight(light.Value, color);
+                        }
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -710,12 +977,13 @@ namespace Chromatics.DeviceInterfaces
         }
 
 
-        public void ResetAsusDevices(bool deviceKeyboard, bool deviceMouse, bool deviceHeadset, Color basecol)
+        public void ResetAsusDevices(bool deviceKeyboard, bool deviceMouse, bool deviceHeadset, bool deviceOther, Color basecol)
         {
 
             _AsusDeviceKeyboard = deviceKeyboard;
             _AsusDeviceMouse = deviceMouse;
             _AsusDeviceHeadset = deviceHeadset;
+            _AsusDeviceOtherDevices = deviceOther;
 
         }
         

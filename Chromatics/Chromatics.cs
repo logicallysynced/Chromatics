@@ -161,6 +161,7 @@ namespace Chromatics
         private bool _asusDeviceKeyboard = true;
         private bool _asusDeviceMouse = true;
         private bool _asusDeviceHeadset = true;
+        private bool _asusDeviceOther = true;
         public bool AsusSdk = false;
         public int AsusSdkCalled = 0;
 
