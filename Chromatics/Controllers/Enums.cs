@@ -123,4 +123,17 @@
         CustomTrigger
 
     }
+
+    public enum Modifiers
+    {
+        Null,
+        None,
+        CTRL,
+        ALT,
+        SHIFT,
+        CTRL_ALT,
+        CTRL_SHIFT,
+        ALT_SHIFT,
+        CTRL_ALT_SHIFT
+    }
 }

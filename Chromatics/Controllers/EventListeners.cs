@@ -19,13 +19,22 @@ namespace Chromatics
         private void Kh_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+            {
                 _keyCtrl = true;
+                //Console.WriteLine("CONTROL");
+            }
 
             if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+            {
                 _keyShift = true;
+                //Console.WriteLine("SHIFT");
+            }
 
             if (e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu)
+            {
                 _keyAlt = true;
+                //Console.WriteLine("ALT");
+            }
         }
 
         private void Kh_KeyUp(object sender, KeyEventArgs e)
