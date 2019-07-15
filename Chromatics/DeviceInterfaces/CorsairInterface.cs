@@ -1048,7 +1048,7 @@ namespace Chromatics.DeviceInterfaces
                 if (cV < 2)
                 {
                     Write.WriteConsole(ConsoleTypes.Error,
-                        "Corsair device support requires CUE2 or iCUE Version 2.0.0 or higher to operate. Please download the latest version of CUE2 or iCUE from the Corsair website.");
+                        "Corsair device support requires iCUE Version 3.0.0 or higher to operate. Please download the latest version of iCUE from the Corsair website.");
                     return false;
                 }
 
@@ -1208,7 +1208,6 @@ namespace Chromatics.DeviceInterfaces
                 {
                     _corsairCommanderAllLed.Brush = (SolidColorBrush) color;
                     CueSDK.CommanderProSDK?.Update(true);
-                    Console.WriteLine(CueSDK.CommanderProSDK?.CommanderProDeviceInfo?.Model);
                 }
 
                 if (!string.IsNullOrEmpty(CueSDK.LightingNodeProSDK?.LightingNodeProDeviceInfo?.Model))
@@ -1376,7 +1375,6 @@ namespace Chromatics.DeviceInterfaces
                 if (!_corsairOtherDevices) return;
                 var cc = new CorsairColor(col);
                 var disable = new CorsairColor(Color.Black);
-
                 
                 //Commander Pro
                 
@@ -1599,8 +1597,6 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 if (x6 > 150) continue;
 
-                                Console.WriteLine("Z6: " + x6 + "/" + z6);
-
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
                                     _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(key, cc);
@@ -1645,7 +1641,7 @@ namespace Chromatics.DeviceInterfaces
                             var x1 = 0;
                             var y1 = 0;
                             var t1 = 0;
-                            
+
                             foreach (var key in _diyZ1.GetRange(x1, z1))
                             {
                                 if (x1 > 150) continue;
@@ -1855,9 +1851,7 @@ namespace Chromatics.DeviceInterfaces
                             foreach (var key in _diyZ1.GetRange(x6, z6))
                             {
                                 if (x6 > 150) continue;
-
-                                Console.WriteLine("Z6: " + x6 + "/" + z6);
-
+                                
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
                                     _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(key, cc);

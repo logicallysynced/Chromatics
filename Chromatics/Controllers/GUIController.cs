@@ -2925,31 +2925,73 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            if (RazerSdkCalled == 1)
+            if (chk_dev_chromalink.Checked)
             {
-                if (chk_dev_chromalink.Checked)
+                
+                _deviceCL = true;
+                SetCLbase = false;
+
+                if (RazerSdkCalled == 1)
                 {
                     _razerDeviceChromaLink = true;
-                    _deviceCL = true;
-                    SetCLbase = false;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
                         _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-
                 }
-                else
+
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceOther = true;
+
+                    _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
+                        _corsairDeviceMousepad, _corsairDeviceHeadset, _corsairDeviceOther,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+
+                if (AsusSdkCalled == 1)
+                {
+                    _asusDeviceOther = true;
+
+                    _asus.ResetAsusDevices(_asusDeviceKeyboard, _asusDeviceMouse,
+                         _asusDeviceHeadset, _asusDeviceOther,
+                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                }
+            }
+            else
+            {
+                
+                _deviceCL = false;
+
+                if (RazerSdkCalled == 1)
                 {
                     _razerDeviceChromaLink = false;
-                    _deviceCL = false;
 
                     _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse,
                         _razerDeviceMousepad, _razerDeviceHeadset, _razerDeviceChromaLink,
-                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                        Color.Black);
                 }
 
-                SaveDevices();
+                if (CorsairSdkCalled == 1)
+                {
+                    _corsairDeviceOther = false;
+
+                    _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
+                        _corsairDeviceMousepad, _corsairDeviceHeadset, _corsairDeviceOther,
+                        Color.Black);
+                }
+
+                if (AsusSdkCalled == 1)
+                {
+                    _asusDeviceOther = false;
+
+                    _asus.ResetAsusDevices(_asusDeviceKeyboard, _asusDeviceMouse,
+                        _asusDeviceHeadset, _asusDeviceOther,
+                        Color.Black);
+                }
             }
+
+            SaveDevices();
         }
 
         private void cb_chromalink_z1_SelectedIndexChanged(object sender, EventArgs e)

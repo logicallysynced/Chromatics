@@ -1282,6 +1282,8 @@ namespace Chromatics
                                 GlobalUpdateBulbState(BulbModeTypes.HighlightColor, highlightColor, 100);
                             }
 
+                            
+
                             if (_LightbarMode == LightbarMode.DefaultColor)
                             {
                                 foreach (var f in DeviceEffects.LightbarZones)
@@ -2911,8 +2913,8 @@ namespace Chromatics
 
                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, castPercentage);
                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, false, castPercentage);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, colCastempty, colCastcharge, false, castPercentage);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp, colCastempty, colCastcharge, castPercentage);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, false, castPercentage);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, castPercentage);
 
                             
                             //Cast Charge Keys

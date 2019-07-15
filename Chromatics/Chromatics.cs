@@ -11,6 +11,7 @@ using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Chromatics.ACTInterfaces;
 using Chromatics.Datastore;
 using Chromatics.DeviceInterfaces;
@@ -65,6 +66,7 @@ namespace Chromatics
         private bool _corsairDeviceKeypad = true;
         private bool _corsairDeviceMouse = true;
         private bool _corsairDeviceMousepad = true;
+        private bool _corsairDeviceOther = true;
 
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
@@ -300,7 +302,7 @@ namespace Chromatics
                     else if (type == ConsoleTypes.Asus)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.OrangeRed; });
                     else if (type == ConsoleTypes.Mystic)
-                        rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.MediumSpringGreen; });
+                        rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.SteelBlue; });
                     else if (type == ConsoleTypes.Error)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Red; });
                     else rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Black; });
@@ -322,7 +324,7 @@ namespace Chromatics
                     else if (type == ConsoleTypes.Roccat) rtb_debug.SelectionColor = Color.RosyBrown;
                     else if (type == ConsoleTypes.Wooting) rtb_debug.SelectionColor = Color.Green;
                     else if (type == ConsoleTypes.Asus) rtb_debug.SelectionColor = Color.OrangeRed;
-                    else if (type == ConsoleTypes.Mystic) rtb_debug.SelectionColor = Color.MediumSpringGreen;
+                    else if (type == ConsoleTypes.Mystic) rtb_debug.SelectionColor = Color.SteelBlue;
                     else if (type == ConsoleTypes.Error) rtb_debug.SelectionColor = Color.Red;
                     else rtb_debug.SelectionColor = Color.Black;
 

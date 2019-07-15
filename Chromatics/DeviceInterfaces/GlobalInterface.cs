@@ -679,7 +679,7 @@ namespace Chromatics
 
             if (CorsairSdkCalled == 1)
                 _corsair.ResetCorsairDevices(_corsairDeviceKeyboard, _corsairDeviceKeypad, _corsairDeviceMouse,
-                    _corsairDeviceMousepad, _corsairDeviceHeadset, _razerDeviceChromaLink, baseColor);
+                    _corsairDeviceMousepad, _corsairDeviceHeadset, _corsairDeviceOther, baseColor);
 
             if (CoolermasterSdkCalled == 1)
                 _coolermaster.ResetCoolermasterDevices(_coolermasterDeviceKeyboard, _coolermasterDeviceMouse, baseColor);
@@ -1446,8 +1446,6 @@ namespace Chromatics
         {
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
-
-            
             
             if (mode == _CLZone1Mode)
             {
@@ -1455,7 +1453,10 @@ namespace Chromatics
                     _razer.ApplyMapChromaLinkLighting(col, 0);
 
                 if (CorsairSdkCalled == 1)
-                    _corsair.ApplyMapOtherLighting(col, 1, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+                {
+                    _corsair.ApplyMapOtherLighting(col, 1, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2,
+                        _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
+                }
 
                 if (AsusSdkCalled == 1)
                 if (AsusSdkCalled == 1)
