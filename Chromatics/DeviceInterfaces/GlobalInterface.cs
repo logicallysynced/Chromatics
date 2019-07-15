@@ -1337,13 +1337,13 @@ namespace Chromatics
             
         }
 
-        public void GlobalApplyMapKeypadBINDLighting(int row, int column, Color col, bool clear)
+        public void GlobalApplyMapKeypadBINDLighting(int key, Color col, bool clear)
         {
             
             if (!_EnableKeypadBinds) return;
 
             if (RazerSdkCalled == 1)
-                _razer.ApplyMapKeypadLightingZone(col, clear, column, row);
+                _razer.ApplyMapKeypadLightingZone(col, clear, Helpers.DeviceHelpers.RazerKeypadCoordinates(key)[1], Helpers.DeviceHelpers.RazerKeypadCoordinates(key)[0]);
 
             if (LogitechSdkCalled == 1)
             {

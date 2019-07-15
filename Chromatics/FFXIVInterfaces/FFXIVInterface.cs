@@ -3535,7 +3535,7 @@ namespace Chromatics
                                                             {
                                                                 if (action.ActionKey == bind.Value)
                                                                 {
-                                                                    GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                         .ColorMappingHotbarNotAvailable), false);
                                                                 }
                                                             }
@@ -3550,7 +3550,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindMap), false);
                                                                     }
                                                                 }
@@ -3560,7 +3560,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindAetherCurrents), false);
                                                                     }
                                                                 }
@@ -3570,7 +3570,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindSigns), false);
                                                                     }
                                                                 }
@@ -3580,7 +3580,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindWaymarks), false);
                                                                     }
                                                                 }
@@ -3590,7 +3590,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindRecordReadyCheck), false);
                                                                     }
                                                                 }
@@ -3600,7 +3600,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindReadyCheck), false);
                                                                     }
                                                                 }
@@ -3610,7 +3610,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindCountdown), false);
                                                                     }
                                                                 }
@@ -3620,7 +3620,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindEmotes), false);
                                                                     }
                                                                 }
@@ -3630,7 +3630,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindLinkshells), false);
                                                                     }
                                                                 }
@@ -3640,7 +3640,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindCrossWorldLS), false);
                                                                     }
                                                                 }
@@ -3650,7 +3650,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindContacts), false);
                                                                     }
                                                                 }
@@ -3660,7 +3660,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindSprint), false);
                                                                     }
                                                                 }
@@ -3670,7 +3670,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindTeleport), false);
                                                                     }
                                                                 }
@@ -3680,7 +3680,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindReturn), false);
                                                                     }
                                                                 }
@@ -3690,7 +3690,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindLimitBreak), false);
                                                                     }
                                                                 }
@@ -3700,7 +3700,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindDutyAction), false);
                                                                     }
                                                                 }
@@ -3710,7 +3710,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindRepair), false);
                                                                     }
                                                                 }
@@ -3720,7 +3720,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindDig), false);
                                                                     }
                                                                 }
@@ -3730,7 +3730,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindInventory), false);
                                                                     }
                                                                 }
@@ -3751,7 +3751,7 @@ namespace Chromatics
                                                                 {
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingHotbarProc), false);
                                                                     }
                                                                 }
@@ -3763,7 +3763,7 @@ namespace Chromatics
                                                                     {
                                                                         if (action.ActionKey == bind.Value)
                                                                         {
-                                                                            GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingHotbarCd), false);
                                                                         }
                                                                     }
@@ -3772,7 +3772,7 @@ namespace Chromatics
                                                                     {
                                                                         if (action.ActionKey == bind.Value)
                                                                         {
-                                                                            GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingHotbarReady), false);
                                                                         }
                                                                     }
@@ -3784,7 +3784,7 @@ namespace Chromatics
                                                             {
                                                                 if (action.ActionKey == bind.Value)
                                                                 {
-                                                                    GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                         .ColorMappingHotbarOutRange), false);
                                                                 }
                                                             }
@@ -3796,7 +3796,7 @@ namespace Chromatics
                                                         {
                                                             if (action.ActionKey == bind.Value)
                                                             {
-                                                                GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], ColorTranslator.FromHtml(ColorMappings
+                                                                GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
                                                                     .ColorMappingHotbarNotAvailable), false);
                                                             }
                                                         }
@@ -4335,7 +4335,7 @@ namespace Chromatics
                                     {
                                         foreach (var bind in _KeyBindMap)
                                         {
-                                            GlobalApplyMapKeypadBINDLighting(Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[0], Helpers.DeviceHelpers.RazerKeypadCoordinates(bind.Key)[1], _baseColor, false);
+                                            GlobalApplyMapKeypadBINDLighting(bind.Key, _baseColor, false);
                                         }
                                     }
 
