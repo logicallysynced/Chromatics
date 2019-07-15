@@ -15,6 +15,7 @@
         Roccat,
         Wooting,
         Asus,
+        Mystic,
         Error
     }
 

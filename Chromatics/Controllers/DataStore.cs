@@ -84,6 +84,7 @@ namespace Chromatics.Datastore
         public bool SDKSteelSeries = true;
         public bool SDKWooting = true;
         public bool SDKAsus = true;
+        public bool SDKMystic = true;
         public bool SDKLifx = true;
 
         public bool EnableKeypadBinds = false;

@@ -844,39 +844,52 @@ namespace Chromatics.DeviceInterfaces
 
             try
             {
-                switch (pos)
+                IAuraSyncDeviceCollection devices = 
+                    sdk.Enumerate(0);
+
+                foreach (IAuraSyncDevice dev in devices)
                 {
-                    case 1:
-                        foreach (var light in _idToZ1)
-                        {
-                            SetRgbOtherLight(light.Value, color);
-                        }
-                        break;
-                    case 2:
-                        foreach (var light in _idToZ2)
-                        {
-                            SetRgbOtherLight(light.Value, color);
-                        }
-                        break;
-                    case 3:
-                        foreach (var light in _idToZ3)
-                        {
-                            SetRgbOtherLight(light.Value, color);
-                        }
-                        break;
-                    case 4:
-                        foreach (var light in _idToZ4)
-                        {
-                            SetRgbOtherLight(light.Value, color);
-                        }
-                        break;
-                    case 5:
-                        foreach (var light in _idToZ5)
-                        {
-                            SetRgbOtherLight(light.Value, color);
-                        }
-                        break;
+                    switch (pos)
+                    {
+                        case 1:
+                            foreach (var light in _idToZ1)
+                            {
+                                SetRgbOtherLight(light.Value, color);
+                            }
+                            break;
+                        case 2:
+                            foreach (var light in _idToZ2)
+                            {
+                                SetRgbOtherLight(light.Value, color);
+                            }
+                            break;
+                        case 3:
+                            foreach (var light in _idToZ3)
+                            {
+                                SetRgbOtherLight(light.Value, color);
+                            }
+                            break;
+                        case 4:
+                            if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.BDD ||
+                                dev.Type == (int) AsusSdkWrapper.DeviceTypes.DRAM)
+                            {
+                                foreach (IAuraRgbLight light in dev.Lights)
+                                {
+                                    SetRgbOtherLight(light, color);
+                                }
+                            }
+                            break;
+                        case 5:
+                            foreach (var light in _idToZ5)
+                            {
+                                SetRgbOtherLight(light.Value, color);
+                            }
+                            break;
+                    }
+
                 }
+
+                
             }
             catch (Exception ex)
             {

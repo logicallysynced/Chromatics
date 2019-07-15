@@ -81,6 +81,9 @@
             this.tP_keypad = new System.Windows.Forms.TabPage();
             this.chk_keypad_binds = new System.Windows.Forms.CheckBox();
             this.dgv_keypad_binds = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lbl_keypad_z1 = new System.Windows.Forms.Label();
             this.cb_keypad_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_keypad = new System.Windows.Forms.CheckBox();
@@ -247,9 +250,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chk_sdk_mystic = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -969,6 +970,27 @@
         " modifier) you have assigned in FFXIV.");
             this.dgv_keypad_binds.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnKeypadBindChanged);
             // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "ID";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.FillWeight = 50.76142F;
+            this.dataGridViewTextBoxColumn2.HeaderText = "Keypad Key";
+            this.dataGridViewTextBoxColumn2.MaxInputLength = 2;
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.FillWeight = 149.2386F;
+            this.dataGridViewTextBoxColumn3.HeaderText = "Keybind";
+            this.dataGridViewTextBoxColumn3.MaxInputLength = 1;
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
             // lbl_keypad_z1
             // 
             this.lbl_keypad_z1.AutoSize = true;
@@ -1469,6 +1491,7 @@
             // 
             // gb_sdkcontrol
             // 
+            this.gb_sdkcontrol.Controls.Add(this.chk_sdk_mystic);
             this.gb_sdkcontrol.Controls.Add(this.chk_sdk_lifx);
             this.gb_sdkcontrol.Controls.Add(this.chk_sdk_asus);
             this.gb_sdkcontrol.Controls.Add(this.chk_sdk_wooting);
@@ -3220,26 +3243,19 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // dataGridViewTextBoxColumn1
+            // chk_sdk_mystic
             // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "ID";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.FillWeight = 50.76142F;
-            this.dataGridViewTextBoxColumn2.HeaderText = "Keypad Key";
-            this.dataGridViewTextBoxColumn2.MaxInputLength = 2;
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.FillWeight = 149.2386F;
-            this.dataGridViewTextBoxColumn3.HeaderText = "Keybind";
-            this.dataGridViewTextBoxColumn3.MaxInputLength = 1;
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.chk_sdk_mystic.AutoSize = true;
+            this.chk_sdk_mystic.Location = new System.Drawing.Point(10, 176);
+            this.chk_sdk_mystic.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_mystic.Name = "chk_sdk_mystic";
+            this.chk_sdk_mystic.Size = new System.Drawing.Size(143, 17);
+            this.chk_sdk_mystic.TabIndex = 9;
+            this.chk_sdk_mystic.Text = "Enable Mystic Light SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_mystic, "Enable/Disable the Mystic Light SDK from loading when Chromatics starts.\r\n(Requir" +
+        "es App Restart)");
+            this.chk_sdk_mystic.UseVisualStyleBackColor = true;
+            this.chk_sdk_mystic.CheckedChanged += new System.EventHandler(this.Chk_sdk_mystic_CheckedChanged);
             // 
             // Chromatics
             // 
@@ -3543,6 +3559,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.CheckBox chk_sdk_mystic;
     }
 }
 

@@ -73,6 +73,8 @@ namespace Chromatics
         //private IRoccatSdk _roccat;
         private ILifxSdk _lifx;
 
+        private IMysticSdk _mystic;
+
         private CancellationTokenSource _lifx4Cts = new CancellationTokenSource();
         private Task _lifxFl4;
         private Task _logiFl2;
@@ -297,6 +299,28 @@ namespace Chromatics
                 }
             }
 
+            if (_SDKMystic && MysticSdkCalled == 0)
+            {
+                WriteConsole(ConsoleTypes.Mystic, @"Attempting to load Mystic Light SDK..");
+                _mystic = MysticInterface.InitializeMysticSdk();
+                if (_mystic != null)
+                {
+                    MysticSdk = true;
+                    MysticSdkCalled = 1;
+                    MysticFirstSet = true;
+                    WriteConsole(ConsoleTypes.Mystic, @"Mystic Light SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Mystic");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Mystic, @"Mystic Light SDK failed to load. Please make sure Mystic Light is installed and running.");
+                }
+            }
+
             if (_SDKLifx && LifxSdkCalled == 0)
             {
                 //Load LIFX SDK
@@ -493,6 +517,26 @@ namespace Chromatics
                 }
             }
 
+            if (_SDKMystic && MysticSdkCalled == 0 && MysticFirstSet)
+            {
+                _mystic = MysticInterface.InitializeMysticSdk();
+                if (_mystic != null)
+                {
+                    MysticSdk = true;
+                    MysticSdkCalled = 1;
+                    WriteConsole(ConsoleTypes.Mystic, @"Mystic Light SDK Loaded");
+
+                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
+                    {
+                        AutoMeasurement.Client.TrackScreenView("Mystic");
+                    }
+                }
+                else
+                {
+                    WriteConsole(ConsoleTypes.Mystic, @"Mystic Light SDK failed to load.");
+                }
+            }
+
             if (_SDKLifx && LifxSdkCalled == 0 && lifxFirstSet)
             {
                 //Load LIFX SDK
@@ -570,6 +614,13 @@ namespace Chromatics
                 _asus = null;
                 AsusSdkCalled = 0;
             }
+
+            if (MysticSdkCalled == 1)
+            {
+                _mystic.ShutdownSdk();
+                _mystic = null;
+                MysticSdkCalled = 0;
+            }
         }
 
         public void GlobalCheckCrash()
@@ -642,6 +693,8 @@ namespace Chromatics
             if (AsusSdkCalled == 1)
                 _asus.ResetAsusDevices(_asusDeviceKeyboard, _asusDeviceMouse, _asusDeviceHeadset, _asusDeviceOther, baseColor);
 
+            if (MysticSdkCalled == 1)
+                _mystic.ResetMysticDevices(_mysticDeviceKeyboard, _mysticDeviceOther, baseColor);
             //ResetDeviceDataGrid();
         }
         
@@ -773,6 +826,11 @@ namespace Chromatics
             {
                 _asus.SetAllLights(col);
             }
+
+            if (MysticSdkCalled == 1)
+            {
+                _mystic.SetAllLights(col);
+            }
         }
 
         public void GlobalApplyAllKeyLighting(Color col)
@@ -804,6 +862,11 @@ namespace Chromatics
             if (AsusSdkCalled == 1)
             {
                 _asus.SetLights(col);
+            }
+
+            if (MysticSdkCalled == 1)
+            {
+                _mystic.SetLights(col);
             }
         }
 
@@ -1395,7 +1458,13 @@ namespace Chromatics
                     _corsair.ApplyMapOtherLighting(col, 1, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
 
                 if (AsusSdkCalled == 1)
+                if (AsusSdkCalled == 1)
+                if (AsusSdkCalled == 1)
+                if (AsusSdkCalled == 1)
                     _asus.ApplyMapOtherLighting(1, col);
+
+                if (MysticSdkCalled == 1)
+                    _mystic.ApplyMapOtherLighting(1, col);
             }
 
             if (mode == _CLZone2Mode)

@@ -69,8 +69,8 @@ namespace Chromatics
         public bool CorsairRescan = false;
         public bool CorsairSdk = false;
         public int CorsairSdkCalled = 0;
-        private readonly string _currentVersionX = "2.5.1";
-        private readonly bool _debugmode = false;
+        private readonly string _currentVersionX = "2.5.2";
+        private readonly bool _debugmode = true;
         public bool DeviceGridStartup = false;
         private bool blockACTVersion = false;
         private const int ACTVersionMatch = 1;
@@ -100,6 +100,7 @@ namespace Chromatics
         public bool _SDKSteelSeries = true;
         public bool _SDKWooting = true;
         public bool _SDKAsus = true;
+        public bool _SDKMystic = true;
         public bool _SDKLifx = true;
 
         public int _ChromaLinkLEDCountZ1 = 10;
@@ -164,6 +165,12 @@ namespace Chromatics
         private bool _asusDeviceOther = true;
         public bool AsusSdk = false;
         public int AsusSdkCalled = 0;
+
+        private bool _mysticDeviceOther = true;
+        private bool _mysticDeviceKeyboard = true;
+        public bool MysticSdk = false;
+        public int MysticSdkCalled = 0;
+        public bool MysticFirstSet = false;
 
         public bool _EnableKeypadBinds = false;
         /*
@@ -292,6 +299,8 @@ namespace Chromatics
                         rtb_debug.Invoke((Action)delegate { rtb_debug.SelectionColor = Color.Green; });
                     else if (type == ConsoleTypes.Asus)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.OrangeRed; });
+                    else if (type == ConsoleTypes.Mystic)
+                        rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.MediumSpringGreen; });
                     else if (type == ConsoleTypes.Error)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Red; });
                     else rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Black; });
@@ -313,6 +322,7 @@ namespace Chromatics
                     else if (type == ConsoleTypes.Roccat) rtb_debug.SelectionColor = Color.RosyBrown;
                     else if (type == ConsoleTypes.Wooting) rtb_debug.SelectionColor = Color.Green;
                     else if (type == ConsoleTypes.Asus) rtb_debug.SelectionColor = Color.OrangeRed;
+                    else if (type == ConsoleTypes.Mystic) rtb_debug.SelectionColor = Color.MediumSpringGreen;
                     else if (type == ConsoleTypes.Error) rtb_debug.SelectionColor = Color.Red;
                     else rtb_debug.SelectionColor = Color.Black;
 
@@ -917,7 +927,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-
+        
         
     }
 

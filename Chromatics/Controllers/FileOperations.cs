@@ -67,6 +67,7 @@ namespace Chromatics
             dr.SDKSteelSeries = _SDKSteelSeries;
             dr.SDKWooting = _SDKWooting;
             dr.SDKAsus = _SDKAsus;
+            dr.SDKMystic = _SDKMystic;
             dr.SDKLifx = _SDKLifx;
 
             dr.KeysSingleKeyModeEnabled = _KeysSingleKeyModeEnabled;
@@ -227,6 +228,7 @@ namespace Chromatics
                         _SDKSteelSeries = dr.SDKSteelSeries;
                         _SDKWooting = dr.SDKWooting;
                         _SDKAsus = dr.SDKAsus;
+                        _SDKMystic = dr.SDKMystic;
                         _SDKLifx = dr.SDKLifx;
                         
                         _KeysSingleKeyModeEnabled = dr.KeysSingleKeyModeEnabled;

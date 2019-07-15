@@ -1157,6 +1157,7 @@ namespace Chromatics
             chk_sdk_wooting.Checked = _SDKWooting;
             chk_sdk_asus.Checked = _SDKAsus;
             chk_sdk_lifx.Checked = _SDKLifx;
+            chk_sdk_mystic.Checked = _SDKMystic;
 
             if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
             {
@@ -3455,6 +3456,14 @@ namespace Chromatics
             if (Startup == false) return;
 
             _SDKAsus = chk_sdk_asus.Checked;
+            SaveDevices();
+        }
+
+        private void Chk_sdk_mystic_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _SDKMystic = chk_sdk_mystic.Checked;
             SaveDevices();
         }
 
