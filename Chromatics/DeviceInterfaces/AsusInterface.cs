@@ -805,29 +805,55 @@ namespace Chromatics.DeviceInterfaces
 
                 if  (_AsusDeviceOtherDevices && _otherConnected)
                 {
-                    foreach (var light in _idToZ1)
-                    {
-                        SetRgbOtherLight(light.Value, color);
-                    }
+                    IAuraSyncDeviceCollection devices = 
+                        sdk.Enumerate(0);
 
-                    foreach (var light in _idToZ2)
+                    foreach (IAuraSyncDevice dev in devices)
                     {
-                        SetRgbOtherLight(light.Value, color);
-                    }
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Chassis ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.AIO ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.Display ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.Projector)
+                        {
+                            foreach (IAuraRgbLight light in dev.Lights)
+                            {
+                                SetRgbOtherLight(light, color);
+                            }
+                        }
 
-                    foreach (var light in _idToZ3)
-                    {
-                        SetRgbOtherLight(light.Value, color);
-                    }
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Motherboard ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.MotherboardLED)
+                        {
+                            foreach (IAuraRgbLight light in dev.Lights)
+                            {
+                                SetRgbOtherLight(light, color);
+                            }
+                        }
 
-                    foreach (var light in _idToZ4)
-                    {
-                        SetRgbOtherLight(light.Value, color);
-                    }
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.VGA)
+                        {
+                            foreach (IAuraRgbLight light in dev.Lights)
+                            {
+                                SetRgbOtherLight(light, color);
+                            }
+                        }
 
-                    foreach (var light in _idToZ5)
-                    {
-                        SetRgbOtherLight(light.Value, color);
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.BDD ||
+                            dev.Type == (int) AsusSdkWrapper.DeviceTypes.DRAM)
+                        {
+                            foreach (IAuraRgbLight light in dev.Lights)
+                            {
+                                SetRgbOtherLight(light, color);
+                            }
+                        }
+
+                        if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Microphone)
+                        {
+                            foreach (IAuraRgbLight light in dev.Lights)
+                            {
+                                SetRgbOtherLight(light, color);
+                            }
+                        }
                     }
                 }
             }
@@ -852,21 +878,34 @@ namespace Chromatics.DeviceInterfaces
                     switch (pos)
                     {
                         case 1:
-                            foreach (var light in _idToZ1)
+                            if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Chassis ||
+                                dev.Type == (int) AsusSdkWrapper.DeviceTypes.AIO ||
+                                dev.Type == (int) AsusSdkWrapper.DeviceTypes.Display ||
+                                dev.Type == (int) AsusSdkWrapper.DeviceTypes.Projector)
                             {
-                                SetRgbOtherLight(light.Value, color);
+                                foreach (IAuraRgbLight light in dev.Lights)
+                                {
+                                    SetRgbOtherLight(light, color);
+                                }
                             }
                             break;
                         case 2:
-                            foreach (var light in _idToZ2)
+                            if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Motherboard ||
+                                dev.Type == (int) AsusSdkWrapper.DeviceTypes.MotherboardLED)
                             {
-                                SetRgbOtherLight(light.Value, color);
+                                foreach (IAuraRgbLight light in dev.Lights)
+                                {
+                                    SetRgbOtherLight(light, color);
+                                }
                             }
                             break;
                         case 3:
-                            foreach (var light in _idToZ3)
+                            if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.VGA)
                             {
-                                SetRgbOtherLight(light.Value, color);
+                                foreach (IAuraRgbLight light in dev.Lights)
+                                {
+                                    SetRgbOtherLight(light, color);
+                                }
                             }
                             break;
                         case 4:
@@ -880,9 +919,12 @@ namespace Chromatics.DeviceInterfaces
                             }
                             break;
                         case 5:
-                            foreach (var light in _idToZ5)
+                            if (dev.Type == (int) AsusSdkWrapper.DeviceTypes.Microphone)
                             {
-                                SetRgbOtherLight(light.Value, color);
+                                foreach (IAuraRgbLight light in dev.Lights)
+                                {
+                                    SetRgbOtherLight(light, color);
+                                }
                             }
                             break;
                     }
