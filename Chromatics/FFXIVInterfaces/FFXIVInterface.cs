@@ -1413,11 +1413,11 @@ namespace Chromatics
 
                         if (SetCLbase == false)
                         {
-                            GlobalApplyMapChromaLinkLighting(DevModeTypes.DefaultColor, baseColor);
-                            GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor);
-                            GlobalApplyMapChromaLinkLighting(DevModeTypes.Castbar, baseColor);
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.DefaultColor, baseColor, true);
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor, true);
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.Castbar, baseColor, true);
 
-                            GlobalApplyMapChromaLinkLighting(DevModeTypes.HighlightColor, highlightColor);
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.HighlightColor, highlightColor, true);
 
                             SetCLbase = true;
                         }
@@ -1506,7 +1506,7 @@ namespace Chromatics
                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
-                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
 
                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -1976,7 +1976,7 @@ namespace Chromatics
                                                 GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                                 GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
     
                                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -2047,6 +2047,10 @@ namespace Chromatics
                                 GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
                                     ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
                                     : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
+
+                                GlobalApplyOtherLightingViaInterpolation(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
+                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0, maxThp, currentThp);
 
                                 //Lightbar
                                 if (_LightbarMode == LightbarMode.TargetHp)
@@ -2198,6 +2202,10 @@ namespace Chromatics
                                     ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                     : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
 
+                                GlobalApplyOtherLightingViaInterpolation(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
+                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0, maxThp, currentThp);
+
                                 //Lightbar
                                 if (_LightbarMode == LightbarMode.TargetHp)
                                 {
@@ -2332,7 +2340,7 @@ namespace Chromatics
                                     GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
                                     GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false, "All");
-                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting));
+                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), true);
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
                                     GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
@@ -2408,7 +2416,7 @@ namespace Chromatics
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm0, false, "All");
-                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0);
+                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0, true);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm0, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm0, false);
@@ -2467,7 +2475,7 @@ namespace Chromatics
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm1, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm1, false);
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm1, false, "All");
-                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm1);
+                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm1, true);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm1, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm1, false);
@@ -2527,7 +2535,7 @@ namespace Chromatics
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm2, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm2, false);
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm2, false, "All");
-                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm2);
+                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm2, true);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm2, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm2, false);
@@ -2587,7 +2595,7 @@ namespace Chromatics
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm3, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm3, false);
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm3, false, "All");
-                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm3);
+                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm3, true);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm3, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm3, false);
@@ -2647,7 +2655,7 @@ namespace Chromatics
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm4, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm4, false);
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm4, false, "All");
-                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm4);
+                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm4, true);
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm4, false);
                                             GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm4, false);
@@ -2707,7 +2715,7 @@ namespace Chromatics
                                         GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                         GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm0, false, "All");
-                                        GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0);
+                                        GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0, true);
 
                                         GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm0, false);
                                         GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm0, false);
@@ -2772,7 +2780,7 @@ namespace Chromatics
                                 GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
-                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
 
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -2835,7 +2843,7 @@ namespace Chromatics
                                 GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, baseColor, false);
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, baseColor, false);
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, baseColor, false, "All");
-                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, baseColor);
+                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, baseColor, true);
 
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", baseColor, false);
                                 GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", baseColor, false);
@@ -2868,7 +2876,7 @@ namespace Chromatics
                             GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, baseColor, false);
                             GlobalApplyMapHeadsetLighting(DevModeTypes.TargetHp, baseColor, false);
                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, baseColor, false, "All");
-                            GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor);
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor, true);
 
                             if (_LightbarMode == LightbarMode.TargetHp || _LightbarMode == LightbarMode.EnmityTracker)
                             {
@@ -2915,6 +2923,8 @@ namespace Chromatics
                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, false, castPercentage);
                             GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, false, castPercentage);
                             GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, castPercentage);
+                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.Castbar, colCastempty, colCastcharge, 0, 100, Convert.ToInt32(castPercentage * 100));
+
 
                             
                             //Cast Charge Keys
@@ -3088,7 +3098,7 @@ namespace Chromatics
                                     GlobalApplyMapMouseLighting(DevModeTypes.Castbar, baseColor, false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.Castbar, baseColor, false);
                                     //GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "All");
-                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.Castbar, baseColor);
+                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.Castbar, baseColor, true);
                                 });
                                 MemoryTasks.Add(cBulbRip1);
                                 MemoryTasks.Run(cBulbRip1);
@@ -3125,6 +3135,8 @@ namespace Chromatics
                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, false, polHpz2);
                             GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, false, polHpz2);
                             GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, polHpz2);
+
+                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, 0, maxHp, currentHp);
 
 
                             //FKeys
@@ -3288,6 +3300,8 @@ namespace Chromatics
                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, false, polMpz2);
                             GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, false, polMpz2);
                             GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, polMpz2);
+
+                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.MpTracker, colMpempty, colMpfull, 0, maxMp, currentMp);
 
                             //FKeys
                             if (_FKeyMode == FKeyMode.HpMp)
@@ -5039,7 +5053,7 @@ namespace Chromatics
                                                 GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), false);
                                                 GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), false);
                                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell));
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), true);
 
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
@@ -5061,12 +5075,12 @@ namespace Chromatics
                                             }
                                             else
                                             {
-                                                GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle));
-                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), "All");
-                                                GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false);
-                                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false);
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle));
+                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle));
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), "All");
+                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false);
+                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false, "All");
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), true);
 
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
@@ -5125,7 +5139,7 @@ namespace Chromatics
                                                 GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), false);
                                                 GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), false);
                                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild));
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), true);
 
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
@@ -5147,12 +5161,12 @@ namespace Chromatics
                                             }
                                             else
                                             {
-                                                GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle));
-                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), "All");
-                                                GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false);
-                                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false);
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle));
+                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle));
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), "All");
+                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false);
+                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false, "All");
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), true);
 
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
@@ -5265,6 +5279,8 @@ namespace Chromatics
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
@@ -5309,6 +5325,8 @@ namespace Chromatics
                                                                 .ColorMappingACTThresholdEmpty),
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTDPSz2);
+
+                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTDPSz2 * 100));
                                                     }
                                                 }
 
@@ -5492,6 +5510,8 @@ namespace Chromatics
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
@@ -5536,6 +5556,8 @@ namespace Chromatics
                                                                 .ColorMappingACTThresholdEmpty),
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTHPSz2);
+
+                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTHPSz2 * 100));
                                                     }
                                                 }
 
@@ -5718,6 +5740,8 @@ namespace Chromatics
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
@@ -5764,6 +5788,8 @@ namespace Chromatics
                                                                 .ColorMappingACTThresholdEmpty),
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTGroupDPSz2);
+
+                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTGroupDPSz2 * 100));
                                                     }
                                                 }
 
@@ -5946,6 +5972,8 @@ namespace Chromatics
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
@@ -5990,6 +6018,8 @@ namespace Chromatics
                                                                 .ColorMappingACTThresholdEmpty),
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTCritz2);
+
+                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTCritz2 * 100));
                                                     }
                                                 }
 
@@ -6171,6 +6201,8 @@ namespace Chromatics
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
@@ -6215,6 +6247,8 @@ namespace Chromatics
                                                                 .ColorMappingACTThresholdEmpty),
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTDHz2);
+
+                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTDHz2 * 100));
                                                     }
                                                 }
 
@@ -6396,6 +6430,8 @@ namespace Chromatics
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdBuild), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdBuild), 1.0);
+
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
@@ -6442,6 +6478,8 @@ namespace Chromatics
                                                                 .ColorMappingACTThresholdEmpty),
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdSuccess), polACTCritDHz2);
+
+                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTCritDHz2 * 100));
                                                     }
                                                 }
 
@@ -6623,6 +6661,8 @@ namespace Chromatics
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
@@ -6669,6 +6709,8 @@ namespace Chromatics
                                                                 .ColorMappingACTThresholdEmpty),
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTOverhealz2);
+
+                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTOverhealz2 * 100));
                                                     }
                                                 }
 
@@ -6848,6 +6890,8 @@ namespace Chromatics
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
@@ -6892,6 +6936,8 @@ namespace Chromatics
                                                                 .ColorMappingACTThresholdEmpty),
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTDamagez2);
+
+                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTDamagez2 * 100));
                                                     }
                                                 }
 
@@ -7061,6 +7107,8 @@ namespace Chromatics
                                             GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0.0);
 
+                                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 0);
+
                                             //Functions
                                             if (_FKeyMode == FKeyMode.ACTTracker)
                                             {
@@ -7191,7 +7239,7 @@ namespace Chromatics
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
                                         "All");
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder,
-                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell));
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), true);
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1",
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false);
@@ -7250,7 +7298,7 @@ namespace Chromatics
                                     GlobalApplyMapMouseLighting(DevModeTypes.DutyFinder, baseColor, false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.DutyFinder, baseColor, false);
                                     GlobalApplyMapKeypadLighting(DevMultiModeTypes.DutyFinder, baseColor, false, "All");
-                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, baseColor);
+                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, baseColor, true);
 
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", baseColor, false);
                                     GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide2", "RightSide2", baseColor, false);

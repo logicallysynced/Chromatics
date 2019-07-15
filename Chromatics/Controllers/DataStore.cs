@@ -108,6 +108,9 @@ namespace Chromatics.Datastore
         public string KeypadZ18Bind = "18";
         public string KeypadZ19Bind = "19";
         public string KeypadZ20Bind = "20";
+
+        public bool OtherInterpolateEffects = false;
+        public bool ReverseInterpolateEffects = false;
     }
 
     //Settings

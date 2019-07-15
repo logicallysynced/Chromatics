@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
+using Chromatics.Controllers;
 using Chromatics.CorsairLibs;
 using Chromatics.DeviceInterfaces.EffectLibrary;
 using Chromatics.FFXIVInterfaces;
@@ -69,7 +70,8 @@ namespace Chromatics.DeviceInterfaces
         void ApplyMapHeadsetLighting(Color col, bool clear);
         void ApplyMapStandLighting(string region, Color col, bool clear);
         void ApplyMapOtherLighting(Color col, int pos, int z1, int z2, int z3, int z4, int z5, int z6);
-
+        void ApplyMapOtherLightingInterpolate(Color empty, Color full, int pos, int z1, int z2, int z3, int z4, int z5, int z6,
+            int min, int max, int current, bool reverse);
         Task Ripple1(Color burstcol, int speed, Color baseColor);
         Task Ripple2(Color burstcol, int speed);
         void Flash1(Color burstcol, int speed, string[] regions);
@@ -724,6 +726,22 @@ namespace Chromatics.DeviceInterfaces
             { CorsairLedId.Cooler_150 }
         };
 
+        private readonly List<CorsairLedId> _memoryZ1 = new List<CorsairLedId>
+        {
+            { CorsairLedId.RAM_1 },
+            { CorsairLedId.RAM_2 },
+            { CorsairLedId.RAM_3 },
+            { CorsairLedId.RAM_4 },
+            { CorsairLedId.RAM_5 },
+            { CorsairLedId.RAM_6 },
+            { CorsairLedId.RAM_7 },
+            { CorsairLedId.RAM_8 },
+            { CorsairLedId.RAM_9 },
+            { CorsairLedId.RAM_10 },
+            { CorsairLedId.RAM_11 },
+            { CorsairLedId.RAM_12 }
+        };
+
         private readonly Dictionary<string, CorsairLedId> _corsairkeyids = new Dictionary<string, CorsairLedId>
         {
             //Keys
@@ -1366,6 +1384,1136 @@ namespace Chromatics.DeviceInterfaces
             CueSDK.HeadsetSDK[CorsairLedId.RightLogo].Color = cc;
         }
 
+        public void ApplyMapOtherLightingInterpolate(Color empty, Color full, int pos, int z1, int z2, int z3, int z4, int z5, int z6,
+            int min, int max, int current, bool reverse)
+        {
+            
+            if (pause) return;
+
+            if (!_corsairOtherDevices) return;
+            var cc_empty = new CorsairColor(reverse ? full : empty);
+            var cc_full = new CorsairColor(reverse ? empty : full);
+            
+
+            if (!string.IsNullOrEmpty(CueSDK.CommanderProSDK?.CommanderProDeviceInfo?.Model))
+            {
+                switch (pos)
+                {
+                    case 1:
+                        var x1 = 0;
+                        var y1 = 0;
+                        var t1 = 0;
+                        
+                        var Z1Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x1 : z1, reverse ? z1 : x1);
+                        var Z2Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y1 : z1, reverse ? z1 : y1);
+                        var Z3Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t1 : z1, reverse ? z1 : t1);
+                        
+                        if (Z1Interpolate1 <= 150)
+                        {
+                            for (var a1 = x1; a1 < z1; a1++)
+                            {
+                                if (a1 <= Z1Interpolate1)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate1 <= 150)
+                        {
+                            for (var a1 = t1; a1 < z1; a1++)
+                            {
+                                if (a1 <= Z2Interpolate1)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate1 <= 150)
+                        {
+                            for (var a1 = t1; a1 < z1; a1++)
+                            {
+                                if (a1 <= Z2Interpolate1)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 2:
+                        var x2 = z1;
+                        var y2 = z1;
+                        var t2 = z1;
+                        
+                        var Z1Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x2 : (z1+z2), reverse ? (z1+z2) : x2);
+                        var Z2Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y2 : (z1+z2), reverse ? (z1+z2) : y2);
+                        var Z3Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t2 : (z1+z2), reverse ? (z1+z2) : t2);
+                        
+                        if (Z1Interpolate2 <= 150)
+                        {
+                            for (var a1 = x2; a1 < (z1+z2); a1++)
+                            {
+                                if (a1 <= Z1Interpolate2)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate2 <= 150)
+                        {
+                            for (var a1 = t2; a1 < (z1+z2); a1++)
+                            {
+                                if (a1 <= Z2Interpolate2)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate2 <= 150)
+                        {
+                            for (var a1 = t2; a1 < (z1+z2); a1++)
+                            {
+                                if (a1 <= Z2Interpolate2)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 3:
+                        var x3 = z1+z2;
+                        var y3 = z1+z2;
+                        var t3 = z1+z2;
+                        
+                        var Z1Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x3 : (z1+z2+z3), reverse ? (z1+z2+z3) : x3);
+                        var Z2Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y3 : (z1+z2+z3), reverse ? (z1+z2+z3) : y3);
+                        var Z3Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t3 : (z1+z2+z3), reverse ? (z1+z2+z3) : t3);
+                        
+                        if (Z1Interpolate3 <= 150)
+                        {
+                            for (var a1 = x3; a1 < (z1+z2+z3); a1++)
+                            {
+                                if (a1 <= Z1Interpolate3)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate3 <= 150)
+                        {
+                            for (var a1 = t3; a1 < (z1+z2+z3); a1++)
+                            {
+                                if (a1 <= Z2Interpolate3)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate3 <= 150)
+                        {
+                            for (var a1 = t3; a1 < (z1+z2+z3); a1++)
+                            {
+                                if (a1 <= Z2Interpolate3)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 4:
+                        var x4 = z1+z2+z3;
+                        var y4 = z1+z2+z3;
+                        var t4 = z1+z2+z3;
+                        
+                        var Z1Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : x4);
+                        var Z2Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : y4);
+                        var Z3Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : t4);
+                        
+                        if (Z1Interpolate4 <= 150)
+                        {
+                            for (var a1 = x4; a1 < (z1+z2+z3+z4); a1++)
+                            {
+                                if (a1 <= Z1Interpolate4)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate4 <= 150)
+                        {
+                            for (var a1 = t4; a1 < (z1+z2+z3+z4); a1++)
+                            {
+                                if (a1 <= Z2Interpolate4)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate4 <= 150)
+                        {
+                            for (var a1 = t4; a1 < (z1+z2+z3+z4); a1++)
+                            {
+                                if (a1 <= Z2Interpolate4)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 5:
+                        var x5 = z1+z2+z3+z4;
+                        var y5 = z1+z2+z3+z4;
+                        var t5 = z1+z2+z3+z4;
+                        
+                        var Z1Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : x5);
+                        var Z2Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : y5);
+                        var Z3Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : t5);
+                        
+                        if (Z1Interpolate5 <= 150)
+                        {
+                            for (var a1 = x5; a1 < (z1+z2+z3+z4+z5); a1++)
+                            {
+                                if (a1 <= Z1Interpolate5)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate5 <= 150)
+                        {
+                            for (var a1 = t5; a1 < (z1+z2+z3+z4+z5); a1++)
+                            {
+                                if (a1 <= Z2Interpolate5)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate5 <= 150)
+                        {
+                            for (var a1 = t5; a1 < (z1+z2+z3+z4+z5); a1++)
+                            {
+                                if (a1 <= Z2Interpolate5)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 6:
+                        var x6 = z1+z2+z3+z4+z5;
+                        var y6 = z1+z2+z3+z4+z5;
+                        var t6 = z1+z2+z3+z4+z5;
+                        
+                        var Z1Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : x6);
+                        var Z2Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : y6);
+                        var Z3Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : t6);
+                        
+                        if (Z1Interpolate6 <= 150)
+                        {
+                            for (var a1 = x6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
+                            {
+                                if (a1 <= Z1Interpolate6)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate6 <= 150)
+                        {
+                            for (var a1 = t6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
+                            {
+                                if (a1 <= Z2Interpolate6)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate6 <= 150)
+                        {
+                            for (var a1 = t6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
+                            {
+                                if (a1 <= Z2Interpolate6)
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCommanderIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairCommanderIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(CueSDK.LightingNodeProSDK?.LightingNodeProDeviceInfo?.Model))
+            {
+                switch (pos)
+                {
+                    case 1:
+                        var x1 = 0;
+                        var y1 = 0;
+                        var t1 = 0;
+                        
+                        var Z1Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x1 : z1, reverse ? z1 : x1);
+                        var Z2Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y1 : z1, reverse ? z1 : y1);
+                        var Z3Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t1 : z1, reverse ? z1 : t1);
+                        
+                        if (Z1Interpolate1 <= 150)
+                        {
+                            for (var a1 = x1; a1 < z1; a1++)
+                            {
+                                if (a1 <= Z1Interpolate1)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate1 <= 150)
+                        {
+                            for (var a1 = t1; a1 < z1; a1++)
+                            {
+                                if (a1 <= Z2Interpolate1)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate1 <= 150)
+                        {
+                            for (var a1 = t1; a1 < z1; a1++)
+                            {
+                                if (a1 <= Z2Interpolate1)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 2:
+                        var x2 = z1;
+                        var y2 = z1;
+                        var t2 = z1;
+                        
+                        var Z1Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x2 : (z1+z2), reverse ? (z1+z2) : x2);
+                        var Z2Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y2 : (z1+z2), reverse ? (z1+z2) : y2);
+                        var Z3Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t2 : (z1+z2), reverse ? (z1+z2) : t2);
+                        
+                        if (Z1Interpolate2 <= 150)
+                        {
+                            for (var a1 = x2; a1 < (z1+z2); a1++)
+                            {
+                                if (a1 <= Z1Interpolate2)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate2 <= 150)
+                        {
+                            for (var a1 = t2; a1 < (z1+z2); a1++)
+                            {
+                                if (a1 <= Z2Interpolate2)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate2 <= 150)
+                        {
+                            for (var a1 = t2; a1 < (z1+z2); a1++)
+                            {
+                                if (a1 <= Z2Interpolate2)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 3:
+                        var x3 = z1+z2;
+                        var y3 = z1+z2;
+                        var t3 = z1+z2;
+                        
+                        var Z1Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x3 : (z1+z2+z3), reverse ? (z1+z2+z3) : x3);
+                        var Z2Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y3 : (z1+z2+z3), reverse ? (z1+z2+z3) : y3);
+                        var Z3Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t3 : (z1+z2+z3), reverse ? (z1+z2+z3) : t3);
+                        
+                        if (Z1Interpolate3 <= 150)
+                        {
+                            for (var a1 = x3; a1 < (z1+z2+z3); a1++)
+                            {
+                                if (a1 <= Z1Interpolate3)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate3 <= 150)
+                        {
+                            for (var a1 = t3; a1 < (z1+z2+z3); a1++)
+                            {
+                                if (a1 <= Z2Interpolate3)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate3 <= 150)
+                        {
+                            for (var a1 = t3; a1 < (z1+z2+z3); a1++)
+                            {
+                                if (a1 <= Z2Interpolate3)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 4:
+                        var x4 = z1+z2+z3;
+                        var y4 = z1+z2+z3;
+                        var t4 = z1+z2+z3;
+                        
+                        var Z1Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : x4);
+                        var Z2Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : y4);
+                        var Z3Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : t4);
+                        
+                        if (Z1Interpolate4 <= 150)
+                        {
+                            for (var a1 = x4; a1 < (z1+z2+z3+z4); a1++)
+                            {
+                                if (a1 <= Z1Interpolate4)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate4 <= 150)
+                        {
+                            for (var a1 = t4; a1 < (z1+z2+z3+z4); a1++)
+                            {
+                                if (a1 <= Z2Interpolate4)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate4 <= 150)
+                        {
+                            for (var a1 = t4; a1 < (z1+z2+z3+z4); a1++)
+                            {
+                                if (a1 <= Z2Interpolate4)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 5:
+                        var x5 = z1+z2+z3+z4;
+                        var y5 = z1+z2+z3+z4;
+                        var t5 = z1+z2+z3+z4;
+                        
+                        var Z1Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : x5);
+                        var Z2Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : y5);
+                        var Z3Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : t5);
+                        
+                        if (Z1Interpolate5 <= 150)
+                        {
+                            for (var a1 = x5; a1 < (z1+z2+z3+z4+z5); a1++)
+                            {
+                                if (a1 <= Z1Interpolate5)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate5 <= 150)
+                        {
+                            for (var a1 = t5; a1 < (z1+z2+z3+z4+z5); a1++)
+                            {
+                                if (a1 <= Z2Interpolate5)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate5 <= 150)
+                        {
+                            for (var a1 = t5; a1 < (z1+z2+z3+z4+z5); a1++)
+                            {
+                                if (a1 <= Z2Interpolate5)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 6:
+                        var x6 = z1+z2+z3+z4+z5;
+                        var y6 = z1+z2+z3+z4+z5;
+                        var t6 = z1+z2+z3+z4+z5;
+                        
+                        var Z1Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : x6);
+                        var Z2Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : y6);
+                        var Z3Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : t6);
+                        
+                        if (Z1Interpolate6 <= 150)
+                        {
+                            for (var a1 = x6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
+                            {
+                                if (a1 <= Z1Interpolate6)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z2Interpolate6 <= 150)
+                        {
+                            for (var a1 = t6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
+                            {
+                                if (a1 <= Z2Interpolate6)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ2[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ2[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        if (Z3Interpolate6 <= 150)
+                        {
+                            for (var a1 = t6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
+                            {
+                                if (a1 <= Z2Interpolate6)
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_full)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairLEDIndvBrush.CorsairGetColorReference(_diyZ3[a1]) != cc_empty)
+                                    {
+                                        _corsairLEDIndvBrush.CorsairApplyMapKeyLighting(_diyZ3[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(CueSDK.CoolerSDK?.CoolerDeviceInfo?.Model))
+            {
+                switch (pos)
+                {
+                    case 1:
+                        var x1 = 0;
+                        
+                        var Z1Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x1 : z1, reverse ? z1 : x1);
+                        
+                        if (Z1Interpolate1 <= 150)
+                        {
+                            for (var a1 = x1; a1 < z1; a1++)
+                            {
+                                if (a1 <= Z1Interpolate1)
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 2:
+                        var x2 = z1;
+                        
+                        var Z1Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x2 : (z1+z2), reverse ? (z1+z2) : x2);
+                        
+                        if (Z1Interpolate2 <= 150)
+                        {
+                            for (var a1 = x2; a1 < (z1+z2); a1++)
+                            {
+                                if (a1 <= Z1Interpolate2)
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 3:
+                        var x3 = z1+z2;
+                        
+                        var Z1Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x3 : (z1+z2+z3), reverse ? (z1+z2+z3) : x3);
+                        
+                        if (Z1Interpolate3 <= 150)
+                        {
+                            for (var a1 = x3; a1 < (z1+z2+z3); a1++)
+                            {
+                                if (a1 <= Z1Interpolate3)
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 4:
+                        var x4 = z1+z2+z3;
+                        
+                        var Z1Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : x4);
+                        
+                        if (Z1Interpolate4 <= 150)
+                        {
+                            for (var a1 = x4; a1 < (z1+z2+z3+z4); a1++)
+                            {
+                                if (a1 <= Z1Interpolate4)
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 5:
+                        var x5 = z1+z2+z3+z4;
+                        
+                        var Z1Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : x5);
+                        
+                        if (Z1Interpolate5 <= 150)
+                        {
+                            for (var a1 = x5; a1 < (z1+z2+z3+z4+z5); a1++)
+                            {
+                                if (a1 <= Z1Interpolate5)
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                    case 6:
+                        var x6 = z1+z2+z3+z4+z5;
+                        
+                        var Z1Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : x6);
+                        
+                        if (Z1Interpolate6 <= 150)
+                        {
+                            for (var a1 = x6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
+                            {
+                                if (a1 <= Z1Interpolate6)
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_full)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairCoolerIndvBrush.CorsairGetColorReference(_coolerZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairCoolerIndvBrush.CorsairApplyMapKeyLighting(_coolerZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(CueSDK.MemoryModuleSDK?.MemoryModuleDeviceInfo?.Model))
+            {
+                switch (pos)
+                {
+                    case 1:
+                        var x1 = 0;
+                    
+                        var Z1Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x1 : _memoryZ1.Count, reverse ? _memoryZ1.Count : x1);
+                    
+                        if (Z1Interpolate1 <= _memoryZ1.Count)
+                        {
+                            for (var a1 = x1; a1 < _memoryZ1.Count; a1++)
+                            {
+                                if (a1 <= Z1Interpolate1)
+                                {
+                                    if (_corsairMemoryIndvBrush.CorsairGetColorReference(_memoryZ1[a1]) != cc_full)
+                                    {
+                                        _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(_memoryZ1[a1], cc_full);
+                                    }
+                                }
+                                else
+                                {
+                                    if (_corsairMemoryIndvBrush.CorsairGetColorReference(_memoryZ1[a1]) != cc_empty)
+                                    {
+                                        _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(_memoryZ1[a1], cc_empty);
+                                    }
+                                }
+
+                            }
+                        }
+                        break;
+                }
+            }
+            
+        }
+
         public void ApplyMapOtherLighting(Color col, int pos, int z1, int z2, int z3, int z4, int z5, int z6)
         {
             try
@@ -1997,36 +3145,31 @@ namespace Chromatics.DeviceInterfaces
 
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_2) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_2, cc);
-                            break;
-                        case 2:
+
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_3) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_3, cc);
 
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_4) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_4, cc);
-                            break;
-                        case 3:
+
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_5) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_5, cc);
 
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_6) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_6, cc);
-                            break;
-                        case 4:
+
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_7) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_7, cc);
 
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_8) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_8, cc);
-                            break;
-                        case 5:
+
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_9) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_9, cc);
 
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_10) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_10, cc);
-                            break;
-                        case 6:
+
                             if (_corsairMemoryIndvBrush.CorsairGetColorReference(CorsairLedId.RAM_11) != cc)
                                 _corsairMemoryIndvBrush.CorsairApplyMapKeyLighting(CorsairLedId.RAM_11, cc);
 

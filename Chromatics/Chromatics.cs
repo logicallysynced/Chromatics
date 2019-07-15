@@ -111,6 +111,8 @@ namespace Chromatics
         public int _ChromaLinkLEDCountZ4 = 10;
         public int _ChromaLinkLEDCountZ5 = 10;
         public int _ChromaLinkLEDCountZ6 = 10;
+        public bool _OtherInterpolateEffects = false;
+        public bool _ReverseInterpolateEffects = false;
 
         private string _hueDefault = "";
         public bool HueRescan = false;
@@ -929,8 +931,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-        
-        
+
     }
 
     public static class ExceptionExtensions

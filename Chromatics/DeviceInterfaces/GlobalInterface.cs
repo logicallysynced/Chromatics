@@ -1441,8 +1441,69 @@ namespace Chromatics
             GlobalApplyMapKeypadLighting(mode, c2, clear, "All");
         }
 
-        //Send a lighting command to a specific Keypad LED
-        public void GlobalApplyMapChromaLinkLighting(DevModeTypes mode, Color col)
+        public void GlobalApplyOtherLightingViaInterpolation(DevModeTypes mode, Color empty, Color full, int min, int max, int current)
+        {
+            
+            if (mode == DevModeTypes.Disabled) return;
+            if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
+
+            if (mode == _CLZone1Mode)
+            {
+                if (CorsairSdkCalled == 1 && _OtherInterpolateEffects)
+                {
+                    _corsair.ApplyMapOtherLightingInterpolate(empty, full, 1, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2,
+                        _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6, min, max, current, _ReverseInterpolateEffects);
+                }
+            }
+
+            if (mode == _CLZone2Mode)
+            {
+                if (CorsairSdkCalled == 1 && _OtherInterpolateEffects)
+                {
+                    _corsair.ApplyMapOtherLightingInterpolate(empty, full, 2, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2,
+                        _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6, min, max, current, _ReverseInterpolateEffects);
+                }
+            }
+
+            if (mode == _CLZone3Mode)
+            {
+                if (CorsairSdkCalled == 1 && _OtherInterpolateEffects)
+                {
+                    _corsair.ApplyMapOtherLightingInterpolate(empty, full, 3, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2,
+                        _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6, min, max, current, _ReverseInterpolateEffects);
+                }
+            }
+
+            if (mode == _CLZone4Mode)
+            {
+                if (CorsairSdkCalled == 1 && _OtherInterpolateEffects)
+                {
+                    _corsair.ApplyMapOtherLightingInterpolate(empty, full, 4, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2,
+                        _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6, min, max, current, _ReverseInterpolateEffects);
+                }
+            }
+
+            if (mode == _CLZone5Mode)
+            {
+                if (CorsairSdkCalled == 1 && _OtherInterpolateEffects)
+                {
+                    _corsair.ApplyMapOtherLightingInterpolate(empty, full, 5, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2,
+                        _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6, min, max, current, _ReverseInterpolateEffects);
+                }
+            }
+
+            if (mode == _CLZone6Mode)
+            {
+                if (CorsairSdkCalled == 1 && _OtherInterpolateEffects)
+                {
+                    _corsair.ApplyMapOtherLightingInterpolate(empty, full, 6, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2,
+                        _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6, min, max, current, _ReverseInterpolateEffects);
+                }
+            }
+            
+        }
+
+        public void GlobalApplyMapChromaLinkLighting(DevModeTypes mode, Color col, bool bypass = false)
         {
             if (mode == DevModeTypes.Disabled) return;
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
@@ -1452,15 +1513,12 @@ namespace Chromatics
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 0);
 
-                if (CorsairSdkCalled == 1)
+                if (CorsairSdkCalled == 1 && (!_OtherInterpolateEffects || bypass))
                 {
                     _corsair.ApplyMapOtherLighting(col, 1, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2,
                         _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
                 }
 
-                if (AsusSdkCalled == 1)
-                if (AsusSdkCalled == 1)
-                if (AsusSdkCalled == 1)
                 if (AsusSdkCalled == 1)
                     _asus.ApplyMapOtherLighting(1, col);
 
@@ -1473,7 +1531,7 @@ namespace Chromatics
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 1);
 
-                if (CorsairSdkCalled == 1)
+                if (CorsairSdkCalled == 1 && (!_OtherInterpolateEffects || bypass))
                     _corsair.ApplyMapOtherLighting(col, 2, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
 
                 if (AsusSdkCalled == 1)
@@ -1485,7 +1543,7 @@ namespace Chromatics
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 2);
 
-                if (CorsairSdkCalled == 1)
+                if (CorsairSdkCalled == 1 && (!_OtherInterpolateEffects || bypass))
                     _corsair.ApplyMapOtherLighting(col, 3, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
 
                 if (AsusSdkCalled == 1)
@@ -1497,7 +1555,7 @@ namespace Chromatics
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 3);
 
-                if (CorsairSdkCalled == 1)
+                if (CorsairSdkCalled == 1 && (!_OtherInterpolateEffects || bypass))
                     _corsair.ApplyMapOtherLighting(col, 4, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
 
                 if (AsusSdkCalled == 1)
@@ -1509,7 +1567,7 @@ namespace Chromatics
                 if (RazerSdkCalled == 1)
                     _razer.ApplyMapChromaLinkLighting(col, 4);
 
-                if (CorsairSdkCalled == 1)
+                if (CorsairSdkCalled == 1 && (!_OtherInterpolateEffects || bypass))
                     _corsair.ApplyMapOtherLighting(col, 5, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
 
                 if (AsusSdkCalled == 1)
@@ -1518,7 +1576,7 @@ namespace Chromatics
 
             if (mode == _CLZone6Mode)
             {
-                if (CorsairSdkCalled == 1)
+                if (CorsairSdkCalled == 1 && (!_OtherInterpolateEffects || bypass))
                     _corsair.ApplyMapOtherLighting(col, 6, _ChromaLinkLEDCountZ1, _ChromaLinkLEDCountZ2, _ChromaLinkLEDCountZ3, _ChromaLinkLEDCountZ4, _ChromaLinkLEDCountZ5, _ChromaLinkLEDCountZ6);
 
             }

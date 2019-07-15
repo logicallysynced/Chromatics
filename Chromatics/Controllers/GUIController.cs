@@ -1296,6 +1296,9 @@ namespace Chromatics
             chk_keys_multimode.Checked = _KeysMultiKeyModeEnabled;
             cb_multizonemode.Enabled = _KeysMultiKeyModeEnabled;
 
+            chk_other_interp.Checked = _OtherInterpolateEffects;
+            chk_other_interpreverse.Checked = _ReverseInterpolateEffects;
+
             //Setup Keypad Keybinds
             
             if (_KeyBindMap.ContainsKey(1)) 
@@ -2506,7 +2509,7 @@ namespace Chromatics
             ChromaticsSettings.ChromaticsSettingsPollingInterval = poll;
 
             WriteConsole(ConsoleTypes.Ffxiv, @"Changing polling interval to " + (string)cb_pollingint.SelectedItem + @".");
-            SaveDevices();
+            SaveChromaticsSettings(1);
         }
 
         private void cb_multizonemode_SelectedIndexChanged(object sender, EventArgs e)
@@ -3523,7 +3526,7 @@ namespace Chromatics
 
             _ChromaLinkLEDCountZ1 = Convert.ToInt32(nm_ledcount_z1.Value);
 
-            SaveChromaticsSettings(1);
+            SaveDevices();
         }
 
         private void Nm_ledcount_z2_ValueChanged(object sender, EventArgs e)
@@ -3532,7 +3535,7 @@ namespace Chromatics
 
             _ChromaLinkLEDCountZ2 = Convert.ToInt32(nm_ledcount_z2.Value);
 
-            SaveChromaticsSettings(1);
+            SaveDevices();
         }
 
         private void Nm_ledcount_z3_ValueChanged(object sender, EventArgs e)
@@ -3541,7 +3544,7 @@ namespace Chromatics
 
             _ChromaLinkLEDCountZ3 = Convert.ToInt32(nm_ledcount_z3.Value);
 
-            SaveChromaticsSettings(1);
+            SaveDevices();
         }
 
         private void Nm_ledcount_z4_ValueChanged(object sender, EventArgs e)
@@ -3550,7 +3553,7 @@ namespace Chromatics
 
             _ChromaLinkLEDCountZ4 = Convert.ToInt32(nm_ledcount_z4.Value);
 
-            SaveChromaticsSettings(1);
+            SaveDevices();
         }
 
         private void Nm_ledcount_z5_ValueChanged(object sender, EventArgs e)
@@ -3559,7 +3562,7 @@ namespace Chromatics
 
             _ChromaLinkLEDCountZ5 = Convert.ToInt32(nm_ledcount_z5.Value);
 
-            SaveChromaticsSettings(1);
+            SaveDevices();
         }
 
         private void Nm_ledcount_z6_ValueChanged(object sender, EventArgs e)
@@ -3568,7 +3571,25 @@ namespace Chromatics
 
             _ChromaLinkLEDCountZ6 = (int)nm_ledcount_z6.Value;
 
-            SaveChromaticsSettings(1);
+            SaveDevices();
+        }
+
+        private void Chk_other_interp_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _OtherInterpolateEffects = chk_other_interp.Checked;
+
+            SaveDevices();
+        }
+
+        private void Chk_other_interpreverse_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _ReverseInterpolateEffects = chk_other_interpreverse.Checked;
+
+            SaveDevices();
         }
 
         private void Chk_keypad_binds_CheckedChanged(object sender, EventArgs e)

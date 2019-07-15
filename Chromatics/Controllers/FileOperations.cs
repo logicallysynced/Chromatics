@@ -114,6 +114,8 @@ namespace Chromatics
             dr.KeypadZ18Bind = _KeyBindMap[18];
             dr.KeypadZ19Bind = _KeyBindMap[19];
             dr.KeypadZ20Bind = _KeyBindMap[20];
+            dr.OtherInterpolateEffects = _OtherInterpolateEffects;
+            dr.ReverseInterpolateEffects = _ReverseInterpolateEffects;
 
             dr.HeadsetZone1Mode = Helpers.ConvertDevModeToString(_HeadsetZone1Mode);
             dr.KeypadZone1Mode = Helpers.ConvertDevMultiModeToString(_KeypadZone1Mode);
@@ -220,6 +222,9 @@ namespace Chromatics
                         _ChromaLinkLEDCountZ4 = dr.ChromaLinkLEDCountZ4;
                         _ChromaLinkLEDCountZ5 = dr.ChromaLinkLEDCountZ5;
                         _ChromaLinkLEDCountZ6 = dr.ChromaLinkLEDCountZ6;
+
+                        _OtherInterpolateEffects = dr.OtherInterpolateEffects;
+                        _ReverseInterpolateEffects = dr.ReverseInterpolateEffects;
 
                         _SDKRazer = dr.SDKRazer;
                         _SDKLogitech = dr.SDKLogitech;

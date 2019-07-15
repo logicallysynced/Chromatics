@@ -99,6 +99,7 @@
             this.col_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tP_misc = new System.Windows.Forms.TabPage();
             this.gP_ChromaLink = new System.Windows.Forms.GroupBox();
+            this.chk_other_interp = new System.Windows.Forms.CheckBox();
             this.nm_ledcount_z6 = new System.Windows.Forms.NumericUpDown();
             this.nm_ledcount_z5 = new System.Windows.Forms.NumericUpDown();
             this.nm_ledcount_z4 = new System.Windows.Forms.NumericUpDown();
@@ -121,6 +122,7 @@
             this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
             this.tP_adv = new System.Windows.Forms.TabPage();
             this.gb_sdkcontrol = new System.Windows.Forms.GroupBox();
+            this.chk_sdk_mystic = new System.Windows.Forms.CheckBox();
             this.chk_sdk_lifx = new System.Windows.Forms.CheckBox();
             this.chk_sdk_asus = new System.Windows.Forms.CheckBox();
             this.chk_sdk_wooting = new System.Windows.Forms.CheckBox();
@@ -250,7 +252,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_sdk_mystic = new System.Windows.Forms.CheckBox();
+            this.chk_other_interpreverse = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1142,6 +1144,8 @@
             // 
             // gP_ChromaLink
             // 
+            this.gP_ChromaLink.Controls.Add(this.chk_other_interpreverse);
+            this.gP_ChromaLink.Controls.Add(this.chk_other_interp);
             this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z6);
             this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z5);
             this.gP_ChromaLink.Controls.Add(this.nm_ledcount_z4);
@@ -1166,14 +1170,27 @@
             this.gP_ChromaLink.Margin = new System.Windows.Forms.Padding(2);
             this.gP_ChromaLink.Name = "gP_ChromaLink";
             this.gP_ChromaLink.Padding = new System.Windows.Forms.Padding(2);
-            this.gP_ChromaLink.Size = new System.Drawing.Size(330, 232);
+            this.gP_ChromaLink.Size = new System.Drawing.Size(330, 297);
             this.gP_ChromaLink.TabIndex = 0;
             this.gP_ChromaLink.TabStop = false;
             this.gP_ChromaLink.Text = "ChromaLink/Other Devices";
             // 
+            // chk_other_interp
+            // 
+            this.chk_other_interp.AutoSize = true;
+            this.chk_other_interp.Location = new System.Drawing.Point(10, 45);
+            this.chk_other_interp.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_other_interp.Name = "chk_other_interp";
+            this.chk_other_interp.Size = new System.Drawing.Size(156, 17);
+            this.chk_other_interp.TabIndex = 40;
+            this.chk_other_interp.Text = "Enable Interpolation Effects";
+            this.tooltip_main.SetToolTip(this.chk_other_interp, "Change effects to interpolate instead of dim.\r\n(CORSAIR ONLY)");
+            this.chk_other_interp.UseVisualStyleBackColor = true;
+            this.chk_other_interp.CheckedChanged += new System.EventHandler(this.Chk_other_interp_CheckedChanged);
+            // 
             // nm_ledcount_z6
             // 
-            this.nm_ledcount_z6.Location = new System.Drawing.Point(222, 177);
+            this.nm_ledcount_z6.Location = new System.Drawing.Point(222, 222);
             this.nm_ledcount_z6.Margin = new System.Windows.Forms.Padding(2);
             this.nm_ledcount_z6.Maximum = new decimal(new int[] {
             150,
@@ -1198,7 +1215,7 @@
             // 
             // nm_ledcount_z5
             // 
-            this.nm_ledcount_z5.Location = new System.Drawing.Point(222, 151);
+            this.nm_ledcount_z5.Location = new System.Drawing.Point(222, 196);
             this.nm_ledcount_z5.Margin = new System.Windows.Forms.Padding(2);
             this.nm_ledcount_z5.Maximum = new decimal(new int[] {
             150,
@@ -1223,7 +1240,7 @@
             // 
             // nm_ledcount_z4
             // 
-            this.nm_ledcount_z4.Location = new System.Drawing.Point(222, 127);
+            this.nm_ledcount_z4.Location = new System.Drawing.Point(222, 172);
             this.nm_ledcount_z4.Margin = new System.Windows.Forms.Padding(2);
             this.nm_ledcount_z4.Maximum = new decimal(new int[] {
             150,
@@ -1248,7 +1265,7 @@
             // 
             // nm_ledcount_z3
             // 
-            this.nm_ledcount_z3.Location = new System.Drawing.Point(222, 103);
+            this.nm_ledcount_z3.Location = new System.Drawing.Point(222, 148);
             this.nm_ledcount_z3.Margin = new System.Windows.Forms.Padding(2);
             this.nm_ledcount_z3.Maximum = new decimal(new int[] {
             150,
@@ -1273,7 +1290,7 @@
             // 
             // nm_ledcount_z2
             // 
-            this.nm_ledcount_z2.Location = new System.Drawing.Point(222, 79);
+            this.nm_ledcount_z2.Location = new System.Drawing.Point(222, 124);
             this.nm_ledcount_z2.Margin = new System.Windows.Forms.Padding(2);
             this.nm_ledcount_z2.Maximum = new decimal(new int[] {
             150,
@@ -1298,7 +1315,7 @@
             // 
             // nm_ledcount_z1
             // 
-            this.nm_ledcount_z1.Location = new System.Drawing.Point(222, 54);
+            this.nm_ledcount_z1.Location = new System.Drawing.Point(222, 99);
             this.nm_ledcount_z1.Margin = new System.Windows.Forms.Padding(2);
             this.nm_ledcount_z1.Maximum = new decimal(new int[] {
             150,
@@ -1324,7 +1341,7 @@
             // lbl_ledcon_z1
             // 
             this.lbl_ledcon_z1.AutoSize = true;
-            this.lbl_ledcon_z1.Location = new System.Drawing.Point(220, 27);
+            this.lbl_ledcon_z1.Location = new System.Drawing.Point(220, 72);
             this.lbl_ledcon_z1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_ledcon_z1.Name = "lbl_ledcon_z1";
             this.lbl_ledcon_z1.Size = new System.Drawing.Size(59, 13);
@@ -1335,7 +1352,7 @@
             // lbl_chromalink_z6
             // 
             this.lbl_chromalink_z6.AutoSize = true;
-            this.lbl_chromalink_z6.Location = new System.Drawing.Point(10, 179);
+            this.lbl_chromalink_z6.Location = new System.Drawing.Point(10, 224);
             this.lbl_chromalink_z6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z6.Name = "lbl_chromalink_z6";
             this.lbl_chromalink_z6.Size = new System.Drawing.Size(41, 13);
@@ -1346,7 +1363,7 @@
             // 
             this.cb_chromalink_z6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z6.FormattingEnabled = true;
-            this.cb_chromalink_z6.Location = new System.Drawing.Point(62, 177);
+            this.cb_chromalink_z6.Location = new System.Drawing.Point(62, 222);
             this.cb_chromalink_z6.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z6.Name = "cb_chromalink_z6";
             this.cb_chromalink_z6.Size = new System.Drawing.Size(132, 21);
@@ -1359,7 +1376,7 @@
             // lbl_chromalink_z5
             // 
             this.lbl_chromalink_z5.AutoSize = true;
-            this.lbl_chromalink_z5.Location = new System.Drawing.Point(10, 154);
+            this.lbl_chromalink_z5.Location = new System.Drawing.Point(10, 199);
             this.lbl_chromalink_z5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z5.Name = "lbl_chromalink_z5";
             this.lbl_chromalink_z5.Size = new System.Drawing.Size(41, 13);
@@ -1370,7 +1387,7 @@
             // 
             this.cb_chromalink_z5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z5.FormattingEnabled = true;
-            this.cb_chromalink_z5.Location = new System.Drawing.Point(62, 152);
+            this.cb_chromalink_z5.Location = new System.Drawing.Point(62, 197);
             this.cb_chromalink_z5.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z5.Name = "cb_chromalink_z5";
             this.cb_chromalink_z5.Size = new System.Drawing.Size(132, 21);
@@ -1381,7 +1398,7 @@
             // lbl_chromalink_z4
             // 
             this.lbl_chromalink_z4.AutoSize = true;
-            this.lbl_chromalink_z4.Location = new System.Drawing.Point(10, 130);
+            this.lbl_chromalink_z4.Location = new System.Drawing.Point(10, 175);
             this.lbl_chromalink_z4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z4.Name = "lbl_chromalink_z4";
             this.lbl_chromalink_z4.Size = new System.Drawing.Size(41, 13);
@@ -1392,7 +1409,7 @@
             // 
             this.cb_chromalink_z4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z4.FormattingEnabled = true;
-            this.cb_chromalink_z4.Location = new System.Drawing.Point(62, 128);
+            this.cb_chromalink_z4.Location = new System.Drawing.Point(62, 173);
             this.cb_chromalink_z4.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z4.Name = "cb_chromalink_z4";
             this.cb_chromalink_z4.Size = new System.Drawing.Size(132, 21);
@@ -1403,7 +1420,7 @@
             // lbl_chromalink_z3
             // 
             this.lbl_chromalink_z3.AutoSize = true;
-            this.lbl_chromalink_z3.Location = new System.Drawing.Point(10, 106);
+            this.lbl_chromalink_z3.Location = new System.Drawing.Point(10, 151);
             this.lbl_chromalink_z3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z3.Name = "lbl_chromalink_z3";
             this.lbl_chromalink_z3.Size = new System.Drawing.Size(41, 13);
@@ -1414,7 +1431,7 @@
             // 
             this.cb_chromalink_z3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z3.FormattingEnabled = true;
-            this.cb_chromalink_z3.Location = new System.Drawing.Point(62, 103);
+            this.cb_chromalink_z3.Location = new System.Drawing.Point(62, 148);
             this.cb_chromalink_z3.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z3.Name = "cb_chromalink_z3";
             this.cb_chromalink_z3.Size = new System.Drawing.Size(132, 21);
@@ -1425,7 +1442,7 @@
             // lbl_chromalink_z2
             // 
             this.lbl_chromalink_z2.AutoSize = true;
-            this.lbl_chromalink_z2.Location = new System.Drawing.Point(10, 81);
+            this.lbl_chromalink_z2.Location = new System.Drawing.Point(10, 126);
             this.lbl_chromalink_z2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z2.Name = "lbl_chromalink_z2";
             this.lbl_chromalink_z2.Size = new System.Drawing.Size(41, 13);
@@ -1436,7 +1453,7 @@
             // 
             this.cb_chromalink_z2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z2.FormattingEnabled = true;
-            this.cb_chromalink_z2.Location = new System.Drawing.Point(62, 79);
+            this.cb_chromalink_z2.Location = new System.Drawing.Point(62, 124);
             this.cb_chromalink_z2.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z2.Name = "cb_chromalink_z2";
             this.cb_chromalink_z2.Size = new System.Drawing.Size(132, 21);
@@ -1447,7 +1464,7 @@
             // lbl_chromalink_z1
             // 
             this.lbl_chromalink_z1.AutoSize = true;
-            this.lbl_chromalink_z1.Location = new System.Drawing.Point(10, 57);
+            this.lbl_chromalink_z1.Location = new System.Drawing.Point(10, 102);
             this.lbl_chromalink_z1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_chromalink_z1.Name = "lbl_chromalink_z1";
             this.lbl_chromalink_z1.Size = new System.Drawing.Size(41, 13);
@@ -1458,7 +1475,7 @@
             // 
             this.cb_chromalink_z1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_chromalink_z1.FormattingEnabled = true;
-            this.cb_chromalink_z1.Location = new System.Drawing.Point(62, 54);
+            this.cb_chromalink_z1.Location = new System.Drawing.Point(62, 99);
             this.cb_chromalink_z1.Margin = new System.Windows.Forms.Padding(2);
             this.cb_chromalink_z1.Name = "cb_chromalink_z1";
             this.cb_chromalink_z1.Size = new System.Drawing.Size(132, 21);
@@ -1508,6 +1525,20 @@
             this.gb_sdkcontrol.TabIndex = 1;
             this.gb_sdkcontrol.TabStop = false;
             this.gb_sdkcontrol.Text = "SDK Control";
+            // 
+            // chk_sdk_mystic
+            // 
+            this.chk_sdk_mystic.AutoSize = true;
+            this.chk_sdk_mystic.Location = new System.Drawing.Point(10, 176);
+            this.chk_sdk_mystic.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_sdk_mystic.Name = "chk_sdk_mystic";
+            this.chk_sdk_mystic.Size = new System.Drawing.Size(143, 17);
+            this.chk_sdk_mystic.TabIndex = 9;
+            this.chk_sdk_mystic.Text = "Enable Mystic Light SDK";
+            this.tooltip_main.SetToolTip(this.chk_sdk_mystic, "Enable/Disable the Mystic Light SDK from loading when Chromatics starts.\r\n(Requir" +
+        "es App Restart)");
+            this.chk_sdk_mystic.UseVisualStyleBackColor = true;
+            this.chk_sdk_mystic.CheckedChanged += new System.EventHandler(this.Chk_sdk_mystic_CheckedChanged);
             // 
             // chk_sdk_lifx
             // 
@@ -3243,19 +3274,18 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_sdk_mystic
+            // chk_other_interpreverse
             // 
-            this.chk_sdk_mystic.AutoSize = true;
-            this.chk_sdk_mystic.Location = new System.Drawing.Point(10, 176);
-            this.chk_sdk_mystic.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_sdk_mystic.Name = "chk_sdk_mystic";
-            this.chk_sdk_mystic.Size = new System.Drawing.Size(143, 17);
-            this.chk_sdk_mystic.TabIndex = 9;
-            this.chk_sdk_mystic.Text = "Enable Mystic Light SDK";
-            this.tooltip_main.SetToolTip(this.chk_sdk_mystic, "Enable/Disable the Mystic Light SDK from loading when Chromatics starts.\r\n(Requir" +
-        "es App Restart)");
-            this.chk_sdk_mystic.UseVisualStyleBackColor = true;
-            this.chk_sdk_mystic.CheckedChanged += new System.EventHandler(this.Chk_sdk_mystic_CheckedChanged);
+            this.chk_other_interpreverse.AutoSize = true;
+            this.chk_other_interpreverse.Location = new System.Drawing.Point(10, 66);
+            this.chk_other_interpreverse.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_other_interpreverse.Name = "chk_other_interpreverse";
+            this.chk_other_interpreverse.Size = new System.Drawing.Size(163, 17);
+            this.chk_other_interpreverse.TabIndex = 41;
+            this.chk_other_interpreverse.Text = "Reverse Interpolation Effects";
+            this.tooltip_main.SetToolTip(this.chk_other_interpreverse, "Change direction of interpolation effects.\r\n(CORSAIR ONLY)");
+            this.chk_other_interpreverse.UseVisualStyleBackColor = true;
+            this.chk_other_interpreverse.CheckedChanged += new System.EventHandler(this.Chk_other_interpreverse_CheckedChanged);
             // 
             // Chromatics
             // 
@@ -3560,6 +3590,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.CheckBox chk_sdk_mystic;
+        private System.Windows.Forms.CheckBox chk_other_interp;
+        private System.Windows.Forms.CheckBox chk_other_interpreverse;
     }
 }
 
