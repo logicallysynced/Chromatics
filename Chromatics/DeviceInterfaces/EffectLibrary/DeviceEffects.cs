@@ -7,7 +7,7 @@ namespace Chromatics.DeviceInterfaces.EffectLibrary
     public class DeviceEffects
     {
         //Key Groups
-
+        
         //All Global Keys
         public static readonly string[] GlobalKeysAll =
         {

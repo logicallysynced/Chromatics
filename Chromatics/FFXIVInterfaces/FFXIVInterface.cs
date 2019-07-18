@@ -49,6 +49,9 @@ namespace Chromatics
         private int _catchMenuchange;
         private int _countMainMenuHold;
         private int _currentET;
+        private bool E1SetBase;
+        private bool E1Pulled;
+        private bool E1Set;
 
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
@@ -691,6 +694,7 @@ namespace Chromatics
                 //DF Bell
                 FfxivDutyFinder.RefreshData();
 
+
                 //Vegas Mode
                 if (ChromaticsSettings.ChromaticsSettingsVegasMode)
                 {
@@ -1258,6 +1262,7 @@ namespace Chromatics
 
                             //GlobalUpdateState("static", baseColor, false);
                             GlobalApplyAllKeyLighting(_baseColor);
+                                
 
                             if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
                             { 
@@ -1437,6 +1442,7 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("Q", _baseColor, false);
                                     GlobalApplyMapKeyLighting("E", _baseColor, false);
                                     GlobalApplyMapKeyLighting("F", _baseColor, false);
+
                                     break;
                                 case KeyRegion.AZERTY:
                                     GlobalApplyMapKeyLighting("W", highlightColor, false);
@@ -1457,6 +1463,7 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("E", _baseColor, false);
                                     GlobalApplyMapKeyLighting("F", _baseColor, false);
                                     GlobalApplyMapKeyLighting("Q", _baseColor, false);
+
                                     break;
                                 case KeyRegion.ESDF:
                                     GlobalApplyMapKeyLighting("E", highlightColor, false);
@@ -1493,8 +1500,8 @@ namespace Chromatics
                         
                         if (targetInfo == null)
                         {
-                            GlobalApplyMapKeyLighting("PrintScreen",
-                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            
+
                             if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
                             {
                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
@@ -1521,6 +1528,9 @@ namespace Chromatics
                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+
+                            GlobalApplyMapKeyLighting("PrintScreen",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                             GlobalApplyMapKeyLighting("Scroll",
                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
@@ -3838,6 +3848,7 @@ namespace Chromatics
                                                                     ColorTranslator.FromHtml(ColorMappings
                                                                         .ColorMappingHotbarNotAvailable), false, true);
 
+
                                                                 continue;
                                                             }
 
@@ -3846,106 +3857,146 @@ namespace Chromatics
                                                                 case "Map":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindMap), false, true);
+                                                                            .ColorMappingKeybindMap), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Aether Currents":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindAetherCurrents), false,
+                                                                            .ColorMappingKeybindAetherCurrents),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Signs":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindSigns), false, true);
+                                                                            .ColorMappingKeybindSigns), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Waymarks":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindWaymarks), false, true);
+                                                                            .ColorMappingKeybindWaymarks),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Record Ready Check":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindRecordReadyCheck),
                                                                         false, true);
+
                                                                     break;
                                                                 case "Ready Check":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindReadyCheck), false,
+                                                                            .ColorMappingKeybindReadyCheck),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Countdown":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindCountdown), false,
+                                                                            .ColorMappingKeybindCountdown),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Emotes":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindEmotes), false, true);
+                                                                            .ColorMappingKeybindEmotes), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Linkshells":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindLinkshells), false,
+                                                                            .ColorMappingKeybindLinkshells),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Cross-world Linkshell":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindCrossWorldLS), false,
+                                                                            .ColorMappingKeybindCrossWorldLS),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Contacts":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindContacts), false, true);
+                                                                            .ColorMappingKeybindContacts),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Sprint":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindSprint), false, true);
+                                                                            .ColorMappingKeybindSprint), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Teleport":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindTeleport), false, true);
+                                                                            .ColorMappingKeybindTeleport),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Return":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindReturn), false, true);
+                                                                            .ColorMappingKeybindReturn), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Limit Break":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindLimitBreak), false,
+                                                                            .ColorMappingKeybindLimitBreak),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Duty Action":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDutyAction), false,
+                                                                            .ColorMappingKeybindDutyAction),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Repair":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindRepair), false, true);
+                                                                            .ColorMappingKeybindRepair), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Dig":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDig), false, true);
+                                                                            .ColorMappingKeybindDig), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Inventory":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindInventory), false,
+                                                                            .ColorMappingKeybindInventory),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                             }
 
@@ -3962,19 +4013,26 @@ namespace Chromatics
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingHotbarProc), false, true);
+
                                                                 }
                                                                 else
                                                                 {
                                                                     if (action.CoolDownPercent > 0)
+                                                                    {
                                                                         GlobalApplyMapKeyLighting(keyid,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingHotbarCd), false,
                                                                             true);
+
+                                                                    }
                                                                     else
+                                                                    {
                                                                         GlobalApplyMapKeyLighting(keyid,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingHotbarReady), false,
                                                                             true);
+
+                                                                    }
                                                                 }
                                                             }
                                                             else
@@ -3982,6 +4040,7 @@ namespace Chromatics
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
                                                                         .ColorMappingHotbarOutRange), false, true);
+
                                                             }
                                                         }
                                                         else
@@ -3989,6 +4048,7 @@ namespace Chromatics
                                                             GlobalApplyMapKeyLighting(keyid,
                                                                 ColorTranslator.FromHtml(ColorMappings
                                                                     .ColorMappingHotbarNotAvailable), false, true);
+
                                                         }
                                                     }
                                                 }
@@ -4010,6 +4070,7 @@ namespace Chromatics
                                                                     ColorTranslator.FromHtml(ColorMappings
                                                                         .ColorMappingHotbarNotAvailable), false, true);
 
+
                                                                 continue;
                                                             }
 
@@ -4018,106 +4079,146 @@ namespace Chromatics
                                                                 case "Map":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindMap), false, true);
+                                                                            .ColorMappingKeybindMap), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Aether Currents":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindAetherCurrents), false,
+                                                                            .ColorMappingKeybindAetherCurrents),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Signs":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindSigns), false, true);
+                                                                            .ColorMappingKeybindSigns), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Waymarks":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindWaymarks), false, true);
+                                                                            .ColorMappingKeybindWaymarks),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Record Ready Check":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindRecordReadyCheck),
                                                                         false, true);
+
                                                                     break;
                                                                 case "Ready Check":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindReadyCheck), false,
+                                                                            .ColorMappingKeybindReadyCheck),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Countdown":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindCountdown), false,
+                                                                            .ColorMappingKeybindCountdown),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Emotes":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindEmotes), false, true);
+                                                                            .ColorMappingKeybindEmotes), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Linkshells":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindLinkshells), false,
+                                                                            .ColorMappingKeybindLinkshells),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Cross-world Linkshell":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindCrossWorldLS), false,
+                                                                            .ColorMappingKeybindCrossWorldLS),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Contacts":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindContacts), false, true);
+                                                                            .ColorMappingKeybindContacts),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Sprint":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindSprint), false, true);
+                                                                            .ColorMappingKeybindSprint), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Teleport":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindTeleport), false, true);
+                                                                            .ColorMappingKeybindTeleport),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Return":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindReturn), false, true);
+                                                                            .ColorMappingKeybindReturn), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Limit Break":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindLimitBreak), false,
+                                                                            .ColorMappingKeybindLimitBreak),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Duty Action":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDutyAction), false,
+                                                                            .ColorMappingKeybindDutyAction),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Repair":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindRepair), false, true);
+                                                                            .ColorMappingKeybindRepair), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Dig":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDig), false, true);
+                                                                            .ColorMappingKeybindDig), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Inventory":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindInventory), false,
+                                                                            .ColorMappingKeybindInventory),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                             }
 
@@ -4134,19 +4235,26 @@ namespace Chromatics
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingHotbarProc), false, true);
+
                                                                 }
                                                                 else
                                                                 {
                                                                     if (action.CoolDownPercent > 0)
+                                                                    {
                                                                         GlobalApplyMapKeyLighting(keyid,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingHotbarCd), false,
                                                                             true);
+
+                                                                    }
                                                                     else
+                                                                    {
+
                                                                         GlobalApplyMapKeyLighting(keyid,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingHotbarReady), false,
                                                                             true);
+                                                                    }
                                                                 }
                                                             }
                                                             else
@@ -4154,6 +4262,7 @@ namespace Chromatics
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
                                                                         .ColorMappingHotbarOutRange), false, true);
+
                                                             }
                                                         }
                                                         else
@@ -4161,6 +4270,7 @@ namespace Chromatics
                                                             GlobalApplyMapKeyLighting(keyid,
                                                                 ColorTranslator.FromHtml(ColorMappings
                                                                     .ColorMappingHotbarNotAvailable), false, true);
+
                                                         }
                                                     }
                                                 }
@@ -4179,114 +4289,155 @@ namespace Chromatics
                                                                     ColorTranslator.FromHtml(ColorMappings
                                                                         .ColorMappingHotbarNotAvailable), false, true);
 
+
                                                                 continue;
                                                             }
-
+                                                            
                                                             switch (action.Name)
                                                             {
                                                                 case "Map":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindMap), false, true);
+                                                                            .ColorMappingKeybindMap), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Aether Currents":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindAetherCurrents), false,
+                                                                            .ColorMappingKeybindAetherCurrents),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Signs":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindSigns), false, true);
+                                                                            .ColorMappingKeybindSigns), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Waymarks":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindWaymarks), false, true);
+                                                                            .ColorMappingKeybindWaymarks),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Record Ready Check":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingKeybindRecordReadyCheck),
                                                                         false, true);
+
                                                                     break;
                                                                 case "Ready Check":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindReadyCheck), false,
+                                                                            .ColorMappingKeybindReadyCheck),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Countdown":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindCountdown), false,
+                                                                            .ColorMappingKeybindCountdown),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Emotes":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindEmotes), false, true);
+                                                                            .ColorMappingKeybindEmotes), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Linkshells":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindLinkshells), false,
+                                                                            .ColorMappingKeybindLinkshells),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Cross-world Linkshell":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindCrossWorldLS), false,
+                                                                            .ColorMappingKeybindCrossWorldLS),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Contacts":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindContacts), false, true);
+                                                                            .ColorMappingKeybindContacts),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Sprint":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindSprint), false, true);
+                                                                            .ColorMappingKeybindSprint), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Teleport":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindTeleport), false, true);
+                                                                            .ColorMappingKeybindTeleport),
+                                                                        false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Return":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindReturn), false, true);
+                                                                            .ColorMappingKeybindReturn), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Limit Break":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindLimitBreak), false,
+                                                                            .ColorMappingKeybindLimitBreak),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Duty Action":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDutyAction), false,
+                                                                            .ColorMappingKeybindDutyAction),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                                 case "Repair":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindRepair), false, true);
+                                                                            .ColorMappingKeybindRepair), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Dig":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDig), false, true);
+                                                                            .ColorMappingKeybindDig), false,
+                                                                        true);
+
                                                                     break;
                                                                 case "Inventory":
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindInventory), false,
+                                                                            .ColorMappingKeybindInventory),
+                                                                        false,
                                                                         true);
+
                                                                     break;
                                                             }
 
@@ -4303,19 +4454,25 @@ namespace Chromatics
                                                                     GlobalApplyMapKeyLighting(keyid,
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingHotbarProc), false, true);
+
                                                                 }
                                                                 else
                                                                 {
                                                                     if (action.CoolDownPercent > 0)
+                                                                    {
                                                                         GlobalApplyMapKeyLighting(keyid,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingHotbarCd), false,
                                                                             true);
+
+                                                                    }
                                                                     else
+                                                                    {
                                                                         GlobalApplyMapKeyLighting(keyid,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingHotbarReady), false,
                                                                             true);
+                                                                    }
                                                                 }
                                                             }
                                                             else
@@ -4323,6 +4480,7 @@ namespace Chromatics
                                                                 GlobalApplyMapKeyLighting(keyid,
                                                                     ColorTranslator.FromHtml(ColorMappings
                                                                         .ColorMappingHotbarOutRange), false, true);
+
                                                             }
                                                         }
                                                         else
@@ -4330,6 +4488,7 @@ namespace Chromatics
                                                             GlobalApplyMapKeyLighting(keyid,
                                                                 ColorTranslator.FromHtml(ColorMappings
                                                                     .ColorMappingHotbarNotAvailable), false, true);
+
                                                         }
                                                     }
                                                 }

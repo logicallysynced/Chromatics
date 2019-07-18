@@ -177,6 +177,7 @@ namespace Chromatics
         public bool MysticFirstSet = false;
 
         public bool _EnableKeypadBinds = false;
+
         /*
         public string _KeypadZ1Bind = "1";
         public string _KeypadZ2Bind = "2";

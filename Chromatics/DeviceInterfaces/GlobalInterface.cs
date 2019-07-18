@@ -115,6 +115,26 @@ namespace Chromatics
         private Task _asusPart;
         private CancellationTokenSource _asusPartCts = new CancellationTokenSource();
 
+        private bool _globalPulse3Running;
+        private Task _rzPulse3;
+        private CancellationTokenSource _rzPulse3Cts = new CancellationTokenSource();
+
+        private bool _globalParticleRunning2;
+        private Task _rzPart2;
+        private CancellationTokenSource _rzPartCts2 = new CancellationTokenSource();
+        private Task _logiPart2;
+        private CancellationTokenSource _logiPartCts2 = new CancellationTokenSource();
+        private Task _corsairPart2;
+        private CancellationTokenSource _corsairPartCts2 = new CancellationTokenSource();
+        private Task _coolermasterPart2;
+        private CancellationTokenSource _coolermasterPartCts2 = new CancellationTokenSource();
+        private Task _steelPart2;
+        private CancellationTokenSource _steelPartCts2 = new CancellationTokenSource();
+        private Task _wootingPart2;
+        private CancellationTokenSource _wootingPartCts2 = new CancellationTokenSource();
+        private Task _asusPart2;
+        private CancellationTokenSource _asusPartCts2 = new CancellationTokenSource();
+
         private bool _globalCycleRunning;
         private Task _rzCycle;
         private CancellationTokenSource _rzCycleCts = new CancellationTokenSource();
@@ -2079,6 +2099,131 @@ namespace Chromatics
             }
         }
 
+        public void GlobalRipple3(Color burstcol, int speed, Color baseColor)
+        {
+            //MemoryTasks.Cleanup();
+
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
+                return;
+
+            MemoryTasks.Cleanup();
+
+            if (RazerSdkCalled == 1)
+            {
+                _rzPulse3 = null;
+                _rzPulse3Cts = new CancellationTokenSource();
+                _rzPulse3 = new Task(() =>
+                {
+                    _razer.Ripple3(burstcol, speed, _rzPulse3Cts);
+                }, _rzPulse3Cts.Token);
+
+                MemoryTasks.Add(_rzPulse3);
+                MemoryTasks.Run(_rzPulse3);
+            }
+
+
+
+            /*
+            if (LogitechSdkCalled == 1)
+            {
+                var rippleTask = _logitech.Ripple1(burstcol, speed, baseColor);
+                MemoryTasks.Add(rippleTask3);
+                MemoryTasks.Run(rippleTask3);
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                var rippleTask = _corsair.Ripple1(burstcol, speed, baseColor);
+                MemoryTasks.Add(rippleTask3);
+                MemoryTasks.Run(rippleTask3);
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                var rippleTask = _coolermaster.Ripple1(burstcol, speed);
+                MemoryTasks.Add(rippleTask3);
+                MemoryTasks.Run(rippleTask3);
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                var rippleTask = _steel.Ripple1(burstcol, speed, baseColor);
+                MemoryTasks.Add(rippleTask3);
+                MemoryTasks.Run(rippleTask3);
+            }
+
+            if (WootingSdkCalled == 1)
+            {
+                var rippleTask = _wooting.Ripple1(burstcol, speed, baseColor);
+                MemoryTasks.Add(rippleTask3);
+                MemoryTasks.Run(rippleTask3);
+            }
+
+            if (AsusSdkCalled == 1)
+            {
+                var rippleTask = _asus.Ripple1(burstcol, speed, baseColor);
+                MemoryTasks.Add(rippleTask3);
+                MemoryTasks.Run(rippleTask3);
+            }
+            */
+
+            _globalPulse3Running = true;
+        }
+
+        public void GlobalStopPulseEffects()
+        {
+            if (!_globalPulse3Running) return;
+
+            Console.WriteLine("Cancelling CTS");
+
+            if (RazerSdkCalled == 1)
+            {
+                _rzPulse3Cts.Cancel();
+                MemoryTasks.Remove(_rzPulse3);
+            }
+
+            /*
+            if (LogitechSdkCalled == 1)
+            {
+                _logiPartCts.Cancel();
+                MemoryTasks.Remove(_logiPart);
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                _corsairPartCts.Cancel();
+                MemoryTasks.Remove(_corsairPart);
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermasterPartCts.Cancel();
+                MemoryTasks.Remove(_coolermasterPart);
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                _steelPartCts.Cancel();
+                MemoryTasks.Remove(_steelPart);
+            }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wootingPartCts.Cancel();
+                MemoryTasks.Remove(_wootingPart);
+            }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asusPartCts.Cancel();
+                MemoryTasks.Remove(_asusPart);
+            }
+            */
+
+            _globalPulse3Running = false;
+
+        }
+
         public void GlobalFlash1(Color burstcol, int speed, string[] regions)
         {
             MemoryTasks.Cleanup();
@@ -2868,6 +3013,164 @@ namespace Chromatics
                 _asusPartCts.Cancel();
                 MemoryTasks.Remove(_asusPart);
             }
+
+            _globalParticleRunning = false;
+
+        }
+
+        public void GlobalRaidParticleEffects(Color[] toColor, string[] regions, uint interval = 20, int speed = 50)
+        {
+
+            if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
+                return;
+            
+            MemoryTasks.Cleanup();
+
+            if (RazerSdkCalled == 1)
+            {
+                _rzPart2 = null;
+                _rzPartCts2 = new CancellationTokenSource();
+                _rzPart2 = new Task(() =>
+                {
+                    _razer.RaidParticleEffect(toColor, regions, interval, _rzPartCts2, speed);
+                }, _rzPartCts2.Token);
+
+                MemoryTasks.Add(_rzPart2);
+                MemoryTasks.Run(_rzPart2);
+            }
+
+            /*
+            if (LogitechSdkCalled == 1)
+            {
+                _logiPart2 = null;
+                _logiPartCts2 = new CancellationTokenSource();
+                _logiPart2 = new Task(() =>
+                {
+                    _logitech.RaidParticleEffect(toColor, interval, _logiPartCts2, speed);
+                }, _logiPartCts2.Token);
+
+                MemoryTasks.Add(_logiPart2);
+                MemoryTasks.Run(_logiPart2);
+            }
+            
+            if (CorsairSdkCalled == 1)
+            {
+                Thread.Sleep(100);
+                GlobalApplyAllKeyLighting(toColor[0]);
+                _corsairPart2 = null;
+                _corsairPartCts2 = new CancellationTokenSource();
+                _corsairPart2 = new Task(() =>
+                {
+                    _corsair.RaidParticleEffect(toColor, interval, _corsairPartCts2, speed);
+                }, _corsairPartCts2.Token);
+
+                MemoryTasks.Add(_corsairPart2);
+                MemoryTasks.Run(_corsairPart2);
+            }
+            
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermasterPart2 = null;
+                _coolermasterPartCts2 = new CancellationTokenSource();
+                _coolermasterPart2 = new Task(() =>
+                {
+                    _coolermaster.RaidParticleEffect(toColor, interval, _coolermasterPartCts2, speed);
+                }, _coolermasterPartCts2.Token);
+
+                MemoryTasks.Add(_coolermasterPart2);
+                MemoryTasks.Run(_coolermasterPart2);
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                _steelPart2 = null;
+                _steelPartCts2 = new CancellationTokenSource();
+                _steelPart2 = new Task(() =>
+                {
+                    _steel.RaidParticleEffect(toColor, interval, _steelPartCts2, speed);
+                }, _steelPartCts2.Token);
+
+                MemoryTasks.Add(_steelPart2);
+                MemoryTasks.Run(_steelPart2);
+            }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wootingPart2 = null;
+                _wootingPartCts2 = new CancellationTokenSource();
+                _wootingPart2 = new Task(() =>
+                {
+                    _wooting.RaidParticleEffect(toColor, interval, _wootingPartCts2, speed);
+                }, _wootingPartCts2.Token);
+
+                MemoryTasks.Add(_wootingPart2);
+                MemoryTasks.Run(_wootingPart2);
+            }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asusPart2 = null;
+                _asusPartCts2 = new CancellationTokenSource();
+                _asusPart2 = new Task(() =>
+                {
+                    _asus.RaidParticleEffect(toColor, interval, _asusPartCts2, speed);
+                }, _asusPartCts2.Token);
+
+                MemoryTasks.Add(_asusPart2);
+                MemoryTasks.Run(_asusPart2);
+            }
+            */
+
+            _globalParticleRunning2 = true;
+        }
+
+        public void GlobalRaidStopParticleEffects()
+        {
+            if (!_globalParticleRunning2) return;
+
+            if (RazerSdkCalled == 1)
+            {
+                _rzPartCts2.Cancel();
+                MemoryTasks.Remove(_rzPart2);
+            }
+
+            /*
+            if (LogitechSdkCalled == 1)
+            {
+                _logiPartCts2.Cancel();
+                MemoryTasks.Remove(_logiPart2);
+            }
+
+            if (CorsairSdkCalled == 1)
+            {
+                _corsairPartCts2.Cancel();
+                MemoryTasks.Remove(_corsairPart2);
+            }
+
+            if (CoolermasterSdkCalled == 1)
+            {
+                _coolermasterPartCts2.Cancel();
+                MemoryTasks.Remove(_coolermasterPart2);
+            }
+
+            if (SteelSdkCalled == 1)
+            {
+                _steelPartCts2.Cancel();
+                MemoryTasks.Remove(_steelPart2);
+            }
+
+            if (WootingSdkCalled == 1)
+            {
+                _wootingPartCts2.Cancel();
+                MemoryTasks.Remove(_wootingPart2);
+            }
+
+            if (AsusSdkCalled == 1)
+            {
+                _asusPartCts2.Cancel();
+                MemoryTasks.Remove(_asusPart2);
+            }
+            */
 
         }
 
