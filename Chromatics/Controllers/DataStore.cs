@@ -157,7 +157,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsCastReadyCheckAlert = false;
         public bool ChromaticsSettingsIFTTTEnable = false;
         public string ChromaticsSettingsIFTTTURL = "";
-        public int ChromaticsSettingsPollingInterval = 300;
+        public int ChromaticsSettingsPollingInterval = 200;
         public bool ChromaticsSettingsExtraBulbEffects = false;
         public bool ChromaticsSettingsReleaseDevices = false;
 
