@@ -365,7 +365,7 @@
             this.tP_debug.Padding = new System.Windows.Forms.Padding(2);
             this.tP_debug.Size = new System.Drawing.Size(725, 399);
             this.tP_debug.TabIndex = 0;
-            this.tP_debug.Text = "Debug";
+            this.tP_debug.Text = "Home";
             // 
             // btn_dumplog
             // 
