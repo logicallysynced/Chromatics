@@ -464,6 +464,7 @@ namespace Chromatics.Datastore
         public string ColorMappingHotbarOutRange = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingHotbarProc = ColorTranslator.ToHtml(Color.Yellow);
         public string ColorMappingHotbarReady = ColorTranslator.ToHtml(Color.DodgerBlue);
+        public string ColorMappingKeybindDisabled = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingKeybindMap = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingKeybindAetherCurrents = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingKeybindSigns = ColorTranslator.ToHtml(Color.OrangeRed);

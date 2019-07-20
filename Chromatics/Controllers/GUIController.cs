@@ -225,6 +225,7 @@ namespace Chromatics
             {"ColorMappingHotbarReady", new[] {"Keybind Ready", "7", "Black", "White"}},
             {"ColorMappingHotbarOutRange", new[] {"Keybind Out of Range", "7", "Black", "White"}},
             {"ColorMappingHotbarNotAvailable", new[] {"Keybind Not Available", "7", "Black", "White"}},
+            {"ColorMappingKeybindDisabled", new[] {"Keybind Disabled", "7", "Black", "White"}},
             {"ColorMappingKeybindMap", new[] {"Map Keybind", "7", "Black", "White"}},
             {"ColorMappingKeybindAetherCurrents", new[] { "Aether Currents Keybind", "7", "Black", "White"}},
             {"ColorMappingKeybindSigns", new[] { "Signs Keybind", "7", "Black", "White"}},

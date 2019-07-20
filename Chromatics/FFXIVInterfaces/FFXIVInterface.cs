@@ -3887,7 +3887,13 @@ namespace Chromatics
                                                                         break;
                                                                 }
 
-                                                                if (bypass) continue;
+                                                                if (bypass)
+                                                                {
+                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingKeybindDisabled), false);
+
+                                                                    continue;
+                                                                }
 
                                                                 if (action.ActionKey == bind.Value)
                                                                 {
@@ -3990,7 +3996,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     
                                                                     if (action.ActionKey == bind.Value)
@@ -4089,7 +4101,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4187,7 +4205,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4285,7 +4309,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4383,7 +4413,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4481,7 +4517,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4579,7 +4621,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4677,7 +4725,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4775,7 +4829,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4873,7 +4933,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -4971,7 +5037,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5069,7 +5141,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5167,7 +5245,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5265,7 +5349,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5363,7 +5453,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5461,7 +5557,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5559,7 +5661,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5657,7 +5765,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5755,7 +5869,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5864,7 +5984,13 @@ namespace Chromatics
                                                                             break;
                                                                     }
 
-                                                                    if (bypass) continue;
+                                                                    if (bypass)
+                                                                    {
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
+
+                                                                        continue;
+                                                                    }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
@@ -5964,7 +6090,13 @@ namespace Chromatics
                                                                                 break;
                                                                         }
 
-                                                                        if (bypass) continue;
+                                                                        if (bypass)
+                                                                        {
+                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
+
+                                                                            continue;
+                                                                        }
 
                                                                         if (action.ActionKey == bind.Value)
                                                                         {
@@ -6061,7 +6193,13 @@ namespace Chromatics
                                                                                 break;
                                                                         }
 
-                                                                        if (bypass) continue;
+                                                                        if (bypass)
+                                                                        {
+                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
+
+                                                                            continue;
+                                                                        }
 
                                                                         if (action.ActionKey == bind.Value)
                                                                         {
@@ -6161,7 +6299,13 @@ namespace Chromatics
                                                                         break;
                                                                 }
 
-                                                                if (bypass) continue;
+                                                                if (bypass)
+                                                                {
+                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingKeybindDisabled), false);
+
+                                                                    continue;
+                                                                }
 
                                                                 if (action.ActionKey == bind.Value)
                                                                 {
@@ -6261,7 +6405,13 @@ namespace Chromatics
                                                                     break;
                                                             }
 
-                                                            if (bypass) continue;
+                                                            if (bypass)
+                                                            {
+                                                                GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingKeybindDisabled), false);
+
+                                                                continue;
+                                                            }
 
                                                             if (action.ActionKey == bind.Value)
                                                             {
