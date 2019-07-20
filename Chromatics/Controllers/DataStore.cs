@@ -464,11 +464,6 @@ namespace Chromatics.Datastore
         public string ColorMappingHotbarOutRange = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingHotbarProc = ColorTranslator.ToHtml(Color.Yellow);
         public string ColorMappingHotbarReady = ColorTranslator.ToHtml(Color.DodgerBlue);
-        public string ColorMappingPetCd = ColorTranslator.ToHtml(Color.OrangeRed);
-        public string ColorMappingPetNotAvailable = ColorTranslator.ToHtml(Color.Red);
-        public string ColorMappingPetOutRange = ColorTranslator.ToHtml(Color.Red);
-        public string ColorMappingPetProc = ColorTranslator.ToHtml(Color.Purple);
-        public string ColorMappingPetReady = ColorTranslator.ToHtml(Color.Lime);
         public string ColorMappingKeybindMap = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingKeybindAetherCurrents = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingKeybindSigns = ColorTranslator.ToHtml(Color.OrangeRed);
