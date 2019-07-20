@@ -99,6 +99,7 @@
             this.col_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tP_misc = new System.Windows.Forms.TabPage();
             this.gP_ChromaLink = new System.Windows.Forms.GroupBox();
+            this.chk_other_interpreverse = new System.Windows.Forms.CheckBox();
             this.chk_other_interp = new System.Windows.Forms.CheckBox();
             this.nm_ledcount_z6 = new System.Windows.Forms.NumericUpDown();
             this.nm_ledcount_z5 = new System.Windows.Forms.NumericUpDown();
@@ -133,11 +134,12 @@
             this.chk_sdk_razer = new System.Windows.Forms.CheckBox();
             this.tP_settings = new System.Windows.Forms.TabPage();
             this.gB_effects = new System.Windows.Forms.GroupBox();
+            this.lbl_bcm = new System.Windows.Forms.Label();
             this.lbl_hpcritical = new System.Windows.Forms.Label();
+            this.cb_bcm = new System.Windows.Forms.ComboBox();
             this.nm_criticalhp = new System.Windows.Forms.NumericUpDown();
             this.chk_vegasmode = new System.Windows.Forms.CheckBox();
             this.chk_cutscenes = new System.Windows.Forms.CheckBox();
-            this.chk_reactiveweather = new System.Windows.Forms.CheckBox();
             this.chk_showstatuseffects = new System.Windows.Forms.CheckBox();
             this.chk_dfbelltoggle = new System.Windows.Forms.CheckBox();
             this.chk_impactflashtog = new System.Windows.Forms.CheckBox();
@@ -252,7 +254,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_other_interpreverse = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -1175,6 +1176,19 @@
             this.gP_ChromaLink.TabStop = false;
             this.gP_ChromaLink.Text = "ChromaLink/Other Devices";
             // 
+            // chk_other_interpreverse
+            // 
+            this.chk_other_interpreverse.AutoSize = true;
+            this.chk_other_interpreverse.Location = new System.Drawing.Point(10, 66);
+            this.chk_other_interpreverse.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_other_interpreverse.Name = "chk_other_interpreverse";
+            this.chk_other_interpreverse.Size = new System.Drawing.Size(163, 17);
+            this.chk_other_interpreverse.TabIndex = 41;
+            this.chk_other_interpreverse.Text = "Reverse Interpolation Effects";
+            this.tooltip_main.SetToolTip(this.chk_other_interpreverse, "Change direction of interpolation effects.\r\n(CORSAIR ONLY)");
+            this.chk_other_interpreverse.UseVisualStyleBackColor = true;
+            this.chk_other_interpreverse.CheckedChanged += new System.EventHandler(this.Chk_other_interpreverse_CheckedChanged);
+            // 
             // chk_other_interp
             // 
             this.chk_other_interp.AutoSize = true;
@@ -1666,11 +1680,12 @@
             // 
             // gB_effects
             // 
+            this.gB_effects.Controls.Add(this.lbl_bcm);
             this.gB_effects.Controls.Add(this.lbl_hpcritical);
+            this.gB_effects.Controls.Add(this.cb_bcm);
             this.gB_effects.Controls.Add(this.nm_criticalhp);
             this.gB_effects.Controls.Add(this.chk_vegasmode);
             this.gB_effects.Controls.Add(this.chk_cutscenes);
-            this.gB_effects.Controls.Add(this.chk_reactiveweather);
             this.gB_effects.Controls.Add(this.chk_showstatuseffects);
             this.gB_effects.Controls.Add(this.chk_dfbelltoggle);
             this.gB_effects.Controls.Add(this.chk_impactflashtog);
@@ -1689,6 +1704,16 @@
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
             // 
+            // lbl_bcm
+            // 
+            this.lbl_bcm.AutoSize = true;
+            this.lbl_bcm.Location = new System.Drawing.Point(199, 223);
+            this.lbl_bcm.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_bcm.Name = "lbl_bcm";
+            this.lbl_bcm.Size = new System.Drawing.Size(61, 13);
+            this.lbl_bcm.TabIndex = 13;
+            this.lbl_bcm.Text = "Base Mode";
+            // 
             // lbl_hpcritical
             // 
             this.lbl_hpcritical.AutoSize = true;
@@ -1698,6 +1723,23 @@
             this.lbl_hpcritical.Size = new System.Drawing.Size(67, 13);
             this.lbl_hpcritical.TabIndex = 13;
             this.lbl_hpcritical.Text = "HP Critical %";
+            // 
+            // cb_bcm
+            // 
+            this.cb_bcm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_bcm.FormattingEnabled = true;
+            this.cb_bcm.Items.AddRange(new object[] {
+            "Static Colors",
+            "Reactive Weather",
+            "Battle Stance",
+            "Job Classes"});
+            this.cb_bcm.Location = new System.Drawing.Point(289, 221);
+            this.cb_bcm.Margin = new System.Windows.Forms.Padding(2);
+            this.cb_bcm.Name = "cb_bcm";
+            this.cb_bcm.Size = new System.Drawing.Size(112, 21);
+            this.cb_bcm.TabIndex = 12;
+            this.tooltip_main.SetToolTip(this.cb_bcm, "Changes the base color mode for Chromatics.\r\n\r\nDefault: Static");
+            this.cb_bcm.SelectedIndexChanged += new System.EventHandler(this.Cb_bcm_SelectedIndexChanged);
             // 
             // nm_criticalhp
             // 
@@ -1717,7 +1759,7 @@
             // chk_vegasmode
             // 
             this.chk_vegasmode.AutoSize = true;
-            this.chk_vegasmode.Location = new System.Drawing.Point(204, 177);
+            this.chk_vegasmode.Location = new System.Drawing.Point(204, 148);
             this.chk_vegasmode.Margin = new System.Windows.Forms.Padding(2);
             this.chk_vegasmode.Name = "chk_vegasmode";
             this.chk_vegasmode.Size = new System.Drawing.Size(184, 17);
@@ -1730,7 +1772,7 @@
             // chk_cutscenes
             // 
             this.chk_cutscenes.AutoSize = true;
-            this.chk_cutscenes.Location = new System.Drawing.Point(204, 147);
+            this.chk_cutscenes.Location = new System.Drawing.Point(204, 118);
             this.chk_cutscenes.Margin = new System.Windows.Forms.Padding(2);
             this.chk_cutscenes.Name = "chk_cutscenes";
             this.chk_cutscenes.Size = new System.Drawing.Size(161, 17);
@@ -1739,19 +1781,6 @@
             this.tooltip_main.SetToolTip(this.chk_cutscenes, "Shows special effects on per-key RGB keyboards during cutscenes.\r\n\r\nDefault: ON");
             this.chk_cutscenes.UseVisualStyleBackColor = true;
             this.chk_cutscenes.CheckedChanged += new System.EventHandler(this.chk_cutscenes_CheckedChanged);
-            // 
-            // chk_reactiveweather
-            // 
-            this.chk_reactiveweather.AutoSize = true;
-            this.chk_reactiveweather.Location = new System.Drawing.Point(204, 118);
-            this.chk_reactiveweather.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_reactiveweather.Name = "chk_reactiveweather";
-            this.chk_reactiveweather.Size = new System.Drawing.Size(149, 17);
-            this.chk_reactiveweather.TabIndex = 9;
-            this.chk_reactiveweather.Text = "Enable Reactive Weather";
-            this.tooltip_main.SetToolTip(this.chk_reactiveweather, "Changes device base colour based on curent in-game weather.\r\n\r\nDefault: OFF");
-            this.chk_reactiveweather.UseVisualStyleBackColor = true;
-            this.chk_reactiveweather.CheckedChanged += new System.EventHandler(this.chk_reactiveweather_CheckedChanged);
             // 
             // chk_showstatuseffects
             // 
@@ -3274,19 +3303,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_other_interpreverse
-            // 
-            this.chk_other_interpreverse.AutoSize = true;
-            this.chk_other_interpreverse.Location = new System.Drawing.Point(10, 66);
-            this.chk_other_interpreverse.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_other_interpreverse.Name = "chk_other_interpreverse";
-            this.chk_other_interpreverse.Size = new System.Drawing.Size(163, 17);
-            this.chk_other_interpreverse.TabIndex = 41;
-            this.chk_other_interpreverse.Text = "Reverse Interpolation Effects";
-            this.tooltip_main.SetToolTip(this.chk_other_interpreverse, "Change direction of interpolation effects.\r\n(CORSAIR ONLY)");
-            this.chk_other_interpreverse.UseVisualStyleBackColor = true;
-            this.chk_other_interpreverse.CheckedChanged += new System.EventHandler(this.Chk_other_interpreverse_CheckedChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3496,7 +3512,6 @@
         private System.Windows.Forms.Label lbl_lang;
         private System.Windows.Forms.ComboBox cb_lang;
         private System.Windows.Forms.ComboBox cb_qwerty;
-        private System.Windows.Forms.CheckBox chk_reactiveweather;
         private System.Windows.Forms.ComboBox cb_lightbarmode;
         private System.Windows.Forms.Label lbl_lightbar;
         private System.Windows.Forms.Label lbl_region;
@@ -3592,6 +3607,8 @@
         private System.Windows.Forms.CheckBox chk_sdk_mystic;
         private System.Windows.Forms.CheckBox chk_other_interp;
         private System.Windows.Forms.CheckBox chk_other_interpreverse;
+        private System.Windows.Forms.Label lbl_bcm;
+        private System.Windows.Forms.ComboBox cb_bcm;
     }
 }
 

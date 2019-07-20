@@ -429,7 +429,65 @@ namespace Chromatics
             {"ColorMappingACTTimerFlash", new[] { "Timer Flash", "11", "Black", "White"}},
             {"ColorMappingACTEnrageEmpty", new[] { "Enrage Empty", "11", "Black", "White"}},
             {"ColorMappingACTEnrageCountdown", new[] { "Enrage Countdown", "11", "Black", "White"}},
-            {"ColorMappingACTEnrageWarning", new[] { "Enrage Warning", "11", "Black", "White"}}
+            {"ColorMappingACTEnrageWarning", new[] { "Enrage Warning", "11", "Black", "White"}},
+            {"ColorMappingJobPLDBase", new[] { "PLD (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobPLDHighlight", new[] { "PLD (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobMNKBase", new[] { "MNK (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobMNKHighlight", new[] { "MNK (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobWARBase", new[] { "WAR (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobWARHighlight", new[] { "WAR (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobDRGBase", new[] { "DRG (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobDRGHighlight", new[] { "DRG (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobBRDBase", new[] { "BRD (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobBRDHighlight", new[] { "BRD (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobWHMBase", new[] { "WHM (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobWHMHighlight", new[] { "WHM (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobBLMBase", new[] { "BLM (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobBLMHighlight", new[] { "BLM (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobSMNBase", new[] { "SMN (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobSMNHighlight", new[] { "SMN (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobSCHBase", new[] { "SCH (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobSCHHighlight", new[] { "SCH (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobNINBase", new[] { "NIN (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobNINHighlight", new[] { "NIN (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobMCHBase", new[] { "MCH (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobMCHHighlight", new[] { "MCH (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobDRKBase", new[] { "DRK (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobDRKHighlight", new[] { "DRK (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobASTBase", new[] { "AST (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobASTHighlight", new[] { "AST (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobSAMBase", new[] { "SAM (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobSAMHighlight", new[] { "SAM (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobRDMBase", new[] { "RDM (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobRDMHighlight", new[] { "RDM (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobDNCBase", new[] { "DNC (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobDNCHighlight", new[] { "DNC (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobGNBBase", new[] { "GNB (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobGNBHighlight", new[] { "GNB (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobBLUBase", new[] { "BLU (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobBLUHighlight", new[] { "BLU (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobCPTBase", new[] { "CPT (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobCPTHighlight", new[] { "CPT (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobBSMBase", new[] { "BSM (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobBSMHighlight", new[] { "BSM (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobARMBase", new[] { "ARM (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobARMHighlight", new[] { "ARM (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobGSMBase", new[] { "GSM (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobGSMHighlight", new[] { "GSM (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobLTWBase", new[] { "LTW (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobLTWHighlight", new[] { "LTW (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobWVRBase", new[] { "WVR (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobWVRHighlight", new[] { "WVR (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobALCBase", new[] { "ALC (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobALCHighlight", new[] { "ALC (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobCULBase", new[] { "CUL (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobCULHighlight", new[] { "CUL (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobMINBase", new[] { "MIN (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobMINHighlight", new[] { "MIN (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobBTNBase", new[] { "BTN (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobBTNHighlight", new[] { "BTN (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobFSHBase", new[] { "FSH (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobFSHHighlight", new[] { "FSH (Highlight)", "12", "Black", "White"}},
         };
 
 
@@ -447,7 +505,8 @@ namespace Chromatics
             {8, "Notifications"},
             {9, "Job Gauges" },
             {10, "Reactive Weather" },
-            {11, "ACT"}
+            {11, "ACT"},
+            {12, "Job Classes"},
         };
 
         public void SetFormName(string text)
@@ -1127,7 +1186,6 @@ namespace Chromatics
             chk_lcdtoggle.Checked = ChromaticsSettings.ChromaticsSettingsLcdEnabled;
             cb_lang.SelectedIndex = ChromaticsSettings.ChromaticsSettingsLanguage;
 
-            chk_reactiveweather.Checked = ChromaticsSettings.ChromaticsSettingsReactiveWeather;
             chk_debugopt.Checked = ChromaticsSettings.ChromaticsSettingsDebugOpt;
 
             nm_criticalhp.Value = ChromaticsSettings.ChromaticsSettingsCriticalHP;
@@ -1141,6 +1199,7 @@ namespace Chromatics
             cb_alarmclock.SelectedIndex = cb_alarmclock.FindStringExact(ChromaticsSettings.ChromaticsSettingsCastAlarmTime);
             chk_castsrank.Checked = ChromaticsSettings.ChromaticsSettingsCastSRankAlert;
             chk_castreadycheck.Checked = ChromaticsSettings.ChromaticsSettingsCastReadyCheckAlert;
+            cb_bcm.SelectedIndex = cb_bcm.FindStringExact(ChromaticsSettings.ChromaticsSettingsBaseMode);
 
             nm_ledcount_z1.Value = _ChromaLinkLEDCountZ1;
             nm_ledcount_z2.Value = _ChromaLinkLEDCountZ2;
@@ -1914,17 +1973,7 @@ namespace Chromatics
             Localization.SetKeyRegion(ChromaticsSettings.ChromaticsSettingsQwertyMode);
             SaveChromaticsSettings(1);
         }
-
-        private void chk_reactiveweather_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Startup == false) return;
-
-            ChromaticsSettings.ChromaticsSettingsReactiveWeather = chk_reactiveweather.Checked;
-            SetKeysbase = false;
-
-            SaveChromaticsSettings(1);
-        }
-
+        
         private void chk_startupenable_CheckedChanged(object sender, EventArgs e)
         {
             if (chk_startupenable.Checked)
@@ -3333,6 +3382,16 @@ namespace Chromatics
 
                 SaveChromaticsSettings(1);
             }
+        }
+
+        private void Cb_bcm_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsBaseMode = (string)cb_bcm.SelectedItem;
+
+            SetKeysbase = false;
+            SaveChromaticsSettings(1);
         }
         
         private void Chk_castsrank_CheckedChanged(object sender, EventArgs e)

@@ -33,6 +33,14 @@ namespace Chromatics
         private Color _baseColor = Color.Black;
         private Color _baseWeatherColor = Color.Black;
         private Color _highlightWeatherColor = Color.Black;
+        private Color _baseStanceColor = Color.Black;
+        private Color _highlightStanceColor = Color.Black;
+        private Color _baseJobColor = Color.Black;
+        private Color _highlightJobColor = Color.Black;
+        private int battleStance = 0;
+        private int _battleStance = 0;
+        private string jobClass = "PLD";
+        private string _jobClass = "PLD";
 
         private Cooldowns.CardTypes _currentCard;
         private string _currentStatus = "";
@@ -1170,7 +1178,7 @@ namespace Chromatics
 
                         //Reactive Weather
                         
-                        if (ChromaticsSettings.ChromaticsSettingsReactiveWeather)
+                        if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Reactive Weather")
                         {
                             if (!_weathertoggle)
                             {
@@ -1235,6 +1243,195 @@ namespace Chromatics
                                 highlightColor = _highlightWeatherColor;
                                 
                             }
+                        }
+                        else if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Battle Stance")
+                        {
+                            if (battleStance != _battleStance)
+                            {
+                                switch (battleStance)
+                                {
+                                    case 0:
+                                        //Idle
+                                        _baseStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity);
+                                        _highlightStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                        break;
+                                    case 1:
+                                        //Engaged
+                                        _baseStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed);
+                                        _highlightStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                        break;
+                                    case 2:
+                                        //Aggro
+                                        _baseStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity4);
+                                        _highlightStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                        break;
+                                    case 3:
+                                        //Cating
+                                        _baseStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting);
+                                        _highlightStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                        break;
+                                }
+
+                                SetKeysbase = false;
+                                SetMousebase = false;
+                                SetPadbase = false;
+                                SetHeadsetbase = false;
+                                SetKeypadbase = false;
+                                SetCLbase = false;
+
+                                _battleStance = battleStance;
+                            }
+
+                            
+
+                            baseColor = _baseStanceColor;
+                            highlightColor = _highlightStanceColor;
+                        }
+                        else if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Job Classes")
+                        {
+                            if (jobClass != _jobClass)
+                            {
+                                switch (jobClass)
+                                {
+                                    case "CPT":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTHighlight);
+                                        break;
+                                    case "BSM":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMHighlight);
+                                        break;
+                                    case "ARM":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMHighlight);
+                                        break;
+                                    case "GSM":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMHighlight);
+                                        break;
+                                    case "LTW":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWHighlight);
+                                        break;
+                                    case "WVR":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRHighlight);
+                                        break;
+                                    case "ALC":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCHighlight);
+                                        break;
+                                    case "CUL":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULHighlight);
+                                        break;
+                                    case "MIN":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINHighlight);
+                                        break;
+                                    case "BTN":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNHighlight);
+                                        break;
+                                    case "FSH":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHHighlight);
+                                        break;
+                                    case "PLD":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDHighlight);
+                                        break;
+                                    case "MNK":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKHighlight);
+                                        break;
+                                    case "WAR":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARHighlight);
+                                        break;
+                                    case "DRG":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGHighlight);
+                                        break;
+                                    case "BRD":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDHighlight);
+                                        break;
+                                    case "WHM":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMHighlight);
+                                        break;
+                                    case "BLM":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMHighlight);
+                                        break;
+                                    case "SMN":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNHighlight);
+                                        break;
+                                    case "SCH":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHHighlight);
+                                        break;
+                                    case "NIN":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHighlight);
+                                        break;
+                                    case "MCH":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHHighlight);
+                                        break;
+                                    case "DRK":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKHighlight);
+                                        break;
+                                    case "AST":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTHighlight);
+                                        break;
+                                    case "SAM":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMHighlight);
+                                        break;
+                                    case "RDM":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMHighlight);
+                                        break;
+                                    case "DNC":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCHighlight);
+                                        break;
+                                    case "GNB":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBHighlight);
+                                        break;
+                                    case "BLU":
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUBase);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUHighlight);
+                                        break;
+                                    default:
+                                        _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
+                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+                                        break;
+                                }
+
+                                SetKeysbase = false;
+                                SetMousebase = false;
+                                SetPadbase = false;
+                                SetHeadsetbase = false;
+                                SetKeypadbase = false;
+                                SetCLbase = false;
+
+                                _jobClass = jobClass;
+                            }
+                            
+
+                            baseColor = _baseJobColor;
+                            highlightColor = _highlightJobColor;
                         }
                         else
                         {
@@ -1553,7 +1750,7 @@ namespace Chromatics
                         }
 
                         //Check Base Weather
-                        if (ChromaticsSettings.ChromaticsSettingsReactiveWeather)
+                        if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Reactive Weather")
                         {
                             if (_baseWeatherColor != _baseColor)
                             {
@@ -1568,6 +1765,40 @@ namespace Chromatics
                             if (_highlightWeatherColor != highlightColor)
                             {
                                 highlightColor = _highlightWeatherColor;
+                            }
+                        }
+                        else if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Battle Stance")
+                        {
+                            if (_baseStanceColor != _baseColor)
+                            {
+                                _baseColor = _baseStanceColor;
+                            }
+
+                            if (_baseStanceColor != baseColor)
+                            {
+                                baseColor = _baseStanceColor;
+                            }
+
+                            if (_highlightStanceColor != highlightColor)
+                            {
+                                highlightColor = _highlightStanceColor;
+                            }
+                        }
+                        else if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Job Classes")
+                        {
+                            if (_baseJobColor != _baseColor)
+                            {
+                                _baseColor = _baseJobColor;
+                            }
+
+                            if (_baseJobColor != baseColor)
+                            {
+                                baseColor = _baseJobColor;
+                            }
+
+                            if (_highlightJobColor != highlightColor)
+                            {
+                                highlightColor = _highlightJobColor;
                             }
                         }
 
@@ -2011,6 +2242,7 @@ namespace Chromatics
     
                                                 GlobalApplyMapLogoLighting("", highlightColor, false);
                                                 //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
+
                                             }
                                             
                                         }
@@ -2383,6 +2615,8 @@ namespace Chromatics
 
                                         _castalert = true;
                                     }
+
+                                    battleStance = 3;
                                 }
                                 else
                                 {
@@ -2412,6 +2646,8 @@ namespace Chromatics
                                         //Debug.WriteLine("Em Position: " + EmnityPosition);
 
                                         //_emnitytable.Clear();
+
+                                        battleStance = 1;
 
                                         if (emnityPosition == -1)
                                         {
@@ -2681,6 +2917,8 @@ namespace Chromatics
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm4, false);
                                             GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm4, false);
 
+                                            battleStance = 2;
+
                                             if (_LightbarMode == LightbarMode.EnmityTracker)
                                             {
                                                 foreach (var f in DeviceEffects.LightbarZones)
@@ -2741,6 +2979,8 @@ namespace Chromatics
                                         GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm0, false);
                                         GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm0, false);
 
+                                        battleStance = 0;
+
                                         if (_LightbarMode == LightbarMode.EnmityTracker)
                                         {
                                             foreach (var f in DeviceEffects.LightbarZones)
@@ -2778,6 +3018,8 @@ namespace Chromatics
                             {
                                 GlobalApplyMapKeyLighting("PrintScreen",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+
+                                battleStance = 0;
 
                                 if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
                                 {
@@ -4605,162 +4847,202 @@ namespace Chromatics
                                 case Actor.Job.Unknown:
                                     _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
                                     _currentlvl = 0;
+                                    jobClass = "Unknown";
                                     break;
                                 case Actor.Job.GLD:
                                     _role = _playerData.CurrentPlayer.GLD_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.GLD;
+                                    jobClass = "PLD";
                                     break;
                                 case Actor.Job.PGL:
                                     _role = _playerData.CurrentPlayer.PGL_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.PGL;
+                                    jobClass = "MNK";
                                     break;
                                 case Actor.Job.MRD:
                                     _role = _playerData.CurrentPlayer.MRD_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.MRD;
+                                    jobClass = "WAR";
                                     break;
                                 case Actor.Job.LNC:
                                     _role = _playerData.CurrentPlayer.LNC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.LNC;
+                                    jobClass = "DRG";
                                     break;
                                 case Actor.Job.ARC:
                                     _role = _playerData.CurrentPlayer.ARC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ARC;
+                                    jobClass = "BRD";
                                     break;
                                 case Actor.Job.CNJ:
                                     _role = _playerData.CurrentPlayer.CNJ_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.CNJ;
+                                    jobClass = "WHM";
                                     break;
                                 case Actor.Job.THM:
                                     _role = _playerData.CurrentPlayer.THM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.THM;
+                                    jobClass = "BLM";
                                     break;
                                 case Actor.Job.CPT:
                                     _role = _playerData.CurrentPlayer.CPT_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.CPT;
+                                    jobClass = "CPT";
                                     break;
                                 case Actor.Job.BSM:
                                     _role = _playerData.CurrentPlayer.BSM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.BSM;
+                                    jobClass = "BSM";
                                     break;
                                 case Actor.Job.ARM:
                                     _role = _playerData.CurrentPlayer.ARM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ARM;
+                                    jobClass = "ARM";
                                     break;
                                 case Actor.Job.GSM:
                                     _role = _playerData.CurrentPlayer.GSM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.GSM;
+                                    jobClass = "GSM";
                                     break;
                                 case Actor.Job.LTW:
                                     _role = _playerData.CurrentPlayer.LTW_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.LTW;
+                                    jobClass = "LTW";
                                     break;
                                 case Actor.Job.WVR:
                                     _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.WVR;
+                                    jobClass = "WVR";
                                     break;
                                 case Actor.Job.ALC:
                                     _role = _playerData.CurrentPlayer.ALC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ALC;
+                                    jobClass = "ALC";
                                     break;
                                 case Actor.Job.CUL:
                                     _role = _playerData.CurrentPlayer.CUL_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.CUL;
+                                    jobClass = "CUL";
                                     break;
                                 case Actor.Job.MIN:
                                     _role = _playerData.CurrentPlayer.MIN_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.MIN;
+                                    jobClass = "MIN";
                                     break;
                                 case Actor.Job.BTN:
                                     _role = _playerData.CurrentPlayer.BTN_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.BTN;
+                                    jobClass = "BTN";
                                     break;
                                 case Actor.Job.FSH:
                                     _role = _playerData.CurrentPlayer.FSH_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.FSH;
+                                    jobClass = "FSH";
                                     break;
                                 case Actor.Job.PLD:
                                     _role = _playerData.CurrentPlayer.GLD_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.GLD;
+                                    jobClass = "PLD";
                                     break;
                                 case Actor.Job.MNK:
                                     _role = _playerData.CurrentPlayer.PGL_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.PGL;
+                                    jobClass = "MNK";
                                     break;
                                 case Actor.Job.WAR:
                                     _role = _playerData.CurrentPlayer.MRD_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.MRD;
+                                    jobClass = "WAR";
                                     break;
                                 case Actor.Job.DRG:
                                     _role = _playerData.CurrentPlayer.LNC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.LNC;
+                                    jobClass = "DRG";
                                     break;
                                 case Actor.Job.BRD:
                                     _role = _playerData.CurrentPlayer.ARC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ARC;
+                                    jobClass = "BRD";
                                     break;
                                 case Actor.Job.WHM:
                                     _role = _playerData.CurrentPlayer.CNJ_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.CNJ;
+                                    jobClass = "WHM";
                                     break;
                                 case Actor.Job.BLM:
                                     _role = _playerData.CurrentPlayer.THM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.THM;
+                                    jobClass = "BLM";
                                     break;
                                 case Actor.Job.ACN:
                                     _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ACN;
+                                    jobClass = "SMN";
                                     break;
                                 case Actor.Job.SMN:
                                     _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ACN;
+                                    jobClass = "SMN";
                                     break;
                                 case Actor.Job.SCH:
                                     _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ACN;
+                                    jobClass = "SCH";
                                     break;
                                 case Actor.Job.ROG:
                                     _role = _playerData.CurrentPlayer.ROG_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ROG;
+                                    jobClass = "NIN";
                                     break;
                                 case Actor.Job.NIN:
                                     _role = _playerData.CurrentPlayer.ROG_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.ROG;
+                                    jobClass = "NIN";
                                     break;
                                 case Actor.Job.MCH:
                                     _role = _playerData.CurrentPlayer.MCH_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.MCH;
+                                    jobClass = "MCH";
                                     break;
                                 case Actor.Job.DRK:
                                     _role = _playerData.CurrentPlayer.DRK_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.DRK;
+                                    jobClass = "DRK";
                                     break;
                                 case Actor.Job.AST:
                                     _role = _playerData.CurrentPlayer.AST_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.AST;
+                                    jobClass = "AST";
                                     break;
                                 case Actor.Job.SAM:
                                     _role = _playerData.CurrentPlayer.SAM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.SAM;
+                                    jobClass = "SAM";
                                     break;
                                 case Actor.Job.RDM:
                                     _role = _playerData.CurrentPlayer.RDM_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.RDM;
+                                    jobClass = "RDM";
                                     break;
                                 case Actor.Job.DNC:
                                     _role = _playerData.CurrentPlayer.DNC_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.DNC;
+                                    jobClass = "DNC";
                                     break;
                                 case Actor.Job.GNB:
                                     _role = _playerData.CurrentPlayer.GNB_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.GNB;
+                                    jobClass = "GNB";
                                     break;
                                 case Actor.Job.BLU:
                                     _role = _playerData.CurrentPlayer.BLU_CurrentEXP;
                                     _currentlvl = _playerData.CurrentPlayer.BLU;
+                                    jobClass = "BLU";
                                     break;
                                 default:
                                     _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
                                     _currentlvl = 0;
+                                    jobClass = "Unknown";
                                     break;
                             }
 
