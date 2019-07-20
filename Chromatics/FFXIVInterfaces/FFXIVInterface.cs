@@ -57,9 +57,6 @@ namespace Chromatics
         private int _catchMenuchange;
         private int _countMainMenuHold;
         private int _currentET;
-        private bool E1SetBase;
-        private bool E1Pulled;
-        private bool E1Set;
 
         /* Parse FFXIV Function
          * Read the data from Sharlayan and call lighting functions according
@@ -1467,6 +1464,7 @@ namespace Chromatics
                                 GlobalUpdateBulbState(BulbModeTypes.TargetHp, _baseColor, 500);
                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
                                 GlobalUpdateBulbState(BulbModeTypes.Castbar, _baseColor, 500);
+                                GlobalUpdateBulbState(BulbModeTypes.Disabled, _baseColor, 500);
                             }
 
                             GlobalApplyKeySingleLighting(DevModeTypes.DefaultColor, _baseColor);
@@ -1524,6 +1522,15 @@ namespace Chromatics
                             GlobalApplyMapMouseLighting(DevModeTypes.DefaultColor, baseColor, false);
                             GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, baseColor, false);
                             GlobalApplyMapMouseLighting(DevModeTypes.Castbar, baseColor, false);
+                            GlobalApplyMapMouseLighting(DevModeTypes.Disabled, baseColor, false);
+
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide1", "RightSide1", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide2", "RightSide2", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide3", "RightSide3", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide4", "RightSide4", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide5", "RightSide5", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide6", "RightSide6", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide7", "RightSide7", baseColor, false);
 
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide1", "RightSide1", baseColor, false);
                             GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide2", "RightSide2", baseColor, false);
@@ -1564,6 +1571,12 @@ namespace Chromatics
 
                         if (SetPadbase == false)
                         {
+                            GlobalApplyMapPadLighting(DevModeTypes.Disabled, 14, 5, 0, baseColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.Disabled, 13, 6, 1, baseColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.Disabled, 12, 7, 2, baseColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.Disabled, 11, 8, 3, baseColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.Disabled, 10, 9, 4, baseColor, false);
+
                             GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 14, 5, 0, baseColor, false);
                             GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 13, 6, 1, baseColor, false);
                             GlobalApplyMapPadLighting(DevModeTypes.DefaultColor, 12, 7, 2, baseColor, false);
@@ -1598,6 +1611,7 @@ namespace Chromatics
                             GlobalApplyMapHeadsetLighting(DevModeTypes.Castbar, baseColor, false);
 
                             GlobalApplyMapHeadsetLighting(DevModeTypes.HighlightColor, highlightColor, false);
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.Disabled, baseColor, false);
 
                             SetHeadsetbase = true;
                         }
@@ -1609,6 +1623,7 @@ namespace Chromatics
                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "All");
 
                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.HighlightColor, highlightColor, false, "All");
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.Disabled, highlightColor, false, "All");
 
                             SetKeypadbase = true;
                         }
@@ -1618,6 +1633,7 @@ namespace Chromatics
                             GlobalApplyMapChromaLinkLighting(DevModeTypes.DefaultColor, baseColor, true);
                             GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor, true);
                             GlobalApplyMapChromaLinkLighting(DevModeTypes.Castbar, baseColor, true);
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.Disabled, baseColor, true);
 
                             GlobalApplyMapChromaLinkLighting(DevModeTypes.HighlightColor, highlightColor, true);
 

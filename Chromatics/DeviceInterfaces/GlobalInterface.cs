@@ -1131,14 +1131,14 @@ namespace Chromatics
         //Send a lighting command to a specific Mouse LED
         public void GlobalApplyMapMouseLighting(DevModeTypes mode, Color col, bool clear)
         {
+            if (mode != _MouseZone1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
+            
             if (mode == DevModeTypes.Disabled)
             {
                 col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
 
             }
 
-            if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
-            
             //Logo
             if (mode == _MouseZone1Mode)
             {
@@ -1236,12 +1236,14 @@ namespace Chromatics
 
         public void GlobalApplyStripMouseLighting(DevModeTypes mode, string region1, string region2, Color col, bool clear)
         {
+            if (mode != _MouseStrip1Mode && mode != _MouseStrip2Mode) return;
+
             if (mode == DevModeTypes.Disabled)
             {
                 col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                
+                Console.WriteLine(mode + "//" + _MouseStrip1Mode);
             }
-
-            if (mode != _MouseStrip1Mode && mode != _MouseStrip2Mode) return;
 
             //Logo
             if (mode == _MouseStrip1Mode)
@@ -1286,7 +1288,7 @@ namespace Chromatics
                 colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
             }
 
-            if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
+            if (mode != _MouseZone1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
 
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 
