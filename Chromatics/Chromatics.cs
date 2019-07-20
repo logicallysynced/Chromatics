@@ -930,7 +930,20 @@ namespace Chromatics
 
         private delegate void BlinkDelegate();
 
-        
+        private void btn_lccrestore_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chk_lccauto_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chk_lccenable_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public static class ExceptionExtensions

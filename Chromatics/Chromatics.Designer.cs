@@ -81,6 +81,10 @@
             this.tP_keypad = new System.Windows.Forms.TabPage();
             this.chk_keypad_binds = new System.Windows.Forms.CheckBox();
             this.dgv_keypad_binds = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lbl_keypad_z1 = new System.Windows.Forms.Label();
             this.cb_keypad_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_keypad = new System.Windows.Forms.CheckBox();
@@ -146,11 +150,6 @@
             this.chk_gcdcounttoggle = new System.Windows.Forms.CheckBox();
             this.chk_castanimatetoggle = new System.Windows.Forms.CheckBox();
             this.chk_castchargetoggle = new System.Windows.Forms.CheckBox();
-            this.gB_lcc = new System.Windows.Forms.GroupBox();
-            this.btn_lccrestore = new System.Windows.Forms.Button();
-            this.chk_lccauto = new System.Windows.Forms.CheckBox();
-            this.chk_lccenable = new System.Windows.Forms.CheckBox();
-            this.lb_lcc = new System.Windows.Forms.Label();
             this.gB_General = new System.Windows.Forms.GroupBox();
             this.chk_releasedevices = new System.Windows.Forms.CheckBox();
             this.lbl_polling = new System.Windows.Forms.Label();
@@ -251,10 +250,11 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gB_lcc = new System.Windows.Forms.GroupBox();
+            this.btn_lccrestore = new System.Windows.Forms.Button();
+            this.chk_lccauto = new System.Windows.Forms.CheckBox();
+            this.chk_lccenable = new System.Windows.Forms.CheckBox();
+            this.lb_lcc = new System.Windows.Forms.Label();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -281,7 +281,6 @@
             this.tP_settings.SuspendLayout();
             this.gB_effects.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nm_criticalhp)).BeginInit();
-            this.gB_lcc.SuspendLayout();
             this.gB_General.SuspendLayout();
             this.tP_mappings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dG_mappings)).BeginInit();
@@ -304,6 +303,7 @@
             this.tP_ifttt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.gB_lcc.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtb_debug
@@ -975,6 +975,33 @@
         " modifier) you have assigned in FFXIV.");
             this.dgv_keypad_binds.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnKeypadBindChanged);
             // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "ID";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.FillWeight = 64.54688F;
+            this.dataGridViewTextBoxColumn2.HeaderText = "Keypad Key";
+            this.dataGridViewTextBoxColumn2.MaxInputLength = 2;
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // Column1
+            // 
+            this.Column1.FillWeight = 45.68528F;
+            this.Column1.HeaderText = "Enabled";
+            this.Column1.Name = "Column1";
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.FillWeight = 189.7679F;
+            this.dataGridViewTextBoxColumn3.HeaderText = "Keybind";
+            this.dataGridViewTextBoxColumn3.MaxInputLength = 1;
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
             // lbl_keypad_z1
             // 
             this.lbl_keypad_z1.AutoSize = true;
@@ -1494,6 +1521,7 @@
             // tP_adv
             // 
             this.tP_adv.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_adv.Controls.Add(this.gB_lcc);
             this.tP_adv.Controls.Add(this.gb_sdkcontrol);
             this.tP_adv.Location = new System.Drawing.Point(4, 22);
             this.tP_adv.Name = "tP_adv";
@@ -1650,7 +1678,6 @@
             // tP_settings
             // 
             this.tP_settings.Controls.Add(this.gB_effects);
-            this.tP_settings.Controls.Add(this.gB_lcc);
             this.tP_settings.Controls.Add(this.gB_General);
             this.tP_settings.Location = new System.Drawing.Point(4, 22);
             this.tP_settings.Margin = new System.Windows.Forms.Padding(2);
@@ -1880,71 +1907,6 @@
             this.tooltip_main.SetToolTip(this.chk_castchargetoggle, "Animates any spell/item casts across the Function keys.\r\nDefault: ON");
             this.chk_castchargetoggle.UseVisualStyleBackColor = true;
             this.chk_castchargetoggle.CheckedChanged += new System.EventHandler(this.chk_castchargetoggle_CheckedChanged);
-            // 
-            // gB_lcc
-            // 
-            this.gB_lcc.Controls.Add(this.btn_lccrestore);
-            this.gB_lcc.Controls.Add(this.chk_lccauto);
-            this.gB_lcc.Controls.Add(this.chk_lccenable);
-            this.gB_lcc.Controls.Add(this.lb_lcc);
-            this.gB_lcc.Location = new System.Drawing.Point(3, 263);
-            this.gB_lcc.Margin = new System.Windows.Forms.Padding(2);
-            this.gB_lcc.Name = "gB_lcc";
-            this.gB_lcc.Padding = new System.Windows.Forms.Padding(2);
-            this.gB_lcc.Size = new System.Drawing.Size(718, 132);
-            this.gB_lcc.TabIndex = 1;
-            this.gB_lcc.TabStop = false;
-            this.gB_lcc.Text = "Logitech Conflict Control";
-            // 
-            // btn_lccrestore
-            // 
-            this.btn_lccrestore.Location = new System.Drawing.Point(608, 72);
-            this.btn_lccrestore.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_lccrestore.Name = "btn_lccrestore";
-            this.btn_lccrestore.Size = new System.Drawing.Size(64, 28);
-            this.btn_lccrestore.TabIndex = 3;
-            this.btn_lccrestore.Text = "Restore";
-            this.tooltip_main.SetToolTip(this.btn_lccrestore, "Use this to restore LGS to its default settings in the case something goes wrong." +
-        "\r\nONLY USE THIS AS A LAST RESORT.");
-            this.btn_lccrestore.UseVisualStyleBackColor = true;
-            this.btn_lccrestore.Click += new System.EventHandler(this.btn_lccrestore_Click);
-            // 
-            // chk_lccauto
-            // 
-            this.chk_lccauto.AutoSize = true;
-            this.chk_lccauto.Location = new System.Drawing.Point(17, 86);
-            this.chk_lccauto.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_lccauto.Name = "chk_lccauto";
-            this.chk_lccauto.Size = new System.Drawing.Size(124, 17);
-            this.chk_lccauto.TabIndex = 2;
-            this.chk_lccauto.Text = "Auto Enable/Disable";
-            this.tooltip_main.SetToolTip(this.chk_lccauto, "When enabled, Chromatics will automatically enable Logitech Conflict Control when" +
-        " it starts and disable it when Chromatics is closed.");
-            this.chk_lccauto.UseVisualStyleBackColor = true;
-            this.chk_lccauto.CheckedChanged += new System.EventHandler(this.chk_lccauto_CheckedChanged);
-            // 
-            // chk_lccenable
-            // 
-            this.chk_lccenable.AutoSize = true;
-            this.chk_lccenable.Location = new System.Drawing.Point(17, 61);
-            this.chk_lccenable.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_lccenable.Name = "chk_lccenable";
-            this.chk_lccenable.Size = new System.Drawing.Size(177, 17);
-            this.chk_lccenable.TabIndex = 1;
-            this.chk_lccenable.Text = "Enable Logitech Conflict Control";
-            this.tooltip_main.SetToolTip(this.chk_lccenable, "Enable/Disable Logitech Conflict Control.");
-            this.chk_lccenable.UseVisualStyleBackColor = true;
-            this.chk_lccenable.CheckedChanged += new System.EventHandler(this.chk_lccenable_CheckedChanged);
-            // 
-            // lb_lcc
-            // 
-            this.lb_lcc.AutoSize = true;
-            this.lb_lcc.Location = new System.Drawing.Point(5, 18);
-            this.lb_lcc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lb_lcc.Name = "lb_lcc";
-            this.lb_lcc.Size = new System.Drawing.Size(677, 26);
-            this.lb_lcc.TabIndex = 0;
-            this.lb_lcc.Text = resources.GetString("lb_lcc.Text");
             // 
             // gB_General
             // 
@@ -3284,32 +3246,67 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // dataGridViewTextBoxColumn1
+            // gB_lcc
             // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "ID";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Visible = false;
+            this.gB_lcc.Controls.Add(this.btn_lccrestore);
+            this.gB_lcc.Controls.Add(this.chk_lccauto);
+            this.gB_lcc.Controls.Add(this.chk_lccenable);
+            this.gB_lcc.Controls.Add(this.lb_lcc);
+            this.gB_lcc.Location = new System.Drawing.Point(3, 238);
+            this.gB_lcc.Margin = new System.Windows.Forms.Padding(2);
+            this.gB_lcc.Name = "gB_lcc";
+            this.gB_lcc.Padding = new System.Windows.Forms.Padding(2);
+            this.gB_lcc.Size = new System.Drawing.Size(711, 132);
+            this.gB_lcc.TabIndex = 2;
+            this.gB_lcc.TabStop = false;
+            this.gB_lcc.Text = "Logitech Conflict Control";
             // 
-            // dataGridViewTextBoxColumn2
+            // btn_lccrestore
             // 
-            this.dataGridViewTextBoxColumn2.FillWeight = 64.54688F;
-            this.dataGridViewTextBoxColumn2.HeaderText = "Keypad Key";
-            this.dataGridViewTextBoxColumn2.MaxInputLength = 2;
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.btn_lccrestore.Location = new System.Drawing.Point(608, 72);
+            this.btn_lccrestore.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_lccrestore.Name = "btn_lccrestore";
+            this.btn_lccrestore.Size = new System.Drawing.Size(64, 28);
+            this.btn_lccrestore.TabIndex = 3;
+            this.btn_lccrestore.Text = "Restore";
+            this.tooltip_main.SetToolTip(this.btn_lccrestore, "Use this to restore LGS to its default settings in the case something goes wrong." +
+        "\r\nONLY USE THIS AS A LAST RESORT.");
+            this.btn_lccrestore.UseVisualStyleBackColor = true;
             // 
-            // Column1
+            // chk_lccauto
             // 
-            this.Column1.FillWeight = 45.68528F;
-            this.Column1.HeaderText = "Enabled";
-            this.Column1.Name = "Column1";
+            this.chk_lccauto.AutoSize = true;
+            this.chk_lccauto.Location = new System.Drawing.Point(17, 86);
+            this.chk_lccauto.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_lccauto.Name = "chk_lccauto";
+            this.chk_lccauto.Size = new System.Drawing.Size(124, 17);
+            this.chk_lccauto.TabIndex = 2;
+            this.chk_lccauto.Text = "Auto Enable/Disable";
+            this.tooltip_main.SetToolTip(this.chk_lccauto, "When enabled, Chromatics will automatically enable Logitech Conflict Control when" +
+        " it starts and disable it when Chromatics is closed.");
+            this.chk_lccauto.UseVisualStyleBackColor = true;
             // 
-            // dataGridViewTextBoxColumn3
+            // chk_lccenable
             // 
-            this.dataGridViewTextBoxColumn3.FillWeight = 189.7679F;
-            this.dataGridViewTextBoxColumn3.HeaderText = "Keybind";
-            this.dataGridViewTextBoxColumn3.MaxInputLength = 1;
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.chk_lccenable.AutoSize = true;
+            this.chk_lccenable.Location = new System.Drawing.Point(17, 61);
+            this.chk_lccenable.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_lccenable.Name = "chk_lccenable";
+            this.chk_lccenable.Size = new System.Drawing.Size(177, 17);
+            this.chk_lccenable.TabIndex = 1;
+            this.chk_lccenable.Text = "Enable Logitech Conflict Control";
+            this.tooltip_main.SetToolTip(this.chk_lccenable, "Enable/Disable Logitech Conflict Control.");
+            this.chk_lccenable.UseVisualStyleBackColor = true;
+            // 
+            // lb_lcc
+            // 
+            this.lb_lcc.AutoSize = true;
+            this.lb_lcc.Location = new System.Drawing.Point(7, 18);
+            this.lb_lcc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_lcc.Name = "lb_lcc";
+            this.lb_lcc.Size = new System.Drawing.Size(677, 26);
+            this.lb_lcc.TabIndex = 0;
+            this.lb_lcc.Text = resources.GetString("lb_lcc.Text");
             // 
             // Chromatics
             // 
@@ -3357,8 +3354,6 @@
             this.gB_effects.ResumeLayout(false);
             this.gB_effects.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nm_criticalhp)).EndInit();
-            this.gB_lcc.ResumeLayout(false);
-            this.gB_lcc.PerformLayout();
             this.gB_General.ResumeLayout(false);
             this.gB_General.PerformLayout();
             this.tP_mappings.ResumeLayout(false);
@@ -3388,6 +3383,8 @@
             this.tP_ifttt.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.gB_lcc.ResumeLayout(false);
+            this.gB_lcc.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3436,13 +3433,8 @@
         private System.Windows.Forms.Label lbl_arx_actip;
         private System.Windows.Forms.TextBox txt_arx_actip;
         private System.Windows.Forms.TabPage tP_settings;
-        private System.Windows.Forms.GroupBox gB_lcc;
         private System.Windows.Forms.GroupBox gB_General;
-        private System.Windows.Forms.Label lb_lcc;
-        private System.Windows.Forms.CheckBox chk_lccauto;
-        private System.Windows.Forms.CheckBox chk_lccenable;
         private System.Windows.Forms.ToolTip tooltip_main;
-        private System.Windows.Forms.Button btn_lccrestore;
         private System.Windows.Forms.CheckBox chk_memorycache;
         private System.Windows.Forms.CheckBox chk_startupenable;
         private System.Windows.Forms.GroupBox gB_effects;
@@ -3618,6 +3610,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.GroupBox gB_lcc;
+        private System.Windows.Forms.Button btn_lccrestore;
+        private System.Windows.Forms.CheckBox chk_lccauto;
+        private System.Windows.Forms.CheckBox chk_lccenable;
+        private System.Windows.Forms.Label lb_lcc;
     }
 }
 
