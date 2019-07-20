@@ -680,6 +680,12 @@ namespace Chromatics
                         {
                             Thread.Sleep(1);
 
+                            //Remove duplicates
+                            if (Lifxduplicates.Contains(d.Key.MacAddressName))
+                                continue;
+
+                            Lifxduplicates.Add(d.Key.MacAddressName);
+
                             //LIFX Device
                             var state = await _lifx.GetLightStateAsync(d.Key);
                             var device = await _lifx.GetDeviceVersionAsync(d.Key);

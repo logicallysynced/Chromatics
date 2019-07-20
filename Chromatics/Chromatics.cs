@@ -126,6 +126,7 @@ namespace Chromatics
         public bool LifxRescan = false;
         public bool LifxSdk = false;
         public int LifxSdkCalled = 0;
+        private List<string> Lifxduplicates = new List<string>();
 
         private bool _logitechDeviceKeyboard = true;
         public bool LogitechRescan = false;
