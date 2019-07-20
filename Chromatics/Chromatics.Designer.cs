@@ -123,6 +123,11 @@
             this.cb_chromalink_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_chromalink = new System.Windows.Forms.CheckBox();
             this.tP_adv = new System.Windows.Forms.TabPage();
+            this.gB_lcc = new System.Windows.Forms.GroupBox();
+            this.btn_lccrestore = new System.Windows.Forms.Button();
+            this.chk_lccauto = new System.Windows.Forms.CheckBox();
+            this.chk_lccenable = new System.Windows.Forms.CheckBox();
+            this.lb_lcc = new System.Windows.Forms.Label();
             this.gb_sdkcontrol = new System.Windows.Forms.GroupBox();
             this.chk_sdk_mystic = new System.Windows.Forms.CheckBox();
             this.chk_sdk_lifx = new System.Windows.Forms.CheckBox();
@@ -151,6 +156,7 @@
             this.chk_castanimatetoggle = new System.Windows.Forms.CheckBox();
             this.chk_castchargetoggle = new System.Windows.Forms.CheckBox();
             this.gB_General = new System.Windows.Forms.GroupBox();
+            this.chk_quickclose = new System.Windows.Forms.CheckBox();
             this.chk_releasedevices = new System.Windows.Forms.CheckBox();
             this.lbl_polling = new System.Windows.Forms.Label();
             this.cb_pollingint = new System.Windows.Forms.ComboBox();
@@ -250,11 +256,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.gB_lcc = new System.Windows.Forms.GroupBox();
-            this.btn_lccrestore = new System.Windows.Forms.Button();
-            this.chk_lccauto = new System.Windows.Forms.CheckBox();
-            this.chk_lccenable = new System.Windows.Forms.CheckBox();
-            this.lb_lcc = new System.Windows.Forms.Label();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -277,6 +278,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z1)).BeginInit();
             this.tP_adv.SuspendLayout();
+            this.gB_lcc.SuspendLayout();
             this.gb_sdkcontrol.SuspendLayout();
             this.tP_settings.SuspendLayout();
             this.gB_effects.SuspendLayout();
@@ -303,7 +305,6 @@
             this.tP_ifttt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            this.gB_lcc.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtb_debug
@@ -1529,6 +1530,68 @@
             this.tP_adv.TabIndex = 7;
             this.tP_adv.Text = "Advanced";
             // 
+            // gB_lcc
+            // 
+            this.gB_lcc.Controls.Add(this.btn_lccrestore);
+            this.gB_lcc.Controls.Add(this.chk_lccauto);
+            this.gB_lcc.Controls.Add(this.chk_lccenable);
+            this.gB_lcc.Controls.Add(this.lb_lcc);
+            this.gB_lcc.Location = new System.Drawing.Point(3, 238);
+            this.gB_lcc.Margin = new System.Windows.Forms.Padding(2);
+            this.gB_lcc.Name = "gB_lcc";
+            this.gB_lcc.Padding = new System.Windows.Forms.Padding(2);
+            this.gB_lcc.Size = new System.Drawing.Size(711, 132);
+            this.gB_lcc.TabIndex = 2;
+            this.gB_lcc.TabStop = false;
+            this.gB_lcc.Text = "Logitech Conflict Control";
+            // 
+            // btn_lccrestore
+            // 
+            this.btn_lccrestore.Location = new System.Drawing.Point(608, 72);
+            this.btn_lccrestore.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_lccrestore.Name = "btn_lccrestore";
+            this.btn_lccrestore.Size = new System.Drawing.Size(64, 28);
+            this.btn_lccrestore.TabIndex = 3;
+            this.btn_lccrestore.Text = "Restore";
+            this.tooltip_main.SetToolTip(this.btn_lccrestore, "Use this to restore LGS to its default settings in the case something goes wrong." +
+        "\r\nONLY USE THIS AS A LAST RESORT.");
+            this.btn_lccrestore.UseVisualStyleBackColor = true;
+            // 
+            // chk_lccauto
+            // 
+            this.chk_lccauto.AutoSize = true;
+            this.chk_lccauto.Location = new System.Drawing.Point(17, 86);
+            this.chk_lccauto.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_lccauto.Name = "chk_lccauto";
+            this.chk_lccauto.Size = new System.Drawing.Size(124, 17);
+            this.chk_lccauto.TabIndex = 2;
+            this.chk_lccauto.Text = "Auto Enable/Disable";
+            this.tooltip_main.SetToolTip(this.chk_lccauto, "When enabled, Chromatics will automatically enable Logitech Conflict Control when" +
+        " it starts and disable it when Chromatics is closed.");
+            this.chk_lccauto.UseVisualStyleBackColor = true;
+            // 
+            // chk_lccenable
+            // 
+            this.chk_lccenable.AutoSize = true;
+            this.chk_lccenable.Location = new System.Drawing.Point(17, 61);
+            this.chk_lccenable.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_lccenable.Name = "chk_lccenable";
+            this.chk_lccenable.Size = new System.Drawing.Size(177, 17);
+            this.chk_lccenable.TabIndex = 1;
+            this.chk_lccenable.Text = "Enable Logitech Conflict Control";
+            this.tooltip_main.SetToolTip(this.chk_lccenable, "Enable/Disable Logitech Conflict Control.");
+            this.chk_lccenable.UseVisualStyleBackColor = true;
+            // 
+            // lb_lcc
+            // 
+            this.lb_lcc.AutoSize = true;
+            this.lb_lcc.Location = new System.Drawing.Point(7, 18);
+            this.lb_lcc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_lcc.Name = "lb_lcc";
+            this.lb_lcc.Size = new System.Drawing.Size(677, 26);
+            this.lb_lcc.TabIndex = 0;
+            this.lb_lcc.Text = resources.GetString("lb_lcc.Text");
+            // 
             // gb_sdkcontrol
             // 
             this.gb_sdkcontrol.Controls.Add(this.chk_sdk_mystic);
@@ -1707,7 +1770,7 @@
             this.gB_effects.Margin = new System.Windows.Forms.Padding(2);
             this.gB_effects.Name = "gB_effects";
             this.gB_effects.Padding = new System.Windows.Forms.Padding(2);
-            this.gB_effects.Size = new System.Drawing.Size(416, 255);
+            this.gB_effects.Size = new System.Drawing.Size(416, 313);
             this.gB_effects.TabIndex = 2;
             this.gB_effects.TabStop = false;
             this.gB_effects.Text = "Effects";
@@ -1715,7 +1778,7 @@
             // lbl_bcm
             // 
             this.lbl_bcm.AutoSize = true;
-            this.lbl_bcm.Location = new System.Drawing.Point(199, 223);
+            this.lbl_bcm.Location = new System.Drawing.Point(199, 278);
             this.lbl_bcm.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_bcm.Name = "lbl_bcm";
             this.lbl_bcm.Size = new System.Drawing.Size(61, 13);
@@ -1725,7 +1788,7 @@
             // lbl_hpcritical
             // 
             this.lbl_hpcritical.AutoSize = true;
-            this.lbl_hpcritical.Location = new System.Drawing.Point(15, 223);
+            this.lbl_hpcritical.Location = new System.Drawing.Point(15, 278);
             this.lbl_hpcritical.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_hpcritical.Name = "lbl_hpcritical";
             this.lbl_hpcritical.Size = new System.Drawing.Size(67, 13);
@@ -1741,7 +1804,7 @@
             "Reactive Weather",
             "Battle Stance",
             "Job Classes"});
-            this.cb_bcm.Location = new System.Drawing.Point(289, 221);
+            this.cb_bcm.Location = new System.Drawing.Point(289, 275);
             this.cb_bcm.Margin = new System.Windows.Forms.Padding(2);
             this.cb_bcm.Name = "cb_bcm";
             this.cb_bcm.Size = new System.Drawing.Size(112, 21);
@@ -1756,7 +1819,7 @@
             0,
             0,
             0});
-            this.nm_criticalhp.Location = new System.Drawing.Point(97, 222);
+            this.nm_criticalhp.Location = new System.Drawing.Point(97, 277);
             this.nm_criticalhp.Margin = new System.Windows.Forms.Padding(2);
             this.nm_criticalhp.Name = "nm_criticalhp";
             this.nm_criticalhp.Size = new System.Drawing.Size(57, 20);
@@ -1910,6 +1973,7 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.chk_quickclose);
             this.gB_General.Controls.Add(this.chk_releasedevices);
             this.gB_General.Controls.Add(this.lbl_polling);
             this.gB_General.Controls.Add(this.cb_pollingint);
@@ -1925,15 +1989,29 @@
             this.gB_General.Margin = new System.Windows.Forms.Padding(2);
             this.gB_General.Name = "gB_General";
             this.gB_General.Padding = new System.Windows.Forms.Padding(2);
-            this.gB_General.Size = new System.Drawing.Size(297, 255);
+            this.gB_General.Size = new System.Drawing.Size(297, 389);
             this.gB_General.TabIndex = 0;
             this.gB_General.TabStop = false;
             this.gB_General.Text = "General";
             // 
+            // chk_quickclose
+            // 
+            this.chk_quickclose.AutoSize = true;
+            this.chk_quickclose.Location = new System.Drawing.Point(17, 100);
+            this.chk_quickclose.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_quickclose.Name = "chk_quickclose";
+            this.chk_quickclose.Size = new System.Drawing.Size(102, 17);
+            this.chk_quickclose.TabIndex = 12;
+            this.chk_quickclose.Text = "Minimise to Tray";
+            this.tooltip_main.SetToolTip(this.chk_quickclose, "When checked, Chromatics will minimise to the system tray when the X is selected." +
+        "\r\nDefault: ON");
+            this.chk_quickclose.UseVisualStyleBackColor = true;
+            this.chk_quickclose.CheckedChanged += new System.EventHandler(this.Chk_quickclose_CheckedChanged);
+            // 
             // chk_releasedevices
             // 
             this.chk_releasedevices.AutoSize = true;
-            this.chk_releasedevices.Location = new System.Drawing.Point(17, 148);
+            this.chk_releasedevices.Location = new System.Drawing.Point(17, 167);
             this.chk_releasedevices.Margin = new System.Windows.Forms.Padding(2);
             this.chk_releasedevices.Name = "chk_releasedevices";
             this.chk_releasedevices.Size = new System.Drawing.Size(214, 17);
@@ -1946,7 +2024,7 @@
             // lbl_polling
             // 
             this.lbl_polling.AutoSize = true;
-            this.lbl_polling.Location = new System.Drawing.Point(5, 196);
+            this.lbl_polling.Location = new System.Drawing.Point(5, 329);
             this.lbl_polling.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_polling.Name = "lbl_polling";
             this.lbl_polling.Size = new System.Drawing.Size(76, 13);
@@ -1967,7 +2045,7 @@
             "400ms",
             "450ms",
             "500ms"});
-            this.cb_pollingint.Location = new System.Drawing.Point(95, 194);
+            this.cb_pollingint.Location = new System.Drawing.Point(95, 327);
             this.cb_pollingint.Margin = new System.Windows.Forms.Padding(2);
             this.cb_pollingint.Name = "cb_pollingint";
             this.cb_pollingint.Size = new System.Drawing.Size(96, 21);
@@ -1980,7 +2058,7 @@
             // chk_debugopt
             // 
             this.chk_debugopt.AutoSize = true;
-            this.chk_debugopt.Location = new System.Drawing.Point(17, 125);
+            this.chk_debugopt.Location = new System.Drawing.Point(17, 144);
             this.chk_debugopt.Margin = new System.Windows.Forms.Padding(2);
             this.chk_debugopt.Name = "chk_debugopt";
             this.chk_debugopt.Size = new System.Drawing.Size(172, 17);
@@ -1994,7 +2072,7 @@
             // lbl_lang
             // 
             this.lbl_lang.AutoSize = true;
-            this.lbl_lang.Location = new System.Drawing.Point(5, 225);
+            this.lbl_lang.Location = new System.Drawing.Point(5, 358);
             this.lbl_lang.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_lang.Name = "lbl_lang";
             this.lbl_lang.Size = new System.Drawing.Size(86, 13);
@@ -2012,7 +2090,7 @@
             "French",
             "German",
             "Korean"});
-            this.cb_lang.Location = new System.Drawing.Point(95, 223);
+            this.cb_lang.Location = new System.Drawing.Point(95, 356);
             this.cb_lang.Margin = new System.Windows.Forms.Padding(2);
             this.cb_lang.Name = "cb_lang";
             this.cb_lang.Size = new System.Drawing.Size(96, 21);
@@ -2022,7 +2100,7 @@
             // 
             // btn_ffxivcachereset
             // 
-            this.btn_ffxivcachereset.Location = new System.Drawing.Point(210, 221);
+            this.btn_ffxivcachereset.Location = new System.Drawing.Point(210, 354);
             this.btn_ffxivcachereset.Margin = new System.Windows.Forms.Padding(2);
             this.btn_ffxivcachereset.Name = "btn_ffxivcachereset";
             this.btn_ffxivcachereset.Size = new System.Drawing.Size(74, 23);
@@ -2036,7 +2114,7 @@
             // chk_lcdtoggle
             // 
             this.chk_lcdtoggle.AutoSize = true;
-            this.chk_lcdtoggle.Location = new System.Drawing.Point(17, 102);
+            this.chk_lcdtoggle.Location = new System.Drawing.Point(17, 121);
             this.chk_lcdtoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_lcdtoggle.Name = "chk_lcdtoggle";
             this.chk_lcdtoggle.Size = new System.Drawing.Size(125, 17);
@@ -3246,68 +3324,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // gB_lcc
-            // 
-            this.gB_lcc.Controls.Add(this.btn_lccrestore);
-            this.gB_lcc.Controls.Add(this.chk_lccauto);
-            this.gB_lcc.Controls.Add(this.chk_lccenable);
-            this.gB_lcc.Controls.Add(this.lb_lcc);
-            this.gB_lcc.Location = new System.Drawing.Point(3, 238);
-            this.gB_lcc.Margin = new System.Windows.Forms.Padding(2);
-            this.gB_lcc.Name = "gB_lcc";
-            this.gB_lcc.Padding = new System.Windows.Forms.Padding(2);
-            this.gB_lcc.Size = new System.Drawing.Size(711, 132);
-            this.gB_lcc.TabIndex = 2;
-            this.gB_lcc.TabStop = false;
-            this.gB_lcc.Text = "Logitech Conflict Control";
-            // 
-            // btn_lccrestore
-            // 
-            this.btn_lccrestore.Location = new System.Drawing.Point(608, 72);
-            this.btn_lccrestore.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_lccrestore.Name = "btn_lccrestore";
-            this.btn_lccrestore.Size = new System.Drawing.Size(64, 28);
-            this.btn_lccrestore.TabIndex = 3;
-            this.btn_lccrestore.Text = "Restore";
-            this.tooltip_main.SetToolTip(this.btn_lccrestore, "Use this to restore LGS to its default settings in the case something goes wrong." +
-        "\r\nONLY USE THIS AS A LAST RESORT.");
-            this.btn_lccrestore.UseVisualStyleBackColor = true;
-            // 
-            // chk_lccauto
-            // 
-            this.chk_lccauto.AutoSize = true;
-            this.chk_lccauto.Location = new System.Drawing.Point(17, 86);
-            this.chk_lccauto.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_lccauto.Name = "chk_lccauto";
-            this.chk_lccauto.Size = new System.Drawing.Size(124, 17);
-            this.chk_lccauto.TabIndex = 2;
-            this.chk_lccauto.Text = "Auto Enable/Disable";
-            this.tooltip_main.SetToolTip(this.chk_lccauto, "When enabled, Chromatics will automatically enable Logitech Conflict Control when" +
-        " it starts and disable it when Chromatics is closed.");
-            this.chk_lccauto.UseVisualStyleBackColor = true;
-            // 
-            // chk_lccenable
-            // 
-            this.chk_lccenable.AutoSize = true;
-            this.chk_lccenable.Location = new System.Drawing.Point(17, 61);
-            this.chk_lccenable.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_lccenable.Name = "chk_lccenable";
-            this.chk_lccenable.Size = new System.Drawing.Size(177, 17);
-            this.chk_lccenable.TabIndex = 1;
-            this.chk_lccenable.Text = "Enable Logitech Conflict Control";
-            this.tooltip_main.SetToolTip(this.chk_lccenable, "Enable/Disable Logitech Conflict Control.");
-            this.chk_lccenable.UseVisualStyleBackColor = true;
-            // 
-            // lb_lcc
-            // 
-            this.lb_lcc.AutoSize = true;
-            this.lb_lcc.Location = new System.Drawing.Point(7, 18);
-            this.lb_lcc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lb_lcc.Name = "lb_lcc";
-            this.lb_lcc.Size = new System.Drawing.Size(677, 26);
-            this.lb_lcc.TabIndex = 0;
-            this.lb_lcc.Text = resources.GetString("lb_lcc.Text");
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3348,6 +3364,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nm_ledcount_z1)).EndInit();
             this.tP_adv.ResumeLayout(false);
+            this.gB_lcc.ResumeLayout(false);
+            this.gB_lcc.PerformLayout();
             this.gb_sdkcontrol.ResumeLayout(false);
             this.gb_sdkcontrol.PerformLayout();
             this.tP_settings.ResumeLayout(false);
@@ -3383,8 +3401,6 @@
             this.tP_ifttt.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.gB_lcc.ResumeLayout(false);
-            this.gB_lcc.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3615,6 +3631,7 @@
         private System.Windows.Forms.CheckBox chk_lccauto;
         private System.Windows.Forms.CheckBox chk_lccenable;
         private System.Windows.Forms.Label lb_lcc;
+        private System.Windows.Forms.CheckBox chk_quickclose;
     }
 }
 

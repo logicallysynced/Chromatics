@@ -1162,6 +1162,7 @@ namespace Chromatics
             chk_desktopnotify.Checked = ChromaticsSettings.ChromaticsSettingsDesktopNotifications;
             chk_cutscenes.Checked = ChromaticsSettings.ChromaticsSettingsCutsceneAnimation;
             chk_vegasmode.Checked = ChromaticsSettings.ChromaticsSettingsVegasMode;
+            chk_quickclose.Checked = ChromaticsSettings.ChromaticsSettingsQuickClose;
 
             cb_qwerty.SelectedIndex = (int)ChromaticsSettings.ChromaticsSettingsQwertyMode;
 
@@ -3753,6 +3754,15 @@ namespace Chromatics
             dgv_keypad_binds.Rows[19].Cells[3].Value = _KeyBindMap[20];
             
             SaveDevices();
+        }
+
+        private void Chk_quickclose_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsQuickClose = chk_quickclose.Checked;
+            
+            SaveChromaticsSettings(1);
         }
 
         private void cb_lang_SelectedIndexChanged(object sender, EventArgs e)

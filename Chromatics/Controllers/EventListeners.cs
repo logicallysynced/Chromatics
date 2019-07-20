@@ -51,13 +51,16 @@ namespace Chromatics
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!_allowClose)
+            if (ChromaticsSettings.ChromaticsSettingsQuickClose)
             {
-                notify_master.Visible = true;
-                _allowVisible = false;
-                Hide();
-                e.Cancel = true;
-                return;
+                if (!_allowClose)
+                {
+                    notify_master.Visible = true;
+                    _allowVisible = false;
+                    Hide();
+                    e.Cancel = true;
+                    return;
+                }
             }
 
             FinalFormClosing(sender);
