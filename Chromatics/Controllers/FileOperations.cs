@@ -94,6 +94,26 @@ namespace Chromatics
             dr.CLZone6Mode = Helpers.ConvertDevModeToString(_CLZone6Mode);
 
             dr.EnableKeypadBinds = _EnableKeypadBinds;
+            dr.KZ1Enabled = _KZ1Enabled;
+            dr.KZ2Enabled = _KZ2Enabled;
+            dr.KZ3Enabled = _KZ3Enabled;
+            dr.KZ4Enabled = _KZ4Enabled;
+            dr.KZ5Enabled = _KZ5Enabled;
+            dr.KZ6Enabled = _KZ6Enabled;
+            dr.KZ7Enabled = _KZ7Enabled;
+            dr.KZ8Enabled = _KZ8Enabled;
+            dr.KZ9Enabled = _KZ9Enabled;
+            dr.KZ10Enabled = _KZ10Enabled;
+            dr.KZ11Enabled = _KZ11Enabled;
+            dr.KZ12Enabled = _KZ12Enabled;
+            dr.KZ13Enabled = _KZ13Enabled;
+            dr.KZ14Enabled = _KZ14Enabled;
+            dr.KZ15Enabled = _KZ15Enabled;
+            dr.KZ16Enabled = _KZ16Enabled;
+            dr.KZ17Enabled = _KZ17Enabled;
+            dr.KZ18Enabled = _KZ18Enabled;
+            dr.KZ19Enabled = _KZ19Enabled;
+            dr.KZ20Enabled = _KZ20Enabled;
             dr.KeypadZ1Bind = _KeyBindMap[1];
             dr.KeypadZ2Bind = _KeyBindMap[2];
             dr.KeypadZ3Bind = _KeyBindMap[3];
@@ -260,6 +280,26 @@ namespace Chromatics
                         _CLZone6Mode = Helpers.ConvertStringToDevMode(dr.CLZone6Mode);
 
                         _EnableKeypadBinds = dr.EnableKeypadBinds;
+                        _KZ1Enabled = dr.KZ1Enabled;
+                        _KZ2Enabled = dr.KZ2Enabled;
+                        _KZ3Enabled = dr.KZ3Enabled;
+                        _KZ4Enabled = dr.KZ4Enabled;
+                        _KZ5Enabled = dr.KZ5Enabled;
+                        _KZ6Enabled = dr.KZ6Enabled;
+                        _KZ7Enabled = dr.KZ7Enabled;
+                        _KZ8Enabled = dr.KZ8Enabled;
+                        _KZ9Enabled = dr.KZ9Enabled;
+                        _KZ10Enabled = dr.KZ10Enabled;
+                        _KZ11Enabled = dr.KZ11Enabled;
+                        _KZ12Enabled = dr.KZ12Enabled;
+                        _KZ13Enabled = dr.KZ13Enabled;
+                        _KZ14Enabled = dr.KZ14Enabled;
+                        _KZ15Enabled = dr.KZ15Enabled;
+                        _KZ16Enabled = dr.KZ16Enabled;
+                        _KZ17Enabled = dr.KZ17Enabled;
+                        _KZ18Enabled = dr.KZ18Enabled;
+                        _KZ19Enabled = dr.KZ19Enabled;
+                        _KZ20Enabled = dr.KZ20Enabled;
 
                         if (!_KeyBindMap.ContainsKey(1))
                             _KeyBindMap.Add(1, dr.KeypadZ1Bind);

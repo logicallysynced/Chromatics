@@ -1163,7 +1163,6 @@ namespace Chromatics
             mi_arxenable.Checked = ChromaticsSettings.ChromaticsSettingsArxToggle;
             chk_lccauto.Checked = ChromaticsSettings.ChromaticsSettingsLccAuto;
             chk_memorycache.Checked = ChromaticsSettings.ChromaticsSettingsMemoryCache;
-            //chk_azertymode.Checked = ChromaticsSettings.ChromaticsSettingsAzertyMode;
             chk_desktopnotify.Checked = ChromaticsSettings.ChromaticsSettingsDesktopNotifications;
             chk_cutscenes.Checked = ChromaticsSettings.ChromaticsSettingsCutsceneAnimation;
             chk_vegasmode.Checked = ChromaticsSettings.ChromaticsSettingsVegasMode;
@@ -1361,45 +1360,45 @@ namespace Chromatics
             //Setup Keypad Keybinds
             
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("0", "1", _KeyBindMap[1]);
+                dgv_keypad_binds.Rows.Add("0", "1", _KZ1Enabled, _KeyBindMap[1]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("1", "2", _KeyBindMap[2]);
+                dgv_keypad_binds.Rows.Add("1", "2", _KZ2Enabled, _KeyBindMap[2]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("2", "3", _KeyBindMap[3]);
+                dgv_keypad_binds.Rows.Add("2", "3", _KZ3Enabled, _KeyBindMap[3]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("3", "4", _KeyBindMap[4]);
+                dgv_keypad_binds.Rows.Add("3", "4", _KZ4Enabled, _KeyBindMap[4]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("4", "5", _KeyBindMap[5]);
+                dgv_keypad_binds.Rows.Add("4", "5", _KZ5Enabled, _KeyBindMap[5]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("5", "6", _KeyBindMap[6]);
+                dgv_keypad_binds.Rows.Add("5", "6", _KZ6Enabled, _KeyBindMap[6]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("6", "7", _KeyBindMap[7]);
+                dgv_keypad_binds.Rows.Add("6", "7", _KZ7Enabled, _KeyBindMap[7]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("7", "8", _KeyBindMap[8]);
+                dgv_keypad_binds.Rows.Add("7", "8", _KZ8Enabled, _KeyBindMap[8]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("8", "9", _KeyBindMap[9]);
+                dgv_keypad_binds.Rows.Add("8", "9", _KZ9Enabled, _KeyBindMap[9]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("9", "10", _KeyBindMap[10]);
+                dgv_keypad_binds.Rows.Add("9", "10", _KZ10Enabled, _KeyBindMap[10]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("10", "11", _KeyBindMap[11]);
+                dgv_keypad_binds.Rows.Add("10", "11", _KZ11Enabled, _KeyBindMap[11]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("11", "12", _KeyBindMap[12]);
+                dgv_keypad_binds.Rows.Add("11", "12", _KZ12Enabled, _KeyBindMap[12]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("12", "13", _KeyBindMap[13]);
+                dgv_keypad_binds.Rows.Add("12", "13", _KZ13Enabled, _KeyBindMap[13]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("13", "14", _KeyBindMap[14]);
+                dgv_keypad_binds.Rows.Add("13", "14", _KZ14Enabled, _KeyBindMap[14]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("14", "15", _KeyBindMap[15]);
+                dgv_keypad_binds.Rows.Add("14", "15", _KZ15Enabled, _KeyBindMap[15]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("15", "16", _KeyBindMap[16]);
+                dgv_keypad_binds.Rows.Add("15", "16", _KZ16Enabled, _KeyBindMap[16]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("16", "17", _KeyBindMap[17]);
+                dgv_keypad_binds.Rows.Add("16", "17", _KZ17Enabled, _KeyBindMap[17]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("17", "18", _KeyBindMap[18]);
+                dgv_keypad_binds.Rows.Add("17", "18", _KZ18Enabled, _KeyBindMap[18]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("18", "19", _KeyBindMap[19]);
+                dgv_keypad_binds.Rows.Add("18", "19", _KZ19Enabled, _KeyBindMap[19]);
             if (_KeyBindMap.ContainsKey(1)) 
-                dgv_keypad_binds.Rows.Add("19", "20", _KeyBindMap[20]);
+                dgv_keypad_binds.Rows.Add("19", "20", _KZ20Enabled, _KeyBindMap[20]);
 
             if (!_EnableKeypadBinds)
             {
@@ -3673,26 +3672,47 @@ namespace Chromatics
         {
             if (Startup == false || !_EnableKeypadBinds) return;
 
-            _KeyBindMap[1] = (string)dgv_keypad_binds.Rows[0].Cells[2].Value;
-            _KeyBindMap[2] = (string)dgv_keypad_binds.Rows[1].Cells[2].Value;
-            _KeyBindMap[3] = (string)dgv_keypad_binds.Rows[2].Cells[2].Value;
-            _KeyBindMap[4] = (string)dgv_keypad_binds.Rows[3].Cells[2].Value;
-            _KeyBindMap[5] = (string)dgv_keypad_binds.Rows[4].Cells[2].Value;
-            _KeyBindMap[6] = (string)dgv_keypad_binds.Rows[5].Cells[2].Value;
-            _KeyBindMap[7] = (string)dgv_keypad_binds.Rows[6].Cells[2].Value;
-            _KeyBindMap[8] = (string)dgv_keypad_binds.Rows[7].Cells[2].Value;
-            _KeyBindMap[9] = (string)dgv_keypad_binds.Rows[8].Cells[2].Value;
-            _KeyBindMap[10] = (string)dgv_keypad_binds.Rows[9].Cells[2].Value;
-            _KeyBindMap[11] = (string)dgv_keypad_binds.Rows[10].Cells[2].Value;
-            _KeyBindMap[12] = (string)dgv_keypad_binds.Rows[11].Cells[2].Value;
-            _KeyBindMap[13] = (string)dgv_keypad_binds.Rows[12].Cells[2].Value;
-            _KeyBindMap[14] = (string)dgv_keypad_binds.Rows[13].Cells[2].Value;
-            _KeyBindMap[15] = (string)dgv_keypad_binds.Rows[14].Cells[2].Value;
-            _KeyBindMap[16] = (string)dgv_keypad_binds.Rows[15].Cells[2].Value;
-            _KeyBindMap[17] = (string)dgv_keypad_binds.Rows[16].Cells[2].Value;
-            _KeyBindMap[18] = (string)dgv_keypad_binds.Rows[17].Cells[2].Value;
-            _KeyBindMap[19] = (string)dgv_keypad_binds.Rows[18].Cells[2].Value;
-            _KeyBindMap[20] = (string)dgv_keypad_binds.Rows[19].Cells[2].Value;
+            _KeyBindMap[1] = (string)dgv_keypad_binds.Rows[0].Cells[3].Value;
+            _KeyBindMap[2] = (string)dgv_keypad_binds.Rows[1].Cells[3].Value;
+            _KeyBindMap[3] = (string)dgv_keypad_binds.Rows[2].Cells[3].Value;
+            _KeyBindMap[4] = (string)dgv_keypad_binds.Rows[3].Cells[3].Value;
+            _KeyBindMap[5] = (string)dgv_keypad_binds.Rows[4].Cells[3].Value;
+            _KeyBindMap[6] = (string)dgv_keypad_binds.Rows[5].Cells[3].Value;
+            _KeyBindMap[7] = (string)dgv_keypad_binds.Rows[6].Cells[3].Value;
+            _KeyBindMap[8] = (string)dgv_keypad_binds.Rows[7].Cells[3].Value;
+            _KeyBindMap[9] = (string)dgv_keypad_binds.Rows[8].Cells[3].Value;
+            _KeyBindMap[10] = (string)dgv_keypad_binds.Rows[9].Cells[3].Value;
+            _KeyBindMap[11] = (string)dgv_keypad_binds.Rows[10].Cells[3].Value;
+            _KeyBindMap[12] = (string)dgv_keypad_binds.Rows[11].Cells[3].Value;
+            _KeyBindMap[13] = (string)dgv_keypad_binds.Rows[12].Cells[3].Value;
+            _KeyBindMap[14] = (string)dgv_keypad_binds.Rows[13].Cells[3].Value;
+            _KeyBindMap[15] = (string)dgv_keypad_binds.Rows[14].Cells[3].Value;
+            _KeyBindMap[16] = (string)dgv_keypad_binds.Rows[15].Cells[3].Value;
+            _KeyBindMap[17] = (string)dgv_keypad_binds.Rows[16].Cells[3].Value;
+            _KeyBindMap[18] = (string)dgv_keypad_binds.Rows[17].Cells[3].Value;
+            _KeyBindMap[19] = (string)dgv_keypad_binds.Rows[18].Cells[3].Value;
+            _KeyBindMap[20] = (string)dgv_keypad_binds.Rows[19].Cells[3].Value;
+
+            _KZ1Enabled = (bool)dgv_keypad_binds.Rows[0].Cells[2].Value;
+            _KZ2Enabled = (bool)dgv_keypad_binds.Rows[1].Cells[2].Value;
+            _KZ3Enabled = (bool)dgv_keypad_binds.Rows[2].Cells[2].Value;
+            _KZ4Enabled = (bool)dgv_keypad_binds.Rows[3].Cells[2].Value;
+            _KZ5Enabled = (bool)dgv_keypad_binds.Rows[4].Cells[2].Value;
+            _KZ6Enabled = (bool)dgv_keypad_binds.Rows[5].Cells[2].Value;
+            _KZ7Enabled = (bool)dgv_keypad_binds.Rows[6].Cells[2].Value;
+            _KZ8Enabled = (bool)dgv_keypad_binds.Rows[7].Cells[2].Value;
+            _KZ9Enabled = (bool)dgv_keypad_binds.Rows[8].Cells[2].Value;
+            _KZ10Enabled = (bool)dgv_keypad_binds.Rows[9].Cells[2].Value;
+            _KZ11Enabled = (bool)dgv_keypad_binds.Rows[10].Cells[2].Value;
+            _KZ12Enabled = (bool)dgv_keypad_binds.Rows[11].Cells[2].Value;
+            _KZ13Enabled = (bool)dgv_keypad_binds.Rows[12].Cells[2].Value;
+            _KZ14Enabled = (bool)dgv_keypad_binds.Rows[13].Cells[2].Value;
+            _KZ15Enabled = (bool)dgv_keypad_binds.Rows[14].Cells[2].Value;
+            _KZ16Enabled = (bool)dgv_keypad_binds.Rows[15].Cells[2].Value;
+            _KZ17Enabled = (bool)dgv_keypad_binds.Rows[16].Cells[2].Value;
+            _KZ18Enabled = (bool)dgv_keypad_binds.Rows[17].Cells[2].Value;
+            _KZ19Enabled = (bool)dgv_keypad_binds.Rows[18].Cells[2].Value;
+            _KZ20Enabled = (bool)dgv_keypad_binds.Rows[19].Cells[2].Value;
 
             _KeyBindMap[1] = _KeyBindMap[1].ToUpper();
             _KeyBindMap[2] = _KeyBindMap[2].ToUpper();
@@ -3715,26 +3735,26 @@ namespace Chromatics
             _KeyBindMap[19] = _KeyBindMap[19].ToUpper();
             _KeyBindMap[20] = _KeyBindMap[20].ToUpper();
 
-            dgv_keypad_binds.Rows[0].Cells[2].Value = _KeyBindMap[1];
-            dgv_keypad_binds.Rows[1].Cells[2].Value = _KeyBindMap[2];
-            dgv_keypad_binds.Rows[2].Cells[2].Value = _KeyBindMap[3];
-            dgv_keypad_binds.Rows[3].Cells[2].Value = _KeyBindMap[4];
-            dgv_keypad_binds.Rows[4].Cells[2].Value = _KeyBindMap[5];
-            dgv_keypad_binds.Rows[5].Cells[2].Value = _KeyBindMap[6];
-            dgv_keypad_binds.Rows[6].Cells[2].Value = _KeyBindMap[7];
-            dgv_keypad_binds.Rows[7].Cells[2].Value = _KeyBindMap[8];
-            dgv_keypad_binds.Rows[8].Cells[2].Value = _KeyBindMap[9];
-            dgv_keypad_binds.Rows[9].Cells[2].Value = _KeyBindMap[10];
-            dgv_keypad_binds.Rows[10].Cells[2].Value = _KeyBindMap[11];
-            dgv_keypad_binds.Rows[11].Cells[2].Value = _KeyBindMap[12];
-            dgv_keypad_binds.Rows[12].Cells[2].Value = _KeyBindMap[13];
-            dgv_keypad_binds.Rows[13].Cells[2].Value = _KeyBindMap[14];
-            dgv_keypad_binds.Rows[14].Cells[2].Value = _KeyBindMap[15];
-            dgv_keypad_binds.Rows[15].Cells[2].Value = _KeyBindMap[16];
-            dgv_keypad_binds.Rows[16].Cells[2].Value = _KeyBindMap[17];
-            dgv_keypad_binds.Rows[17].Cells[2].Value = _KeyBindMap[18];
-            dgv_keypad_binds.Rows[18].Cells[2].Value = _KeyBindMap[19];
-            dgv_keypad_binds.Rows[19].Cells[2].Value = _KeyBindMap[20];
+            dgv_keypad_binds.Rows[0].Cells[3].Value = _KeyBindMap[1];
+            dgv_keypad_binds.Rows[1].Cells[3].Value = _KeyBindMap[2];
+            dgv_keypad_binds.Rows[2].Cells[3].Value = _KeyBindMap[3];
+            dgv_keypad_binds.Rows[3].Cells[3].Value = _KeyBindMap[4];
+            dgv_keypad_binds.Rows[4].Cells[3].Value = _KeyBindMap[5];
+            dgv_keypad_binds.Rows[5].Cells[3].Value = _KeyBindMap[6];
+            dgv_keypad_binds.Rows[6].Cells[3].Value = _KeyBindMap[7];
+            dgv_keypad_binds.Rows[7].Cells[3].Value = _KeyBindMap[8];
+            dgv_keypad_binds.Rows[8].Cells[3].Value = _KeyBindMap[9];
+            dgv_keypad_binds.Rows[9].Cells[3].Value = _KeyBindMap[10];
+            dgv_keypad_binds.Rows[10].Cells[3].Value = _KeyBindMap[11];
+            dgv_keypad_binds.Rows[11].Cells[3].Value = _KeyBindMap[12];
+            dgv_keypad_binds.Rows[12].Cells[3].Value = _KeyBindMap[13];
+            dgv_keypad_binds.Rows[13].Cells[3].Value = _KeyBindMap[14];
+            dgv_keypad_binds.Rows[14].Cells[3].Value = _KeyBindMap[15];
+            dgv_keypad_binds.Rows[15].Cells[3].Value = _KeyBindMap[16];
+            dgv_keypad_binds.Rows[16].Cells[3].Value = _KeyBindMap[17];
+            dgv_keypad_binds.Rows[17].Cells[3].Value = _KeyBindMap[18];
+            dgv_keypad_binds.Rows[18].Cells[3].Value = _KeyBindMap[19];
+            dgv_keypad_binds.Rows[19].Cells[3].Value = _KeyBindMap[20];
             
             SaveDevices();
         }

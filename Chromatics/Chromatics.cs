@@ -177,29 +177,26 @@ namespace Chromatics
         public bool MysticFirstSet = false;
 
         public bool _EnableKeypadBinds = false;
-
-        /*
-        public string _KeypadZ1Bind = "1";
-        public string _KeypadZ2Bind = "2";
-        public string _KeypadZ3Bind = "3";
-        public string _KeypadZ4Bind = "4";
-        public string _KeypadZ5Bind = "5";
-        public string _KeypadZ6Bind = "6";
-        public string _KeypadZ7Bind = "7";
-        public string _KeypadZ8Bind = "8";
-        public string _KeypadZ9Bind = "9";
-        public string _KeypadZ10Bind = "10";
-        public string _KeypadZ11Bind = "11";
-        public string _KeypadZ12Bind = "12";
-        public string _KeypadZ13Bind = "13";
-        public string _KeypadZ14Bind = "14";
-        public string _KeypadZ15Bind = "15";
-        public string _KeypadZ16Bind = "16";
-        public string _KeypadZ17Bind = "17";
-        public string _KeypadZ18Bind = "18";
-        public string _KeypadZ19Bind = "19";
-        public string _KeypadZ20Bind = "20";
-        */
+        public bool _KZ1Enabled = true;
+        public bool _KZ2Enabled = true;
+        public bool _KZ3Enabled = true;
+        public bool _KZ4Enabled = true;
+        public bool _KZ5Enabled = true;
+        public bool _KZ6Enabled = true;
+        public bool _KZ7Enabled = true;
+        public bool _KZ8Enabled = true;
+        public bool _KZ9Enabled = true;
+        public bool _KZ10Enabled = true;
+        public bool _KZ11Enabled = true;
+        public bool _KZ12Enabled = true;
+        public bool _KZ13Enabled = true;
+        public bool _KZ14Enabled = true;
+        public bool _KZ15Enabled = true;
+        public bool _KZ16Enabled = true;
+        public bool _KZ17Enabled = true;
+        public bool _KZ18Enabled = true;
+        public bool _KZ19Enabled = true;
+        public bool _KZ20Enabled = true;
 
         public Dictionary<int, string> _KeyBindMap = new Dictionary<int, string>();
 

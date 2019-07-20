@@ -108,6 +108,26 @@ namespace Chromatics.Datastore
         public string KeypadZ18Bind = "18";
         public string KeypadZ19Bind = "19";
         public string KeypadZ20Bind = "20";
+        public bool KZ1Enabled = true;
+        public bool KZ2Enabled = true;
+        public bool KZ3Enabled = true;
+        public bool KZ4Enabled = true;
+        public bool KZ5Enabled = true;
+        public bool KZ6Enabled = true;
+        public bool KZ7Enabled = true;
+        public bool KZ8Enabled = true;
+        public bool KZ9Enabled = true;
+        public bool KZ10Enabled = true;
+        public bool KZ11Enabled = true;
+        public bool KZ12Enabled = true;
+        public bool KZ13Enabled = true;
+        public bool KZ14Enabled = true;
+        public bool KZ15Enabled = true;
+        public bool KZ16Enabled = true;
+        public bool KZ17Enabled = true;
+        public bool KZ18Enabled = true;
+        public bool KZ19Enabled = true;
+        public bool KZ20Enabled = true;
 
         public bool OtherInterpolateEffects = false;
         public bool ReverseInterpolateEffects = false;
