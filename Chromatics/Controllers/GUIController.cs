@@ -3694,6 +3694,48 @@ namespace Chromatics
             */
         }
 
+        private void SetupAboutText()
+        {
+            var tb = rtb_about;
+
+            tb.SelectionFont = new Font(tb.Font, FontStyle.Bold);
+            tb.AppendText(@"Developed by:" + Environment.NewLine);
+            tb.SelectionFont = new Font(tb.Font, FontStyle.Regular);
+            tb.AppendText(@"Roxas Keyheart" + Environment.NewLine);
+            tb.AppendText(Environment.NewLine);
+            tb.SelectionFont = new Font(tb.Font, FontStyle.Bold);
+            tb.AppendText(@"Contributors:" + Environment.NewLine);
+            tb.SelectionFont = new Font(tb.Font, FontStyle.Regular);
+            tb.AppendText(@"Sharlayan Dev Team" + Environment.NewLine);
+            tb.AppendText(@"Colore Dev Team" + Environment.NewLine);
+            tb.AppendText(@"CUE.NET Dev Team" + Environment.NewLine);
+            tb.AppendText(@"Daniel Rouleau (Zealotus)" + Environment.NewLine);
+            tb.AppendText(@"Elestriel" + Environment.NewLine);
+            tb.AppendText(@"Sidewinder94" + Environment.NewLine);
+            tb.AppendText(@"C.J. Manca" + Environment.NewLine);
+            tb.AppendText(@"Liam Dawson" + Environment.NewLine);
+            tb.AppendText(@"jesterfraud" + Environment.NewLine);
+            tb.AppendText(@"Paladinleeds" + Environment.NewLine);
+            tb.AppendText(@"Ayiana Arch" + Environment.NewLine);
+            tb.AppendText(@"GeT_ReKt" + Environment.NewLine);
+            tb.AppendText(@"Timewarrener" + Environment.NewLine);
+            tb.AppendText(Environment.NewLine);
+            tb.SelectionFont = new Font(tb.Font, FontStyle.Bold);
+            tb.AppendText(@"Big thanks to Chromatics' Supporters:" + Environment.NewLine);
+            tb.SelectionFont = new Font(tb.Font, FontStyle.Regular);
+            tb.AppendText(@"RAZER™" + Environment.NewLine);
+            tb.AppendText(@"AliceD" + Environment.NewLine);
+            tb.AppendText(@"TeoDaTank" + Environment.NewLine);
+            tb.AppendText(@"dwighte" + Environment.NewLine);
+            tb.AppendText(Environment.NewLine);
+            tb.SelectionFont = new Font(tb.Font, FontStyle.Bold);
+            tb.AppendText(@"Disclaimer" + Environment.NewLine);
+            tb.SelectionFont = new Font(tb.Font, FontStyle.Regular);
+            tb.AppendText(@"Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners." + Environment.NewLine);
+            tb.AppendText(Environment.NewLine);
+            tb.AppendText(@"© 2010-2019 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN, HEAVENSWARD, STORMBLOOD, SHADOWBRINGERS is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd." + Environment.NewLine);
+        }
+
         private delegate void ResetGridDelegate();
         private delegate void SetFormNameDelegate();
         private delegate void ResetMappingsDelegate();

@@ -354,12 +354,15 @@ namespace Chromatics
             if (!_debugmode)
             {
                 Text = @"Chromatics " + _currentVersionX;
+                lbl_about_ver.Text = @"Version " + _currentVersionX;
             }
             else
             {
                 Text = @"Chromatics " + _currentVersionX + @" (BETA)";
+                lbl_about_ver.Text = @"Version " + _currentVersionX + @" (BETA)";
             }
 
+            SetupAboutText();
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
             
             //Setup Event Listeners
@@ -925,95 +928,6 @@ namespace Chromatics
 
         private delegate void BlinkDelegate();
 
-        private void txt_arx_actip_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cb_arx_mode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cb_arx_theme_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chk_arxtoggle_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btn_acthelp_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chk_actflashtimer_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chk_actflashtrigger_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cb_actjobclass_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nm_actdmgprc_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nm_actoverhealprc_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nm_actcritdhprc_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nm_actdhprc_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nm_actcritprc_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nm_actgroupdps_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nm_acttargethps_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nm_acttargetdps_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chk_actflash_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cb_actmode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 
     public static class ExceptionExtensions
