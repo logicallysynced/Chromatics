@@ -1072,8 +1072,7 @@ namespace Chromatics
 
             if (mode == DevModeTypes.Disabled)
             {
-                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
-                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                return;
             }
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 
@@ -1088,8 +1087,7 @@ namespace Chromatics
 
             if (mode == DevMultiModeTypes.Disabled)
             {
-                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
-                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                return;
             }
 
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
@@ -1284,8 +1282,7 @@ namespace Chromatics
         {
             if (mode == DevModeTypes.Disabled)
             {
-                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
-                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                return;
             }
 
             if (mode != _MouseZone1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
@@ -1383,8 +1380,7 @@ namespace Chromatics
         {
             if (mode == DevModeTypes.Disabled)
             {
-                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
-                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                return;
             }
 
             if (mode != _HeadsetZone1Mode) return;
@@ -1471,8 +1467,7 @@ namespace Chromatics
         {
             if (mode == DevMultiModeTypes.Disabled)
             {
-                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
-                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                return;
             }
             
             if (mode != _KeypadZone1Mode) return;
@@ -1636,8 +1631,7 @@ namespace Chromatics
         {
             if (mode == DevModeTypes.Disabled)
             {
-                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
-                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                return;
             }
 
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;

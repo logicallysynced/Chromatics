@@ -611,7 +611,7 @@ namespace Chromatics
                 {
                     if (File.Exists(_lgsInstall + @"\SDK\LED\x64\LogitechLed.dll"))
                         WriteConsole(ConsoleTypes.Error,
-                            "Logitech: Chromatics has detected that the LGS internal SDK library is causing a conflict between FFXIV and Chromatics. Please make sure to enable 'Logitech Conflict Mode' under the settings tab and check that 'LED Illumination' is disabled for 'ffxiv_dx11' within LGS.");
+                            "Logitech: Chromatics has detected that the LGS internal SDK library is causing a conflict between FFXIV and Chromatics. Please make sure to enable 'Logitech Conflict Mode' under the Devices > Advanced tab and check that 'LED Illumination' is disabled for 'ffxiv_dx11' within LGS.");
                 }
             }
             else

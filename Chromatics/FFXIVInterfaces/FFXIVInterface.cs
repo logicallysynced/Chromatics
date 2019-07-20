@@ -750,6 +750,7 @@ namespace Chromatics
                 }
 
                 if (_playerInfo != null && _playerInfo.Name != "")
+                {
                     //Watchdog.WatchdogReset();
 
 
@@ -884,7 +885,7 @@ namespace Chromatics
                                         targetEngaged = 1;
                                 }
 
-                                    _arx.ArxUpdateFfxivStats(hpPerc, mpPerc, 0, currentHp, currentMp, 0,
+                                _arx.ArxUpdateFfxivStats(hpPerc, mpPerc, 0, currentHp, currentMp, 0,
                                     _playerInfo.MapID, cClass, arxHudmd, targetPercent, targetHpcurrent,
                                     targetHpmax,
                                     targetName, targetEngaged);
@@ -909,7 +910,8 @@ namespace Chromatics
                                         {
                                             //Collect Emnity Table
                                             //var TargetEmnity = TargetEmnityInfo.Count;
-                                            var emnitytableX = targetEmnityInfo.Select(t => new KeyValuePair<uint, uint>(t.ID, t.Enmity)).ToList();
+                                            var emnitytableX = targetEmnityInfo
+                                                .Select(t => new KeyValuePair<uint, uint>(t.ID, t.Enmity)).ToList();
 
 
                                             //Sort emnity by highest holder
@@ -1083,7 +1085,7 @@ namespace Chromatics
                                                 ptJob = "Chocobo";
                                                 break;
                                         }
-                                        
+
 
                                         datastring[i] = "1," + ptType + "," + partyInfo[i].Name + "," +
                                                         partyInfo[i].HPPercent.ToString("#0%") + "," +
@@ -1169,7 +1171,7 @@ namespace Chromatics
                         //Parse Data
 
                         //Reactive Weather
-                        
+
                         if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Reactive Weather")
                         {
                             if (!_weathertoggle)
@@ -1211,29 +1213,30 @@ namespace Chromatics
                                     string.IsNullOrWhiteSpace(weatherMaphighlightKey))
                                 {
                                     _baseWeatherColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
-                                    _highlightWeatherColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+                                    _highlightWeatherColor =
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
 
                                     GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false, "All");
                                 }
                                 else
                                 {
-                                    var weatherMapbase = (string)typeof(Datastore.FfxivColorMappings)
+                                    var weatherMapbase = (string) typeof(Datastore.FfxivColorMappings)
                                         .GetField(weatherMapbaseKey).GetValue(ColorMappings);
-                                    var weatherMaphighlight = (string)typeof(Datastore.FfxivColorMappings)
+                                    var weatherMaphighlight = (string) typeof(Datastore.FfxivColorMappings)
                                         .GetField(weatherMaphighlightKey).GetValue(ColorMappings);
-                                    
+
                                     _baseWeatherColor = ColorTranslator.FromHtml(weatherMapbase);
                                     _highlightWeatherColor = ColorTranslator.FromHtml(weatherMaphighlight);
 
                                     GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
                                         ColorTranslator.FromHtml(weatherMapbase), false, "All");
                                 }
-                                
+
 
                                 baseColor = _baseWeatherColor;
                                 highlightColor = _highlightWeatherColor;
-                                
+
                             }
                         }
                         else if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Battle Stance")
@@ -1245,25 +1248,31 @@ namespace Chromatics
                                     case 0:
                                         //Idle
                                         _baseStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity);
-                                        _highlightStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+                                        _highlightStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
 
                                         break;
                                     case 1:
                                         //Engaged
-                                        _baseStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed);
-                                        _highlightStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+                                        _baseStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed);
+                                        _highlightStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
 
                                         break;
                                     case 2:
                                         //Aggro
                                         _baseStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity4);
-                                        _highlightStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+                                        _highlightStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
 
                                         break;
                                     case 3:
                                         //Cating
-                                        _baseStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting);
-                                        _highlightStanceColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+                                        _baseStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting);
+                                        _highlightStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
 
                                         break;
                                 }
@@ -1278,7 +1287,7 @@ namespace Chromatics
                                 _battleStance = battleStance;
                             }
 
-                            
+
 
                             baseColor = _baseStanceColor;
                             highlightColor = _highlightStanceColor;
@@ -1291,123 +1300,153 @@ namespace Chromatics
                                 {
                                     case "CPT":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTHighlight);
                                         break;
                                     case "BSM":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMHighlight);
                                         break;
                                     case "ARM":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMHighlight);
                                         break;
                                     case "GSM":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMHighlight);
                                         break;
                                     case "LTW":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWHighlight);
                                         break;
                                     case "WVR":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRHighlight);
                                         break;
                                     case "ALC":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCHighlight);
                                         break;
                                     case "CUL":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULHighlight);
                                         break;
                                     case "MIN":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINHighlight);
                                         break;
                                     case "BTN":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNHighlight);
                                         break;
                                     case "FSH":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHHighlight);
                                         break;
                                     case "PLD":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDHighlight);
                                         break;
                                     case "MNK":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKHighlight);
                                         break;
                                     case "WAR":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARHighlight);
                                         break;
                                     case "DRG":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGHighlight);
                                         break;
                                     case "BRD":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDHighlight);
                                         break;
                                     case "WHM":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMHighlight);
                                         break;
                                     case "BLM":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMHighlight);
                                         break;
                                     case "SMN":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNHighlight);
                                         break;
                                     case "SCH":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHHighlight);
                                         break;
                                     case "NIN":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHighlight);
                                         break;
                                     case "MCH":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHHighlight);
                                         break;
                                     case "DRK":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKHighlight);
                                         break;
                                     case "AST":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTHighlight);
                                         break;
                                     case "SAM":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMHighlight);
                                         break;
                                     case "RDM":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMHighlight);
                                         break;
                                     case "DNC":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCHighlight);
                                         break;
                                     case "GNB":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBHighlight);
                                         break;
                                     case "BLU":
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUBase);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUHighlight);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUHighlight);
                                         break;
                                     default:
                                         _baseJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
-                                        _highlightJobColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
                                         break;
                                 }
 
@@ -1420,7 +1459,7 @@ namespace Chromatics
 
                                 _jobClass = jobClass;
                             }
-                            
+
 
                             baseColor = _baseJobColor;
                             highlightColor = _highlightJobColor;
@@ -1439,7 +1478,7 @@ namespace Chromatics
 
                             _weathertoggle = false;
                         }
-                        
+
                         //Console.WriteLine(baseColor.Name);
 
                         //Set Base Keyboard lighting. 
@@ -1451,10 +1490,11 @@ namespace Chromatics
 
                             //GlobalUpdateState("static", baseColor, false);
                             GlobalApplyAllKeyLighting(_baseColor);
-                                
 
-                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                            { 
+
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                            {
                                 GlobalUpdateBulbState(BulbModeTypes.DefaultColor, _baseColor, 500);
                                 GlobalUpdateBulbState(BulbModeTypes.TargetHp, _baseColor, 500);
                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
@@ -1472,12 +1512,13 @@ namespace Chromatics
 
                             GlobalApplyKeySingleLighting(DevModeTypes.HighlightColor, highlightColor);
                             GlobalApplyKeyMultiLighting(DevMultiModeTypes.HighlightColor, highlightColor, "All");
-                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
                             {
                                 GlobalUpdateBulbState(BulbModeTypes.HighlightColor, highlightColor, 100);
                             }
 
-                            
+
 
                             if (_LightbarMode == LightbarMode.DefaultColor)
                             {
@@ -1519,45 +1560,80 @@ namespace Chromatics
                             GlobalApplyMapMouseLighting(DevModeTypes.Castbar, baseColor, false);
                             GlobalApplyMapMouseLighting(DevModeTypes.Disabled, baseColor, false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide1", "RightSide1", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide2", "RightSide2", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide3", "RightSide3", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide4", "RightSide4", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide5", "RightSide5", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide6", "RightSide6", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide7", "RightSide7", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide1", "RightSide1", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide2", "RightSide2", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide3", "RightSide3", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide4", "RightSide4", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide5", "RightSide5", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide6", "RightSide6", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Disabled, "LeftSide7", "RightSide7", baseColor,
+                                false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide1", "RightSide1", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide2", "RightSide2", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide3", "RightSide3", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide4", "RightSide4", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide5", "RightSide5", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide6", "RightSide6", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide7", "RightSide7", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide1", "RightSide1",
+                                baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide2", "RightSide2",
+                                baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide3", "RightSide3",
+                                baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide4", "RightSide4",
+                                baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide5", "RightSide5",
+                                baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide6", "RightSide6",
+                                baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.DefaultColor, "LeftSide7", "RightSide7",
+                                baseColor, false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide1", "RightSide1", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide2", "RightSide2", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide3", "RightSide3", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide4", "RightSide4", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide5", "RightSide5", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide6", "RightSide6", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7", baseColor,
+                                false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide1", "RightSide1", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide2", "RightSide2", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide3", "RightSide3", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", baseColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", baseColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide1", "RightSide1", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide2", "RightSide2", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide3", "RightSide3", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide4", "RightSide4", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide5", "RightSide5", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide6", "RightSide6", baseColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide7", "RightSide7", baseColor,
+                                false);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide1", "RightSide1", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide2", "RightSide2", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide3", "RightSide3", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide4", "RightSide4", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide5", "RightSide5", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide6", "RightSide6", highlightColor, false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide7", "RightSide7", highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide1", "RightSide1",
+                                highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide2", "RightSide2",
+                                highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide3", "RightSide3",
+                                highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide4", "RightSide4",
+                                highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide5", "RightSide5",
+                                highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide6", "RightSide6",
+                                highlightColor, false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.HighlightColor, "LeftSide7", "RightSide7",
+                                highlightColor, false);
 
                             GlobalApplyMapMouseLighting(DevModeTypes.HighlightColor, highlightColor, false);
 
@@ -1617,7 +1693,8 @@ namespace Chromatics
                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, baseColor, false, "All");
                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "All");
 
-                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.HighlightColor, highlightColor, false, "All");
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.HighlightColor, highlightColor, false,
+                                "All");
                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.Disabled, highlightColor, false, "All");
 
                             SetKeypadbase = true;
@@ -1705,37 +1782,56 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("Space", _baseColor, false);
                             GlobalApplyMapKeyLighting("LeftAlt", _baseColor, false);
                         }
-                        
+
                         if (targetInfo == null)
                         {
-                            
 
-                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
                             {
                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
                                     ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), 250);
                             }
 
-                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
-                            GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), "All");
-                            GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
-                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
+                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+                            GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), "All");
+                            GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
 
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7",
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
-                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4,
+                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                             GlobalApplyMapKeyLighting("PrintScreen",
                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -1818,8 +1914,8 @@ namespace Chromatics
 
                         //if (PlayerInfo.IsClaimed)
                         //{
-                        
-                        
+
+
                         var statEffects = _playerInfo.StatusItems;
 
                         if (ChromaticsSettings.ChromaticsSettingsStatusEffectToggle)
@@ -1827,60 +1923,72 @@ namespace Chromatics
                             if (statEffects.Count > 0)
                             {
                                 var status = statEffects.Last();
-                                if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name && !FFXIVHelpers.IsCompanyAction(status.StatusName))
-                                { 
+                                if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name &&
+                                    !FFXIVHelpers.IsCompanyAction(status.StatusName))
+                                {
                                     if (_currentStatus != status.StatusName)
                                     {
                                         //Console.WriteLine(status.StatusName);
 
                                         if (status.StatusName == "Bind")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBind);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
                                             {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
-                                            
+
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
+                                                _baseColor, false, "All");
                                         }
                                         else if (status.StatusName == "Petrification")
                                         {
-                                            _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPetrification);
+                                            _baseColor =
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingPetrification);
                                             //GlobalUpdateState("static", _baseColor, false);
                                             GlobalApplyAllKeyLighting(_baseColor);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {   
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                             }
-                                            
+
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            
+                                                _baseColor, false, "All");
+
                                         }
                                         else if (status.StatusName == "Old")
                                         {
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
                                             //GlobalUpdateState("static", _baseColor, false);
                                             GlobalApplyAllKeyLighting(_baseColor);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                             }
-                                            
+
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
                                                 _baseColor, false, "All");
                                         }
                                         else if (status.StatusName == "Slow")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
-                                            
+
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
                                                 _baseColor, false, "All");
                                         }
@@ -1889,11 +1997,13 @@ namespace Chromatics
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingStun);
                                             //GlobalUpdateState("static", _baseColor, false);
                                             GlobalApplyAllKeyLighting(_baseColor);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                             }
-                                            
+
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
                                                 _baseColor, false, "All");
                                         }
@@ -1902,8 +2012,10 @@ namespace Chromatics
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSilence);
                                             //GlobalUpdateState("static", _baseColor, false);
                                             GlobalApplyAllKeyLighting(_baseColor);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
                                             }
 
@@ -1912,10 +2024,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Poison")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -1924,10 +2039,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Pollen")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -1938,8 +2056,10 @@ namespace Chromatics
                                         {
                                             GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPox), 100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPox);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -1951,8 +2071,10 @@ namespace Chromatics
                                             GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis),
                                                 100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -1961,10 +2083,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Leaden")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -1978,8 +2103,10 @@ namespace Chromatics
                                                 100);
                                             _baseColor =
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -1988,10 +2115,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Dropsy")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2003,8 +2133,10 @@ namespace Chromatics
                                             GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia),
                                                 100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2013,10 +2145,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Bleed")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2025,10 +2160,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Misery")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2037,10 +2175,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Sleep")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2049,10 +2190,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Daze")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2061,10 +2205,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Heavy")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2076,8 +2223,10 @@ namespace Chromatics
                                             GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary),
                                                 100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2086,10 +2235,13 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Burns")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns), 100);
+                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns),
+                                                100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2098,23 +2250,30 @@ namespace Chromatics
                                         }
                                         else if (status.StatusName == "Deep Freeze")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze),
+                                            GlobalRipple2(
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze),
                                                 100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
+
                                             GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
                                                 _baseColor, false, "All");
                                         }
                                         else if (status.StatusName == "Damage Down")
                                         {
-                                            GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown),
+                                            GlobalRipple2(
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown),
                                                 100);
                                             _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 1000);
                                             }
 
@@ -2123,12 +2282,14 @@ namespace Chromatics
                                         }
                                         else
                                         {
-                                            
+
                                             _baseColor = baseColor;
                                             //GlobalUpdateState("static", _baseColor, false);
                                             GlobalApplyAllKeyLighting(_baseColor);
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                            {  
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
                                                 GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
                                             }
 
@@ -2136,7 +2297,7 @@ namespace Chromatics
                                                 _baseColor, false, "All");
 
                                             statEffects.Clear();
-    
+
                                             if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
                                             {
                                                 switch (ChromaticsSettings.ChromaticsSettingsQwertyMode)
@@ -2203,67 +2364,114 @@ namespace Chromatics
                                                 GlobalApplyMapKeyLighting("Space", _baseColor, false);
                                                 GlobalApplyMapKeyLighting("LeftAlt", _baseColor, false);
                                             }
-    
+
                                             if (targetInfo == null)
                                             {
                                                 GlobalApplyMapKeyLighting("PrintScreen",
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
                                                 GlobalApplyMapKeyLighting("Scroll",
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
                                                 GlobalApplyMapKeyLighting("Pause",
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
-                                                {  
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                     !_inCutscene && !_inVegas))
+                                                {
                                                     GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
                                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
                                                         250);
                                                 }
-    
+
                                                 GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
                                                     ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
-    
+
                                                 GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker,
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), "All");
-    
-                                                GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
-    
-                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-    
-                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-    
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    "All");
+
+                                                GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false,
+                                                    "All");
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
+
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1",
+                                                    "RightSide1",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2",
+                                                    "RightSide2",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3",
+                                                    "RightSide3",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4",
+                                                    "RightSide4",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5",
+                                                    "RightSide5",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6",
+                                                    "RightSide6",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7",
+                                                    "RightSide7",
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+
                                                 GlobalApplyMapKeyLighting("Macro16",
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
                                                 GlobalApplyMapKeyLighting("Macro17",
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
                                                 GlobalApplyMapKeyLighting("Macro18",
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-    
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                    false);
+
                                                 GlobalApplyMapLogoLighting("", highlightColor, false);
                                                 //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
 
                                             }
-                                            
+
                                         }
-    
+
                                         _currentStatus = status.StatusName;
                                     }
                                 }
                             }
                         }
-                        
+
 
                         //Target
                         if (targetInfo != null)
@@ -2273,47 +2481,69 @@ namespace Chromatics
                                 //Friendly HP
                                 var currentThp = targetInfo.HPCurrent;
                                 var maxThp = targetInfo.HPMax;
-                                var polTargetHpx = (currentThp - 0) * ((long)65535 - 0) / (maxThp - 0) + 0;
+                                var polTargetHpx = (currentThp - 0) * ((long) 65535 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx2 = (currentThp - 0) * (1.0 - 0.0) / (maxThp - 0) + 0.0;
 
-                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                     !_inVegas))
                                 {
-                                GlobalUpdateBulbStateBrightness(BulbModeTypes.TargetHp,
+                                    GlobalUpdateBulbStateBrightness(BulbModeTypes.TargetHp,
+                                        targetInfo.IsClaimed
+                                            ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                            : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
+                                        (ushort) polTargetHpx, 250);
+                                }
+
+                                GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
                                     targetInfo.IsClaimed
                                         ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
                                         : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
-                                    (ushort)polTargetHpx, 250);
-                                }
+                                    polTargetHpx2);
 
-                                GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
+                                GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false,
+                                    polTargetHpx2);
 
-                                GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
+                                GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false,
+                                    polTargetHpx2);
 
-                                GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
+                                GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
+                                    polTargetHpx2);
 
-                                GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
-
-                                GlobalApplyOtherLightingViaInterpolation(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0, maxThp, currentThp);
+                                GlobalApplyOtherLightingViaInterpolation(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0, maxThp,
+                                    currentThp);
 
                                 //Lightbar
                                 if (_LightbarMode == LightbarMode.TargetHp)
                                 {
                                     var LBTargetHp_Collection = DeviceEffects.LightbarZones;
-                                    var LBTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, LBTargetHp_Collection.Length, 0);
+                                    var LBTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
+                                        0, maxThp, LBTargetHp_Collection.Length, 0);
 
                                     for (int i = 0; i < LBTargetHp_Collection.Length; i++)
                                     {
-                                        GlobalApplyMapLightbarLighting(LBTargetHp_Collection[i], LBTargetHp_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, false);
+                                        GlobalApplyMapLightbarLighting(LBTargetHp_Collection[i],
+                                            LBTargetHp_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, false);
                                     }
                                 }
 
@@ -2321,16 +2551,22 @@ namespace Chromatics
                                 if (_FKeyMode == FKeyMode.TargetHp)
                                 {
                                     var FKTargetHp_Collection = DeviceEffects.Functions;
-                                    var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, FKTargetHp_Collection.Length, 0);
+                                    var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
+                                        0, maxThp, FKTargetHp_Collection.Length, 0);
 
                                     for (int i = 0; i < FKTargetHp_Collection.Length; i++)
                                     {
-                                        GlobalApplyMapKeyLighting(FKTargetHp_Collection[i], FKTargetHp_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, false);
+                                        GlobalApplyMapKeyLighting(FKTargetHp_Collection[i],
+                                            FKTargetHp_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, false);
                                     }
                                 }
 
                                 var KeyTargetHp_Collection = DeviceEffects.MacroTarget;
-                                var KeyTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, KeyTargetHp_Collection.Length, 0);
+                                var KeyTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0,
+                                    maxThp, KeyTargetHp_Collection.Length, 0);
 
                                 for (int i = 0; i < KeyTargetHp_Collection.Length; i++)
                                 {
@@ -2355,66 +2591,106 @@ namespace Chromatics
                                 //Mouse
                                 var TargetHpMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                 var TargetHpMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
-                                var TargetHpMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, TargetHpMouseStrip_CollectionA.Length, 0);
+                                var TargetHpMouseStrip_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp,
+                                        TargetHpMouseStrip_CollectionA.Length, 0);
 
                                 for (int i = 0; i < TargetHpMouseStrip_CollectionA.Length; i++)
                                 {
                                     if (targetInfo.IsClaimed)
                                     {
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, TargetHpMouseStrip_CollectionA[i], TargetHpMouseStrip_CollectionB[i], TargetHpMouseStrip_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp,
+                                            TargetHpMouseStrip_CollectionA[i], TargetHpMouseStrip_CollectionB[i],
+                                            TargetHpMouseStrip_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
                                     }
                                     else
                                     {
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, TargetHpMouseStrip_CollectionA[i], TargetHpMouseStrip_CollectionB[i], TargetHpMouseStrip_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp,
+                                            TargetHpMouseStrip_CollectionA[i], TargetHpMouseStrip_CollectionB[i],
+                                            TargetHpMouseStrip_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
                                     }
 
                                 }
 
                                 //Mousepad
                                 var TargetHpMousePadCollection = 5;
-                                var TargetHpMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, TargetHpMousePadCollection, 0);
+                                var TargetHpMousePad_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp,
+                                        TargetHpMousePadCollection, 0);
 
                                 for (int i = 0; i < TargetHpMousePadCollection; i++)
                                 {
                                     if (targetInfo.IsClaimed)
                                     {
-                                        GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10 + i, 9 - i, 4 - i, TargetHpMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10 + i, 9 - i, 4 - i,
+                                            TargetHpMousePad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
                                     }
                                     else
                                     {
-                                        GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10 + i, 9 - i, 4 - i, TargetHpMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10 + i, 9 - i, 4 - i,
+                                            TargetHpMousePad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
                                     }
                                 }
 
                                 //Keypad
                                 var TargetHpKeypad_Collection = DeviceEffects.Keypadzones;
-                                var TargetHpKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, TargetHpKeypad_Collection.Length, 0);
+                                var TargetHpKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
+                                    0, maxThp, TargetHpKeypad_Collection.Length, 0);
 
                                 for (int i = 0; i < TargetHpKeypad_Collection.Length; i++)
                                 {
                                     if (targetInfo.IsClaimed)
                                     {
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, TargetHpKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, TargetHpKeypad_Collection[i]);
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp,
+                                            TargetHpKeypad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, TargetHpKeypad_Collection[i]);
                                     }
                                     else
                                     {
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, TargetHpKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, TargetHpKeypad_Collection[i]);
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp,
+                                            TargetHpKeypad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, TargetHpKeypad_Collection[i]);
                                     }
                                 }
 
                                 //MultiKeyboard
                                 var TargetHpMulti_Collection = DeviceEffects.Multikeyzones;
-                                var TargetHpMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, TargetHpMulti_Collection.Length, 0);
+                                var TargetHpMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
+                                    0, maxThp, TargetHpMulti_Collection.Length, 0);
 
                                 for (int i = 0; i < TargetHpMulti_Collection.Length; i++)
                                 {
                                     if (targetInfo.IsClaimed)
                                     {
-                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp, TargetHpMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), TargetHpMulti_Collection[i]);
+                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp,
+                                            TargetHpMulti_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            TargetHpMulti_Collection[i]);
                                     }
                                     else
                                     {
-                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp, TargetHpMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), TargetHpMulti_Collection[i]);
+                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp,
+                                            TargetHpMulti_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            TargetHpMulti_Collection[i]);
                                     }
                                 }
                             }
@@ -2427,47 +2703,69 @@ namespace Chromatics
                                 //Target HP
                                 var currentThp = targetInfo.HPCurrent;
                                 var maxThp = targetInfo.HPMax;
-                                var polTargetHpx = (currentThp - 0) * ((long)65535 - 0) / (maxThp - 0) + 0;
+                                var polTargetHpx = (currentThp - 0) * ((long) 65535 - 0) / (maxThp - 0) + 0;
                                 var polTargetHpx2 = (currentThp - 0) * (1.0 - 0.0) / (maxThp - 0) + 0.0;
 
-                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                     !_inVegas))
                                 {
                                     GlobalUpdateBulbStateBrightness(BulbModeTypes.TargetHp,
                                         targetInfo.IsClaimed
                                             ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                             : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
-                                        (ushort)polTargetHpx, 250);
+                                        (ushort) polTargetHpx, 250);
                                 }
 
-                                GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
+                                GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
+                                    polTargetHpx2);
 
-                                GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
+                                GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false,
+                                    polTargetHpx2);
 
-                                GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false, polTargetHpx2);
+                                GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), false,
+                                    polTargetHpx2);
 
-                                GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), polTargetHpx2);
+                                GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
+                                    polTargetHpx2);
 
-                                GlobalApplyOtherLightingViaInterpolation(DevModeTypes.TargetHp, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), targetInfo.IsClaimed
-                                    ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
-                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0, maxThp, currentThp);
+                                GlobalApplyOtherLightingViaInterpolation(DevModeTypes.TargetHp,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                    targetInfo.IsClaimed
+                                        ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                        : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0, maxThp,
+                                    currentThp);
 
                                 //Lightbar
                                 if (_LightbarMode == LightbarMode.TargetHp)
                                 {
                                     var LBTargetHp_Collection = DeviceEffects.LightbarZones;
-                                    var LBTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, LBTargetHp_Collection.Length, 0);
+                                    var LBTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
+                                        0, maxThp, LBTargetHp_Collection.Length, 0);
 
                                     for (int i = 0; i < LBTargetHp_Collection.Length; i++)
                                     {
-                                        GlobalApplyMapLightbarLighting(LBTargetHp_Collection[i], LBTargetHp_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, false);
+                                        GlobalApplyMapLightbarLighting(LBTargetHp_Collection[i],
+                                            LBTargetHp_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, false);
                                     }
                                 }
 
@@ -2475,16 +2773,22 @@ namespace Chromatics
                                 if (_FKeyMode == FKeyMode.TargetHp)
                                 {
                                     var FKTargetHp_Collection = DeviceEffects.Functions;
-                                    var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, FKTargetHp_Collection.Length, 0);
+                                    var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
+                                        0, maxThp, FKTargetHp_Collection.Length, 0);
 
                                     for (int i = 0; i < FKTargetHp_Collection.Length; i++)
                                     {
-                                        GlobalApplyMapKeyLighting(FKTargetHp_Collection[i], FKTargetHp_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, false);
+                                        GlobalApplyMapKeyLighting(FKTargetHp_Collection[i],
+                                            FKTargetHp_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, false);
                                     }
                                 }
 
                                 var KeyTargetHp_Collection = DeviceEffects.MacroTarget;
-                                var KeyTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, KeyTargetHp_Collection.Length, 0);
+                                var KeyTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0,
+                                    maxThp, KeyTargetHp_Collection.Length, 0);
 
                                 for (int i = 0; i < KeyTargetHp_Collection.Length; i++)
                                 {
@@ -2509,66 +2813,106 @@ namespace Chromatics
                                 //Mouse
                                 var TargetHpMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                 var TargetHpMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
-                                var TargetHpMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, TargetHpMouseStrip_CollectionA.Length, 0);
+                                var TargetHpMouseStrip_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp,
+                                        TargetHpMouseStrip_CollectionA.Length, 0);
 
                                 for (int i = 0; i < TargetHpMouseStrip_CollectionA.Length; i++)
                                 {
                                     if (targetInfo.IsClaimed)
                                     {
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, TargetHpMouseStrip_CollectionA[i], TargetHpMouseStrip_CollectionB[i], TargetHpMouseStrip_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp,
+                                            TargetHpMouseStrip_CollectionA[i], TargetHpMouseStrip_CollectionB[i],
+                                            TargetHpMouseStrip_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
                                     }
                                     else
                                     {
-                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, TargetHpMouseStrip_CollectionA[i], TargetHpMouseStrip_CollectionB[i], TargetHpMouseStrip_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetHp,
+                                            TargetHpMouseStrip_CollectionA[i], TargetHpMouseStrip_CollectionB[i],
+                                            TargetHpMouseStrip_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
                                     }
-                                        
+
                                 }
 
                                 //Mousepad
                                 var TargetHpMousePadCollection = 5;
-                                var TargetHpMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, TargetHpMousePadCollection, 0);
+                                var TargetHpMousePad_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp,
+                                        TargetHpMousePadCollection, 0);
 
                                 for (int i = 0; i < TargetHpMousePadCollection; i++)
                                 {
                                     if (targetInfo.IsClaimed)
                                     {
-                                        GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10 + i, 9 - i, 4 - i, TargetHpMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10 + i, 9 - i, 4 - i,
+                                            TargetHpMousePad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
                                     }
                                     else
                                     {
-                                        GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10 + i, 9 - i, 4 - i, TargetHpMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false);
+                                        GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10 + i, 9 - i, 4 - i,
+                                            TargetHpMousePad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
                                     }
                                 }
 
                                 //Keypad
                                 var TargetHpKeypad_Collection = DeviceEffects.Keypadzones;
-                                var TargetHpKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, TargetHpKeypad_Collection.Length, 0);
+                                var TargetHpKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
+                                    0, maxThp, TargetHpKeypad_Collection.Length, 0);
 
                                 for (int i = 0; i < TargetHpKeypad_Collection.Length; i++)
                                 {
                                     if (targetInfo.IsClaimed)
                                     {
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, TargetHpKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, TargetHpKeypad_Collection[i]);
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp,
+                                            TargetHpKeypad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, TargetHpKeypad_Collection[i]);
                                     }
                                     else
                                     {
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, TargetHpKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), false, TargetHpKeypad_Collection[i]);
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp,
+                                            TargetHpKeypad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, TargetHpKeypad_Collection[i]);
                                     }
                                 }
 
                                 //MultiKeyboard
                                 var TargetHpMulti_Collection = DeviceEffects.Multikeyzones;
-                                var TargetHpMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp, 0, maxThp, TargetHpMulti_Collection.Length, 0);
+                                var TargetHpMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
+                                    0, maxThp, TargetHpMulti_Collection.Length, 0);
 
                                 for (int i = 0; i < TargetHpMulti_Collection.Length; i++)
                                 {
                                     if (targetInfo.IsClaimed)
                                     {
-                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp, TargetHpMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), TargetHpMulti_Collection[i]);
+                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp,
+                                            TargetHpMulti_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            TargetHpMulti_Collection[i]);
                                     }
                                     else
                                     {
-                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp, TargetHpMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle) : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), TargetHpMulti_Collection[i]);
+                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp,
+                                            TargetHpMulti_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            TargetHpMulti_Collection[i]);
                                     }
                                 }
 
@@ -2577,7 +2921,9 @@ namespace Chromatics
 
                                 if (targetInfo.IsCasting)
                                 {
-                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                         !_inVegas))
                                     {
                                         GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
                                             ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
@@ -2590,25 +2936,42 @@ namespace Chromatics
                                     GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker,
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), "All");
 
-                                    GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false, "All");
-                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), true);
+                                    GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false,
+                                        "All");
+                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), true);
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
 
-                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
-                                    
+                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
+
                                     GlobalApplyMapKeyLighting("Macro16",
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false);
                                     GlobalApplyMapKeyLighting("Macro17",
@@ -2622,7 +2985,7 @@ namespace Chromatics
                                     {
                                         ToggleGlobalFlash2(true);
                                         GlobalFlash2(ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
-                                            200, new[] { "PrintScreen", "Scroll", "Pause" });
+                                            200, new[] {"PrintScreen", "Scroll", "Pause"});
 
                                         _castalert = true;
                                     }
@@ -2644,7 +3007,8 @@ namespace Chromatics
                                     {
                                         //Collect Emnity Table
                                         //var TargetEmnity = TargetEmnityInfo.Count;
-                                        var emnitytable = targetEmnityInfo.Select(t => new KeyValuePair<uint, uint>(t.ID, t.Enmity)).ToList();
+                                        var emnitytable = targetEmnityInfo
+                                            .Select(t => new KeyValuePair<uint, uint>(t.ID, t.Enmity)).ToList();
 
 
                                         //Sort emnity by highest holder
@@ -2663,7 +3027,9 @@ namespace Chromatics
                                         if (emnityPosition == -1)
                                         {
                                             //Engaged/No Aggro
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
                                             {
                                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm0, 1000);
                                             }
@@ -2672,22 +3038,35 @@ namespace Chromatics
                                             GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, colEm0, "All");
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm0, false);
-                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm0, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm0, false,
+                                                "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0, true);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm0, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1",
+                                                "RightSide1", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2",
+                                                "RightSide2", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3",
+                                                "RightSide3", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4",
+                                                "RightSide4", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5",
+                                                "RightSide5", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6",
+                                                "RightSide6", colEm0, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7",
+                                                "RightSide7", colEm0, false);
 
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm0, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm0, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm0, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm0, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm0, false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm0,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm0,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm0,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm0,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm0,
+                                                false);
 
                                             if (_LightbarMode == LightbarMode.EnmityTracker)
                                             {
@@ -2723,30 +3102,46 @@ namespace Chromatics
                                         else if (emnityPosition > 4 && emnityPosition <= 8)
                                         {
                                             //Low Aggro
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
                                             {
                                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm1, 1000);
                                             }
+
                                             GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm1);
                                             GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, colEm1, "All");
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm1, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm1, false);
-                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm1, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm1, false,
+                                                "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm1, true);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm1, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1",
+                                                "RightSide1", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2",
+                                                "RightSide2", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3",
+                                                "RightSide3", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4",
+                                                "RightSide4", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5",
+                                                "RightSide5", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6",
+                                                "RightSide6", colEm1, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7",
+                                                "RightSide7", colEm1, false);
 
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm1, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm1, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm1, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm1, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm1, false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm1,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm1,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm1,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm1,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm1,
+                                                false);
 
                                             if (_LightbarMode == LightbarMode.EnmityTracker)
                                             {
@@ -2782,7 +3177,9 @@ namespace Chromatics
                                         else if (emnityPosition > 1 && emnityPosition <= 4)
                                         {
                                             //Moderate Aggro
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
                                             {
                                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm2, 1000);
                                             }
@@ -2791,22 +3188,35 @@ namespace Chromatics
                                             GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, colEm2, "All");
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm2, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm2, false);
-                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm2, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm2, false,
+                                                "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm2, true);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm2, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1",
+                                                "RightSide1", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2",
+                                                "RightSide2", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3",
+                                                "RightSide3", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4",
+                                                "RightSide4", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5",
+                                                "RightSide5", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6",
+                                                "RightSide6", colEm2, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7",
+                                                "RightSide7", colEm2, false);
 
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm2, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm2, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm2, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm2, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm2, false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm2,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm2,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm2,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm2,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm2,
+                                                false);
 
                                             if (_LightbarMode == LightbarMode.EnmityTracker)
                                             {
@@ -2842,7 +3252,9 @@ namespace Chromatics
                                         else if (emnityPosition == 1)
                                         {
                                             //Partial Aggro
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
                                             {
                                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm3, 1000);
                                             }
@@ -2851,22 +3263,35 @@ namespace Chromatics
                                             GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, colEm3, "All");
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm3, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm3, false);
-                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm3, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm3, false,
+                                                "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm3, true);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm3, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1",
+                                                "RightSide1", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2",
+                                                "RightSide2", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3",
+                                                "RightSide3", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4",
+                                                "RightSide4", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5",
+                                                "RightSide5", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6",
+                                                "RightSide6", colEm3, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7",
+                                                "RightSide7", colEm3, false);
 
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm3, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm3, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm3, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm3, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm3, false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm3,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm3,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm3,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm3,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm3,
+                                                false);
 
                                             if (_LightbarMode == LightbarMode.EnmityTracker)
                                             {
@@ -2902,7 +3327,9 @@ namespace Chromatics
                                         else if (emnityPosition == 0)
                                         {
                                             //Full Aggro
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
                                             {
                                                 GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm4, 1000);
                                             }
@@ -2911,22 +3338,35 @@ namespace Chromatics
                                             GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, colEm4, "All");
                                             GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm4, false);
                                             GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm4, false);
-                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm4, false, "All");
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm4, false,
+                                                "All");
                                             GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm4, true);
 
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm4, false);
-                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1",
+                                                "RightSide1", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2",
+                                                "RightSide2", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3",
+                                                "RightSide3", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4",
+                                                "RightSide4", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5",
+                                                "RightSide5", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6",
+                                                "RightSide6", colEm4, false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7",
+                                                "RightSide7", colEm4, false);
 
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm4, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm4, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm4, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm4, false);
-                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm4, false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm4,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm4,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, colEm4,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, colEm4,
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm4,
+                                                false);
 
                                             battleStance = 2;
 
@@ -2965,24 +3405,35 @@ namespace Chromatics
                                     else
                                     {
                                         //Not Engaged/No aggro
-                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                             !_inVegas))
                                         {
                                             GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, colEm0, 1000);
                                         }
+
                                         GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, colEm0);
                                         GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, colEm0, "All");
                                         GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, colEm0, false);
                                         GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, colEm0, false);
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm0, false, "All");
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, colEm0, false,
+                                            "All");
                                         GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, colEm0, true);
 
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", colEm0, false);
-                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1",
+                                            "RightSide1", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2",
+                                            "RightSide2", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3",
+                                            "RightSide3", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4",
+                                            "RightSide4", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5",
+                                            "RightSide5", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6",
+                                            "RightSide6", colEm0, false);
+                                        GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7",
+                                            "RightSide7", colEm0, false);
 
                                         GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, colEm0, false);
                                         GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, colEm0, false);
@@ -3032,28 +3483,44 @@ namespace Chromatics
 
                                 battleStance = 0;
 
-                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                     !_inVegas))
                                 {
-                                GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
-                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), 250);
+                                    GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), 250);
                                 }
 
-                                GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
-                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), "All");
-                                GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
-                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
+                                GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), "All");
+                                GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false, "All");
+                                GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), true);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7",
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
-                                if (_LightbarMode == LightbarMode.TargetHp || _LightbarMode == LightbarMode.EnmityTracker)
+                                if (_LightbarMode == LightbarMode.TargetHp ||
+                                    _LightbarMode == LightbarMode.EnmityTracker)
                                 {
                                     foreach (var f in DeviceEffects.LightbarZones)
                                     {
@@ -3071,11 +3538,16 @@ namespace Chromatics
                                     }
                                 }
 
-                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
-                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
+                                GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4,
+                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                                 GlobalApplyMapKeyLighting("Scroll",
                                     ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
@@ -3096,7 +3568,9 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
                                 GlobalApplyMapKeyLighting("Macro4", _baseColor, false);
                                 GlobalApplyMapKeyLighting("Macro5", _baseColor, false);
-                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                     !_inVegas))
                                 {
                                     GlobalUpdateBulbState(BulbModeTypes.EnmityTracker, baseColor, 1000);
                                 }
@@ -3108,13 +3582,20 @@ namespace Chromatics
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker, baseColor, false, "All");
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker, baseColor, true);
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6", baseColor, false);
-                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7", baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide1", "RightSide1",
+                                    baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide2", "RightSide2",
+                                    baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide3", "RightSide3",
+                                    baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide4", "RightSide4",
+                                    baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide5", "RightSide5",
+                                    baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide6", "RightSide6",
+                                    baseColor, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker, "LeftSide7", "RightSide7",
+                                    baseColor, false);
 
                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0, baseColor, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1, baseColor, false);
@@ -3130,10 +3611,12 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
                             GlobalApplyMapKeyLighting("Macro4", _baseColor, false);
                             GlobalApplyMapKeyLighting("Macro5", _baseColor, false);
-                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
                             {
                                 GlobalUpdateBulbState(BulbModeTypes.TargetHp, baseColor, 1000);
                             }
+
                             GlobalApplyKeySingleLighting(DevModeTypes.TargetHp, baseColor);
                             GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp, baseColor, "All");
                             GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, baseColor, false);
@@ -3165,38 +3648,50 @@ namespace Chromatics
                             ToggleGlobalFlash2(false);
                             _castalert = false;
                         }
-                        
+
 
                         //Castbar
                         var castPercentage = _playerInfo.CastingPercentage;
-                        var polCastZ = (castPercentage - 0) * ((long)65535 - 0) / (1.0 - 0.0) + 0;
-                        
+                        var polCastZ = (castPercentage - 0) * ((long) 65535 - 0) / (1.0 - 0.0) + 0;
+
                         if (_playerInfo.IsCasting)
                         {
                             //Console.WriteLine(CastPercentage);
                             _lastcast = true;
 
-                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                 !_inVegas))
                             {
-                                GlobalUpdateBulbStateBrightness(BulbModeTypes.Castbar, colCastcharge, (ushort)polCastZ,
+                                GlobalUpdateBulbStateBrightness(BulbModeTypes.Castbar, colCastcharge,
+                                    (ushort) polCastZ,
                                     250);
                             }
 
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, castPercentage);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, false, castPercentage);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, false, castPercentage);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge, castPercentage);
-                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.Castbar, colCastempty, colCastcharge, 0, 100, Convert.ToInt32(castPercentage * 100));
-
-
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.Castbar, colCastempty,
+                                colCastcharge,
+                                castPercentage);
+                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.Castbar, colCastempty, colCastcharge,
+                                false, castPercentage);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.Castbar, colCastempty,
+                                colCastcharge,
+                                false, castPercentage);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.Castbar, colCastempty,
+                                colCastcharge, castPercentage);
                             
+                            if (Convert.ToInt64(castPercentage * 100) < 101)
+                                GlobalApplyOtherLightingViaInterpolation(DevModeTypes.Castbar, colCastempty,
+                                    colCastcharge,
+                                    0, 100, Convert.ToInt32(castPercentage * 100));
+
+
                             //Cast Charge Keys
                             var Castcharge_Collection = DeviceEffects.Functions;
 
                             var Castcharge_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Double(castPercentage, 0.0, 1.0,
                                     Castcharge_Collection.Length, 0);
-                            
+
                             for (int i = 0; i < Castcharge_Collection.Length; i++)
                             {
                                 if (Castcharge_Interpolate >= i && ChromaticsSettings.ChromaticsSettingsCastToggle)
@@ -3221,7 +3716,8 @@ namespace Chromatics
                             {
                                 if (Castcharge_Interpolate >= i && ChromaticsSettings.ChromaticsSettingsCastToggle)
                                 {
-                                    GlobalApplyMapPadLighting(DevModeTypes.Castbar, 10 + i, 9 - i, 4 - i, colCastcharge, false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.Castbar, 10 + i, 9 - i, 4 - i, colCastcharge,
+                                        false);
                                 }
                             }
 
@@ -3235,7 +3731,8 @@ namespace Chromatics
                             {
                                 if (Castcharge_Interpolate >= i && ChromaticsSettings.ChromaticsSettingsCastToggle)
                                 {
-                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false, CastKeypad_Collection[i]);
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, colCastcharge, false,
+                                        CastKeypad_Collection[i]);
                                 }
                             }
 
@@ -3249,7 +3746,8 @@ namespace Chromatics
                             {
                                 if (Castcharge_Interpolate >= i && ChromaticsSettings.ChromaticsSettingsCastToggle)
                                 {
-                                    GlobalApplyKeyMultiLighting(DevMultiModeTypes.Castbar, colCastcharge, CastMulti_Collection[i]);
+                                    GlobalApplyKeyMultiLighting(DevMultiModeTypes.Castbar, colCastcharge,
+                                        CastMulti_Collection[i]);
                                 }
                             }
 
@@ -3353,10 +3851,13 @@ namespace Chromatics
 
                                 var cBulbRip1 = new Task(() =>
                                 {
-                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                         !_inVegas))
                                     {
                                         GlobalUpdateBulbState(BulbModeTypes.Castbar, baseColor, 500);
                                     }
+
                                     GlobalApplyKeySingleLighting(DevModeTypes.Castbar, baseColor);
                                     GlobalApplyMapMouseLighting(DevModeTypes.Castbar, baseColor, false);
                                     GlobalApplyMapHeadsetLighting(DevModeTypes.Castbar, baseColor, false);
@@ -3371,7 +3872,8 @@ namespace Chromatics
                                 {
                                     GlobalRipple1(colCastcharge, 80, _baseColor);
 
-                                    if (_KeypadZone1Mode == DevMultiModeTypes.Castbar || _KeysMultiKeyMode == DevMultiModeTypes.Castbar)
+                                    if (_KeypadZone1Mode == DevMultiModeTypes.Castbar ||
+                                        _KeysMultiKeyMode == DevMultiModeTypes.Castbar)
                                         GlobalMultiRipple1(colCastcharge, 200, _baseColor);
                                 }
 
@@ -3384,29 +3886,36 @@ namespace Chromatics
                         if (maxHp != 0)
                         {
                             var polHp = (currentHp - 0) * (40 - 0) / (maxHp - 0) + 0;
-                            var polHpz = (currentHp - 0) * ((long)65535 - 0) / (maxHp - 0) + 0; //65535
+                            var polHpz = (currentHp - 0) * ((long) 65535 - 0) / (maxHp - 0) + 0; //65535
 
                             var polHpz2 = (currentHp - 0) * (1.0 - 0.0) / (maxHp - 0) + 0.0;
                             var criticalThresh = ChromaticsSettings.ChromaticsSettingsCriticalHP / 100;
 
-                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
                             {
-                                GlobalUpdateBulbStateBrightness(BulbModeTypes.HpTracker, polHp <= criticalThresh ? colHpempty : colHpfull, (ushort)polHpz, 250);
+                                GlobalUpdateBulbStateBrightness(BulbModeTypes.HpTracker,
+                                    polHp <= criticalThresh ? colHpempty : colHpfull, (ushort) polHpz, 250);
                             }
 
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpcritical : colHpfull, polHpz2);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, false, polHpz2);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, false, polHpz2);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, polHpz2);
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.HpTracker, colHpempty,
+                                polHp <= criticalThresh ? colHpcritical : colHpfull, polHpz2);
+                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.HpTracker, colHpempty,
+                                polHp <= criticalThresh ? colHpempty : colHpfull, false, polHpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.HpTracker, colHpempty,
+                                polHp <= criticalThresh ? colHpempty : colHpfull, false, polHpz2);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.HpTracker, colHpempty,
+                                polHp <= criticalThresh ? colHpempty : colHpfull, polHpz2);
 
-                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.HpTracker, colHpempty, polHp <= criticalThresh ? colHpempty : colHpfull, 0, maxHp, currentHp);
+                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.HpTracker, colHpempty,
+                                polHp <= criticalThresh ? colHpempty : colHpfull, 0, maxHp, currentHp);
 
 
                             //FKeys
                             if (_FKeyMode == FKeyMode.HpMp)
                             {
                                 var HpFunction_Collection = DeviceEffects.FunctionL;
-                                
+
 
                                 var HpFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
@@ -3459,7 +3968,9 @@ namespace Chromatics
 
                             //Mousepad
                             var HpMousePadCollection = 5;
-                            var HpMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp, HpMousePadCollection, 0);
+                            var HpMousePad_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp, HpMousePadCollection,
+                                    0);
 
                             for (int i = 0; i < HpMousePadCollection; i++)
                             {
@@ -3470,12 +3981,15 @@ namespace Chromatics
                                     col = colHpcritical;
                                 }
 
-                                GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 10+i, 9-i, 4-i, HpMousePad_Interpolate > i ? col : colHpempty, false);
+                                GlobalApplyMapPadLighting(DevModeTypes.HpTracker, 10 + i, 9 - i, 4 - i,
+                                    HpMousePad_Interpolate > i ? col : colHpempty, false);
                             }
 
                             //Keypad
                             var HpKeypad_Collection = DeviceEffects.Keypadzones;
-                            var HpKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp, HpKeypad_Collection.Length, 0);
+                            var HpKeypad_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
+                                    HpKeypad_Collection.Length, 0);
 
                             for (int i = 0; i < HpKeypad_Collection.Length; i++)
                             {
@@ -3486,12 +4000,15 @@ namespace Chromatics
                                     col = colHpcritical;
                                 }
 
-                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker, HpKeypad_Interpolate > i ? col : colHpempty, false, HpKeypad_Collection[i]);
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.HpTracker,
+                                    HpKeypad_Interpolate > i ? col : colHpempty, false, HpKeypad_Collection[i]);
                             }
 
                             //MultiKeyboard
                             var HpMulti_Collection = DeviceEffects.Multikeyzones;
-                            var HpMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp, HpMulti_Collection.Length, 0);
+                            var HpMulti_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
+                                    HpMulti_Collection.Length, 0);
 
                             for (int i = 0; i < HpMulti_Collection.Length; i++)
                             {
@@ -3502,13 +4019,16 @@ namespace Chromatics
                                     col = colHpcritical;
                                 }
 
-                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.HpTracker, HpMulti_Interpolate > i ? col : colHpempty, HpMulti_Collection[i]);
+                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.HpTracker,
+                                    HpMulti_Interpolate > i ? col : colHpempty, HpMulti_Collection[i]);
                             }
 
                             //Mouse
                             var HpMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                             var HpMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
-                            var HpMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp, HpMouseStrip_CollectionA.Length, 0);
+                            var HpMouseStrip_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
+                                    HpMouseStrip_CollectionA.Length, 0);
 
                             for (int i = 0; i < HpMouseStrip_CollectionA.Length; i++)
                             {
@@ -3519,7 +4039,9 @@ namespace Chromatics
                                     col = colHpcritical;
                                 }
 
-                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, HpMouseStrip_CollectionA[i], HpMouseStrip_CollectionB[i], HpMouseStrip_Interpolate > i ? col : colHpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.HpTracker, HpMouseStrip_CollectionA[i],
+                                    HpMouseStrip_CollectionB[i], HpMouseStrip_Interpolate > i ? col : colHpempty,
+                                    false);
                             }
 
                             //Lightbar
@@ -3550,27 +4072,33 @@ namespace Chromatics
                         if (maxMp != 0)
                         {
                             var polMp = (currentMp - 0) * (40 - 0) / (maxMp - 0) + 0;
-                            var polMpz = (currentMp - 0) * ((long)65535 - 0) / (maxMp - 0) + 0;
+                            var polMpz = (currentMp - 0) * ((long) 65535 - 0) / (maxMp - 0) + 0;
                             var polMpz2 = (currentMp - 0) * (1.0 - 0.0) / (maxMp - 0) + 0.0;
 
-                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
                             {
-                                GlobalUpdateBulbStateBrightness(BulbModeTypes.MpTracker, colMpfull, (ushort)polMpz,
+                                GlobalUpdateBulbStateBrightness(BulbModeTypes.MpTracker, colMpfull, (ushort) polMpz,
                                     250);
                             }
 
-                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, polMpz2);
-                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, false, polMpz2);
-                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, false, polMpz2);
-                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, polMpz2);
+                            GlobalApplyKeySingleLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull,
+                                polMpz2);
+                            GlobalApplyMapMouseLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull, false,
+                                polMpz2);
+                            GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull,
+                                false, polMpz2);
+                            GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.MpTracker, colMpempty, colMpfull,
+                                polMpz2);
 
-                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.MpTracker, colMpempty, colMpfull, 0, maxMp, currentMp);
+                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.MpTracker, colMpempty, colMpfull, 0,
+                                maxMp, currentMp);
 
                             //FKeys
                             if (_FKeyMode == FKeyMode.HpMp)
                             {
                                 var MpFunction_Collection = DeviceEffects.FunctionR;
-                                
+
                                 var MpFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
                                         MpFunction_Collection.Length, 0);
@@ -3608,39 +4136,52 @@ namespace Chromatics
 
                             //Mousepad
                             var MpMousePadCollection = 5;
-                            var MpMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp, MpMousePadCollection, 0);
+                            var MpMousePad_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp, MpMousePadCollection,
+                                    0);
 
                             for (int i = 0; i < MpMousePadCollection; i++)
                             {
-                                GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 10 + i, 9 - i, 4 - i, MpMousePad_Interpolate > i ? colMpfull : colMpempty, false);
+                                GlobalApplyMapPadLighting(DevModeTypes.MpTracker, 10 + i, 9 - i, 4 - i,
+                                    MpMousePad_Interpolate > i ? colMpfull : colMpempty, false);
                             }
 
                             //Keypad
                             var MpKeypad_Collection = DeviceEffects.Keypadzones;
-                            var MpKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp, MpKeypad_Collection.Length, 0);
+                            var MpKeypad_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
+                                    MpKeypad_Collection.Length, 0);
 
                             for (int i = 0; i < MpKeypad_Collection.Length; i++)
                             {
-                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker, MpKeypad_Interpolate > i ? colMpfull : colMpempty, false, MpKeypad_Collection[i]);
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.MpTracker,
+                                    MpKeypad_Interpolate > i ? colMpfull : colMpempty, false, MpKeypad_Collection[i]);
                             }
 
                             //MultiKeyboard
                             var MpMulti_Collection = DeviceEffects.Multikeyzones;
-                            var MpMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp, MpMulti_Collection.Length, 0);
+                            var MpMulti_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
+                                    MpMulti_Collection.Length, 0);
 
                             for (int i = 0; i < MpMulti_Collection.Length; i++)
                             {
-                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.MpTracker, MpMulti_Interpolate > i ? colMpfull : colMpempty, MpMulti_Collection[i]);
+                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.MpTracker,
+                                    MpMulti_Interpolate > i ? colMpfull : colMpempty, MpMulti_Collection[i]);
                             }
 
                             //Mouse
                             var MpMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                             var MpMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
-                            var MpMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp, MpMouseStrip_CollectionA.Length, 0);
+                            var MpMouseStrip_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
+                                    MpMouseStrip_CollectionA.Length, 0);
 
                             for (int i = 0; i < MpMouseStrip_CollectionA.Length; i++)
                             {
-                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, MpMouseStrip_CollectionA[i], MpMouseStrip_CollectionB[i], MpMouseStrip_Interpolate > i ? colMpfull : colMpempty, false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.MpTracker, MpMouseStrip_CollectionA[i],
+                                    MpMouseStrip_CollectionB[i], MpMouseStrip_Interpolate > i ? colMpfull : colMpempty,
+                                    false);
                             }
 
                             //Lightbar
@@ -3658,7 +4199,7 @@ namespace Chromatics
                                 }
                             }
                         }
-                        
+
 
                         //Action Alerts
                         if (ChromaticsSettings.ChromaticsSettingsImpactToggle)
@@ -3679,10 +4220,10 @@ namespace Chromatics
 
                         //DX11 Effects
 
-                        
+
                         if (IsDx11)
                         {
-                            
+
                             Cooldowns.RefreshData();
                             Sharlayan.Models.ReadResults.ActionResult hotbars = null;
 
@@ -3698,15 +4239,24 @@ namespace Chromatics
 
                                     foreach (var hotbar in hotbars.ActionContainers)
                                     {
-                                        if (hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_1 ||
-                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_2 ||
-                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_3 ||
-                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_4 ||
-                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_5 ||
-                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_6 ||
-                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_7 ||
-                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_8 ||
-                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_PETBAR) continue;
+                                        if (hotbar.ContainerType ==
+                                            Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_1 ||
+                                            hotbar.ContainerType ==
+                                            Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_2 ||
+                                            hotbar.ContainerType ==
+                                            Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_3 ||
+                                            hotbar.ContainerType ==
+                                            Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_4 ||
+                                            hotbar.ContainerType ==
+                                            Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_5 ||
+                                            hotbar.ContainerType ==
+                                            Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_6 ||
+                                            hotbar.ContainerType ==
+                                            Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_7 ||
+                                            hotbar.ContainerType ==
+                                            Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_8 ||
+                                            hotbar.ContainerType == Sharlayan.Core.Enums.Action.Container.CROSS_PETBAR)
+                                            continue;
 
                                         foreach (var action in hotbar.ActionItems)
                                         {
@@ -3715,7 +4265,7 @@ namespace Chromatics
                                                 string.IsNullOrEmpty(action.ActionKey)) continue;
 
                                             //Console.WriteLine(action.Name);
-                                            
+
                                             //Collect Modifier Info
                                             var modsactive = action.Modifiers.Count;
                                             var _modsactive = modsactive;
@@ -3724,7 +4274,7 @@ namespace Chromatics
                                                 FfxivHotbar.Keybindwhitelist.Add(action.ActionKey);
 
                                             var modKey = Modifiers.Null;
-                                            
+
                                             if (modsactive > 0)
                                             {
                                                 var _ctrl = false;
@@ -3746,6 +4296,7 @@ namespace Chromatics
                                                             break;
                                                     }
                                                 }
+
                                                 //CTRL
                                                 if (_ctrl && !_alt && !_shift && _keyCtrl &&
                                                     !_keyAlt && !_keyShift)
@@ -3804,7 +4355,7 @@ namespace Chromatics
                                                 //Keypads
                                                 if (_EnableKeypadBinds)
                                                 {
-                                                    
+
                                                     if (action.Category == 49 || action.Category == 51)
                                                     {
                                                         if (!action.IsAvailable || !action.InRange ||
@@ -3900,16 +4451,18 @@ namespace Chromatics
 
                                                                 if (bypass)
                                                                 {
-                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                        .ColorMappingKeybindDisabled), false);
+                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
 
                                                                     continue;
                                                                 }
 
                                                                 if (action.ActionKey == bind.Value)
                                                                 {
-                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                        .ColorMappingHotbarNotAvailable), false);
+                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarNotAvailable), false);
                                                                 }
                                                             }
 
@@ -4009,19 +4562,22 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
-                                                                    
+
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindMap), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindMap), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Aether Currents":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4114,18 +4670,22 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindAetherCurrents), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindAetherCurrents),
+                                                                            false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Signs":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4218,18 +4778,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindSigns), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindSigns), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Waymarks":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4322,18 +4885,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindWaymarks), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindWaymarks), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Record Ready Check":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4426,18 +4992,22 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindRecordReadyCheck), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindRecordReadyCheck),
+                                                                            false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Ready Check":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4530,18 +5100,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindReadyCheck), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindReadyCheck), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Countdown":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4634,18 +5207,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindCountdown), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindCountdown), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Emotes":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4738,18 +5314,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindEmotes), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindEmotes), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Linkshells":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4842,18 +5421,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindLinkshells), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindLinkshells), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Cross-world Linkshell":
                                                                 foreach (var bind in _KeyBindMap)
@@ -4946,18 +5528,22 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindCrossWorldLS), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindCrossWorldLS),
+                                                                            false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Contacts":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5050,18 +5636,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindContacts), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindContacts), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Sprint":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5154,18 +5743,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindSprint), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindSprint), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Teleport":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5258,18 +5850,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindTeleport), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindTeleport), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Return":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5362,18 +5957,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindReturn), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindReturn), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Limit Break":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5466,18 +6064,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindLimitBreak), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindLimitBreak), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Duty Action":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5570,18 +6171,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDutyAction), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDutyAction), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Repair":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5674,18 +6278,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindRepair), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindRepair), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Dig":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5778,18 +6385,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDig), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDig), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                             case "Inventory":
                                                                 foreach (var bind in _KeyBindMap)
@@ -5882,18 +6492,21 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindInventory), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindInventory), false);
                                                                     }
                                                                 }
+
                                                                 break;
                                                         }
 
@@ -5997,16 +6610,18 @@ namespace Chromatics
 
                                                                     if (bypass)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingKeybindDisabled), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingKeybindDisabled), false);
 
                                                                         continue;
                                                                     }
 
                                                                     if (action.ActionKey == bind.Value)
                                                                     {
-                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                            .ColorMappingHotbarProc), false);
+                                                                        GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                                .ColorMappingHotbarProc), false);
                                                                     }
                                                                 }
                                                             }
@@ -6103,16 +6718,19 @@ namespace Chromatics
 
                                                                         if (bypass)
                                                                         {
-                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingKeybindDisabled), false);
+                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingKeybindDisabled),
+                                                                                false);
 
                                                                             continue;
                                                                         }
 
                                                                         if (action.ActionKey == bind.Value)
                                                                         {
-                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingHotbarCd), false);
+                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingHotbarCd), false);
                                                                         }
                                                                     }
                                                                 else
@@ -6206,16 +6824,19 @@ namespace Chromatics
 
                                                                         if (bypass)
                                                                         {
-                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingKeybindDisabled), false);
+                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingKeybindDisabled),
+                                                                                false);
 
                                                                             continue;
                                                                         }
 
                                                                         if (action.ActionKey == bind.Value)
                                                                         {
-                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingHotbarReady), false);
+                                                                            GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                                    .ColorMappingHotbarReady), false);
                                                                         }
                                                                     }
                                                             }
@@ -6312,16 +6933,18 @@ namespace Chromatics
 
                                                                 if (bypass)
                                                                 {
-                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                        .ColorMappingKeybindDisabled), false);
+                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingKeybindDisabled), false);
 
                                                                     continue;
                                                                 }
 
                                                                 if (action.ActionKey == bind.Value)
                                                                 {
-                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                        .ColorMappingHotbarOutRange), false);
+                                                                    GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingHotbarOutRange), false);
                                                                 }
                                                             }
                                                         }
@@ -6418,21 +7041,23 @@ namespace Chromatics
 
                                                             if (bypass)
                                                             {
-                                                                GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                    .ColorMappingKeybindDisabled), false);
+                                                                GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingKeybindDisabled), false);
 
                                                                 continue;
                                                             }
 
                                                             if (action.ActionKey == bind.Value)
                                                             {
-                                                                GlobalApplyMapKeypadBINDLighting(bind.Key, ColorTranslator.FromHtml(ColorMappings
-                                                                    .ColorMappingHotbarNotAvailable), false);
+                                                                GlobalApplyMapKeypadBINDLighting(bind.Key,
+                                                                    ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingHotbarNotAvailable), false);
                                                             }
                                                         }
                                                     }
                                                 }
-                                                
+
 
                                                 //Keyboards
                                                 if (ChromaticsSettings.ChromaticsSettingsQwertyMode == KeyRegion.AZERTY)
@@ -6896,7 +7521,7 @@ namespace Chromatics
 
                                                                 continue;
                                                             }
-                                                            
+
                                                             switch (action.Name)
                                                             {
                                                                 case "Map":
@@ -7121,11 +7746,11 @@ namespace Chromatics
                                     //SetKeysbase = false;
                                 }
                             }
-                            
+
 
                             //Cooldowns
-                            
-                                
+
+
                             var gcdHot = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdHot);
                             var gcdReady = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdReady);
                             var gcdEmpty = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdEmpty);
@@ -7434,34 +8059,38 @@ namespace Chromatics
                                 if (_LightbarMode == LightbarMode.CurrentExp)
                                 {
                                     var LBExp_Collection = DeviceEffects.LightbarZones;
-                                    var LBExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0, FFXIVHelpers.ExperienceTable[_currentlvl], LBExp_Collection.Length, 0);
+                                    var LBExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0,
+                                        FFXIVHelpers.ExperienceTable[_currentlvl], LBExp_Collection.Length, 0);
 
                                     for (var i = 0; i < LBExp_Collection.Length; i++)
                                     {
-                                        GlobalApplyMapLightbarLighting(LBExp_Collection[i], LBExp_Interpolate > i ? expcolfull : expcolempty, false, false);
+                                        GlobalApplyMapLightbarLighting(LBExp_Collection[i],
+                                            LBExp_Interpolate > i ? expcolfull : expcolempty, false, false);
                                     }
                                 }
 
                                 if (_FKeyMode == FKeyMode.CurrentExp)
                                 {
                                     var FKExp_Collection = DeviceEffects.Functions;
-                                    var FKExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0, FFXIVHelpers.ExperienceTable[_currentlvl], FKExp_Collection.Length, 0);
+                                    var FKExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0,
+                                        FFXIVHelpers.ExperienceTable[_currentlvl], FKExp_Collection.Length, 0);
 
                                     for (var i2 = 0; i2 < FKExp_Collection.Length; i2++)
                                     {
-                                        GlobalApplyMapKeyLighting(FKExp_Collection[i2], FKExp_Interpolate > i2 ? expcolfull : expcolempty, false, false);
+                                        GlobalApplyMapKeyLighting(FKExp_Collection[i2],
+                                            FKExp_Interpolate > i2 ? expcolfull : expcolempty, false, false);
                                     }
 
                                 }
                             }
-                            
-                            
+
+
                             //Job Gauges
                             ImplementJobGauges(statEffects, _baseColor, hotbars);
 
 
                             //Pull Countdown
-                            
+
                             if (!ChatInit)
                             {
                                 ChatpreviousArrayIndex = 0;
@@ -7492,7 +8121,9 @@ namespace Chromatics
                                     if (_FKeyMode == FKeyMode.PullCountdown)
                                     {
                                         var FKPullCount_Collection = DeviceEffects.Functions;
-                                        var FKPullCount_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(pullCountInterval, 0, pullCountMax, 0, FKPullCount_Collection.Length);
+                                        var FKPullCount_Interpolate =
+                                            Helpers.FFXIVInterpolation.Interpolate_Int(pullCountInterval, 0,
+                                                pullCountMax, 0, FKPullCount_Collection.Length);
 
                                         if (pullCountMax - pullCountInterval > FKPullCount_Collection.Length)
                                         {
@@ -7501,14 +8132,21 @@ namespace Chromatics
 
                                         for (var i2 = 0; i2 < FKPullCount_Collection.Length; i2++)
                                         {
-                                            GlobalApplyMapKeyLighting(FKPullCount_Collection[i2], FKPullCount_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownTick) : ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
+                                            GlobalApplyMapKeyLighting(FKPullCount_Collection[i2],
+                                                FKPullCount_Interpolate > i2
+                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingPullCountdownTick)
+                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingPullCountdownEmpty), false, false);
                                         }
                                     }
 
                                     if (_LightbarMode == LightbarMode.PullCountdown)
                                     {
                                         var LBPullCount_Collection = DeviceEffects.LightbarZones;
-                                        var LBPullCount_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(pullCountInterval, 0, pullCountMax, 0, LBPullCount_Collection.Length);
+                                        var LBPullCount_Interpolate =
+                                            Helpers.FFXIVInterpolation.Interpolate_Int(pullCountInterval, 0,
+                                                pullCountMax, 0, LBPullCount_Collection.Length);
 
                                         if (pullCountMax - pullCountInterval > LBPullCount_Collection.Length)
                                         {
@@ -7517,7 +8155,12 @@ namespace Chromatics
 
                                         for (var i2 = 0; i2 < LBPullCount_Collection.Length; i2++)
                                         {
-                                            GlobalApplyMapLightbarLighting(LBPullCount_Collection[i2], LBPullCount_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownTick) : ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
+                                            GlobalApplyMapLightbarLighting(LBPullCount_Collection[i2],
+                                                LBPullCount_Interpolate > i2
+                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingPullCountdownTick)
+                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingPullCountdownEmpty), false, false);
                                         }
                                     }
                                 }
@@ -7526,7 +8169,7 @@ namespace Chromatics
                                     if (_FKeyMode == FKeyMode.PullCountdown)
                                     {
                                         var FKPullCount_Collection = DeviceEffects.Functions;
-                                        
+
                                         for (var i2 = 0; i2 < FKPullCount_Collection.Length; i2++)
                                         {
                                             if (_playerInfo.IsCasting)
@@ -7534,7 +8177,9 @@ namespace Chromatics
                                                 break;
                                             }
 
-                                            GlobalApplyMapKeyLighting(FKPullCount_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
+                                            GlobalApplyMapKeyLighting(FKPullCount_Collection[i2],
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty),
+                                                false, false);
                                         }
                                     }
 
@@ -7544,7 +8189,9 @@ namespace Chromatics
 
                                         for (var i2 = 0; i2 < LBPullCount_Collection.Length; i2++)
                                         {
-                                            GlobalApplyMapLightbarLighting(LBPullCount_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty), false, false);
+                                            GlobalApplyMapLightbarLighting(LBPullCount_Collection[i2],
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingPullCountdownEmpty),
+                                                false, false);
                                         }
                                     }
 
@@ -7561,17 +8208,17 @@ namespace Chromatics
                                                 int.TryParse(pullcount, out int x);
                                                 pullCountInterval = 0;
                                                 pullCountMax = x;
-                                                
+
                                                 var pullTimer = new System.Timers.Timer();
                                                 pullTimer.Elapsed += new ElapsedEventHandler((source, e) =>
-                                                    {
-                                                        pullCountInterval++;
+                                                {
+                                                    pullCountInterval++;
 
-                                                        if (pullCountInterval == pullCountMax)
-                                                        {
-                                                            pullTimer.Stop();
-                                                        }
-                                                    });
+                                                    if (pullCountInterval == pullCountMax)
+                                                    {
+                                                        pullTimer.Stop();
+                                                    }
+                                                });
                                                 pullTimer.Interval = 960;
                                                 pullTimer.Start();
 
@@ -7648,7 +8295,7 @@ namespace Chromatics
                                     }
                                 }
 
-                                
+
                                 if (ChatReadResult.ChatLogItems.Count > 0)
                                 {
                                     var castChatAlert = ChatReadResult.ChatLogItems.LastOrDefault();
@@ -7666,7 +8313,8 @@ namespace Chromatics
 
                                         if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
                                         {
-                                            IFTTTController.FireIFTTTEvent(@"Chromatics_SRankAlert", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
+                                            IFTTTController.FireIFTTTEvent(@"Chromatics_SRankAlert",
+                                                ChromaticsSettings.ChromaticsSettingsIFTTTURL);
                                         }
                                     }
 
@@ -7683,13 +8331,14 @@ namespace Chromatics
 
                                         if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
                                         {
-                                            IFTTTController.FireIFTTTEvent(@"Chromatics_ReadyCheck", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
+                                            IFTTTController.FireIFTTTEvent(@"Chromatics_ReadyCheck",
+                                                ChromaticsSettings.ChromaticsSettingsIFTTTURL);
                                         }
                                     }
                                 }
-                                
+
                             }
-                            
+
                             //ACT
                             if (!blockACTVersion)
                             {
@@ -7823,7 +8472,7 @@ namespace Chromatics
                                                     SwitchACTJob("Bluemage");
                                                 break;
                                         }
-                                        
+
                                         //Custom Triggers
                                         if (ChromaticsSettings.ChromaticsSettingsACTFlashCustomTrigger)
                                         {
@@ -7851,19 +8500,33 @@ namespace Chromatics
                                         {
                                             if (_ACTData.CustomTriggerActive)
                                             {
-                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell));
-                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), "All");
-                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), false);
-                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), false);
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerBell), true);
+                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerBell));
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerBell), "All");
+                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerBell), false);
+                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerBell), false);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerBell), false, "All");
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerBell), true);
 
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
                                                     var FKACTTrigger_Collection = DeviceEffects.Functions;
                                                     for (var i2 = 0; i2 < FKACTTrigger_Collection.Length; i2++)
                                                     {
-                                                        GlobalApplyMapKeyLighting(FKACTTrigger_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                        GlobalApplyMapKeyLighting(FKACTTrigger_Collection[i2],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false, false);
                                                     }
                                                 }
 
@@ -7872,18 +8535,32 @@ namespace Chromatics
                                                     var LBACTTrigger_Collection = DeviceEffects.LightbarZones;
                                                     for (var i2 = 0; i2 < LBACTTrigger_Collection.Length; i2++)
                                                     {
-                                                        GlobalApplyMapLightbarLighting(LBACTTrigger_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                        GlobalApplyMapLightbarLighting(LBACTTrigger_Collection[i2],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false, false);
                                                     }
                                                 }
                                             }
                                             else
                                             {
-                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle));
-                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), "All");
-                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false);
-                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false);
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), true);
+                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerIdle));
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerIdle), "All");
+                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerIdle), false);
+                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerIdle), false);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerIdle), false, "All");
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingACTCustomTriggerIdle), true);
 
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
@@ -7895,7 +8572,9 @@ namespace Chromatics
                                                             break;
                                                         }
 
-                                                        GlobalApplyMapKeyLighting(FKACTTrigger_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false, false);
+                                                        GlobalApplyMapKeyLighting(FKACTTrigger_Collection[i2],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTCustomTriggerIdle), false, false);
                                                     }
                                                 }
 
@@ -7904,7 +8583,9 @@ namespace Chromatics
                                                     var LBACTTrigger_Collection = DeviceEffects.LightbarZones;
                                                     for (var i2 = 0; i2 < LBACTTrigger_Collection.Length; i2++)
                                                     {
-                                                        GlobalApplyMapLightbarLighting(LBACTTrigger_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTCustomTriggerIdle), false, false);
+                                                        GlobalApplyMapLightbarLighting(LBACTTrigger_Collection[i2],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTCustomTriggerIdle), false, false);
                                                     }
                                                 }
                                             }
@@ -7937,19 +8618,32 @@ namespace Chromatics
                                         {
                                             if (_ACTData.CustomTriggerActive)
                                             {
-                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild));
-                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), "All");
-                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), false);
-                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), false);
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), true);
+                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild));
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild),
+                                                    "All");
+                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild),
+                                                    false);
+                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild),
+                                                    false);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild),
+                                                    false, "All");
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild),
+                                                    true);
 
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
                                                     var FKACTTimer_Collection = DeviceEffects.Functions;
                                                     for (var i2 = 0; i2 < FKACTTimer_Collection.Length; i2++)
                                                     {
-                                                        GlobalApplyMapKeyLighting(FKACTTimer_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), false, false);
+                                                        GlobalApplyMapKeyLighting(FKACTTimer_Collection[i2],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTTimerBuild), false, false);
                                                     }
                                                 }
 
@@ -7958,18 +8652,31 @@ namespace Chromatics
                                                     var LBACTTimer_Collection = DeviceEffects.LightbarZones;
                                                     for (var i2 = 0; i2 < LBACTTimer_Collection.Length; i2++)
                                                     {
-                                                        GlobalApplyMapLightbarLighting(LBACTTimer_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerBuild), false, false);
+                                                        GlobalApplyMapLightbarLighting(LBACTTimer_Collection[i2],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTTimerBuild), false, false);
                                                     }
                                                 }
                                             }
                                             else
                                             {
-                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle));
-                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), "All");
-                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false);
-                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false);
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false, "All");
-                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), true);
+                                                GlobalApplyKeySingleLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle));
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle),
+                                                    "All");
+                                                GlobalApplyMapMouseLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle),
+                                                    false);
+                                                GlobalApplyMapHeadsetLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle),
+                                                    false);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle),
+                                                    false, "All");
+                                                GlobalApplyMapChromaLinkLighting(DevModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle),
+                                                    true);
 
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
@@ -7981,7 +8688,9 @@ namespace Chromatics
                                                             break;
                                                         }
 
-                                                        GlobalApplyMapKeyLighting(FKACTTimer_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false, false);
+                                                        GlobalApplyMapKeyLighting(FKACTTimer_Collection[i2],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTTimerIdle), false, false);
                                                     }
                                                 }
 
@@ -7990,7 +8699,9 @@ namespace Chromatics
                                                     var LBACTTimer_Collection = DeviceEffects.LightbarZones;
                                                     for (var i2 = 0; i2 < LBACTTimer_Collection.Length; i2++)
                                                     {
-                                                        GlobalApplyMapLightbarLighting(LBACTTimer_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTTimerIdle), false, false);
+                                                        GlobalApplyMapLightbarLighting(LBACTTimer_Collection[i2],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTTimerIdle), false, false);
                                                     }
                                                 }
                                             }
@@ -8013,49 +8724,74 @@ namespace Chromatics
 
                                             if (encounter != null)
                                             {
-                                                if ((encounter.BossName == "None") || _ACTData.Enemies.Contains(encounter.BossName))
+                                                if ((encounter.BossName == "None") ||
+                                                    _ACTData.Enemies.Contains(encounter.BossName))
                                                 {
                                                     if (_FKeyMode == FKeyMode.ACTEnrage)
                                                     {
                                                         var FKACTEnrage_Collection = DeviceEffects.Functions;
-                                                        var FKACTEnrage_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.CurrentEncounterTime, 0, encounter.EnrageTimer, 0, FKACTEnrage_Collection.Length);
-                                                        var enrageTimerCol = ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageCountdown);
+                                                        var FKACTEnrage_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.CurrentEncounterTime, 0,
+                                                                encounter.EnrageTimer, 0,
+                                                                FKACTEnrage_Collection.Length);
+                                                        var enrageTimerCol =
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTEnrageCountdown);
 
                                                         if (FKACTEnrage_Interpolate >= (encounter.EnrageTimer - 60))
                                                         {
-                                                            enrageTimerCol = ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageWarning);
+                                                            enrageTimerCol =
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTEnrageWarning);
                                                         }
 
                                                         for (var i2 = 0; i2 < FKACTEnrage_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTEnrage_Collection[i2], FKACTEnrage_Interpolate > i2 ? enrageTimerCol : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTEnrage_Collection[i2],
+                                                                FKACTEnrage_Interpolate > i2
+                                                                    ? enrageTimerCol
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTEnrageEmpty), false, false);
                                                         }
                                                     }
 
                                                     if (_LightbarMode == LightbarMode.ACTTracker)
                                                     {
                                                         var LBACTEnrage_Collection = DeviceEffects.LightbarZones;
-                                                        var LBACTEnrage_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDPS, 0, ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0], 0, LBACTEnrage_Collection.Length);
-                                                        var enrageTimerCol = ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageCountdown);
+                                                        var LBACTEnrage_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentDPS, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0],
+                                                                0, LBACTEnrage_Collection.Length);
+                                                        var enrageTimerCol =
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTEnrageCountdown);
 
                                                         if (LBACTEnrage_Interpolate >= (encounter.EnrageTimer - 60))
                                                         {
-                                                            enrageTimerCol = ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageWarning);
+                                                            enrageTimerCol =
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTEnrageWarning);
                                                         }
 
                                                         for (var i2 = 0; i2 < LBACTEnrage_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTEnrage_Collection[i2], LBACTEnrage_Interpolate > i2 ? enrageTimerCol : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTEnrage_Collection[i2],
+                                                                LBACTEnrage_Interpolate > i2
+                                                                    ? enrageTimerCol
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTEnrageEmpty), false, false);
                                                         }
                                                     }
                                                 }
                                             }
-                                            
+
 
                                             //DPS Tracker
                                             if (_ACTMode == ACTMode.DPS)
                                             {
-                                                if ((long)_ACTData.PlayerCurrentDPS >=
+                                                if ((long) _ACTData.PlayerCurrentDPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0])
                                                 {
                                                     if (!threshFlash)
@@ -8064,38 +8800,66 @@ namespace Chromatics
                                                         {
                                                             _rzFl1Cts.Cancel();
                                                             _corsairF1Cts.Cancel();
-                                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdFlash), 200, DeviceEffects.GlobalKeys3);
+                                                            GlobalFlash1(
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdFlash), 200,
+                                                                DeviceEffects.GlobalKeys3);
                                                         }
 
                                                         threshFlash = true;
                                                     }
 
-                                                    GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
-                                                        (ushort)(long)65535,
+                                                    GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess),
+                                                        (ushort) (long) 65535,
                                                         250);
 
                                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
                                                     GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
 
-                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
                                                     threshFlash = false;
 
                                                     var polACTDPSz =
-                                                        ((long)_ACTData.PlayerCurrentDPS - 0) * ((long)65535 - 0) / (ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0] - 0) + 0;
-                                                    var polACTDPSz2 = (_ACTData.PlayerCurrentDPS - 0) * (1.0 - 0.0) / (ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0] - 0) + 0.0;
-                                                    
+                                                        ((long) _ACTData.PlayerCurrentDPS - 0) * ((long) 65535 - 0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0] - 0) +
+                                                        0;
+                                                    var polACTDPSz2 =
+                                                        (_ACTData.PlayerCurrentDPS - 0) * (1.0 - 0.0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0] - 0) +
+                                                        0.0;
+
                                                     if (polACTDPSz >= 0 && polACTDPSz <= 65535)
                                                     {
-                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
                                                         {
                                                             GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
                                                                 ColorTranslator.FromHtml(ColorMappings
@@ -8129,7 +8893,13 @@ namespace Chromatics
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTDPSz2);
 
-                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTDPSz2 * 100));
+                                                        GlobalApplyOtherLightingViaInterpolation(
+                                                            DevModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdEmpty),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), 0, 100,
+                                                            Convert.ToInt32(polACTDPSz2 * 100));
                                                     }
                                                 }
 
@@ -8137,22 +8907,33 @@ namespace Chromatics
                                                 if (_FKeyMode == FKeyMode.ACTTracker)
                                                 {
                                                     var FKACTDPS_Collection = DeviceEffects.Functions;
-                                                    
-                                                    if ((long)_ACTData.PlayerCurrentDPS >= ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0])
+
+                                                    if ((long) _ACTData.PlayerCurrentDPS >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < FKACTDPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTDPS_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var FKACTDPS_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDPS, 0, ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0], FKACTDPS_Collection.Length, 0);
+                                                        var FKACTDPS_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentDPS, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0],
+                                                                FKACTDPS_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < FKACTDPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTDPS_Collection[i2], FKACTDPS_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTDPS_Collection[i2],
+                                                                FKACTDPS_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -8162,21 +8943,32 @@ namespace Chromatics
                                                 {
                                                     var LBACTDPS_Collection = DeviceEffects.LightbarZones;
 
-                                                    if ((long)_ACTData.PlayerCurrentDPS >= ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentDPS >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < LBACTDPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTDPS_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var LBACTDPS_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDPS, 0, ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0], LBACTDPS_Collection.Length, 0);
+                                                        var LBACTDPS_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentDPS, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0],
+                                                                LBACTDPS_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < LBACTDPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTDPS_Collection[i2], LBACTDPS_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTDPS_Collection[i2],
+                                                                LBACTDPS_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -8189,20 +8981,31 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTDPSMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDPSMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDPS, 0, ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0], ACTDPSMousePadCollection, 0);
+                                                    var ACTDPSMousePad_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0],
+                                                            ACTDPSMousePadCollection, 0);
 
                                                     for (int i = 0; i < ACTDPSMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ACTDPSMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i, ACTDPSMousePad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty), false);
                                                     }
                                                 }
-                                                
+
                                                 //Keypad
                                                 var ACTDPSKeypad_Collection = DeviceEffects.Keypadzones;
 
@@ -8212,21 +9015,27 @@ namespace Chromatics
                                                     for (int i = 0; i < ACTDPSKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
                                                             false, ACTDPSKeypad_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     var ACTDPSKeypad_Interpolate =
-                                                        Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDPS, 0, ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0],
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0],
                                                             ACTDPSKeypad_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTDPSKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ACTDPSKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                            ACTDPSKeypad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
                                                             false, ACTDPSKeypad_Collection[i]);
                                                     }
                                                 }
@@ -8239,20 +9048,32 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTDPSMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), ACTDPSMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            ACTDPSMulti_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDPSMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDPS, 0, ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0], ACTDPSMulti_Collection.Length, 0);
+                                                    var ACTDPSMulti_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0],
+                                                            ACTDPSMulti_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTDPSMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ACTDPSMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTDPSMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ACTDPSMulti_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
+                                                            ACTDPSMulti_Collection[i]);
                                                     }
                                                 }
-                                                
+
                                                 //Mouse
                                                 var ACTDPSMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                                 var ACTDPSMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
@@ -8262,28 +9083,40 @@ namespace Chromatics
                                                 {
                                                     for (int i = 0; i < ACTDPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTDPSMouseStrip_CollectionA[i],
+                                                            ACTDPSMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDPSMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDPS, 0, ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0], ACTDPSMouseStrip_CollectionA.Length, 0);
+                                                    var ACTDPSMouseStrip_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0],
+                                                            ACTDPSMouseStrip_CollectionA.Length, 0);
 
                                                     for (int i = 0; i < ACTDPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTDPSMouseStrip_CollectionA[i],
+                                                            ACTDPSMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
 
-                                                    
+
                                             }
 
                                             //HPS Tracker
                                             if (_ACTMode == ACTMode.HPS)
                                             {
-                                                
 
-                                                if ((long)_ACTData.PlayerCurrentHPS >=
+
+                                                if ((long) _ACTData.PlayerCurrentHPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
                                                 {
                                                     if (!threshFlash)
@@ -8292,41 +9125,71 @@ namespace Chromatics
                                                         {
                                                             _rzFl1Cts.Cancel();
                                                             _corsairF1Cts.Cancel();
-                                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdFlash), 200, DeviceEffects.GlobalKeys3);
+                                                            GlobalFlash1(
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdFlash), 200,
+                                                                DeviceEffects.GlobalKeys3);
                                                         }
 
                                                         threshFlash = true;
                                                     }
 
-                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                         !_inCutscene && !_inVegas))
                                                     {
-                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
-                                                            (ushort)(long)65535,
+                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            (ushort) (long) 65535,
                                                             250);
                                                     }
 
                                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
                                                     GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
 
-                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
                                                     threshFlash = false;
 
                                                     var polACTHPSz =
-                                                        ((long)_ACTData.PlayerCurrentHPS - 0) * ((long)65535 - 0) / (ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0] - 0) + 0;
-                                                    var polACTHPSz2 = ((long)_ACTData.PlayerCurrentHPS - 0) * (1.0 - 0.0) / (ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0] - 0) + 0.0;
+                                                        ((long) _ACTData.PlayerCurrentHPS - 0) * ((long) 65535 - 0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0] - 0) +
+                                                        0;
+                                                    var polACTHPSz2 =
+                                                        ((long) _ACTData.PlayerCurrentHPS - 0) * (1.0 - 0.0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0] - 0) +
+                                                        0.0;
 
                                                     if (polACTHPSz >= 0 && polACTHPSz <= 65535)
                                                     {
-                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
                                                         {
                                                             GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
                                                                 ColorTranslator.FromHtml(ColorMappings
@@ -8360,7 +9223,13 @@ namespace Chromatics
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTHPSz2);
 
-                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTHPSz2 * 100));
+                                                        GlobalApplyOtherLightingViaInterpolation(
+                                                            DevModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdEmpty),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), 0, 100,
+                                                            Convert.ToInt32(polACTHPSz2 * 100));
                                                     }
                                                 }
 
@@ -8369,21 +9238,32 @@ namespace Chromatics
                                                 {
                                                     var FKACTHPS_Collection = DeviceEffects.Functions;
 
-                                                    if ((long)_ACTData.PlayerCurrentHPS >= ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentHPS >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < FKACTHPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTHPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTHPS_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var FKACTHPS_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentHPS, 0, ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0], FKACTHPS_Collection.Length, 0);
+                                                        var FKACTHPS_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentHPS, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0],
+                                                                FKACTHPS_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < FKACTHPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTHPS_Collection[i2], FKACTHPS_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTHPS_Collection[i2],
+                                                                FKACTHPS_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -8393,21 +9273,32 @@ namespace Chromatics
                                                 {
                                                     var LBACTHPS_Collection = DeviceEffects.LightbarZones;
 
-                                                    if ((long)_ACTData.PlayerCurrentHPS >= ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentHPS >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < LBACTHPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTHPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTHPS_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var LBACTHPS_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentHPS, 0, ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0], LBACTHPS_Collection.Length, 0);
+                                                        var LBACTHPS_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentHPS, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0],
+                                                                LBACTHPS_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < LBACTHPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTHPS_Collection[i2], LBACTHPS_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTHPS_Collection[i2],
+                                                                LBACTHPS_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -8415,49 +9306,66 @@ namespace Chromatics
                                                 //Mousepad
                                                 var ACTHPSMousePadCollection = 5;
 
-                                                if ((long)_ACTData.PlayerCurrentHPS >=
+                                                if ((long) _ACTData.PlayerCurrentHPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTHPSMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTHPSMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentHPS, 0, ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0], ACTHPSMousePadCollection, 0);
+                                                    var ACTHPSMousePad_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentHPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0],
+                                                            ACTHPSMousePadCollection, 0);
 
                                                     for (int i = 0; i < ACTHPSMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ACTHPSMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i, ACTHPSMousePad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty), false);
                                                     }
                                                 }
 
                                                 //Keypad
                                                 var ACTHPSKeypad_Collection = DeviceEffects.Keypadzones;
 
-                                                if ((long)_ACTData.PlayerCurrentHPS >=
+                                                if ((long) _ACTData.PlayerCurrentHPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTHPSKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
                                                             false, ACTHPSKeypad_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     var ACTHPSKeypad_Interpolate =
-                                                        Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentHPS, 0, ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0],
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentHPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0],
                                                             ACTHPSKeypad_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTHPSKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ACTHPSKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                            ACTHPSKeypad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
                                                             false, ACTHPSKeypad_Collection[i]);
                                                     }
                                                 }
@@ -8465,22 +9373,34 @@ namespace Chromatics
                                                 //MultiKeyboard
                                                 var ACTHPSMulti_Collection = DeviceEffects.Multikeyzones;
 
-                                                if ((long)_ACTData.PlayerCurrentHPS >=
+                                                if ((long) _ACTData.PlayerCurrentHPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTHPSMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), ACTHPSMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            ACTHPSMulti_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTHPSMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentHPS, 0, ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0], ACTHPSMulti_Collection.Length, 0);
+                                                    var ACTHPSMulti_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentHPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0],
+                                                            ACTHPSMulti_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTHPSMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ACTHPSMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTHPSMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ACTHPSMulti_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
+                                                            ACTHPSMulti_Collection[i]);
                                                     }
                                                 }
 
@@ -8488,21 +9408,33 @@ namespace Chromatics
                                                 var ACTHPSMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                                 var ACTHPSMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
 
-                                                if ((long)_ACTData.PlayerCurrentHPS >=
+                                                if ((long) _ACTData.PlayerCurrentHPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTHPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTHPSMouseStrip_CollectionA[i], ACTHPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTHPSMouseStrip_CollectionA[i],
+                                                            ACTHPSMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTHPSMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentHPS, 0, ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0], ACTHPSMouseStrip_CollectionA.Length, 0);
+                                                    var ACTHPSMouseStrip_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentHPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0],
+                                                            ACTHPSMouseStrip_CollectionA.Length, 0);
 
                                                     for (int i = 0; i < ACTHPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTHPSMouseStrip_CollectionA[i], ACTHPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTHPSMouseStrip_CollectionA[i],
+                                                            ACTHPSMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -8510,9 +9442,9 @@ namespace Chromatics
                                             //GroupDPS Tracker
                                             if (_ACTMode == ACTMode.GroupDPS)
                                             {
-                                                
 
-                                                if ((long)_ACTData.PlayerCurrentGroupDPS >=
+
+                                                if ((long) _ACTData.PlayerCurrentGroupDPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
                                                 {
 
@@ -8522,41 +9454,72 @@ namespace Chromatics
                                                         {
                                                             _rzFl1Cts.Cancel();
                                                             _corsairF1Cts.Cancel();
-                                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdFlash), 200, DeviceEffects.GlobalKeys3);
+                                                            GlobalFlash1(
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdFlash), 200,
+                                                                DeviceEffects.GlobalKeys3);
                                                         }
 
                                                         threshFlash = true;
                                                     }
 
-                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                         !_inCutscene && !_inVegas))
                                                     {
-                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
-                                                            (ushort)(long)65535,
+                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            (ushort) (long) 65535,
                                                             250);
                                                     }
 
                                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
                                                     GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
 
-                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
                                                     threshFlash = false;
 
                                                     var polACTGroupDPSz =
-                                                        ((long)_ACTData.PlayerCurrentGroupDPS - 0) * ((long)65535 - 0) / (ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0] - 0) + 0;
-                                                    var polACTGroupDPSz2 = ((long)_ACTData.PlayerCurrentGroupDPS - 0) * (1.0 - 0.0) / (ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0] - 0) + 0.0;
+                                                        ((long) _ACTData.PlayerCurrentGroupDPS - 0) *
+                                                        ((long) 65535 - 0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0] -
+                                                         0) + 0;
+                                                    var polACTGroupDPSz2 =
+                                                        ((long) _ACTData.PlayerCurrentGroupDPS - 0) * (1.0 - 0.0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0] -
+                                                         0) + 0.0;
 
                                                     if (polACTGroupDPSz >= 0 && polACTGroupDPSz <= 65535)
                                                     {
-                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
                                                         {
                                                             GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
                                                                 ColorTranslator.FromHtml(ColorMappings
@@ -8592,7 +9555,13 @@ namespace Chromatics
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTGroupDPSz2);
 
-                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTGroupDPSz2 * 100));
+                                                        GlobalApplyOtherLightingViaInterpolation(
+                                                            DevModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdEmpty),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), 0, 100,
+                                                            Convert.ToInt32(polACTGroupDPSz2 * 100));
                                                     }
                                                 }
 
@@ -8601,21 +9570,33 @@ namespace Chromatics
                                                 {
                                                     var FKACTGroupDPS_Collection = DeviceEffects.Functions;
 
-                                                    if ((long)_ACTData.PlayerCurrentGroupDPS >= ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentGroupDPS >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < FKACTGroupDPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTGroupDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTGroupDPS_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var FKACTGroupDPS_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentGroupDPS, 0, ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0], FKACTGroupDPS_Collection.Length, 0);
+                                                        var FKACTGroupDPS_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentGroupDPS, 0,
+                                                                ChromaticsSettings
+                                                                    .ChromaticsSettingsACTGroupDPS[jobkey][0],
+                                                                FKACTGroupDPS_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < FKACTGroupDPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTGroupDPS_Collection[i2], FKACTGroupDPS_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTGroupDPS_Collection[i2],
+                                                                FKACTGroupDPS_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -8625,21 +9606,33 @@ namespace Chromatics
                                                 {
                                                     var LBACTGroupDPS_Collection = DeviceEffects.LightbarZones;
 
-                                                    if ((long)_ACTData.PlayerCurrentGroupDPS >= ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentGroupDPS >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < LBACTGroupDPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTGroupDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTGroupDPS_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var LBACTGroupDPS_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentGroupDPS, 0, ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0], LBACTGroupDPS_Collection.Length, 0);
+                                                        var LBACTGroupDPS_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentGroupDPS, 0,
+                                                                ChromaticsSettings
+                                                                    .ChromaticsSettingsACTGroupDPS[jobkey][0],
+                                                                LBACTGroupDPS_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < LBACTGroupDPS_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTGroupDPS_Collection[i2], LBACTGroupDPS_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTGroupDPS_Collection[i2],
+                                                                LBACTGroupDPS_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -8647,49 +9640,66 @@ namespace Chromatics
                                                 //Mousepad
                                                 var ACTGroupDPSMousePadCollection = 5;
 
-                                                if ((long)_ACTData.PlayerCurrentGroupDPS >=
+                                                if ((long) _ACTData.PlayerCurrentGroupDPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTGroupDPSMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTGroupDPSMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentGroupDPS, 0, ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0], ACTGroupDPSMousePadCollection, 0);
+                                                    var ACTGroupDPSMousePad_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentGroupDPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0],
+                                                            ACTGroupDPSMousePadCollection, 0);
 
                                                     for (int i = 0; i < ACTGroupDPSMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ACTGroupDPSMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i, ACTGroupDPSMousePad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty), false);
                                                     }
                                                 }
 
                                                 //Keypad
                                                 var ACTGroupDPSKeypad_Collection = DeviceEffects.Keypadzones;
 
-                                                if ((long)_ACTData.PlayerCurrentGroupDPS >=
+                                                if ((long) _ACTData.PlayerCurrentGroupDPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTGroupDPSKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
                                                             false, ACTGroupDPSKeypad_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     var ACTGroupDPSKeypad_Interpolate =
-                                                        Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentGroupDPS, 0, ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0],
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentGroupDPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0],
                                                             ACTGroupDPSKeypad_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTGroupDPSKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ACTGroupDPSKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                            ACTGroupDPSKeypad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
                                                             false, ACTGroupDPSKeypad_Collection[i]);
                                                     }
                                                 }
@@ -8697,22 +9707,34 @@ namespace Chromatics
                                                 //MultiKeyboard
                                                 var ACTGroupDPSMulti_Collection = DeviceEffects.Multikeyzones;
 
-                                                if ((long)_ACTData.PlayerCurrentGroupDPS >=
+                                                if ((long) _ACTData.PlayerCurrentGroupDPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTGroupDPSMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), ACTGroupDPSMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            ACTGroupDPSMulti_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTGroupDPSMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentGroupDPS, 0, ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0], ACTGroupDPSMulti_Collection.Length, 0);
+                                                    var ACTGroupDPSMulti_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentGroupDPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0],
+                                                            ACTGroupDPSMulti_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTGroupDPSMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ACTGroupDPSMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTGroupDPSMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ACTGroupDPSMulti_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
+                                                            ACTGroupDPSMulti_Collection[i]);
                                                     }
                                                 }
 
@@ -8720,21 +9742,33 @@ namespace Chromatics
                                                 var ACTGroupDPSMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                                 var ACTGroupDPSMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
 
-                                                if ((long)_ACTData.PlayerCurrentGroupDPS >=
+                                                if ((long) _ACTData.PlayerCurrentGroupDPS >=
                                                     ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTGroupDPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTGroupDPSMouseStrip_CollectionA[i], ACTGroupDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTGroupDPSMouseStrip_CollectionA[i],
+                                                            ACTGroupDPSMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTGroupDPSMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentGroupDPS, 0, ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0], ACTGroupDPSMouseStrip_CollectionA.Length, 0);
+                                                    var ACTGroupDPSMouseStrip_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentGroupDPS, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0],
+                                                            ACTGroupDPSMouseStrip_CollectionA.Length, 0);
 
                                                     for (int i = 0; i < ACTGroupDPSMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTGroupDPSMouseStrip_CollectionA[i], ACTGroupDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTGroupDPSMouseStrip_CollectionA[i],
+                                                            ACTGroupDPSMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -8742,9 +9776,9 @@ namespace Chromatics
                                             //Crit Tracker
                                             if (_ACTMode == ACTMode.CritPrc)
                                             {
-                                                
 
-                                                if ((long)_ACTData.PlayerCurrentCrit >=
+
+                                                if ((long) _ACTData.PlayerCurrentCrit >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
                                                 {
 
@@ -8754,41 +9788,71 @@ namespace Chromatics
                                                         {
                                                             _rzFl1Cts.Cancel();
                                                             _corsairF1Cts.Cancel();
-                                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdFlash), 200, DeviceEffects.GlobalKeys3);
+                                                            GlobalFlash1(
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdFlash), 200,
+                                                                DeviceEffects.GlobalKeys3);
                                                         }
 
                                                         threshFlash = true;
                                                     }
 
-                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                         !_inCutscene && !_inVegas))
                                                     {
-                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
-                                                            (ushort)(long)65535,
+                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            (ushort) (long) 65535,
                                                             250);
                                                     }
 
                                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
                                                     GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
 
-                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
                                                     threshFlash = false;
 
                                                     var polACTCritz =
-                                                        ((long)_ACTData.PlayerCurrentCrit - 0) * ((long)65535 - 0) / (ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0] - 0) + 0;
-                                                    var polACTCritz2 = ((long)_ACTData.PlayerCurrentCrit - 0) * (1.0 - 0.0) / (ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0] - 0) + 0.0;
+                                                        ((long) _ACTData.PlayerCurrentCrit - 0) * ((long) 65535 - 0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0] -
+                                                         0) + 0;
+                                                    var polACTCritz2 =
+                                                        ((long) _ACTData.PlayerCurrentCrit - 0) * (1.0 - 0.0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0] -
+                                                         0) + 0.0;
 
                                                     if (polACTCritz >= 0 && polACTCritz <= 65535)
                                                     {
-                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
                                                         {
                                                             GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
                                                                 ColorTranslator.FromHtml(ColorMappings
@@ -8822,7 +9886,13 @@ namespace Chromatics
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTCritz2);
 
-                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTCritz2 * 100));
+                                                        GlobalApplyOtherLightingViaInterpolation(
+                                                            DevModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdEmpty),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), 0, 100,
+                                                            Convert.ToInt32(polACTCritz2 * 100));
                                                     }
                                                 }
 
@@ -8831,21 +9901,32 @@ namespace Chromatics
                                                 {
                                                     var FKACTCrit_Collection = DeviceEffects.Functions;
 
-                                                    if ((long)_ACTData.PlayerCurrentCrit >= ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentCrit >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < FKACTCrit_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTCrit_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTCrit_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var FKACTCrit_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCrit, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0], FKACTCrit_Collection.Length, 0);
+                                                        var FKACTCrit_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentCrit, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTTargetCrit[
+                                                                    jobkey][0], FKACTCrit_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < FKACTCrit_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTCrit_Collection[i2], FKACTCrit_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTCrit_Collection[i2],
+                                                                FKACTCrit_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -8855,21 +9936,32 @@ namespace Chromatics
                                                 {
                                                     var LBACTCrit_Collection = DeviceEffects.LightbarZones;
 
-                                                    if ((long)_ACTData.PlayerCurrentCrit >= ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentCrit >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < LBACTCrit_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTCrit_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTCrit_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var LBACTCrit_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCrit, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0], LBACTCrit_Collection.Length, 0);
+                                                        var LBACTCrit_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentCrit, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTTargetCrit[
+                                                                    jobkey][0], LBACTCrit_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < LBACTCrit_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTCrit_Collection[i2], LBACTCrit_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTCrit_Collection[i2],
+                                                                LBACTCrit_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -8877,49 +9969,67 @@ namespace Chromatics
                                                 //Mousepad
                                                 var ACTCritMousePadCollection = 5;
 
-                                                if ((long)_ACTData.PlayerCurrentCrit >=
+                                                if ((long) _ACTData.PlayerCurrentCrit >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTCritMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTCritMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCrit, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0], ACTCritMousePadCollection, 0);
+                                                    var ACTCritMousePad_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentCrit, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][
+                                                                0], ACTCritMousePadCollection, 0);
 
                                                     for (int i = 0; i < ACTCritMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ACTCritMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i, ACTCritMousePad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty), false);
                                                     }
                                                 }
 
                                                 //Keypad
                                                 var ACTCritKeypad_Collection = DeviceEffects.Keypadzones;
 
-                                                if ((long)_ACTData.PlayerCurrentCrit >=
+                                                if ((long) _ACTData.PlayerCurrentCrit >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTCritKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
                                                             false, ACTCritKeypad_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     var ACTCritKeypad_Interpolate =
-                                                        Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCrit, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0],
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentCrit, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][
+                                                                0],
                                                             ACTCritKeypad_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTCritKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ACTCritKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                            ACTCritKeypad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
                                                             false, ACTCritKeypad_Collection[i]);
                                                     }
                                                 }
@@ -8927,22 +10037,34 @@ namespace Chromatics
                                                 //MultiKeyboard
                                                 var ACTCritMulti_Collection = DeviceEffects.Multikeyzones;
 
-                                                if ((long)_ACTData.PlayerCurrentCrit >=
+                                                if ((long) _ACTData.PlayerCurrentCrit >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTCritMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), ACTCritMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            ACTCritMulti_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTCritMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCrit, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0], ACTCritMulti_Collection.Length, 0);
+                                                    var ACTCritMulti_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentCrit, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][
+                                                                0], ACTCritMulti_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTCritMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ACTCritMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTCritMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ACTCritMulti_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
+                                                            ACTCritMulti_Collection[i]);
                                                     }
                                                 }
 
@@ -8950,21 +10072,33 @@ namespace Chromatics
                                                 var ACTCritMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                                 var ACTCritMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
 
-                                                if ((long)_ACTData.PlayerCurrentCrit >=
+                                                if ((long) _ACTData.PlayerCurrentCrit >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTCritMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTCritMouseStrip_CollectionA[i], ACTCritMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTCritMouseStrip_CollectionA[i],
+                                                            ACTCritMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTCritMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCrit, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][0], ACTCritMouseStrip_CollectionA.Length, 0);
+                                                    var ACTCritMouseStrip_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentCrit, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][
+                                                                0], ACTCritMouseStrip_CollectionA.Length, 0);
 
                                                     for (int i = 0; i < ACTCritMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTCritMouseStrip_CollectionA[i], ACTCritMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTCritMouseStrip_CollectionA[i],
+                                                            ACTCritMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -8972,9 +10106,9 @@ namespace Chromatics
                                             //DH Tracker
                                             if (_ACTMode == ACTMode.DHPrc)
                                             {
-                                                
 
-                                                if ((long)_ACTData.PlayerCurrentDH >=
+
+                                                if ((long) _ACTData.PlayerCurrentDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
                                                 {
                                                     if (!threshFlash)
@@ -8983,41 +10117,71 @@ namespace Chromatics
                                                         {
                                                             _rzFl1Cts.Cancel();
                                                             _corsairF1Cts.Cancel();
-                                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdFlash), 200, DeviceEffects.GlobalKeys3);
+                                                            GlobalFlash1(
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdFlash), 200,
+                                                                DeviceEffects.GlobalKeys3);
                                                         }
 
                                                         threshFlash = true;
                                                     }
 
-                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                         !_inCutscene && !_inVegas))
                                                     {
-                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
-                                                            (ushort)(long)65535,
+                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            (ushort) (long) 65535,
                                                             250);
                                                     }
 
                                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
                                                     GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
 
-                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
                                                     threshFlash = false;
 
                                                     var polACTDHz =
-                                                        ((long)_ACTData.PlayerCurrentDH - 0) * ((long)65535 - 0) / (ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0] - 0) + 0;
-                                                    var polACTDHz2 = ((long)_ACTData.PlayerCurrentDH - 0) * (1.0 - 0.0) / (ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0] - 0) + 0.0;
+                                                        ((long) _ACTData.PlayerCurrentDH - 0) * ((long) 65535 - 0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0] -
+                                                         0) + 0;
+                                                    var polACTDHz2 =
+                                                        ((long) _ACTData.PlayerCurrentDH - 0) * (1.0 - 0.0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0] -
+                                                         0) + 0.0;
 
                                                     if (polACTDHz >= 0 && polACTDHz <= 65535)
                                                     {
-                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
                                                         {
                                                             GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
                                                                 ColorTranslator.FromHtml(ColorMappings
@@ -9051,7 +10215,13 @@ namespace Chromatics
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTDHz2);
 
-                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTDHz2 * 100));
+                                                        GlobalApplyOtherLightingViaInterpolation(
+                                                            DevModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdEmpty),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), 0, 100,
+                                                            Convert.ToInt32(polACTDHz2 * 100));
                                                     }
                                                 }
 
@@ -9060,21 +10230,33 @@ namespace Chromatics
                                                 {
                                                     var FKACTDH_Collection = DeviceEffects.Functions;
 
-                                                    if ((long)_ACTData.PlayerCurrentDH >= ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentDH >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < FKACTDH_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTDH_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTDH_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var FKACTDH_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0], FKACTDH_Collection.Length, 0);
+                                                        var FKACTDH_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentDH, 0,
+                                                                ChromaticsSettings
+                                                                    .ChromaticsSettingsACTTargetDH[jobkey][0],
+                                                                FKACTDH_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < FKACTDH_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTDH_Collection[i2], FKACTDH_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTDH_Collection[i2],
+                                                                FKACTDH_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -9084,21 +10266,33 @@ namespace Chromatics
                                                 {
                                                     var LBACTDH_Collection = DeviceEffects.LightbarZones;
 
-                                                    if ((long)_ACTData.PlayerCurrentDH >= ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentDH >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < LBACTDH_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTDH_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTDH_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var LBACTDH_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0], LBACTDH_Collection.Length, 0);
+                                                        var LBACTDH_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentDH, 0,
+                                                                ChromaticsSettings
+                                                                    .ChromaticsSettingsACTTargetDH[jobkey][0],
+                                                                LBACTDH_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < LBACTDH_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTDH_Collection[i2], LBACTDH_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTDH_Collection[i2],
+                                                                LBACTDH_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -9106,49 +10300,66 @@ namespace Chromatics
                                                 //Mousepad
                                                 var ACTDHMousePadCollection = 5;
 
-                                                if ((long)_ACTData.PlayerCurrentDH >=
+                                                if ((long) _ACTData.PlayerCurrentDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTDHMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDHMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0], ACTDHMousePadCollection, 0);
+                                                    var ACTDHMousePad_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDH, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0],
+                                                            ACTDHMousePadCollection, 0);
 
                                                     for (int i = 0; i < ACTDHMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ACTDHMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i, ACTDHMousePad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty), false);
                                                     }
                                                 }
 
                                                 //Keypad
                                                 var ACTDHKeypad_Collection = DeviceEffects.Keypadzones;
 
-                                                if ((long)_ACTData.PlayerCurrentDH >=
+                                                if ((long) _ACTData.PlayerCurrentDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTDHKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
                                                             false, ACTDHKeypad_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     var ACTDHKeypad_Interpolate =
-                                                        Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0],
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDH, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0],
                                                             ACTDHKeypad_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTDHKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ACTDHKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                            ACTDHKeypad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
                                                             false, ACTDHKeypad_Collection[i]);
                                                     }
                                                 }
@@ -9156,22 +10367,34 @@ namespace Chromatics
                                                 //MultiKeyboard
                                                 var ACTDHMulti_Collection = DeviceEffects.Multikeyzones;
 
-                                                if ((long)_ACTData.PlayerCurrentDH >=
+                                                if ((long) _ACTData.PlayerCurrentDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTDHMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), ACTDHMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            ACTDHMulti_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDHMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0], ACTDHMulti_Collection.Length, 0);
+                                                    var ACTDHMulti_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDH, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0],
+                                                            ACTDHMulti_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTDHMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ACTDHMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTDHMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ACTDHMulti_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
+                                                            ACTDHMulti_Collection[i]);
                                                     }
                                                 }
 
@@ -9179,21 +10402,33 @@ namespace Chromatics
                                                 var ACTDHMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                                 var ACTDHMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
 
-                                                if ((long)_ACTData.PlayerCurrentDH >=
+                                                if ((long) _ACTData.PlayerCurrentDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTDHMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDHMouseStrip_CollectionA[i], ACTDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTDHMouseStrip_CollectionA[i],
+                                                            ACTDHMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDHMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0], ACTDHMouseStrip_CollectionA.Length, 0);
+                                                    var ACTDHMouseStrip_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDH, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0],
+                                                            ACTDHMouseStrip_CollectionA.Length, 0);
 
                                                     for (int i = 0; i < ACTDHMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDHMouseStrip_CollectionA[i], ACTDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTDHMouseStrip_CollectionA[i],
+                                                            ACTDHMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -9201,9 +10436,9 @@ namespace Chromatics
                                             //CritDH Tracker
                                             if (_ACTMode == ACTMode.CritDHPrc)
                                             {
-                                                
 
-                                                if ((long)_ACTData.PlayerCurrentCritDH >=
+
+                                                if ((long) _ACTData.PlayerCurrentCritDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
                                                 {
                                                     if (!threshFlash)
@@ -9212,41 +10447,71 @@ namespace Chromatics
                                                         {
                                                             _rzFl1Cts.Cancel();
                                                             _corsairF1Cts.Cancel();
-                                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdFlash), 200, DeviceEffects.GlobalKeys3);
+                                                            GlobalFlash1(
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdFlash), 200,
+                                                                DeviceEffects.GlobalKeys3);
                                                         }
 
                                                         threshFlash = true;
                                                     }
 
-                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                         !_inCutscene && !_inVegas))
                                                     {
-                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdBuild),
-                                                            (ushort)(long)65535,
+                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdBuild),
+                                                            (ushort) (long) 65535,
                                                             250);
                                                     }
 
                                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdBuild), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdBuild), 1.0);
                                                     GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdBuild), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdBuild), false, 1.0);
                                                     GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdBuild), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdBuild), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdBuild), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdBuild), 1.0);
 
-                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
                                                     threshFlash = false;
 
                                                     var polACTCritDHz =
-                                                        ((long)_ACTData.PlayerCurrentCritDH - 0) * ((long)65535 - 0) / (ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0] - 0) + 0;
-                                                    var polACTCritDHz2 = ((long)_ACTData.PlayerCurrentCritDH - 0) * (1.0 - 0.0) / (ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0] - 0) + 0.0;
+                                                        ((long) _ACTData.PlayerCurrentCritDH - 0) * ((long) 65535 - 0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey]
+                                                             [0] - 0) + 0;
+                                                    var polACTCritDHz2 =
+                                                        ((long) _ACTData.PlayerCurrentCritDH - 0) * (1.0 - 0.0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey]
+                                                             [0] - 0) + 0.0;
 
                                                     if (polACTCritDHz >= 0 && polACTCritDHz <= 65535)
                                                     {
-                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
                                                         {
                                                             GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
                                                                 ColorTranslator.FromHtml(ColorMappings
@@ -9282,7 +10547,13 @@ namespace Chromatics
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdSuccess), polACTCritDHz2);
 
-                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTCritDHz2 * 100));
+                                                        GlobalApplyOtherLightingViaInterpolation(
+                                                            DevModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdEmpty),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), 0, 100,
+                                                            Convert.ToInt32(polACTCritDHz2 * 100));
                                                     }
                                                 }
 
@@ -9291,21 +10562,32 @@ namespace Chromatics
                                                 {
                                                     var FKACTCritDH_Collection = DeviceEffects.Functions;
 
-                                                    if ((long)_ACTData.PlayerCurrentCritDH >= ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentCritDH >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < FKACTCritDH_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTCritDH_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTCritDH_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var FKACTCritDH_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCritDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0], FKACTCritDH_Collection.Length, 0);
+                                                        var FKACTCritDH_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentCritDH, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[
+                                                                    jobkey][0], FKACTCritDH_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < FKACTCritDH_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTCritDH_Collection[i2], FKACTCritDH_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTCritDH_Collection[i2],
+                                                                FKACTCritDH_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -9315,21 +10597,32 @@ namespace Chromatics
                                                 {
                                                     var LBACTCritDH_Collection = DeviceEffects.LightbarZones;
 
-                                                    if ((long)_ACTData.PlayerCurrentCritDH >= ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentCritDH >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < LBACTCritDH_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTCritDH_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTCritDH_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var LBACTCritDH_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCritDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0], LBACTCritDH_Collection.Length, 0);
+                                                        var LBACTCritDH_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentCritDH, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[
+                                                                    jobkey][0], LBACTCritDH_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < LBACTCritDH_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTCritDH_Collection[i2], LBACTCritDH_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTCritDH_Collection[i2],
+                                                                LBACTCritDH_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -9337,49 +10630,68 @@ namespace Chromatics
                                                 //Mousepad
                                                 var ACTCritDHMousePadCollection = 5;
 
-                                                if ((long)_ACTData.PlayerCurrentCritDH >=
+                                                if ((long) _ACTData.PlayerCurrentCritDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTCritDHMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTCritDHMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCritDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0], ACTCritDHMousePadCollection, 0);
+                                                    var ACTCritDHMousePad_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentCritDH, 0,
+                                                            ChromaticsSettings
+                                                                .ChromaticsSettingsACTTargetCritDH[jobkey][0],
+                                                            ACTCritDHMousePadCollection, 0);
 
                                                     for (int i = 0; i < ACTCritDHMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ACTCritDHMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i, ACTCritDHMousePad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty), false);
                                                     }
                                                 }
 
                                                 //Keypad
                                                 var ACTCritDHKeypad_Collection = DeviceEffects.Keypadzones;
 
-                                                if ((long)_ACTData.PlayerCurrentCritDH >=
+                                                if ((long) _ACTData.PlayerCurrentCritDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTCritDHKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
                                                             false, ACTCritDHKeypad_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     var ACTCritDHKeypad_Interpolate =
-                                                        Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCritDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0],
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentCritDH, 0,
+                                                            ChromaticsSettings
+                                                                .ChromaticsSettingsACTTargetCritDH[jobkey][0],
                                                             ACTCritDHKeypad_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTCritDHKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ACTCritDHKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                            ACTCritDHKeypad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
                                                             false, ACTCritDHKeypad_Collection[i]);
                                                     }
                                                 }
@@ -9387,22 +10699,35 @@ namespace Chromatics
                                                 //MultiKeyboard
                                                 var ACTCritDHMulti_Collection = DeviceEffects.Multikeyzones;
 
-                                                if ((long)_ACTData.PlayerCurrentCritDH >=
+                                                if ((long) _ACTData.PlayerCurrentCritDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTCritDHMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), ACTCritDHMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            ACTCritDHMulti_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTCritDHMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCritDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0], ACTCritDHMulti_Collection.Length, 0);
+                                                    var ACTCritDHMulti_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentCritDH, 0,
+                                                            ChromaticsSettings
+                                                                .ChromaticsSettingsACTTargetCritDH[jobkey][0],
+                                                            ACTCritDHMulti_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTCritDHMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ACTCritDHMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTCritDHMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ACTCritDHMulti_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
+                                                            ACTCritDHMulti_Collection[i]);
                                                     }
                                                 }
 
@@ -9410,21 +10735,34 @@ namespace Chromatics
                                                 var ACTCritDHMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                                 var ACTCritDHMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
 
-                                                if ((long)_ACTData.PlayerCurrentCritDH >=
+                                                if ((long) _ACTData.PlayerCurrentCritDH >=
                                                     ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTCritDHMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTCritDHMouseStrip_CollectionA[i], ACTCritDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTCritDHMouseStrip_CollectionA[i],
+                                                            ACTCritDHMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTCritDHMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentCritDH, 0, ChromaticsSettings.ChromaticsSettingsACTTargetCritDH[jobkey][0], ACTCritDHMouseStrip_CollectionA.Length, 0);
+                                                    var ACTCritDHMouseStrip_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentCritDH, 0,
+                                                            ChromaticsSettings
+                                                                .ChromaticsSettingsACTTargetCritDH[jobkey][0],
+                                                            ACTCritDHMouseStrip_CollectionA.Length, 0);
 
                                                     for (int i = 0; i < ACTCritDHMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTCritDHMouseStrip_CollectionA[i], ACTCritDHMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTCritDHMouseStrip_CollectionA[i],
+                                                            ACTCritDHMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -9432,9 +10770,9 @@ namespace Chromatics
                                             //Overheal Tracker
                                             if (_ACTMode == ACTMode.OverhealPrc)
                                             {
-                                                
 
-                                                if ((long)_ACTData.PlayerCurrentOverheal >=
+
+                                                if ((long) _ACTData.PlayerCurrentOverheal >=
                                                     ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
                                                 {
                                                     if (!threshFlash)
@@ -9443,41 +10781,72 @@ namespace Chromatics
                                                         {
                                                             _rzFl1Cts.Cancel();
                                                             _corsairF1Cts.Cancel();
-                                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdFlash), 200, DeviceEffects.GlobalKeys3);
+                                                            GlobalFlash1(
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdFlash), 200,
+                                                                DeviceEffects.GlobalKeys3);
                                                         }
 
                                                         threshFlash = true;
                                                     }
 
-                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                         !_inCutscene && !_inVegas))
                                                     {
-                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
-                                                            (ushort)(long)65535,
+                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            (ushort) (long) 65535,
                                                             250);
                                                     }
 
                                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
                                                     GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
 
-                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
                                                     threshFlash = false;
 
                                                     var polACTOverhealz =
-                                                        ((long)_ACTData.PlayerCurrentOverheal - 0) * ((long)65535 - 0) / (ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0] - 0) + 0;
-                                                    var polACTOverhealz2 = ((long)_ACTData.PlayerCurrentOverheal - 0) * (1.0 - 0.0) / (ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0] - 0) + 0.0;
+                                                        ((long) _ACTData.PlayerCurrentOverheal - 0) *
+                                                        ((long) 65535 - 0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0] -
+                                                         0) + 0;
+                                                    var polACTOverhealz2 =
+                                                        ((long) _ACTData.PlayerCurrentOverheal - 0) * (1.0 - 0.0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0] -
+                                                         0) + 0.0;
 
                                                     if (polACTOverhealz >= 0 && polACTOverhealz <= 65535)
                                                     {
-                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
                                                         {
                                                             GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
                                                                 ColorTranslator.FromHtml(ColorMappings
@@ -9513,7 +10882,13 @@ namespace Chromatics
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTOverhealz2);
 
-                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTOverhealz2 * 100));
+                                                        GlobalApplyOtherLightingViaInterpolation(
+                                                            DevModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdEmpty),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), 0, 100,
+                                                            Convert.ToInt32(polACTOverhealz2 * 100));
                                                     }
                                                 }
 
@@ -9522,21 +10897,33 @@ namespace Chromatics
                                                 {
                                                     var FKACTOverheal_Collection = DeviceEffects.Functions;
 
-                                                    if ((long)_ACTData.PlayerCurrentOverheal >= ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentOverheal >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < FKACTOverheal_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTOverheal_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTOverheal_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var FKACTOverheal_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentOverheal, 0, ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0], FKACTOverheal_Collection.Length, 0);
+                                                        var FKACTOverheal_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentOverheal, 0,
+                                                                ChromaticsSettings
+                                                                    .ChromaticsSettingsACTOverheal[jobkey][0],
+                                                                FKACTOverheal_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < FKACTOverheal_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTOverheal_Collection[i2], FKACTOverheal_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTOverheal_Collection[i2],
+                                                                FKACTOverheal_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -9546,21 +10933,33 @@ namespace Chromatics
                                                 {
                                                     var LBACTOverheal_Collection = DeviceEffects.LightbarZones;
 
-                                                    if ((long)_ACTData.PlayerCurrentOverheal >= ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentOverheal >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < LBACTOverheal_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTOverheal_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTOverheal_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var LBACTOverheal_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentOverheal, 0, ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0], LBACTOverheal_Collection.Length, 0);
+                                                        var LBACTOverheal_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentOverheal, 0,
+                                                                ChromaticsSettings
+                                                                    .ChromaticsSettingsACTOverheal[jobkey][0],
+                                                                LBACTOverheal_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < LBACTOverheal_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTOverheal_Collection[i2], LBACTOverheal_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTOverheal_Collection[i2],
+                                                                LBACTOverheal_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -9568,49 +10967,66 @@ namespace Chromatics
                                                 //Mousepad
                                                 var ACTOverhealMousePadCollection = 5;
 
-                                                if ((long)_ACTData.PlayerCurrentOverheal >=
+                                                if ((long) _ACTData.PlayerCurrentOverheal >=
                                                     ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTOverhealMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTOverhealMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentOverheal, 0, ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0], ACTOverhealMousePadCollection, 0);
+                                                    var ACTOverhealMousePad_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentOverheal, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0],
+                                                            ACTOverhealMousePadCollection, 0);
 
                                                     for (int i = 0; i < ACTOverhealMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ACTOverhealMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i, ACTOverhealMousePad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty), false);
                                                     }
                                                 }
 
                                                 //Keypad
                                                 var ACTOverhealKeypad_Collection = DeviceEffects.Keypadzones;
 
-                                                if ((long)_ACTData.PlayerCurrentOverheal >=
+                                                if ((long) _ACTData.PlayerCurrentOverheal >=
                                                     ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTOverhealKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
                                                             false, ACTOverhealKeypad_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     var ACTOverhealKeypad_Interpolate =
-                                                        Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentOverheal, 0, ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0],
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentOverheal, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0],
                                                             ACTOverhealKeypad_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTOverhealKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ACTOverhealKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                            ACTOverhealKeypad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
                                                             false, ACTOverhealKeypad_Collection[i]);
                                                     }
                                                 }
@@ -9618,22 +11034,34 @@ namespace Chromatics
                                                 //MultiKeyboard
                                                 var ACTOverhealMulti_Collection = DeviceEffects.Multikeyzones;
 
-                                                if ((long)_ACTData.PlayerCurrentOverheal >=
+                                                if ((long) _ACTData.PlayerCurrentOverheal >=
                                                     ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTOverhealMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), ACTOverhealMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            ACTOverhealMulti_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTOverhealMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentOverheal, 0, ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0], ACTOverhealMulti_Collection.Length, 0);
+                                                    var ACTOverhealMulti_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentOverheal, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0],
+                                                            ACTOverhealMulti_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTOverhealMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ACTOverhealMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTOverhealMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ACTOverhealMulti_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
+                                                            ACTOverhealMulti_Collection[i]);
                                                     }
                                                 }
 
@@ -9641,21 +11069,33 @@ namespace Chromatics
                                                 var ACTOverhealMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                                 var ACTOverhealMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
 
-                                                if ((long)_ACTData.PlayerCurrentOverheal >=
+                                                if ((long) _ACTData.PlayerCurrentOverheal >=
                                                     ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTOverhealMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTOverhealMouseStrip_CollectionA[i], ACTOverhealMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTOverhealMouseStrip_CollectionA[i],
+                                                            ACTOverhealMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTOverhealMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentOverheal, 0, ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0], ACTOverhealMouseStrip_CollectionA.Length, 0);
+                                                    var ACTOverhealMouseStrip_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentOverheal, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0],
+                                                            ACTOverhealMouseStrip_CollectionA.Length, 0);
 
                                                     for (int i = 0; i < ACTOverhealMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTOverhealMouseStrip_CollectionA[i], ACTOverhealMouseStrip_CollectionB[i],  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTOverhealMouseStrip_CollectionA[i],
+                                                            ACTOverhealMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -9663,7 +11103,7 @@ namespace Chromatics
                                             //Damage Tracker
                                             if (_ACTMode == ACTMode.DamagePrc)
                                             {
-                                                if ((long)_ACTData.PlayerCurrentDamage >=
+                                                if ((long) _ACTData.PlayerCurrentDamage >=
                                                     ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
                                                 {
                                                     if (!threshFlash)
@@ -9672,41 +11112,71 @@ namespace Chromatics
                                                         {
                                                             _rzFl1Cts.Cancel();
                                                             _corsairF1Cts.Cancel();
-                                                            GlobalFlash1(ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdFlash), 200, DeviceEffects.GlobalKeys3);
+                                                            GlobalFlash1(
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdFlash), 200,
+                                                                DeviceEffects.GlobalKeys3);
                                                         }
 
                                                         threshFlash = true;
                                                     }
 
-                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                         !_inCutscene && !_inVegas))
                                                     {
-                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
-                                                            (ushort)(long)65535,
+                                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            (ushort) (long) 65535,
                                                             250);
                                                     }
 
                                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
                                                     GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), false, 1.0);
                                                     GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 1.0);
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 1.0);
 
-                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 100);
+                                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty),
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdSuccess), 0, 100, 100);
                                                 }
                                                 else
                                                 {
                                                     threshFlash = false;
 
                                                     var polACTDamagez =
-                                                        ((long)_ACTData.PlayerCurrentDamage - 0) * ((long)65535 - 0) / (ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0] - 0) + 0;
-                                                    var polACTDamagez2 = ((long)_ACTData.PlayerCurrentDamage - 0) * (1.0 - 0.0) / (ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0] - 0) + 0.0;
+                                                        ((long) _ACTData.PlayerCurrentDamage - 0) * ((long) 65535 - 0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0] -
+                                                         0) + 0;
+                                                    var polACTDamagez2 =
+                                                        ((long) _ACTData.PlayerCurrentDamage - 0) * (1.0 - 0.0) /
+                                                        (ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0] -
+                                                         0) + 0.0;
 
                                                     if (polACTDamagez >= 0 && polACTDamagez <= 65535)
                                                     {
-                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
                                                         {
                                                             GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
                                                                 ColorTranslator.FromHtml(ColorMappings
@@ -9740,7 +11210,13 @@ namespace Chromatics
                                                             ColorTranslator.FromHtml(ColorMappings
                                                                 .ColorMappingACTThresholdBuild), polACTDamagez2);
 
-                                                        GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, Convert.ToInt32(polACTDamagez2 * 100));
+                                                        GlobalApplyOtherLightingViaInterpolation(
+                                                            DevModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdEmpty),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), 0, 100,
+                                                            Convert.ToInt32(polACTDamagez2 * 100));
                                                     }
                                                 }
 
@@ -9749,21 +11225,32 @@ namespace Chromatics
                                                 {
                                                     var FKACTDamage_Collection = DeviceEffects.Functions;
 
-                                                    if ((long)_ACTData.PlayerCurrentDamage >= ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentDamage >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < FKACTDamage_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTDamage_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTDamage_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var FKACTDamage_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDamage, 0, ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0], FKACTDamage_Collection.Length, 0);
+                                                        var FKACTDamage_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentDamage, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][
+                                                                    0], FKACTDamage_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < FKACTDamage_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapKeyLighting(FKACTDamage_Collection[i2], FKACTDamage_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapKeyLighting(FKACTDamage_Collection[i2],
+                                                                FKACTDamage_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -9773,21 +11260,32 @@ namespace Chromatics
                                                 {
                                                     var LBACTDamage_Collection = DeviceEffects.LightbarZones;
 
-                                                    if ((long)_ACTData.PlayerCurrentDamage >= ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
+                                                    if ((long) _ACTData.PlayerCurrentDamage >=
+                                                        ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
                                                     {
                                                         for (var i2 = 0; i2 < LBACTDamage_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTDamage_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTDamage_Collection[i2],
+                                                                ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdSuccess), false, false);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        var LBACTDamage_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDamage, 0, ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0], LBACTDamage_Collection.Length, 0);
+                                                        var LBACTDamage_Interpolate =
+                                                            Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                                (long) _ACTData.PlayerCurrentDamage, 0,
+                                                                ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][
+                                                                    0], LBACTDamage_Collection.Length, 0);
 
                                                         for (var i2 = 0; i2 < LBACTDamage_Collection.Length; i2++)
                                                         {
-                                                            GlobalApplyMapLightbarLighting(LBACTDamage_Collection[i2], LBACTDamage_Interpolate > i2 ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                            GlobalApplyMapLightbarLighting(LBACTDamage_Collection[i2],
+                                                                LBACTDamage_Interpolate > i2
+                                                                    ? ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdBuild)
+                                                                    : ColorTranslator.FromHtml(ColorMappings
+                                                                        .ColorMappingACTThresholdEmpty), false, false);
                                                         }
                                                     }
                                                 }
@@ -9795,49 +11293,66 @@ namespace Chromatics
                                                 //Mousepad
                                                 var ACTDamageMousePadCollection = 5;
 
-                                                if ((long)_ACTData.PlayerCurrentDamage >=
+                                                if ((long) _ACTData.PlayerCurrentDamage >=
                                                     ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTDamageMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDamageMousePad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDamage, 0, ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0], ACTDamageMousePadCollection, 0);
+                                                    var ACTDamageMousePad_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDamage, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0],
+                                                            ACTDamageMousePadCollection, 0);
 
                                                     for (int i = 0; i < ACTDamageMousePadCollection; i++)
                                                     {
-                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ACTDamageMousePad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                        GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i,
+                                                            9 - i, 4 - i, ACTDamageMousePad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty), false);
                                                     }
                                                 }
 
                                                 //Keypad
                                                 var ACTDamageKeypad_Collection = DeviceEffects.Keypadzones;
 
-                                                if ((long)_ACTData.PlayerCurrentDamage >=
+                                                if ((long) _ACTData.PlayerCurrentDamage >=
                                                     ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTDamageKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
                                                             false, ACTDamageKeypad_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     var ACTDamageKeypad_Interpolate =
-                                                        Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDamage, 0, ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0],
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDamage, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0],
                                                             ACTDamageKeypad_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTDamageKeypad_Collection.Length; i++)
                                                     {
                                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
-                                                            ACTDamageKeypad_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                            ACTDamageKeypad_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
                                                             false, ACTDamageKeypad_Collection[i]);
                                                     }
                                                 }
@@ -9845,22 +11360,34 @@ namespace Chromatics
                                                 //MultiKeyboard
                                                 var ACTDamageMulti_Collection = DeviceEffects.Multikeyzones;
 
-                                                if ((long)_ACTData.PlayerCurrentDamage >=
+                                                if ((long) _ACTData.PlayerCurrentDamage >=
                                                     ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTDamageMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), ACTDamageMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess),
+                                                            ACTDamageMulti_Collection[i]);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDamageMulti_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDamage, 0, ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0], ACTDamageMulti_Collection.Length, 0);
+                                                    var ACTDamageMulti_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDamage, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0],
+                                                            ACTDamageMulti_Collection.Length, 0);
 
                                                     for (int i = 0; i < ACTDamageMulti_Collection.Length; i++)
                                                     {
-                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ACTDamageMulti_Interpolate > i ? ColorTranslator.FromHtml(ColorMappings
-                                                            .ColorMappingACTThresholdBuild) : ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTDamageMulti_Collection[i]);
+                                                        GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                            ACTDamageMulti_Interpolate > i
+                                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdBuild)
+                                                                : ColorTranslator.FromHtml(ColorMappings
+                                                                    .ColorMappingACTThresholdEmpty),
+                                                            ACTDamageMulti_Collection[i]);
                                                     }
                                                 }
 
@@ -9868,21 +11395,33 @@ namespace Chromatics
                                                 var ACTDamageMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
                                                 var ACTDamageMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
 
-                                                if ((long)_ACTData.PlayerCurrentDamage >=
+                                                if ((long) _ACTData.PlayerCurrentDamage >=
                                                     ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
                                                 {
                                                     for (int i = 0; i < ACTDamageMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDamageMouseStrip_CollectionA[i], ACTDamageMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTDamageMouseStrip_CollectionA[i],
+                                                            ACTDamageMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    var ACTDamageMouseStrip_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Long((long)_ACTData.PlayerCurrentDamage, 0, ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0], ACTDamageMouseStrip_CollectionA.Length, 0);
+                                                    var ACTDamageMouseStrip_Interpolate =
+                                                        Helpers.FFXIVInterpolation.Interpolate_Long(
+                                                            (long) _ACTData.PlayerCurrentDamage, 0,
+                                                            ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0],
+                                                            ACTDamageMouseStrip_CollectionA.Length, 0);
 
                                                     for (int i = 0; i < ACTDamageMouseStrip_CollectionA.Length; i++)
                                                     {
-                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDamageMouseStrip_CollectionA[i], ACTDamageMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false);
+                                                        GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                            ACTDamageMouseStrip_CollectionA[i],
+                                                            ACTDamageMouseStrip_CollectionB[i],
+                                                            ColorTranslator.FromHtml(ColorMappings
+                                                                .ColorMappingACTThresholdSuccess), false);
                                                     }
                                                 }
                                             }
@@ -9894,23 +11433,38 @@ namespace Chromatics
                                             _corsairF1Cts.Cancel();
                                             threshFlash = false;
 
-                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) || (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene && !_inVegas))
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
                                             {
-                                                GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
-                                                    (ushort)(long)65535,
+                                                GlobalUpdateBulbStateBrightness(BulbModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingACTThresholdEmpty),
+                                                    (ushort) (long) 65535,
                                                     250);
                                             }
 
                                             GlobalApplyKeySingleLightingBrightness(DevModeTypes.ACTTracker,
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0.0);
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                0.0);
                                             GlobalApplyMapMouseLightingBrightness(DevModeTypes.ACTTracker,
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 0.0);
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                false, 0.0);
                                             GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.ACTTracker,
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), false, 0.0);
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                false, 0.0);
                                             GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.ACTTracker,
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0.0);
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                0.0);
 
-                                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,  ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess), 0, 100, 0);
+                                            GlobalApplyOtherLightingViaInterpolation(DevModeTypes.ACTTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty),
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdSuccess),
+                                                0, 100, 0);
 
                                             //Functions
                                             if (_FKeyMode == FKeyMode.ACTTracker)
@@ -9924,7 +11478,9 @@ namespace Chromatics
                                                         break;
                                                     }
 
-                                                    GlobalApplyMapKeyLighting(FKACTDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                    GlobalApplyMapKeyLighting(FKACTDPS_Collection[i2],
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty), false, false);
                                                 }
                                             }
 
@@ -9939,7 +11495,9 @@ namespace Chromatics
                                                         break;
                                                     }
 
-                                                    GlobalApplyMapKeyLighting(FKACTEnrage_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
+                                                    GlobalApplyMapKeyLighting(FKACTEnrage_Collection[i2],
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTEnrageEmpty), false, false);
                                                 }
                                             }
 
@@ -9950,7 +11508,9 @@ namespace Chromatics
 
                                                 for (var i2 = 0; i2 < LBACTDPS_Collection.Length; i2++)
                                                 {
-                                                    GlobalApplyMapLightbarLighting(LBACTDPS_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, false);
+                                                    GlobalApplyMapLightbarLighting(LBACTDPS_Collection[i2],
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTThresholdEmpty), false, false);
                                                 }
                                             }
 
@@ -9960,7 +11520,9 @@ namespace Chromatics
 
                                                 for (var i2 = 0; i2 < LBACTEnrage_Collection.Length; i2++)
                                                 {
-                                                    GlobalApplyMapLightbarLighting(LBACTEnrage_Collection[i2], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTEnrageEmpty), false, false);
+                                                    GlobalApplyMapLightbarLighting(LBACTEnrage_Collection[i2],
+                                                        ColorTranslator.FromHtml(ColorMappings
+                                                            .ColorMappingACTEnrageEmpty), false, false);
                                                 }
                                             }
 
@@ -9969,7 +11531,9 @@ namespace Chromatics
 
                                             for (int i = 0; i < ACTDPSMousePadCollection; i++)
                                             {
-                                                GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                GlobalApplyMapPadLighting(DevModeTypes.ACTTracker, 10 + i, 9 - i, 4 - i,
+                                                    ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingACTThresholdEmpty), false);
                                             }
 
                                             //Keypad
@@ -9977,7 +11541,10 @@ namespace Chromatics
 
                                             for (int i = 0; i < ACTDPSKeypad_Collection.Length; i++)
                                             {
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false, ACTDPSKeypad_Collection[i]);
+                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingACTThresholdEmpty), false,
+                                                    ACTDPSKeypad_Collection[i]);
                                             }
 
                                             //MultiKeyboard
@@ -9985,7 +11552,10 @@ namespace Chromatics
 
                                             for (int i = 0; i < ACTDPSMulti_Collection.Length; i++)
                                             {
-                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker, ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), ACTDPSMulti_Collection[i]);
+                                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.ACTTracker,
+                                                    ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingACTThresholdEmpty),
+                                                    ACTDPSMulti_Collection[i]);
                                             }
 
                                             //Mouse
@@ -9994,7 +11564,10 @@ namespace Chromatics
 
                                             for (int i = 0; i < ACTDPSMouseStrip_CollectionA.Length; i++)
                                             {
-                                                GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker, ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i], ColorTranslator.FromHtml(ColorMappings.ColorMappingACTThresholdEmpty), false);
+                                                GlobalApplyStripMouseLighting(DevModeTypes.ACTTracker,
+                                                    ACTDPSMouseStrip_CollectionA[i], ACTDPSMouseStrip_CollectionB[i],
+                                                    ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingACTThresholdEmpty), false);
                                             }
                                         }
                                     }
@@ -10006,14 +11579,16 @@ namespace Chromatics
                             {
                                 if (!_dfpopOnce)
                                 {
-                                    if (ChromaticsSettings.ChromaticsSettingsCastEnabled && ChromaticsSettings.ChromaticsSettingsCastDFBell)
+                                    if (ChromaticsSettings.ChromaticsSettingsCastEnabled &&
+                                        ChromaticsSettings.ChromaticsSettingsCastDFBell)
                                     {
                                         SharpcastController.CastMedia("dfpop_notify.mp3");
                                     }
 
                                     if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
                                     {
-                                        IFTTTController.FireIFTTTEvent(@"Chromatics_DFBell", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
+                                        IFTTTController.FireIFTTTEvent(@"Chromatics_DFBell",
+                                            ChromaticsSettings.ChromaticsSettingsIFTTTURL);
                                     }
 
                                     _dfpopOnce = true;
@@ -10075,7 +11650,8 @@ namespace Chromatics
                                         foreach (var f in DeviceEffects.LightbarZones)
                                         {
                                             GlobalApplyMapLightbarLighting(f,
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell), false,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingDutyFinderBell),
+                                                false,
                                                 false);
                                         }
                                     }
@@ -10103,13 +11679,20 @@ namespace Chromatics
                                     GlobalApplyMapKeypadLighting(DevMultiModeTypes.DutyFinder, baseColor, false, "All");
                                     GlobalApplyMapChromaLinkLighting(DevModeTypes.DutyFinder, baseColor, true);
 
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide2", "RightSide2", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide3", "RightSide3", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide4", "RightSide4", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide5", "RightSide5", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide6", "RightSide6", baseColor, false);
-                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide7", "RightSide7", baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide1", "RightSide1",
+                                        baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide2", "RightSide2",
+                                        baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide3", "RightSide3",
+                                        baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide4", "RightSide4",
+                                        baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide5", "RightSide5",
+                                        baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide6", "RightSide6",
+                                        baseColor, false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.DutyFinder, "LeftSide7", "RightSide7",
+                                        baseColor, false);
 
                                     GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 14, 5, 0, baseColor, false);
                                     GlobalApplyMapPadLighting(DevModeTypes.DutyFinder, 13, 6, 1, baseColor, false);
@@ -10131,7 +11714,7 @@ namespace Chromatics
                             if (ChromaticsSettings.ChromaticsSettingsCastAlarmBell)
                             {
                                 if (_currentET != FFXIVHelpers.FetchEorzeaTime().Minute)
-                                { 
+                                {
                                     var timeLock = ChromaticsSettings.ChromaticsSettingsCastAlarmTime.Split(' ');
                                     var setHour = Int32.Parse(timeLock[0].Split(':')[0]);
                                     var setMinute = Int32.Parse(timeLock[0].Split(':')[1]);
@@ -10140,7 +11723,7 @@ namespace Chromatics
                                     {
                                         setHour = 0;
                                     }
-                                    
+
                                     if (timeLock[1] == "PM")
                                     {
                                         setHour = setHour + 12;
@@ -10151,8 +11734,9 @@ namespace Chromatics
                                         setHour = 12;
                                     }
 
-                                    
-                                    if (FFXIVHelpers.FetchEorzeaTime().Hour == setHour && FFXIVHelpers.FetchEorzeaTime().Minute == setMinute)
+
+                                    if (FFXIVHelpers.FetchEorzeaTime().Hour == setHour &&
+                                        FFXIVHelpers.FetchEorzeaTime().Minute == setMinute)
                                     {
                                         if (ChromaticsSettings.ChromaticsSettingsCastEnabled)
                                         {
@@ -10161,7 +11745,8 @@ namespace Chromatics
 
                                         if (ChromaticsSettings.ChromaticsSettingsIFTTTEnable)
                                         {
-                                            IFTTTController.FireIFTTTEvent(@"Chromatics_Alarm", ChromaticsSettings.ChromaticsSettingsIFTTTURL);
+                                            IFTTTController.FireIFTTTEvent(@"Chromatics_Alarm",
+                                                ChromaticsSettings.ChromaticsSettingsIFTTTURL);
                                         }
                                     }
 
@@ -10171,11 +11756,12 @@ namespace Chromatics
 
 
                         }
-                        
+
 
                         GlobalKeyboardUpdate();
                         MemoryTasks.Cleanup();
                     }
+                }
             }
             catch (Exception ex)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -846,7 +847,8 @@ namespace Chromatics.Controllers
         {
             if (lambda < 0 || lambda > 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(lambda));
+                return Color.Black;
+                //throw new ArgumentOutOfRangeException(nameof(lambda));
             }
             System.Drawing.Color color = System.Drawing.Color.FromArgb(
                 InterpolateComponent(endPoint1, endPoint2, lambda, _redSelector),
