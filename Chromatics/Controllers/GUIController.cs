@@ -3033,7 +3033,7 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            Process.Start("https://github.com/roxaskeyheart/Chromatics/issues");
+            Process.Start("https://discord.gg/sK47yFE");
         }
 
         private void btn_doc_Click(object sender, EventArgs e)
@@ -3721,7 +3721,7 @@ namespace Chromatics
             tb.AppendText(@"Timewarrener" + Environment.NewLine);
             tb.AppendText(Environment.NewLine);
             tb.SelectionFont = new Font(tb.Font, FontStyle.Bold);
-            tb.AppendText(@"Big thanks to Chromatics' Supporters:" + Environment.NewLine);
+            tb.AppendText(@"Big thanks to Chromatics' Donators/Supporters:" + Environment.NewLine);
             tb.SelectionFont = new Font(tb.Font, FontStyle.Regular);
             tb.AppendText(@"RAZER™" + Environment.NewLine);
             tb.AppendText(@"AliceD" + Environment.NewLine);

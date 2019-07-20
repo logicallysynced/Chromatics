@@ -410,8 +410,8 @@
             this.btn_help.Name = "btn_help";
             this.btn_help.Size = new System.Drawing.Size(68, 24);
             this.btn_help.TabIndex = 3;
-            this.btn_help.Text = "Report Bug";
-            this.tooltip_main.SetToolTip(this.btn_help, "Report a bug found in Chromatics to the developers.");
+            this.btn_help.Text = "Discord";
+            this.tooltip_main.SetToolTip(this.btn_help, "Opens Chromatics Discord channel.");
             this.btn_help.UseVisualStyleBackColor = true;
             this.btn_help.Click += new System.EventHandler(this.btn_help_Click);
             // 
@@ -3274,7 +3274,7 @@
             this.lbl_about_ver.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_about_ver.Location = new System.Drawing.Point(0, 0);
             this.lbl_about_ver.Name = "lbl_about_ver";
-            this.lbl_about_ver.Size = new System.Drawing.Size(725, 22);
+            this.lbl_about_ver.Size = new System.Drawing.Size(725, 28);
             this.lbl_about_ver.TabIndex = 5;
             this.lbl_about_ver.Text = "Version 2.5.0";
             this.lbl_about_ver.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3405,9 +3405,9 @@
             // 
             this.panel1.Controls.Add(this.lbl_about_ver);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 112);
+            this.panel1.Location = new System.Drawing.Point(0, 106);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(725, 22);
+            this.panel1.Size = new System.Drawing.Size(725, 28);
             this.panel1.TabIndex = 6;
             // 
             // Chromatics
