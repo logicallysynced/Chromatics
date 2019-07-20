@@ -104,14 +104,11 @@ namespace Chromatics.DeviceInterfaces
         private static readonly ILogWrite Write = SimpleIoc.Default.GetInstance<ILogWrite>();
         private IAuraSdk sdk;
         private bool isInitialized = false;
-
-        private CancellationTokenSource _cancellationTokenSource;
-
+        
         private bool _AsusDeviceKeyboard = true;
         private bool _AsusDeviceMouse = true;
         private bool _AsusDeviceHeadset = true;
         private bool _AsusDeviceMousepad = true;
-        private bool _AsusDeviceSpeakers = true;
         private bool _AsusDeviceOtherDevices = true;
 
         private bool _keyConnected = false;

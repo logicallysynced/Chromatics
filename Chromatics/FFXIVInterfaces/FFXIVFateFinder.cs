@@ -24,7 +24,7 @@ namespace Chromatics.FFXIVInterfaces
         private static bool _memoryready;
         private static List<Signature> _sList;
         private static bool _isPopped;
-        private static int _countdown;
+        private static int _countdown = 0;
         private static bool _initialized;
 
         private static readonly object RefreshLock = new object();

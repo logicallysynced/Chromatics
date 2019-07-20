@@ -224,7 +224,7 @@
             this.chk_arxtoggle = new System.Windows.Forms.CheckBox();
             this.tP_integrate = new System.Windows.Forms.TabPage();
             this.tC_integrations = new System.Windows.Forms.TabControl();
-            this.Events = new System.Windows.Forms.TabPage();
+            this.tP_events = new System.Windows.Forms.TabPage();
             this.cb_alarmclock = new System.Windows.Forms.ComboBox();
             this.chk_enabletimebell = new System.Windows.Forms.CheckBox();
             this.tP_cast = new System.Windows.Forms.TabPage();
@@ -300,7 +300,7 @@
             this.gB_ARX1.SuspendLayout();
             this.tP_integrate.SuspendLayout();
             this.tC_integrations.SuspendLayout();
-            this.Events.SuspendLayout();
+            this.tP_events.SuspendLayout();
             this.tP_cast.SuspendLayout();
             this.tP_ifttt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).BeginInit();
@@ -2926,7 +2926,7 @@
             // 
             // tC_integrations
             // 
-            this.tC_integrations.Controls.Add(this.Events);
+            this.tC_integrations.Controls.Add(this.tP_events);
             this.tC_integrations.Controls.Add(this.tP_cast);
             this.tC_integrations.Controls.Add(this.tP_ifttt);
             this.tC_integrations.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2937,16 +2937,16 @@
             this.tC_integrations.Size = new System.Drawing.Size(725, 399);
             this.tC_integrations.TabIndex = 4;
             // 
-            // Events
+            // tP_events
             // 
-            this.Events.BackColor = System.Drawing.SystemColors.Control;
-            this.Events.Controls.Add(this.cb_alarmclock);
-            this.Events.Controls.Add(this.chk_enabletimebell);
-            this.Events.Location = new System.Drawing.Point(4, 22);
-            this.Events.Name = "Events";
-            this.Events.Size = new System.Drawing.Size(717, 373);
-            this.Events.TabIndex = 2;
-            this.Events.Text = "Events";
+            this.tP_events.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_events.Controls.Add(this.cb_alarmclock);
+            this.tP_events.Controls.Add(this.chk_enabletimebell);
+            this.tP_events.Location = new System.Drawing.Point(4, 22);
+            this.tP_events.Name = "tP_events";
+            this.tP_events.Size = new System.Drawing.Size(717, 373);
+            this.tP_events.TabIndex = 2;
+            this.tP_events.Text = "Events";
             // 
             // cb_alarmclock
             // 
@@ -3393,8 +3393,8 @@
             this.gB_ARX1.PerformLayout();
             this.tP_integrate.ResumeLayout(false);
             this.tC_integrations.ResumeLayout(false);
-            this.Events.ResumeLayout(false);
-            this.Events.PerformLayout();
+            this.tP_events.ResumeLayout(false);
+            this.tP_events.PerformLayout();
             this.tP_cast.ResumeLayout(false);
             this.tP_cast.PerformLayout();
             this.tP_ifttt.ResumeLayout(false);
@@ -3587,7 +3587,7 @@
         private System.Windows.Forms.CheckBox chk_enableifttt;
         private System.Windows.Forms.Label lbl_polling;
         private System.Windows.Forms.ComboBox cb_pollingint;
-        private System.Windows.Forms.TabPage Events;
+        private System.Windows.Forms.TabPage tP_events;
         private System.Windows.Forms.ComboBox cb_alarmclock;
         private System.Windows.Forms.CheckBox chk_enabletimebell;
         private System.Windows.Forms.Button btn_casttest;

@@ -240,7 +240,6 @@ namespace Chromatics.DeviceInterfaces
         private IKeypad Keypad;
         private IChromaLink ChromaLink;
 
-        private bool _razerDeathstalker;
         private bool _razerDeviceHeadset = true;
 
         private bool _razerDeviceKeyboard = true;

@@ -585,12 +585,7 @@ namespace Chromatics
                 WriteConsole(ConsoleTypes.Error, @"Internal Error: " + ex.StackTrace);
             }
         }
-
-        private int xi = 0;
-        private int xi_interval = 50;
-        private int xi_bench = 50;
-        private int xi_scan = 20;
-
+        
         private void ProcessFfxivData()
         {
             MemoryTasks.Cleanup();
