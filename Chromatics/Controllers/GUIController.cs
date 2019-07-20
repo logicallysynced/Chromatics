@@ -162,6 +162,7 @@ namespace Chromatics
             //Keys
             {"ColorMappingBaseColor", new[] {"Base Color", "1", "Black", "White"}},
             {"ColorMappingHighlightColor", new[] {"Highlight Color", "1", "Black", "White"}},
+            {"ColorMappingDeviceDisabled", new[] {"Device Disabled Color", "1", "Black", "White"}},
             {"ColorMappingMenuBase", new[] {"Menu Base Color", "1", "Black", "White"}},
             {"ColorMappingMenuHighlight1", new[] { "Menu Highlight Color 1", "1", "Black", "White"}},
             {"ColorMappingMenuHighlight2", new[] { "Menu Highlight Color 2", "1", "Black", "White"}},
@@ -754,83 +755,7 @@ namespace Chromatics
 
                     dG_devices.Rows.AddRange(dgV);
                 }
-
-                if (HueSdkCalled == 1)
-                {
-                    DataGridViewRow[] dgV = new DataGridViewRow[_hue.HueBulbsDat.ToList().Count];
-                    var i = 0;
-
-                    if (_hue.HueBulbs > 0)
-                        foreach (var d in _hue.HueBulbsDat.ToList())
-                        {
-                            Thread.Sleep(1);
-
-                            //HUE Device
-                            var state = await _hue.GetLightStateAsync(d.Key);
-                            var device = await _hue.GetDeviceVersionAsync(d.Key);
-
-                            _dGmode.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
-                            _dGmode.DisplayStyleForCurrentCellOnly = true;
-                            var lState = _hue.HueStateMemory[d.Key.UniqueId];
-
-                            var huedGDevice = (DataGridViewRow) dG_devices.Rows[0].Clone();
-                            huedGDevice.Cells[dG_devices.Columns["col_devicename"].Index].Value = d.Key.Name + " (" +
-                                                                                                  d.Key.UniqueId +
-                                                                                                  ")";
-                            huedGDevice.Cells[dG_devices.Columns["col_devicetype"].Index].Value =
-                                d.Key.ModelId + " (Version " + device + ")";
-                            huedGDevice.Cells[dG_devices.Columns["col_status"].Index].Value = lState == 0
-                                ? "Disabled"
-                                : "Enabled";
-                            huedGDevice.Cells[dG_devices.Columns["col_state"].Index].Value = lState != 0;
-                            huedGDevice.Cells[dG_devices.Columns["col_dattype"].Index].Value = "HUE";
-                            huedGDevice.Cells[dG_devices.Columns["col_ID"].Index].Value = d.Key.UniqueId;
-
-                            var huedGDeviceDgc = new DataGridViewComboBoxCell();
-
-                            foreach (var x in _bulbModes.ToList())
-                            {
-                                if (d.Value != 0 && x.Key == BulbModeTypes.Disabled) continue;
-                                if (x.Key == BulbModeTypes.ChromaticsDefault) continue;
-                                huedGDeviceDgc.Items.Add(x.Value);
-                            }
-
-                            huedGDeviceDgc.Value = d.Value == BulbModeTypes.ChromaticsDefault
-                                ? _bulbModes[BulbModeTypes.Standby]
-                                : _bulbModes[d.Value];
-                            huedGDeviceDgc.DisplayStyleForCurrentCellOnly = true;
-                            huedGDeviceDgc.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
-
-                            huedGDevice.Cells[dG_devices.Columns["col_mode"].Index] = huedGDeviceDgc;
-
-                            //Check for duplicates
-                            /*
-                            var duplicate = false;
-
-                            if (DeviceGridStartup)
-                            {
-                                foreach (DataGridViewRow row in dG_devices.Rows)
-                                {
-                                    if (row.Cells[dG_devices.Columns["col_ID"].Index].Value.ToString().Contains(d.Key.UniqueId))
-                                    {
-                                        duplicate = true;
-                                        break;
-                                    }
-
-                                }
-                            }
-
-                            if (duplicate) continue;
-                            */
-                            //dG_devices.Rows.Add(huedGDevice);
-                            dgV[i] = huedGDevice;
-                            i++;
-                            huedGDeviceDgc.ReadOnly = d.Value == 0 ? true : false;
-                        }
-
-                    dG_devices.Rows.AddRange(dgV);
-                }
-
+                
                 DeviceGridStartup = true;
                 dG_devices.AllowUserToAddRows = false;
             }
@@ -909,37 +834,6 @@ namespace Chromatics
                             change[dG_devices.Columns["col_status"].Index].Value = _switch ? "Enabled" : "Disabled";
                         }
                     }
-                    else if (dattype == "HUE")
-                    {
-                        var id = (string)dG_devices.Rows[e.RowIndex].Cells[dG_devices.Columns["col_ID"].Index].Value;
-                        if (HueSdkCalled == 1 && id != null)
-                        {
-                            var bulb = _hue.HueDevices[id];
-
-                            if (_switch)
-                            {
-                                _hue.HueBulbsDat[bulb] = _hue.HueModeMemory[id];
-                                _hue.HueStateMemory[bulb.UniqueId] = 1;
-                                WriteConsole(ConsoleTypes.Hue, @"Enabled HUE Bulb " + id);
-                            }
-                            else
-                            {
-                                _hue.HueModeMemory[id] = key;
-                                _hue.HueStateMemory[bulb.UniqueId] = 0;
-                                _hue.HueBulbsDat[bulb] = 0;
-                                var state = _hue.HueBulbsRestore[bulb];
-                                WriteConsole(ConsoleTypes.Hue, @"Disabled HUE Bulb " + id);
-
-                                _hue.SetColorAsync(bulb, state.Hue, state.Saturation, state.Brightness,
-                                    state.ColorTemperature,
-                                    TimeSpan.FromMilliseconds(1000));
-
-                                WriteConsole(ConsoleTypes.Hue, @"Restoring HUE Bulb " + bulb.Name);
-                            }
-
-                            change[dG_devices.Columns["col_status"].Index].Value = _switch ? "Enabled" : "Disabled";
-                        }
-                    }
                 }
 
                 if (dG_devices.Columns[e.ColumnIndex].Name == "col_mode")
@@ -972,16 +866,6 @@ namespace Chromatics
                                     break;
                             }
                             
-                        }
-
-                    if (HueSdkCalled == 1 && id != null && dattype == "HUE")
-                        if (_bulbModes.ContainsValue(mode))
-                        {
-                            var key = _bulbModes.FirstOrDefault(x => x.Value == mode).Key;
-                            var bulb = _hue.HueDevices[id];
-                            _hue.HueBulbsDat[bulb] = key;
-                            _hue.HueModeMemory[bulb.UniqueId] = key;
-                            WriteConsole(ConsoleTypes.Lifx, @"Updated Mode of HUE Bulb " + id + " to " + key);
                         }
                 }
 
@@ -1752,8 +1636,6 @@ namespace Chromatics
                     CorsairSdkCalled = 0;
                 if (LifxSdk)
                     LifxSdkCalled = 0;
-                if (HueSdk)
-                    HueSdkCalled = 0;
             }
             else
             {
@@ -1765,8 +1647,6 @@ namespace Chromatics
                     CorsairSdkCalled = 1;
                 if (LifxSdk)
                     LifxSdkCalled = 1;
-                if (HueSdk)
-                    HueSdkCalled = 1;
             }
 
             ResetDeviceDataGrid();

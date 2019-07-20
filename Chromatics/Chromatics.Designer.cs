@@ -1049,7 +1049,7 @@
             this.tP_bulbs.Name = "tP_bulbs";
             this.tP_bulbs.Size = new System.Drawing.Size(717, 373);
             this.tP_bulbs.TabIndex = 4;
-            this.tP_bulbs.Text = "Smartbulbs";
+            this.tP_bulbs.Text = "LIFX";
             // 
             // chk_enablebulbextraeffect
             // 

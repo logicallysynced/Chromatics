@@ -8,7 +8,6 @@
         Corsair,
         Logitech,
         Lifx,
-        Hue,
         Arx,
         Steel,
         Coolermaster,

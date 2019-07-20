@@ -114,9 +114,6 @@ namespace Chromatics
         public bool _OtherInterpolateEffects = false;
         public bool _ReverseInterpolateEffects = false;
 
-        private string _hueDefault = "";
-        public bool HueRescan = false;
-        public bool HueSdk = false;
         public int HueSdkCalled = 0;
         public bool Init = false;
         public bool IsDx11 = false;
@@ -287,8 +284,6 @@ namespace Chromatics
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.DodgerBlue; });
                     else if (type == ConsoleTypes.Lifx)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.BlueViolet; });
-                    else if (type == ConsoleTypes.Hue)
-                        rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Orange; });
                     else if (type == ConsoleTypes.Arx)
                         rtb_debug.Invoke((Action) delegate { rtb_debug.SelectionColor = Color.Aqua; });
                     else if (type == ConsoleTypes.Steel)
@@ -317,7 +312,6 @@ namespace Chromatics
                     else if (type == ConsoleTypes.Corsair) rtb_debug.SelectionColor = Color.MediumVioletRed;
                     else if (type == ConsoleTypes.Logitech) rtb_debug.SelectionColor = Color.DodgerBlue;
                     else if (type == ConsoleTypes.Lifx) rtb_debug.SelectionColor = Color.BlueViolet;
-                    else if (type == ConsoleTypes.Hue) rtb_debug.SelectionColor = Color.Orange;
                     else if (type == ConsoleTypes.Arx) rtb_debug.SelectionColor = Color.Aqua;
                     else if (type == ConsoleTypes.Steel) rtb_debug.SelectionColor = Color.HotPink;
                     else if (type == ConsoleTypes.Coolermaster) rtb_debug.SelectionColor = Color.DarkBlue;

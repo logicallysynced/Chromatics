@@ -12,8 +12,6 @@ namespace Chromatics.Datastore
         public bool DeviceOperationCorsairKeypad = false; //Not Implemented
         public bool DeviceOperationCorsairMouse = true;
         public bool DeviceOperationCorsairMousepad = true;
-        public string DeviceOperationHueDefault = "";
-        public string DeviceOperationHueDevices = "";
         public string DeviceOperationLifxDevices = "";
         public bool DeviceOperationLogitechHeadset = true;
         public bool DeviceOperationLogitechKeyboard = true;
@@ -434,6 +432,7 @@ namespace Chromatics.Datastore
     //Color Mapping
     public class FfxivColorMappings
     {
+        public string ColorMappingDeviceDisabled = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingAmnesia = ColorTranslator.ToHtml(Color.Snow);
         public string ColorMappingBaseColor = ColorTranslator.ToHtml(Color.DodgerBlue);
         public string ColorMappingBind = ColorTranslator.ToHtml(Color.BlueViolet);

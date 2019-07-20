@@ -396,7 +396,6 @@
     <Compile Include="DeviceInterfaces\GlobalInterface.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DeviceInterfaces\HueInterface.cs" />
     <Compile Include="DeviceInterfaces\LIFXInterface.cs" />
     <Compile Include="DeviceInterfaces\Localization.cs" />
     <Compile Include="DeviceInterfaces\MysticInterface.cs" />

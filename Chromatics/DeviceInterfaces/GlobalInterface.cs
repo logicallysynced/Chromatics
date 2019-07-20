@@ -35,8 +35,6 @@ namespace Chromatics
         private CancellationTokenSource _corsairFl3Cts = new CancellationTokenSource();
         private Task _corsairFl4;
         private CancellationTokenSource _corsairFl4Cts = new CancellationTokenSource();
-        private IHueSdk _hue;
-        private CancellationTokenSource _hue4Cts = new CancellationTokenSource();
 
         private ISteelSdk _steel;
         private CancellationTokenSource _steelFl1Cts = new CancellationTokenSource();
@@ -68,7 +66,6 @@ namespace Chromatics
         private CancellationTokenSource _asusFl4Cts = new CancellationTokenSource();
         private Task _asusFlash;
 
-        private Task _hueFl4;
 
         //private IRoccatSdk _roccat;
         private ILifxSdk _lifx;
@@ -366,22 +363,6 @@ namespace Chromatics
                 }
             }
 
-
-            //Load HUE SDK - ENABLE THIS TO TEST
-
-            /*
-            _hue = DeviceInterfaces.HueInterface.InitializeHueSDK(HUEDefault);
-            if (_hue != null)
-            {
-                HueSDK = true;
-                HueSDKCalled = 1;
-                WriteConsole(ConsoleTypes.HUE, "HUE SDK Loaded");
-            }
-            else
-            {
-                WriteConsole(ConsoleTypes.HUE, "HUE SDK failed to load.");
-            }
-            */
 
 
             //InitializeLIFXSDK();
@@ -733,7 +714,7 @@ namespace Chromatics
                 _coolermaster.SetWave();
         }
 
-        /* Sends a standard lighting update command to LIFX or HUE devices
+        /* Sends a standard lighting update command to LIFX devices
          * Modes:
          * 0 - Disabled
          * 1 - Standby
@@ -751,38 +732,32 @@ namespace Chromatics
         public void GlobalUpdateBulbState(BulbModeTypes mode, Color col, int transition)
         {
             if (LifxSdkCalled == 1)
-                if (mode != BulbModeTypes.Disabled)
-                    if (mode == BulbModeTypes.Standby)
-                        _lifx.LifxUpdateState(mode, Color.Black, transition);
-                    else
-                        _lifx.LifxUpdateState(mode, col, transition);
-
-            if (HueSdkCalled == 1)
-                if (mode != BulbModeTypes.Disabled)
-                    if (mode == BulbModeTypes.Standby)
-                        _hue.HueUpdateState(mode, Color.Black, transition);
-                    else
-                        _hue.HueUpdateState(mode, col, transition);
+                if (mode == BulbModeTypes.Disabled)
+                {
+                    //_lifx.LifxUpdateState(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), transition);
+                    return;
+                }
+                
+                if (mode == BulbModeTypes.Standby)
+                    _lifx.LifxUpdateState(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), transition);
+                else
+                    _lifx.LifxUpdateState(mode, col, transition);
         }
 
         public void GlobalUpdateBulbStateBrightness(BulbModeTypes mode, Color col, ushort brightness, int transition)
         {
             if (LifxSdkCalled == 1)
             {
-                if (mode != BulbModeTypes.Disabled)
-                    if (mode == BulbModeTypes.Standby)
-                        _lifx.LifxUpdateStateBrightness(mode, Color.Black, brightness, transition);
-                    else
-                        _lifx.LifxUpdateStateBrightness(mode, col, brightness, transition);
-            }
+                if (mode == BulbModeTypes.Disabled)
+                {
+                    //_lifx.LifxUpdateStateBrightness(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), brightness, transition);
+                    return;
+                }
 
-            if (HueSdkCalled == 1)
-            {
-                if (mode != BulbModeTypes.Disabled)
-                    if (mode == BulbModeTypes.Standby)
-                        _hue.HueUpdateStateBrightness(mode, Color.Black, brightness, transition);
-                    else
-                        _hue.HueUpdateStateBrightness(mode, col, brightness, transition);
+                if (mode == BulbModeTypes.Standby)
+                    _lifx.LifxUpdateStateBrightness(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), brightness, transition);
+                else
+                    _lifx.LifxUpdateStateBrightness(mode, col, brightness, transition);
             }
         }
 
@@ -1093,8 +1068,13 @@ namespace Chromatics
 
         public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, double val)
         {
-            if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
+            if (!_KeysSingleKeyModeEnabled || mode != _KeysSingleKeyMode) return;
 
+            if (mode == DevModeTypes.Disabled)
+            {
+                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 
             var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
@@ -1104,7 +1084,13 @@ namespace Chromatics
 
         public void GlobalApplyKeyMultiLightingBrightness(DevMultiModeTypes mode, Color colMin, Color colMax, double val)
         {
-            if (!_KeysMultiKeyModeEnabled || mode == DevMultiModeTypes.Disabled || mode != _KeysMultiKeyMode) return;
+            if (!_KeysMultiKeyModeEnabled || mode != _KeysMultiKeyMode) return;
+
+            if (mode == DevMultiModeTypes.Disabled)
+            {
+                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
 
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
@@ -1145,7 +1131,12 @@ namespace Chromatics
         //Send a lighting command to a specific Mouse LED
         public void GlobalApplyMapMouseLighting(DevModeTypes mode, Color col, bool clear)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+
+            }
+
             if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
             
             //Logo
@@ -1245,7 +1236,11 @@ namespace Chromatics
 
         public void GlobalApplyStripMouseLighting(DevModeTypes mode, string region1, string region2, Color col, bool clear)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _MouseStrip1Mode && mode != _MouseStrip2Mode) return;
 
             //Logo
@@ -1285,7 +1280,12 @@ namespace Chromatics
 
         public void GlobalApplyMapMouseLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, bool clear, double val)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _MouseStrip1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
 
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
@@ -1298,7 +1298,11 @@ namespace Chromatics
         //Send a lighting command to a specific Headset LED
         public void GlobalApplyMapHeadsetLighting(DevModeTypes mode, Color col, bool clear)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _HeadsetZone1Mode && mode != _HeadsetZone2Mode) return;
 
             //Logo
@@ -1375,7 +1379,12 @@ namespace Chromatics
 
         public void GlobalApplyMapHeadsetLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, bool clear, double val)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _HeadsetZone1Mode) return;
 
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
@@ -1388,7 +1397,13 @@ namespace Chromatics
         public void GlobalApplyMapKeypadLighting(DevMultiModeTypes mode, Color col, bool clear, string region)
         {
             
-            if (mode == DevMultiModeTypes.Disabled || _EnableKeypadBinds) return;
+            if (_EnableKeypadBinds) return;
+
+            if (mode == DevMultiModeTypes.Disabled)
+            {
+                col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _KeypadZone1Mode) return;
 
             //Logo
@@ -1452,7 +1467,12 @@ namespace Chromatics
 
         public void GlobalApplyMapKeypadLightingBrightness(DevMultiModeTypes mode, Color colMin, Color colMax, bool clear, double val)
         {
-            if (mode == DevMultiModeTypes.Disabled) return;
+            if (mode == DevMultiModeTypes.Disabled)
+            {
+                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+            
             if (mode != _KeypadZone1Mode) return;
 
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
@@ -1464,7 +1484,11 @@ namespace Chromatics
         public void GlobalApplyOtherLightingViaInterpolation(DevModeTypes mode, Color empty, Color full, int min, int max, int current)
         {
             
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                empty = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
 
             if (mode == _CLZone1Mode)
@@ -1525,7 +1549,11 @@ namespace Chromatics
 
         public void GlobalApplyMapChromaLinkLighting(DevModeTypes mode, Color col, bool bypass = false)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
             
             if (mode == _CLZone1Mode)
@@ -1604,7 +1632,12 @@ namespace Chromatics
 
         public void GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, double val)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                colMin = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+                colMax = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
 
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
@@ -1613,10 +1646,14 @@ namespace Chromatics
             GlobalApplyMapChromaLinkLighting(mode, c2);
         }
 
-        //Send a lighting command to a specific Mousepad or HUE/LIFX LED
+        //Send a lighting command to a specific Mousepad or LIFX LED
         public void GlobalApplyMapPadLighting(DevModeTypes mode, int region1, int region2, int region3, Color col, bool clear)
         {
-            if (mode == DevModeTypes.Disabled) return;
+            if (mode == DevModeTypes.Disabled)
+            {
+                col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
             if (mode != _PadZone1Mode && mode != _PadZone2Mode && mode != _PadZone3Mode) return;
 
             if (mode == _PadZone1Mode)
@@ -2775,15 +2812,6 @@ namespace Chromatics
                     MemoryTasks.Run(_lifxFl4);
                 }
 
-                if (HueSdkCalled == 1)
-                {
-                    _hueFl4 = null;
-                    _hue4Cts = new CancellationTokenSource();
-                    _hueFl4 = new Task(() => { _hue.Flash4(basecol, burstcol, speed * 2, _hue4Cts.Token); },
-                        _hue4Cts.Token);
-                    MemoryTasks.Add(_hueFl4);
-                    MemoryTasks.Run(_hueFl4);
-                }
 
                 _globalFlash4Running = true;
             }
@@ -2846,14 +2874,7 @@ namespace Chromatics
                     MemoryTasks.Remove(_lifxFl4);
                 }
 
-                if (HueSdkCalled == 1)
-                {
-                    _hue4Cts.Cancel();
-                    MemoryTasks.Remove(_hueFl4);
-                }
-
-                Console.WriteLine(@"Stopping Flash 4 (A)");
-
+                
                 MemoryTasks.Cleanup();
             }
 

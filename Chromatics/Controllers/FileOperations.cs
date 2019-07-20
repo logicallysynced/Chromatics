@@ -144,25 +144,14 @@ namespace Chromatics
             dr.FKeyMode = Helpers.ConvertFKeyModeToString(_FKeyMode);
 
             var lifxLoad = "";
-            var hueLoad = "";
 
             if (LifxSdk && _lifx.LifxModeMemory.Any())
             {
                 var lifxEx = _lifx.LifxModeMemory.Select(lp => lp.Key + "|" + lp.Value + "|" + _lifx.LifxStateMemory[lp.Key]).ToArray();
                 lifxLoad = string.Join(",", lifxEx);
             }
-
-
-            if (HueSdk && _hue.HueModeMemory.Any())
-            {
-                var hueEx = _hue.HueModeMemory.Select(hp => hp.Key + "|" + hp.Value + "|" + _hue.HueStateMemory[hp.Key]).ToArray();
-                hueLoad = string.Join(",", hueEx);
-            }
-
-
-            dr.DeviceOperationHueDefault = _hueDefault;
+            
             dr.DeviceOperationLifxDevices = lifxLoad;
-            dr.DeviceOperationHueDevices = hueLoad;
 
             try
             {
@@ -227,7 +216,6 @@ namespace Chromatics
                         _roccatDeviceMouse = dr.DeviceOperationRoccatMouse;
 
                         _logitechDeviceKeyboard = dr.DeviceOperationLogitechKeyboard;
-                        _hueDefault = dr.DeviceOperationHueDefault;
 
                         _deviceKeyboard = dr.DeviceOperationKeyboard;
                         _deviceMouse = dr.DeviceOperationMouse;
@@ -388,25 +376,7 @@ namespace Chromatics
                                 _lifx.LifxStateMemory.Add(lState[0], lEnabled);
                             }
                         }
-
-                        var hueLoad = dr.DeviceOperationHueDevices;
-                        if (hueLoad != "")
-                        {
-                            var hueDevices = hueLoad.Split(',');
-                            foreach (var hd in hueDevices)
-                            {
-                                var hState = hd.Split('|');
-                                //var HMode = 0;
-                                //int.TryParse(HState[1], out HMode);
-                                var hMode = (BulbModeTypes) Enum.Parse(typeof(BulbModeTypes), hState[1]);
-                                var hEnabled = 0;
-                                int.TryParse(hState[2], out hEnabled);
-                                _hue.HueModeMemory.Add(hState[0], hMode);
-                                _hue.HueStateMemory.Add(hState[0], hEnabled);
-                                //HueModeMemory.Add(HState[0], HMode, HEnabled);
-                            }
-                        }
-
+                        
                         WriteConsole(ConsoleTypes.System, @"devices.chromatics loaded.");
                     }
                     catch (Exception ex)
