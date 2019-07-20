@@ -1408,7 +1408,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y1 : z1, reverse ? z1 : y1);
                         var Z3Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t1 : z1, reverse ? z1 : t1);
                         
-                        if (Z1Interpolate1 <= 150)
+                        if (Z1Interpolate1 <= _diyZ1.Count)
                         {
                             for (var a1 = x1; a1 < z1; a1++)
                             {
@@ -1430,7 +1430,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate1 <= 150)
+                        if (Z2Interpolate1 <= _diyZ2.Count)
                         {
                             for (var a1 = t1; a1 < z1; a1++)
                             {
@@ -1452,7 +1452,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate1 <= 150)
+                        if (Z3Interpolate1 <= _diyZ3.Count)
                         {
                             for (var a1 = t1; a1 < z1; a1++)
                             {
@@ -1483,7 +1483,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y2 : (z1+z2), reverse ? (z1+z2) : y2);
                         var Z3Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t2 : (z1+z2), reverse ? (z1+z2) : t2);
                         
-                        if (Z1Interpolate2 <= 150)
+                        if (Z1Interpolate2 <= _diyZ1.Count)
                         {
                             for (var a1 = x2; a1 < (z1+z2); a1++)
                             {
@@ -1505,7 +1505,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate2 <= 150)
+                        if (Z2Interpolate2 <= _diyZ2.Count)
                         {
                             for (var a1 = t2; a1 < (z1+z2); a1++)
                             {
@@ -1527,7 +1527,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate2 <= 150)
+                        if (Z3Interpolate2 <= _diyZ3.Count)
                         {
                             for (var a1 = t2; a1 < (z1+z2); a1++)
                             {
@@ -1558,7 +1558,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y3 : (z1+z2+z3), reverse ? (z1+z2+z3) : y3);
                         var Z3Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t3 : (z1+z2+z3), reverse ? (z1+z2+z3) : t3);
                         
-                        if (Z1Interpolate3 <= 150)
+                        if (Z1Interpolate3 <= _diyZ1.Count)
                         {
                             for (var a1 = x3; a1 < (z1+z2+z3); a1++)
                             {
@@ -1580,7 +1580,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate3 <= 150)
+                        if (Z2Interpolate3 <= _diyZ2.Count)
                         {
                             for (var a1 = t3; a1 < (z1+z2+z3); a1++)
                             {
@@ -1602,7 +1602,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate3 <= 150)
+                        if (Z3Interpolate3 <= _diyZ3.Count)
                         {
                             for (var a1 = t3; a1 < (z1+z2+z3); a1++)
                             {
@@ -1633,7 +1633,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : y4);
                         var Z3Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : t4);
                         
-                        if (Z1Interpolate4 <= 150)
+                        if (Z1Interpolate4 <= _diyZ1.Count)
                         {
                             for (var a1 = x4; a1 < (z1+z2+z3+z4); a1++)
                             {
@@ -1655,7 +1655,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate4 <= 150)
+                        if (Z2Interpolate4 <= _diyZ2.Count)
                         {
                             for (var a1 = t4; a1 < (z1+z2+z3+z4); a1++)
                             {
@@ -1677,7 +1677,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate4 <= 150)
+                        if (Z3Interpolate4 <= _diyZ3.Count)
                         {
                             for (var a1 = t4; a1 < (z1+z2+z3+z4); a1++)
                             {
@@ -1708,7 +1708,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : y5);
                         var Z3Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : t5);
                         
-                        if (Z1Interpolate5 <= 150)
+                        if (Z1Interpolate5 <= _diyZ1.Count)
                         {
                             for (var a1 = x5; a1 < (z1+z2+z3+z4+z5); a1++)
                             {
@@ -1730,7 +1730,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate5 <= 150)
+                        if (Z2Interpolate5 <= _diyZ2.Count)
                         {
                             for (var a1 = t5; a1 < (z1+z2+z3+z4+z5); a1++)
                             {
@@ -1752,7 +1752,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate5 <= 150)
+                        if (Z3Interpolate5 <= _diyZ3.Count)
                         {
                             for (var a1 = t5; a1 < (z1+z2+z3+z4+z5); a1++)
                             {
@@ -1783,7 +1783,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : y6);
                         var Z3Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : t6);
                         
-                        if (Z1Interpolate6 <= 150)
+                        if (Z1Interpolate6 <= _diyZ1.Count)
                         {
                             for (var a1 = x6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
                             {
@@ -1805,7 +1805,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate6 <= 150)
+                        if (Z2Interpolate6 <= _diyZ2.Count)
                         {
                             for (var a1 = t6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
                             {
@@ -1827,7 +1827,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate6 <= 150)
+                        if (Z3Interpolate6 <= _diyZ3.Count)
                         {
                             for (var a1 = t6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
                             {
@@ -1865,7 +1865,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y1 : z1, reverse ? z1 : y1);
                         var Z3Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t1 : z1, reverse ? z1 : t1);
                         
-                        if (Z1Interpolate1 <= 150)
+                        if (Z1Interpolate1 <= _diyZ1.Count)
                         {
                             for (var a1 = x1; a1 < z1; a1++)
                             {
@@ -1887,7 +1887,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate1 <= 150)
+                        if (Z2Interpolate1 <= _diyZ2.Count)
                         {
                             for (var a1 = t1; a1 < z1; a1++)
                             {
@@ -1909,7 +1909,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate1 <= 150)
+                        if (Z3Interpolate1 <= _diyZ3.Count)
                         {
                             for (var a1 = t1; a1 < z1; a1++)
                             {
@@ -1940,7 +1940,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y2 : (z1+z2), reverse ? (z1+z2) : y2);
                         var Z3Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t2 : (z1+z2), reverse ? (z1+z2) : t2);
                         
-                        if (Z1Interpolate2 <= 150)
+                        if (Z1Interpolate2 <= _diyZ1.Count)
                         {
                             for (var a1 = x2; a1 < (z1+z2); a1++)
                             {
@@ -1962,7 +1962,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate2 <= 150)
+                        if (Z2Interpolate2 <= _diyZ2.Count)
                         {
                             for (var a1 = t2; a1 < (z1+z2); a1++)
                             {
@@ -1984,7 +1984,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate2 <= 150)
+                        if (Z3Interpolate2 <= _diyZ3.Count)
                         {
                             for (var a1 = t2; a1 < (z1+z2); a1++)
                             {
@@ -2015,7 +2015,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y3 : (z1+z2+z3), reverse ? (z1+z2+z3) : y3);
                         var Z3Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t3 : (z1+z2+z3), reverse ? (z1+z2+z3) : t3);
                         
-                        if (Z1Interpolate3 <= 150)
+                        if (Z1Interpolate3 <= _diyZ1.Count)
                         {
                             for (var a1 = x3; a1 < (z1+z2+z3); a1++)
                             {
@@ -2037,7 +2037,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate3 <= 150)
+                        if (Z2Interpolate3 <= _diyZ2.Count)
                         {
                             for (var a1 = t3; a1 < (z1+z2+z3); a1++)
                             {
@@ -2059,7 +2059,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate3 <= 150)
+                        if (Z3Interpolate3 <= _diyZ3.Count)
                         {
                             for (var a1 = t3; a1 < (z1+z2+z3); a1++)
                             {
@@ -2090,7 +2090,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : y4);
                         var Z3Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : t4);
                         
-                        if (Z1Interpolate4 <= 150)
+                        if (Z1Interpolate4 <= _diyZ1.Count)
                         {
                             for (var a1 = x4; a1 < (z1+z2+z3+z4); a1++)
                             {
@@ -2112,7 +2112,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate4 <= 150)
+                        if (Z2Interpolate4 <= _diyZ2.Count)
                         {
                             for (var a1 = t4; a1 < (z1+z2+z3+z4); a1++)
                             {
@@ -2134,7 +2134,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate4 <= 150)
+                        if (Z3Interpolate4 <= _diyZ3.Count)
                         {
                             for (var a1 = t4; a1 < (z1+z2+z3+z4); a1++)
                             {
@@ -2165,7 +2165,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : y5);
                         var Z3Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : t5);
                         
-                        if (Z1Interpolate5 <= 150)
+                        if (Z1Interpolate5 <= _diyZ1.Count)
                         {
                             for (var a1 = x5; a1 < (z1+z2+z3+z4+z5); a1++)
                             {
@@ -2187,7 +2187,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate5 <= 150)
+                        if (Z2Interpolate5 <= _diyZ2.Count)
                         {
                             for (var a1 = t5; a1 < (z1+z2+z3+z4+z5); a1++)
                             {
@@ -2209,7 +2209,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate5 <= 150)
+                        if (Z3Interpolate5 <= _diyZ3.Count)
                         {
                             for (var a1 = t5; a1 < (z1+z2+z3+z4+z5); a1++)
                             {
@@ -2240,7 +2240,7 @@ namespace Chromatics.DeviceInterfaces
                         var Z2Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? y6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : y6);
                         var Z3Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? t6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : t6);
                         
-                        if (Z1Interpolate6 <= 150)
+                        if (Z1Interpolate6 <= _diyZ1.Count)
                         {
                             for (var a1 = x6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
                             {
@@ -2262,7 +2262,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z2Interpolate6 <= 150)
+                        if (Z2Interpolate6 <= _diyZ2.Count)
                         {
                             for (var a1 = t6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
                             {
@@ -2284,7 +2284,7 @@ namespace Chromatics.DeviceInterfaces
                             }
                         }
 
-                        if (Z3Interpolate6 <= 150)
+                        if (Z3Interpolate6 <= _diyZ3.Count)
                         {
                             for (var a1 = t6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
                             {
@@ -2318,7 +2318,7 @@ namespace Chromatics.DeviceInterfaces
                         
                         var Z1Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x1 : z1, reverse ? z1 : x1);
                         
-                        if (Z1Interpolate1 <= 150)
+                        if (Z1Interpolate1 <= _coolerZ1.Count)
                         {
                             for (var a1 = x1; a1 < z1; a1++)
                             {
@@ -2345,7 +2345,7 @@ namespace Chromatics.DeviceInterfaces
                         
                         var Z1Interpolate2 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x2 : (z1+z2), reverse ? (z1+z2) : x2);
                         
-                        if (Z1Interpolate2 <= 150)
+                        if (Z1Interpolate2 <= _coolerZ1.Count)
                         {
                             for (var a1 = x2; a1 < (z1+z2); a1++)
                             {
@@ -2372,7 +2372,7 @@ namespace Chromatics.DeviceInterfaces
                         
                         var Z1Interpolate3 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x3 : (z1+z2+z3), reverse ? (z1+z2+z3) : x3);
                         
-                        if (Z1Interpolate3 <= 150)
+                        if (Z1Interpolate3 <= _coolerZ1.Count)
                         {
                             for (var a1 = x3; a1 < (z1+z2+z3); a1++)
                             {
@@ -2399,7 +2399,7 @@ namespace Chromatics.DeviceInterfaces
                         
                         var Z1Interpolate4 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x4 : (z1+z2+z3+z4), reverse ? (z1+z2+z3+z4) : x4);
                         
-                        if (Z1Interpolate4 <= 150)
+                        if (Z1Interpolate4 <= _coolerZ1.Count)
                         {
                             for (var a1 = x4; a1 < (z1+z2+z3+z4); a1++)
                             {
@@ -2426,7 +2426,7 @@ namespace Chromatics.DeviceInterfaces
                         
                         var Z1Interpolate5 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x5 : (z1+z2+z3+z4+z5), reverse ? (z1+z2+z3+z4+z5) : x5);
                         
-                        if (Z1Interpolate5 <= 150)
+                        if (Z1Interpolate5 <= _coolerZ1.Count)
                         {
                             for (var a1 = x5; a1 < (z1+z2+z3+z4+z5); a1++)
                             {
@@ -2453,7 +2453,7 @@ namespace Chromatics.DeviceInterfaces
                         
                         var Z1Interpolate6 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x6 : (z1+z2+z3+z4+z5+z6), reverse ? (z1+z2+z3+z4+z5+z6) : x6);
                         
-                        if (Z1Interpolate6 <= 150)
+                        if (Z1Interpolate6 <= _coolerZ1.Count)
                         {
                             for (var a1 = x6; a1 < (z1+z2+z3+z4+z5+z6); a1++)
                             {
@@ -2537,7 +2537,7 @@ namespace Chromatics.DeviceInterfaces
                             
                             foreach (var key in _diyZ1.GetRange(x1, z1))
                             {
-                                if (x1 > 150) continue;
+                                if (x1 > _diyZ1.Count) continue;
                                 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2549,7 +2549,7 @@ namespace Chromatics.DeviceInterfaces
                             
                             foreach (var key in _diyZ2.GetRange(y1, z1))
                             {
-                                if (y1 > 150) continue;
+                                if (y1 > _diyZ2.Count) continue;
                                 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2561,7 +2561,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t1, z1))
                             {
-                                if (t1 > 150) continue;
+                                if (t1 > _diyZ3.Count) continue;
                                 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2579,7 +2579,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x2, z2))
                             {
-                                if (x2 > 150) continue;
+                                if (x2 > _diyZ1.Count) continue;
                                 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2591,7 +2591,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y2, z2))
                             {
-                                if (y2 > 150) continue;
+                                if (y2 > _diyZ2.Count) continue;
                                 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2603,7 +2603,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t2, z2))
                             {
-                                if (t2 > 150) continue;
+                                if (t2 > _diyZ3.Count) continue;
                                 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2620,7 +2620,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x3, z3))
                             {
-                                if (x3 > 150) continue;
+                                if (x3 > _diyZ1.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2632,7 +2632,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y3, z3))
                             {
-                                if (y3 > 150) continue;
+                                if (y3 > _diyZ2.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2644,7 +2644,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t3, z3))
                             {
-                                if (t3 > 150) continue;
+                                if (t3 > _diyZ3.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2661,7 +2661,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x4, z4))
                             {
-                                if (x4 > 150) continue;
+                                if (x4 > _diyZ1.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2673,7 +2673,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y4, z4))
                             {
-                                if (y4 > 150) continue;
+                                if (y4 > _diyZ2.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2685,7 +2685,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t4, z4))
                             {
-                                if (t4 > 150) continue;
+                                if (t4 > _diyZ3.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2702,7 +2702,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x5, z5))
                             {
-                                if (x5 > 150) continue;
+                                if (x5 > _diyZ1.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2714,7 +2714,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y5, z5))
                             {
-                                if (y5 > 150) continue;
+                                if (y5 > _diyZ2.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2726,7 +2726,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t5, z5))
                             {
-                                if (t5 > 150) continue;
+                                if (t5 > _diyZ3.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2743,7 +2743,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x6, z6))
                             {
-                                if (x6 > 150) continue;
+                                if (x6 > _diyZ1.Count) continue;
 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2755,7 +2755,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y6, z6))
                             {
-                                if (y6 > 150) continue;
+                                if (y6 > _diyZ2.Count) continue;
                                 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2767,7 +2767,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t6, z6))
                             {
-                                if (t6 > 150) continue;
+                                if (t6 > _diyZ3.Count) continue;
                                 
                                 if (_corsairCommanderIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2792,7 +2792,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x1, z1))
                             {
-                                if (x1 > 150) continue;
+                                if (x1 > _diyZ1.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2804,7 +2804,7 @@ namespace Chromatics.DeviceInterfaces
                             
                             foreach (var key in _diyZ2.GetRange(y1, z1))
                             {
-                                if (y1 > 150) continue;
+                                if (y1 > _diyZ2.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2816,7 +2816,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t1, z1))
                             {
-                                if (t1 > 150) continue;
+                                if (t1 > _diyZ3.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2834,7 +2834,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x2, z2))
                             {
-                                if (x2 > 150) continue;
+                                if (x2 > _diyZ1.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2846,7 +2846,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y2, z2))
                             {
-                                if (y2 > 150) continue;
+                                if (y2 > _diyZ2.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2858,7 +2858,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t2, z2))
                             {
-                                if (t2 > 150) continue;
+                                if (t2 > _diyZ3.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2875,7 +2875,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x3, z3))
                             {
-                                if (x3 > 150) continue;
+                                if (x3 > _diyZ1.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2887,7 +2887,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y3, z3))
                             {
-                                if (y3 > 150) continue;
+                                if (y3 > _diyZ2.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2899,7 +2899,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t3, z3))
                             {
-                                if (t3 > 150) continue;
+                                if (t3 > _diyZ3.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2916,7 +2916,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x4, z4))
                             {
-                                if (x4 > 150) continue;
+                                if (x4 > _diyZ1.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2928,7 +2928,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y4, z4))
                             {
-                                if (y4 > 150) continue;
+                                if (y4 > _diyZ2.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2940,7 +2940,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t4, z4))
                             {
-                                if (t4 > 150) continue;
+                                if (t4 > _diyZ3.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2957,7 +2957,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x5, z5))
                             {
-                                if (x5 > 150) continue;
+                                if (x5 > _diyZ1.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2969,7 +2969,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y5, z5))
                             {
-                                if (y5 > 150) continue;
+                                if (y5 > _diyZ2.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2981,7 +2981,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t5, z5))
                             {
-                                if (t5 > 150) continue;
+                                if (t5 > _diyZ3.Count) continue;
 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -2998,7 +2998,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ1.GetRange(x6, z6))
                             {
-                                if (x6 > 150) continue;
+                                if (x6 > _diyZ1.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -3010,7 +3010,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ2.GetRange(y6, z6))
                             {
-                                if (y6 > 150) continue;
+                                if (y6 > _diyZ2.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -3022,7 +3022,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _diyZ3.GetRange(t6, z6))
                             {
-                                if (t6 > 150) continue;
+                                if (t6 > _diyZ3.Count) continue;
                                 
                                 if (_corsairLEDIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -3045,7 +3045,7 @@ namespace Chromatics.DeviceInterfaces
                             
                             foreach (var key in _coolerZ1.GetRange(x1, z1))
                             {
-                                if (x1 > 150) continue;
+                                if (x1 > _coolerZ1.Count) continue;
                                 
                                 if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -3061,7 +3061,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _coolerZ1.GetRange(x2, z2))
                             {
-                                if (x2 > 150) continue;
+                                if (x2 > _coolerZ1.Count) continue;
                                 
                                 if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -3076,7 +3076,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _coolerZ1.GetRange(x3, z3))
                             {
-                                if (x3 > 150) continue;
+                                if (x3 > _coolerZ1.Count) continue;
 
                                 if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -3091,7 +3091,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _coolerZ1.GetRange(x4, z4))
                             {
-                                if (x4 > 150) continue;
+                                if (x4 > _coolerZ1.Count) continue;
 
                                 if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -3106,7 +3106,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _coolerZ1.GetRange(x5, z5))
                             {
-                                if (x5 > 150) continue;
+                                if (x5 > _coolerZ1.Count) continue;
 
                                 if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
@@ -3121,7 +3121,7 @@ namespace Chromatics.DeviceInterfaces
 
                             foreach (var key in _coolerZ1.GetRange(x6, z6))
                             {
-                                if (x6 > 150) continue;
+                                if (x6 > _coolerZ1.Count) continue;
                                 
                                 if (_corsairCoolerIndvBrush.CorsairGetColorReference(key) != cc)
                                 {
