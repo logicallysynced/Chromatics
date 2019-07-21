@@ -93,12 +93,22 @@ namespace Chromatics.DeviceInterfaces
             {29, "LIFX+ A19"},
             {30, "LIFX+ BR30"},
             {31, "LIFX Z"},
+            {32, "LIFX Z2"},
             {36, "LIFX Downlight"},
             {37, "LIFX Downlight"},
+            {38, "LIFX Beam"},
             {43, "LIFX A19"},
             {44, "LIFX BR30"},
             {45, "LIFX+ A19"},
-            {46, "LIFX+ BR30"}
+            {46, "LIFX+ BR30"},
+            {49, "LIFX Mini"},
+            {50, "LIFX Mini Day & Dusk"},
+            {51, "LIFX Mini White"},
+            {52, "LIFX GU10"},
+            {55, "LIFX Tile"},
+            {59, "LIFX Mini"},
+            {60, "LIFX Mini Day & Dusk"},
+            {61, "LIFX Mini White"}
         };
 
         private static readonly Dictionary<string, int> _LifxStateMemory = new Dictionary<string, int>();
@@ -319,14 +329,24 @@ namespace Chromatics.DeviceInterfaces
 
         private void LIFXClient_DeviceLost(object sender, LifxClient.DeviceDiscoveryEventArgs e)
         {
-            Write.WriteConsole(ConsoleTypes.Lifx,
-                "LIFX Device Lost: " + e.Device.HostName + " (" + e.Device.MacAddress + ")");
-            _LifxBulbsDat.Remove(e.Device as LightBulb);
-            _LifxBulbsRestore.Remove(e.Device as LightBulb);
-            _LifxDevices.Remove(e.Device.MacAddressName);
+            if (_LifxDevices.ContainsKey(e.Device.MacAddressName))
+            {
+                Write.WriteConsole(ConsoleTypes.Lifx,
+                    "LIFX Device Lost: " + e.Device.HostName + " (" + e.Device.MacAddress + ")");
 
-            if (_lifxBulbs > 0)
-                _lifxBulbs--;
+                if (_LifxBulbsDat.ContainsKey((LightBulb) e.Device))
+                    _LifxBulbsDat.Remove((LightBulb) e.Device);
+
+                if (_LifxBulbsRestore.ContainsKey((LightBulb) e.Device))
+                    _LifxBulbsRestore.Remove((LightBulb) e.Device);
+
+                _LifxDevices.Remove(e.Device.MacAddressName);
+
+                if (_lifxBulbs > 0)
+                    _lifxBulbs--;
+                
+                Write.ResetDeviceDataGrid();
+            }
 
             if (_lifxBulbs == 0)
             {
@@ -334,8 +354,6 @@ namespace Chromatics.DeviceInterfaces
                 //LifxSDKCalled = 0;
                 Write.WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK Disabled (No Devices Found)");
             }
-
-            Write.ResetDeviceDataGrid();
         }
 
         private async void LIFXClient_DeviceDiscovered(object sender, LifxClient.DeviceDiscoveryEventArgs e)
@@ -359,24 +377,30 @@ namespace Chromatics.DeviceInterfaces
                 defaultmode = _LifxModeMemory[e.Device.MacAddressName];
             }
 
-            _LifxBulbsDat.Add(e.Device as LightBulb, defaultmode);
-            _LifxBulbsRestore.Add(e.Device as LightBulb, state);
-            _LifxDevices.Add(e.Device.MacAddressName, e.Device as LightBulb);
-
-
-            _lifxBulbs++;
-
-            if (_lifxSdk == false && _lifxBulbs > 0)
+            if (!_LifxDevices.ContainsKey(e.Device.MacAddressName))
             {
-                _lifxSdk = true;
-                //LifxSDKCalled = 1;
-                Write.WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK Enabled");
+                if (!_LifxBulbsDat.ContainsKey((LightBulb) e.Device))
+                    _LifxBulbsDat.Add((LightBulb) e.Device, defaultmode);
+
+                if (!_LifxBulbsRestore.ContainsKey((LightBulb) e.Device))
+                    _LifxBulbsRestore.Add((LightBulb) e.Device, state);
+
+                _LifxDevices.Add(e.Device.MacAddressName, (LightBulb) e.Device);
+                
+                _lifxBulbs++;
+
+                if (_lifxSdk == false && _lifxBulbs > 0)
+                {
+                    _lifxSdk = true;
+                    //LifxSDKCalled = 1;
+                    Write.WriteConsole(ConsoleTypes.Lifx, @"LIFX SDK Enabled");
+                }
+
+                Write.WriteConsole(ConsoleTypes.Lifx,
+                    "LIFX Bulb Found: " + state.Label + " (" + e.Device.MacAddressName + ")");
+
+                Write.ResetDeviceDataGrid();
             }
-
-            Write.WriteConsole(ConsoleTypes.Lifx,
-                "LIFX Bulb Found: " + state.Label + " (" + e.Device.MacAddressName + ")");
-
-            Write.ResetDeviceDataGrid();
         }
 
         private void LoadLifxDevices()
@@ -411,8 +435,23 @@ namespace Chromatics.DeviceInterfaces
 
                                 var lEnabled = 0;
                                 int.TryParse(lState[2], out lEnabled);
-                                _LifxModeMemory.Add(lState[0], lMode);
-                                _LifxStateMemory.Add(lState[0], lEnabled);
+                                if (LifxModeMemory.ContainsKey(lState[0]))
+                                {
+                                    LifxModeMemory[lState[0]] = lMode;
+                                }
+                                else
+                                {
+                                    LifxModeMemory.Add(lState[0], lMode);
+                                }
+
+                                if (LifxStateMemory.ContainsKey(lState[0]))
+                                {
+                                    LifxStateMemory[lState[0]] = lEnabled;
+                                }
+                                else
+                                {
+                                    LifxStateMemory.Add(lState[0], lEnabled);
+                                }
                             }
                         }
                     }

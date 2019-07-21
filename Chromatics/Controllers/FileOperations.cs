@@ -372,8 +372,24 @@ namespace Chromatics
 
                                 var lEnabled = 0;
                                 int.TryParse(lState[2], out lEnabled);
-                                _lifx.LifxModeMemory.Add(lState[0], lMode);
-                                _lifx.LifxStateMemory.Add(lState[0], lEnabled);
+
+                                if (_lifx.LifxModeMemory.ContainsKey(lState[0]))
+                                {
+                                    _lifx.LifxModeMemory[lState[0]] = lMode;
+                                }
+                                else
+                                {
+                                    _lifx.LifxModeMemory.Add(lState[0], lMode);
+                                }
+
+                                if (_lifx.LifxStateMemory.ContainsKey(lState[0]))
+                                {
+                                    _lifx.LifxStateMemory[lState[0]] = lEnabled;
+                                }
+                                else
+                                {
+                                    _lifx.LifxStateMemory.Add(lState[0], lEnabled);
+                                }
                             }
                         }
                         

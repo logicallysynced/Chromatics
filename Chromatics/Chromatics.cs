@@ -500,7 +500,7 @@ namespace Chromatics
                     SaveChromaticsSettings(0);
                 }
             }
-
+            
             //Check Updater
             try
             {
@@ -537,7 +537,7 @@ namespace Chromatics
             notify_master.ContextMenuStrip = contextMenuStrip1;
             
             Localization.SetKeyRegion(ChromaticsSettings.ChromaticsSettingsQwertyMode);
-
+            
             try
             {
                 if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
@@ -562,6 +562,7 @@ namespace Chromatics
             //Setup Device Interfaces
             InitializeSdk();
             InitDevicesGui();
+            SaveChromaticsSettings(0);
 
             if (LogitechSdkCalled == 1 && Process.GetProcessesByName("LCore").Length > 0)
             {
