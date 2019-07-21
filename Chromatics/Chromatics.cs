@@ -28,6 +28,11 @@ namespace Chromatics
     {
         //Setup Threading/Tasks
         private CancellationTokenSource _memoryTask = new CancellationTokenSource();
+        PerformanceCounter cpuCounter;
+        PerformanceCounter ramCounter;
+        private bool usageWarning;
+        private int cpuUsageMax = 30;
+        private int ramUsageMax = 500;
 
         private ILogitechArx _arx;
         private ILogitechLcd _lcd;
@@ -364,6 +369,7 @@ namespace Chromatics
 
             SetupAboutText();
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+            cpuCounter = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName, true);
             
             //Setup Event Listeners
             FormClosing += OnFormClosing;
