@@ -365,7 +365,28 @@ namespace Chromatics
                 
                 if (cpuCounter != null)
                 {
-                    if (Math.Round(cpuCounter.NextValue() / Environment.ProcessorCount) > cpuUsageMax)
+                    if ((cpuCounter.NextValue() / Environment.ProcessorCount) > cpuUsageDanger)
+                    {
+                        WriteConsole(ConsoleTypes.Error, "Chromatics exceeded dangerous CPU usage limit. Attempting to close Chromatics..");
+                        _allowClose = true;
+                    
+                        if (InvokeRequired)
+                        {
+                            void Dispose()
+                            {
+                                notify_master.Dispose();
+                            }
+
+                            Invoke((SetFormNameDelegate) Dispose);
+                        }
+                        else
+                        {
+                            notify_master.Dispose();
+                        }
+            
+                        Environment.Exit(Environment.ExitCode);
+                    }
+                    else if (Math.Round(cpuCounter.NextValue() / Environment.ProcessorCount) > cpuUsageMax)
                     {
                         //CPU exceed
                         if (!usageWarning)
@@ -630,7 +651,28 @@ namespace Chromatics
             //Check for crash
             if (cpuCounter != null)
             {
-                if (Math.Round(cpuCounter.NextValue() / Environment.ProcessorCount) > cpuUsageMax)
+                if ((cpuCounter.NextValue() / Environment.ProcessorCount) > cpuUsageDanger)
+                {
+                    WriteConsole(ConsoleTypes.Error, "Chromatics exceeded dangerous CPU usage limit. Attempting to close Chromatics..");
+                    _allowClose = true;
+                    
+                    if (InvokeRequired)
+                    {
+                        void Dispose()
+                        {
+                            notify_master.Dispose();
+                        }
+
+                        Invoke((SetFormNameDelegate) Dispose);
+                    }
+                    else
+                    {
+                        notify_master.Dispose();
+                    }
+            
+                    Environment.Exit(Environment.ExitCode);
+                }
+                else if (Math.Round(cpuCounter.NextValue() / Environment.ProcessorCount) > cpuUsageMax)
                 {
                     //CPU exceed
                     if (!usageWarning)
