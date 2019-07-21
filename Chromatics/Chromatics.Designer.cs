@@ -247,9 +247,11 @@
             this.btn_ifttthelp = new System.Windows.Forms.Button();
             this.chk_enableifttt = new System.Windows.Forms.CheckBox();
             this.tP_about = new System.Windows.Forms.TabPage();
+            this.sC_about = new System.Windows.Forms.SplitContainer();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.lbl_about_ver = new System.Windows.Forms.Label();
-            this.rtb_about = new System.Windows.Forms.RichTextBox();
             this.pB_about_logo = new System.Windows.Forms.PictureBox();
+            this.rtb_about = new System.Windows.Forms.RichTextBox();
             this.mapping_colorEditorManager = new Cyotek.Windows.Forms.ColorEditorManager();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mi_effectsenable = new System.Windows.Forms.ToolStripMenuItem();
@@ -261,8 +263,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.sC_about = new System.Windows.Forms.SplitContainer();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.lbl_lifx_other = new System.Windows.Forms.Label();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -313,13 +314,13 @@
             this.tP_ifttt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).BeginInit();
             this.tP_about.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pB_about_logo)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sC_about)).BeginInit();
             this.sC_about.Panel1.SuspendLayout();
             this.sC_about.Panel2.SuspendLayout();
             this.sC_about.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pB_about_logo)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtb_debug
@@ -1056,6 +1057,7 @@
             // tP_bulbs
             // 
             this.tP_bulbs.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_bulbs.Controls.Add(this.lbl_lifx_other);
             this.tP_bulbs.Controls.Add(this.chk_enablebulbextraeffect);
             this.tP_bulbs.Controls.Add(this.dG_devices);
             this.tP_bulbs.Location = new System.Drawing.Point(4, 22);
@@ -3268,6 +3270,34 @@
             this.tP_about.TabIndex = 8;
             this.tP_about.Text = "About";
             // 
+            // sC_about
+            // 
+            this.sC_about.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sC_about.Location = new System.Drawing.Point(0, 0);
+            this.sC_about.Name = "sC_about";
+            this.sC_about.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // sC_about.Panel1
+            // 
+            this.sC_about.Panel1.Controls.Add(this.panel1);
+            this.sC_about.Panel1.Controls.Add(this.pB_about_logo);
+            // 
+            // sC_about.Panel2
+            // 
+            this.sC_about.Panel2.Controls.Add(this.rtb_about);
+            this.sC_about.Size = new System.Drawing.Size(725, 399);
+            this.sC_about.SplitterDistance = 134;
+            this.sC_about.TabIndex = 6;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lbl_about_ver);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 106);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(725, 28);
+            this.panel1.TabIndex = 6;
+            // 
             // lbl_about_ver
             // 
             this.lbl_about_ver.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3278,19 +3308,6 @@
             this.lbl_about_ver.TabIndex = 5;
             this.lbl_about_ver.Text = "Version 2.5.0";
             this.lbl_about_ver.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // rtb_about
-            // 
-            this.rtb_about.CausesValidation = false;
-            this.rtb_about.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtb_about.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtb_about.Location = new System.Drawing.Point(0, 0);
-            this.rtb_about.Name = "rtb_about";
-            this.rtb_about.ReadOnly = true;
-            this.rtb_about.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtb_about.Size = new System.Drawing.Size(725, 261);
-            this.rtb_about.TabIndex = 4;
-            this.rtb_about.Text = "";
             // 
             // pB_about_logo
             // 
@@ -3305,6 +3322,19 @@
             this.pB_about_logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pB_about_logo.TabIndex = 3;
             this.pB_about_logo.TabStop = false;
+            // 
+            // rtb_about
+            // 
+            this.rtb_about.CausesValidation = false;
+            this.rtb_about.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtb_about.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtb_about.Location = new System.Drawing.Point(0, 0);
+            this.rtb_about.Name = "rtb_about";
+            this.rtb_about.ReadOnly = true;
+            this.rtb_about.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rtb_about.Size = new System.Drawing.Size(725, 261);
+            this.rtb_about.TabIndex = 4;
+            this.rtb_about.Text = "";
             // 
             // mapping_colorEditorManager
             // 
@@ -3382,33 +3412,14 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // sC_about
+            // lbl_lifx_other
             // 
-            this.sC_about.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sC_about.Location = new System.Drawing.Point(0, 0);
-            this.sC_about.Name = "sC_about";
-            this.sC_about.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // sC_about.Panel1
-            // 
-            this.sC_about.Panel1.Controls.Add(this.panel1);
-            this.sC_about.Panel1.Controls.Add(this.pB_about_logo);
-            // 
-            // sC_about.Panel2
-            // 
-            this.sC_about.Panel2.Controls.Add(this.rtb_about);
-            this.sC_about.Size = new System.Drawing.Size(725, 399);
-            this.sC_about.SplitterDistance = 134;
-            this.sC_about.TabIndex = 6;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.lbl_about_ver);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 106);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(725, 28);
-            this.panel1.TabIndex = 6;
+            this.lbl_lifx_other.AutoSize = true;
+            this.lbl_lifx_other.Location = new System.Drawing.Point(5, 7);
+            this.lbl_lifx_other.Name = "lbl_lifx_other";
+            this.lbl_lifx_other.Size = new System.Drawing.Size(344, 13);
+            this.lbl_lifx_other.TabIndex = 9;
+            this.lbl_lifx_other.Text = "For Philips HUE support, please use Razer ChromaLink (See Other tab).";
             // 
             // Chromatics
             // 
@@ -3488,13 +3499,13 @@
             this.tP_ifttt.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_iftttgrid)).EndInit();
             this.tP_about.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pB_about_logo)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.sC_about.Panel1.ResumeLayout(false);
             this.sC_about.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.sC_about)).EndInit();
             this.sC_about.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pB_about_logo)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -3733,6 +3744,7 @@
         private System.Windows.Forms.PictureBox pB_about_logo;
         private System.Windows.Forms.SplitContainer sC_about;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lbl_lifx_other;
     }
 }
 
