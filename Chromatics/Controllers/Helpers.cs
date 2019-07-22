@@ -177,6 +177,12 @@ namespace Chromatics.Controllers
                     return "DutyFinder";
                 case DevModeTypes.ACTTracker:
                     return "ACTTracker";
+                case DevModeTypes.ReactiveWeather:
+                    return "ReactiveWeather";
+                case DevModeTypes.BattleStance:
+                    return "BattleStance";
+                case DevModeTypes.JobClass:
+                    return "JobClass";
             }
             
             return "Disabled";
@@ -240,6 +246,12 @@ namespace Chromatics.Controllers
                     return DevModeTypes.DutyFinder;
                 case "ACTTracker":
                     return DevModeTypes.ACTTracker;
+                case "ReactiveWeather":
+                    return DevModeTypes.ReactiveWeather;
+                case "BattleStance":
+                    return DevModeTypes.BattleStance;
+                case "JobClass":
+                    return DevModeTypes.JobClass;
             }
             
             return DevModeTypes.Disabled;
@@ -304,6 +316,12 @@ namespace Chromatics.Controllers
                     return DevModeTypes.DutyFinder;
                 case "ACT Tracker":
                     return DevModeTypes.ACTTracker;
+                case "Reactive Weather":
+                    return DevModeTypes.ReactiveWeather;
+                case "Battle Stance":
+                    return DevModeTypes.BattleStance;
+                case "Job Class":
+                    return DevModeTypes.JobClass;
             }
 
             return DevModeTypes.Disabled;
@@ -367,6 +385,12 @@ namespace Chromatics.Controllers
                     return "Duty Finder Bell";
                 case DevModeTypes.ACTTracker:
                     return "ACT Tracker";
+                case DevModeTypes.ReactiveWeather:
+                    return "Reactive Weather";
+                case DevModeTypes.BattleStance:
+                    return "Battle Stance";
+                case DevModeTypes.JobClass:
+                    return "Job Class";
             }
 
             return "Disabled";

@@ -1287,9 +1287,546 @@ namespace Chromatics
 
                             //Console.WriteLine("Map ID: " + PlayerInfo.MapID);
 
-                            //Parse Data
+                            //Battle Stance
+                            if (battleStance != _battleStance)
+                            {
+                                switch (battleStance)
+                                {
+                                    case 0:
+                                        //Idle
+                                        _baseStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity);
+                                        _highlightStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                        break;
+                                    case 1:
+                                        //Engaged
+                                        _baseStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed);
+                                        _highlightStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                        break;
+                                    case 2:
+                                        //Aggro
+                                        _baseStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity4);
+                                        _highlightStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                        break;
+                                    case 3:
+                                        //Cating
+                                        _baseStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting);
+                                        _highlightStanceColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                        break;
+                                }
+                                
+                                _battleStance = battleStance;
+                            }
+
+
+                            //Smartbulbs
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                             !_inVegas))
+                            {
+                                GlobalUpdateBulbState(BulbModeTypes.BattleStance, _baseStanceColor, 100);
+                            }
+                            
+                            //Lightbar
+                            if (_LightbarMode == LightbarMode.BattleStance)
+                            {
+                                foreach (var f in DeviceEffects.LightbarZones)
+                                {
+                                    GlobalApplyMapLightbarLighting(f, _baseStanceColor, false, false);
+                                }
+                            }
+
+                            //Fkeys
+                            if (_FKeyMode == FKeyMode.BattleStance)
+                            {
+                                foreach (var f in DeviceEffects.Functions)
+                                {
+                                    GlobalApplyMapKeyLighting(f, _baseStanceColor, false, false);
+                                }
+                            }
+
+
+                            //Mouse
+                            GlobalApplyMapMouseLighting(DevModeTypes.BattleStance, _baseStanceColor, false);
+
+                            GlobalApplyStripMouseLighting(DevModeTypes.BattleStance, "LeftSide1", "RightSide1",
+                                _baseStanceColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.BattleStance, "LeftSide2", "RightSide2",
+                                _baseStanceColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.BattleStance, "LeftSide3", "RightSide3",
+                                _baseStanceColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.BattleStance, "LeftSide4", "RightSide4",
+                                _baseStanceColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.BattleStance, "LeftSide5", "RightSide5",
+                                _baseStanceColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.BattleStance, "LeftSide6", "RightSide6",
+                                _baseStanceColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.BattleStance, "LeftSide7", "RightSide7",
+                                _baseStanceColor,
+                                false);
+
+                            //Pad
+                            GlobalApplyMapPadLighting(DevModeTypes.BattleStance, 14, 5, 0, _baseStanceColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.BattleStance, 13, 6, 1, _baseStanceColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.BattleStance, 12, 7, 2, _baseStanceColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.BattleStance, 11, 8, 3, _baseStanceColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.BattleStance, 10, 9, 4, _baseStanceColor, false);
+
+                            //Headset
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.BattleStance, _baseStanceColor, false);
+
+                            //ChromaLink
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.BattleStance, _baseStanceColor, true);
+
+
+
+                            //Job Classes
+                            if (jobClass != _jobClass)
+                            {
+                                switch (jobClass)
+                                {
+                                    case "CPT":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTHighlight);
+                                        break;
+                                    case "BSM":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMHighlight);
+                                        break;
+                                    case "ARM":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMHighlight);
+                                        break;
+                                    case "GSM":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMHighlight);
+                                        break;
+                                    case "LTW":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWHighlight);
+                                        break;
+                                    case "WVR":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRHighlight);
+                                        break;
+                                    case "ALC":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCHighlight);
+                                        break;
+                                    case "CUL":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULHighlight);
+                                        break;
+                                    case "MIN":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINHighlight);
+                                        break;
+                                    case "BTN":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNHighlight);
+                                        break;
+                                    case "FSH":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHHighlight);
+                                        break;
+                                    case "PLD":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDHighlight);
+                                        break;
+                                    case "MNK":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKHighlight);
+                                        break;
+                                    case "WAR":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARHighlight);
+                                        break;
+                                    case "DRG":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGHighlight);
+                                        break;
+                                    case "BRD":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDHighlight);
+                                        break;
+                                    case "WHM":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMHighlight);
+                                        break;
+                                    case "BLM":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMHighlight);
+                                        break;
+                                    case "SMN":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNHighlight);
+                                        break;
+                                    case "SCH":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHHighlight);
+                                        break;
+                                    case "NIN":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHighlight);
+                                        break;
+                                    case "MCH":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHHighlight);
+                                        break;
+                                    case "DRK":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKHighlight);
+                                        break;
+                                    case "AST":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTHighlight);
+                                        break;
+                                    case "SAM":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMHighlight);
+                                        break;
+                                    case "RDM":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMHighlight);
+                                        break;
+                                    case "DNC":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCHighlight);
+                                        break;
+                                    case "GNB":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBHighlight);
+                                        break;
+                                    case "BLU":
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUBase);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUHighlight);
+                                        break;
+                                    default:
+                                        _baseJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
+                                        _highlightJobColor =
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+                                        break;
+                                }
+                                
+                                _jobClass = jobClass;
+                            }
+
+                            //Smartbulbs
+                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                             !_inVegas))
+                            {
+                                GlobalUpdateBulbState(BulbModeTypes.JobClass, _baseJobColor, 100);
+                            }
+                            
+                            //Lightbar
+                            if (_LightbarMode == LightbarMode.JobClass)
+                            {
+                                foreach (var f in DeviceEffects.LightbarZones)
+                                {
+                                    GlobalApplyMapLightbarLighting(f, _baseJobColor, false, false);
+                                }
+                            }
+
+                            //Fkeys
+                            if (_FKeyMode == FKeyMode.JobClass)
+                            {
+                                foreach (var f in DeviceEffects.Functions)
+                                {
+                                    GlobalApplyMapKeyLighting(f, _baseJobColor, false, false);
+                                }
+                            }
+
+
+                            //Mouse
+                            GlobalApplyMapMouseLighting(DevModeTypes.JobClass, _baseJobColor, false);
+
+                            GlobalApplyStripMouseLighting(DevModeTypes.JobClass, "LeftSide1", "RightSide1",
+                                _baseJobColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.JobClass, "LeftSide2", "RightSide2",
+                                _baseJobColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.JobClass, "LeftSide3", "RightSide3",
+                                _baseJobColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.JobClass, "LeftSide4", "RightSide4",
+                                _baseJobColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.JobClass, "LeftSide5", "RightSide5",
+                                _baseJobColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.JobClass, "LeftSide6", "RightSide6",
+                                _baseJobColor,
+                                false);
+                            GlobalApplyStripMouseLighting(DevModeTypes.JobClass, "LeftSide7", "RightSide7",
+                                _baseJobColor,
+                                false);
+
+                            //Pad
+                            GlobalApplyMapPadLighting(DevModeTypes.JobClass, 14, 5, 0, _baseJobColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.JobClass, 13, 6, 1, _baseJobColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.JobClass, 12, 7, 2, _baseJobColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.JobClass, 11, 8, 3, _baseJobColor, false);
+                            GlobalApplyMapPadLighting(DevModeTypes.JobClass, 10, 9, 4, _baseJobColor, false);
+
+                            //Headset
+                            GlobalApplyMapHeadsetLighting(DevModeTypes.JobClass, _baseJobColor, false);
+
+                            //ChromaLink
+                            GlobalApplyMapChromaLinkLighting(DevModeTypes.JobClass, _baseJobColor, true);
+
 
                             //Reactive Weather
+                            FFXIVWeather.RefreshData();
+                            var currentWeather = FFXIVWeather.WeatherIconID();
+
+                            if (_lastWeather != currentWeather)
+                            {
+                                _lastWeather = currentWeather;
+                            }
+
+                            if (_lastWeather > 0)
+                            {
+                                var weatherMapbaseKey = _mappingPalette.FirstOrDefault(x =>
+                                    x.Value[0] == FFXIVWeather.WeatherIconName(_lastWeather) + @" (Base)").Key;
+                                var weatherMaphighlightKey = _mappingPalette.FirstOrDefault(x =>
+                                    x.Value[0] == FFXIVWeather.WeatherIconName(_lastWeather) + @" (Highlight)").Key;
+
+
+                                if (string.IsNullOrWhiteSpace(weatherMapbaseKey) ||
+                                    string.IsNullOrWhiteSpace(weatherMaphighlightKey))
+                                {
+                                    _baseWeatherColor =
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
+                                    _highlightWeatherColor =
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
+
+                                    //Smartbulbs
+                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                     !_inVegas))
+                                    {
+                                        GlobalUpdateBulbState(BulbModeTypes.ReactiveWeather, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), 100);
+                                    }
+                                    
+                                    //Lightbar
+                                    if (_LightbarMode == LightbarMode.ReactiveWeather)
+                                    {
+                                        foreach (var f in DeviceEffects.LightbarZones)
+                                        {
+                                            GlobalApplyMapLightbarLighting(f, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false, false);
+                                        }
+                                    }
+
+                                    //Fkeys
+                                    if (_FKeyMode == FKeyMode.ReactiveWeather)
+                                    {
+                                        foreach (var f in DeviceEffects.Functions)
+                                        {
+                                            GlobalApplyMapKeyLighting(f, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false, false);
+                                        }
+                                    }
+
+                                    //Keypad
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false,
+                                        "All");
+
+                                    //Mouse
+                                    GlobalApplyMapMouseLighting(DevModeTypes.ReactiveWeather, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false);
+
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide1", "RightSide1",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide2", "RightSide2",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide3", "RightSide3",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide4", "RightSide4",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide5", "RightSide5",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide6", "RightSide6",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide7", "RightSide7",
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor),
+                                        false);
+
+                                    //Pad
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 14, 5, 0, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 13, 6, 1, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 12, 7, 2, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 11, 8, 3, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 10, 9, 4, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false);
+
+                                    //Headset
+                                    GlobalApplyMapHeadsetLighting(DevModeTypes.ReactiveWeather, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false);
+
+                                    //ChromaLink
+                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.ReactiveWeather, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), true);
+                                }
+                                else
+                                {
+                                    var weatherMapbase = (string) typeof(Datastore.FfxivColorMappings)
+                                        .GetField(weatherMapbaseKey).GetValue(ColorMappings);
+                                    var weatherMaphighlight = (string) typeof(Datastore.FfxivColorMappings)
+                                        .GetField(weatherMaphighlightKey).GetValue(ColorMappings);
+                                    
+                                    //Smartbulbs
+                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
+                                     !_inVegas))
+                                    {
+                                        GlobalUpdateBulbState(BulbModeTypes.ReactiveWeather, ColorTranslator.FromHtml(weatherMapbase), 100);
+                                    }
+                                    
+                                    //Lightbar
+                                    if (_LightbarMode == LightbarMode.ReactiveWeather)
+                                    {
+                                        foreach (var f in DeviceEffects.LightbarZones)
+                                        {
+                                            GlobalApplyMapLightbarLighting(f, ColorTranslator.FromHtml(weatherMapbase), false, false);
+                                        }
+                                    }
+
+                                    //Fkeys
+                                    if (_FKeyMode == FKeyMode.ReactiveWeather)
+                                    {
+                                        foreach (var f in DeviceEffects.Functions)
+                                        {
+                                            GlobalApplyMapKeyLighting(f, ColorTranslator.FromHtml(weatherMapbase), false, false);
+                                        }
+                                    }
+
+                                    //Keypad
+                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
+                                        ColorTranslator.FromHtml(weatherMapbase), false,
+                                        "All");
+
+                                    //Mouse
+                                    GlobalApplyMapMouseLighting(DevModeTypes.ReactiveWeather, ColorTranslator.FromHtml(weatherMapbase), false);
+
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide1", "RightSide1",
+                                        ColorTranslator.FromHtml(weatherMapbase),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide2", "RightSide2",
+                                        ColorTranslator.FromHtml(weatherMapbase),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide3", "RightSide3",
+                                        ColorTranslator.FromHtml(weatherMapbase),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide4", "RightSide4",
+                                        ColorTranslator.FromHtml(weatherMapbase),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide5", "RightSide5",
+                                        ColorTranslator.FromHtml(weatherMapbase),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide6", "RightSide6",
+                                        ColorTranslator.FromHtml(weatherMapbase),
+                                        false);
+                                    GlobalApplyStripMouseLighting(DevModeTypes.ReactiveWeather, "LeftSide7", "RightSide7",
+                                        ColorTranslator.FromHtml(weatherMapbase),
+                                        false);
+
+                                    //Pad
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 14, 5, 0, ColorTranslator.FromHtml(weatherMapbase), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 13, 6, 1, ColorTranslator.FromHtml(weatherMapbase), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 12, 7, 2, ColorTranslator.FromHtml(weatherMapbase), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 11, 8, 3, ColorTranslator.FromHtml(weatherMapbase), false);
+                                    GlobalApplyMapPadLighting(DevModeTypes.ReactiveWeather, 10, 9, 4, ColorTranslator.FromHtml(weatherMapbase), false);
+
+                                    //Headset
+                                    GlobalApplyMapHeadsetLighting(DevModeTypes.ReactiveWeather, ColorTranslator.FromHtml(weatherMapbase), false);
+
+                                    //ChromaLink
+                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.ReactiveWeather, ColorTranslator.FromHtml(weatherMapbase), true);
+                                }
+
+
+                            }
+
 
                             if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Reactive Weather")
                             {
@@ -1304,11 +1841,7 @@ namespace Chromatics
 
                                     _weathertoggle = true;
                                 }
-
-                                FFXIVWeather.RefreshData();
-
-                                var currentWeather = FFXIVWeather.WeatherIconID();
-
+                                
                                 if (_lastWeather != currentWeather)
                                 {
                                     _lastWeather = currentWeather;
@@ -1331,14 +1864,8 @@ namespace Chromatics
                                     if (string.IsNullOrWhiteSpace(weatherMapbaseKey) ||
                                         string.IsNullOrWhiteSpace(weatherMaphighlightKey))
                                     {
-                                        _baseWeatherColor =
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
-                                        _highlightWeatherColor =
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
-
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
-                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false,
-                                            "All");
+                                        _baseWeatherColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
+                                        _highlightWeatherColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
                                     }
                                     else
                                     {
@@ -1349,260 +1876,36 @@ namespace Chromatics
 
                                         _baseWeatherColor = ColorTranslator.FromHtml(weatherMapbase);
                                         _highlightWeatherColor = ColorTranslator.FromHtml(weatherMaphighlight);
-
-                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.ReactiveWeather,
-                                            ColorTranslator.FromHtml(weatherMapbase), false, "All");
                                     }
 
-
+                                    
                                     baseColor = _baseWeatherColor;
                                     highlightColor = _highlightWeatherColor;
 
                                 }
+
+                                
                             }
                             else if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Battle Stance")
                             {
-                                if (battleStance != _battleStance)
+                                if (baseColor != _baseStanceColor)
                                 {
-                                    switch (battleStance)
-                                    {
-                                        case 0:
-                                            //Idle
-                                            _baseStanceColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity);
-                                            _highlightStanceColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
-
-                                            break;
-                                        case 1:
-                                            //Engaged
-                                            _baseStanceColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed);
-                                            _highlightStanceColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
-
-                                            break;
-                                        case 2:
-                                            //Aggro
-                                            _baseStanceColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingEmnity4);
-                                            _highlightStanceColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
-
-                                            break;
-                                        case 3:
-                                            //Cating
-                                            _baseStanceColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting);
-                                            _highlightStanceColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
-
-                                            break;
-                                    }
-
                                     SetKeysbase = false;
                                     SetMousebase = false;
                                     SetPadbase = false;
                                     SetHeadsetbase = false;
                                     SetKeypadbase = false;
                                     SetCLbase = false;
-
-                                    _battleStance = battleStance;
+                                    baseColor = _baseStanceColor;
+                                    highlightColor = _highlightStanceColor;
                                 }
-
-
-
-                                baseColor = _baseStanceColor;
-                                highlightColor = _highlightStanceColor;
+                                    
                             }
                             else if (ChromaticsSettings.ChromaticsSettingsBaseMode == "Job Classes")
                             {
-                                if (jobClass != _jobClass)
-                                {
-                                    switch (jobClass)
-                                    {
-                                        case "CPT":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCPTHighlight);
-                                            break;
-                                        case "BSM":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBSMHighlight);
-                                            break;
-                                        case "ARM":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobARMHighlight);
-                                            break;
-                                        case "GSM":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGSMHighlight);
-                                            break;
-                                        case "LTW":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobLTWHighlight);
-                                            break;
-                                        case "WVR":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWVRHighlight);
-                                            break;
-                                        case "ALC":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobALCHighlight);
-                                            break;
-                                        case "CUL":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobCULHighlight);
-                                            break;
-                                        case "MIN":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMINHighlight);
-                                            break;
-                                        case "BTN":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBTNHighlight);
-                                            break;
-                                        case "FSH":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobFSHHighlight);
-                                            break;
-                                        case "PLD":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDHighlight);
-                                            break;
-                                        case "MNK":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKHighlight);
-                                            break;
-                                        case "WAR":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARHighlight);
-                                            break;
-                                        case "DRG":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGHighlight);
-                                            break;
-                                        case "BRD":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDHighlight);
-                                            break;
-                                        case "WHM":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMHighlight);
-                                            break;
-                                        case "BLM":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMHighlight);
-                                            break;
-                                        case "SMN":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNHighlight);
-                                            break;
-                                        case "SCH":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHHighlight);
-                                            break;
-                                        case "NIN":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHighlight);
-                                            break;
-                                        case "MCH":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHHighlight);
-                                            break;
-                                        case "DRK":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKHighlight);
-                                            break;
-                                        case "AST":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTHighlight);
-                                            break;
-                                        case "SAM":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMHighlight);
-                                            break;
-                                        case "RDM":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMHighlight);
-                                            break;
-                                        case "DNC":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDNCHighlight);
-                                            break;
-                                        case "GNB":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobGNBHighlight);
-                                            break;
-                                        case "BLU":
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUBase);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUHighlight);
-                                            break;
-                                        default:
-                                            _baseJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
-                                            _highlightJobColor =
-                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingHighlightColor);
-                                            break;
-                                    }
 
+                                if (baseColor != _baseJobColor)
+                                {
                                     SetKeysbase = false;
                                     SetMousebase = false;
                                     SetPadbase = false;
@@ -1610,12 +1913,11 @@ namespace Chromatics
                                     SetKeypadbase = false;
                                     SetCLbase = false;
 
-                                    _jobClass = jobClass;
+                                    baseColor = _baseJobColor;
+                                    highlightColor = _highlightJobColor;
                                 }
 
-
-                                baseColor = _baseJobColor;
-                                highlightColor = _highlightJobColor;
+                                
                             }
                             else
                             {
@@ -3243,8 +3545,7 @@ namespace Chromatics
 
                                             //_emnitytable.Clear();
 
-                                            battleStance = 1;
-
+                                            
                                             if (emnityPosition == -1)
                                             {
                                                 //Engaged/No Aggro
@@ -3292,6 +3593,8 @@ namespace Chromatics
                                                     false);
                                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm0,
                                                     false);
+
+                                                battleStance = 1;
 
                                                 if (_LightbarMode == LightbarMode.EnmityTracker)
                                                 {
@@ -3372,6 +3675,8 @@ namespace Chromatics
                                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm1,
                                                     false);
 
+                                                battleStance = 1;
+
                                                 if (_LightbarMode == LightbarMode.EnmityTracker)
                                                 {
                                                     foreach (var f in DeviceEffects.LightbarZones)
@@ -3451,6 +3756,8 @@ namespace Chromatics
                                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm2,
                                                     false);
 
+                                                battleStance = 1;
+
                                                 if (_LightbarMode == LightbarMode.EnmityTracker)
                                                 {
                                                     foreach (var f in DeviceEffects.LightbarZones)
@@ -3529,6 +3836,8 @@ namespace Chromatics
                                                     false);
                                                 GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4, colEm3,
                                                     false);
+
+                                                battleStance = 1;
 
                                                 if (_LightbarMode == LightbarMode.EnmityTracker)
                                                 {
@@ -3854,6 +4163,9 @@ namespace Chromatics
                             }
                             else
                             {
+                                if (!_playerInfo.InCombat)
+                                    battleStance = 0;
+
                                 GlobalApplyMapKeyLighting("Macro1", _baseColor, false);
                                 GlobalApplyMapKeyLighting("Macro2", _baseColor, false);
                                 GlobalApplyMapKeyLighting("Macro3", _baseColor, false);
@@ -3872,7 +4184,7 @@ namespace Chromatics
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.TargetHp, baseColor, false);
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, baseColor, false, "All");
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor, true);
-
+                                
                                 if (_LightbarMode == LightbarMode.TargetHp ||
                                     _LightbarMode == LightbarMode.EnmityTracker)
                                 {

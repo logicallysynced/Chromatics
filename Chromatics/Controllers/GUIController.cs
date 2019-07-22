@@ -38,7 +38,10 @@ namespace Chromatics
             {BulbModeTypes.Castbar, "Castbar"},
             {BulbModeTypes.DutyFinder, "Duty Finder Bell"},
             {BulbModeTypes.ACTTracker, "ACT Tracker"},
-            {BulbModeTypes.ChromaticsDefault, "Chromatics Default"}
+            {BulbModeTypes.ChromaticsDefault, "Chromatics Default"},
+            {BulbModeTypes.ReactiveWeather, "Reactive Weather"},
+            {BulbModeTypes.BattleStance, "Battle Stance"},
+            {BulbModeTypes.JobClass, "Job Class"}
         };
 
         private readonly Dictionary<DevModeTypes, string> _devModesA = new Dictionary<DevModeTypes, string>
@@ -54,7 +57,10 @@ namespace Chromatics
             {DevModeTypes.MpTracker, "MP Tracker"},
             {DevModeTypes.Castbar, "Castbar"},
             {DevModeTypes.DutyFinder, "Duty Finder Bell"},
-            {DevModeTypes.ACTTracker, "ACT Tracker"}
+            {DevModeTypes.ACTTracker, "ACT Tracker"},
+            {DevModeTypes.ReactiveWeather, "Reactive Weather"},
+            {DevModeTypes.BattleStance, "Battle Stance"},
+            {DevModeTypes.JobClass, "Job Class"}
         };
 
         private readonly Dictionary<DevMultiModeTypes, string> _devModesMulti = new Dictionary<DevMultiModeTypes, string>
@@ -1167,7 +1173,6 @@ namespace Chromatics
 
             foreach (var item in _devModesA)
             {
-                cb_singlezonemode.Items.Add(item.Value);
                 cb_mouse_z1.Items.Add(item.Value);
                 cb_mouse_z2.Items.Add(item.Value);
                 cb_mouse_z3.Items.Add(item.Value);
@@ -1186,15 +1191,31 @@ namespace Chromatics
                 cb_chromalink_z6.Items.Add(item.Value);
             }
 
+            foreach (var item in _devModesA)
+            {
+                if (item.Key == DevModeTypes.ReactiveWeather || item.Key == DevModeTypes.BattleStance || item.Key == DevModeTypes.JobClass)
+                {
+                    continue;
+                }
+
+                cb_singlezonemode.Items.Add(item.Value);
+            }
+
             chk_keypad_binds.Checked = _EnableKeypadBinds;
 
             foreach (var item in _devModesMulti)
             {
                 if (item.Key == DevMultiModeTypes.ReactiveWeather) continue;
                 if (item.Key == DevMultiModeTypes.StatusEffects) continue;
+                
+                cb_multizonemode.Items.Add(item.Value);
+            }
+
+            foreach (var item in _devModesMulti)
+            {
+                if (item.Key == DevMultiModeTypes.StatusEffects) continue;
 
                 cb_keypad_z1.Items.Add(item.Value);
-                cb_multizonemode.Items.Add(item.Value);
             }
 
             foreach (var item in _lightbarModes)

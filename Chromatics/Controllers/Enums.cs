@@ -33,6 +33,9 @@
         DutyFinder,
         StatusEffects,
         ACTTracker,
+        ReactiveWeather,
+        BattleStance,
+        JobClass,
         Unknown
     }
 
@@ -47,7 +50,10 @@
         MpTracker,
         Castbar,
         DutyFinder,
-        ACTTracker
+        ACTTracker,
+        ReactiveWeather,
+        BattleStance,
+        JobClass
     }
 
     public enum DevMultiModeTypes
