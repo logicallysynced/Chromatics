@@ -159,8 +159,8 @@ namespace Chromatics.Controllers
             {
                 case DevModeTypes.Disabled:
                     return "Disabled";
-                case DevModeTypes.DefaultColor:
-                    return "DefaultColor";
+                case DevModeTypes.BaseMode:
+                    return "BaseMode";
                 case DevModeTypes.HighlightColor:
                     return "HighlightColor";
                 case DevModeTypes.EnmityTracker:
@@ -188,8 +188,8 @@ namespace Chromatics.Controllers
             {
                 case DevMultiModeTypes.Disabled:
                     return "Disabled";
-                case DevMultiModeTypes.DefaultColor:
-                    return "DefaultColor";
+                case DevMultiModeTypes.BaseMode:
+                    return "BaseMode";
                 case DevMultiModeTypes.HighlightColor:
                     return "HighlightColor";
                 case DevMultiModeTypes.EnmityTracker:
@@ -222,7 +222,8 @@ namespace Chromatics.Controllers
                 case "Disabled":
                     return DevModeTypes.Disabled;
                 case "DefaultColor":
-                    return DevModeTypes.DefaultColor;
+                case "BaseMode":
+                    return DevModeTypes.BaseMode;
                 case "HighlightColor":
                     return DevModeTypes.HighlightColor;
                 case "EnmityTracker":
@@ -251,7 +252,8 @@ namespace Chromatics.Controllers
                 case "Disabled":
                     return DevMultiModeTypes.Disabled;
                 case "DefaultColor":
-                    return DevMultiModeTypes.DefaultColor;
+                case "BaseMode":
+                    return DevMultiModeTypes.BaseMode;
                 case "HighlightColor":
                     return DevMultiModeTypes.HighlightColor;
                 case "EnmityTracker":
@@ -284,7 +286,8 @@ namespace Chromatics.Controllers
                 case "Disabled":
                     return DevModeTypes.Disabled;
                 case "Default Color":
-                    return DevModeTypes.DefaultColor;
+                case "Base Mode":
+                    return DevModeTypes.BaseMode;
                 case "Highlight Color":
                     return DevModeTypes.HighlightColor;
                 case "Enmity Tracker":
@@ -313,7 +316,8 @@ namespace Chromatics.Controllers
                 case "Disabled":
                     return DevMultiModeTypes.Disabled;
                 case "Default Color":
-                    return DevMultiModeTypes.DefaultColor;
+                case "Base Mode":
+                    return DevMultiModeTypes.BaseMode;
                 case "Highlight Color":
                     return DevMultiModeTypes.HighlightColor;
                 case "Enmity Tracker":
@@ -345,8 +349,8 @@ namespace Chromatics.Controllers
             {
                 case DevModeTypes.Disabled:
                     return "Disabled";
-                case DevModeTypes.DefaultColor:
-                    return "Default Color";
+                case DevModeTypes.BaseMode:
+                    return "Base Mode";
                 case DevModeTypes.HighlightColor:
                     return "Highlight Color";
                 case DevModeTypes.EnmityTracker:
@@ -374,8 +378,8 @@ namespace Chromatics.Controllers
             {
                 case DevMultiModeTypes.Disabled:
                     return "Disabled";
-                case DevMultiModeTypes.DefaultColor:
-                    return "Default Color";
+                case DevMultiModeTypes.BaseMode:
+                    return "Base Mode";
                 case DevMultiModeTypes.HighlightColor:
                     return "Highlight Color";
                 case DevMultiModeTypes.EnmityTracker:
@@ -407,8 +411,8 @@ namespace Chromatics.Controllers
             {
                 case LightbarMode.Disabled:
                     return "Disabled";
-                case LightbarMode.DefaultColor:
-                    return "DefaultColor";
+                case LightbarMode.BaseMode:
+                    return "Base Mode";
                 case LightbarMode.HighlightColor:
                     return "HighlightColor";
                 case LightbarMode.EnmityTracker:
@@ -445,7 +449,8 @@ namespace Chromatics.Controllers
                 case "Disabled":
                     return LightbarMode.Disabled;
                 case "DefaultColor":
-                    return LightbarMode.DefaultColor;
+                case "BaseMode":
+                    return LightbarMode.BaseMode;
                 case "HighlightColor":
                     return LightbarMode.HighlightColor;
                 case "EnmityTracker":
@@ -482,7 +487,8 @@ namespace Chromatics.Controllers
                 case "Disabled":
                     return LightbarMode.Disabled;
                 case "Default Color":
-                    return LightbarMode.DefaultColor;
+                case "Base Mode":
+                    return LightbarMode.BaseMode;
                 case "Highlight Color":
                     return LightbarMode.HighlightColor;
                 case "Enmity Tracker":
@@ -518,8 +524,8 @@ namespace Chromatics.Controllers
             {
                 case LightbarMode.Disabled:
                     return "Disabled";
-                case LightbarMode.DefaultColor:
-                    return "Default Color";
+                case LightbarMode.BaseMode:
+                    return "Base Mode";
                 case LightbarMode.HighlightColor:
                     return "Highlight Color";
                 case LightbarMode.EnmityTracker:
@@ -555,8 +561,8 @@ namespace Chromatics.Controllers
             {
                 case FKeyMode.Disabled:
                     return "Disabled";
-                case FKeyMode.DefaultColor:
-                    return "DefaultColor";
+                case FKeyMode.BaseMode:
+                    return "BaseMode";
                 case FKeyMode.HighlightColor:
                     return "HighlightColor";
                 case FKeyMode.EnmityTracker:
@@ -568,7 +574,7 @@ namespace Chromatics.Controllers
                 case FKeyMode.MpTracker:
                     return "MpTracker";
                 case FKeyMode.HpMp:
-                    return "HpMpTp";
+                    return "HpMp";
                 case FKeyMode.CurrentExp:
                     return "CurrentExp";
                 case FKeyMode.JobGauge:
@@ -590,8 +596,8 @@ namespace Chromatics.Controllers
             {
                 case "Disabled":
                     return FKeyMode.Disabled;
-                case "DefaultColor":
-                    return FKeyMode.DefaultColor;
+                case "BaseMode":
+                    return FKeyMode.BaseMode;
                 case "HighlightColor":
                     return FKeyMode.HighlightColor;
                 case "EnmityTracker":
@@ -603,6 +609,7 @@ namespace Chromatics.Controllers
                 case "MpTracker":
                     return FKeyMode.MpTracker;
                 case "HpMpTp":
+                case "HpMp":
                     return FKeyMode.HpMp;
                 case "CurrentExp":
                     return FKeyMode.CurrentExp;
@@ -626,7 +633,8 @@ namespace Chromatics.Controllers
                 case "Disabled":
                     return FKeyMode.Disabled;
                 case "Default Color":
-                    return FKeyMode.DefaultColor;
+                case "Base Mode":
+                    return FKeyMode.BaseMode;
                 case "Highlight Color":
                     return FKeyMode.HighlightColor;
                 case "Enmity Tracker":
@@ -637,6 +645,7 @@ namespace Chromatics.Controllers
                     return FKeyMode.HpTracker;
                 case "MP Tracker":
                     return FKeyMode.MpTracker;
+                case "HP/MP/TP":
                 case "HP/MP":
                     return FKeyMode.HpMp;
                 case "Experience Tracker":
@@ -660,8 +669,8 @@ namespace Chromatics.Controllers
             {
                 case FKeyMode.Disabled:
                     return "Disabled";
-                case FKeyMode.DefaultColor:
-                    return "Default Color";
+                case FKeyMode.BaseMode:
+                    return "Base Mode";
                 case FKeyMode.HighlightColor:
                     return "Highlight Color";
                 case FKeyMode.EnmityTracker:

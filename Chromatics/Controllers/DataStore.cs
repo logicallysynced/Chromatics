@@ -44,9 +44,9 @@ namespace Chromatics.Datastore
         public string KeySingleKeyMode = "Disabled";
         public string KeyMultiKeyMode = "Disabled";
 
-        public string MouseZone1Mode = "DefaultColor";
+        public string MouseZone1Mode = "BaseMode";
         public string MouseZone2Mode = "EnmityTracker";
-        public string MouseZone3Mode = "DefaultColor";
+        public string MouseZone3Mode = "BaseMode";
         public string MouseStrip1Mode = "HpTracker";
         public string MouseStrip2Mode = "MpTracker";
 
@@ -54,16 +54,16 @@ namespace Chromatics.Datastore
         public string PadZone2Mode = "MpTracker";
         public string PadZone3Mode = "MpTracker";
 
-        public string CLZone1Mode = "DefaultColor";
-        public string CLZone2Mode = "DefaultColor";
-        public string CLZone3Mode = "DefaultColor";
-        public string CLZone4Mode = "DefaultColor";
-        public string CLZone5Mode = "DefaultColor";
-        public string CLZone6Mode = "DefaultColor";
+        public string CLZone1Mode = "BaseMode";
+        public string CLZone2Mode = "BaseMode";
+        public string CLZone3Mode = "BaseMode";
+        public string CLZone4Mode = "BaseMode";
+        public string CLZone5Mode = "BaseMode";
+        public string CLZone6Mode = "BaseMode";
 
-        public string HeadsetZone1Mode = "DefaultColor";
+        public string HeadsetZone1Mode = "BaseMode";
         public string HeadsetZone2Mode = "HighlightColor";
-        public string KeypadZone1Mode = "DefaultColor";
+        public string KeypadZone1Mode = "BaseMode";
 
         public string LightbarMode = "TargetHp";
         public string FKeyMode = "HpMpTp";

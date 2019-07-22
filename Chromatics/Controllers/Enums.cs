@@ -22,7 +22,7 @@
     {
         Disabled,
         Standby,
-        DefaultColor,
+        BaseMode,
         HighlightColor,
         EnmityTracker,
         TargetHp,
@@ -39,7 +39,7 @@
     public enum DevModeTypes
     {
         Disabled,
-        DefaultColor,
+        BaseMode,
         HighlightColor,
         EnmityTracker,
         TargetHp,
@@ -53,7 +53,7 @@
     public enum DevMultiModeTypes
     {
         Disabled,
-        DefaultColor,
+        BaseMode,
         HighlightColor,
         EnmityTracker,
         TargetHp,
@@ -77,7 +77,7 @@
     public enum LightbarMode
     {
         Disabled,
-        DefaultColor,
+        BaseMode,
         HighlightColor,
         EnmityTracker,
         TargetHp,
@@ -95,7 +95,7 @@
     public enum FKeyMode
     {
         Disabled,
-        DefaultColor,
+        BaseMode,
         HighlightColor,
         EnmityTracker,
         TargetHp,

@@ -240,9 +240,9 @@ namespace Chromatics
         private DevModeTypes _KeysSingleKeyMode = DevModeTypes.Disabled;
         private DevMultiModeTypes _KeysMultiKeyMode = DevMultiModeTypes.Disabled;
 
-        public DevModeTypes _MouseZone1Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _MouseZone1Mode = DevModeTypes.BaseMode;
         public DevModeTypes _MouseZone2Mode = DevModeTypes.EnmityTracker;
-        public DevModeTypes _MouseZone3Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _MouseZone3Mode = DevModeTypes.BaseMode;
         public DevModeTypes _MouseStrip1Mode = DevModeTypes.HpTracker; 
         public DevModeTypes _MouseStrip2Mode = DevModeTypes.MpTracker;
 
@@ -250,16 +250,16 @@ namespace Chromatics
         public DevModeTypes _PadZone2Mode = DevModeTypes.Castbar;
         public DevModeTypes _PadZone3Mode = DevModeTypes.MpTracker;
 
-        public DevModeTypes _HeadsetZone1Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _HeadsetZone1Mode = DevModeTypes.BaseMode;
         public DevModeTypes _HeadsetZone2Mode = DevModeTypes.HighlightColor;
-        public DevMultiModeTypes _KeypadZone1Mode = DevMultiModeTypes.DefaultColor;
+        public DevMultiModeTypes _KeypadZone1Mode = DevMultiModeTypes.BaseMode;
 
-        public DevModeTypes _CLZone1Mode = DevModeTypes.DefaultColor;
-        public DevModeTypes _CLZone2Mode = DevModeTypes.DefaultColor;
-        public DevModeTypes _CLZone3Mode = DevModeTypes.DefaultColor;
-        public DevModeTypes _CLZone4Mode = DevModeTypes.DefaultColor;
-        public DevModeTypes _CLZone5Mode = DevModeTypes.DefaultColor;
-        public DevModeTypes _CLZone6Mode = DevModeTypes.DefaultColor;
+        public DevModeTypes _CLZone1Mode = DevModeTypes.BaseMode;
+        public DevModeTypes _CLZone2Mode = DevModeTypes.BaseMode;
+        public DevModeTypes _CLZone3Mode = DevModeTypes.BaseMode;
+        public DevModeTypes _CLZone4Mode = DevModeTypes.BaseMode;
+        public DevModeTypes _CLZone5Mode = DevModeTypes.BaseMode;
+        public DevModeTypes _CLZone6Mode = DevModeTypes.BaseMode;
 
         public LightbarMode _LightbarMode = LightbarMode.TargetHp;
         public FKeyMode _FKeyMode = FKeyMode.HpMp;

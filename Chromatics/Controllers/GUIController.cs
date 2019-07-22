@@ -28,7 +28,7 @@ namespace Chromatics
             //Keys
             {BulbModeTypes.Disabled, "Disabled"},
             {BulbModeTypes.Standby, "Standby"},
-            {BulbModeTypes.DefaultColor, "Default Color"},
+            {BulbModeTypes.BaseMode, "Base Mode"},
             {BulbModeTypes.HighlightColor, "Highlight Color"},
             {BulbModeTypes.EnmityTracker, "Enmity Tracker"},
             {BulbModeTypes.TargetHp, "Target HP"},
@@ -46,7 +46,7 @@ namespace Chromatics
             //Keys
             {DevModeTypes.Disabled, "Disabled"},
             //{DevModeTypes.Standby, "Standby"},
-            {DevModeTypes.DefaultColor, "Default Color"},
+            {DevModeTypes.BaseMode, "Base Mode"},
             {DevModeTypes.HighlightColor, "Highlight Color"},
             {DevModeTypes.EnmityTracker, "Enmity Tracker"},
             {DevModeTypes.TargetHp, "Target HP"},
@@ -62,7 +62,7 @@ namespace Chromatics
             //Keys
             {DevMultiModeTypes.Disabled, "Disabled"},
             //{DevMultiModeTypes.Standby, "Standby"},
-            {DevMultiModeTypes.DefaultColor, "Default Color"},
+            {DevMultiModeTypes.BaseMode, "Base Mode"},
             {DevMultiModeTypes.HighlightColor, "Highlight Color"},
             {DevMultiModeTypes.EnmityTracker, "Enmity Tracker"},
             {DevMultiModeTypes.TargetHp, "Target HP"},
@@ -79,7 +79,7 @@ namespace Chromatics
         {
             //Keys
             {LightbarMode.Disabled, "Disabled"},
-            {LightbarMode.DefaultColor, "Default Color"}, //
+            {LightbarMode.BaseMode, "Base Mode"}, //
             {LightbarMode.HighlightColor, "Highlight Color"}, //
             {LightbarMode.EnmityTracker, "Enmity Tracker"}, //
             {LightbarMode.TargetHp, "Target HP"}, //
@@ -98,7 +98,7 @@ namespace Chromatics
         {
             //Keys
             {FKeyMode.Disabled, "Disabled"},
-            {FKeyMode.DefaultColor, "Default Color"}, //
+            {FKeyMode.BaseMode, "Base Mode"}, //
             {FKeyMode.HighlightColor, "Highlight Color"}, //
             {FKeyMode.EnmityTracker, "Enmity Tracker"}, //
             {FKeyMode.TargetHp, "Target HP"}, //
@@ -818,7 +818,7 @@ namespace Chromatics
                                             TimeSpan.FromMilliseconds(1000));
                                         WriteConsole(ConsoleTypes.Lifx, @"Restoring LIFX Bulb " + state.Label);
                                         break;
-                                    case BulbModeTypes.DefaultColor:
+                                    case BulbModeTypes.BaseMode:
                                     case BulbModeTypes.HighlightColor:
                                         SetKeysbase = false;
                                         break;
@@ -865,7 +865,7 @@ namespace Chromatics
                                         TimeSpan.FromMilliseconds(1000));
                                     WriteConsole(ConsoleTypes.Lifx, @"Restoring LIFX Bulb " + state.Label);
                                     break;
-                                case BulbModeTypes.DefaultColor:
+                                case BulbModeTypes.BaseMode:
                                 case BulbModeTypes.HighlightColor:
                                     SetKeysbase = false;
                                     break;
@@ -1181,6 +1181,9 @@ namespace Chromatics
 
             foreach (var item in _devModesMulti)
             {
+                if (item.Key == DevMultiModeTypes.ReactiveWeather) continue;
+                if (item.Key == DevMultiModeTypes.StatusEffects) continue;
+
                 cb_keypad_z1.Items.Add(item.Value);
                 cb_multizonemode.Items.Add(item.Value);
             }
@@ -1290,7 +1293,33 @@ namespace Chromatics
             {
                 dgv_keypad_binds.Enabled = false;
             }
-                
+
+            //Check for Depreciated Values
+            
+            if (_KeypadZone1Mode == DevMultiModeTypes.ReactiveWeather)
+            {
+                _KeypadZone1Mode = DevMultiModeTypes.BaseMode;
+                cb_keypad_z1.SelectedItem = Helpers.ConvertDevMultiModeToString(DevMultiModeTypes.BaseMode);
+            }
+
+            if (_KeypadZone1Mode == DevMultiModeTypes.StatusEffects)
+            {
+                _KeypadZone1Mode = DevMultiModeTypes.BaseMode;
+                cb_keypad_z1.SelectedItem = Helpers.ConvertDevMultiModeToString(DevMultiModeTypes.BaseMode);
+            }
+
+            if (_KeysMultiKeyMode == DevMultiModeTypes.ReactiveWeather)
+            {
+                _KeysMultiKeyMode = DevMultiModeTypes.BaseMode;
+                cb_multizonemode.SelectedItem = Helpers.ConvertDevMultiModeToString(DevMultiModeTypes.BaseMode);
+            }
+
+            if (_KeysMultiKeyMode == DevMultiModeTypes.StatusEffects)
+            {
+                _KeysMultiKeyMode = DevMultiModeTypes.BaseMode;
+                cb_multizonemode.SelectedItem = Helpers.ConvertDevMultiModeToString(DevMultiModeTypes.BaseMode);
+            }
+            
         }
 
         private void InitDevicesGui()
