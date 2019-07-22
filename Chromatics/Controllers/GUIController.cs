@@ -91,7 +91,10 @@ namespace Chromatics
             {LightbarMode.JobGauge, "Job Gauge"},
             {LightbarMode.PullCountdown, "Pull Countdown"},
             {LightbarMode.ACTTracker, "ACT Tracker"},
-            {LightbarMode.ACTEnrage, "ACT Enrage"}
+            {LightbarMode.ACTEnrage, "ACT Enrage"},
+            {LightbarMode.ReactiveWeather, "Reactive Weather"},
+            {LightbarMode.BattleStance, "Battle Stance"},
+            {LightbarMode.JobClass, "Job Class"}
         };
 
         private readonly Dictionary<FKeyMode, string> _fkeyModes = new Dictionary<FKeyMode, string>
@@ -109,7 +112,10 @@ namespace Chromatics
             {FKeyMode.JobGauge, "Job Gauge"},
             {FKeyMode.PullCountdown, "Pull Countdown"},
             {FKeyMode.ACTTracker, "ACT Tracker"},
-            {FKeyMode.ACTEnrage, "ACT Enrage"}
+            {FKeyMode.ACTEnrage, "ACT Enrage"},
+            {FKeyMode.ReactiveWeather, "Reactive Weather"},
+            {FKeyMode.BattleStance, "Battle Stance"},
+            {FKeyMode.JobClass, "Job Class"}
         };
 
         private readonly Dictionary<ACTMode, string> _actModes = new Dictionary<ACTMode, string>
@@ -1666,27 +1672,13 @@ namespace Chromatics
         private void enableeffects_Click(object sender, EventArgs e)
         {
             //Enable effects
-            if (!mi_effectsenable.Checked)
+            if (mi_effectsenable.Checked)
             {
-                if (RazerSdk)
-                    RazerSdkCalled = 0;
-                if (LogitechSdk)
-                    LogitechSdkCalled = 0;
-                if (CorsairSdk)
-                    CorsairSdkCalled = 0;
-                if (LifxSdk)
-                    LifxSdkCalled = 0;
+                HoldReader = true;
             }
             else
             {
-                if (RazerSdk)
-                    RazerSdkCalled = 1;
-                if (LogitechSdk)
-                    LogitechSdkCalled = 1;
-                if (CorsairSdk)
-                    CorsairSdkCalled = 1;
-                if (LifxSdk)
-                    LifxSdkCalled = 1;
+                HoldReader = false;
             }
 
             ResetDeviceDataGrid();

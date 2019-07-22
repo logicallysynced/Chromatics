@@ -732,16 +732,19 @@ namespace Chromatics
         public void GlobalUpdateBulbState(BulbModeTypes mode, Color col, int transition)
         {
             if (LifxSdkCalled == 1)
+            {
                 if (mode == BulbModeTypes.Disabled)
                 {
                     //_lifx.LifxUpdateState(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), transition);
                     return;
                 }
-                
+
                 if (mode == BulbModeTypes.Standby)
-                    _lifx.LifxUpdateState(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), transition);
+                    _lifx.LifxUpdateState(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled),
+                        transition);
                 else
                     _lifx.LifxUpdateState(mode, col, transition);
+            }
         }
 
         public void GlobalUpdateBulbStateBrightness(BulbModeTypes mode, Color col, ushort brightness, int transition)

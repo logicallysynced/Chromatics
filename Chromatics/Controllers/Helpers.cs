@@ -437,6 +437,12 @@ namespace Chromatics.Controllers
                     return "ACTTracker";
                 case LightbarMode.ACTEnrage:
                     return "ACTEnrage";
+                case LightbarMode.ReactiveWeather:
+                    return "ReactiveWeather";
+                case LightbarMode.BattleStance:
+                    return "BattleStance";
+                case LightbarMode.JobClass:
+                    return "JobClass";
             }
 
             return "Disabled";
@@ -475,6 +481,12 @@ namespace Chromatics.Controllers
                     return LightbarMode.ACTTracker;
                 case "ACTEnrage":
                     return LightbarMode.ACTEnrage;
+                case "ReactiveWeather":
+                    return LightbarMode.ReactiveWeather;
+                case "BattleStance":
+                    return LightbarMode.BattleStance;
+                case "JobClass":
+                    return LightbarMode.JobClass;
             }
 
             return LightbarMode.Disabled;
@@ -513,6 +525,13 @@ namespace Chromatics.Controllers
                     return LightbarMode.ACTTracker;
                 case "ACT Enrage":
                     return LightbarMode.ACTEnrage;
+                case "Reactive Weather":
+                    return LightbarMode.ReactiveWeather;
+                case "Battle Stance":
+                    return LightbarMode.BattleStance;
+                case "Job Class":
+                    return LightbarMode.JobClass;
+
             }
 
             return LightbarMode.Disabled;
@@ -550,6 +569,12 @@ namespace Chromatics.Controllers
                     return "ACT Tracker";
                 case LightbarMode.ACTEnrage:
                     return "ACT Enrage";
+                case LightbarMode.ReactiveWeather:
+                    return "Reactive Weather";
+                case LightbarMode.BattleStance:
+                    return "Battle Stance";
+                case LightbarMode.JobClass:
+                    return "Job Class";
             }
 
             return "Disabled";
@@ -585,6 +610,12 @@ namespace Chromatics.Controllers
                     return "ACTTracker";
                 case FKeyMode.ACTEnrage:
                     return "ACTEnrage";
+                case FKeyMode.ReactiveWeather:
+                    return "ReactiveWeather";
+                case FKeyMode.BattleStance:
+                    return "BattleStance";
+                case FKeyMode.JobClass:
+                    return "JobClass";
             }
 
             return "HpMp";
@@ -621,6 +652,12 @@ namespace Chromatics.Controllers
                     return FKeyMode.ACTTracker;
                 case "ACTEnrage":
                     return FKeyMode.ACTEnrage;
+                case "ReactiveWeather":
+                    return FKeyMode.ReactiveWeather;
+                case "BattleStance":
+                    return FKeyMode.BattleStance;
+                case "JobClass":
+                    return FKeyMode.JobClass;
             }
 
             return FKeyMode.HpMp;
@@ -658,6 +695,13 @@ namespace Chromatics.Controllers
                     return FKeyMode.ACTTracker;
                 case "ACT Enrage":
                     return FKeyMode.ACTEnrage;
+                case "Reactive Weather":
+                    return FKeyMode.ReactiveWeather;
+                case "Battle Stance":
+                    return FKeyMode.BattleStance;
+                case "Job Class":
+                    return FKeyMode.JobClass;
+
             }
 
             return FKeyMode.HpMp;
@@ -693,6 +737,12 @@ namespace Chromatics.Controllers
                     return "ACT Tracker";
                 case FKeyMode.ACTEnrage:
                     return "ACT Enrage";
+                case FKeyMode.ReactiveWeather:
+                    return "Reactive Weather";
+                case FKeyMode.BattleStance:
+                    return "Battle Stance";
+                case FKeyMode.JobClass:
+                    return "Job Class";
             }
 
             return "HpMp";

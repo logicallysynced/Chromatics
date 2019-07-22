@@ -89,7 +89,10 @@
         JobGauge,
         PullCountdown,
         ACTTracker,
-        ACTEnrage
+        ACTEnrage,
+        ReactiveWeather,
+        BattleStance,
+        JobClass
     }
 
     public enum FKeyMode
@@ -106,7 +109,10 @@
         JobGauge,
         PullCountdown,
         ACTTracker,
-        ACTEnrage
+        ACTEnrage,
+        ReactiveWeather,
+        BattleStance,
+        JobClass
     }
 
     public enum ACTMode
