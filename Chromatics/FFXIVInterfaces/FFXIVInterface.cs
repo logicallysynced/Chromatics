@@ -4531,6 +4531,7 @@ namespace Chromatics
 
                                     if (ChromaticsSettings.ChromaticsSettingsKeybindToggle)
                                     {
+                                        FfxivHotbar.CheckJobGaugeBinds(ChromaticsSettings.ChromaticsSettingsJobGaugeToggle);
                                         FfxivHotbar.Keybindwhitelist.Clear();
 
                                         foreach (var hotbar in hotbars.ActionContainers)
@@ -4561,7 +4562,7 @@ namespace Chromatics
                                                     string.IsNullOrEmpty(action.KeyBinds) ||
                                                     string.IsNullOrEmpty(action.ActionKey)) continue;
 
-                                                //Console.WriteLine(action.Name);
+                                                //Console.WriteLine(action.ActionKey);
 
                                                 //Collect Modifier Info
                                                 var modsactive = action.Modifiers.Count;
@@ -7847,12 +7848,11 @@ namespace Chromatics
                                                     }
                                                     else
                                                     {
-                                                        if (FfxivHotbar.Keybindtranslation.ContainsKey(action.ActionKey)
-                                                        )
+                                                        if (FfxivHotbar.Keybindtranslation.ContainsKey(action.ActionKey))
                                                         {
                                                             var keyid = FfxivHotbar
                                                                 .Keybindtranslation[action.ActionKey];
-
+                                                            
                                                             if (action.Category == 49 || action.Category == 51)
                                                             {
                                                                 if (!action.IsAvailable || !action.InRange ||

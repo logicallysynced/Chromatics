@@ -3877,23 +3877,27 @@ namespace Chromatics
             else
             {
                 ToggleGlobalFlash3(false);
-                GlobalApplyMapKeyLighting("NumLock", baseColor, false);
-                GlobalApplyMapKeyLighting("NumDivide", baseColor, false);
-                GlobalApplyMapKeyLighting("NumMultiply", baseColor, false);
-                GlobalApplyMapKeyLighting("NumSubtract", baseColor, false);
-                GlobalApplyMapKeyLighting("Num7", baseColor, false);
-                GlobalApplyMapKeyLighting("Num8", baseColor, false);
-                GlobalApplyMapKeyLighting("Num9", baseColor, false);
-                GlobalApplyMapKeyLighting("NumAdd", baseColor, false);
-                GlobalApplyMapKeyLighting("Num4", baseColor, false);
-                GlobalApplyMapKeyLighting("Num5", baseColor, false);
-                GlobalApplyMapKeyLighting("Num6", baseColor, false);
-                GlobalApplyMapKeyLighting("NumEnter", baseColor, false);
-                GlobalApplyMapKeyLighting("Num1", baseColor, false);
-                GlobalApplyMapKeyLighting("Num2", baseColor, false);
-                GlobalApplyMapKeyLighting("Num3", baseColor, false);
-                GlobalApplyMapKeyLighting("Num0", baseColor, false);
-                GlobalApplyMapKeyLighting("NumDecimal", baseColor, false);
+
+                if (!ChromaticsSettings.ChromaticsSettingsKeybindToggle)
+                {
+                    GlobalApplyMapKeyLighting("NumLock", baseColor, false);
+                    GlobalApplyMapKeyLighting("NumDivide", baseColor, false);
+                    GlobalApplyMapKeyLighting("NumMultiply", baseColor, false);
+                    GlobalApplyMapKeyLighting("NumSubtract", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num7", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num8", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num9", baseColor, false);
+                    GlobalApplyMapKeyLighting("NumAdd", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num4", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num5", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num6", baseColor, false);
+                    GlobalApplyMapKeyLighting("NumEnter", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num1", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num2", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num3", baseColor, false);
+                    GlobalApplyMapKeyLighting("Num0", baseColor, false);
+                    GlobalApplyMapKeyLighting("NumDecimal", baseColor, false);
+                }
 
                 if (_LightbarMode == LightbarMode.JobGauge)
                 {

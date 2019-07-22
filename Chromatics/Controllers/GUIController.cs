@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Chromatics.Controllers;
 using Chromatics.Datastore;
 using Chromatics.DeviceInterfaces;
+using Chromatics.FFXIVInterfaces;
 using Chromatics.LCDInterfaces;
 using Cyotek.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
@@ -1907,11 +1908,12 @@ namespace Chromatics
         private void chk_jobgaugetoggle_CheckedChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;
-
+            
             ChromaticsSettings.ChromaticsSettingsJobGaugeToggle = chk_jobgaugetoggle.Checked;
             SetKeysbase = false;
 
             SaveChromaticsSettings(1);
+            
         }
 
         private void chk_keybindtoggle_CheckedChanged(object sender, EventArgs e)
