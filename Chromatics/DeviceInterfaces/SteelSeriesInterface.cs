@@ -66,6 +66,7 @@ namespace Chromatics.DeviceInterfaces
         void SetLights(Color col);
         void ApplyMapSingleLighting(Color col);
         void ApplyMapMultiLighting(Color col, string region);
+        void ApplyMapMultiLightingInterpolate(Color empty, Color full, int pos, int z1, int min, int max, int current, bool reverse);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapMouseLighting(string key, Color col);
         void ApplyMapHeadsetLighting(Color col);
@@ -128,6 +129,15 @@ namespace Chromatics.DeviceInterfaces
         private static bool _steelFlash4Running;
         private static Dictionary<string, Color> _flashpresets4 = new Dictionary<string, Color>();
         private static readonly object SteelFlash4 = new object();
+
+        private static Dictionary<int, string> _multiZones = new Dictionary<int, string>
+        {
+            {0, "zone1" },
+            {1, "zone2" },
+            {2, "zone3" },
+            {3, "zone4" },
+            {4, "zone5" },
+        };
         
         public bool InitializeLights()
         {
@@ -390,6 +400,59 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
+        public void ApplyMapMultiLightingInterpolate(Color empty, Color full, int pos, int z1, int min, int max,
+            int current, bool reverse)
+        {
+            if (!isInitialized) return;
+
+            keyboard_updated = false;
+
+            try
+            {
+                if (!_steelKeyboard) return;
+                SendKeepalive();
+
+                var cc_empty = reverse ? full : empty;
+                var cc_full = reverse ? empty : full;
+
+                var x1 = 0;
+                var Z1Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x1 : z1, reverse ? z1 : x1);
+
+                if (Z1Interpolate1 <= _multiZones.Count)
+                {
+                    for (var a1 = x1; a1 < z1; a1++)
+                    {
+                        if (_multiZones.ContainsKey(a1))
+                        {
+                            if (a1 <= Z1Interpolate1)
+                            {
+                                if (KeyboardZones[a1] != cc_full)
+                                {
+                                    gameSenseSDK.sendColor(_multiZones[a1], cc_full.R, cc_full.G, cc_full.B);
+                                    keyboard_updated = true;
+                                    KeyboardZones[a1] = cc_full;
+                                }
+                            }
+                            else
+                            {
+                                if (KeyboardZones[a1] != cc_empty)
+                                {
+                                    gameSenseSDK.sendColor(_multiZones[a1], cc_empty.R, cc_empty.G, cc_empty.B);
+                                    keyboard_updated = true;
+                                    KeyboardZones[a1] = cc_empty;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Write.WriteConsole(ConsoleTypes.Steel,
+                    "SteelSeries GameSense SDK, error when updating keyboard (multi). EX: " + ex);
+            }
+        }
+
         public void ApplyMapMultiLighting(Color col, string region)
         {
             if (!isInitialized) return;
@@ -402,69 +465,21 @@ namespace Chromatics.DeviceInterfaces
 
                 if (_steelKeyboard)
                 {
-                    switch (region)
+                    for (var i = 0; i < _multiZones.Count; i++)
                     {
-                        case "All":
-                            if (KeyboardZones[0] != col)
-                            {
-                                gameSenseSDK.sendColor("periph", col.R, col.G, col.B);
-                                keyboard_updated = true;
-                                KeyboardZones[0] = col;
-                            }
-
-                            break;
-                        case "0":
-                            if (KeyboardZones[1] != col)
-                            {
-                                gameSenseSDK.sendColor("zone1", col.R, col.G, col.B);
-                                keyboard_updated = true;
-                                KeyboardZones[1] = col;
-                            }
-
-                            break;
-                        case "1":
-                            if (KeyboardZones[2] != col)
-                            {
-                                gameSenseSDK.sendColor("zone2", col.R, col.G, col.B);
-                                keyboard_updated = true;
-                                KeyboardZones[2] = col;
-                            }
-
-                            break;
-                        case "2":
-                            if (KeyboardZones[3] != col)
-                            {
-                                gameSenseSDK.sendColor("zone3", col.R, col.G, col.B);
-                                keyboard_updated = true;
-                                KeyboardZones[3] = col;
-                            }
-
-                            break;
-                        case "3":
-                            if (KeyboardZones[4] != col)
-                            {
-                                gameSenseSDK.sendColor("zone4", col.R, col.G, col.B);
-                                keyboard_updated = true;
-                                KeyboardZones[4] = col;
-                            }
-
-                            break;
-                        case "4":
-                            if (KeyboardZones[5] != col)
-                            {
-                                gameSenseSDK.sendColor("zone5", col.R, col.G, col.B);
-                                keyboard_updated = true;
-                                KeyboardZones[5] = col;
-                            }
-
-                            break;
+                        if (KeyboardZones[i] != col)
+                        {
+                            gameSenseSDK.sendColor(_multiZones[i], col.R, col.G, col.B);
+                            keyboard_updated = true;
+                            KeyboardZones[i] = col;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 Write.WriteConsole(ConsoleTypes.Steel,
-                    "SteelSeries GameSense SDK, error when updating keyboard (single). EX: " + ex);
+                    "SteelSeries GameSense SDK, error when updating keyboard (multi). EX: " + ex);
             }
         }
 
