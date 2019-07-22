@@ -32,7 +32,7 @@ namespace Chromatics
         PerformanceCounter ramCounter;
         private bool usageWarning;
         private int cpuUsageDanger = 90;
-        private int cpuUsageMax = 30;
+        private int cpuUsageMax = 40;
         private int ramUsageMax = 500;
 
         private ILogitechArx _arx;
