@@ -239,6 +239,8 @@ namespace Chromatics
         private bool _KeysMultiKeyModeEnabled;
         private DevModeTypes _KeysSingleKeyMode = DevModeTypes.Disabled;
         private DevMultiModeTypes _KeysMultiKeyMode = DevMultiModeTypes.Disabled;
+        private int _KeyMultiLEDCount = 5;
+        private bool _KeyMultiReverse = false;
 
         public DevModeTypes _MouseZone1Mode = DevModeTypes.BaseMode;
         public DevModeTypes _MouseZone2Mode = DevModeTypes.EnmityTracker;
@@ -936,6 +938,7 @@ namespace Chromatics
 
         private delegate void BlinkDelegate();
 
+        
     }
 
     public static class ExceptionExtensions

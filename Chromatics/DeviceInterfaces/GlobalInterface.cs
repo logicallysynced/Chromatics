@@ -768,7 +768,7 @@ namespace Chromatics
             if (!HoldReader)
             {
                 if (RazerSdkCalled == 1)
-                    _razer.DeviceUpdate();
+                    _razer.DeviceUpdate(_KeysSingleKeyModeEnabled, _KeysMultiKeyModeEnabled);
 
                 if (SteelSdkCalled == 1)
                     _steel.DeviceUpdate();
@@ -784,7 +784,7 @@ namespace Chromatics
         public void GlobalApplyAllDeviceLighting(Color col)
         {
             if (_KeysSingleKeyModeEnabled) GlobalApplySingleZoneLighting(col);
-            if (_KeysMultiKeyModeEnabled) GlobalApplyMultiZoneLighting(col, "All");
+            //if (_KeysMultiKeyModeEnabled) GlobalApplyMultiZoneLighting(col, "All");
 
             if (RazerSdkCalled == 1)
             {
@@ -894,7 +894,7 @@ namespace Chromatics
 
         public void GlobalApplyMultiZoneLighting(Color col, string region)
         {
-            if (!_KeysMultiKeyModeEnabled || _KeysSingleKeyModeEnabled)
+            if (!_KeysMultiKeyModeEnabled)
                 return;
 
             if (RazerSdkCalled == 1)
@@ -918,7 +918,7 @@ namespace Chromatics
             if (AsusSdkCalled == 1)
                 _asus.ApplyMapMultiLighting(col, region);
         }
-
+        
         //Send a lighting command to a specific Keyboard LED
         public void GlobalApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
@@ -1057,6 +1057,25 @@ namespace Chromatics
             if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
 
             GlobalApplySingleZoneLighting(col);
+        }
+
+        public void GlobalApplyMultiZoneLightingViaInterpolation(DevMultiModeTypes mode, Color empty, Color full, int min, int max, int current)
+        {
+            if (!_KeysMultiKeyModeEnabled)
+                return;
+
+            if (mode == DevMultiModeTypes.Disabled)
+            {
+                empty = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
+            }
+
+            if (mode != _KeysMultiKeyMode) return;
+
+            if (RazerSdkCalled == 1)
+            {
+                _razer.ApplyMapMultiLightingInterpolate(empty, full, 0, _KeyMultiLEDCount, min, max, current, _KeyMultiReverse);
+            }
+            
         }
 
         public void GlobalApplyKeyMultiLighting(DevMultiModeTypes mode, Color col, string region)

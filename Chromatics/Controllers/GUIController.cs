@@ -1093,6 +1093,9 @@ namespace Chromatics
             nm_ledcount_z5.Value = _ChromaLinkLEDCountZ5;
             nm_ledcount_z6.Value = _ChromaLinkLEDCountZ6;
 
+            nm_keymulti_led.Value = _KeyMultiLEDCount;
+            chk_keymulti_rev.Checked = _KeyMultiReverse;
+
             chk_sdk_razer.Checked = _SDKRazer;
             chk_sdk_logi.Checked = _SDKLogitech;
             chk_sdk_corsair.Checked = _SDKCorsair;
@@ -1242,6 +1245,9 @@ namespace Chromatics
 
             chk_keys_multimode.Checked = _KeysMultiKeyModeEnabled;
             cb_multizonemode.Enabled = _KeysMultiKeyModeEnabled;
+            lbl_multiledcnt.Enabled = _KeysMultiKeyModeEnabled;
+            nm_keymulti_led.Enabled = _KeysMultiKeyModeEnabled;
+            chk_keymulti_rev.Enabled = _KeysMultiKeyModeEnabled;
 
             chk_other_interp.Checked = _OtherInterpolateEffects;
             chk_other_interpreverse.Checked = _ReverseInterpolateEffects;
@@ -2416,6 +2422,9 @@ namespace Chromatics
                 _KeysMultiKeyModeEnabled = false;
                 chk_keys_multimode.Enabled = false;
                 cb_multizonemode.Enabled = false;
+                lbl_multiledcnt.Enabled = false;
+                nm_keymulti_led.Enabled = false;
+                chk_keymulti_rev.Enabled = false;
             }
             else
             {
@@ -2424,6 +2433,9 @@ namespace Chromatics
 
                 chk_keys_multimode.Enabled = true;
                 cb_multizonemode.Enabled = true;
+                lbl_multiledcnt.Enabled = true;
+                nm_keymulti_led.Enabled = true;
+                chk_keymulti_rev.Enabled = true;
             }
 
             SetKeysbase = false;
@@ -2439,6 +2451,9 @@ namespace Chromatics
             {
                 _KeysMultiKeyModeEnabled = true;
                 cb_multizonemode.Enabled = true;
+                lbl_multiledcnt.Enabled = true;
+                nm_keymulti_led.Enabled = true;
+                chk_keymulti_rev.Enabled = true;
 
                 _KeysSingleKeyModeEnabled = false;
                 chk_keys_singlemode.Enabled = false;
@@ -2448,6 +2463,9 @@ namespace Chromatics
             {
                 _KeysMultiKeyModeEnabled = false;
                 cb_multizonemode.Enabled = false;
+                lbl_multiledcnt.Enabled = false;
+                nm_keymulti_led.Enabled = false;
+                chk_keymulti_rev.Enabled = false;
 
                 chk_keys_singlemode.Enabled = true;
                 cb_singlezonemode.Enabled = true;
@@ -3130,6 +3148,15 @@ namespace Chromatics
             SaveChromaticsSettings(1);
         }
 
+        private void Chk_keymulti_rev_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _KeyMultiReverse = chk_keymulti_rev.Checked;
+
+            SaveDevices();
+        }
+
         private void chk_lcdtoggle_CheckedChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;
@@ -3487,6 +3514,15 @@ namespace Chromatics
             if (Startup == false) return;
 
             _SDKLifx = chk_sdk_lifx.Checked;
+            SaveDevices();
+        }
+
+        private void Nm_keymulti_led_ValueChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            _KeyMultiLEDCount = Convert.ToInt32(nm_keymulti_led.Value);
+
             SaveDevices();
         }
 

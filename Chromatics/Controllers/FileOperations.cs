@@ -75,6 +75,8 @@ namespace Chromatics
 
             dr.KeysMultiKeyModeEnabled = _KeysMultiKeyModeEnabled;
             dr.KeyMultiKeyMode = Helpers.ConvertDevMultiModeToString(_KeysMultiKeyMode);
+            dr.KeyMultiLEDCount = _KeyMultiLEDCount;
+            dr.KeyMultiReverse = _KeyMultiReverse;
 
             dr.MouseZone1Mode = Helpers.ConvertDevModeToString(_MouseZone1Mode);
             dr.MouseZone2Mode = Helpers.ConvertDevModeToString(_MouseZone2Mode);
@@ -249,6 +251,8 @@ namespace Chromatics
 
                         _KeysMultiKeyModeEnabled = dr.KeysMultiKeyModeEnabled;
                         _KeysMultiKeyMode = Helpers.ConvertStringToDevMultiMode(dr.KeyMultiKeyMode);
+                        _KeyMultiLEDCount = dr.KeyMultiLEDCount;
+                        _KeyMultiReverse = dr.KeyMultiReverse;
 
                         _MouseZone1Mode = Helpers.ConvertStringToDevMode(dr.MouseZone1Mode);
                         _MouseZone2Mode = Helpers.ConvertStringToDevMode(dr.MouseZone2Mode);

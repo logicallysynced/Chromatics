@@ -41,6 +41,8 @@
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
             this.tP_keys = new System.Windows.Forms.TabPage();
+            this.lbl_multiledcnt = new System.Windows.Forms.Label();
+            this.nm_keymulti_led = new System.Windows.Forms.NumericUpDown();
             this.cb_fkeymode = new System.Windows.Forms.ComboBox();
             this.lbl_fkeymode = new System.Windows.Forms.Label();
             this.cb_multizonemode = new System.Windows.Forms.ComboBox();
@@ -89,6 +91,7 @@
             this.cb_keypad_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_keypad = new System.Windows.Forms.CheckBox();
             this.tP_bulbs = new System.Windows.Forms.TabPage();
+            this.lbl_lifx_other = new System.Windows.Forms.Label();
             this.chk_enablebulbextraeffect = new System.Windows.Forms.CheckBox();
             this.dG_devices = new System.Windows.Forms.DataGridView();
             this.col_devicename = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -263,13 +266,14 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.lbl_lifx_other = new System.Windows.Forms.Label();
+            this.chk_keymulti_rev = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
             this.tP_devicesnew.SuspendLayout();
             this.tb_controldev.SuspendLayout();
             this.tP_keys.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_keymulti_led)).BeginInit();
             this.tP_mouse.SuspendLayout();
             this.tP_mousepad.SuspendLayout();
             this.tP_headset.SuspendLayout();
@@ -462,6 +466,9 @@
             // tP_keys
             // 
             this.tP_keys.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keys.Controls.Add(this.chk_keymulti_rev);
+            this.tP_keys.Controls.Add(this.lbl_multiledcnt);
+            this.tP_keys.Controls.Add(this.nm_keymulti_led);
             this.tP_keys.Controls.Add(this.cb_fkeymode);
             this.tP_keys.Controls.Add(this.lbl_fkeymode);
             this.tP_keys.Controls.Add(this.cb_multizonemode);
@@ -480,6 +487,42 @@
             this.tP_keys.Size = new System.Drawing.Size(717, 373);
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
+            // 
+            // lbl_multiledcnt
+            // 
+            this.lbl_multiledcnt.AutoSize = true;
+            this.lbl_multiledcnt.Location = new System.Drawing.Point(466, 87);
+            this.lbl_multiledcnt.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_multiledcnt.Name = "lbl_multiledcnt";
+            this.lbl_multiledcnt.Size = new System.Drawing.Size(59, 13);
+            this.lbl_multiledcnt.TabIndex = 31;
+            this.lbl_multiledcnt.Text = "LED Count";
+            this.tooltip_main.SetToolTip(this.lbl_multiledcnt, "Set the LED count for multi-zone keyboards.");
+            // 
+            // nm_keymulti_led
+            // 
+            this.nm_keymulti_led.Location = new System.Drawing.Point(543, 83);
+            this.nm_keymulti_led.Margin = new System.Windows.Forms.Padding(2);
+            this.nm_keymulti_led.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.nm_keymulti_led.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_keymulti_led.Name = "nm_keymulti_led";
+            this.nm_keymulti_led.Size = new System.Drawing.Size(57, 20);
+            this.nm_keymulti_led.TabIndex = 30;
+            this.tooltip_main.SetToolTip(this.nm_keymulti_led, "Set the LED count for multi-zone keyboards.");
+            this.nm_keymulti_led.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nm_keymulti_led.ValueChanged += new System.EventHandler(this.Nm_keymulti_led_ValueChanged);
             // 
             // cb_fkeymode
             // 
@@ -1066,6 +1109,15 @@
             this.tP_bulbs.Size = new System.Drawing.Size(717, 373);
             this.tP_bulbs.TabIndex = 4;
             this.tP_bulbs.Text = "LIFX";
+            // 
+            // lbl_lifx_other
+            // 
+            this.lbl_lifx_other.AutoSize = true;
+            this.lbl_lifx_other.Location = new System.Drawing.Point(5, 7);
+            this.lbl_lifx_other.Name = "lbl_lifx_other";
+            this.lbl_lifx_other.Size = new System.Drawing.Size(344, 13);
+            this.lbl_lifx_other.TabIndex = 9;
+            this.lbl_lifx_other.Text = "For Philips HUE support, please use Razer ChromaLink (See Other tab).";
             // 
             // chk_enablebulbextraeffect
             // 
@@ -3412,14 +3464,18 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // lbl_lifx_other
+            // chk_keymulti_rev
             // 
-            this.lbl_lifx_other.AutoSize = true;
-            this.lbl_lifx_other.Location = new System.Drawing.Point(5, 7);
-            this.lbl_lifx_other.Name = "lbl_lifx_other";
-            this.lbl_lifx_other.Size = new System.Drawing.Size(344, 13);
-            this.lbl_lifx_other.TabIndex = 9;
-            this.lbl_lifx_other.Text = "For Philips HUE support, please use Razer ChromaLink (See Other tab).";
+            this.chk_keymulti_rev.AutoSize = true;
+            this.chk_keymulti_rev.Location = new System.Drawing.Point(628, 85);
+            this.chk_keymulti_rev.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_keymulti_rev.Name = "chk_keymulti_rev";
+            this.chk_keymulti_rev.Size = new System.Drawing.Size(66, 17);
+            this.chk_keymulti_rev.TabIndex = 42;
+            this.chk_keymulti_rev.Text = "Reverse";
+            this.tooltip_main.SetToolTip(this.chk_keymulti_rev, "Change direction of multi-key effects.");
+            this.chk_keymulti_rev.UseVisualStyleBackColor = true;
+            this.chk_keymulti_rev.CheckedChanged += new System.EventHandler(this.Chk_keymulti_rev_CheckedChanged);
             // 
             // Chromatics
             // 
@@ -3439,6 +3495,7 @@
             this.tb_controldev.ResumeLayout(false);
             this.tP_keys.ResumeLayout(false);
             this.tP_keys.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nm_keymulti_led)).EndInit();
             this.tP_mouse.ResumeLayout(false);
             this.tP_mouse.PerformLayout();
             this.tP_mousepad.ResumeLayout(false);
@@ -3745,6 +3802,9 @@
         private System.Windows.Forms.SplitContainer sC_about;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lbl_lifx_other;
+        private System.Windows.Forms.Label lbl_multiledcnt;
+        private System.Windows.Forms.NumericUpDown nm_keymulti_led;
+        private System.Windows.Forms.CheckBox chk_keymulti_rev;
     }
 }
 

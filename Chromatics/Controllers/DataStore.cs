@@ -43,6 +43,8 @@ namespace Chromatics.Datastore
         public bool KeysMultiKeyModeEnabled = false;
         public string KeySingleKeyMode = "Disabled";
         public string KeyMultiKeyMode = "Disabled";
+        public int KeyMultiLEDCount = 5;
+        public bool KeyMultiReverse = false;
 
         public string MouseZone1Mode = "BaseMode";
         public string MouseZone2Mode = "EnmityTracker";
@@ -66,7 +68,7 @@ namespace Chromatics.Datastore
         public string KeypadZone1Mode = "BaseMode";
 
         public string LightbarMode = "TargetHp";
-        public string FKeyMode = "HpMpTp";
+        public string FKeyMode = "HpMp";
 
         public int ChromaLinkLEDCountZ1 = 10;
         public int ChromaLinkLEDCountZ2 = 10;

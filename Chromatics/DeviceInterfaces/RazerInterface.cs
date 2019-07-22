@@ -61,11 +61,12 @@ namespace Chromatics.DeviceInterfaces
         void ResetRazerDevices(bool deviceKeyboard, bool deviceKeypad, bool deviceMouse, bool deviceMousepad,
             bool deviceHeadset, bool deviceChromaLink, Color basecol);
 
-        void DeviceUpdate();
+        void DeviceUpdate(bool single, bool multi);
         void SetLights(Color col);
         void SetAllLights(Color col);
         void ApplyMapSingleLighting(Color col);
         void ApplyMapMultiLighting(Color col, string region);
+        void ApplyMapMultiLightingInterpolate(Color empty, Color full, int pos, int z1, int min, int max, int current, bool reverse);
         void ApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist);
         void ApplyMapLogoLighting(string key, Color col, bool clear);
         void ApplyMapMouseLighting(string key, Color col, bool clear);
@@ -391,6 +392,7 @@ namespace Chromatics.DeviceInterfaces
                 if (_razerDeviceChromaLink) ChromaLink.SetAllAsync(c);
                 if (_razerDeviceKeypad) Keypad.SetAllAsync(c);
                 if (_razerDeviceHeadset) Headset.SetAllAsync(c);
+
             }
             catch (Exception ex)
             {
@@ -467,15 +469,18 @@ namespace Chromatics.DeviceInterfaces
             }
         }
 
-        public void DeviceUpdate()
+        public void DeviceUpdate(bool single, bool multi)
         {
             if (!_isInitialized) return;
 
             try
             {
-                lock (RazerFlash1)
+                if (!multi)
                 {
-                    Chroma.Keyboard.SetCustomAsync(_keyboardGrid);
+                    lock (RazerFlash1)
+                    {
+                        Chroma.Keyboard.SetCustomAsync(_keyboardGrid);
+                    }
                 }
 
                 Chroma.Mouse.SetGridAsync(_mouseGrid);
@@ -492,7 +497,7 @@ namespace Chromatics.DeviceInterfaces
         {
             if (!_isInitialized) return;
             if (!_razerDeviceKeyboard) return;
-
+            
             try
             {
                 Keyboard.SetAllAsync(ToColoreCol(col));
@@ -504,70 +509,120 @@ namespace Chromatics.DeviceInterfaces
             
         }
 
+        public void ApplyMapMultiLightingInterpolate(Color empty, Color full, int pos, int z1, int min, int max, int current, bool reverse)
+        {
+            if (!_isInitialized) return;
+
+            try
+            {
+                uint cc_empty = ToColoreCol(reverse ? full : empty);
+                uint cc_full = ToColoreCol(reverse ? empty : full);
+
+                var x1 = 0;
+                var Z1Interpolate1 = Helpers.FFXIVInterpolation.Interpolate_Int(current, min, max, reverse ? x1 : z1, reverse ? z1 : x1);
+
+                if (Z1Interpolate1 <= KeyboardConstants.MaxDeathstalkerZones)
+                {
+                    for (var a1 = x1; a1 < z1; a1++)
+                    {
+                        if (a1 <= Z1Interpolate1)
+                        {
+                            if (Keyboard[a1].Value != cc_full)
+                            {
+                                Keyboard.SetDeathstalkerZoneAsync(a1, cc_full);
+                            }
+                        }
+                        else
+                        {
+                            if (Keyboard[a1].Value != cc_empty)
+                            {
+                                Keyboard.SetDeathstalkerZoneAsync(a1, cc_empty);
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+            }
+
+            
+        }
+
         public void ApplyMapMultiLighting(Color col, string region)
         {
             if (!_isInitialized) return;
-            if (!Keyboard.IsDeathstalkerConnected) return;
+            
+            try
             {
-                try
+                uint rzCol = ToColoreCol(col);
+
+                for (var i = 0; i < KeyboardConstants.MaxDeathstalkerZones; i++)
                 {
-                    uint rzCol = ToColoreCol(col);
-
-                    switch (region)
+                    if (Keyboard[i].Value != rzCol)
                     {
-                        case "All":
-                            if (Keyboard[0].Value != rzCol)
-                                Keyboard.SetAllAsync(rzCol);
-
-                            break;
-                        case "0":
-                            if (Keyboard[0].Value != rzCol)
-                            {
-                                Keyboard.SetDeathstalkerZoneAsync(0, rzCol);
-                            }
-
-                            break;
-                        case "1":
-                            if (Keyboard[1].Value != rzCol)
-                            {
-                                Keyboard.SetDeathstalkerZoneAsync(1, rzCol);
-                            }
-
-                            break;
-                        case "2":
-                            if (Keyboard[2].Value != rzCol)
-                            {
-                                Keyboard.SetDeathstalkerZoneAsync(2, rzCol);
-                            }
-
-                            break;
-                        case "3":
-                            if (Keyboard[3].Value != rzCol)
-                            {
-                                Keyboard.SetDeathstalkerZoneAsync(3, rzCol);
-                            }
-
-                            break;
-                        case "4":
-                            if (Keyboard[4].Value != rzCol)
-                            {
-                                Keyboard.SetDeathstalkerZoneAsync(4, rzCol);
-                            }
-
-                            break;
-                        case "5":
-                            if (Keyboard[5].Value != rzCol)
-                            {
-                                Keyboard.SetDeathstalkerZoneAsync(5, rzCol);
-                            }
-
-                            break;
+                        Keyboard.SetDeathstalkerZoneAsync(i, rzCol);
                     }
                 }
-                catch (Exception ex)
+
+                /*
+                switch (region)
                 {
-                    CheckRazerEx(ex);
+                    case "All":
+                        if (Keyboard[0].Value != rzCol)
+                            Keyboard.SetAllAsync(rzCol);
+
+                        break;
+                    case "0":
+                        if (Keyboard[0].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(0, rzCol);
+                        }
+
+                        break;
+                    case "1":
+                        if (Keyboard[1].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(1, rzCol);
+                        }
+
+                        break;
+                    case "2":
+                        if (Keyboard[2].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(2, rzCol);
+                        }
+
+                        break;
+                    case "3":
+                        if (Keyboard[3].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(3, rzCol);
+                        }
+
+                        break;
+                    case "4":
+                        if (Keyboard[4].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(4, rzCol);
+                        }
+
+                        break;
+                    case "5":
+                        if (Keyboard[5].Value != rzCol)
+                        {
+                            Keyboard.SetDeathstalkerZoneAsync(5, rzCol);
+                        }
+
+                        break;
                 }
+                */
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
             }
         }
 
@@ -577,7 +632,7 @@ namespace Chromatics.DeviceInterfaces
 
             if (FfxivHotbar.Keybindwhitelist.Contains(key) && !bypasswhitelist)
                 return;
-
+            
             //keyboardGrid
             uint rzCol = ToColoreCol(col);
 
