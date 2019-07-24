@@ -128,6 +128,26 @@ namespace Chromatics.Datastore
         public bool KZ18Enabled = true;
         public bool KZ19Enabled = true;
         public bool KZ20Enabled = true;
+        public string kz1Modifiers = "None";
+        public string kz2Modifiers = "None";
+        public string kz3Modifiers = "None";
+        public string kz4Modifiers = "None";
+        public string kz5Modifiers = "None";
+        public string kz6Modifiers = "None";
+        public string kz7Modifiers = "None";
+        public string kz8Modifiers = "None";
+        public string kz9Modifiers = "None";
+        public string kz10Modifiers = "None";
+        public string kz11Modifiers = "None";
+        public string kz12Modifiers = "None";
+        public string kz13Modifiers = "None";
+        public string kz14Modifiers = "None";
+        public string kz15Modifiers = "None";
+        public string kz16Modifiers = "None";
+        public string kz17Modifiers = "None";
+        public string kz18Modifiers = "None";
+        public string kz19Modifiers = "None";
+        public string kz20Modifiers = "None";
 
         public bool OtherInterpolateEffects = false;
         public bool ReverseInterpolateEffects = false;

@@ -771,7 +771,107 @@ namespace Chromatics.Controllers
 
             return "HpMp";
         }
+
+        public static string ConvertModifiersToCB(Modifiers mods)
+        {
+            switch (mods)
+            {
+                case Modifiers.None:
+                    return "None";
+                case Modifiers.CTRL:
+                    return "CTRL";
+                case Modifiers.ALT:
+                    return "ALT";
+                case Modifiers.SHIFT:
+                    return "SHIFT";
+                case Modifiers.CTRL_ALT:
+                    return "CTRL + ALT";
+                case Modifiers.CTRL_SHIFT:
+                    return "CTRL + SHIFT";
+                case Modifiers.ALT_SHIFT:
+                    return "ALT + SHIFT";
+                case Modifiers.CTRL_ALT_SHIFT:
+                    return "CTRL + ALT + SHIFT";
+            }
+
+            return "None";
+        }
                
+        public static string ConvertModifiersToString(Modifiers mods)
+        {
+            switch (mods)
+            {
+                case Modifiers.None:
+                    return "None";
+                case Modifiers.CTRL:
+                    return "CTRL";
+                case Modifiers.ALT:
+                    return "ALT";
+                case Modifiers.SHIFT:
+                    return "SHIFT";
+                case Modifiers.CTRL_ALT:
+                    return "CTRL_ALT";
+                case Modifiers.CTRL_SHIFT:
+                    return "CTRL_SHIFT";
+                case Modifiers.ALT_SHIFT:
+                    return "ALT_SHIFT";
+                case Modifiers.CTRL_ALT_SHIFT:
+                    return "CTRL_ALT_SHIFT";
+            }
+
+            return "None";
+        }
+
+        public static Modifiers ConvertStringToModifiers(string mods)
+        {
+            switch (mods)
+            {
+                case "Disabled":
+                    return Modifiers.None;
+                case "CTRL":
+                    return Modifiers.CTRL;
+                case "ALT":
+                    return Modifiers.ALT;
+                case "SHIFT":
+                    return Modifiers.SHIFT;
+                case "CTRL_ALT":
+                    return Modifiers.CTRL_ALT;
+                case "CTRL_SHIFT":
+                    return Modifiers.CTRL_SHIFT;
+                case "ALT_SHIFT":
+                    return Modifiers.ALT_SHIFT;
+                case "CTRL_ALT_SHIFT":
+                    return Modifiers.CTRL_ALT_SHIFT;
+            }
+
+            return Modifiers.None;
+        }
+
+        public static Modifiers ConvertCBToModifiers(string mods)
+        {
+            switch (mods)
+            {
+                case "Disabled":
+                    return Modifiers.None;
+                case "CTRL":
+                    return Modifiers.CTRL;
+                case "ALT":
+                    return Modifiers.ALT;
+                case "SHIFT":
+                    return Modifiers.SHIFT;
+                case "CTRL + ALT":
+                    return Modifiers.CTRL_ALT;
+                case "CTRL + SHIFT":
+                    return Modifiers.CTRL_SHIFT;
+                case "ALT + SHIFT":
+                    return Modifiers.ALT_SHIFT;
+                case "CTRL + ALT + SHIFT":
+                    return Modifiers.CTRL_ALT_SHIFT;
+            }
+
+            return Modifiers.None;
+        }
+
 
         public struct ColorRGB
         {

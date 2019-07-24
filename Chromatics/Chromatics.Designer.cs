@@ -41,6 +41,7 @@
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
             this.tP_keys = new System.Windows.Forms.TabPage();
+            this.chk_keymulti_rev = new System.Windows.Forms.CheckBox();
             this.lbl_multiledcnt = new System.Windows.Forms.Label();
             this.nm_keymulti_led = new System.Windows.Forms.NumericUpDown();
             this.cb_fkeymode = new System.Windows.Forms.ComboBox();
@@ -83,10 +84,6 @@
             this.tP_keypad = new System.Windows.Forms.TabPage();
             this.chk_keypad_binds = new System.Windows.Forms.CheckBox();
             this.dgv_keypad_binds = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lbl_keypad_z1 = new System.Windows.Forms.Label();
             this.cb_keypad_z1 = new System.Windows.Forms.ComboBox();
             this.chk_dev_keypad = new System.Windows.Forms.CheckBox();
@@ -266,7 +263,11 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_keymulti_rev = new System.Windows.Forms.CheckBox();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.col_mod = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -487,6 +488,19 @@
             this.tP_keys.Size = new System.Drawing.Size(717, 373);
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
+            // 
+            // chk_keymulti_rev
+            // 
+            this.chk_keymulti_rev.AutoSize = true;
+            this.chk_keymulti_rev.Location = new System.Drawing.Point(628, 85);
+            this.chk_keymulti_rev.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_keymulti_rev.Name = "chk_keymulti_rev";
+            this.chk_keymulti_rev.Size = new System.Drawing.Size(66, 17);
+            this.chk_keymulti_rev.TabIndex = 42;
+            this.chk_keymulti_rev.Text = "Reverse";
+            this.tooltip_main.SetToolTip(this.chk_keymulti_rev, "Change direction of multi-key effects.");
+            this.chk_keymulti_rev.UseVisualStyleBackColor = true;
+            this.chk_keymulti_rev.CheckedChanged += new System.EventHandler(this.Chk_keymulti_rev_CheckedChanged);
             // 
             // lbl_multiledcnt
             // 
@@ -1021,6 +1035,7 @@
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2,
             this.Column1,
+            this.col_mod,
             this.dataGridViewTextBoxColumn3});
             this.dgv_keypad_binds.Location = new System.Drawing.Point(295, 49);
             this.dgv_keypad_binds.Margin = new System.Windows.Forms.Padding(2);
@@ -1033,33 +1048,6 @@
             this.tooltip_main.SetToolTip(this.dgv_keypad_binds, "Maps Keypad keys to keybinds. To use this, match each key to the keybind (without" +
         " modifier) you have assigned in FFXIV.");
             this.dgv_keypad_binds.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnKeypadBindChanged);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "ID";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.FillWeight = 64.54688F;
-            this.dataGridViewTextBoxColumn2.HeaderText = "Keypad Key";
-            this.dataGridViewTextBoxColumn2.MaxInputLength = 2;
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
-            // Column1
-            // 
-            this.Column1.FillWeight = 45.68528F;
-            this.Column1.HeaderText = "Enabled";
-            this.Column1.Name = "Column1";
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.FillWeight = 189.7679F;
-            this.dataGridViewTextBoxColumn3.HeaderText = "Keybind";
-            this.dataGridViewTextBoxColumn3.MaxInputLength = 1;
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             // 
             // lbl_keypad_z1
             // 
@@ -3464,18 +3452,50 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_keymulti_rev
+            // dataGridViewTextBoxColumn1
             // 
-            this.chk_keymulti_rev.AutoSize = true;
-            this.chk_keymulti_rev.Location = new System.Drawing.Point(628, 85);
-            this.chk_keymulti_rev.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_keymulti_rev.Name = "chk_keymulti_rev";
-            this.chk_keymulti_rev.Size = new System.Drawing.Size(66, 17);
-            this.chk_keymulti_rev.TabIndex = 42;
-            this.chk_keymulti_rev.Text = "Reverse";
-            this.tooltip_main.SetToolTip(this.chk_keymulti_rev, "Change direction of multi-key effects.");
-            this.chk_keymulti_rev.UseVisualStyleBackColor = true;
-            this.chk_keymulti_rev.CheckedChanged += new System.EventHandler(this.Chk_keymulti_rev_CheckedChanged);
+            this.dataGridViewTextBoxColumn1.HeaderText = "ID";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.FillWeight = 86.69802F;
+            this.dataGridViewTextBoxColumn2.HeaderText = "Keypad Key";
+            this.dataGridViewTextBoxColumn2.MaxInputLength = 2;
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // Column1
+            // 
+            this.Column1.FillWeight = 61.36351F;
+            this.Column1.HeaderText = "Enabled";
+            this.Column1.Name = "Column1";
+            this.Column1.ToolTipText = "Enable/Disable this key on the keypad";
+            // 
+            // col_mod
+            // 
+            this.col_mod.FillWeight = 142.132F;
+            this.col_mod.HeaderText = "Modifiers";
+            this.col_mod.Items.AddRange(new object[] {
+            "None",
+            "CTRL",
+            "ALT",
+            "SHIFT",
+            "CTRL + ALT",
+            "CTRL + SHIFT",
+            "ALT + SHIFT",
+            "CTRL + ALT + SHIFT"});
+            this.col_mod.Name = "col_mod";
+            this.col_mod.ToolTipText = "Select modifier the FFIXV keybind is attached to for this key";
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.FillWeight = 109.8065F;
+            this.dataGridViewTextBoxColumn3.HeaderText = "Keybind";
+            this.dataGridViewTextBoxColumn3.MaxInputLength = 1;
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ToolTipText = "Set the FFXIV keybind this key is attached to.";
             // 
             // Chromatics
             // 
@@ -3748,10 +3768,6 @@
         private System.Windows.Forms.CheckBox chk_other_interpreverse;
         private System.Windows.Forms.Label lbl_bcm;
         private System.Windows.Forms.ComboBox cb_bcm;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.GroupBox gB_lcc;
         private System.Windows.Forms.Button btn_lccrestore;
         private System.Windows.Forms.CheckBox chk_lccauto;
@@ -3805,6 +3821,11 @@
         private System.Windows.Forms.Label lbl_multiledcnt;
         private System.Windows.Forms.NumericUpDown nm_keymulti_led;
         private System.Windows.Forms.CheckBox chk_keymulti_rev;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewComboBoxColumn col_mod;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
     }
 }
 

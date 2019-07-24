@@ -203,6 +203,7 @@ namespace Chromatics
         public bool _KZ20Enabled = true;
 
         public Dictionary<int, string> _KeyBindMap = new Dictionary<int, string>();
+        public Dictionary<int, Modifiers> _KeyBindModMap = new Dictionary<int, Modifiers>();
 
         private readonly RegistryKey _rkApp =
             Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);

@@ -136,6 +136,27 @@ namespace Chromatics
             dr.KeypadZ18Bind = _KeyBindMap[18];
             dr.KeypadZ19Bind = _KeyBindMap[19];
             dr.KeypadZ20Bind = _KeyBindMap[20];
+            dr.kz1Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[1]);
+            dr.kz2Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[2]);
+            dr.kz3Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[3]);
+            dr.kz4Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[4]);
+            dr.kz5Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[5]);
+            dr.kz6Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[6]);
+            dr.kz7Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[7]);
+            dr.kz8Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[8]);
+            dr.kz9Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[9]);
+            dr.kz10Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[10]);
+            dr.kz11Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[11]);
+            dr.kz12Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[12]);
+            dr.kz13Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[13]);
+            dr.kz14Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[14]);
+            dr.kz15Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[15]);
+            dr.kz16Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[16]);
+            dr.kz17Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[17]);
+            dr.kz18Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[18]);
+            dr.kz19Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[19]);
+            dr.kz20Modifiers = Helpers.ConvertModifiersToString(_KeyBindModMap[20]);
+
             dr.OtherInterpolateEffects = _OtherInterpolateEffects;
             dr.ReverseInterpolateEffects = _ReverseInterpolateEffects;
 
@@ -292,6 +313,66 @@ namespace Chromatics
                         _KZ18Enabled = dr.KZ18Enabled;
                         _KZ19Enabled = dr.KZ19Enabled;
                         _KZ20Enabled = dr.KZ20Enabled;
+
+                        if (!_KeyBindModMap.ContainsKey(1))
+                            _KeyBindModMap.Add(1, Helpers.ConvertStringToModifiers(dr.kz1Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(2))
+                            _KeyBindModMap.Add(2, Helpers.ConvertStringToModifiers(dr.kz2Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(3))
+                            _KeyBindModMap.Add(3, Helpers.ConvertStringToModifiers(dr.kz3Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(4))
+                            _KeyBindModMap.Add(4, Helpers.ConvertStringToModifiers(dr.kz4Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(5))
+                            _KeyBindModMap.Add(5, Helpers.ConvertStringToModifiers(dr.kz5Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(6))
+                            _KeyBindModMap.Add(6, Helpers.ConvertStringToModifiers(dr.kz6Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(7))
+                            _KeyBindModMap.Add(7, Helpers.ConvertStringToModifiers(dr.kz7Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(8))
+                            _KeyBindModMap.Add(8, Helpers.ConvertStringToModifiers(dr.kz8Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(9))
+                            _KeyBindModMap.Add(9, Helpers.ConvertStringToModifiers(dr.kz9Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(10))
+                            _KeyBindModMap.Add(10, Helpers.ConvertStringToModifiers(dr.kz10Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(11))
+                            _KeyBindModMap.Add(11, Helpers.ConvertStringToModifiers(dr.kz11Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(12))
+                            _KeyBindModMap.Add(12, Helpers.ConvertStringToModifiers(dr.kz12Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(13))
+                            _KeyBindModMap.Add(13, Helpers.ConvertStringToModifiers(dr.kz13Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(14))
+                            _KeyBindModMap.Add(14, Helpers.ConvertStringToModifiers(dr.kz14Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(15))
+                            _KeyBindModMap.Add(15, Helpers.ConvertStringToModifiers(dr.kz15Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(16))
+                            _KeyBindModMap.Add(16, Helpers.ConvertStringToModifiers(dr.kz16Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(17))
+                            _KeyBindModMap.Add(17, Helpers.ConvertStringToModifiers(dr.kz17Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(18))
+                            _KeyBindModMap.Add(18, Helpers.ConvertStringToModifiers(dr.kz18Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(19))
+                            _KeyBindModMap.Add(19, Helpers.ConvertStringToModifiers(dr.kz19Modifiers));
+
+                        if (!_KeyBindModMap.ContainsKey(20))
+                            _KeyBindModMap.Add(20, Helpers.ConvertStringToModifiers(dr.kz20Modifiers));
 
                         if (!_KeyBindMap.ContainsKey(1))
                             _KeyBindMap.Add(1, dr.KeypadZ1Bind);
