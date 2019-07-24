@@ -4814,12 +4814,13 @@ namespace Chromatics
 
                                                 //Collect Modifier Info
                                                 var modsactive = action.Modifiers.Count;
-                                                var _modsactive = modsactive;
+                                                //var _modsactive = modsactive;
 
                                                 if (!FfxivHotbar.Keybindwhitelist.Contains(action.ActionKey))
                                                     FfxivHotbar.Keybindwhitelist.Add(action.ActionKey);
 
                                                 var modKey = Modifiers.Null;
+                                                var pushedKey = Modifiers.None;
 
                                                 if (modsactive > 0)
                                                 {
@@ -4843,47 +4844,71 @@ namespace Chromatics
                                                         }
                                                     }
 
-                                                    //CTRL
-                                                    if (_ctrl && !_alt && !_shift && _keyCtrl &&
-                                                        !_keyAlt && !_keyShift)
+                                                    //CTRL ALT SHIFT
+                                                    if (_ctrl && _alt && _shift)
                                                     {
-                                                        modKey = Modifiers.CTRL;
-                                                    }
-                                                    //ALT
-                                                    else if (!_ctrl && _alt && !_shift && !_keyCtrl &&
-                                                             _keyAlt && !_keyShift)
-                                                    {
-                                                        modKey = Modifiers.ALT;
-                                                    }
-                                                    //SHIFT
-                                                    else if (!_ctrl && !_alt && _shift && !_keyCtrl &&
-                                                             !_keyAlt && _keyShift)
-                                                    {
-                                                        modKey = Modifiers.SHIFT;
+                                                        modKey = Modifiers.CTRL_ALT_SHIFT;
                                                     }
                                                     //ALT SHIFT
-                                                    else if (!_ctrl && _alt && _shift && !_keyCtrl &&
-                                                             _keyAlt && _keyShift)
+                                                    else if (!_ctrl && _alt && _shift)
                                                     {
                                                         modKey = Modifiers.ALT_SHIFT;
                                                     }
                                                     //CTRL SHIFT
-                                                    else if (_ctrl && !_alt && _shift && _keyCtrl &&
-                                                             !_keyAlt && _keyShift)
+                                                    else if (_ctrl && !_alt && _shift)
                                                     {
                                                         modKey = Modifiers.CTRL_SHIFT;
                                                     }
                                                     //CTRL ALT
-                                                    else if (_ctrl && _alt && !_shift && _keyCtrl &&
-                                                             _keyAlt && !_keyShift)
+                                                    else if (_ctrl && _alt && !_shift)
                                                     {
                                                         modKey = Modifiers.CTRL_ALT;
                                                     }
-                                                    //CTRL ALT
-                                                    else if (_ctrl && _alt && _shift && _keyCtrl &&
-                                                             _keyAlt && _keyShift)
+                                                    //CTRL
+                                                    else if (_ctrl && !_alt && !_shift)
                                                     {
-                                                        modKey = Modifiers.CTRL_ALT_SHIFT;
+                                                        modKey = Modifiers.CTRL;
+                                                    }
+                                                    //ALT
+                                                    else if (!_ctrl && _alt && !_shift)
+                                                    {
+                                                        modKey = Modifiers.ALT;
+                                                    }
+                                                    //SHIFT
+                                                    else if (!_ctrl && !_alt && _shift)
+                                                    {
+                                                        modKey = Modifiers.SHIFT;
+                                                    }
+
+                                                    //PRESSED
+                                                    if (_keyCtrl && _keyAlt && _keyShift)
+                                                    {
+                                                        pushedKey = Modifiers.CTRL_ALT_SHIFT;
+                                                        
+                                                    }
+                                                    else if (!_keyCtrl && _keyAlt && _keyShift)
+                                                    {
+                                                        pushedKey = Modifiers.ALT_SHIFT;
+                                                    }
+                                                    else if (_keyCtrl && !_keyAlt && _keyShift)
+                                                    {
+                                                        pushedKey = Modifiers.CTRL_SHIFT;
+                                                    }
+                                                    else if (_keyCtrl && _keyAlt && !_keyShift)
+                                                    {
+                                                        pushedKey = Modifiers.CTRL_ALT;
+                                                    }
+                                                    else if (_keyCtrl && !_keyAlt && !_keyShift)
+                                                    {
+                                                        pushedKey = Modifiers.CTRL;
+                                                    }
+                                                    else if (!_keyCtrl && _keyAlt && !_keyShift)
+                                                    {
+                                                        pushedKey = Modifiers.ALT;
+                                                    }
+                                                    else if (!_keyCtrl && !_keyAlt && _keyShift)
+                                                    {
+                                                        pushedKey = Modifiers.SHIFT;
                                                     }
                                                 }
                                                 else
@@ -4891,14 +4916,19 @@ namespace Chromatics
                                                     modKey = Modifiers.None;
                                                 }
 
+
                                                 //Assign Lighting
-                                                if (modKey == Modifiers.None || modKey == Modifiers.CTRL ||
-                                                    modKey == Modifiers.ALT ||
-                                                    modKey == Modifiers.SHIFT || modKey == Modifiers.ALT_SHIFT ||
-                                                    modKey == Modifiers.CTRL_ALT ||
-                                                    modKey == Modifiers.CTRL_ALT_SHIFT ||
-                                                    modKey == Modifiers.CTRL_SHIFT)
+                                                if (modKey == pushedKey)
                                                 {
+                                                    var _modKey = modKey == Modifiers.None ? "No" : "Yes";
+                                                    if (!FfxivHotbar.KeybindsActive.Contains(action.ActionKey + "|" + _modKey))
+                                                        FfxivHotbar.KeybindsActive.Add(action.ActionKey + "|" + _modKey);
+                                                    
+                                                    if (modsactive == 0 && FfxivHotbar.KeybindsActive.Contains(action.ActionKey + "|Yes"))
+                                                    {
+                                                        continue;
+                                                    }
+
                                                     //Keypads
                                                     if (_EnableKeypadBinds)
                                                     {
@@ -8316,12 +8346,16 @@ namespace Chromatics
                                                     }
                                                 }
                                             }
+
+                                            FfxivHotbar.KeybindsActive.Clear();
                                         }
                                     }
                                     else
                                     {
                                         if (FfxivHotbar.Keybindwhitelist.Count > 0)
                                             FfxivHotbar.Keybindwhitelist.Clear();
+
+                                        FfxivHotbar.KeybindsActive.Clear();
 
                                         foreach (var key in FfxivHotbar.Keybindtranslation)
                                         {
