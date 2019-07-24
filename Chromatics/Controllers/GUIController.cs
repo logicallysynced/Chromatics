@@ -196,6 +196,7 @@ namespace Chromatics
             {"ColorMappingCpEmpty", new[] {"CP Empty", "2", "Black", "White"}},
             {"ColorMappingExpEmpty", new[] {"Experience Bar (Empty)", "2", "Black", "White"}},
             {"ColorMappingExpFull", new[] { "Experience Bar (Full)", "2", "Black", "White"}},
+            {"ColorMappingExpMax", new[] { "Experience Bar (Level Cap)", "2", "Black", "White"}},
             {"ColorMappingCastChargeFull", new[] {"Cast Charge", "3", "Black", "White"}},
             {"ColorMappingCastChargeEmpty", new[] {"Cast Empty", "3", "Black", "White"}},
             {"ColorMappingEmnity0", new[] {"Minimal Enmity", "4", "Black", "White"}},

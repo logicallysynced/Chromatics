@@ -8666,7 +8666,7 @@ namespace Chromatics
                                     {
                                         foreach (var f in DeviceEffects.LightbarZones)
                                         {
-                                            GlobalApplyMapLightbarLighting(f, expcolfull, false, false);
+                                            GlobalApplyMapLightbarLighting(f, ColorTranslator.FromHtml(ColorMappings.ColorMappingExpMax), false, false);
                                         }
                                     }
 
@@ -8674,7 +8674,7 @@ namespace Chromatics
                                     {
                                         foreach (var f in DeviceEffects.Functions)
                                         {
-                                            GlobalApplyMapKeyLighting(f, expcolfull, false, false);
+                                            GlobalApplyMapKeyLighting(f, ColorTranslator.FromHtml(ColorMappings.ColorMappingExpMax), false, false);
                                         }
                                     }
                                 }
