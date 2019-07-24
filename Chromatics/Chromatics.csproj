@@ -384,6 +384,7 @@
     <Compile Include="Controllers\Locator.cs" />
     <Compile Include="Controllers\Enums.cs" />
     <Compile Include="Controllers\MemoryTasks.cs" />
+    <Compile Include="Controllers\ResourceMonitor.cs" />
     <Compile Include="Controllers\SharpcastController.cs" />
     <Compile Include="DeviceInterfaces\AmbienceInterface.cs" />
     <Compile Include="DeviceInterfaces\AmbienceLibs\AmbInterop.cs" />

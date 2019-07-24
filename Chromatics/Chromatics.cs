@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Chromatics.ACTInterfaces;
+using Chromatics.Controllers;
 using Chromatics.Datastore;
 using Chromatics.DeviceInterfaces;
 using Chromatics.LCDInterfaces;
@@ -28,18 +29,17 @@ namespace Chromatics
     {
         //Setup Threading/Tasks
         private CancellationTokenSource _memoryTask = new CancellationTokenSource();
-        PerformanceCounter cpuCounter;
-        PerformanceCounter ramCounter;
-        private bool usageWarning;
-        private int cpuUsageDanger = 90;
-        private int cpuUsageMax = 40;
-        private int ramUsageMax = 500;
+        
 
         private ILogitechArx _arx;
         private ILogitechLcd _lcd;
         private Task _call;
         public Task MemoryTask;
         public Thread FfxivThread;
+        private static bool usageWarning;
+        private static float cpuUsageDanger = 90;
+        private static float cpuUsageMax = 40;
+        private static float ramUsageMax = 500;
 
         private bool _allowClose;
         private bool _allowVisible = true;
@@ -372,7 +372,7 @@ namespace Chromatics
 
             SetupAboutText();
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-            cpuCounter = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName, true);
+            ResourceMonitor.Initialize();
             
             //Setup Event Listeners
             FormClosing += OnFormClosing;

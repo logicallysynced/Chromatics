@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chromatics.Controllers;
 
 namespace Chromatics
 {
@@ -93,6 +94,7 @@ namespace Chromatics
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _allowClose = true;
+            ResourceMonitor.Stop();
             notify_master.Dispose();
             
             Application.Exit();
