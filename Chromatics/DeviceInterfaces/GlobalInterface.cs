@@ -3233,13 +3233,13 @@ namespace Chromatics
                     _rzCycleCts = new CancellationTokenSource();
                     _rzCycle = new Task(() =>
                     {
-                        //_razer.CycleEffect(interval, _rzCycleCts);
+                        _razer.CycleEffect(interval, _rzCycleCts);
                     }, _rzCycleCts.Token);
     
                     MemoryTasks.Add(_rzCycle);
                     MemoryTasks.Run(_rzCycle);
                 }
-    
+            
                 if (LogitechSdkCalled == 1)
                 {
                     _logiCycle = null;
@@ -3321,7 +3321,7 @@ namespace Chromatics
                 _rzCycleCts.Cancel();
                 MemoryTasks.Remove(_rzCycle);
             }
-
+            
             if (LogitechSdkCalled == 1)
             {
                 _logiCycleCts.Cancel();

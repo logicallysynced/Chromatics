@@ -819,7 +819,7 @@ namespace Chromatics
                                 ToggleGlobalFlash4(false);
                                 GlobalApplyAllDeviceLighting(
                                     ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
-
+                                
                                 GlobalParticleEffects(
                                     new Color[]
                                     {
@@ -831,6 +831,7 @@ namespace Chromatics
                                         Color.Purple
                                     }, null,
                                    50);
+                                
 
                                 GlobalColorCycle();
 
