@@ -823,14 +823,14 @@ namespace Chromatics
                                 GlobalParticleEffects(
                                     new Color[]
                                     {
+                                        Color.Magenta,
                                         Color.Red,
                                         Color.Orange,
                                         Color.Green,
                                         Color.DodgerBlue,
-                                        Color.Magenta,
                                         Color.Purple
                                     }, null,
-                                    50);
+                                   50);
 
                                 GlobalColorCycle();
 

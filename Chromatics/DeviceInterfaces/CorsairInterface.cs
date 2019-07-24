@@ -3991,7 +3991,7 @@ namespace Chromatics.DeviceInterfaces
             //Keyboard.SetCustomAsync(refreshKeyGrid);
             Thread.Sleep(500);
             
-            while (true)
+            while (!cts.IsCancellationRequested)
             {
                 if (cts.IsCancellationRequested) break;
 
@@ -4017,34 +4017,29 @@ namespace Chromatics.DeviceInterfaces
                     }
                 }
 
-                Task t = Task.Factory.StartNew(() =>
+                //Thread.Sleep(500);
+
+                var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                foreach (var key in _regions)
                 {
-                    //Thread.Sleep(500);
+                    if (cts.IsCancellationRequested) return;
+                    if (!_corsairkeyids.ContainsKey(key)) continue;
 
-                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
-
-                    foreach (var key in _regions)
+                    foreach (var color in colorFaderDict[key].Fade())
                     {
                         if (cts.IsCancellationRequested) return;
-                        if (!_corsairkeyids.ContainsKey(key)) continue;
-
-                        foreach (var color in colorFaderDict[key].Fade())
+                        if (_corsairkeyids.ContainsKey(key))
                         {
-                            if (cts.IsCancellationRequested) return;
-                            if (_corsairkeyids.ContainsKey(key))
-                            {
-                                //ApplyMapKeyLighting(key, color, false);
-                                if (CueSDK.KeyboardSDK[_corsairkeyids[key]] != null)
-                                    _corsairKeyboardIndvBrushEffect.CorsairApplyMapKeyLighting(_corsairkeyids[key], color);
-                            }
+                            //ApplyMapKeyLighting(key, color, false);
+                            if (CueSDK.KeyboardSDK[_corsairkeyids[key]] != null)
+                                _corsairKeyboardIndvBrushEffect.CorsairApplyMapKeyLighting(_corsairkeyids[key], color);
                         }
-
-                        //Keyboard.SetCustomAsync(refreshKeyGrid);
-                        Thread.Sleep(speed);
                     }
-                });
 
-                Thread.Sleep(colorFaderDict.Count * speed);
+                    //Keyboard.SetCustomAsync(refreshKeyGrid);
+                    Thread.Sleep(speed);
+                }
             }
         }
 

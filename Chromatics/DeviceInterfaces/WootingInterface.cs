@@ -1051,7 +1051,7 @@ namespace Chromatics.DeviceInterfaces
             //Keyboard.SetCustomAsync(refreshKeyGrid);
             Thread.Sleep(500);
 
-            while (true)
+            while (!cts.IsCancellationRequested)
             {
                 if (cts.IsCancellationRequested) break;
 
@@ -1067,39 +1067,32 @@ namespace Chromatics.DeviceInterfaces
                     colorFaderDict.Add(key, new ColorFader(toColor[0], rndCol, interval));
                 }
 
-                Task t = Task.Factory.StartNew(() =>
+                var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                List<string> hids = new List<string>();
+                List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+                foreach (var key in _regions)
                 {
-                    //Thread.Sleep(500);
+                    if (cts.IsCancellationRequested) return;
 
-                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
-
-                    List<string> hids = new List<string>();
-                    List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
-
-                    foreach (var key in _regions)
+                    foreach (var color in colorFaderDict[key].Fade())
                     {
                         if (cts.IsCancellationRequested) return;
 
-                        foreach (var color in colorFaderDict[key].Fade())
+                        if (prevKeyboard.ContainsKey(key))
                         {
-                            if (cts.IsCancellationRequested) return;
-
-                            if (prevKeyboard.ContainsKey(key))
-                            {
-                                hids.Add(key);
-                                colors.Add(Tuple.Create(color.R, color.G, color.B));
-                            }
+                            hids.Add(key);
+                            colors.Add(Tuple.Create(color.R, color.G, color.B));
                         }
-
-                        EffectKeyUpdate(hids, colors);
-                        hids.Clear();
-                        colors.Clear();
-
-                        Thread.Sleep(speed);
                     }
-                });
 
-                Thread.Sleep(colorFaderDict.Count * speed);
+                    EffectKeyUpdate(hids, colors);
+                    hids.Clear();
+                    colors.Clear();
+
+                    Thread.Sleep(speed);
+                }
             }
         }
 

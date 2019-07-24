@@ -3360,7 +3360,7 @@ namespace Chromatics
         {
             //if (!_KeysSingleKeyModeEnabled && !_KeysMultiKeyModeEnabled) return;
 
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 lock (lockObject)
                 {

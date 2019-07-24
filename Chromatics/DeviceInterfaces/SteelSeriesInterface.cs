@@ -1374,7 +1374,7 @@ namespace Chromatics.DeviceInterfaces
             //Keyboard.SetCustomAsync(refreshKeyGrid);
             Thread.Sleep(500);
 
-            while (true)
+            while (!cts.IsCancellationRequested)
             {
                 if (cts.IsCancellationRequested) break;
 
@@ -1390,40 +1390,34 @@ namespace Chromatics.DeviceInterfaces
                     colorFaderDict.Add(key, new ColorFader(toColor[0], rndCol, interval));
                 }
 
-                Task t = Task.Factory.StartNew(() =>
+                var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                List<byte> hids = new List<byte>();
+                List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+                foreach (var key in _regions)
                 {
-                    //Thread.Sleep(500);
+                    if (cts.IsCancellationRequested) return;
+                    if (!colorFaderDict.ContainsKey(key)) continue;
 
-                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
-
-                    List<byte> hids = new List<byte>();
-                    List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
-
-                    foreach (var key in _regions)
+                    foreach (var color in colorFaderDict[key].Fade())
                     {
                         if (cts.IsCancellationRequested) return;
-                        if (!colorFaderDict.ContainsKey(key)) continue;
 
-                        foreach (var color in colorFaderDict[key].Fade())
+                        if (prevKeyboard.ContainsKey(GetHIDCode(key)))
                         {
-                            if (cts.IsCancellationRequested) return;
-
-                            if (prevKeyboard.ContainsKey(GetHIDCode(key)))
-                            {
-                                hids.Add(GetHIDCode(key));
-                                colors.Add(Tuple.Create(color.R, color.G, color.B));
-                            }
+                            hids.Add(GetHIDCode(key));
+                            colors.Add(Tuple.Create(color.R, color.G, color.B));
                         }
-
-                        EffectKeyUpdate(hids, colors);
-                        hids.Clear();
-                        colors.Clear();
-
-                        Thread.Sleep(speed);
                     }
-                });
 
-                Thread.Sleep(colorFaderDict.Count * speed);
+                    EffectKeyUpdate(hids, colors);
+                    hids.Clear();
+                    colors.Clear();
+
+                    Thread.Sleep(speed);
+                }
+
             }
         }
 

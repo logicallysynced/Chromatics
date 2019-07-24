@@ -1380,7 +1380,7 @@ namespace Chromatics.DeviceInterfaces
             //
             Thread.Sleep(500);
 
-            while (true)
+            while (!cts.IsCancellationRequested)
             {
                 if (cts.IsCancellationRequested) break;
 
@@ -1397,28 +1397,21 @@ namespace Chromatics.DeviceInterfaces
                     colorFaderDict.Add(key, new ColorFader(toColor[0], rndCol, interval));
                 }
 
-                Task t = Task.Factory.StartNew(() =>
+                var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                foreach (var key in _regions)
                 {
-                    //Thread.Sleep(500);
+                    if (cts.IsCancellationRequested) return;
 
-                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
-
-                    foreach (var key in _regions)
+                    foreach (var color in colorFaderDict[key].Fade())
                     {
                         if (cts.IsCancellationRequested) return;
 
-                        foreach (var color in colorFaderDict[key].Fade())
-                        {
-                            if (cts.IsCancellationRequested) return;
-
-                            ApplyMapKeyLighting(key, color, false);
-                        }
-
-                        Thread.Sleep(speed);
+                        ApplyMapKeyLighting(key, color, false);
                     }
-                });
 
-                Thread.Sleep(colorFaderDict.Count * speed);
+                    Thread.Sleep(speed);
+                }
             }
         }
 

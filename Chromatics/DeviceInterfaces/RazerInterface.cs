@@ -2750,7 +2750,8 @@ namespace Chromatics.DeviceInterfaces
             });
         }
 
-        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50)
+        public void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts,
+            int speed = 50)
         {
             if (!_isInitialized) return;
             if (!_razerDeviceKeyboard) return;
@@ -2775,9 +2776,8 @@ namespace Chromatics.DeviceInterfaces
             {
                 CheckRazerEx(ex);
             }
-            
 
-            while (true)
+            while (!cts.IsCancellationRequested)
             {
                 if (cts.IsCancellationRequested) break;
 
@@ -2791,7 +2791,7 @@ namespace Chromatics.DeviceInterfaces
                     if (Enum.IsDefined(typeof(Key), key))
                     {
                         var rndCol = Color.Black;
-                        var keyid = (Key)Enum.Parse(typeof(Key), key);
+                        var keyid = (Key) Enum.Parse(typeof(Key), key);
 
                         do
                         {
@@ -2807,54 +2807,52 @@ namespace Chromatics.DeviceInterfaces
                     }
                 }
 
-                Task t = Task.Factory.StartNew(async () =>
+                //Thread.Sleep(500);
+
+                var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                foreach (var key in _regions)
                 {
-                    //Thread.Sleep(500);
+                    if (cts.IsCancellationRequested) return;
 
-                    var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+                    if (!Enum.IsDefined(typeof(Key), key)) continue;
+                    if (!colorFaderDict.ContainsKey(key)) continue;
 
-                    foreach (var key in _regions)
+                    foreach (var color in colorFaderDict[key].Fade())
                     {
                         if (cts.IsCancellationRequested) return;
-
-                        if (!Enum.IsDefined(typeof(Key), key)) continue;
-                        if (!colorFaderDict.ContainsKey(key)) continue;
-
-                        foreach (var color in colorFaderDict[key].Fade())
+                        if (Enum.IsDefined(typeof(Key), key))
                         {
-                            if (cts.IsCancellationRequested) return;
-                            if (Enum.IsDefined(typeof(Key), key))
+                            var keyid = (Key) Enum.Parse(typeof(Key), key);
+                            var rzCol = ToColoreCol(color);
+
+                            try
                             {
-                                var keyid = (Key)Enum.Parse(typeof(Key), key);
-                                var rzCol = ToColoreCol(color);
-
-                                try
+                                if (_effectGrid[keyid].Value != rzCol)
                                 {
-                                    if (_effectGrid[keyid].Value != rzCol)
-                                    {
-                                        _effectGrid[keyid] = rzCol;
-                                        //await Keyboard.SetKeyAsync(keyid, rzCol);
-                                    }
+                                    _effectGrid[keyid] = rzCol;
+                                    //await Keyboard.SetKeyAsync(keyid, rzCol);
+                                }
 
-                                    //refreshKeyGrid[keyid] = ToColoreCol(color);
-                                }
-                                catch (Exception ex)
-                                {
-                                    CheckRazerEx(ex);
-                                }
-                                
+                                //refreshKeyGrid[keyid] = ToColoreCol(color);
                             }
-                        }
+                            catch (Exception ex)
+                            {
+                                CheckRazerEx(ex);
+                            }
 
-                        await Keyboard.SetCustomAsync(_effectGrid);
-                        //_effectGrid.Clear();
-                        Thread.Sleep(speed);
+                        }
                     }
-                });
-                
-                Thread.Sleep(colorFaderDict.Count * speed);
+
+                    Keyboard.SetCustomAsync(_effectGrid);
+                    //_effectGrid.Clear();
+                    Thread.Sleep(speed);
+                }
+
             }
         }
+
+
 
         public void RaidParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts, int speed = 50)
         {
