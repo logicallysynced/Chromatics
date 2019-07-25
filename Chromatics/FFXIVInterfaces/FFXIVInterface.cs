@@ -4915,105 +4915,105 @@ namespace Chromatics
                                                 {
                                                     modKey = Modifiers.None;
                                                 }
-
-
+                                                
                                                 //Assign Lighting
                                                 //Keypads
                                                 if (_EnableKeypadBinds)
                                                 {
-
+                                                    
                                                     if (action.Category == 49 || action.Category == 51)
                                                     {
-                                                        if (!action.IsAvailable || !action.InRange ||
-                                                            _playerInfo.IsCasting || action.CoolDownPercent > 0)
+                                                        foreach (var bind in _KeyBindMap)
                                                         {
-                                                            foreach (var bind in _KeyBindMap)
+                                                            var bypass = false;
+
+                                                            switch (bind.Key)
                                                             {
-                                                                var bypass = false;
-                                                                
-                                                                switch (bind.Key)
-                                                                {
-                                                                    case 1:
-                                                                        if (!_KZ1Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 2:
-                                                                        if (!_KZ2Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 3:
-                                                                        if (!_KZ3Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 4:
-                                                                        if (!_KZ4Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 5:
-                                                                        if (!_KZ5Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 6:
-                                                                        if (!_KZ6Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 7:
-                                                                        if (!_KZ7Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 8:
-                                                                        if (!_KZ8Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 9:
-                                                                        if (!_KZ9Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 10:
-                                                                        if (!_KZ10Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 11:
-                                                                        if (!_KZ11Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 12:
-                                                                        if (!_KZ12Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 13:
-                                                                        if (!_KZ13Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 14:
-                                                                        if (!_KZ14Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 15:
-                                                                        if (!_KZ15Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 16:
-                                                                        if (!_KZ16Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 17:
-                                                                        if (!_KZ17Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 18:
-                                                                        if (!_KZ18Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 19:
-                                                                        if (!_KZ19Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                    case 20:
-                                                                        if (!_KZ20Enabled)
-                                                                            bypass = true;
-                                                                        break;
-                                                                }
+                                                                case 1:
+                                                                    if (!_KZ1Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 2:
+                                                                    if (!_KZ2Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 3:
+                                                                    if (!_KZ3Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 4:
+                                                                    if (!_KZ4Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 5:
+                                                                    if (!_KZ5Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 6:
+                                                                    if (!_KZ6Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 7:
+                                                                    if (!_KZ7Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 8:
+                                                                    if (!_KZ8Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 9:
+                                                                    if (!_KZ9Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 10:
+                                                                    if (!_KZ10Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 11:
+                                                                    if (!_KZ11Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 12:
+                                                                    if (!_KZ12Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 13:
+                                                                    if (!_KZ13Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 14:
+                                                                    if (!_KZ14Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 15:
+                                                                    if (!_KZ15Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 16:
+                                                                    if (!_KZ16Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 17:
+                                                                    if (!_KZ17Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 18:
+                                                                    if (!_KZ18Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 19:
+                                                                    if (!_KZ19Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                                case 20:
+                                                                    if (!_KZ20Enabled)
+                                                                        bypass = true;
+                                                                    break;
+                                                            }
+
+                                                            if (!action.IsAvailable || !action.InRange ||
+                                                                _playerInfo.IsCasting || action.CoolDownPercent > 0)
+                                                            {
 
                                                                 if (bypass)
                                                                 {
@@ -5024,109 +5024,21 @@ namespace Chromatics
                                                                     continue;
                                                                 }
 
-                                                                if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                if (action.ActionKey == bind.Value &&
+                                                                    _KeyBindModMap[bind.Key] == modKey)
                                                                 {
                                                                     GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                         ColorTranslator.FromHtml(ColorMappings
                                                                             .ColorMappingHotbarNotAvailable),
                                                                         false);
                                                                 }
+
+                                                                continue;
                                                             }
 
-                                                            continue;
-                                                        }
-                                                        
-                                                        switch (action.Name)
-                                                        {
-                                                            case "Map":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                            switch (action.Name)
+                                                            {
+                                                                case "Map":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -5138,104 +5050,16 @@ namespace Chromatics
                                                                     }
 
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindMap), false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Aether Currents":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Aether Currents":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -5246,105 +5070,17 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindAetherCurrents),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Signs":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Signs":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -5355,104 +5091,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindSigns), false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Waymarks":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Waymarks":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -5463,105 +5111,17 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindWaymarks),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Record Ready Check":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Record Ready Check":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -5572,105 +5132,17 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindRecordReadyCheck),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Ready Check":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Ready Check":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -5681,105 +5153,17 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindReadyCheck),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Countdown":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Countdown":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -5790,105 +5174,17 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindCountdown),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Emotes":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Emotes":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -5899,104 +5195,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindEmotes), false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Linkshells":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Linkshells":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6007,105 +5215,17 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindLinkshells),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Cross-world Linkshell":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Cross-world Linkshell":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6116,105 +5236,17 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindCrossWorldLS),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Contacts":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Contacts":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6225,105 +5257,17 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindContacts),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Sprint":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Sprint":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6334,104 +5278,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindSprint), false);
                                                                     }
-                                                                }
 
-                                                                break;
-                                                            case "Teleport":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                    }
-
+                                                                    break;
+                                                                case "Teleport":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6442,105 +5298,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingKeybindTeleport),
-                                                                            false);
-                                                                    }
-                                                                }
-
-                                                                break;
-                                                            case "Return":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
+                                                                                .ColorMappingKeybindSprint), false);
                                                                     }
 
+                                                                    break;
+                                                                case "Return":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6551,104 +5318,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingKeybindReturn), false);
-                                                                    }
-                                                                }
-
-                                                                break;
-                                                            case "Limit Break":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
+                                                                                .ColorMappingKeybindSprint), false);
                                                                     }
 
+                                                                    break;
+                                                                case "Limit Break":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6659,105 +5338,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingKeybindLimitBreak),
-                                                                            false);
-                                                                    }
-                                                                }
-
-                                                                break;
-                                                            case "Duty Action":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
+                                                                                .ColorMappingKeybindSprint), false);
                                                                     }
 
+                                                                    break;
+                                                                case "Duty Action":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6768,105 +5358,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingKeybindDutyAction),
-                                                                            false);
-                                                                    }
-                                                                }
-
-                                                                break;
-                                                            case "Repair":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
+                                                                                .ColorMappingKeybindSprint), false);
                                                                     }
 
+                                                                    break;
+                                                                case "Repair":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6877,104 +5378,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingKeybindRepair), false);
-                                                                    }
-                                                                }
-
-                                                                break;
-                                                            case "Dig":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
+                                                                                .ColorMappingKeybindSprint), false);
                                                                     }
 
+                                                                    break;
+                                                                case "Dig":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -6985,104 +5398,16 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
-                                                                                .ColorMappingKeybindDig), false);
-                                                                    }
-                                                                }
-
-                                                                break;
-                                                            case "Inventory":
-                                                                foreach (var bind in _KeyBindMap)
-                                                                {
-                                                                    var bypass = false;
-
-                                                                    switch (bind.Key)
-                                                                    {
-                                                                        case 1:
-                                                                            if (!_KZ1Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 2:
-                                                                            if (!_KZ2Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 3:
-                                                                            if (!_KZ3Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 4:
-                                                                            if (!_KZ4Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 5:
-                                                                            if (!_KZ5Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 6:
-                                                                            if (!_KZ6Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 7:
-                                                                            if (!_KZ7Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 8:
-                                                                            if (!_KZ8Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 9:
-                                                                            if (!_KZ9Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 10:
-                                                                            if (!_KZ10Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 11:
-                                                                            if (!_KZ11Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 12:
-                                                                            if (!_KZ12Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 13:
-                                                                            if (!_KZ13Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 14:
-                                                                            if (!_KZ14Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 15:
-                                                                            if (!_KZ15Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 16:
-                                                                            if (!_KZ16Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 17:
-                                                                            if (!_KZ17Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 18:
-                                                                            if (!_KZ18Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 19:
-                                                                            if (!_KZ19Enabled)
-                                                                                bypass = true;
-                                                                            break;
-                                                                        case 20:
-                                                                            if (!_KZ20Enabled)
-                                                                                bypass = true;
-                                                                            break;
+                                                                                .ColorMappingKeybindSprint), false);
                                                                     }
 
+                                                                    break;
+                                                                case "Inventory":
                                                                     if (bypass)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
@@ -7093,23 +5418,27 @@ namespace Chromatics
                                                                         continue;
                                                                     }
 
-                                                                    if (action.ActionKey == bind.Value && _KeyBindModMap[bind.Key] == modKey)
+                                                                    if (action.ActionKey == bind.Value &&
+                                                                        _KeyBindModMap[bind.Key] == modKey)
                                                                     {
                                                                         GlobalApplyMapKeypadBINDLighting(bind.Key,
                                                                             ColorTranslator.FromHtml(ColorMappings
                                                                                 .ColorMappingKeybindInventory),
                                                                             false);
                                                                     }
-                                                                }
 
-                                                                break;
+                                                                    break;
+                                                            }
+
+                                                            continue;
                                                         }
-                                                        
+
                                                         continue;
                                                     }
-
+                                                    
                                                     if (action.IsAvailable || !_playerInfo.IsCasting)
                                                     {
+
                                                         if (action.InRange)
                                                         {
                                                             if (action.IsProcOrCombo)
@@ -7663,7 +5992,7 @@ namespace Chromatics
                                                         }
                                                     }
                                                 }
-
+                                                
                                                 if (modKey == pushedKey)
                                                 {
                                                     //Keyboards
@@ -8132,6 +6461,7 @@ namespace Chromatics
                                                             
                                                             if (action.Category == 49 || action.Category == 51)
                                                             {
+
                                                                 if (!action.IsAvailable || !action.InRange ||
                                                                     _playerInfo.IsCasting || action.CoolDownPercent > 0)
                                                                 {
@@ -8143,7 +6473,7 @@ namespace Chromatics
 
                                                                     continue;
                                                                 }
-
+                                                                
                                                                 switch (action.Name)
                                                                 {
                                                                     case "Map":
