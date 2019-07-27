@@ -20,10 +20,12 @@ namespace Chromatics.Controllers
         {
             if (_IsRunning) return;
 
+            /*
             cpuCounter = new PerformanceCounter("Process", "% Processor Time",
                 Process.GetCurrentProcess().ProcessName, true);
             _IsRunning = true;
             CycleCPUCounter();
+            */
         }
 
         public static void Stop()

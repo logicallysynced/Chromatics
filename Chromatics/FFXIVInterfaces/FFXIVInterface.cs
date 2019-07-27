@@ -362,7 +362,7 @@ namespace Chromatics
             try
             {
                 //Check for crash
-                
+                /*
                 if (ResourceMonitor.GetCPUUsage() > cpuUsageDanger)
                 {
                     WriteConsole(ConsoleTypes.Error, "Chromatics exceeded dangerous CPU usage limit. Attempting to close Chromatics..");
@@ -417,6 +417,7 @@ namespace Chromatics
                 }
 
                 if (usageWarning) return;
+                */
                 
 
                 /*
@@ -646,7 +647,7 @@ namespace Chromatics
             MemoryTasks.Cleanup();
 
             //Check for crash
-
+            /*
             if (ResourceMonitor.GetCPUUsage() > cpuUsageDanger)
             {
                 WriteConsole(ConsoleTypes.Error, "Chromatics exceeded dangerous CPU usage limit. Attempting to close Chromatics..");
@@ -672,6 +673,7 @@ namespace Chromatics
             else if (ResourceMonitor.GetCPUUsage() > cpuUsageMax)
             {
                 //CPU exceed
+                
                 if (!usageWarning)
                 {
                     WriteConsole(ConsoleTypes.Error,
@@ -702,6 +704,7 @@ namespace Chromatics
                     usageWarning = false;
                 }
             }
+            */
 
             if (!HoldReader)
             {
