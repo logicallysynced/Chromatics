@@ -41,6 +41,9 @@ namespace Chromatics
         private static float cpuUsageMax = 40;
         private static float ramUsageMax = 500;
 
+        private string DebugMapID = "";
+        private string DebugJobClass = "";
+
         private bool _allowClose;
         private bool _allowVisible = true;
         private bool _exit;

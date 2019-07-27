@@ -805,6 +805,11 @@ namespace Chromatics
                         sw.WriteLine();
                         sw.Write("Exported Time: " + datenow.Hour + ":" + datenow.Minute + ":" + datenow.Second + " " + datenow.Day + "/" + datenow.Month + "/" + datenow.Year);
                         sw.WriteLine();
+                        sw.Write("Player Job: " + DebugJobClass);
+                        sw.WriteLine();
+                        sw.Write("Player Location: " + DebugMapID);
+                        sw.WriteLine();
+                        sw.WriteLine();
                         sw.WriteLine();
                         sw.Write(log);
                         sw.WriteLine();

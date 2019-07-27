@@ -3183,7 +3183,7 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            Process.Start("https://github.com/roxaskeyheart/Chromatics/wiki/Connecting-with-Advanced-Combat-Tracker-(ACT)");
+            Process.Start("https://docs.chromaticsffxiv.com/chromatics/integrations/advanced-combat-tracker");
         }
 
         private void chk_desktopnotify_CheckedChanged(object sender, EventArgs e)
@@ -3516,7 +3516,7 @@ namespace Chromatics
         {
             if (Startup == false) return;
 
-            Process.Start("https://github.com/roxaskeyheart/Chromatics/wiki/Connecting-with-IFTTT");
+            Process.Start("https://docs.chromaticsffxiv.com/chromatics/integrations/ifttt");
         }
 
         private void Chk_sdk_razer_CheckedChanged(object sender, EventArgs e)

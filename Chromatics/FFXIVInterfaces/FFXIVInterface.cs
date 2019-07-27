@@ -811,6 +811,8 @@ namespace Chromatics
                     FfxivDutyFinder.RefreshData();
 
 
+                    DebugMapID = _playerInfo.MapTerritory.ToString();
+
                     //Vegas Mode
                     if (ChromaticsSettings.ChromaticsSettingsVegasMode)
                     {
@@ -6992,6 +6994,7 @@ namespace Chromatics
                                         break;
                                 }
 
+                                DebugJobClass = jobClass;
 
                                 if (_currentlvl == 80)
                                 {
