@@ -7017,29 +7017,34 @@ namespace Chromatics
 
                                     if (_LightbarMode == LightbarMode.CurrentExp)
                                     {
-                                        var LBExp_Collection = DeviceEffects.LightbarZones;
-                                        var LBExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0,
-                                            FFXIVHelpers.ExperienceTable[_currentlvl], LBExp_Collection.Length, 0);
-
-                                        for (var i = 0; i < LBExp_Collection.Length; i++)
+                                        if (FFXIVHelpers.ExperienceTable.ContainsKey(_currentlvl))
                                         {
-                                            GlobalApplyMapLightbarLighting(LBExp_Collection[i],
-                                                LBExp_Interpolate > i ? expcolfull : expcolempty, false, false);
+                                            var LBExp_Collection = DeviceEffects.LightbarZones;
+                                            var LBExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0,
+                                                FFXIVHelpers.ExperienceTable[_currentlvl], LBExp_Collection.Length, 0);
+
+                                            for (var i = 0; i < LBExp_Collection.Length; i++)
+                                            {
+                                                GlobalApplyMapLightbarLighting(LBExp_Collection[i],
+                                                    LBExp_Interpolate > i ? expcolfull : expcolempty, false, false);
+                                            }
                                         }
                                     }
 
                                     if (_FKeyMode == FKeyMode.CurrentExp)
                                     {
-                                        var FKExp_Collection = DeviceEffects.Functions;
-                                        var FKExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0,
-                                            FFXIVHelpers.ExperienceTable[_currentlvl], FKExp_Collection.Length, 0);
-
-                                        for (var i2 = 0; i2 < FKExp_Collection.Length; i2++)
+                                        if (FFXIVHelpers.ExperienceTable.ContainsKey(_currentlvl))
                                         {
-                                            GlobalApplyMapKeyLighting(FKExp_Collection[i2],
-                                                FKExp_Interpolate > i2 ? expcolfull : expcolempty, false, false);
-                                        }
+                                            var FKExp_Collection = DeviceEffects.Functions;
+                                            var FKExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0,
+                                                FFXIVHelpers.ExperienceTable[_currentlvl], FKExp_Collection.Length, 0);
 
+                                            for (var i2 = 0; i2 < FKExp_Collection.Length; i2++)
+                                            {
+                                                GlobalApplyMapKeyLighting(FKExp_Collection[i2],
+                                                    FKExp_Interpolate > i2 ? expcolfull : expcolempty, false, false);
+                                            }
+                                        }
                                     }
                                 }
 
