@@ -20,7 +20,7 @@ namespace Chromatics.DeviceInterfaces
             switch (key)
             {
                 case "A":
-                    if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
+                    if (_region == KeyRegion.AZERTY)
                     {
                         return "Q";
                     }
@@ -30,7 +30,7 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                 case "Q":
-                    if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
+                    if (_region == KeyRegion.AZERTY)
                     {
                         return "A";
                     }
@@ -40,7 +40,7 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                 case "S":
-                    if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
+                    if (_region == KeyRegion.AZERTY)
                     {
                         return "S";
                     }
@@ -50,7 +50,7 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                 case "W":
-                    if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
+                    if (_region == KeyRegion.AZERTY)
                     {
                         return "Z";
                     }
@@ -73,7 +73,7 @@ namespace Chromatics.DeviceInterfaces
                     {
                         return "Y";
                     }
-                    else if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
+                    else if (_region == KeyRegion.AZERTY)
                     {
                         return "W";
                     }

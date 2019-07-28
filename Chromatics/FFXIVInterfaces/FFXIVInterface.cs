@@ -2677,7 +2677,6 @@ namespace Chromatics
 
                                                 if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
                                                 {
-                                                    Console.WriteLine("Ping");
                                                     switch (ChromaticsSettings.ChromaticsSettingsQwertyMode)
                                                     {
                                                         case KeyRegion.ESDF:
@@ -5853,7 +5852,8 @@ namespace Chromatics
                                                     }
 
                                                     if (ChromaticsSettings.ChromaticsSettingsQwertyMode ==
-                                                        KeyRegion.AZERTY)
+                                                        KeyRegion.AZERTY || ChromaticsSettings.ChromaticsSettingsQwertyMode ==
+                                                        KeyRegion.AZERTY2)
                                                     {
                                                         if (FfxivHotbar.KeybindtranslationAZERTY.ContainsKey(
                                                             action.ActionKey))
