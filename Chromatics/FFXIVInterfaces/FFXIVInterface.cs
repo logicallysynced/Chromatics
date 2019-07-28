@@ -5860,14 +5860,7 @@ namespace Chromatics
                                                         {
                                                             var keyid = FfxivHotbar.KeybindtranslationAZERTY[
                                                                 action.ActionKey];
-
-                                                            if (ChromaticsSettings.ChromaticsSettingsQwertyMode ==
-                                                                KeyRegion.AZERTY2)
-                                                            {
-                                                                keyid = FfxivHotbar
-                                                                    .TranslateAZERTYKeys(keyid);
-                                                            }
-
+                                                            
                                                             if (action.Category == 49 || action.Category == 51)
                                                             {
                                                                 if (!action.IsAvailable || !action.InRange ||
@@ -6568,6 +6561,7 @@ namespace Chromatics
                                 var gcdTotal = Cooldowns.GlobalCooldownTotal;
                                 var gcdRemain = Cooldowns.GlobalCooldownRemaining;
                                 var polGcd = (gcdRemain - 0) * (30 - 0) / (gcdTotal - 0) + 0;
+                                //Console.WriteLine(gcdRemain + "/" + gcdTotal);
 
                                 if (ChromaticsSettings.ChromaticsSettingsGcdCountdown)
                                 {

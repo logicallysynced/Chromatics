@@ -436,40 +436,7 @@ namespace Chromatics.FFXIVInterfaces
         public static List<string> Keybindwhitelist = new List<string>();
 
         public static List<string> KeybindsActive = new List<string>();
-
-        public static string TranslateAZERTYKeys(string key)
-        {
-            switch (key)
-            {
-                case "²":
-                    return "`";
-                case "&":
-                    return "1";
-                case "é":
-                    return "2";
-                case "\"":
-                    return "3";
-                case "'":
-                    return "4";
-                case "(":
-                    return "5";
-                case "-":
-                    return "6";
-                case "è":
-                    return "7";
-                case "_":
-                    return "8";
-                case "ç":
-                    return "9";
-                case "à":
-                    return "0";
-                case ")":
-                    return "-";
-                default:
-                    return key;
-            }
-        }
-
+        
         public static readonly Dictionary<string, string> Keybindtranslation = new Dictionary<string, string>
         {
             //Keys
@@ -549,12 +516,22 @@ namespace Chromatics.FFXIVInterfaces
         public static readonly Dictionary<string, string> KeybindtranslationAZERTY = new Dictionary<string, string>
         {
             //Keys
+            {"1", "D1"},
+            {"2", "D2"},
+            {"3", "D3"},
+            {"4", "D4"},
+            {"5", "D5"},
+            {"6", "D6"},
+            {"7", "D7"},
+            {"8", "D8"},
+            {"9", "D9"},
+            {"0", "D0"},
             {"&", "D1"},
             {"é", "D2"},
             { "\"", "D3"},
-            { "4", "D4"},
+            { "'", "D4"},
             { "(", "D5"},
-            { "6", "D6"},
+            { "-", "D6"},
             { "è", "D7"},
             { "_", "D8"},
             { "ç", "D9"},
@@ -588,13 +565,12 @@ namespace Chromatics.FFXIVInterfaces
             {"Tab", "Tab"},
             {"Backspace", "Backspace"},
             {"`", "OemTilde"},
-            {"-", "OemMinus"},
+            {")", "OemMinus"},
             {"=", "OemEquals"},
             {"[", "OemLeftBracket"},
             {"]", "OemRightBracket"},
             {"/", "OemSlash"},
             {";", "OemSemicolon"},
-            {"'", "OemApostrophe"},
             {",", "OemComma"},
             {".", "OemPeriod"},
             {@"\", "OemBackslash"},
@@ -605,6 +581,7 @@ namespace Chromatics.FFXIVInterfaces
             {"Ö",  "OemSemicolon"},
             {"Ä",  "OemApostrophe"},
             {"^",  "OemTilde"},
+            {"²",  "OemTilde"},
             {"NUM0", "Num0" },
             {"NUM1", "Num1" },
             {"NUM2", "Num2" },
