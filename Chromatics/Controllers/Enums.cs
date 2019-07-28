@@ -78,6 +78,7 @@
         AZERTY = 1,
         QWERTZ = 2,
         ESDF = 3,
+        AZERTY2 = 4
     }
 
     public enum LightbarMode

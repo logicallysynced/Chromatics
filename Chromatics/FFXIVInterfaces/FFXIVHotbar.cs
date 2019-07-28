@@ -437,6 +437,39 @@ namespace Chromatics.FFXIVInterfaces
 
         public static List<string> KeybindsActive = new List<string>();
 
+        public static string TranslateAZERTYKeys(string key)
+        {
+            switch (key)
+            {
+                case "²":
+                    return "`";
+                case "&":
+                    return "1";
+                case "é":
+                    return "2";
+                case "\"":
+                    return "3";
+                case "'":
+                    return "4";
+                case "(":
+                    return "5";
+                case "-":
+                    return "6";
+                case "è":
+                    return "7";
+                case "_":
+                    return "8";
+                case "ç":
+                    return "9";
+                case "à":
+                    return "0";
+                case ")":
+                    return "-";
+                default:
+                    return key;
+            }
+        }
+
         public static readonly Dictionary<string, string> Keybindtranslation = new Dictionary<string, string>
         {
             //Keys

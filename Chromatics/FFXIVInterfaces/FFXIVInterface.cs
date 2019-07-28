@@ -2199,38 +2199,6 @@ namespace Chromatics
                             {
                                 switch (ChromaticsSettings.ChromaticsSettingsQwertyMode)
                                 {
-                                    case KeyRegion.QWERTY:
-                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("F", _baseColor, false);
-
-                                        break;
-                                    case KeyRegion.AZERTY:
-                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("F", _baseColor, false);
-                                        break;
-                                    case KeyRegion.QWERTZ:
-                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("F", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
-
-                                        break;
                                     case KeyRegion.ESDF:
                                         GlobalApplyMapKeyLighting("E", highlightColor, false);
                                         GlobalApplyMapKeyLighting("S", highlightColor, false);
@@ -2241,6 +2209,17 @@ namespace Chromatics
                                         GlobalApplyMapKeyLighting("Z", _baseColor, false);
                                         GlobalApplyMapKeyLighting("Q", _baseColor, false);
                                         break;
+                                    default:
+                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                        GlobalApplyMapKeyLighting("E", _baseColor, false);
+                                        GlobalApplyMapKeyLighting("F", _baseColor, false);
+                                        break;
+                                    
                                 }
 
                                 GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
@@ -2816,38 +2795,9 @@ namespace Chromatics
 
                                                 if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
                                                 {
+                                                    Console.WriteLine("Ping");
                                                     switch (ChromaticsSettings.ChromaticsSettingsQwertyMode)
                                                     {
-                                                        case KeyRegion.QWERTY:
-                                                            GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("F", _baseColor, false);
-                                                            break;
-                                                        case KeyRegion.AZERTY:
-                                                            GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("F", _baseColor, false);
-                                                            break;
-                                                        case KeyRegion.QWERTZ:
-                                                            GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("F", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                                            break;
                                                         case KeyRegion.ESDF:
                                                             GlobalApplyMapKeyLighting("E", highlightColor, false);
                                                             GlobalApplyMapKeyLighting("S", highlightColor, false);
@@ -2857,6 +2807,16 @@ namespace Chromatics
                                                             GlobalApplyMapKeyLighting("A", _baseColor, false);
                                                             GlobalApplyMapKeyLighting("Z", _baseColor, false);
                                                             GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                                            break;
+                                                        default:
+                                                            GlobalApplyMapKeyLighting("W", highlightColor, false);
+                                                            GlobalApplyMapKeyLighting("A", highlightColor, false);
+                                                            GlobalApplyMapKeyLighting("S", highlightColor, false);
+                                                            GlobalApplyMapKeyLighting("D", highlightColor, false);
+                                                            GlobalApplyMapKeyLighting("Z", _baseColor, false);
+                                                            GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                                            GlobalApplyMapKeyLighting("E", _baseColor, false);
+                                                            GlobalApplyMapKeyLighting("F", _baseColor, false);
                                                             break;
                                                     }
 
@@ -6018,6 +5978,13 @@ namespace Chromatics
                                                         {
                                                             var keyid = FfxivHotbar.KeybindtranslationAZERTY[
                                                                 action.ActionKey];
+
+                                                            if (ChromaticsSettings.ChromaticsSettingsQwertyMode ==
+                                                                KeyRegion.AZERTY2)
+                                                            {
+                                                                keyid = FfxivHotbar
+                                                                    .TranslateAZERTYKeys(keyid);
+                                                            }
 
                                                             if (action.Category == 49 || action.Category == 51)
                                                             {

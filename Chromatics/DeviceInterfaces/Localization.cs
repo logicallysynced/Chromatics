@@ -14,13 +14,13 @@ namespace Chromatics.DeviceInterfaces
         {
             _region = region;
         }
-
+        
         public static string LocalizeKey(string key)
         {
             switch (key)
             {
                 case "A":
-                    if (_region == KeyRegion.AZERTY)
+                    if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
                     {
                         return "Q";
                     }
@@ -30,7 +30,7 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                 case "Q":
-                    if (_region == KeyRegion.AZERTY)
+                    if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
                     {
                         return "A";
                     }
@@ -40,7 +40,7 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                 case "S":
-                    if (_region == KeyRegion.AZERTY)
+                    if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
                     {
                         return "S";
                     }
@@ -50,7 +50,7 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                 case "W":
-                    if (_region == KeyRegion.AZERTY)
+                    if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
                     {
                         return "Z";
                     }
@@ -73,7 +73,7 @@ namespace Chromatics.DeviceInterfaces
                     {
                         return "Y";
                     }
-                    else if (_region == KeyRegion.AZERTY)
+                    else if (_region == KeyRegion.AZERTY || _region == KeyRegion.AZERTY2)
                     {
                         return "W";
                     }

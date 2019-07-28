@@ -1946,21 +1946,15 @@ namespace Chromatics
             ChromaticsSettings.ChromaticsSettingsMemoryCache = chk_memorycache.Checked;
             SaveChromaticsSettings(1);
         }
-
-        private void chk_azertymode_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Startup == false) return;
-
-            //ChromaticsSettings.ChromaticsSettingsAzertyMode = chk_azertymode.Checked;
-            //SaveChromaticsSettings(1);
-        }
-
+        
         private void cb_qwerty_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsQwertyMode = (KeyRegion)cb_qwerty.SelectedIndex;
             Localization.SetKeyRegion(ChromaticsSettings.ChromaticsSettingsQwertyMode);
+
+            SetKeysbase = true;
             SaveChromaticsSettings(1);
         }
         
