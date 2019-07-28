@@ -361,64 +361,6 @@ namespace Chromatics
         {
             try
             {
-                //Check for crash
-                /*
-                if (ResourceMonitor.GetCPUUsage() > cpuUsageDanger)
-                {
-                    WriteConsole(ConsoleTypes.Error, "Chromatics exceeded dangerous CPU usage limit. Attempting to close Chromatics..");
-                    _allowClose = true;
-                
-                    if (InvokeRequired)
-                    {
-                        void Dispose()
-                        {
-                            notify_master.Dispose();
-                        }
-
-                        Invoke((SetFormNameDelegate) Dispose);
-                    }
-                    else
-                    {
-                        notify_master.Dispose();
-                    }
-        
-                    Environment.Exit(Environment.ExitCode);
-                }
-                else if (ResourceMonitor.GetCPUUsage() > cpuUsageMax)
-                {
-                    //CPU exceed
-                    if (!usageWarning)
-                    {
-                        WriteConsole(ConsoleTypes.Error,
-                            "Chromatics exceeded maximum CPU usage. Pausing execution (CPU usage: " +
-                            ResourceMonitor.GetCPUUsage().ToString("n2") + "%).");
-                        SetFormName(@"Chromatics " + _currentVersionX + @" (Paused)");
-                        usageWarning = true;
-
-                        GlobalStopParticleEffects();
-                        GlobalStopCycleEffects();
-                        GlobalStopPulseEffects();
-                        GlobalRaidStopParticleEffects();
-                        ToggleGlobalFlash2(false);
-                        ToggleGlobalFlash3(false);
-                        ToggleGlobalFlash4(false);
-                    }
-                }
-                else
-                {
-                    if (usageWarning)
-                    {
-                        WriteConsole(ConsoleTypes.Error,
-                            "Resuming Execution. (CPU usage: " +
-                            ResourceMonitor.GetCPUUsage().ToString("n2") + "%).");
-                        SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
-                        usageWarning = false;
-                    }
-                }
-
-                if (usageWarning) return;
-                */
-                
 
                 /*
                     *0 - Not Attached
@@ -645,66 +587,6 @@ namespace Chromatics
         private void ProcessFfxivData()
         {
             MemoryTasks.Cleanup();
-
-            //Check for crash
-            /*
-            if (ResourceMonitor.GetCPUUsage() > cpuUsageDanger)
-            {
-                WriteConsole(ConsoleTypes.Error, "Chromatics exceeded dangerous CPU usage limit. Attempting to close Chromatics..");
-                _allowClose = true;
-                ResourceMonitor.Stop();
-                
-                if (InvokeRequired)
-                {
-                    void Dispose()
-                    {
-                        notify_master.Dispose();
-                    }
-
-                    Invoke((SetFormNameDelegate) Dispose);
-                }
-                else
-                {
-                    notify_master.Dispose();
-                }
-        
-                Environment.Exit(Environment.ExitCode);
-            }
-            else if (ResourceMonitor.GetCPUUsage() > cpuUsageMax)
-            {
-                //CPU exceed
-                
-                if (!usageWarning)
-                {
-                    WriteConsole(ConsoleTypes.Error,
-                        "Chromatics exceeded maximum CPU usage. Pausing execution (CPU usage: " +
-                        ResourceMonitor.GetCPUUsage().ToString("n2") + "%).");
-                    SetFormName(@"Chromatics " + _currentVersionX + @" (Paused)");
-                    HoldReader = true;
-                    usageWarning = true;
-
-                    GlobalStopParticleEffects();
-                    GlobalStopCycleEffects();
-                    GlobalStopPulseEffects();
-                    GlobalRaidStopParticleEffects();
-                    ToggleGlobalFlash2(false);
-                    ToggleGlobalFlash3(false);
-                    ToggleGlobalFlash4(false);
-                }
-            }
-            else
-            {
-                if (usageWarning)
-                {
-                    WriteConsole(ConsoleTypes.Error,
-                        "Resuming Execution. (CPU usage: " +
-                        ResourceMonitor.GetCPUUsage().ToString("n2") + "%).");
-                    SetFormName(@"Chromatics " + _currentVersionX + @" (Running)");
-                    HoldReader = false;
-                    usageWarning = false;
-                }
-            }
-            */
 
             if (!HoldReader)
             {

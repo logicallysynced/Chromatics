@@ -30,16 +30,11 @@ namespace Chromatics
         //Setup Threading/Tasks
         private CancellationTokenSource _memoryTask = new CancellationTokenSource();
         
-
         private ILogitechArx _arx;
         private ILogitechLcd _lcd;
         private Task _call;
         public Task MemoryTask;
         public Thread FfxivThread;
-        private static bool usageWarning;
-        private static float cpuUsageDanger = 90;
-        private static float cpuUsageMax = 40;
-        private static float ramUsageMax = 500;
 
         private string DebugMapID = "";
         private string DebugJobClass = "";
@@ -376,7 +371,6 @@ namespace Chromatics
 
             SetupAboutText();
             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-            ResourceMonitor.Initialize();
             
             //Setup Event Listeners
             FormClosing += OnFormClosing;
