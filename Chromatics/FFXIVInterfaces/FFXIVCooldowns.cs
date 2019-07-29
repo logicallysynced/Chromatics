@@ -1830,7 +1830,34 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[8];
+            }
+        }
+
+        public static int FlowerCharge //Builds to 120
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[7];
+            }
+        }
+
+        public static bool BloodFlowerReady
+        {
+            get
+            {
+                if (!Initialized)
+                    return false;
+                CheckCache();
+
+                if (RawResourceData[9] == 3)
+                    return true;
+
+                return false;
             }
         }
 

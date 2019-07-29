@@ -551,6 +551,8 @@ namespace Chromatics.Datastore
         public string ColorMappingJobBRDMinuet = ColorTranslator.ToHtml(Color.MediumSpringGreen);
         public string ColorMappingJobWHMNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobWHMFlowerPetal = ColorTranslator.ToHtml(Color.MediumVioletRed);
+        public string ColorMappingJobWHMFlowerCharge = ColorTranslator.ToHtml(Color.Aqua);
+        public string ColorMappingJobWHMBloodLily = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingJobWHMFreecure = ColorTranslator.ToHtml(Color.LightSeaGreen);
         public string ColorMappingJobBLMNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobBLMAstralFire = ColorTranslator.ToHtml(Color.OrangeRed);

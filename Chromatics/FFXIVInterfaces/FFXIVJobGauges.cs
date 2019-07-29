@@ -1054,8 +1054,11 @@ namespace Chromatics
                         var negwhmcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMNegative);
                         var flowercol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMFlowerPetal);
                         var cureproc = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMFreecure);
+                        var bloodlilycol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMBloodLily);
 
                         var petalcount = Cooldowns.FlowerPetals;
+                        var flowercharge = Cooldowns.FlowerCharge;
+
 
                         if (statEffects.Find(i => i.StatusName == "Freecure") != null)
                         {
@@ -1081,17 +1084,21 @@ namespace Chromatics
                         }
 
                         //Lightbar
+                        var flowerchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMFlowerCharge);
+                        if (Cooldowns.BloodFlowerReady)
+                            flowerchargecol = bloodlilycol;
+
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
                             var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(petalcount, 0, 3,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(flowercharge, 0, 116,
                                     JobLightbar_Collection.Length, 0);
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
                                 GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
-                                    JobLightbar_Interpolate > i ? flowercol : negwhmcol, false, false);
+                                    JobLightbar_Interpolate > i ? flowerchargecol : negwhmcol, false, false);
                             }
                         }
 
@@ -1100,43 +1107,43 @@ namespace Chromatics
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
                             var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(petalcount, 0, 3,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(flowercharge, 0, 116,
                                     JobFunction_Collection.Length, 0);
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
                                 GlobalApplyMapKeyLighting(JobFunction_Collection[i],
-                                    JobFunction_Interpolate > i ? flowercol : negwhmcol, false);
+                                    JobFunction_Interpolate > i ? flowerchargecol : negwhmcol, false);
                             }
                         }
 
                         switch (petalcount)
                         {
                             case 3:
-                                GlobalApplyMapKeyLighting("Num9", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num6", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num3", flowercol, false);
+                                GlobalApplyMapKeyLighting("Num9", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num6", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num3", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
 
-                                GlobalApplyMapKeyLighting("Num8", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num5", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num2", flowercol, false);
+                                GlobalApplyMapKeyLighting("Num8", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num5", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num2", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
 
-                                GlobalApplyMapKeyLighting("Num7", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num4", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num1", flowercol, false);
+                                GlobalApplyMapKeyLighting("Num7", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num4", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num1", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
                                 break;
                             case 2:
                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
                                 GlobalApplyMapKeyLighting("Num6", negwhmcol, false);
                                 GlobalApplyMapKeyLighting("Num3", negwhmcol, false);
 
-                                GlobalApplyMapKeyLighting("Num8", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num5", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num2", flowercol, false);
+                                GlobalApplyMapKeyLighting("Num8", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num5", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num2", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
 
-                                GlobalApplyMapKeyLighting("Num7", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num4", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num1", flowercol, false);
+                                GlobalApplyMapKeyLighting("Num7", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num4", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num1", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
                                 break;
                             case 1:
                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
@@ -1147,9 +1154,9 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num5", negwhmcol, false);
                                 GlobalApplyMapKeyLighting("Num2", negwhmcol, false);
 
-                                GlobalApplyMapKeyLighting("Num7", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num4", flowercol, false);
-                                GlobalApplyMapKeyLighting("Num1", flowercol, false);
+                                GlobalApplyMapKeyLighting("Num7", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num4", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num1", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
                                 break;
                             default:
                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);

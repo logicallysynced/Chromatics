@@ -282,6 +282,8 @@ namespace Chromatics
             {"ColorMappingJobWHMNegative", new[] {"WHM: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobWHMFlowerPetal", new[] {"WHM: Flower", "9", "Black", "White"}},
             {"ColorMappingJobWHMFreecure", new[] {"WHM: Freecure Proc", "9", "Black", "White"}},
+            {"ColorMappingJobWHMFlowerCharge", new[] {"WHM: Flower Charge", "9", "Black", "White"}},
+            {"ColorMappingJobWHMBloodLily", new[] {"WHM: Blood Lily", "9", "Black", "White"}},
             {"ColorMappingJobBLMNegative", new[] {"BLM: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobBLMAstralFire", new[] { "BLM: Astral Fire", "9", "Black", "White"}},
             {"ColorMappingJobBLMUmbralIce", new[] { "BLM: Umbral Ice", "9", "Black", "White"}},
