@@ -2613,9 +2613,7 @@ namespace Chromatics
                         var whitemana = Cooldowns.WhiteMana;
                         var polBlack = (blackmana - 0) * (40 - 0) / (100 - 0) + 0;
                         var polWhite = (whitemana - 0) * (40 - 0) / (100 - 0) + 0;
-
-                        //Console.WriteLine(@"RDM: " + Cooldowns.BlackMana.ToString());
-
+                        
                         var blackburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMBlackMana);
                         var whiteburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMWhiteMana);
                         var negburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRDMNegative);
