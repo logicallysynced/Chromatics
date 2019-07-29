@@ -470,20 +470,61 @@ namespace Chromatics
                     case Actor.Job.DRG:
 
                         var burstdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
+                        var burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
                         var negdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGNegative);
-                        var bloodremain = Convert.ToInt32(Cooldowns.BloodOfTheDragonTimeRemaining * 100);
-                        var polBlood = (bloodremain - 0) * (50 - 0) / (60 - 0) + 0;
+                        var bloodremain = Cooldowns.BloodOfTheDragonTimeRemaining;
+                        var polBlood = (bloodremain - 0) * (50 - 0) / (30 - 0) + 0;
 
+                        if (Cooldowns.LifeOfTheDragon)
+                        {
+                            burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon);
+                            GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon), false);
+                            GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon), false);
+                            GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon), false);
+                            GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon), false);
+                            GlobalApplyMapKeyLighting("Num0", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon), false);
+                        }
+                        else
+                        {
+                            switch (Cooldowns.DragonGauge)
+                            {
+                                case 2:
+                                    burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge2);
+                                    GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge2), false);
+                                    GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge2), false);
+                                    GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge2), false);
+                                    GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge2), false);
+                                    GlobalApplyMapKeyLighting("Num0", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge2), false);
+                                    break;
+                                case 1:
+                                    burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge1);
+                                    GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge1), false);
+                                    GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge1), false);
+                                    GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge1), false);
+                                    GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge1), false);
+                                    GlobalApplyMapKeyLighting("Num0", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge1), false);
+                                    break;
+                                default:
+                                    burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
+                                    GlobalApplyMapKeyLighting("NumSubtract", negdrgcol, false);
+                                    GlobalApplyMapKeyLighting("NumAdd", negdrgcol, false);
+                                    GlobalApplyMapKeyLighting("NumEnter", negdrgcol, false);
+                                    GlobalApplyMapKeyLighting("NumDecimal", negdrgcol, false);
+                                    GlobalApplyMapKeyLighting("Num0", negdrgcol, false);
+                                    break;
+                            }
+                        }
+                        
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = (bloodremain - 0) * (JobLightbar_Collection.Length - 0) / (60 - 0) + 0;
+                            var JobLightbar_Interpolate = (bloodremain - 0) * (JobLightbar_Collection.Length - 0) / (30 - 0) + 0;
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
                                 GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
-                                    JobLightbar_Interpolate > i ? burstdrgcol : negdrgcol, false, false);
+                                    JobLightbar_Interpolate > i ? burstdrgeyecol : negdrgcol, false, false);
                             }
                         }
 
@@ -491,14 +532,15 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = (bloodremain - 0) * (JobFunction_Collection.Length - 0) / (60 - 0) + 0;
+                            var JobFunction_Interpolate = (bloodremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
                                 GlobalApplyMapKeyLighting(JobFunction_Collection[i],
-                                    JobFunction_Interpolate > i ? burstdrgcol : negdrgcol, false);
+                                    JobFunction_Interpolate > i ? burstdrgeyecol : negdrgcol, false);
                             }
                         }
+                        
 
                         if (bloodremain > 0)
                         {

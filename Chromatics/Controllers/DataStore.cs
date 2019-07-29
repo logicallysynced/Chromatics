@@ -548,7 +548,10 @@ namespace Chromatics.Datastore
         public string ColorMappingJobMNKNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobMNKGreased = ColorTranslator.ToHtml(Color.Orange);
         public string ColorMappingJobDRGNegative = ColorTranslator.ToHtml(Color.Black);
-        public string ColorMappingJobDRGBloodDragon = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingJobDRGBloodDragon = ColorTranslator.ToHtml(Color.Aqua);
+        public string ColorMappingJobDRGDragonGauge1 = ColorTranslator.ToHtml(Color.BlueViolet);
+        public string ColorMappingJobDRGDragonGauge2 = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingJobDRGLifeOfTheDragon = ColorTranslator.ToHtml(Color.MediumVioletRed);
         public string ColorMappingJobBRDNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobBRDRepertoire = ColorTranslator.ToHtml(Color.GhostWhite);
         public string ColorMappingJobBRDBallad = ColorTranslator.ToHtml(Color.MediumSlateBlue);

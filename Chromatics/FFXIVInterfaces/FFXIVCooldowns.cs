@@ -1942,6 +1942,33 @@ namespace Chromatics.FFXIVInterfaces
             }
         }
 
+        public static int DragonGauge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[7];
+            }
+        }
+
+        public static bool LifeOfTheDragon
+        {
+            get
+            {
+                if (!Initialized)
+                    return false;
+                CheckCache();
+
+                if (RawResourceData[6] == 2)
+                    return true;
+
+                return false;
+            }
+        }
+
 
         // Ninja
         public static float KissOfTheWaspViper => CooldownType0Remaining;
