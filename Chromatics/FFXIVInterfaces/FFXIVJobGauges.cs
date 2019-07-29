@@ -2383,6 +2383,17 @@ namespace Chromatics
                         var kenkicharge = Cooldowns.KenkiCharge;
                         var PolKenki = (kenkicharge - 0) * (40 - 0) / (100 - 0) + 0;
 
+                        Console.WriteLine(@"1:" + Cooldowns.RawResourceData[1]);
+                        Console.WriteLine(@"2:" + Cooldowns.RawResourceData[2]);
+                        Console.WriteLine(@"3:" + Cooldowns.RawResourceData[3]);
+                        Console.WriteLine(@"4:" + Cooldowns.RawResourceData[4]);
+                        Console.WriteLine(@"5:" + Cooldowns.RawResourceData[5]);
+                        Console.WriteLine(@"6:" + Cooldowns.RawResourceData[6]);
+                        Console.WriteLine(@"7:" + Cooldowns.RawResourceData[7]);
+                        Console.WriteLine(@"8:" + Cooldowns.RawResourceData[8]);
+                        Console.WriteLine(@"9:" + Cooldowns.RawResourceData[9]);
+                        Console.WriteLine(@"10:" + Cooldowns.RawResourceData[10]);
+
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
