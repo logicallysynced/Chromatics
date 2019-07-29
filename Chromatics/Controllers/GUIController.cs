@@ -306,6 +306,7 @@ namespace Chromatics
             {"ColorMappingJobSCHFaerieGauge", new[] {"SCH: Faerie Gauge", "9", "Black", "White"}},
             {"ColorMappingJobNINNegative", new[] {"NIN: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobNINHuton", new[] {"NIN: Huton", "9", "Black", "White"}},
+            {"ColorMappingJobNINNinkiGauge", new[] {"NIN: Ninki Gauge", "9", "Black", "White"}},
             {"ColorMappingJobDRKNegative", new[] {"DRK: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobDRKBloodGauge", new[] {"DRK: Blood Gauge", "9", "Black", "White"}},
             {"ColorMappingJobDRKGrit", new[] {"DRK: Grit", "9", "Black", "White"}},

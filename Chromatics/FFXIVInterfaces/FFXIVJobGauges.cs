@@ -1529,21 +1529,21 @@ namespace Chromatics
                     case Actor.Job.NIN:
                         //Ninja
                         var negnincol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINNegative);
+                        var ninkicol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINNinkiGauge);
                         var hutoncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHuton);
 
-                        var hutonremain = Cooldowns.HutonTimeRemaining;
-                        var polHuton = (hutonremain - 0) * (50 - 0) / (1.0 - 0) + 0;
-
+                        var polHuton = ((int)Cooldowns.HutonTimeRemaining - 0) * (50 - 0) / (70 - 0) + 0;
+                        
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = ((int)hutonremain - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+                            var JobLightbar_Interpolate = (Cooldowns.NinkiGauge - 0) * (JobLightbar_Collection.Length - 0) / (100 - 0) + 0;
                             
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
                                 GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
-                                    JobLightbar_Interpolate > i ? hutoncol : negnincol, false, false);
+                                    JobLightbar_Interpolate > i ? ninkicol : negnincol, false, false);
                             }
                         }
 
@@ -1551,15 +1551,15 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = ((int)hutonremain - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
+                            var JobFunction_Interpolate = (Cooldowns.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
                                 GlobalApplyMapKeyLighting(JobFunction_Collection[i],
-                                    JobFunction_Interpolate > i ? hutoncol : negnincol, false);
+                                    JobFunction_Interpolate > i ? ninkicol : negnincol, false);
                             }
                         }
-
+                        
                         if (polHuton <= 50 && polHuton > 40)
                         {
                             ToggleGlobalFlash3(false);
@@ -1649,6 +1649,21 @@ namespace Chromatics
                         else
                         {
                             ToggleGlobalFlash3(false);
+                            GlobalApplyMapKeyLighting("NumLock", negnincol, false);
+                            GlobalApplyMapKeyLighting("NumDivide", negnincol, false);
+                            GlobalApplyMapKeyLighting("NumMultiply", negnincol, false);
+
+                            GlobalApplyMapKeyLighting("Num7", negnincol, false);
+                            GlobalApplyMapKeyLighting("Num8", negnincol, false);
+                            GlobalApplyMapKeyLighting("Num9", negnincol, false);
+
+                            GlobalApplyMapKeyLighting("Num4", negnincol, false);
+                            GlobalApplyMapKeyLighting("Num5", negnincol, false);
+                            GlobalApplyMapKeyLighting("Num6", negnincol, false);
+
+                            GlobalApplyMapKeyLighting("Num1", negnincol, false);
+                            GlobalApplyMapKeyLighting("Num2", negnincol, false);
+                            GlobalApplyMapKeyLighting("Num3", negnincol, false);
                         }
 
                         break;

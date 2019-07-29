@@ -2011,7 +2011,19 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(6);
+                return GetTimer(4);
+            }
+        }
+
+        public static int NinkiGauge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[9];
             }
         }
 

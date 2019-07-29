@@ -576,6 +576,7 @@ namespace Chromatics.Datastore
         public string ColorMappingJobSCHFaerieGauge = ColorTranslator.ToHtml(Color.MediumSpringGreen);
         public string ColorMappingJobNINNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobNINHuton = ColorTranslator.ToHtml(Color.White);
+        public string ColorMappingJobNINNinkiGauge = ColorTranslator.ToHtml(Color.Coral);
         public string ColorMappingJobDRKNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobDRKBloodGauge = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingJobDRKGrit = ColorTranslator.ToHtml(Color.DodgerBlue);
