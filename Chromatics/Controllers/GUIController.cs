@@ -318,6 +318,8 @@ namespace Chromatics
             {"ColorMappingJobASTEwer", new[] { "AST: Ewer Drawn", "9", "Black", "White"}},
             {"ColorMappingJobASTSpear", new[] { "AST: Spear Drawn", "9", "Black", "White"}},
             {"ColorMappingJobASTSpire", new[] { "AST: Spire Drawn", "9", "Black", "White"}},
+            {"ColorMappingJobASTLady", new[] { "AST: Lady of Crowns Drawn", "9", "Black", "White"}},
+            {"ColorMappingJobASTLord", new[] { "AST: Lord of Crowns Drawn", "9", "Black", "White"}},
             {"ColorMappingJobMCHNegative", new[] {"MCH: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobMCHAmmo", new[] { "MCH: Ammo", "9", "Black", "White"}},
             {"ColorMappingJobMCHHeatGauge", new[] { "MCH: Heat Gauge", "9", "Black", "White"}},

@@ -26,7 +26,9 @@ namespace Chromatics.FFXIVInterfaces
             Arrow = 3,
             Spear = 4,
             Ewer = 5,
-            Spire = 6
+            Spire = 6,
+            Lady = 7,
+            Lord = 8
         }
 
         public enum RoyalRoadTypes
@@ -2453,7 +2455,7 @@ namespace Chromatics.FFXIVInterfaces
                 CheckCache();
 
                 // Chop off the high order bits containing the held card
-                var card = RawResourceData[10] & 0xf;
+                var card = RawResourceData[8] & 0xf;
 
                 if (card > 6 || card < 1)
                     return CardTypes.None;
@@ -2471,7 +2473,7 @@ namespace Chromatics.FFXIVInterfaces
                 CheckCache();
 
                 // Chop off the low order bits containing the current card
-                var card = RawResourceData[10] >> 4;
+                var card = RawResourceData[8] >> 4;
 
                 if (card > 6 || card < 1)
                     return CardTypes.None;

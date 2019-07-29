@@ -588,6 +588,8 @@ namespace Chromatics.Datastore
         public string ColorMappingJobASTEwer = ColorTranslator.ToHtml(Color.MediumBlue);
         public string ColorMappingJobASTSpear = ColorTranslator.ToHtml(Color.Turquoise);
         public string ColorMappingJobASTSpire = ColorTranslator.ToHtml(Color.SlateBlue);
+        public string ColorMappingJobASTLady = ColorTranslator.ToHtml(Color.HotPink);
+        public string ColorMappingJobASTLord = ColorTranslator.ToHtml(Color.Magenta);
         public string ColorMappingJobMCHNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobMCHAmmo = ColorTranslator.ToHtml(Color.Gold);
         public string ColorMappingJobMCHHeatGauge = ColorTranslator.ToHtml(Color.DarkOrange);

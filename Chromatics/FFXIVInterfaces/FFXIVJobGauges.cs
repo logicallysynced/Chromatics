@@ -18,6 +18,8 @@ namespace Chromatics
 {
     partial class Chromatics
     {
+        private Color _burstastcol = Color.Black;
+        private Color _burstastcolX = Color.Black;
         public void ImplementJobGauges(List<StatusItem> statEffects, Color baseColor, Sharlayan.Models.ReadResults.ActionResult hotbars)
         { 
             if (ChromaticsSettings.ChromaticsSettingsJobGaugeToggle)
@@ -1976,20 +1978,23 @@ namespace Chromatics
                     case Actor.Job.AST:
                         var burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative);
                         
+                        var cardheld = Cooldowns.CurrentCard;
 
-                        if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
+                        if (statEffects.Find(i => i.StatusName == "Lady of Crowns Drawn") != null)
                         {
-                            var tR = 30;
+                            cardheld = Cooldowns.CardTypes.Lady;
+                        }
+                        else if (statEffects.Find(i => i.StatusName == "Lord of Crowns Drawn") != null)
+                        {
+                            cardheld = Cooldowns.CardTypes.Lord;
+                        }
 
-                            switch (Cooldowns.CurrentCard)
+                        if (cardheld != Cooldowns.CardTypes.None)
+                        {
+                            switch (cardheld)
                             {
                                 case Cooldowns.CardTypes.Arrow:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTArrow);
-
-                                    if (statEffects.Find(i => i.StatusName == "Expanded Royal Road") != null)
-                                    {
-                                        tR = 60;
-                                    }
 
                                     break;
                                 case Cooldowns.CardTypes.Balance:
@@ -2003,25 +2008,27 @@ namespace Chromatics
                                     break;
                                 case Cooldowns.CardTypes.Spear:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpear);
-
-                                    if (statEffects.Find(i => i.StatusName == "Expanded Royal Road") != null)
-                                    {
-                                        tR = 60;
-                                    }
-
                                     break;
                                 case Cooldowns.CardTypes.Spire:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpire);
                                     break;
+                                case Cooldowns.CardTypes.Lady:
+                                    burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTLady);
+                                    break;
+                                case Cooldowns.CardTypes.Lord:
+                                    burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTLord);
+                                    break;
                             }
-
+                            
                             if (Cooldowns.CurrentCard != _currentCard)
                             {
                                 if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
                                     GlobalRipple1(burstastcol, 80, baseColor);
 
                                 _currentCard = Cooldowns.CurrentCard;
+                                _burstastcol = burstastcol;
                             }
+                            
 
                             GlobalApplyMapKeyLighting("NumLock", burstastcol, false);
                             GlobalApplyMapKeyLighting("NumDivide", burstastcol, false);
@@ -2041,71 +2048,101 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("Num0", burstastcol, false);
                             GlobalApplyMapKeyLighting("NumDecimal", burstastcol, false);
                             
-
-                            //Lightbar
-                            if (_LightbarMode == LightbarMode.JobGauge)
-                            {
-                                var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                var JobLightbar_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int((int)Cooldowns.CurrentCardRemainingTime, 0, tR,
-                                        JobLightbar_Collection.Length, 0);
-
-                                for (int i = 0; i < JobLightbar_Collection.Length; i++)
-                                {
-                                    GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
-                                        JobLightbar_Interpolate > i ? burstastcol : ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false, false);
-                                }
-                            }
-
-                            //FKeys
-                            if (_FKeyMode == FKeyMode.JobGauge)
-                            {
-                                var JobFunction_Collection = DeviceEffects.Functions;
-                                var JobFunction_Interpolate =
-                                    Helpers.FFXIVInterpolation.Interpolate_Int((int)Cooldowns.CurrentCardRemainingTime, 0, tR,
-                                        JobFunction_Collection.Length, 0);
-
-                                for (int i = 0; i < JobFunction_Collection.Length; i++)
-                                {
-                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
-                                        JobFunction_Interpolate > i ? burstastcol : ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
-                                }
-                            }
                         }
                         else
                         {
-                            GlobalApplyMapKeyLighting("NumLock", burstastcol, false);
-                            GlobalApplyMapKeyLighting("NumDivide", burstastcol, false);
-                            GlobalApplyMapKeyLighting("NumMultiply", burstastcol, false);
-                            GlobalApplyMapKeyLighting("NumSubtract", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num7", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num8", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num9", burstastcol, false);
-                            GlobalApplyMapKeyLighting("NumAdd", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num4", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num5", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num6", burstastcol, false);
-                            GlobalApplyMapKeyLighting("NumEnter", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num1", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num2", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num3", burstastcol, false);
-                            GlobalApplyMapKeyLighting("Num0", burstastcol, false);
-                            GlobalApplyMapKeyLighting("NumDecimal", burstastcol, false);
+                            _burstastcolX = _burstastcol;
 
-                            if (_LightbarMode == LightbarMode.JobGauge)
+                            GlobalApplyMapKeyLighting("NumLock", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("NumDivide", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("NumMultiply", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num7", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num8", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num9", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num4", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num5", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num6", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num1", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num2", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num3", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("Num0", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+
+                        }
+
+                        var cardRemain = 0;
+
+                        if (statEffects.Find(i => i.StatusName == "The Arrow") != null)
+                        {
+                            var tR1 = statEffects.Find(i => i.StatusName == "The Arrow").Duration;
+                            cardRemain = Convert.ToInt32((tR1 - 0) * (100 - 0) / (1.0 - 0) + 0);
+                        }
+                        else if (statEffects.Find(i => i.StatusName == "The Balance") != null)
+                        {
+                            var tR2 = statEffects.Find(i => i.StatusName == "The Balance").Duration;
+                            cardRemain = Convert.ToInt32((tR2 - 0) * (100 - 0) / (1.0 - 0) + 0);
+                        }
+                        else if (statEffects.Find(i => i.StatusName == "The Bole") != null)
+                        {
+                            var tR3 = statEffects.Find(i => i.StatusName == "The Bole").Duration;
+                            cardRemain = Convert.ToInt32((tR3 - 0) * (100 - 0) / (1.0 - 0) + 0);
+                        }
+                        else if (statEffects.Find(i => i.StatusName == "The Ewer") != null)
+                        {
+                            var tR4 = statEffects.Find(i => i.StatusName == "The Ewer").Duration;
+                            cardRemain = Convert.ToInt32((tR4 - 0) * (100 - 0) / (1.0 - 0) + 0);
+                        }
+                        else if (statEffects.Find(i => i.StatusName == "The Spear") != null)
+                        {
+                            var tR5 = statEffects.Find(i => i.StatusName == "The Spear").Duration;
+                            cardRemain = Convert.ToInt32((tR5 - 0) * (100 - 0) / (1.0 - 0) + 0);
+                        }
+                        else if (statEffects.Find(i => i.StatusName == "The Spire") != null)
+                        {
+                            var tR6 = statEffects.Find(i => i.StatusName == "The Spire").Duration;
+                            cardRemain = Convert.ToInt32((tR6 - 0) * (100 - 0) / (1.0 - 0) + 0);
+                        }
+                        else if (statEffects.Find(i => i.StatusName == "Lady of Crowns") != null)
+                        {
+                            var tR7 = statEffects.Find(i => i.StatusName == "Lady of Crowns").Duration;
+                            cardRemain = Convert.ToInt32((tR7 - 0) * (100 - 0) / (1.0 - 0) + 0);
+                        }
+                        else if (statEffects.Find(i => i.StatusName == "Lord of Crowns") != null)
+                        {
+                            var tR8 = statEffects.Find(i => i.StatusName == "Lord of Crowns").Duration;
+                            cardRemain = Convert.ToInt32((tR8 - 0) * (100 - 0) / (1.0 - 0) + 0);
+                        }
+                        
+                        //Lightbar
+                        if (_LightbarMode == LightbarMode.JobGauge)
+                        {
+                            var JobLightbar_Collection = DeviceEffects.LightbarZones;
+                            var JobLightbar_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(cardRemain, 0, 1500,
+                                    JobLightbar_Collection.Length, 0);
+
+                            for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
-                                foreach (var f in DeviceEffects.LightbarZones)
-                                {
-                                    GlobalApplyMapLightbarLighting(f, burstastcol, false);
-                                }
+                                GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
+                                    JobLightbar_Interpolate > i ? _burstastcolX : ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false, false);
                             }
+                        }
 
-                            if (_FKeyMode == FKeyMode.JobGauge)
+                        //FKeys
+                        if (_FKeyMode == FKeyMode.JobGauge)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(cardRemain, 0, 1500,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
-                                foreach (var f in DeviceEffects.Functions)
-                                {
-                                    GlobalApplyMapKeyLighting(f, burstastcol, false);
-                                }
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? _burstastcolX : ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
                             }
                         }
                         break;
