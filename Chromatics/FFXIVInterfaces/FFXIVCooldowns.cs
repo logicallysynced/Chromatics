@@ -1793,7 +1793,7 @@ namespace Chromatics.FFXIVInterfaces
         public static float Bulwark => CooldownType11Remaining;
 
         public static float HallowedGround => CooldownType13Remaining;
-
+        
         public static int OathGauge
         {
             get
