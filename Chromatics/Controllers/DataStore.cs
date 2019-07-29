@@ -566,7 +566,9 @@ namespace Chromatics.Datastore
         public string ColorMappingJobBLMAstralFire = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingJobBLMUmbralIce = ColorTranslator.ToHtml(Color.DeepSkyBlue);
         public string ColorMappingJobBLMUmbralHeart = ColorTranslator.ToHtml(Color.DeepPink);
-        public string ColorMappingJobBLMEnochian = ColorTranslator.ToHtml(Color.MediumPurple);
+        public string ColorMappingJobBLMEnochianCountdown = ColorTranslator.ToHtml(Color.MediumPurple);
+        public string ColorMappingJobBLMEnochianCharge = ColorTranslator.ToHtml(Color.MediumPurple);
+        public string ColorMappingJobBLMPolyglot = ColorTranslator.ToHtml(Color.Magenta);
         public string ColorMappingJobSMNNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobSMNAetherflow = ColorTranslator.ToHtml(Color.Orchid);
         public string ColorMappingJobSCHNegative = ColorTranslator.ToHtml(Color.Black);

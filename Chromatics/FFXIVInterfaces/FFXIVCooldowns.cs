@@ -2174,10 +2174,36 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(8);
+                return GetTimer(6);
             }
         }
 
+        public static float EnochianCharge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[5];
+            }
+        }
+
+        public static bool PolyglotActive
+        {
+            get
+            {
+                if (!Initialized)
+                    return false;
+                CheckCache();
+
+                if (RawResourceData[10] == 1)
+                    return true;
+
+                return false;
+            }
+        }
 
         public static int UmbralIce
         {
@@ -2187,11 +2213,11 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                if (RawResourceData[10] == 255)
+                if (RawResourceData[8] == 255)
                     return 1;
-                if (RawResourceData[10] == 254)
+                if (RawResourceData[8] == 254)
                     return 2;
-                if (RawResourceData[10] == 253)
+                if (RawResourceData[8] == 253)
                     return 3;
 
                 return 0;
@@ -2206,10 +2232,10 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                if (RawResourceData[10] > 3)
+                if (RawResourceData[8] > 3)
                     return 0;
 
-                return RawResourceData[10];
+                return RawResourceData[8];
             }
         }
 
@@ -2221,7 +2247,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[11];
+                return RawResourceData[9];
             }
         }
 
@@ -2233,7 +2259,7 @@ namespace Chromatics.FFXIVInterfaces
                     return false;
                 CheckCache();
 
-                return RawResourceData[12] == 1;
+                return RawResourceData[11] == 1;
             }
         }
 

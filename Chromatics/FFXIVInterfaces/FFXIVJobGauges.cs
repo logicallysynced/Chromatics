@@ -1028,12 +1028,22 @@ namespace Chromatics
                         var firecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMAstralFire);
                         var icecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMUmbralIce);
                         var heartcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMUmbralHeart);
-                        var enochcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochian);
+                        var enochcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochianCountdown);
+                        var enochchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochianCharge);
 
                         var firestacks = Cooldowns.AstralFire;
                         var icestacks = Cooldowns.UmbralIce;
                         var heartstacks = Cooldowns.UmbralHearts;
 
+                        if (Cooldowns.PolyglotActive)
+                        {
+                            enochchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMPolyglot);
+                        }
+                        else
+                        {
+                            enochchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochianCharge);
+                        }
+                        
                         switch (heartstacks)
                         {
                             case 1:
@@ -1106,23 +1116,23 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("NumDivide", negblmcol, false);
                             GlobalApplyMapKeyLighting("NumMultiply", negblmcol, false);
                         }
-
+                        
                         if (Cooldowns.EnochianActive)
                         {
-                            var enochtime = (Cooldowns.EnochianTimeRemaining - 0) * (40 - 0) / (1.0 - 0) + 0;
+                            var enochtime = (Cooldowns.EnochianTimeRemaining - 0) * (40 - 0) / (15 - 0) + 0;
 
                             //Lightbar
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                var JobLightbar_Interpolate = ((int)Cooldowns.EnochianTimeRemaining - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+                                var JobLightbar_Interpolate = ((int)Cooldowns.EnochianCharge - 0) * (JobLightbar_Collection.Length - 0) / (116 - 0) + 0;
 
                                 
 
                                 for (int i = 0; i < JobLightbar_Collection.Length; i++)
                                 {
                                     GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
-                                        JobLightbar_Interpolate > i ? enochcol : negblmcol, false, false);
+                                        JobLightbar_Interpolate > i ? enochchargecol : negblmcol, false, false);
                                 }
                             }
 
@@ -1130,12 +1140,12 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
                                 var JobFunction_Collection = DeviceEffects.Functions;
-                                var JobFunction_Interpolate = ((int)Cooldowns.EnochianTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
+                                var JobFunction_Interpolate = ((int)Cooldowns.EnochianCharge - 0) * (JobFunction_Collection.Length - 0) / (116 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
                                 {
                                     GlobalApplyMapKeyLighting(JobFunction_Collection[i],
-                                        JobFunction_Interpolate > i ? enochcol : negblmcol, false);
+                                        JobFunction_Interpolate > i ? enochchargecol : negblmcol, false);
                                 }
                             }
 
