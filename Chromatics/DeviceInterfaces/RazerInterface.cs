@@ -1621,7 +1621,7 @@ namespace Chromatics.DeviceInterfaces
                                 //Setup
 
                                 foreach (var key in DeviceEffects.GlobalKeys)
-                                    if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                    if (!FfxivHotbar.KeybindsActive.Contains(key))
                                     {
                                         var fkey = (Key) Enum.Parse(typeof(Key), key);
                                         var cc = _keyboardGrid[fkey];
@@ -1640,7 +1640,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep0, key);
                                     if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                        if (!FfxivHotbar.KeybindsActive.Contains(key))
                                             if (Enum.IsDefined(typeof(Key), key))
                                             {
                                                 var keyid = (Key) Enum.Parse(typeof(Key), key);
@@ -1655,7 +1655,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep1, key);
                                     if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                        if (!FfxivHotbar.KeybindsActive.Contains(key))
                                             if (Enum.IsDefined(typeof(Key), key))
                                             {
                                                 var keyid = (Key) Enum.Parse(typeof(Key), key);
@@ -1670,7 +1670,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep2, key);
                                     if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                        if (!FfxivHotbar.KeybindsActive.Contains(key))
                                             if (Enum.IsDefined(typeof(Key), key))
                                             {
                                                 var keyid = (Key) Enum.Parse(typeof(Key), key);
@@ -1685,7 +1685,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep3, key);
                                     if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                        if (!FfxivHotbar.KeybindsActive.Contains(key))
                                             if (Enum.IsDefined(typeof(Key), key))
                                             {
                                                 var keyid = (Key) Enum.Parse(typeof(Key), key);
@@ -1700,7 +1700,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep4, key);
                                     if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                        if (!FfxivHotbar.KeybindsActive.Contains(key))
                                             if (Enum.IsDefined(typeof(Key), key))
                                             {
                                                 var keyid = (Key) Enum.Parse(typeof(Key), key);
@@ -1715,7 +1715,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep5, key);
                                     if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                        if (!FfxivHotbar.KeybindsActive.Contains(key))
                                             if (Enum.IsDefined(typeof(Key), key))
                                             {
                                                 var keyid = (Key) Enum.Parse(typeof(Key), key);
@@ -1730,7 +1730,7 @@ namespace Chromatics.DeviceInterfaces
                                 {
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep6, key);
                                     if (pos > -1)
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                        if (!FfxivHotbar.KeybindsActive.Contains(key))
                                             if (Enum.IsDefined(typeof(Key), key))
                                             {
                                                 var keyid = (Key) Enum.Parse(typeof(Key), key);
@@ -1746,7 +1746,7 @@ namespace Chromatics.DeviceInterfaces
                                     var pos = Array.IndexOf(DeviceEffects.PulseOutStep7, key);
                                     if (pos > -1)
                                     {
-                                        if (!FfxivHotbar.Keybindwhitelist.Contains(key))
+                                        if (!FfxivHotbar.KeybindsActive.Contains(key))
                                             if (Enum.IsDefined(typeof(Key), key))
                                             {
                                                 var keyid = (Key) Enum.Parse(typeof(Key), key);

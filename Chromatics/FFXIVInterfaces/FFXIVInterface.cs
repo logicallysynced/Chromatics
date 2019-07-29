@@ -2082,47 +2082,48 @@ namespace Chromatics
                                 switch (ChromaticsSettings.ChromaticsSettingsQwertyMode)
                                 {
                                     case KeyRegion.ESDF:
-                                        GlobalApplyMapKeyLighting("E", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("F", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("W", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("A", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
+                                        GlobalApplyMapKeyLighting("E", highlightColor, false, true);
+                                        GlobalApplyMapKeyLighting("S", highlightColor, false, true);
+                                        GlobalApplyMapKeyLighting("D", highlightColor, false, true);
+                                        GlobalApplyMapKeyLighting("F", highlightColor, false, true);
+                                        GlobalApplyMapKeyLighting("W", _baseColor, false, true);
+                                        GlobalApplyMapKeyLighting("A", _baseColor, false, true);
+                                        GlobalApplyMapKeyLighting("Z", _baseColor, false, true);
+                                        GlobalApplyMapKeyLighting("Q", _baseColor, false, true);
+
                                         break;
                                     default:
-                                        GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                        GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                        GlobalApplyMapKeyLighting("F", _baseColor, false);
+                                        GlobalApplyMapKeyLighting("W", highlightColor, false, true);
+                                        GlobalApplyMapKeyLighting("A", highlightColor, false, true);
+                                        GlobalApplyMapKeyLighting("S", highlightColor, false, true);
+                                        GlobalApplyMapKeyLighting("D", highlightColor, false, true);
+                                        GlobalApplyMapKeyLighting("Z", _baseColor, false, true);
+                                        GlobalApplyMapKeyLighting("Q", _baseColor, false, true);
+                                        GlobalApplyMapKeyLighting("E", _baseColor, false, true);
+                                        GlobalApplyMapKeyLighting("F", _baseColor, false, true);
                                         break;
                                     
                                 }
 
-                                GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
-                                GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
-                                GlobalApplyMapKeyLighting("Space", highlightColor, false);
-                                GlobalApplyMapKeyLighting("LeftAlt", highlightColor, false);
+                                GlobalApplyMapKeyLighting("LeftShift", highlightColor, false, true);
+                                GlobalApplyMapKeyLighting("LeftControl", highlightColor, false, true);
+                                GlobalApplyMapKeyLighting("Space", highlightColor, false, true);
+                                GlobalApplyMapKeyLighting("LeftAlt", highlightColor, false, true);
                             }
                             else
                             {
-                                GlobalApplyMapKeyLighting("W", _baseColor, false);
-                                GlobalApplyMapKeyLighting("A", _baseColor, false);
-                                GlobalApplyMapKeyLighting("S", _baseColor, false);
-                                GlobalApplyMapKeyLighting("D", _baseColor, false);
-                                GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                GlobalApplyMapKeyLighting("F", _baseColor, false);
-                                GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                GlobalApplyMapKeyLighting("LeftShift", _baseColor, false);
-                                GlobalApplyMapKeyLighting("LeftControl", _baseColor, false);
-                                GlobalApplyMapKeyLighting("Space", _baseColor, false);
-                                GlobalApplyMapKeyLighting("LeftAlt", _baseColor, false);
+                                GlobalApplyMapKeyLighting("W", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("A", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("S", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("D", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("Z", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("E", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("F", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("Q", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("LeftShift", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("LeftControl", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("Space", _baseColor, false, true);
+                                GlobalApplyMapKeyLighting("LeftAlt", _baseColor, false, true);
                             }
 
                             if (targetInfo == null)
@@ -2254,25 +2255,32 @@ namespace Chromatics
 
 
                             //Debuff Status Effects
-
-                            //if (PlayerInfo.IsClaimed)
-                            //{
-
-
+                            
                             var statEffects = _playerInfo.StatusItems;
 
                             if (ChromaticsSettings.ChromaticsSettingsStatusEffectToggle)
                             {
-                                if (statEffects.Count > 0)
+                                var statusList = statEffects;
+
+                                statEffectcount = statusList.Count;
+                                foreach (var sE in statusList.ToList())
                                 {
-                                    var status = statEffects.Last();
+                                    if (sE.IsCompanyAction || sE.TargetName != _playerInfo.Name ||
+                                        FFXIVHelpers.IsCompanyAction(sE.StatusName) || sE.StatusName == "???" || sE.Duration < 0.1)
+                                    {
+                                        statEffectcount--;
+                                        statusList.Remove(sE);
+                                    }
+                                }
+                                
+                                if (statEffectcount > 0)
+                                {
+                                    var status = statusList.LastOrDefault();
                                     if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name &&
-                                        !FFXIVHelpers.IsCompanyAction(status.StatusName))
+                                        !FFXIVHelpers.IsCompanyAction(status.StatusName) && status.StatusName != "???")
                                     {
                                         if (_currentStatus != status.StatusName)
                                         {
-                                            //Console.WriteLine(status.StatusName);
-
                                             if (status.StatusName == "Bind")
                                             {
                                                 GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind),
@@ -2657,184 +2665,143 @@ namespace Chromatics
                                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
                                                     _baseColor, false, "All");
                                             }
-                                            else
-                                            {
-
-                                                _baseColor = baseColor;
-                                                //GlobalUpdateState("static", _baseColor, false);
-                                                GlobalApplyAllKeyLighting(_baseColor);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-
-                                                statEffects.Clear();
-
-                                                if (ChromaticsSettings.ChromaticsSettingsKeyHighlights)
-                                                {
-                                                    switch (ChromaticsSettings.ChromaticsSettingsQwertyMode)
-                                                    {
-                                                        case KeyRegion.ESDF:
-                                                            GlobalApplyMapKeyLighting("E", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("F", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("W", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("A", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                                            break;
-                                                        default:
-                                                            GlobalApplyMapKeyLighting("W", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("A", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("S", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("D", highlightColor, false);
-                                                            GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                                            GlobalApplyMapKeyLighting("F", _baseColor, false);
-                                                            break;
-                                                    }
-
-                                                    GlobalApplyMapKeyLighting("LeftShift", highlightColor, false);
-                                                    GlobalApplyMapKeyLighting("LeftControl", highlightColor, false);
-                                                    GlobalApplyMapKeyLighting("Space", highlightColor, false);
-                                                    GlobalApplyMapKeyLighting("LeftAlt", highlightColor, false);
-                                                }
-                                                else
-                                                {
-                                                    GlobalApplyMapKeyLighting("W", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("A", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("S", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("D", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("Z", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("E", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("F", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("Q", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("LeftShift", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("LeftControl", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("Space", _baseColor, false);
-                                                    GlobalApplyMapKeyLighting("LeftAlt", _baseColor, false);
-                                                }
-
-                                                if (targetInfo == null)
-                                                {
-                                                    GlobalApplyMapKeyLighting("PrintScreen",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapKeyLighting("Scroll",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapKeyLighting("Pause",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                        (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                         !_inCutscene && !_inVegas))
-                                                    {
-                                                        GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
-                                                            ColorTranslator.FromHtml(ColorMappings
-                                                                .ColorMappingNoEmnity),
-                                                            250);
-                                                    }
-
-                                                    GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
-
-                                                    GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        "All");
-
-                                                    GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false,
-                                                        "All");
-                                                    GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        true);
-
-                                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
-                                                        "LeftSide1",
-                                                        "RightSide1",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
-                                                        "LeftSide2",
-                                                        "RightSide2",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
-                                                        "LeftSide3",
-                                                        "RightSide3",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
-                                                        "LeftSide4",
-                                                        "RightSide4",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
-                                                        "LeftSide5",
-                                                        "RightSide5",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
-                                                        "LeftSide6",
-                                                        "RightSide6",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
-                                                        "LeftSide7",
-                                                        "RightSide7",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-
-                                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4,
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-
-                                                    GlobalApplyMapKeyLighting("Macro16",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapKeyLighting("Macro17",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-                                                    GlobalApplyMapKeyLighting("Macro18",
-                                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
-                                                        false);
-
-                                                    GlobalApplyMapLogoLighting("", highlightColor, false);
-                                                    //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
-
-                                                }
-
-                                            }
 
                                             _currentStatus = status.StatusName;
+                                            statEffectActive = true;
                                         }
+                                    }
+                                }
+                                else
+                                {
+                                    if (statEffectActive)
+                                    {
+                                        _baseColor = baseColor;
+                                        SetKeysbase = false;
+                                        //GlobalUpdateState("static", _baseColor, true);
+                                        //GlobalApplyAllKeyLighting(_baseColor);
+
+                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                             !_inCutscene && !_inVegas))
+                                        {
+                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
+                                        }
+
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                            _baseColor, false, "All");
+
+                                        statEffects.Clear();
+                                        statusList.Clear();
+
+                                        if (targetInfo == null)
+                                        {
+                                            GlobalApplyMapKeyLighting("PrintScreen",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapKeyLighting("Scroll",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapKeyLighting("Pause",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                 !_inCutscene && !_inVegas))
+                                            {
+                                                GlobalUpdateBulbState(BulbModeTypes.EnmityTracker,
+                                                    ColorTranslator.FromHtml(ColorMappings
+                                                        .ColorMappingNoEmnity),
+                                                    250);
+                                            }
+
+                                            GlobalApplyKeySingleLighting(DevModeTypes.EnmityTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity));
+
+                                            GlobalApplyKeyMultiLighting(DevMultiModeTypes.EnmityTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                "All");
+
+                                            GlobalApplyMapMouseLighting(DevModeTypes.EnmityTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapHeadsetLighting(DevModeTypes.EnmityTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapKeypadLighting(DevMultiModeTypes.EnmityTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false,
+                                                "All");
+                                            GlobalApplyMapChromaLinkLighting(DevModeTypes.EnmityTracker,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                true);
+
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
+                                                "LeftSide1",
+                                                "RightSide1",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
+                                                "LeftSide2",
+                                                "RightSide2",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
+                                                "LeftSide3",
+                                                "RightSide3",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
+                                                "LeftSide4",
+                                                "RightSide4",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
+                                                "LeftSide5",
+                                                "RightSide5",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
+                                                "LeftSide6",
+                                                "RightSide6",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyStripMouseLighting(DevModeTypes.EnmityTracker,
+                                                "LeftSide7",
+                                                "RightSide7",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 14, 5, 0,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 13, 6, 1,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 12, 7, 2,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 11, 8, 3,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapPadLighting(DevModeTypes.EnmityTracker, 10, 9, 4,
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+
+                                            GlobalApplyMapKeyLighting("Macro16",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapKeyLighting("Macro17",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+                                            GlobalApplyMapKeyLighting("Macro18",
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity),
+                                                false);
+
+                                            GlobalApplyMapLogoLighting("", highlightColor, false);
+                                            //GlobalApplyMapMouseLighting("Logo", highlightColor, false);
+                                        }
+
+                                        statEffectActive = false;
                                     }
                                 }
                             }
@@ -4664,6 +4631,7 @@ namespace Chromatics
 
                                                 if (!FfxivHotbar.Keybindwhitelist.Contains(action.ActionKey))
                                                     FfxivHotbar.Keybindwhitelist.Add(action.ActionKey);
+
 
                                                 var modKey = Modifiers.Null;
                                                 var pushedKey = Modifiers.None;

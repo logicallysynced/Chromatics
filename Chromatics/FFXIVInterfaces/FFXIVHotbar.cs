@@ -436,6 +436,8 @@ namespace Chromatics.FFXIVInterfaces
         public static List<string> Keybindwhitelist = new List<string>();
 
         public static List<string> KeybindsActive = new List<string>();
+
+        public static List<string> KeybindsHighlights = new List<string>();
         
         public static readonly Dictionary<string, string> Keybindtranslation = new Dictionary<string, string>
         {

@@ -91,6 +91,8 @@ namespace Chromatics
         private bool pullCountdownRun = false;
         private int pullCountMax = 0;
         private int pullCountInterval = 0;
+        private int statEffectcount = 0;
+        private bool statEffectActive = false;
 
         public bool EffectRunning = false;
         private CancellationTokenSource _ffxiVcts = new CancellationTokenSource();
