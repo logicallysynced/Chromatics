@@ -1938,7 +1938,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(5);
+                return GetTimer(4);
             }
         }
 
@@ -2324,7 +2324,7 @@ namespace Chromatics.FFXIVInterfaces
             }
         }
 
-        public static float FlowerCharge //Builds to 120
+        public static int FlowerCharge //Builds to 116
         {
             get
             {
@@ -2332,7 +2332,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(7);
+                return RawResourceData[7];
             }
         }
 

@@ -1078,6 +1078,7 @@ namespace Chromatics
 
                         var petalcount = Cooldowns.FlowerPetals;
                         var flowercharge = Cooldowns.FlowerCharge;
+                        //Console.WriteLine(Cooldowns.FlowerCharge * 100);
 
 
                         if (statEffects.Find(i => i.StatusName == "Freecure") != null)
@@ -1112,7 +1113,7 @@ namespace Chromatics
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
                             var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(flowercharge, 0, 116,
+                                Helpers.FFXIVInterpolation.Interpolate_Int((int)flowercharge, 0, 116,
                                     JobLightbar_Collection.Length, 0);
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
@@ -1127,7 +1128,7 @@ namespace Chromatics
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
                             var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(flowercharge, 0, 116,
+                                Helpers.FFXIVInterpolation.Interpolate_Int((int)flowercharge, 0, 116,
                                     JobFunction_Collection.Length, 0);
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1421,13 +1422,13 @@ namespace Chromatics
 
                         var burstsmncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNAetherflow);
                         var burstsmnempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNNegative);
-                        
+
 
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = (Convert.ToInt32(Cooldowns.BloodOfTheDragonTimeRemaining * 100) - 0) * (JobLightbar_Collection.Length - 0) / (60 - 0) + 0;
+                            var JobLightbar_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobLightbar_Collection.Length - 0) / (16 - 0) + 0;
 
                             
 
@@ -1442,7 +1443,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = (Convert.ToInt32(Cooldowns.BloodOfTheDragonTimeRemaining * 100) - 0) * (JobFunction_Collection.Length - 0) / (60 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (16 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
