@@ -1048,6 +1048,104 @@ namespace Chromatics.FFXIVInterfaces
             }
         }
 
+        public static float CooldownType21Elapsed
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return _rawData.cooldownType21Elapsed + CurrentTimeshift;
+            }
+        }
+
+        public static float CooldownType21Total
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return _rawData.cooldownType21Total;
+            }
+        }
+
+        public static float CooldownType21Remaining
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return Math.Max(_rawData.cooldownType21Total - CooldownType21Elapsed, 0);
+            }
+        }
+
+        public static float CooldownType22Elapsed
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return _rawData.cooldownType22Elapsed + CurrentTimeshift;
+            }
+        }
+
+        public static float CooldownType22Total
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return _rawData.cooldownType22Total;
+            }
+        }
+
+        public static float CooldownType22Remaining
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return Math.Max(_rawData.cooldownType22Total - CooldownType22Elapsed, 0);
+            }
+        }
+
+        public static float CooldownType23Elapsed
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return _rawData.cooldownType23Elapsed + CurrentTimeshift;
+            }
+        }
+
+        public static float CooldownType23Total
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return _rawData.cooldownType23Total;
+            }
+        }
+
+        public static float CooldownType23Remaining
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+                return Math.Max(_rawData.cooldownType23Total - CooldownType23Elapsed, 0);
+            }
+        }
 
         public static float CooldownCrossClassSlot1Elapsed
         {
@@ -1704,7 +1802,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[5];
+                return RawResourceData[6];
             }
         }
 
@@ -1718,7 +1816,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[5];
+                return RawResourceData[6];
             }
         }
 
@@ -1732,7 +1830,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[8];
             }
         }
 
@@ -1768,7 +1866,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[5];
+                return RawResourceData[6];
             }
         }
 
@@ -1801,7 +1899,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(5);
+                return GetTimer(6);
             }
         }
 
@@ -1813,7 +1911,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[8];
             }
         }
 
@@ -1854,7 +1952,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(5);
+                return GetTimer(6);
             }
         }
 
@@ -1900,35 +1998,70 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(5);
+                return GetTimer(6);
             }
         }
 
 
         // Bard
-        public static float MiserysEnd => CooldownType0Remaining;
-
-        public static float Bloodletter => CooldownType1Remaining;
-
-        public static float RepellingShot => CooldownType3Remaining;
-
-        public static float MagesBallad => CooldownType5Remaining;
-
-        public static float RagingStrikes => CooldownType6Remaining;
-
-        public static float Barrage => CooldownType7Remaining;
-
-        public static float BattleVoice => CooldownType12Remaining;
-
-        public static float EmpyrealArrow => CooldownType14Remaining;
-
-        public static float Sidewinder => CooldownType15Remaining;
-
-        public static float ArmysPaeon => CooldownType16Remaining;
-
-        public static float WanderersMinuet => CooldownType17Remaining;
-
-        public static float PitchPerfect => CooldownType19Remaining;
+        public static float Bloodletter
+        {
+            get { return CooldownType4Remaining; }
+        }
+        public static float RepellingShot
+        {
+            get { return CooldownType9Remaining; }
+        }
+        public static float MagesBallad
+        {
+            get { return CooldownType15Remaining; }
+        }
+        public static float ArmysPaeon
+        {
+            get { return CooldownType16Remaining; }
+        }
+        public static float WanderersMinuet
+        {
+            get { return CooldownType17Remaining; }
+        }
+        public static float RagingStrikes
+        {
+            get { return CooldownType13Remaining; }
+        }
+        public static float Barrage
+        {
+            get { return CooldownType14Remaining; }
+        }
+        public static float BattleVoice
+        {
+            get { return CooldownType22Remaining; }
+        }
+        public static float EmpyrealArrow
+        {
+            get { return CooldownType7Remaining; }
+        }
+        public static float Sidewinder
+        {
+            get { return CooldownType12Remaining; }
+        }
+        public static float PitchPerfect
+        {
+            get { return CooldownType0Remaining; }
+        }
+        public static float Troubadour
+        {
+            get
+            {
+                return CooldownType23Remaining;
+            }
+        }
+        public static float NaturesMinne
+        {
+            get
+            {
+                return CooldownType19Remaining;
+            }
+        }
 
 
         public static BardSongs Song
@@ -1939,14 +2072,18 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                
                 if (RawResourceData[8] == 5)
+                {
                     return BardSongs.MagesBallad;
+                }
                 if (RawResourceData[8] == 10)
+                {
                     return BardSongs.ArmysPaeon;
+                }
                 if (RawResourceData[8] == 15)
+                {
                     return BardSongs.WanderersMinuet;
-                
+                }
 
                 return BardSongs.None;
             }
@@ -1960,7 +2097,8 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(5);
+                return GetTimer(4);
+
             }
         }
 
@@ -1973,6 +2111,20 @@ namespace Chromatics.FFXIVInterfaces
                 CheckCache();
 
                 return RawResourceData[6];
+
+            }
+        }
+
+        public static int BardSoulGauge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[7];
+
             }
         }
 
@@ -2010,7 +2162,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(6);
+                return GetTimer(8);
             }
         }
 
@@ -2150,7 +2302,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
                 
-                return RawResourceData[5];
+                return RawResourceData[6];
             }
         }
         
@@ -2187,7 +2339,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(5);
+                return GetTimer(6);
             }
         }
 
@@ -2247,40 +2399,76 @@ namespace Chromatics.FFXIVInterfaces
 
 
         // Machinist
-        public static float RapidFire => CooldownType11Remaining;
+        public static float Wildfire
+        {
+            get { return CooldownType19Remaining; }
+        }
+        public static float Reassemble
+        {
+            get { return CooldownType11Remaining; }
+        }
+        public static float Autoturret
+        {
+            get { return CooldownType3Remaining; }
+        }
+        public static float AutomationQueen
+        {
+            get { return CooldownType1Remaining; }
+        }
+        public static float Tactician
+        {
+            get { return CooldownType23Remaining; }
+        }
+        public static float Drill
+        {
+            get { return CooldownType6Remaining; }
+        }
+        public static float HotShot
+        {
+            get { return CooldownType9Remaining; }
+        }
+        public static float AirAnchor
+        {
+            get { return CooldownType10Remaining; }
+        }
 
-        public static float Wildfire => CooldownType10Remaining;
 
-        public static float Reload => CooldownType7Remaining;
 
-        public static float QuickReload => CooldownType6Remaining;
+        public static float GaussRound
+        {
+            get { return CooldownType7Remaining; }
+        }
 
-        public static float Reassemble => CooldownType17Remaining;
+        public static float Ricochet
+        {
+            get { return CooldownType8Remaining; }
+        }
 
-        public static float Heartbreak => CooldownType4Remaining;
+        public static float Hypercharge
+        {
+            get { return CooldownType4Remaining; }
+        }
 
-        public static float Blank => CooldownType5Remaining;
-
-        public static float Autoturret => CooldownType3Remaining;
-
-        public static int HeatGauge
+        public static float BarrelStabilizer
         {
             get
             {
-                if (!Initialized)
-                    return 0;
-                CheckCache();
-
-                // if we don't have gauss barrel on, we don't have any heat 
-                // (although sometimes the data in memory says we do, it'll be reset to 0 next time gauss barrel is turned on)
-                if (RawResourceData[10] == 0)
-                    return 0;
-
-                return RawResourceData[6];
+                return CooldownType20Remaining;
+            }
+        }
+        public static float Flamethrower
+        {
+            get
+            {
+                return CooldownType12Remaining;
             }
         }
 
-        public static int AmmoCount
+
+
+
+
+        public static int HeatGauge
         {
             get
             {
@@ -2292,7 +2480,7 @@ namespace Chromatics.FFXIVInterfaces
             }
         }
 
-        public static float OverHeatTime
+        public static int Battery
         {
             get
             {
@@ -2300,16 +2488,11 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                // if we have gauss barrel on, return the actual cooldown timer
-                if (RawResourceData[10] > 0)
-                    return GetTimer(5);
-
-                // Otherwise, return whichever has more time
-                return 0;
+                return RawResourceData[9];
             }
         }
 
-        public static float GaussBarrel
+        public static float HyperchargeTime
         {
             get
             {
@@ -2317,16 +2500,12 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                // if we have gauss barrel on, return the actual cooldown timer
-                if (RawResourceData[10] > 0)
-                    return CooldownType0Remaining;
-
-                // Otherwise, return whichever has more time
-                return Math.Max(CooldownType0Remaining, GetTimer(5));
+                return GetTimer(4);
             }
         }
 
-        public static bool GaussBarrelEnabled
+
+        public static bool HyperchargeActive
         {
             get
             {
@@ -2334,20 +2513,125 @@ namespace Chromatics.FFXIVInterfaces
                     return false;
                 CheckCache();
 
-                return RawResourceData[10] > 0;
+                return (RawResourceData[11] & 1) > 0;
             }
         }
 
+        public static bool TurretActive
+        {
+            get
+            {
+                if (!Initialized)
+                    return false;
+                CheckCache();
 
-        public static float GaussRound => CooldownType14Remaining;
+                return (RawResourceData[11] & 2) > 0;
+            }
+        }
 
-        public static float Hypercharge => CooldownType13Remaining;
+        // Dancer
 
-        public static float Ricochet => CooldownType8Remaining;
+        public static float ShieldSamba
+        {
+            get { return CooldownType22Remaining; }
+        }
 
-        public static float BarrelStabilizer => CooldownType9Remaining;
+        public static float CuringWaltz
+        {
+            get { return CooldownType14Remaining; }
+        }
 
-        public static float Flamethrower => CooldownType15Remaining;
+
+
+        public static float EnAvant
+        {
+            get { return CooldownType9Remaining; }
+        }
+        
+        public static float Flourish
+        {
+            get { return CooldownType13Remaining; }
+        }
+
+        public static float Devilment
+        {
+            get { return CooldownType20Remaining; }
+        }
+
+        public static float Improvisation
+        {
+            get { return CooldownType99Remaining; }
+        }
+
+        public static float ClosedPosition
+        {
+            get { return CooldownType0Remaining; }
+        }
+
+        public static float StandardStep
+        {
+            get { return CooldownType8Remaining; }
+        }
+
+        public static float TechnicalStep
+        {
+            get { return CooldownType19Remaining; }
+        }
+
+        public static float FanDance
+        {
+            get { return CooldownType1Remaining; }
+        }
+
+        public static float FanDance2
+        {
+            get { return CooldownType2Remaining; }
+        }
+
+        public static float FanDance3
+        {
+            get { return CooldownType3Remaining; }
+        }
+
+
+        public static int FourfoldFeathers
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[4];
+
+            }
+        }
+
+        public static int Espirit
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[5];
+
+            }
+        }
+
+        public static int DanceStepCount
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[10];
+
+            }
+        }
 
 
         // Red Mage
@@ -2375,7 +2659,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[5];
+                return RawResourceData[6];
             }
         }
 
@@ -2390,8 +2674,7 @@ namespace Chromatics.FFXIVInterfaces
                 return RawResourceData[7];
             }
         }
-
-
+        
         public static void RefreshData()
         {
             lock (RefreshLock)
@@ -2670,368 +2953,542 @@ namespace Chromatics.FFXIVInterfaces
             [MarshalAs(UnmanagedType.I2)] [FieldOffset(0x13)] // B7
             public readonly short resource7;
         }
-
+        
         [StructLayout(LayoutKind.Explicit, Pack = 1)]
         private struct CooldownRawData
         {
             // 01CECC84
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x0)] // 
-            public readonly float afterSkillLockTime;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x0)] // 
+            public float afterSkillLockTime;
 
-            [MarshalAs(UnmanagedType.Bool)] [FieldOffset(0x20)] public readonly bool currentlyCasting;
+            [MarshalAs(UnmanagedType.Bool)]
+            [FieldOffset(0x20)]
+            public bool currentlyCasting;
 
             // 01CECCB0
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x28)] // 
-            public readonly float castTimeElapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x28)] // 
+            public float castTimeElapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2C)] // 
-            public readonly float castTimeTotal;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2C)] // 
+            public float castTimeTotal;
+
 
 
             // 01CECCE0
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x58)] // 
-            public readonly float comboTimeRemaining;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x58)] // 
+            public float comboTimeRemaining;
+
 
 
             // 01DF98A4
             // 01DF99A0
-            [MarshalAs(UnmanagedType.U4)] [FieldOffset(0x118)] // 
-            public readonly int actionCount;
+            [MarshalAs(UnmanagedType.U4)]
+            [FieldOffset(0x118)] // 
+            public int actionCount;
+
+
+            // 
+            //  (98)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x184)]
+            public float cooldownType98Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x188)]
+            public float cooldownType98Total;
 
 
             // 
             //  (99)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x13C)] public readonly float cooldownType99Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x198)]
+            public float cooldownType99Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x140)] public readonly float cooldownType99Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x19C)]
+            public float cooldownType99Total;
 
-
-            // 
-            // Painflare (0)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x150)] public readonly float cooldownType0Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x154)] public readonly float cooldownType0Total;
 
 
             // 
-            // EnergyDrain (1)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x164)] // 0x128
-            public readonly float cooldownType1Elapsed;
+            // (0)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1AC)] 
+            public float cooldownType0Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x168)] // 0x12C
-            public readonly float cooldownType1Total;
-
-
-            // 
-            // Bane (2)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x178)] // 0x150
-            public readonly float cooldownType2Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x17C)] // 0x154
-            public readonly float cooldownType2Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1B0)]
+            public float cooldownType0Total;
 
 
             // 
-            // Fester (3)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x18C)] // 0x18C
-            public readonly float cooldownType3Elapsed;
+            // (1)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1C0)] // 0x128
+            public float cooldownType1Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x190)] // 0x190
-            public readonly float cooldownType3Total;
-
-
-            // 
-            // Tri-Disaster (4)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1A0)] // 0x204
-            public readonly float cooldownType4Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1A4)] // 0x208
-            public readonly float cooldownType4Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1C4)] // 0x12C
+            public float cooldownType1Total;
 
 
             // 
-            // Aetherflow (5)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1B4)] // 0x114
-            public readonly float cooldownType5Elapsed;
+            // (2)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1D4)] // 0x150
+            public float cooldownType2Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1B8)] // 0x118
-            public readonly float cooldownType5Total;
-
-
-            // 
-            // Virus (6)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1C8)] // 0x13C
-            public readonly float cooldownType6Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1CC)] // 0x140
-            public readonly float cooldownType6Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1D8)] // 0x154
+            public float cooldownType2Total;
 
 
             // 
-            // Rouse (7)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1DC)] // 0x178
-            public readonly float cooldownType7Elapsed;
+            // (3)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1E8)] // 0x18C
+            public float cooldownType3Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1E0)] // 0x17C
-            public readonly float cooldownType7Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1EC)] // 0x190
+            public float cooldownType3Total;
 
-
-            // 
-            // Spur (8)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1F0)] // 0x1B4
-            public readonly float cooldownType8Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x1F4)] // 0x1B8
-            public readonly float cooldownType8Total;
 
 
             // 
-            // Kassatsu (9)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x204)] // 0x1DC
-            public readonly float cooldownType9Elapsed;
+            // (4)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x1FC)] // 0x204
+            public float cooldownType4Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x208)] // 0x1E0
-            public readonly float cooldownType9Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x200)] // 0x208
+            public float cooldownType4Total;
 
 
-            // 
-            // Eye for an Eye (10)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x218)] // 0x164
-            public readonly float cooldownType10Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x21C)] // 0x168
-            public readonly float cooldownType10Total;
 
 
             // 
-            // Bulwark (11)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x22C)] // 0x1A0
-            public readonly float cooldownType11Elapsed;
+            // (5)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x210)] // 0x114
+            public float cooldownType5Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x230)] // 0x1A4
-            public readonly float cooldownType11Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x214)] // 0x118
+            public float cooldownType5Total;
+
+
+
+
+            // 
+            // (6)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x224)] // 0x13C
+            public float cooldownType6Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x228)] // 0x140
+            public float cooldownType6Total;
+
+
+            // 
+            // (7)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x238)] // 0x178
+            public float cooldownType7Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x23C)] // 0x17C
+            public float cooldownType7Total;
+
+
+            // 
+            // (8)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x24C)] // 0x1B4
+            public float cooldownType8Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x250)] // 0x1B8
+            public float cooldownType8Total;
+
+
+
+            // 
+            // (9)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x260)] // 0x1DC
+            public float cooldownType9Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x264)] // 0x1E0
+            public float cooldownType9Total;
+
+
+
+
+            // 
+            // (10)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x274)] // 0x164
+            public float cooldownType10Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x278)] // 0x168
+            public float cooldownType10Total;
+
+
+            // 
+            // (11)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x288)] // 0x1A0
+            public float cooldownType11Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x28C)] // 0x1A4
+            public float cooldownType11Total;
+
 
 
             // 02138AC8
-            // Enkindle (12)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x240)] // 0x1C8
-            public readonly float cooldownType12Elapsed;
+            // (12)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x29C)] // 0x1C8
+            public float cooldownType12Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x244)] // 0x1CC
-            public readonly float cooldownType12Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2A0)] // 0x1CC
+            public float cooldownType12Total;
+
+
 
 
             // 
-            // Hallowed Ground (13)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x254)] // 0x1F0
-            public readonly float cooldownType13Elapsed;
+            // (13)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2B0)] // 0x1F0
+            public float cooldownType13Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x258)] // 0x1F4
-            public readonly float cooldownType13Total;
-
-
-            // 02138AF0
-            // Dreadwyrm Trance (14)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x268)] // 0x1F0
-            public readonly float cooldownType14Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x26C)] // 0x1F4
-            public readonly float cooldownType14Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2B4)] // 0x1F4
+            public float cooldownType13Total;
 
 
             // 02138AF0
-            // Deathflare (15)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x27C)] // 0x1F0
-            public readonly float cooldownType15Elapsed;
+            // (14)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2C4)] // 0x1F0
+            public float cooldownType14Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x280)] // 0x1F4
-            public readonly float cooldownType15Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2C8)] // 0x1F4
+            public float cooldownType14Total;
+
+
+
+            // 02138AF0
+            // (15)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2D8)] // 0x1F0
+            public float cooldownType15Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2DC)] // 0x1F4
+            public float cooldownType15Total;
 
 
             // 02138AF0
             //  (16)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x290)] // 0x1F0
-            public readonly float cooldownType16Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2EC)] // 0x1F0
+            public float cooldownType16Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x294)] // 0x1F4
-            public readonly float cooldownType16Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x2F0)] // 0x1F4
+            public float cooldownType16Total;
 
 
             // 02138AF0
             //  (17)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2A4)] // 0x1F0
-            public readonly float cooldownType17Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x300)] // 0x1F0
+            public float cooldownType17Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2A8)] // 0x1F4
-            public readonly float cooldownType17Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x304)] // 0x1F4
+            public float cooldownType17Total;
 
 
             // 02138AF0
             //  (18)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2B8)] // 0x1F0
-            public readonly float cooldownType18Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x314)] // 0x1F0
+            public float cooldownType18Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2BC)] // 0x1F4
-            public readonly float cooldownType18Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x318)] // 0x1F4
+            public float cooldownType18Total;
 
 
             //  (19)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2CC)] // 0x1F0
-            public readonly float cooldownType19Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x328)] // 0x1F0
+            public float cooldownType19Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2D0)] // 0x1F4
-            public readonly float cooldownType19Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x32C)] // 0x1F4
+            public float cooldownType19Total;
 
 
             //  (20)
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2E0)] // 0x1F0
-            public readonly float cooldownType20Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x33C)] // 0x1F0
+            public float cooldownType20Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x2E4)] // 0x1F4
-            public readonly float cooldownType20Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x340)] // 0x1F4
+            public float cooldownType20Total;
+
+
+            //  (21)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x350)] // 0x1F0
+            public float cooldownType21Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x354)] // 0x1F4
+            public float cooldownType21Total;
+
+            //  (22)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x364)] // 0x1F0
+            public float cooldownType22Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x368)] // 0x1F4
+            public float cooldownType22Total;
+
+            //  (23)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x378)] // 0x1F0
+            public float cooldownType23Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x37C)] // 0x1F4
+            public float cooldownType23Total;
+
+            //  (24)
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x38C)] // 0x1F0
+            public float cooldownType24Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x390)] // 0x1F4
+            public float cooldownType24Total;
 
 
             // 022FA638
             // 10FA638
             // 01CED0DC
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x470)] // 0x434
-            public readonly float cooldownCrossClassSlot1Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x4CC)] // 0x434
+            public float cooldownCrossClassSlot1Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x474)] // 0x438
-            public readonly float cooldownCrossClassSlot1Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x4D0)] // 0x438
+            public float cooldownCrossClassSlot1Total;
 
 
             // 01CED0F0
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x484)] // 0x448
-            public readonly float cooldownCrossClassSlot2Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x4E0)] // 0x448
+            public float cooldownCrossClassSlot2Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x488)] // 0x44C
-            public readonly float cooldownCrossClassSlot2Total;
-
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x498)] // 02140B30
-            public readonly float cooldownCrossClassSlot3Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x49C)] // 02140B34
-            public readonly float cooldownCrossClassSlot3Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x4E4)] // 0x44C
+            public float cooldownCrossClassSlot2Total;
 
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4AC)] // 02140B44
-            public readonly float cooldownCrossClassSlot4Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4B0)] // 02140B48
-            public readonly float cooldownCrossClassSlot4Total;
 
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4C0)] // 02140B58
-            public readonly float cooldownCrossClassSlot5Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x4F4)] // 02140B30
+            public float cooldownCrossClassSlot3Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4C4)] // 02140B5C
-            public readonly float cooldownCrossClassSlot5Total;
-
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4D4)] // 
-            public readonly float cooldownCrossClassSlot6Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4D8)] // 
-            public readonly float cooldownCrossClassSlot6Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x4F8)] // 02140B34
+            public float cooldownCrossClassSlot3Total;
 
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4E8)] // 
-            public readonly float cooldownCrossClassSlot7Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4EC)] // 
-            public readonly float cooldownCrossClassSlot7Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x508)] // 02140B44
+            public float cooldownCrossClassSlot4Elapsed;
 
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x4FC)] // 
-            public readonly float cooldownCrossClassSlot8Elapsed;
-
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x500)] // 
-            public readonly float cooldownCrossClassSlot8Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x50C)] // 02140B48
+            public float cooldownCrossClassSlot4Total;
 
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x510)] // 
-            public readonly float cooldownCrossClassSlot9Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x514)] // 
-            public readonly float cooldownCrossClassSlot9Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x51C)] // 02140B58
+            public float cooldownCrossClassSlot5Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x520)] // 02140B5C
+            public float cooldownCrossClassSlot5Total;
 
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x524)] // 
-            public readonly float cooldownCrossClassSlot10Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x528)] // 
-            public readonly float cooldownCrossClassSlot10Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x530)] // 
+            public float cooldownCrossClassSlot6Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x534)] // 
+            public float cooldownCrossClassSlot6Total;
+
+
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x544)] // 
+            public float cooldownCrossClassSlot7Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x548)] // 
+            public float cooldownCrossClassSlot7Total;
+
+
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x558)] // 
+            public float cooldownCrossClassSlot8Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x55C)] // 
+            public float cooldownCrossClassSlot8Total;
+
+
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x56C)] // 
+            public float cooldownCrossClassSlot9Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x570)] // 
+            public float cooldownCrossClassSlot9Total;
+
+
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x580)] // 
+            public float cooldownCrossClassSlot10Elapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x584)] // 
+            public float cooldownCrossClassSlot10Total;
+
 
 
             // 01CED208
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x59C)] // 0x560
-            public readonly float cooldownSprintElapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x5F8)] // 0x560
+            public float cooldownSprintElapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x5A0)] // 0x564
-            public readonly float cooldownSprintTotal;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x5FC)] // 0x564
+            public float cooldownSprintTotal;
 
-
-            // 01CED230
-            [MarshalAs(UnmanagedType.Bool)] [FieldOffset(0x5BC)] // 0x588
-            public readonly bool globalCooldownInUse;
 
 
             // 01CED230
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x5C4)] // 0x588
-            public readonly float globalCooldownElapsed;
+            [MarshalAs(UnmanagedType.Bool)]
+            [FieldOffset(0x618)] // 0x588
+            public bool globalCooldownInUse;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x5C8)] // 0x58C
-            public readonly float globalCooldownTotal;
+
+
+            // 01CED230
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x620)] // 0x588
+            public float globalCooldownElapsed;
+
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x624)] // 0x58C
+            public float globalCooldownTotal;
+
 
 
             // 01CED244
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x5D8)] // 02140C70
-            public readonly float cooldownPotionElapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x634)] // 02140C70
+            public float cooldownPotionElapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x5DC)] // 02140C74
-            public readonly float cooldownPotionTotal;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x638)] // 02140C74
+            public float cooldownPotionTotal;
+
 
 
             // 01CED244
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x5EC)] // 02140C70
-            public readonly float cooldownPoisonPotionElapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x648)] // 02140C70
+            public float cooldownPoisonPotionElapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x5F0)] // 02140C74
-            public readonly float cooldownPoisonPotionTotal;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x64C)] // 02140C74
+            public float cooldownPoisonPotionTotal;
+
+
 
 
             // 01CED3AC
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x740)] // 0x704
-            public readonly float cooldownPetAbility1Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x79C)] // 0x704
+            public float cooldownPetAbility1Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x744)] // 0x708
-            public readonly float cooldownPetAbility1Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x7A0)] // 0x708
+            public float cooldownPetAbility1Total;
 
 
             // 01CED3C0
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x754)] // 0x718
-            public readonly float cooldownPetAbility2Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x7B0)] // 0x718
+            public float cooldownPetAbility2Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x758)] // 0x71C
-            public readonly float cooldownPetAbility2Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x7B4)] // 0x71C
+            public float cooldownPetAbility2Total;
 
 
             // 01CED3D4
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x768)] // 0x72C
-            public readonly float cooldownPetAbility3Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x7C4)] // 0x72C
+            public float cooldownPetAbility3Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x76C)] // 0x730
-            public readonly float cooldownPetAbility3Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x7C8)] // 0x730
+            public float cooldownPetAbility3Total;
 
 
             // 01CED3E8
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x77C)] // 0x740
-            public readonly float cooldownPetAbility4Elapsed;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x7D8)] // 0x740
+            public float cooldownPetAbility4Elapsed;
 
-            [MarshalAs(UnmanagedType.R4)] [FieldOffset(0x780)] // 0x744
-            public readonly float cooldownPetAbility4Total;
+            [MarshalAs(UnmanagedType.R4)]
+            [FieldOffset(0x7DC)] // 0x744
+            public float cooldownPetAbility4Total;
+
+
+
         }
 
         public class Cooldown
