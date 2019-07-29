@@ -393,6 +393,8 @@ namespace Chromatics.DeviceInterfaces
                 if (_razerDeviceKeypad) Keypad.SetAllAsync(c);
                 if (_razerDeviceHeadset) Headset.SetAllAsync(c);
 
+                //Console.WriteLine("Set All");
+
             }
             catch (Exception ex)
             {
@@ -417,6 +419,7 @@ namespace Chromatics.DeviceInterfaces
                 try
                 {
                     _keyboardGrid.Set(ToColoreCol(col));
+                    //Console.WriteLine("Keyboard Set All");
                 }
                 catch (Exception ex)
                 {
@@ -480,6 +483,7 @@ namespace Chromatics.DeviceInterfaces
                     lock (RazerFlash1)
                     {
                         Chroma.Keyboard.SetCustomAsync(_keyboardGrid);
+                        //Console.WriteLine("Device Update");
                     }
                 }
 
@@ -655,6 +659,8 @@ namespace Chromatics.DeviceInterfaces
                             {
                                 if (_keyboardGrid[keyid].Value != rzCol)
                                     _keyboardGrid[keyid] = rzCol;
+
+                                //Console.WriteLine("Keyboard Set Key");
                             }
                         }
                     }

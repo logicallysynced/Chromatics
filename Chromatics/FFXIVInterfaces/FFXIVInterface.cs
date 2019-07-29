@@ -311,30 +311,12 @@ namespace Chromatics
         {
             try
             {
-                
-                
                 FfxivThread = new Thread(new ThreadStart(CallThreadFFXIVAttach));
                 FfxivThread.Priority = ThreadPriority.Lowest;
+                FfxivThread.Name = "FFXIVPollingThread";
                 FfxivThread.Start();
                 FfxivThread.Join();
                 ct.Cancel();
-                
-                
-                /*
-                while (!ct.IsCancellationRequested && !_exit)
-                {
-                    if (_exit)
-                    {
-                        ct.Cancel();
-                    }
-
-                    ReadFfxivMemory();
-                    await Task.Delay(ChromaticsSettings.ChromaticsSettingsPollingInterval);
-                    
-                }
-                */
-                
-                
             }
             catch (Exception ex)
             {
@@ -2256,11 +2238,9 @@ namespace Chromatics
 
                             //Debuff Status Effects
                             
-                            var statEffects = _playerInfo.StatusItems;
-
                             if (ChromaticsSettings.ChromaticsSettingsStatusEffectToggle)
                             {
-                                var statusList = statEffects;
+                                var statusList =  _playerInfo.StatusItems.ToList();
 
                                 statEffectcount = statusList.Count;
                                 foreach (var sE in statusList.ToList())
@@ -2348,8 +2328,7 @@ namespace Chromatics
                                         GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
                                             _baseColor, false, "All");
 
-                                        statEffects.Clear();
-                                        statusList.Clear();
+                                        //statusList.Clear();
 
                                         if (targetInfo == null)
                                         {
@@ -6522,7 +6501,7 @@ namespace Chromatics
 
 
                                 //Job Gauges
-                                ImplementJobGauges(statEffects, _baseColor, hotbars);
+                                ImplementJobGauges( _playerInfo.StatusItems, _baseColor, hotbars);
 
 
                                 //Pull Countdown

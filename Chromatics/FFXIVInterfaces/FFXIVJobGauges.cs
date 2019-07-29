@@ -25,12 +25,14 @@ namespace Chromatics
                 switch (_playerInfo.Job)
                 {
                     case Actor.Job.WAR:
-                        var burstwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARWrathBurst);
-                        var maxwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARWrathMax);
+                        var burstwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARBeastGauge);
+                        var maxwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARBeastGaugeMax);
                         var negwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARNegative);
+                        var defiancecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARDefiance);
+                        var nondefiancecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARNonDefiance);
                         var wrath = Cooldowns.Wrath;
                         var polWrath = (wrath - 0) * (50 - 0) / (100 - 0) + 0;
-
+                        
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
@@ -60,6 +62,24 @@ namespace Chromatics
                                     JobFunction_Interpolate > i ? burstwarcol : negwarcol, false);
                             }
                         }
+                        
+
+                        if (statEffects.Find(i => i.StatusName == "Defiance") != null)
+                        {
+                            GlobalApplyMapKeyLighting("NumSubtract", defiancecol, false);
+                            GlobalApplyMapKeyLighting("NumAdd", defiancecol, false);
+                            GlobalApplyMapKeyLighting("NumEnter", defiancecol, false);
+                            GlobalApplyMapKeyLighting("Num0", defiancecol, false);
+                            GlobalApplyMapKeyLighting("NumDecimal", defiancecol, false);
+                        }
+                        else
+                        {
+                            GlobalApplyMapKeyLighting("NumSubtract", nondefiancecol, false);
+                            GlobalApplyMapKeyLighting("NumAdd", nondefiancecol, false);
+                            GlobalApplyMapKeyLighting("NumEnter", nondefiancecol, false);
+                            GlobalApplyMapKeyLighting("Num0", nondefiancecol, false);
+                            GlobalApplyMapKeyLighting("NumDecimal", nondefiancecol, false);
+                        }
 
                         if (wrath > 0)
                         {
@@ -86,6 +106,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                ToggleGlobalFlash3(false);
                             }
                             else if (polWrath <= 40 && polWrath > 30)
                             {
@@ -104,6 +126,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                ToggleGlobalFlash3(false);
                             }
                             else if (polWrath <= 30 && polWrath > 20)
                             {
@@ -122,6 +146,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                ToggleGlobalFlash3(false);
                             }
                             else if (polWrath <= 20 && polWrath > 10)
                             {
@@ -140,6 +166,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                ToggleGlobalFlash3(false);
                             }
                             else if (polWrath <= 10 && polWrath > 0)
                             {
@@ -158,6 +186,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num1", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num2", burstwarcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstwarcol, false);
+
+                                ToggleGlobalFlash3(false);
                             }
                             else if (polWrath == 0)
                             {
@@ -176,6 +206,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num1", negwarcol, false);
                                 GlobalApplyMapKeyLighting("Num2", negwarcol, false);
                                 GlobalApplyMapKeyLighting("Num3", negwarcol, false);
+
+                                ToggleGlobalFlash3(false);
                             }
                         }
                         else

@@ -537,8 +537,10 @@ namespace Chromatics.Datastore
         public string ColorMappingExpFull = ColorTranslator.ToHtml(Color.Yellow);
         public string ColorMappingExpMax = ColorTranslator.ToHtml(Color.Orange);
         public string ColorMappingJobWARNegative = ColorTranslator.ToHtml(Color.Black);
-        public string ColorMappingJobWARWrathBurst = ColorTranslator.ToHtml(Color.Orange);
-        public string ColorMappingJobWARWrathMax = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingJobWARBeastGauge = ColorTranslator.ToHtml(Color.Orange);
+        public string ColorMappingJobWARBeastGaugeMax = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingJobWARDefiance = ColorTranslator.ToHtml(Color.MediumVioletRed);
+        public string ColorMappingJobWARNonDefiance = ColorTranslator.ToHtml(Color.Blue);
         public string ColorMappingJobPLDNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobPLDShieldOath = ColorTranslator.ToHtml(Color.Khaki);
         public string ColorMappingJobPLDSwordOath = ColorTranslator.ToHtml(Color.DodgerBlue);
