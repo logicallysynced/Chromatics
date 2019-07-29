@@ -1802,7 +1802,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[4];
             }
         }
 

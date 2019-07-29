@@ -6501,7 +6501,7 @@ namespace Chromatics
 
 
                                 //Job Gauges
-                                ImplementJobGauges( _playerInfo.StatusItems, _baseColor, hotbars);
+                                ImplementJobGauges(_playerInfo.StatusItems.ToList(), _baseColor, hotbars);
 
 
                                 //Pull Countdown
