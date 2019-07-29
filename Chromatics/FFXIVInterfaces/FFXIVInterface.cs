@@ -2265,8 +2265,7 @@ namespace Chromatics
                                 statEffectcount = statusList.Count;
                                 foreach (var sE in statusList.ToList())
                                 {
-                                    if (sE.IsCompanyAction || sE.TargetName != _playerInfo.Name ||
-                                        FFXIVHelpers.IsCompanyAction(sE.StatusName) || sE.StatusName == "???" || sE.Duration < 0.1)
+                                    if (!FFXIVHelpers.StatusEffects.ContainsKey(sE.StatusName) || sE.Duration < 0.1)
                                     {
                                         statEffectcount--;
                                         statusList.Remove(sE);
@@ -2276,394 +2275,53 @@ namespace Chromatics
                                 if (statEffectcount > 0)
                                 {
                                     var status = statusList.LastOrDefault();
-                                    if (status.IsCompanyAction == false && status.TargetName == _playerInfo.Name &&
-                                        !FFXIVHelpers.IsCompanyAction(status.StatusName) && status.StatusName != "???")
+                                    if (FFXIVHelpers.StatusEffects.ContainsKey(status.StatusName))
                                     {
                                         if (_currentStatus != status.StatusName)
                                         {
-                                            if (status.StatusName == "Bind")
+                                            foreach (var sE in FFXIVHelpers.StatusEffects)
                                             {
-                                                GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBind),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBind);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
+                                                if (sE.Key == status.StatusName)
                                                 {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
+                                                    var statusCol = (string)typeof(Datastore.FfxivColorMappings).GetField(sE.Value[1]).GetValue(ColorMappings);
+
+                                                    if (sE.Value[0] == "Static")
+                                                    {
+                                                        _baseColor =
+                                                            ColorTranslator.FromHtml(statusCol);
+                                                        //GlobalUpdateState("static", _baseColor, false);
+                                                        GlobalApplyAllKeyLighting(_baseColor);
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
+                                                        {
+                                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects,
+                                                                _baseColor, 250);
+                                                        }
+
+                                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                            _baseColor, false, "All");
+                                                    }
+                                                    else if (sE.Value[0] == "Ripple")
+                                                    {
+                                                        GlobalRipple2(ColorTranslator.FromHtml(statusCol), 100);
+                                                        _baseColor = ColorTranslator.FromHtml(statusCol);
+                                                        if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
+                                                            (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
+                                                             !_inCutscene && !_inVegas))
+                                                        {
+                                                            GlobalUpdateBulbState(BulbModeTypes.StatusEffects,
+                                                                _baseColor,
+                                                                1000);
+                                                        }
+
+                                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
+                                                            _baseColor, false, "All");
+                                                    }
+                                                    
+                                                    break;
                                                 }
 
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Petrification")
-                                            {
-                                                _baseColor =
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingPetrification);
-                                                //GlobalUpdateState("static", _baseColor, false);
-                                                GlobalApplyAllKeyLighting(_baseColor);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-
-                                            }
-                                            else if (status.StatusName == "Old")
-                                            {
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
-                                                //GlobalUpdateState("static", _baseColor, false);
-                                                GlobalApplyAllKeyLighting(_baseColor);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Slow")
-                                            {
-                                                GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSlow);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Stun")
-                                            {
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingStun);
-                                                //GlobalUpdateState("static", _baseColor, false);
-                                                GlobalApplyAllKeyLighting(_baseColor);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Silence")
-                                            {
-                                                _baseColor =
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingSilence);
-                                                //GlobalUpdateState("static", _baseColor, false);
-                                                GlobalApplyAllKeyLighting(_baseColor);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 250);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Poison")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPoison);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Pollen")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPollen);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Pox")
-                                            {
-                                                GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingPox),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingPox);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Paralysis")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis),
-                                                    100);
-                                                _baseColor =
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingParalysis);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Leaden")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingLeaden);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Incapacitation")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation),
-                                                    100);
-                                                _baseColor =
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingIncapacitation);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Dropsy")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDropsy);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Amnesia")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia),
-                                                    100);
-                                                _baseColor =
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingAmnesia);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Bleed")
-                                            {
-                                                GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBleed);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Misery")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingMisery);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Sleep")
-                                            {
-                                                GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingSleep);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Daze")
-                                            {
-                                                GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingDaze);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Heavy")
-                                            {
-                                                GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingHeavy);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Infirmary")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary),
-                                                    100);
-                                                _baseColor =
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingInfirmary);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Burns")
-                                            {
-                                                GlobalRipple2(ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns),
-                                                    100);
-                                                _baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBurns);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Deep Freeze")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze),
-                                                    100);
-                                                _baseColor =
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingDeepFreeze);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
-                                            }
-                                            else if (status.StatusName == "Damage Down")
-                                            {
-                                                GlobalRipple2(
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown),
-                                                    100);
-                                                _baseColor =
-                                                    ColorTranslator.FromHtml(ColorMappings.ColorMappingDamageDown);
-                                                if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
-                                                    (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects &&
-                                                     !_inCutscene && !_inVegas))
-                                                {
-                                                    GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor,
-                                                        1000);
-                                                }
-
-                                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.StatusEffects,
-                                                    _baseColor, false, "All");
                                             }
 
                                             _currentStatus = status.StatusName;

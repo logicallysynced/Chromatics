@@ -2124,7 +2124,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(4);
+                return GetTimer(5);
 
             }
         }

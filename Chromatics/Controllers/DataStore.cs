@@ -458,6 +458,7 @@ namespace Chromatics.Datastore
         public string ColorMappingAmnesia = ColorTranslator.ToHtml(Color.Snow);
         public string ColorMappingBaseColor = ColorTranslator.ToHtml(Color.DodgerBlue);
         public string ColorMappingBind = ColorTranslator.ToHtml(Color.BlueViolet);
+        public string ColorMappingVulnerabilityUp = ColorTranslator.ToHtml(Color.Orange);
         public string ColorMappingBleed = ColorTranslator.ToHtml(Color.IndianRed);
         public string ColorMappingBurns = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingCastChargeEmpty = ColorTranslator.ToHtml(Color.Black);
@@ -466,6 +467,7 @@ namespace Chromatics.Datastore
         public string ColorMappingCpFull = ColorTranslator.ToHtml(Color.Purple);
         public string ColorMappingDamageDown = ColorTranslator.ToHtml(Color.PaleVioletRed);
         public string ColorMappingDaze = ColorTranslator.ToHtml(Color.PaleVioletRed);
+        public string ColorMappingOld = ColorTranslator.ToHtml(Color.SlateGray);
         public string ColorMappingDeepFreeze = ColorTranslator.ToHtml(Color.RoyalBlue);
         public string ColorMappingDropsy = ColorTranslator.ToHtml(Color.DeepSkyBlue);
         public string ColorMappingDutyFinderBell = ColorTranslator.ToHtml(Color.Red);

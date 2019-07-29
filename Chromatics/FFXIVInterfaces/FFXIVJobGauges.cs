@@ -860,9 +860,8 @@ namespace Chromatics
 
                         if (Cooldowns.Song != Cooldowns.BardSongs.None)
                         {
-                            var songremain = Cooldowns.SongTimeRemaining;
-                            var polSong = (songremain - 0) * (50 - 0) / (1.0 - 0) + 0;
-                            
+                            var songremain = Convert.ToInt32(Cooldowns.SongTimeRemaining * 100);
+
                             switch (Cooldowns.Song)
                             {
                                 case Cooldowns.BardSongs.ArmysPaeon:
@@ -923,7 +922,7 @@ namespace Chromatics
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                var JobLightbar_Interpolate = ((int)songremain - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+                                var JobLightbar_Interpolate = ((int)songremain - 0) * (JobLightbar_Collection.Length - 0) / (100 - 0) + 0;
 
                                 for (int i = 0; i < JobLightbar_Collection.Length; i++)
                                 {
@@ -936,7 +935,7 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
                                 var JobFunction_Collection = DeviceEffects.Functions;
-                                var JobFunction_Interpolate = ((int)songremain - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
+                                var JobFunction_Interpolate = ((int)songremain - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
                                 {
@@ -945,7 +944,7 @@ namespace Chromatics
                                 }
                             }
 
-                            if (polSong <= 50 && polSong > 40)
+                            if (songremain <= 100 && songremain > 80)
                             {
                                 ToggleGlobalFlash3(false);
 
@@ -965,7 +964,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
                             }
-                            else if (polSong <= 40 && polSong > 30)
+                            else if (songremain <= 80 && songremain > 60)
                             {
                                 ToggleGlobalFlash3(false);
 
@@ -985,7 +984,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
                             }
-                            else if (polSong <= 30 && polSong > 20)
+                            else if (songremain <= 60 && songremain > 40)
                             {
                                 ToggleGlobalFlash3(false);
 
@@ -1005,7 +1004,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
                             }
-                            else if (polSong <= 20 && polSong > 10)
+                            else if (songremain <= 40 && songremain > 20)
                             {
                                 ToggleGlobalFlash3(false);
 
@@ -1025,7 +1024,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
                             }
-                            else if (polSong <= 10 && polSong > 0)
+                            else if (songremain <= 20 && songremain > 0)
                             {
                                 //Flash
                                 ToggleGlobalFlash3(true);

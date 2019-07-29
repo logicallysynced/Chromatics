@@ -30,6 +30,34 @@ namespace Chromatics.FFXIVInterfaces
             return ToEorzeaTime(DateTime.Now);
         }
 
+        public static Dictionary<string, string[]> StatusEffects = new Dictionary<string, string[]>
+        {
+            { "Bind", new[] {"Ripple", "ColorMappingBind"} },
+            { "Petrification", new[] {"Static", "ColorMappingPetrification"} },
+            { "Old", new[] {"Static", "ColorMappingOld"} },
+            { "Slow", new[] {"Ripple", "ColorMappingSlow"} },
+            { "Stun", new[] {"Static", "ColorMappingStun"} },
+            { "Silence", new[] {"Static", "ColorMappingSilence"} },
+            { "Poison", new[] {"Ripple", "ColorMappingPoison"} },
+            { "Pollen", new[] {"Ripple", "ColorMappingPollen"} },
+            { "Pox", new[] {"Ripple", "ColorMappingPox"} },
+            { "Paralysis", new[] {"Ripple", "ColorMappingParalysis"} },
+            { "Leaden", new[] {"Ripple", "ColorMappingLeaden"} },
+            { "Incapacitation", new[] {"Ripple", "ColorMappingIncapacitation"} },
+            { "Dropsy", new[] {"Ripple", "ColorMappingDropsy"} },
+            { "Amnesia", new[] {"Ripple", "ColorMappingAmnesia"} },
+            { "Bleed", new[] {"Ripple", "ColorMappingBleed"} },
+            { "Misery", new[] {"Ripple", "ColorMappingMisery"} },
+            { "Sleep", new[] {"Ripple", "ColorMappingSleep"} },
+            { "Daze", new[] {"Ripple", "ColorMappingDaze"} },
+            { "Heavy", new[] {"Ripple", "ColorMappingHeavy"} },
+            { "Infirmary", new[] {"Ripple", "ColorMappingInfirmary"} },
+            { "Burns", new[] {"Ripple", "ColorMappingBurns"} },
+            { "Deep Freeze", new[] {"Ripple", "ColorMappingDeepFreeze"} },
+            { "Damage Down", new[] {"Ripple", "ColorMappingDamageDown"} },
+            { "Vulnerability Up", new[] {"Static", "ColorMappingVulnerabilityUp"} }
+        };
+
         public static bool IsCompanyAction(string action)
         {
             switch(action)
