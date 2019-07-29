@@ -1428,7 +1428,7 @@ namespace Chromatics
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobLightbar_Collection.Length - 0) / (16 - 0) + 0;
+                            var JobLightbar_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobLightbar_Collection.Length - 0) / (15 - 0) + 0;
 
                             
 
@@ -1443,7 +1443,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (16 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
