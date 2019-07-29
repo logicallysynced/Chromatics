@@ -1821,47 +1821,6 @@ namespace Chromatics.FFXIVInterfaces
         }
 
 
-        //White mage
-        public static int FlowerPetals
-        {
-            get
-            {
-                if (!Initialized)
-                    return 0;
-                CheckCache();
-
-                return RawResourceData[8];
-            }
-        }
-
-        public static int FlowerCharge //Builds to 120
-        {
-            get
-            {
-                if (!Initialized)
-                    return 0;
-                CheckCache();
-
-                return RawResourceData[7];
-            }
-        }
-
-        public static bool BloodFlowerReady
-        {
-            get
-            {
-                if (!Initialized)
-                    return false;
-                CheckCache();
-
-                if (RawResourceData[9] == 3)
-                    return true;
-
-                return false;
-            }
-        }
-
-
         // Warrior
         public static float Defiance => CooldownType0Remaining;
 
@@ -2124,8 +2083,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(5);
-
+                return GetTimer(4);
             }
         }
 
@@ -2353,6 +2311,45 @@ namespace Chromatics.FFXIVInterfaces
         public static float DivineSeal => CooldownType5Remaining;
 
         public static float Benediction => CooldownType12Remaining;
+
+        public static int FlowerPetals
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[8];
+            }
+        }
+
+        public static float FlowerCharge //Builds to 120
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return GetTimer(7);
+            }
+        }
+
+        public static bool BloodFlowerReady
+        {
+            get
+            {
+                if (!Initialized)
+                    return false;
+                CheckCache();
+
+                if (RawResourceData[9] == 3)
+                    return true;
+
+                return false;
+            }
+        }
 
 
         // Astrologian
@@ -2900,11 +2897,8 @@ namespace Chromatics.FFXIVInterfaces
                 return 0;
 
             CheckCache();
-            var bit = Math.Max(BitConverter.ToUInt16(RawResourceData, i) / 100f - CurrentTimeshift, 0);
 
-            if (bit > 1.0) bit = 1;
-
-            return bit;
+            return Math.Max(BitConverter.ToUInt16(RawResourceData, i) / 1000f, 0);
         }
 
         public static byte GetRaw(int i)

@@ -857,10 +857,10 @@ namespace Chromatics
                         GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
 
                         //Console.WriteLine(@"Song: " + Cooldowns.Song.ToString());
-
+                        
                         if (Cooldowns.Song != Cooldowns.BardSongs.None)
                         {
-                            var songremain = Convert.ToInt32(Cooldowns.SongTimeRemaining * 100);
+                            var songremain = Cooldowns.SongTimeRemaining;
 
                             switch (Cooldowns.Song)
                             {
@@ -922,7 +922,7 @@ namespace Chromatics
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                var JobLightbar_Interpolate = ((int)songremain - 0) * (JobLightbar_Collection.Length - 0) / (100 - 0) + 0;
+                                var JobLightbar_Interpolate = ((int)songremain - 0) * (JobLightbar_Collection.Length - 0) / (30 - 0) + 0;
 
                                 for (int i = 0; i < JobLightbar_Collection.Length; i++)
                                 {
@@ -935,7 +935,7 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
                                 var JobFunction_Collection = DeviceEffects.Functions;
-                                var JobFunction_Interpolate = ((int)songremain - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
+                                var JobFunction_Interpolate = ((int)songremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
                                 {
@@ -944,7 +944,8 @@ namespace Chromatics
                                 }
                             }
 
-                            if (songremain <= 100 && songremain > 80)
+                            var songInt = ((int)songremain - 0) * (100 - 0) / (30 - 0) + 0;
+                            if (songInt <= 100 && songInt > 80)
                             {
                                 ToggleGlobalFlash3(false);
 
@@ -964,7 +965,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
                             }
-                            else if (songremain <= 80 && songremain > 60)
+                            else if (songInt <= 80 && songInt > 60)
                             {
                                 ToggleGlobalFlash3(false);
 
@@ -984,7 +985,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
                             }
-                            else if (songremain <= 60 && songremain > 40)
+                            else if (songInt <= 60 && songInt > 40)
                             {
                                 ToggleGlobalFlash3(false);
 
@@ -1004,7 +1005,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
                             }
-                            else if (songremain <= 40 && songremain > 20)
+                            else if (songInt <= 40 && songInt > 20)
                             {
                                 ToggleGlobalFlash3(false);
 
@@ -1024,7 +1025,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", burstcol, false);
                                 GlobalApplyMapKeyLighting("Num3", burstcol, false);
                             }
-                            else if (songremain <= 20 && songremain > 0)
+                            else if (songInt <= 20 && songInt > 0)
                             {
                                 //Flash
                                 ToggleGlobalFlash3(true);
