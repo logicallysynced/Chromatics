@@ -688,14 +688,14 @@ namespace Chromatics
 
                         var burstdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
                         var negdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGNegative);
-                        var bloodremain = Cooldowns.BloodOfTheDragonTimeRemaining;
-                        var polBlood = (bloodremain - 0) * (50 - 0) / (1.0 - 0) + 0;
+                        var bloodremain = Convert.ToInt32(Cooldowns.BloodOfTheDragonTimeRemaining * 100);
+                        var polBlood = (bloodremain - 0) * (50 - 0) / (60 - 0) + 0;
 
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = ((int)bloodremain - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+                            var JobLightbar_Interpolate = (bloodremain - 0) * (JobLightbar_Collection.Length - 0) / (60 - 0) + 0;
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
@@ -708,7 +708,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = ((int)bloodremain - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
+                            var JobFunction_Interpolate = (bloodremain - 0) * (JobFunction_Collection.Length - 0) / (60 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -719,7 +719,27 @@ namespace Chromatics
 
                         if (bloodremain > 0)
                         {
-                            if (polBlood <= 50 && polBlood > 40)
+                            if (polBlood > 50)
+                            {
+                                ToggleGlobalFlash3(false);
+
+                                GlobalApplyMapKeyLighting("NumLock", burstdrgcol, false);
+                                GlobalApplyMapKeyLighting("NumDivide", burstdrgcol, false);
+                                GlobalApplyMapKeyLighting("NumMultiply", burstdrgcol, false);
+
+                                GlobalApplyMapKeyLighting("Num7", burstdrgcol, false);
+                                GlobalApplyMapKeyLighting("Num8", burstdrgcol, false);
+                                GlobalApplyMapKeyLighting("Num9", burstdrgcol, false);
+
+                                GlobalApplyMapKeyLighting("Num4", burstdrgcol, false);
+                                GlobalApplyMapKeyLighting("Num5", burstdrgcol, false);
+                                GlobalApplyMapKeyLighting("Num6", burstdrgcol, false);
+
+                                GlobalApplyMapKeyLighting("Num1", burstdrgcol, false);
+                                GlobalApplyMapKeyLighting("Num2", burstdrgcol, false);
+                                GlobalApplyMapKeyLighting("Num3", burstdrgcol, false);
+                            }
+                            else if (polBlood <= 50 && polBlood > 40)
                             {
                                 ToggleGlobalFlash3(false);
 
