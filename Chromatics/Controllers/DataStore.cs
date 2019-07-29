@@ -546,7 +546,7 @@ namespace Chromatics.Datastore
         public string ColorMappingJobPLDSwordOath = ColorTranslator.ToHtml(Color.DodgerBlue);
         public string ColorMappingJobPLDIronWill = ColorTranslator.ToHtml(Color.Orange);
         public string ColorMappingJobMNKNegative = ColorTranslator.ToHtml(Color.Black);
-        public string ColorMappingJobMNKGreased = ColorTranslator.ToHtml(Color.Aqua);
+        public string ColorMappingJobMNKGreased = ColorTranslator.ToHtml(Color.Orange);
         public string ColorMappingJobDRGNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobDRGBloodDragon = ColorTranslator.ToHtml(Color.Red);
         public string ColorMappingJobBRDNegative = ColorTranslator.ToHtml(Color.Black);

@@ -366,11 +366,12 @@ namespace Chromatics
                         var burstmnkcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKGreased);
                         var burstmnkempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKNegative);
 
+
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = ((int)greaseRemaining - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+                            var JobLightbar_Interpolate = ((int)greaseRemaining - 0) * (JobLightbar_Collection.Length - 0) / (16 - 0) + 0;
                             
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
@@ -384,7 +385,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = ((int)greaseRemaining - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)greaseRemaining - 0) * (JobFunction_Collection.Length - 0) / (16 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
