@@ -573,6 +573,7 @@ namespace Chromatics.Datastore
         public string ColorMappingJobSMNAetherflow = ColorTranslator.ToHtml(Color.Orchid);
         public string ColorMappingJobSCHNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobSCHAetherflow = ColorTranslator.ToHtml(Color.Orchid);
+        public string ColorMappingJobSCHFaerieGauge = ColorTranslator.ToHtml(Color.MediumSpringGreen);
         public string ColorMappingJobNINNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobNINHuton = ColorTranslator.ToHtml(Color.White);
         public string ColorMappingJobDRKNegative = ColorTranslator.ToHtml(Color.Black);

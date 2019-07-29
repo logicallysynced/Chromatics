@@ -1340,21 +1340,21 @@ namespace Chromatics
                         var aetherflowsch = Cooldowns.AetherflowCount;
 
                         var burstschcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHAetherflow);
+                        var faerieccol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHFaerieGauge);
                         var burstschempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHNegative);
                         
-
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
                             var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.OathGauge, 0, 100,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.FaerieGauge, 0, 100,
                                     JobLightbar_Collection.Length, 0);
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
                                 GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
-                                    JobLightbar_Interpolate > i ? burstschcol : burstschempty, false, false);
+                                    JobLightbar_Interpolate > i ? faerieccol : burstschempty, false, false);
                             }
                         }
 
@@ -1363,13 +1363,13 @@ namespace Chromatics
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
                             var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.OathGauge, 0, 100,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.FaerieGauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
                                 GlobalApplyMapKeyLighting(JobFunction_Collection[i],
-                                    JobFunction_Interpolate > i ? burstschcol : burstschempty, false);
+                                    JobFunction_Interpolate > i ? faerieccol : burstschempty, false);
                             }
                         }
 

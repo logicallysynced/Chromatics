@@ -2351,6 +2351,18 @@ namespace Chromatics.FFXIVInterfaces
 
         public static float Dissipation => CooldownType11Remaining;
 
+        public static int FaerieGauge
+        {
+            get
+            {
+                if (!Initialized)
+                    return 0;
+                CheckCache();
+
+                return RawResourceData[7];
+            }
+        }
+
 
         // White Mage
         public static float ClericStance => CooldownType0Remaining;

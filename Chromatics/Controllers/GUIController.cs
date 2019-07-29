@@ -303,6 +303,7 @@ namespace Chromatics
             {"ColorMappingJobSMNAetherflow", new[] {"SMN: Aetherflow", "9", "Black", "White"}},
             {"ColorMappingJobSCHNegative", new[] {"SCH: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobSCHAetherflow", new[] {"SCH: Aetherflow", "9", "Black", "White"}},
+            {"ColorMappingJobSCHFaerieGauge", new[] {"SCH: Faerie Gauge", "9", "Black", "White"}},
             {"ColorMappingJobNINNegative", new[] {"NIN: Blank Key", "9", "Black", "White"}},
             {"ColorMappingJobNINHuton", new[] {"NIN: Huton", "9", "Black", "White"}},
             {"ColorMappingJobDRKNegative", new[] {"DRK: Blank Key", "9", "Black", "White"}},
