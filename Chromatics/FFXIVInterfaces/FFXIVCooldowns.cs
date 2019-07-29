@@ -1979,7 +1979,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return GetTimer(6);
+                return GetTimer(5);
             }
         }
 
@@ -2275,7 +2275,7 @@ namespace Chromatics.FFXIVInterfaces
                 CheckCache();
 
                 // Only the 4 low bits hold the aetherflow count. Higher holds aethertrail attunement.
-                return RawResourceData[10] & 0xf;
+                return RawResourceData[6] & 0xf;
             }
         }
 
@@ -2304,7 +2304,7 @@ namespace Chromatics.FFXIVInterfaces
                 CheckCache();
 
                 // Only the 4 high bits hold the aethertrail count. Lower holds aetherflow stacks.
-                return RawResourceData[10] >> 4;
+                return RawResourceData[6] >> 4;
             }
         }
 

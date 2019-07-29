@@ -1401,12 +1401,13 @@ namespace Chromatics
 
                         var burstsmncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNAetherflow);
                         var burstsmnempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNNegative);
+                        
 
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobLightbar_Collection.Length - 0) / (1.0 - 0) + 0;
+                            var JobLightbar_Interpolate = (Convert.ToInt32(Cooldowns.BloodOfTheDragonTimeRemaining * 100) - 0) * (JobLightbar_Collection.Length - 0) / (60 - 0) + 0;
 
                             
 
@@ -1421,8 +1422,8 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
-
+                            var JobFunction_Interpolate = (Convert.ToInt32(Cooldowns.BloodOfTheDragonTimeRemaining * 100) - 0) * (JobFunction_Collection.Length - 0) / (60 - 0) + 0;
+                            
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
                                 GlobalApplyMapKeyLighting(JobFunction_Collection[i],
@@ -1434,23 +1435,10 @@ namespace Chromatics
                         {
                             switch (aetherflowsmn)
                             {
-                                case 3:
+                                case 2:
                                     GlobalApplyMapKeyLighting("Num9", burstsmncol, false);
                                     GlobalApplyMapKeyLighting("Num6", burstsmncol, false);
                                     GlobalApplyMapKeyLighting("Num3", burstsmncol, false);
-
-                                    GlobalApplyMapKeyLighting("Num8", burstsmncol, false);
-                                    GlobalApplyMapKeyLighting("Num5", burstsmncol, false);
-                                    GlobalApplyMapKeyLighting("Num2", burstsmncol, false);
-
-                                    GlobalApplyMapKeyLighting("Num7", burstsmncol, false);
-                                    GlobalApplyMapKeyLighting("Num4", burstsmncol, false);
-                                    GlobalApplyMapKeyLighting("Num1", burstsmncol, false);
-                                    break;
-                                case 2:
-                                    GlobalApplyMapKeyLighting("Num9", burstsmnempty, false);
-                                    GlobalApplyMapKeyLighting("Num6", burstsmnempty, false);
-                                    GlobalApplyMapKeyLighting("Num3", burstsmnempty, false);
 
                                     GlobalApplyMapKeyLighting("Num8", burstsmncol, false);
                                     GlobalApplyMapKeyLighting("Num5", burstsmncol, false);
@@ -1497,6 +1485,7 @@ namespace Chromatics
 
                         var burstschcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHAetherflow);
                         var burstschempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHNegative);
+                        
 
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
