@@ -842,9 +842,7 @@ namespace Chromatics
                         {
                             var songremain = Cooldowns.SongTimeRemaining;
                             var polSong = (songremain - 0) * (50 - 0) / (1.0 - 0) + 0;
-
-                            Console.WriteLine(polSong);
-
+                            
                             switch (Cooldowns.Song)
                             {
                                 case Cooldowns.BardSongs.ArmysPaeon:
@@ -1806,23 +1804,13 @@ namespace Chromatics
                         var negdrkcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKNegative);
                         var bloodcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKBloodGauge);
                         var gritcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKGrit);
-                        var darksidecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKDarkside);
 
                         var bloodgauge = Cooldowns.BloodGauge;
                         var bloodPol = (bloodgauge - 0) * (50 - 0) / (100 - 0) + 0;
-
-                        if (statEffects.Find(i => i.StatusName == "Darkside") != null)
-                        {
-                            GlobalApplyMapKeyLighting("NumSubtract", darksidecol, false);
-                            GlobalApplyMapKeyLighting("NumAdd", darksidecol, false);
-                            GlobalApplyMapKeyLighting("NumEnter", darksidecol, false);
-                        }
-                        else
-                        {
-                            GlobalApplyMapKeyLighting("NumSubtract", negdrkcol, false);
-                            GlobalApplyMapKeyLighting("NumAdd", negdrkcol, false);
-                            GlobalApplyMapKeyLighting("NumEnter", negdrkcol, false);
-                        }
+                        
+                        GlobalApplyMapKeyLighting("NumSubtract", negdrkcol, false);
+                        GlobalApplyMapKeyLighting("NumAdd", negdrkcol, false);
+                        GlobalApplyMapKeyLighting("NumEnter", negdrkcol, false);
 
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
@@ -2256,7 +2244,7 @@ namespace Chromatics
                         break;
                     case Actor.Job.MCH:
                         //Machinist
-                        var ammo = Cooldowns.AmmoCount;
+                        var ammo = Cooldowns.Battery;
 
                         var ammoburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHAmmo);
                         var negmchburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHNegative);
@@ -2849,7 +2837,6 @@ namespace Chromatics
                                                         //Blue
                                                         if (action.IsProcOrCombo)
                                                         {
-                                                            Console.WriteLine("Blue");
                                                             GlobalApplyMapKeyLighting("Num7",
                                                                 ColorTranslator.FromHtml(ColorMappings
                                                                     .ColorMappingJobDNCEntrechat), false);

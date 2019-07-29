@@ -1816,7 +1816,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[6];
+                return RawResourceData[4];
             }
         }
 
@@ -1830,7 +1830,7 @@ namespace Chromatics.FFXIVInterfaces
                     return 0;
                 CheckCache();
 
-                return RawResourceData[8];
+                return RawResourceData[6];
             }
         }
 
@@ -2905,53 +2905,33 @@ namespace Chromatics.FFXIVInterfaces
         [StructLayout(LayoutKind.Explicit, Pack = 1)]
         private struct ClassResourceRawData
         {
-            // Dragoon: Blood of the dragon timer (1000 = 1 second)
-            // Ninja: Huton timer
-            // Bard: Song remaining time
-            // Warrior: Wrath
-            // MCH: Overheat timer (countdown from 10 seconds, 1000 = 1 second). Also the timer for when Gauss Barrel can be turned back on after overheat.
-            // Monk: Greased Lightning timer
-            // AST: Card timer
-            [MarshalAs(UnmanagedType.I2)] [FieldOffset(0x5)] // B0
-            public readonly short resource1;
-
-            // Ninja: 0 most of the time. 1 briefly after casting huton
-            // MCH: Heat Gauge (stays at 100 when overheated)
-            // BLM: Combine resource2 and resource3 into an astral fire timer (ugly)
-            // Monk: Greased Lightning Stacks
-            // Bard: Song Repertoire stacks
-            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x6)] // B2
-            public readonly byte resource2;
-
-            // Bard: 15 = Wanderer's Minuet, 10 = Army's Paeon, 5 = Mage's Ballad, Anything else = nothing. May be a bit mask.
-            // MCH: Ammo count
-            // BLM: Combine resource2 and resource3 into an astral fire timer (ugly)
-            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x8)] // B3
-            public readonly byte resource3;
-
-            // MCH: Gauss barrel (bool)
-            // BLM: 255 = Umbral Ice 1; 254 = Umbral Ice 2; 253 = Umbral Ice 3; 1 = Astral Fire 1; 2 = Astral Fire 2; 3 = Astral Fire 3. If converted to signed, umbral 1/2/3 would be -1/-2/-3 respectively.
-            // SMN: Aetherflow stacks and Aethertrail stacks. Bitmask - low bits (1 and 2) represent aetherflow, bits 3 and 4 represent aethertrail stacks
-            // SCH: Aetherflow stacks
-            // AST: Split in half, low bits contain current card, high bits contain held card. (1 = Balance, 2 = Bole, 3 = Arrow, 4 = Spear, 5 = Ewer, 6 = Spire). 
-            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x10)] // B4
-            public readonly byte resource4;
-
-
-            // BLM: Umbral Heart count
-            // AST: Royal Road effect (16 = Enhanced, 32 = Extended, 48 = spread). Looks like it's the top 4 bits. Not sure if the lower 4 bits are used for anything yet.
-            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x11)] // B5
-            public readonly byte resource5;
-
-
-            // BLM: Enochian active (bool)
-            [MarshalAs(UnmanagedType.I1)] [FieldOffset(0x12)] // B6
-            public readonly byte resource6;
-
-
-            // Ninja: total number of times Huton has been used or refreshed
-            [MarshalAs(UnmanagedType.I2)] [FieldOffset(0x13)] // B7
-            public readonly short resource7;
+            [MarshalAs(UnmanagedType.I2)]
+            [FieldOffset(6)] // B0
+            public short resource1;
+            
+            [MarshalAs(UnmanagedType.I1)]
+            [FieldOffset(8)] // B2
+            public byte resource2;
+            
+            [MarshalAs(UnmanagedType.I1)]
+            [FieldOffset(9)] // B3
+            public byte resource3;
+            
+            [MarshalAs(UnmanagedType.I1)]
+            [FieldOffset(10)] // B4
+            public byte resource4;
+            
+            [MarshalAs(UnmanagedType.I1)]
+            [FieldOffset(11)] // B5
+            public byte resource5;
+            
+            [MarshalAs(UnmanagedType.I1)]
+            [FieldOffset(12)] // B6
+            public byte resource6;
+            
+            [MarshalAs(UnmanagedType.I2)]
+            [FieldOffset(13)] // B7
+            public short resource7;
         }
         
         [StructLayout(LayoutKind.Explicit, Pack = 1)]
