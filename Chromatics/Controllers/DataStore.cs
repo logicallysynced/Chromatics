@@ -68,7 +68,7 @@ namespace Chromatics.Datastore
         public string KeypadZone1Mode = "BaseMode";
 
         public string LightbarMode = "TargetHp";
-        public string FKeyMode = "HpMp";
+        public string FKeyMode = "HpJobMp";
 
         public int ChromaLinkLEDCountZ1 = 10;
         public int ChromaLinkLEDCountZ2 = 10;
@@ -169,7 +169,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsImpactToggle = false;
         public bool ChromaticsSettingsJobGaugeToggle = true;
         public bool ChromaticsSettingsKeybindToggle = true;
-        public bool ChromaticsSettingsStatusEffectToggle = false;
+        public bool ChromaticsSettingsStatusEffectToggle = true;
         public string ChromaticsSettingsBaseMode = "Static Colors";
         public int ChromaticsSettingsLanguage = 0;
         public int ChromaticsSettingsPreviousLanguage = 0;

@@ -266,7 +266,7 @@ namespace Chromatics
         public DevModeTypes _CLZone6Mode = DevModeTypes.BaseMode;
 
         public LightbarMode _LightbarMode = LightbarMode.TargetHp;
-        public FKeyMode _FKeyMode = FKeyMode.HpMp;
+        public FKeyMode _FKeyMode = FKeyMode.HpJobMp;
         public ACTMode _ACTMode = ACTMode.DPS;
 
         //Main Thread
