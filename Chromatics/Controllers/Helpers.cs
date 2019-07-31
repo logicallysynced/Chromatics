@@ -624,6 +624,8 @@ namespace Chromatics.Controllers
                     return "MpTracker";
                 case FKeyMode.HpMp:
                     return "HpMp";
+                case FKeyMode.HpJobMp:
+                    return "HpJobMp";
                 case FKeyMode.CurrentExp:
                     return "CurrentExp";
                 case FKeyMode.JobGauge:
@@ -666,6 +668,8 @@ namespace Chromatics.Controllers
                 case "HpMpTp":
                 case "HpMp":
                     return FKeyMode.HpMp;
+                case "HpJobMp":
+                    return FKeyMode.HpJobMp;
                 case "CurrentExp":
                     return FKeyMode.CurrentExp;
                 case "JobGauge":
@@ -709,6 +713,8 @@ namespace Chromatics.Controllers
                 case "HP/MP/TP":
                 case "HP/MP":
                     return FKeyMode.HpMp;
+                case "Hp/Job Gauge/MP":
+                    return FKeyMode.HpJobMp;
                 case "Experience Tracker":
                     return FKeyMode.CurrentExp;
                 case "Job Gauge":
@@ -751,6 +757,8 @@ namespace Chromatics.Controllers
                     return "MP Tracker";
                 case FKeyMode.HpMp:
                     return "HP/MP";
+                case FKeyMode.HpJobMp:
+                    return "Hp/Job Gauge/MP";
                 case FKeyMode.CurrentExp:
                     return "Experience Tracker";
                 case FKeyMode.JobGauge:

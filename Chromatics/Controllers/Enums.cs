@@ -112,6 +112,7 @@
         HpTracker,
         MpTracker,
         HpMp,
+        HpJobMp,
         CurrentExp,
         JobGauge,
         PullCountdown,

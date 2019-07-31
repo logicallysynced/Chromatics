@@ -66,6 +66,20 @@ namespace Chromatics
                                     JobFunction_Interpolate > i ? burstwarcol : negwarcol, false);
                             }
                         }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(wrath, 0, 100,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? burstwarcol : negwarcol, false);
+                            }
+                        }
                         
 
                         if (statEffects.Find(i => i.StatusName == "Defiance") != null)
@@ -275,6 +289,20 @@ namespace Chromatics
                                     JobFunction_Interpolate > i ? oathcol : negpldcol, false);
                             }
                         }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(oathgauge, 0, 100,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? oathcol : negpldcol, false);
+                            }
+                        }
                         
                         if (statEffects.ToList().Find(i => i.StatusName == "Iron Will") != null)
                         {
@@ -387,6 +415,18 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Interpolate = ((int)greaseRemaining - 0) * (JobFunction_Collection.Length - 0) / (16 - 0) + 0;
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? burstmnkcol : burstmnkempty, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate = ((int)greaseRemaining - 0) * (JobFunction_Collection.Length - 0) / (16 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -534,6 +574,18 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Interpolate = (bloodremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? burstdrgeyecol : negdrgcol, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate = (bloodremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -771,6 +823,18 @@ namespace Chromatics
                                 }
                             }
 
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Function2;
+                                var JobFunction_Interpolate = ((int)songremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
+
+                                for (int i = 0; i < JobFunction_Collection.Length; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        JobFunction_Interpolate > i ? burstcol : negcol, false);
+                                }
+                            }
+
                             var songInt = ((int)songremain - 0) * (100 - 0) / (30 - 0) + 0;
                             if (songInt <= 100 && songInt > 80)
                             {
@@ -894,6 +958,14 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting(f, negcol, false);
                                 }
                             }
+
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                foreach (var f in DeviceEffects.Function2)
+                                {
+                                    GlobalApplyMapKeyLighting(f, negcol, false);
+                                }
+                            }
                         }
                         break;
                     case Actor.Job.WHM:
@@ -954,6 +1026,20 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int((int)flowercharge, 0, 116,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? flowerchargecol : negwhmcol, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int((int)flowercharge, 0, 116,
                                     JobFunction_Collection.Length, 0);
@@ -1151,6 +1237,18 @@ namespace Chromatics
                                 }
                             }
 
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Function2;
+                                var JobFunction_Interpolate = ((int)Cooldowns.EnochianCharge - 0) * (JobFunction_Collection.Length - 0) / (116 - 0) + 0;
+
+                                for (int i = 0; i < JobFunction_Collection.Length; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        JobFunction_Interpolate > i ? enochchargecol : negblmcol, false);
+                                }
+                            }
+
                             if (enochtime <= 40 && enochtime > 30)
                             {
                                 GlobalApplyMapKeyLighting("Num7", enochcol, false);
@@ -1251,6 +1349,14 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting(f, negblmcol, false);
                                 }
                             }
+
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                foreach (var f in DeviceEffects.Function2)
+                                {
+                                    GlobalApplyMapKeyLighting(f, negblmcol, false);
+                                }
+                            }
                         }
 
                         break;
@@ -1280,6 +1386,18 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
+                            
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? burstsmncol : burstsmnempty, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1375,6 +1493,20 @@ namespace Chromatics
                             }
                         }
 
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.FaerieGauge, 0, 100,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? faerieccol : burstschempty, false);
+                            }
+                        }
+
                         if (aetherflowsch > 0)
                         {
                             switch (aetherflowsch)
@@ -1391,29 +1523,6 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("Num7", burstschcol, false);
                                     GlobalApplyMapKeyLighting("Num4", burstschcol, false);
                                     GlobalApplyMapKeyLighting("Num1", burstschcol, false);
-
-                                    if (_LightbarMode == LightbarMode.JobGauge)
-                                    {
-                                        GlobalApplyMapLightbarLighting("Lightbar19", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar18", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar17", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar16", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar15", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar14", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar13", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar12", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar11", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar10", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar9", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar8", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar7", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar6", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar5", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar4", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar3", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar2", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar1", burstschcol, false, false);
-                                    }
                                     break;
                                 case 2:
                                     GlobalApplyMapKeyLighting("Num9", burstschempty, false);
@@ -1427,29 +1536,6 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("Num7", burstschcol, false);
                                     GlobalApplyMapKeyLighting("Num4", burstschcol, false);
                                     GlobalApplyMapKeyLighting("Num1", burstschcol, false);
-
-                                    if (_LightbarMode == LightbarMode.JobGauge)
-                                    {
-                                        GlobalApplyMapLightbarLighting("Lightbar19", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar18", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar17", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar16", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar15", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar14", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar13", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar12", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar11", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar10", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar9", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar8", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar7", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar6", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar5", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar4", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar3", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar2", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar1", burstschcol, false, false);
-                                    }
                                     break;
                                 case 1:
                                     GlobalApplyMapKeyLighting("Num9", burstschempty, false);
@@ -1463,29 +1549,6 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("Num7", burstschcol, false);
                                     GlobalApplyMapKeyLighting("Num4", burstschcol, false);
                                     GlobalApplyMapKeyLighting("Num1", burstschcol, false);
-
-                                    if (_LightbarMode == LightbarMode.JobGauge)
-                                    {
-                                        GlobalApplyMapLightbarLighting("Lightbar19", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar18", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar17", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar16", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar15", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar14", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar13", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar12", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar11", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar10", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar9", burstschempty, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar8", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar7", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar6", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar5", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar4", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar3", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar2", burstschcol, false, false);
-                                        GlobalApplyMapLightbarLighting("Lightbar1", burstschcol, false, false);
-                                    }
                                     break;
                             }
                         }
@@ -1502,29 +1565,6 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("Num7", burstschempty, false);
                             GlobalApplyMapKeyLighting("Num4", burstschempty, false);
                             GlobalApplyMapKeyLighting("Num1", burstschempty, false);
-
-                            if (_LightbarMode == LightbarMode.JobGauge)
-                            {
-                                GlobalApplyMapLightbarLighting("Lightbar19", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar18", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar17", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar16", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar15", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar14", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar13", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar12", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar11", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar10", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar9", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar8", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar7", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar6", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar5", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar4", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar3", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar2", burstschempty, false, false);
-                                GlobalApplyMapLightbarLighting("Lightbar1", burstschempty, false, false);
-                            }
                         }
 
                         break;
@@ -1553,6 +1593,18 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Interpolate = (Cooldowns.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? ninkicol : negnincol, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate = (Cooldowns.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1708,6 +1760,28 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(bloodgauge, 0, 100,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                if (statEffects.Find(t => t.StatusName == "Grit") != null)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        JobFunction_Interpolate > i ? gritcol : negdrkcol, false);
+                                }
+                                else
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        JobFunction_Interpolate > i ? bloodcol : negdrkcol, false, false);
+                                }
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(bloodgauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -2145,6 +2219,20 @@ namespace Chromatics
                                     JobFunction_Interpolate > i ? _burstastcolX : ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
                             }
                         }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(cardRemain, 0, 1500,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? _burstastcolX : ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative), false);
+                            }
+                        }
                         break;
                     case Actor.Job.MCH:
                         //Machinist
@@ -2228,6 +2316,18 @@ namespace Chromatics
                                         JobFunction_Interpolate > i ? heatover : negmchburst, false);
                                 }
                             }
+
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Function2;
+                                var JobFunction_Interpolate = ((int)mchgb - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
+
+                                for (int i = 0; i < JobFunction_Collection.Length; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        JobFunction_Interpolate > i ? heatover : negmchburst, false);
+                                }
+                            }
                         }
                         else
                         {
@@ -2253,6 +2353,20 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
                                 var JobFunction_Collection = DeviceEffects.Functions;
+                                var JobFunction_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(mchgb, 0, 100,
+                                        JobFunction_Collection.Length, 0);
+
+                                for (int i = 0; i < JobFunction_Collection.Length; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        JobFunction_Interpolate > i ? heatnormal : negmchburst, false);
+                                }
+                            }
+
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Function2;
                                 var JobFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(mchgb, 0, 100,
                                         JobFunction_Collection.Length, 0);
@@ -2382,18 +2496,7 @@ namespace Chromatics
                         var sen = Cooldowns.SenGauge;
                         var kenkicharge = Cooldowns.KenkiCharge;
                         var PolKenki = (kenkicharge - 0) * (40 - 0) / (100 - 0) + 0;
-
-                        Console.WriteLine(@"1:" + Cooldowns.RawResourceData[1]);
-                        Console.WriteLine(@"2:" + Cooldowns.RawResourceData[2]);
-                        Console.WriteLine(@"3:" + Cooldowns.RawResourceData[3]);
-                        Console.WriteLine(@"4:" + Cooldowns.RawResourceData[4]);
-                        Console.WriteLine(@"5:" + Cooldowns.RawResourceData[5]);
-                        Console.WriteLine(@"6:" + Cooldowns.RawResourceData[6]);
-                        Console.WriteLine(@"7:" + Cooldowns.RawResourceData[7]);
-                        Console.WriteLine(@"8:" + Cooldowns.RawResourceData[8]);
-                        Console.WriteLine(@"9:" + Cooldowns.RawResourceData[9]);
-                        Console.WriteLine(@"10:" + Cooldowns.RawResourceData[10]);
-
+                        
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
@@ -2413,6 +2516,20 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(kenkicharge, 0, 100,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? kenkicol : negsamcol, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(kenkicharge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -2569,6 +2686,32 @@ namespace Chromatics
                             }
 
                             var JobFunction_CollectionB = DeviceEffects.FunctionL;
+                            var JobFunction_InterpolateB =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(whitemana, 0, 100,
+                                    JobFunction_CollectionB.Length, 0);
+
+                            for (int i = 0; i < JobFunction_CollectionB.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_CollectionB[i],
+                                    JobFunction_InterpolateB > i ? whiteburst : negburst, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_CollectionA = DeviceEffects.Function2R.ToList();
+                            JobFunction_CollectionA.Reverse();
+                            var JobFunction_InterpolateA =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(blackmana, 0, 100,
+                                    JobFunction_CollectionA.Count, 0);
+
+                            for (int i = 0; i < JobFunction_CollectionA.Count; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_CollectionA[i],
+                                    JobFunction_InterpolateA > i ? blackburst : negburst, false);
+                            }
+
+                            var JobFunction_CollectionB = DeviceEffects.Function2L;
                             var JobFunction_InterpolateB =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(whitemana, 0, 100,
                                     JobFunction_CollectionB.Length, 0);
@@ -2802,6 +2945,18 @@ namespace Chromatics
                                                                 }
                                                             }
 
+                                                            if (_FKeyMode == FKeyMode.HpJobMp)
+                                                            {
+                                                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+
+                                                                for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingJobDNCEntrechat), false);
+                                                                }
+                                                            }
+
                                                             if (_LightbarMode == LightbarMode.JobGauge)
                                                             {
                                                                 var Lightbar_Collection = DeviceEffects.LightbarZones.ToList();
@@ -2863,6 +3018,18 @@ namespace Chromatics
                                                             if (_FKeyMode == FKeyMode.JobGauge)
                                                             {
                                                                 var JobFunction_Collection = DeviceEffects.Functions.ToList();
+
+                                                                for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingJobDNCPirouette), false);
+                                                                }
+                                                            }
+
+                                                            if (_FKeyMode == FKeyMode.HpJobMp)
+                                                            {
+                                                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -2943,6 +3110,18 @@ namespace Chromatics
                                                                 }
                                                             }
 
+                                                            if (_FKeyMode == FKeyMode.HpJobMp)
+                                                            {
+                                                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+
+                                                                for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingJobDNCEmboite), false);
+                                                                }
+                                                            }
+
                                                             if (_LightbarMode == LightbarMode.JobGauge)
                                                             {
                                                                 var Lightbar_Collection = DeviceEffects.LightbarZones.ToList();
@@ -3005,6 +3184,18 @@ namespace Chromatics
                                                             if (_FKeyMode == FKeyMode.JobGauge)
                                                             {
                                                                 var JobFunction_Collection = DeviceEffects.Functions.ToList();
+
+                                                                for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingJobDNCJete), false);
+                                                                }
+                                                            }
+
+                                                            if (_FKeyMode == FKeyMode.HpJobMp)
+                                                            {
+                                                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -3100,6 +3291,26 @@ namespace Chromatics
                                                                 }
                                                             }
 
+                                                            if (_FKeyMode == FKeyMode.HpJobMp)
+                                                            {
+                                                                var JobFunction_CollectionA = DeviceEffects.Function2L.ToList();
+                                                                var JobFunction_CollectionB = DeviceEffects.Function2R.ToList();
+
+                                                                for (int i = 0; i < JobFunction_CollectionA.Count; i++)
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(JobFunction_CollectionA[i],
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingJobDNCEmboite), false);
+                                                                }
+
+                                                                for (int i = 0; i < JobFunction_CollectionB.Count; i++)
+                                                                {
+                                                                    GlobalApplyMapKeyLighting(JobFunction_CollectionB[i],
+                                                                        ColorTranslator.FromHtml(ColorMappings
+                                                                            .ColorMappingJobDNCJete), false);
+                                                                }
+                                                            }
+
                                                             if (_LightbarMode == LightbarMode.JobGauge)
                                                             {
                                                                 var Lightbar_CollectionA = DeviceEffects.LightbarZonesL.ToList();
@@ -3186,6 +3397,18 @@ namespace Chromatics
                                 if (_FKeyMode == FKeyMode.JobGauge)
                                 {
                                     var JobFunction_Collection = DeviceEffects.Functions.ToList();
+
+                                    for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                    {
+                                        GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                            ColorTranslator.FromHtml(ColorMappings
+                                                .ColorMappingJobDNCNegative), false);
+                                    }
+                                }
+
+                                if (_FKeyMode == FKeyMode.HpJobMp)
+                                {
+                                    var JobFunction_Collection = DeviceEffects.Function2.ToList();
 
                                     for (int i = 0; i < JobFunction_Collection.Count; i++)
                                     {
@@ -3290,6 +3513,18 @@ namespace Chromatics
                                 }
                             }
 
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+
+                                for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        ColorTranslator.FromHtml(ColorMappings
+                                            .ColorMappingJobGNBRoyalGuard), false);
+                                }
+                            }
+
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var Lightbar_Collection = DeviceEffects.LightbarZones.ToList();
@@ -3381,6 +3616,18 @@ namespace Chromatics
                                 }
                             }
 
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+
+                                for (int i = 0; i < JobFunction_Collection.Count; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        ColorTranslator.FromHtml(ColorMappings
+                                            .ColorMappingJobGNBNegative), false);
+                                }
+                            }
+
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var Lightbar_Collection = DeviceEffects.LightbarZones.ToList();
@@ -3444,6 +3691,20 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
                                 var JobFunction_Collection = DeviceEffects.Functions;
+                                var JobFunction_Interpolate =
+                                    Helpers.FFXIVInterpolation.Interpolate_Int(IQStacks, 0, 12,
+                                        JobFunction_Collection.Length, 0);
+
+                                for (int i = 0; i < JobFunction_Collection.Length; i++)
+                                {
+                                    GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                        JobFunction_Interpolate > i ? innerquietcol : negcraftercol, false);
+                                }
+                            }
+
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                var JobFunction_Collection = DeviceEffects.Function2;
                                 var JobFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(IQStacks, 0, 12,
                                         JobFunction_Collection.Length, 0);
@@ -3686,6 +3947,14 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting(f, negcraftercol, false);
                                 }
                             }
+
+                            if (_FKeyMode == FKeyMode.HpJobMp)
+                            {
+                                foreach (var f in DeviceEffects.Function2)
+                                {
+                                    GlobalApplyMapKeyLighting(f, negcraftercol, false);
+                                }
+                            }
                         }
 
 
@@ -3733,6 +4002,14 @@ namespace Chromatics
                             }
                         }
 
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            foreach (var f in DeviceEffects.Function2)
+                            {
+                                GlobalApplyMapKeyLighting(f, baseColor, false);
+                            }
+                        }
+
                         break;
 
                 }
@@ -3773,6 +4050,14 @@ namespace Chromatics
                 if (_FKeyMode == FKeyMode.JobGauge)
                 {
                     foreach (var f in DeviceEffects.Functions)
+                    {
+                        GlobalApplyMapKeyLighting(f, baseColor, false);
+                    }
+                }
+
+                if (_FKeyMode == FKeyMode.HpJobMp)
+                {
+                    foreach (var f in DeviceEffects.Function2)
                     {
                         GlobalApplyMapKeyLighting(f, baseColor, false);
                     }

@@ -108,6 +108,16 @@ namespace Chromatics.DeviceInterfaces.EffectLibrary
             "F7", "F8", "F9", "F10", "F11", "F12"
         };
 
+        public static readonly string[] Function2L =
+        {
+            "F5", "F6"
+        };
+
+        public static readonly string[] Function2R =
+        {
+            "F7", "F8"
+        };
+
         public static readonly string[] Function1 =
         {
             "F1", "F2", "F3", "F4"

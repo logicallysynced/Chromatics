@@ -114,6 +114,7 @@ namespace Chromatics
             {FKeyMode.HpTracker, "HP Tracker"}, //
             {FKeyMode.MpTracker, "MP Tracker"}, //
             {FKeyMode.HpMp, "HP/MP"}, //
+            {FKeyMode.HpJobMp, "Hp/Job Gauge/MP" },
             {FKeyMode.CurrentExp, "Experience Tracker"},
             {FKeyMode.JobGauge, "Job Gauge"},
             {FKeyMode.PullCountdown, "Pull Countdown"},
