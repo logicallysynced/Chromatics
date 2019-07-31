@@ -2543,6 +2543,45 @@ namespace Chromatics
                                         }
                                     }
 
+                                    //Target Casting
+                                    //Lightbar
+                                    if (_LightbarMode == LightbarMode.TargetCastbar)
+                                    {
+                                        var LBTargetHp_Collection = DeviceEffects.LightbarZones;
+                                        var LBTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Double(
+                                            targetInfo.CastingPercentage,
+                                            0.0, 1.0, LBTargetHp_Collection.Length, 0);
+
+                                        for (int i = 0; i < LBTargetHp_Collection.Length; i++)
+                                        {
+                                            GlobalApplyMapLightbarLighting(LBTargetHp_Collection[i],
+                                                LBTargetHp_Interpolate > i
+                                                    ? ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingTargetCasting)
+                                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                                false, false);
+                                        }
+                                    }
+
+                                    //Function Keys
+                                    if (_FKeyMode == FKeyMode.TargetCastbar)
+                                    {
+                                        var FKTargetHp_Collection = DeviceEffects.Functions;
+                                        var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Double(
+                                            targetInfo.CastingPercentage,
+                                            0.0, 1.0, FKTargetHp_Collection.Length, 0);
+
+                                        for (int i = 0; i < FKTargetHp_Collection.Length; i++)
+                                        {
+                                            GlobalApplyMapKeyLighting(FKTargetHp_Collection[i],
+                                                FKTargetHp_Interpolate > i
+                                                    ? ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingTargetCasting)
+                                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                                false, false);
+                                        }
+                                    }
+
                                     var KeyTargetHp_Collection = DeviceEffects.MacroTarget;
                                     var KeyTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
                                         0,
@@ -2759,6 +2798,46 @@ namespace Chromatics
                                                 false, false);
                                         }
                                     }
+
+                                    //Target Casting
+                                    //Lightbar
+                                    if (_LightbarMode == LightbarMode.TargetCastbar)
+                                    {
+                                        var LBTargetHp_Collection = DeviceEffects.LightbarZones;
+                                        var LBTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Double(
+                                            targetInfo.CastingPercentage,
+                                            0.0, 1.0, LBTargetHp_Collection.Length, 0);
+
+                                        for (int i = 0; i < LBTargetHp_Collection.Length; i++)
+                                        {
+                                            GlobalApplyMapLightbarLighting(LBTargetHp_Collection[i],
+                                                LBTargetHp_Interpolate > i
+                                                    ? ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingTargetCasting)
+                                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                                false, false);
+                                        }
+                                    }
+
+                                    //Function Keys
+                                    if (_FKeyMode == FKeyMode.TargetCastbar)
+                                    {
+                                        var FKTargetHp_Collection = DeviceEffects.Functions;
+                                        var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Double(
+                                            targetInfo.CastingPercentage,
+                                            0.0, 1.0, FKTargetHp_Collection.Length, 0);
+
+                                        for (int i = 0; i < FKTargetHp_Collection.Length; i++)
+                                        {
+                                            GlobalApplyMapKeyLighting(FKTargetHp_Collection[i],
+                                                FKTargetHp_Interpolate > i
+                                                    ? ColorTranslator.FromHtml(
+                                                        ColorMappings.ColorMappingTargetCasting)
+                                                    : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                                false, false);
+                                        }
+                                    }
+
 
                                     var KeyTargetHp_Collection = DeviceEffects.MacroTarget;
                                     var KeyTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(currentThp,
@@ -3525,7 +3604,7 @@ namespace Chromatics
                                         ColorTranslator.FromHtml(ColorMappings.ColorMappingNoEmnity), false);
 
                                     if (_LightbarMode == LightbarMode.TargetHp ||
-                                        _LightbarMode == LightbarMode.EnmityTracker)
+                                        _LightbarMode == LightbarMode.EnmityTracker || _LightbarMode == LightbarMode.TargetCastbar)
                                     {
                                         foreach (var f in DeviceEffects.LightbarZones)
                                         {
@@ -3535,7 +3614,7 @@ namespace Chromatics
                                     }
 
                                     //Function Keys
-                                    if (_FKeyMode == FKeyMode.TargetHp || _FKeyMode == FKeyMode.EnmityTracker)
+                                    if (_FKeyMode == FKeyMode.TargetHp || _FKeyMode == FKeyMode.EnmityTracker || _FKeyMode == FKeyMode.TargetCastbar)
                                     {
                                         foreach (var f in DeviceEffects.Functions)
                                         {
@@ -3635,7 +3714,7 @@ namespace Chromatics
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor, true);
                                 
                                 if (_LightbarMode == LightbarMode.TargetHp ||
-                                    _LightbarMode == LightbarMode.EnmityTracker)
+                                    _LightbarMode == LightbarMode.EnmityTracker || _LightbarMode == LightbarMode.TargetCastbar)
                                 {
                                     foreach (var f in DeviceEffects.LightbarZones)
                                     {
@@ -3645,7 +3724,7 @@ namespace Chromatics
                                 }
 
                                 //Function Keys
-                                if (_FKeyMode == FKeyMode.TargetHp || _FKeyMode == FKeyMode.EnmityTracker)
+                                if (_FKeyMode == FKeyMode.TargetHp || _FKeyMode == FKeyMode.EnmityTracker || _FKeyMode == FKeyMode.TargetCastbar)
                                 {
                                     foreach (var f in DeviceEffects.Functions)
                                     {
@@ -3707,7 +3786,8 @@ namespace Chromatics
                                 {
                                     if (Castcharge_Interpolate >= i && ChromaticsSettings.ChromaticsSettingsCastToggle)
                                     {
-                                        GlobalApplyMapKeyLighting(Castcharge_Collection[i], colCastcharge, false);
+                                        if (_FKeyMode != FKeyMode.TargetCastbar)
+                                            GlobalApplyMapKeyLighting(Castcharge_Collection[i], colCastcharge, false);
 
                                         if (i == Castcharge_Collection.Length - 1) _successcast = true;
                                     }

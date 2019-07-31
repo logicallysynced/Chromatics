@@ -443,6 +443,8 @@ namespace Chromatics.Controllers
                     return "EnmityTracker";
                 case LightbarMode.TargetHp:
                     return "TargetHp";
+                case LightbarMode.TargetCastbar:
+                    return "TargetCastbar";
                 case LightbarMode.HpTracker:
                     return "HpTracker";
                 case LightbarMode.MpTracker:
@@ -487,6 +489,8 @@ namespace Chromatics.Controllers
                     return LightbarMode.EnmityTracker;
                 case "TargetHp":
                     return LightbarMode.TargetHp;
+                case "TargetCastbar":
+                    return LightbarMode.TargetCastbar;
                 case "HpTracker":
                     return LightbarMode.HpTracker;
                 case "MpTracker":
@@ -531,6 +535,8 @@ namespace Chromatics.Controllers
                     return LightbarMode.EnmityTracker;
                 case "Target HP":
                     return LightbarMode.TargetHp;
+                case "Target Castbar":
+                    return LightbarMode.TargetCastbar;
                 case "HP Tracker":
                     return LightbarMode.HpTracker;
                 case "MP Tracker":
@@ -575,6 +581,8 @@ namespace Chromatics.Controllers
                     return "Enmity Tracker";
                 case LightbarMode.TargetHp:
                     return "Target HP";
+                case LightbarMode.TargetCastbar:
+                    return "Target Castbar";
                 case LightbarMode.HpTracker:
                     return "HP Tracker";
                 case LightbarMode.MpTracker:
@@ -618,6 +626,8 @@ namespace Chromatics.Controllers
                     return "EnmityTracker";
                 case FKeyMode.TargetHp:
                     return "TargetHp";
+                case FKeyMode.TargetCastbar:
+                    return "TargetCastbar";
                 case FKeyMode.HpTracker:
                     return "HpTracker";
                 case FKeyMode.MpTracker:
@@ -661,6 +671,8 @@ namespace Chromatics.Controllers
                     return FKeyMode.EnmityTracker;
                 case "TargetHp":
                     return FKeyMode.TargetHp;
+                case "TargetCastbar":
+                    return FKeyMode.TargetCastbar;
                 case "HpTracker":
                     return FKeyMode.HpTracker;
                 case "MpTracker":
@@ -706,6 +718,8 @@ namespace Chromatics.Controllers
                     return FKeyMode.EnmityTracker;
                 case "Target HP":
                     return FKeyMode.TargetHp;
+                case "Target Castbar":
+                    return FKeyMode.TargetCastbar;
                 case "HP Tracker":
                     return FKeyMode.HpTracker;
                 case "MP Tracker":
@@ -751,6 +765,8 @@ namespace Chromatics.Controllers
                     return "Enmity Tracker";
                 case FKeyMode.TargetHp:
                     return "Target HP";
+                case FKeyMode.TargetCastbar:
+                    return "Target Castbar";
                 case FKeyMode.HpTracker:
                     return "HP Tracker";
                 case FKeyMode.MpTracker:

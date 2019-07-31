@@ -89,6 +89,7 @@ namespace Chromatics
             {LightbarMode.HighlightColor, "Highlight Color"}, //
             {LightbarMode.EnmityTracker, "Enmity Tracker"}, //
             {LightbarMode.TargetHp, "Target HP"}, //
+            {LightbarMode.TargetCastbar, "Target Castbar"},
             {LightbarMode.HpTracker, "HP Tracker"}, //
             {LightbarMode.MpTracker, "MP Tracker"}, //
             {LightbarMode.Castbar, "Castbar"}, //
@@ -111,6 +112,7 @@ namespace Chromatics
             {FKeyMode.HighlightColor, "Highlight Color"}, //
             {FKeyMode.EnmityTracker, "Enmity Tracker"}, //
             {FKeyMode.TargetHp, "Target HP"}, //
+            {FKeyMode.TargetCastbar, "Target Castbar"},
             {FKeyMode.HpTracker, "HP Tracker"}, //
             {FKeyMode.MpTracker, "MP Tracker"}, //
             {FKeyMode.HpMp, "HP/MP"}, //
