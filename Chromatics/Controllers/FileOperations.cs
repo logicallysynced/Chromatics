@@ -851,6 +851,8 @@ namespace Chromatics
                         sw.WriteLine();
                         sw.Write("Player Location: " + DebugMapID);
                         sw.WriteLine();
+                        sw.Write("Player Instance: " + DebugInstanceID);
+                        sw.WriteLine();
                         sw.WriteLine();
                         sw.WriteLine();
                         sw.Write(log);

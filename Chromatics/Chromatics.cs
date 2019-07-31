@@ -38,6 +38,7 @@ namespace Chromatics
 
         private string DebugMapID = "";
         private string DebugJobClass = "";
+        private string DebugInstanceID = "";
 
         private bool _allowClose;
         private bool _allowVisible = true;

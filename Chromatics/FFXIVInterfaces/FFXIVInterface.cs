@@ -624,9 +624,11 @@ namespace Chromatics
 
 
                     //Cutscenes
+                    FfxivMenu.RefreshData();
+
                     if (ChromaticsSettings.ChromaticsSettingsCutsceneAnimation && !_inVegas)
                     {
-                        if (_playerInfo.IconID == 15)
+                        if (_playerInfo.IconID == 15 && !FfxivMenu.InInstance())
                         {
                             if (!_inCutscene)
                             {
@@ -676,6 +678,7 @@ namespace Chromatics
 
 
                     DebugMapID = _playerInfo.MapTerritory.ToString();
+                    DebugInstanceID = FfxivMenu.GetContentID().ToString();
 
                     //Vegas Mode
                     if (ChromaticsSettings.ChromaticsSettingsVegasMode)

@@ -12,14 +12,18 @@ namespace Chromatics.FFXIVInterfaces
         public static DateTime LastUpdated = DateTime.MinValue;
 
         private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(0.05);
-        private static bool _siginit;
-        private static bool _memoryready;
+        private static bool _siginitA;
+        private static bool _siginitB;
+        private static bool _memoryreadyA;
+        private static bool _memoryreadyB;
         private static List<Signature> _sList;
         private static bool _inMainMenu;
         private static bool _inCharMenu;
         private static bool _inGame;
         private static bool _initialized;
+        private static bool _contentInit;
         private static int _raw;
+        private static int _Contentraw;
 
         private static readonly object RefreshLock = new object();
 
@@ -29,11 +33,12 @@ namespace Chromatics.FFXIVInterfaces
         {
             lock (RefreshLock)
             {
-                if (!_memoryready)
-                    if (!Scanner.Instance.Locations.ContainsKey("MENUTRACK") || !_siginit)
+                if (!_memoryreadyA)
+                {
+                    if (!Scanner.Instance.Locations.ContainsKey("MENUTRACK") || !_siginitA)
                     {
 
-                        
+
                         _sList = new List<Signature>
                         {
                             new Signature
@@ -50,7 +55,7 @@ namespace Chromatics.FFXIVInterfaces
                                 }
                             }
                         };
-                        
+
                         /*
                         _sList = new List<Signature>
                         {
@@ -83,14 +88,65 @@ namespace Chromatics.FFXIVInterfaces
                                             Scanner.Instance.Locations["MENUTRACK"].GetAddress().ToInt64()
                                                 .ToString("X"));
 
-                            _siginit = true;
+                            _siginitA = true;
                         }
 
-                        if (_siginit)
-                            _memoryready = true;
+                        if (_siginitA)
+                            _memoryreadyA = true;
                     }
 
-                if (_memoryready)
+                    if (!Scanner.Instance.Locations.ContainsKey("CONTENTFINDER") || !_siginitB)
+                    {
+                        _sList = new List<Signature>
+                        {
+                            new Signature
+                            {
+                                Key = "CONTENTFINDER",
+                                Value = "75**33d2488d0d********e8********48393d",
+                                ASMSignature = true,
+                                PointerPath = new List<long>
+                                {
+                                    0x0,
+                                    0x0
+                                }
+                            }
+                        };
+
+                        /*
+                        _sList.Add(new Signature
+                        {
+                            Key = "WEATHER",
+                            PointerPath = new List<long>
+                            {
+                                0x018FE408,
+                                0x38,
+                                0x18,
+                                0x190,
+                                0x20,
+                                0x0
+                            }
+                        });
+                        */
+
+                        Scanner.Instance.LoadOffsets(_sList);
+
+                        Thread.Sleep(100);
+
+                        if (Scanner.Instance.Locations.ContainsKey("CONTENTFINDER"))
+                        {
+                            Debug.WriteLine("Initializing CONTENTFINDER done: " +
+                                            Scanner.Instance.Locations["CONTENTFINDER"].GetAddress().ToInt64()
+                                                .ToString("X"));
+
+                            _siginitB = true;
+                        }
+
+                        if (_siginitB)
+                            _memoryreadyB = true;
+                    }
+                }
+
+                if (_memoryreadyA)
                 {
                     if (Scanner.Instance.Locations.ContainsKey("MENUTRACK"))
                     {
@@ -114,6 +170,23 @@ namespace Chromatics.FFXIVInterfaces
 
                     LastUpdated = DateTime.Now;
                 }
+
+                if (_memoryreadyB)
+                {
+                    if (Scanner.Instance.Locations.ContainsKey("CONTENTFINDER"))
+                    {
+                        var address = Scanner.Instance.Locations["CONTENTFINDER"];
+
+                        var MenuState = MemoryHandler.Instance.GetByte(address.GetAddress(), 0xC);
+
+                        _Contentraw = MenuState;
+
+                        _contentInit = true;
+                    }
+
+
+                    LastUpdated = DateTime.Now;
+                }
             }
         }
 
@@ -124,6 +197,26 @@ namespace Chromatics.FFXIVInterfaces
                 if (LastUpdated + UpdateInterval <= DateTime.Now)
                     RefreshData();
             }
+        }
+
+        public static int GetContentID()
+        {
+            if (!_contentInit)
+                return 0;
+
+            CheckCache();
+
+            return _Contentraw;
+        }
+
+        public static bool InInstance()
+        {
+            if (!_contentInit)
+                return false;
+
+            CheckCache();
+
+            return _Contentraw != 0;
         }
 
         public static int GetState()
