@@ -1821,6 +1821,7 @@ namespace Chromatics
                                 {
                                     GlobalUpdateBulbState(BulbModeTypes.BaseMode, _baseColor, 500);
                                     GlobalUpdateBulbState(BulbModeTypes.TargetHp, _baseColor, 500);
+                                    GlobalUpdateBulbState(BulbModeTypes.TargetCastbar, _baseColor, 500);
                                     GlobalUpdateBulbState(BulbModeTypes.StatusEffects, _baseColor, 500);
                                     GlobalUpdateBulbState(BulbModeTypes.Castbar, _baseColor, 500);
                                     GlobalUpdateBulbState(BulbModeTypes.Disabled, _baseColor, 500);
@@ -1828,10 +1829,12 @@ namespace Chromatics
 
                                 GlobalApplyKeySingleLighting(DevModeTypes.BaseMode, _baseColor);
                                 GlobalApplyKeySingleLighting(DevModeTypes.TargetHp, _baseColor);
+                                GlobalApplyKeySingleLighting(DevModeTypes.TargetCastbar, _baseColor);
                                 GlobalApplyKeySingleLighting(DevModeTypes.Castbar, _baseColor);
 
                                 GlobalApplyKeyMultiLighting(DevMultiModeTypes.BaseMode, _baseColor, "All");
                                 GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetHp, _baseColor, "All");
+                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetCastbar, _baseColor, "All");
                                 GlobalApplyKeyMultiLighting(DevMultiModeTypes.Castbar, _baseColor, "All");
                                 GlobalApplyKeyMultiLighting(DevMultiModeTypes.Disabled, _baseColor, "All");
 
@@ -1884,6 +1887,7 @@ namespace Chromatics
                             {
                                 GlobalApplyMapMouseLighting(DevModeTypes.BaseMode, baseColor, false);
                                 GlobalApplyMapMouseLighting(DevModeTypes.TargetHp, baseColor, false);
+                                GlobalApplyMapMouseLighting(DevModeTypes.TargetCastbar, baseColor, false);
                                 GlobalApplyMapMouseLighting(DevModeTypes.Castbar, baseColor, false);
                                 GlobalApplyMapMouseLighting(DevModeTypes.Disabled, baseColor, false);
 
@@ -1943,6 +1947,28 @@ namespace Chromatics
                                     baseColor,
                                     false);
                                 GlobalApplyStripMouseLighting(DevModeTypes.TargetHp, "LeftSide7", "RightSide7",
+                                    baseColor,
+                                    false);
+
+                                GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar, "LeftSide1", "RightSide1",
+                                    baseColor,
+                                    false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar, "LeftSide2", "RightSide2",
+                                    baseColor,
+                                    false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar, "LeftSide3", "RightSide3",
+                                    baseColor,
+                                    false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar, "LeftSide4", "RightSide4",
+                                    baseColor,
+                                    false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar, "LeftSide5", "RightSide5",
+                                    baseColor,
+                                    false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar, "LeftSide6", "RightSide6",
+                                    baseColor,
+                                    false);
+                                GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar, "LeftSide7", "RightSide7",
                                     baseColor,
                                     false);
 
@@ -2008,6 +2034,12 @@ namespace Chromatics
                                 GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 11, 8, 3, baseColor, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.TargetHp, 10, 9, 4, baseColor, false);
 
+                                GlobalApplyMapPadLighting(DevModeTypes.TargetCastbar, 14, 5, 0, baseColor, false);
+                                GlobalApplyMapPadLighting(DevModeTypes.TargetCastbar, 13, 6, 1, baseColor, false);
+                                GlobalApplyMapPadLighting(DevModeTypes.TargetCastbar, 12, 7, 2, baseColor, false);
+                                GlobalApplyMapPadLighting(DevModeTypes.TargetCastbar, 11, 8, 3, baseColor, false);
+                                GlobalApplyMapPadLighting(DevModeTypes.TargetCastbar, 10, 9, 4, baseColor, false);
+
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 14, 5, 0, baseColor, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 13, 6, 1, baseColor, false);
                                 GlobalApplyMapPadLighting(DevModeTypes.Castbar, 12, 7, 2, baseColor, false);
@@ -2027,6 +2059,7 @@ namespace Chromatics
                             {
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.BaseMode, baseColor, false);
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.TargetHp, baseColor, false);
+                                GlobalApplyMapHeadsetLighting(DevModeTypes.TargetCastbar, baseColor, false);
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.Castbar, baseColor, false);
 
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.HighlightColor, highlightColor, false);
@@ -2039,6 +2072,7 @@ namespace Chromatics
                             {
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.BaseMode, baseColor, false, "All");
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, baseColor, false, "All");
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetCastbar, baseColor, false, "All");
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.Castbar, baseColor, false, "All");
 
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.HighlightColor, highlightColor, false,
@@ -2052,6 +2086,7 @@ namespace Chromatics
                             {
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.BaseMode, baseColor, true);
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor, true);
+                                GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetCastbar, baseColor, true);
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.Castbar, baseColor, true);
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.Disabled, baseColor, true);
 
@@ -2457,6 +2492,8 @@ namespace Chromatics
                                     var maxThp = targetInfo.HPMax;
                                     var polTargetHpx = (currentThp - 0) * ((long) 65535 - 0) / (maxThp - 0) + 0;
                                     var polTargetHpx2 = (currentThp - 0) * (1.0 - 0.0) / (maxThp - 0) + 0.0;
+                                    var polTargetCast = (targetInfo.CastingPercentage - 0) * ((long) 65535 - 0) / (1.0 - 0) + 0;
+                                    var polTargetCast2 = (Convert.ToInt32(targetInfo.CastingPercentage * 100) - 0) * (1.0 - 0.0) / (100 - 0) + 0.0;
 
                                     if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
                                         (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
@@ -2467,6 +2504,10 @@ namespace Chromatics
                                                 ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpFriendly)
                                                 : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
                                             (ushort) polTargetHpx, 250);
+
+                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.TargetCastbar,
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                            (ushort) polTargetCast, 250);
                                     }
 
                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp,
@@ -2504,6 +2545,33 @@ namespace Chromatics
                                             : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0,
                                         maxThp,
                                         currentThp);
+
+                                    //
+                                    GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                        polTargetCast2);
+
+                                    GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false,
+                                        polTargetCast2);
+
+                                    GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false,
+                                        polTargetCast2);
+
+                                    GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                        polTargetCast2);
+
+                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), 0,
+                                        100,
+                                        Convert.ToInt32(polTargetCast * 100));
                                     
                                     //Lightbar
                                     if (_LightbarMode == LightbarMode.TargetHp)
@@ -2701,6 +2769,65 @@ namespace Chromatics
                                             : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0,
                                         maxThp,
                                         currentThp);
+
+                                    //
+                                    //Mouse
+                                    var TargetCastbarMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
+                                    var TargetCastbarMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
+                                    var TargetCastbarMouseStrip_Interpolate =
+                                        Helpers.FFXIVInterpolation.Interpolate_Int(Convert.ToInt32(polTargetCast * 100), 0, 100,
+                                            TargetHpMouseStrip_CollectionA.Length, 0);
+
+                                    for (int i = 0; i < TargetCastbarMouseStrip_CollectionA.Length; i++)
+                                    {
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar,
+                                            TargetCastbarMouseStrip_CollectionA[i], TargetCastbarMouseStrip_CollectionB[i],
+                                            TargetCastbarMouseStrip_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                    .ColorMappingTargetHpFriendly)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
+
+                                    }
+
+                                    //Mousepad
+                                    var TargetCastbarMousePadCollection = 5;
+                                    var TargetCastbarMousePad_Interpolate =
+                                        Helpers.FFXIVInterpolation.Interpolate_Int(Convert.ToInt32(polTargetCast * 100), 0, 100,
+                                            TargetCastbarMousePadCollection, 0);
+
+                                    for (int i = 0; i < TargetCastbarMousePadCollection; i++)
+                                    {
+                                        GlobalApplyMapPadLighting(DevModeTypes.TargetCastbar, 10 + i, 9 - i, 4 - i,
+                                            TargetHpMousePad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                    .ColorMappingTargetCasting)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
+                                    }
+
+                                    //Keypad
+                                    var TargetCastbarKeypad_Collection = DeviceEffects.Keypadzones;
+                                    var TargetCastbarKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(
+                                        Convert.ToInt32(polTargetCast * 100),
+                                        0, 100, TargetCastbarKeypad_Collection.Length, 0);
+
+                                    for (int i = 0; i < TargetCastbarKeypad_Collection.Length; i++)
+                                    {
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetCastbar,
+                                            TargetCastbarKeypad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                    .ColorMappingTargetCasting)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, TargetCastbarKeypad_Collection[i]);
+                                    }
+
+                                    //MultiKeyboard
+                                    GlobalApplyMultiZoneLightingViaInterpolation(DevMultiModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), 0,
+                                        100,
+                                        Convert.ToInt32(polTargetCast * 100));
                                 }
                                 else if (targetInfo.Type == Actor.Type.Monster)
                                 {
@@ -2713,6 +2840,8 @@ namespace Chromatics
                                     var maxThp = targetInfo.HPMax;
                                     var polTargetHpx = (currentThp - 0) * ((long) 65535 - 0) / (maxThp - 0) + 0;
                                     var polTargetHpx2 = (currentThp - 0) * (1.0 - 0.0) / (maxThp - 0) + 0.0;
+                                    var polTargetCast = (targetInfo.CastingPercentage - 0) * ((long) 65535 - 0) / (1.0 - 0) + 0;
+                                    var polTargetCast2 = (Convert.ToInt32(targetInfo.CastingPercentage * 100) - 0) * (1.0 - 0.0) / (100 - 0) + 0.0;
 
                                     if ((!ChromaticsSettings.ChromaticsSettingsExtraBulbEffects) ||
                                         (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects && !_inCutscene &&
@@ -2723,6 +2852,10 @@ namespace Chromatics
                                                 ? ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpClaimed)
                                                 : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle),
                                             (ushort) polTargetHpx, 250);
+
+                                        GlobalUpdateBulbStateBrightness(BulbModeTypes.TargetCastbar,
+                                            ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                            (ushort) polTargetCast, 250);
                                     }
 
                                     GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetHp,
@@ -2760,6 +2893,33 @@ namespace Chromatics
                                             : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0,
                                         maxThp,
                                         currentThp);
+
+                                    //
+                                    GlobalApplyKeySingleLightingBrightness(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                        polTargetCast2);
+
+                                    GlobalApplyMapMouseLightingBrightness(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false,
+                                        polTargetCast2);
+
+                                    GlobalApplyMapHeadsetLightingBrightness(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), false,
+                                        polTargetCast2);
+
+                                    GlobalApplyMapChromaLinkLightingBrightness(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                        polTargetCast2);
+
+                                    GlobalApplyOtherLightingViaInterpolation(DevModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting), 0,
+                                        100,
+                                        Convert.ToInt32(polTargetCast * 100));
                                     
                                     //Lightbar
                                     if (_LightbarMode == LightbarMode.TargetHp)
@@ -2958,6 +3118,65 @@ namespace Chromatics
                                             : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpIdle), 0,
                                         maxThp,
                                         currentThp);
+
+                                    //
+                                    //Mouse
+                                    var TargetCastbarMouseStrip_CollectionA = DeviceEffects.MouseStripsLeft;
+                                    var TargetCastbarMouseStrip_CollectionB = DeviceEffects.MouseStripsRight;
+                                    var TargetCastbarMouseStrip_Interpolate =
+                                        Helpers.FFXIVInterpolation.Interpolate_Int(Convert.ToInt32(polTargetCast * 100), 0, 100,
+                                            TargetHpMouseStrip_CollectionA.Length, 0);
+
+                                    for (int i = 0; i < TargetCastbarMouseStrip_CollectionA.Length; i++)
+                                    {
+                                        GlobalApplyStripMouseLighting(DevModeTypes.TargetCastbar,
+                                            TargetCastbarMouseStrip_CollectionA[i], TargetCastbarMouseStrip_CollectionB[i],
+                                            TargetCastbarMouseStrip_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                    .ColorMappingTargetHpFriendly)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
+
+                                    }
+
+                                    //Mousepad
+                                    var TargetCastbarMousePadCollection = 5;
+                                    var TargetCastbarMousePad_Interpolate =
+                                        Helpers.FFXIVInterpolation.Interpolate_Int(Convert.ToInt32(polTargetCast * 100), 0, 100,
+                                            TargetCastbarMousePadCollection, 0);
+
+                                    for (int i = 0; i < TargetCastbarMousePadCollection; i++)
+                                    {
+                                        GlobalApplyMapPadLighting(DevModeTypes.TargetCastbar, 10 + i, 9 - i, 4 - i,
+                                            TargetHpMousePad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                    .ColorMappingTargetCasting)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false);
+                                    }
+
+                                    //Keypad
+                                    var TargetCastbarKeypad_Collection = DeviceEffects.Keypadzones;
+                                    var TargetCastbarKeypad_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(
+                                        Convert.ToInt32(polTargetCast * 100),
+                                        0, 100, TargetCastbarKeypad_Collection.Length, 0);
+
+                                    for (int i = 0; i < TargetCastbarKeypad_Collection.Length; i++)
+                                    {
+                                        GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetCastbar,
+                                            TargetCastbarKeypad_Interpolate > i
+                                                ? ColorTranslator.FromHtml(ColorMappings
+                                                    .ColorMappingTargetCasting)
+                                                : ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty),
+                                            false, TargetCastbarKeypad_Collection[i]);
+                                    }
+
+                                    //MultiKeyboard
+                                    GlobalApplyMultiZoneLightingViaInterpolation(DevMultiModeTypes.TargetCastbar,
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetCasting),
+                                        ColorTranslator.FromHtml(ColorMappings.ColorMappingTargetHpEmpty), 0,
+                                        100,
+                                        Convert.ToInt32(polTargetCast * 100));
 
 
                                     //Emnity/Casting
@@ -3704,6 +3923,7 @@ namespace Chromatics
                                      !_inVegas))
                                 {
                                     GlobalUpdateBulbState(BulbModeTypes.TargetHp, baseColor, 1000);
+                                    GlobalUpdateBulbState(BulbModeTypes.TargetCastbar, baseColor, 1000);
                                 }
 
                                 GlobalApplyKeySingleLighting(DevModeTypes.TargetHp, baseColor);
@@ -3712,6 +3932,13 @@ namespace Chromatics
                                 GlobalApplyMapHeadsetLighting(DevModeTypes.TargetHp, baseColor, false);
                                 GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetHp, baseColor, false, "All");
                                 GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetHp, baseColor, true);
+
+                                GlobalApplyKeySingleLighting(DevModeTypes.TargetCastbar, baseColor);
+                                GlobalApplyKeyMultiLighting(DevMultiModeTypes.TargetCastbar, baseColor, "All");
+                                GlobalApplyMapMouseLighting(DevModeTypes.TargetCastbar, baseColor, false);
+                                GlobalApplyMapHeadsetLighting(DevModeTypes.TargetCastbar, baseColor, false);
+                                GlobalApplyMapKeypadLighting(DevMultiModeTypes.TargetCastbar, baseColor, false, "All");
+                                GlobalApplyMapChromaLinkLighting(DevModeTypes.TargetCastbar, baseColor, true);
                                 
                                 if (_LightbarMode == LightbarMode.TargetHp ||
                                     _LightbarMode == LightbarMode.EnmityTracker || _LightbarMode == LightbarMode.TargetCastbar)

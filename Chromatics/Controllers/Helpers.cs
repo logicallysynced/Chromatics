@@ -8,6 +8,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace Chromatics.Controllers
 {
@@ -167,6 +168,8 @@ namespace Chromatics.Controllers
                     return "EnmityTracker";
                 case DevModeTypes.TargetHp:
                     return "TargetHp";
+                case DevModeTypes.TargetCastbar:
+                    return "TargetCastbar";
                 case DevModeTypes.HpTracker:
                     return "HpTracker";
                 case DevModeTypes.MpTracker:
@@ -202,6 +205,8 @@ namespace Chromatics.Controllers
                     return "EnmityTracker";
                 case DevMultiModeTypes.TargetHp:
                     return "TargetHp";
+                case DevMultiModeTypes.TargetCastbar:
+                    return "TargetCastbar";
                 case DevMultiModeTypes.HpTracker:
                     return "HpTracker";
                 case DevMultiModeTypes.MpTracker:
@@ -236,6 +241,8 @@ namespace Chromatics.Controllers
                     return DevModeTypes.EnmityTracker;
                 case "TargetHp":
                     return DevModeTypes.TargetHp;
+                case "TargetCastbar":
+                    return DevModeTypes.TargetCastbar;
                 case "HpTracker":
                     return DevModeTypes.HpTracker;
                 case "MpTracker":
@@ -272,6 +279,8 @@ namespace Chromatics.Controllers
                     return DevMultiModeTypes.EnmityTracker;
                 case "TargetHp":
                     return DevMultiModeTypes.TargetHp;
+                case "TargetCastbar":
+                    return DevMultiModeTypes.TargetCastbar;
                 case "HpTracker":
                     return DevMultiModeTypes.HpTracker;
                 case "MpTracker":
@@ -306,6 +315,8 @@ namespace Chromatics.Controllers
                     return DevModeTypes.EnmityTracker;
                 case "Target HP":
                     return DevModeTypes.TargetHp;
+                case "Target Castbar":
+                    return DevModeTypes.TargetCastbar;
                 case "HP Tracker":
                     return DevModeTypes.HpTracker;
                 case "MP Tracker":
@@ -342,6 +353,8 @@ namespace Chromatics.Controllers
                     return DevMultiModeTypes.EnmityTracker;
                 case "Target HP":
                     return DevMultiModeTypes.TargetHp;
+                case "Target Castbar":
+                    return DevMultiModeTypes.TargetCastbar;
                 case "HP Tracker":
                     return DevMultiModeTypes.HpTracker;
                 case "MP Tracker":
@@ -375,6 +388,8 @@ namespace Chromatics.Controllers
                     return "Enmity Tracker";
                 case DevModeTypes.TargetHp:
                     return "Target HP";
+                case DevModeTypes.TargetCastbar:
+                    return "Target Castbar";
                 case DevModeTypes.HpTracker:
                     return "HP Tracker";
                 case DevModeTypes.MpTracker:
@@ -410,6 +425,8 @@ namespace Chromatics.Controllers
                     return "Enmity Tracker";
                 case DevMultiModeTypes.TargetHp:
                     return "Target HP";
+                case DevMultiModeTypes.TargetCastbar:
+                    return "Target Castbar";
                 case DevMultiModeTypes.HpTracker:
                     return "HP Tracker";
                 case DevMultiModeTypes.MpTracker:
