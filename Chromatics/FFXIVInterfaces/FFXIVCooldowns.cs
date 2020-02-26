@@ -2824,7 +2824,7 @@ namespace Chromatics.FFXIVInterfaces
                                 new Signature
                                 {
                                     Key = "COOLDOWNS",
-                                    Value = "8D812DF7FFFFA9F9FFFFFF750881F9D9080000750EF3410F104710F30F1105",
+                                    Value = "0ABA150000000FA3CA7218058BB6FFFF83F802760EF3410F104710F30F1105",
                                     ASMSignature = true,
                                     PointerPath = new List<long>
                                     {
