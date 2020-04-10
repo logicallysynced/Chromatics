@@ -349,9 +349,6 @@
     </Reference>
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
-    <Reference Include="Wooting.NET">
-      <HintPath>..\Build Dependencies\Wooting.NET.dll</HintPath>
-    </Reference>
     <Reference Include="Zeroconf, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Zeroconf.3.0.30\lib\netstandard2.0\Zeroconf.dll</HintPath>
     </Reference>
@@ -402,7 +399,6 @@
     <Compile Include="DeviceInterfaces\SteelSeriesLibs\ColorUtils.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesLibs\GameSenseSDK.cs" />
     <Compile Include="DeviceInterfaces\SteelSeriesLibs\USBHIDCodes.cs" />
-    <Compile Include="DeviceInterfaces\WootingInterface.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVFateFinder.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVMenu.cs" />
     <Compile Include="FFXIVInterfaces\FFXIVJobGauges.cs">

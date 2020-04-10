@@ -46,16 +46,6 @@ namespace Chromatics
         private CancellationTokenSource _steelFl4Cts = new CancellationTokenSource();
         private Task _steelFlash;
 
-        private IWootingSdk _wooting;
-        private CancellationTokenSource _wootingFl1Cts = new CancellationTokenSource();
-        private Task _wootingFl2;
-        private CancellationTokenSource _wootingFl2Cts = new CancellationTokenSource();
-        private Task _wootingFl3;
-        private CancellationTokenSource _wootingFl3Cts = new CancellationTokenSource();
-        private Task _wootingFl4;
-        private CancellationTokenSource _wootingFl4Cts = new CancellationTokenSource();
-        private Task _wootingFlash;
-
         private IAsusSdk _asus;
         private CancellationTokenSource _asusFl1Cts = new CancellationTokenSource();
         private Task _asusFl2;
@@ -107,8 +97,6 @@ namespace Chromatics
         private CancellationTokenSource _coolermasterPartCts = new CancellationTokenSource();
         private Task _steelPart;
         private CancellationTokenSource _steelPartCts = new CancellationTokenSource();
-        private Task _wootingPart;
-        private CancellationTokenSource _wootingPartCts = new CancellationTokenSource();
         private Task _asusPart;
         private CancellationTokenSource _asusPartCts = new CancellationTokenSource();
 
@@ -127,8 +115,6 @@ namespace Chromatics
         private CancellationTokenSource _coolermasterPartCts2 = new CancellationTokenSource();
         private Task _steelPart2;
         private CancellationTokenSource _steelPartCts2 = new CancellationTokenSource();
-        private Task _wootingPart2;
-        private CancellationTokenSource _wootingPartCts2 = new CancellationTokenSource();
         private Task _asusPart2;
         private CancellationTokenSource _asusPartCts2 = new CancellationTokenSource();
 
@@ -143,8 +129,6 @@ namespace Chromatics
         private CancellationTokenSource _coolermasterCycleCts = new CancellationTokenSource();
         private Task _steelCycle;
         private CancellationTokenSource _steelCycleCts = new CancellationTokenSource();
-        private Task _wootingCycle;
-        private CancellationTokenSource _wootingCycleCts = new CancellationTokenSource();
         private Task _asusCycle;
         private CancellationTokenSource _asusCycleCts = new CancellationTokenSource();
 
@@ -270,27 +254,6 @@ namespace Chromatics
                 else
                 {
                     WriteConsole(ConsoleTypes.Steel, @"SteelSeries SDK failed to load. Please make sure SteelSeries Engine is running.");
-                }
-            }
-
-            if (_SDKWooting && WootingSdkCalled == 0)
-            {
-                _wooting = WootingInterface.InitializeWootingSdk();
-                if (_wooting != null)
-                {
-                    WootingSdk = true;
-                    WootingSdkCalled = 1;
-                    wootingFirstSet = true;
-                    WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK Loaded");
-
-                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
-                    {
-                        AutoMeasurement.Client.TrackScreenView("Wooting");
-                    }
-                }
-                else
-                {
-                    WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK failed to load.");
                 }
             }
 
@@ -478,26 +441,6 @@ namespace Chromatics
                 }
             }
 
-            if (_SDKWooting && WootingSdkCalled == 0 && wootingFirstSet)
-            {
-                _wooting = WootingInterface.InitializeWootingSdk();
-                if (_wooting != null)
-                {
-                    WootingSdk = true;
-                    WootingSdkCalled = 1;
-                    WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK Loaded");
-
-                    if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
-                    {
-                        AutoMeasurement.Client.TrackScreenView("Wooting");
-                    }
-                }
-                else
-                {
-                    WriteConsole(ConsoleTypes.Wooting, @"Wooting SDK failed to load.");
-                }
-            }
-
             if (_SDKAsus && AsusSdkCalled == 0 && AsusFirstSet)
             {
                 _asus = AsusInterface.InitializeAsusSdk();
@@ -602,13 +545,6 @@ namespace Chromatics
                 SteelSdkCalled = 0;
             }
 
-            if (WootingSdkCalled == 1)
-            {
-                _wooting.Shutdown();
-                _wooting = null;
-                WootingSdkCalled = 0;
-            }
-
             if (AsusSdkCalled == 1)
             {
                 _asus.ShutdownSdk();
@@ -688,8 +624,6 @@ namespace Chromatics
             if (SteelSdkCalled == 1)
                 _steel.ResetSteelSeriesDevices(_steelDeviceKeyboard, _steelDeviceMouse, _steelDeviceHeadset, baseColor);
 
-            if (WootingSdkCalled == 1)
-                _wooting.ResetWootingDevices(_steelDeviceKeyboard, baseColor);
 
             if (AsusSdkCalled == 1)
                 _asus.ResetAsusDevices(_asusDeviceKeyboard, _asusDeviceMouse, _asusDeviceHeadset, _asusDeviceOther, baseColor);
@@ -776,9 +710,6 @@ namespace Chromatics
                 if (SteelSdkCalled == 1)
                     _steel.DeviceUpdate();
 
-                if (WootingSdkCalled == 1)
-                    _wooting.DeviceUpdate();
-
                 if (AsusSdkCalled == 1)
                     _asus.DeviceUpdate();
             }
@@ -815,11 +746,6 @@ namespace Chromatics
                 _steel.SetAllLights(col);
             }
 
-            if (WootingSdkCalled == 1)
-            {
-                _wooting.SetAllLights(col);
-            }
-
             if (AsusSdkCalled == 1)
             {
                 _asus.SetAllLights(col);
@@ -850,11 +776,6 @@ namespace Chromatics
             if (SteelSdkCalled == 1)
             {
                 _steel.SetLights(col);
-            }
-
-            if (WootingSdkCalled == 1)
-            {
-                _wooting.SetLights(col);
             }
 
             if (AsusSdkCalled == 1)
@@ -888,9 +809,6 @@ namespace Chromatics
             if (SteelSdkCalled == 1)
                 _steel.ApplyMapSingleLighting(col);
 
-            if (WootingSdkCalled == 1)
-                _wooting.ApplyMapSingleLighting(col);
-
             if (AsusSdkCalled == 1)
                 _asus.ApplyMapSingleLighting(col);
         }
@@ -914,10 +832,7 @@ namespace Chromatics
 
             if (SteelSdkCalled == 1)
                 _steel.ApplyMapMultiLighting(col, region);
-
-            if (WootingSdkCalled == 1)
-                _wooting.ApplyMapMultiLighting(col, region);
-
+            
             if (AsusSdkCalled == 1)
                 _asus.ApplyMapMultiLighting(col, region);
         }
@@ -1013,30 +928,6 @@ namespace Chromatics
                 else
                 {
                     _steel.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
-                }
-            }
-
-            if (WootingSdkCalled == 1)
-            {
-                if (key == "Macro1")
-                {
-                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey("Macro1"), col, clear, bypasswhitelist);
-                }
-                else if (key == "Macro2")
-                {
-                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey("Macro2"), col, clear, bypasswhitelist);
-                }
-                else if (key == "Macro3")
-                {
-                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey("Macro3"), col, clear, bypasswhitelist);
-                }
-                else if (key == "Macro4")
-                {
-                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey("Macro4"), col, clear, bypasswhitelist);
-                }
-                else
-                {
-                    _wooting.ApplyMapKeyLighting(Localization.LocalizeKey(key), col, clear, bypasswhitelist);
                 }
             }
 
@@ -1987,13 +1878,6 @@ namespace Chromatics
                 MemoryTasks.Run(rippleTask);
             }
 
-            if (WootingSdkCalled == 1)
-            {
-                var rippleTask = _wooting.Ripple1(burstcol, speed, baseColor);
-                MemoryTasks.Add(rippleTask);
-                MemoryTasks.Run(rippleTask);
-            }
-
             if (AsusSdkCalled == 1)
             {
                 var rippleTask = _asus.Ripple1(burstcol, speed, baseColor);
@@ -2088,13 +1972,6 @@ namespace Chromatics
             if (SteelSdkCalled == 1)
             {
                 var rippleTask2 = _steel.Ripple2(burstcol, speed);
-                MemoryTasks.Add(rippleTask2);
-                MemoryTasks.Run(rippleTask2);
-            }
-
-            if (WootingSdkCalled == 1)
-            {
-                var rippleTask2 = _wooting.Ripple2(burstcol, speed);
                 MemoryTasks.Add(rippleTask2);
                 MemoryTasks.Run(rippleTask2);
             }
@@ -2372,21 +2249,6 @@ namespace Chromatics
                 MemoryTasks.Run(_steelFlash);
             }
 
-            if (WootingSdkCalled == 1)
-            {
-                _wootingFlash = null;
-                _wootingFl1Cts = new CancellationTokenSource();
-
-                _wootingFlash = new Task(() =>
-                {
-                    HoldReader = true;
-                    _wooting.Flash1(burstcol, speed, regions);
-                    HoldReader = false;
-                }, _wootingFl1Cts.Token);
-                MemoryTasks.Add(_wootingFlash);
-                MemoryTasks.Run(_wootingFlash);
-            }
-
             if (AsusSdkCalled == 1)
             {
                 _asusFlash = null;
@@ -2482,17 +2344,6 @@ namespace Chromatics
                     MemoryTasks.Run(_steelFl2);
                 }
 
-                if (WootingSdkCalled == 1)
-                {
-                    _wootingFl2 = null;
-                    _wootingFl2Cts = new CancellationTokenSource();
-                    _wootingFl2 =
-                        new Task(() => { _wooting.Flash2(burstcol, speed, _wootingFl2Cts.Token, template); },
-                            _wootingFl2Cts.Token);
-                    MemoryTasks.Add(_wootingFl2);
-                    MemoryTasks.Run(_wootingFl2);
-                }
-
                 if (AsusSdkCalled == 1)
                 {
                     _asusFl2 = null;
@@ -2542,12 +2393,6 @@ namespace Chromatics
                 {
                     _steelFl2Cts.Cancel();
                     MemoryTasks.Remove(_steelFl2);
-                }
-
-                if (WootingSdkCalled == 1)
-                {
-                    _wootingFl2Cts.Cancel();
-                    MemoryTasks.Remove(_wootingFl2);
                 }
 
                 if (AsusSdkCalled == 1)
@@ -2624,17 +2469,6 @@ namespace Chromatics
                     MemoryTasks.Run(_steelFl3);
                 }
 
-                if (WootingSdkCalled == 1)
-                {
-                    _wootingFl3 = null;
-                    _wootingFl3Cts = new CancellationTokenSource();
-                    _wootingFl3 =
-                        new Task(() => { _wooting.Flash3(burstcol, speed, _wootingFl3Cts.Token); },
-                            _steelFl3Cts.Token);
-                    MemoryTasks.Add(_wootingFl3);
-                    MemoryTasks.Run(_wootingFl3);
-                }
-
                 if (AsusSdkCalled == 1)
                 {
                     _asusFl3 = null;
@@ -2690,13 +2524,7 @@ namespace Chromatics
                     _steelFl3Cts.Cancel();
                     MemoryTasks.Remove(_steelFl3);
                 }
-
-                if (WootingSdkCalled == 1)
-                {
-                    _wootingFl3Cts.Cancel();
-                    MemoryTasks.Remove(_wootingFl3);
-                }
-
+                
                 if (AsusSdkCalled == 1)
                 {
                     _asusFl3Cts.Cancel();
@@ -2795,18 +2623,6 @@ namespace Chromatics
                         MemoryTasks.Run(_steelFl4);
                     }
 
-                    if (WootingSdkCalled == 1)
-                    {
-                        _wootingFl4 = null;
-                        _wootingFl4Cts = new CancellationTokenSource();
-                        _wootingFl4 =
-                            new Task(
-                                () => { _wooting.Flash4(burstcol, speed, _wootingFl4Cts.Token, template); },
-                                _wootingFl4Cts.Token);
-                        MemoryTasks.Add(_wootingFl4);
-                        MemoryTasks.Run(_wootingFl4);
-                    }
-
                     if (AsusSdkCalled == 1)
                     {
                         _asusFl4 = null;
@@ -2872,13 +2688,7 @@ namespace Chromatics
                         _steelFl4Cts.Cancel();
                         MemoryTasks.Remove(_steelFl4);
                     }
-
-                    if (WootingSdkCalled == 1)
-                    {
-                        _wootingFl4Cts.Cancel();
-                        MemoryTasks.Remove(_wootingFl4);
-                    }
-
+                    
                     if (AsusSdkCalled == 1)
                     {
                         _asusFl4Cts.Cancel();
@@ -2978,19 +2788,6 @@ namespace Chromatics
                 MemoryTasks.Run(_steelPart);
             }
 
-            if (WootingSdkCalled == 1)
-            {
-                _wootingPart = null;
-                _wootingPartCts = new CancellationTokenSource();
-                _wootingPart = new Task(() =>
-                {
-                    _wooting.ParticleEffect(toColor, regions, interval, _wootingPartCts, speed);
-                }, _wootingPartCts.Token);
-
-                MemoryTasks.Add(_wootingPart);
-                MemoryTasks.Run(_wootingPart);
-            }
-
             if (AsusSdkCalled == 1)
             {
                 _asusPart = null;
@@ -3041,11 +2838,6 @@ namespace Chromatics
                 MemoryTasks.Remove(_steelPart);
             }
 
-            if (WootingSdkCalled == 1)
-            {
-                _wootingPartCts.Cancel();
-                MemoryTasks.Remove(_wootingPart);
-            }
 
             if (AsusSdkCalled == 1)
             {
