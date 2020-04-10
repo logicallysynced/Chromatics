@@ -10379,7 +10379,6 @@ namespace Chromatics
                                 //Duty Finder Bell
                                 if (FfxivDutyFinder.IsPopped())
                                 {
-                                    Debug.WriteLine("HELLO X");
                                     if (!_dfpopOnce)
                                     {
                                         if (ChromaticsSettings.ChromaticsSettingsCastEnabled &&
@@ -10392,7 +10391,6 @@ namespace Chromatics
                                         {
                                             IFTTTController.FireIFTTTEvent(@"Chromatics_DFBell",
                                                 ChromaticsSettings.ChromaticsSettingsIFTTTURL);
-                                            Debug.WriteLine("HELLO");
                                         }
 
                                         _dfpopOnce = true;
