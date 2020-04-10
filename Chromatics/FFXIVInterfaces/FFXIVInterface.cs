@@ -820,7 +820,7 @@ namespace Chromatics
                             {
                                 maxHp = _playerInfo.HPMax;
                                 currentHp = _playerInfo.HPCurrent;
-                                maxMp = _playerInfo.MPMax;
+                                maxMp = 10000;
                                 currentMp = _playerInfo.MPCurrent;
                                 mpPerc = _playerInfo.MPPercent;
                                 cClass = "battle";
@@ -10379,6 +10379,7 @@ namespace Chromatics
                                 //Duty Finder Bell
                                 if (FfxivDutyFinder.IsPopped())
                                 {
+                                    Debug.WriteLine("HELLO X");
                                     if (!_dfpopOnce)
                                     {
                                         if (ChromaticsSettings.ChromaticsSettingsCastEnabled &&
@@ -10391,6 +10392,7 @@ namespace Chromatics
                                         {
                                             IFTTTController.FireIFTTTEvent(@"Chromatics_DFBell",
                                                 ChromaticsSettings.ChromaticsSettingsIFTTTURL);
+                                            Debug.WriteLine("HELLO");
                                         }
 
                                         _dfpopOnce = true;
