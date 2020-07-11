@@ -3895,6 +3895,8 @@ namespace Chromatics
             tb.AppendText(@"Ayiana Arch" + Environment.NewLine);
             tb.AppendText(@"GeT_ReKt" + Environment.NewLine);
             tb.AppendText(@"Timewarrener" + Environment.NewLine);
+            tb.AppendText(@"ajanata" + Environment.NewLine);
+            tb.AppendText(@"BenoitAnastay" + Environment.NewLine);
             tb.AppendText(Environment.NewLine);
             tb.SelectionFont = new Font(tb.Font, FontStyle.Bold);
             tb.AppendText(@"Big thanks to Chromatics' Donators/Supporters:" + Environment.NewLine);
@@ -3905,6 +3907,8 @@ namespace Chromatics
             tb.AppendText(@"dwighte" + Environment.NewLine);
             tb.AppendText(@"Robyn" + Environment.NewLine);
             tb.AppendText(@"Naxterra" + Environment.NewLine);
+            tb.AppendText(@"MoikeZ" + Environment.NewLine);
+            tb.AppendText(@"ravegrunt" + Environment.NewLine);
             tb.AppendText(Environment.NewLine);
             tb.SelectionFont = new Font(tb.Font, FontStyle.Bold);
             tb.AppendText(@"Disclaimer" + Environment.NewLine);

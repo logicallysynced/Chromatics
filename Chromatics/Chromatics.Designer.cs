@@ -3392,7 +3392,7 @@
             this.lbl_about_ver.Name = "lbl_about_ver";
             this.lbl_about_ver.Size = new System.Drawing.Size(725, 28);
             this.lbl_about_ver.TabIndex = 5;
-            this.lbl_about_ver.Text = "Version 2.5.0";
+            this.lbl_about_ver.Text = "Version 2.6.0";
             this.lbl_about_ver.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pB_about_logo
