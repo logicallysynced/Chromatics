@@ -287,8 +287,8 @@
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.4.1.5\lib\net46\System.Reactive.dll</HintPath>
+    <Reference Include="System.Reactive, Version=4.4.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.4.4.1\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
@@ -361,8 +361,8 @@
     </Reference>
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
-    <Reference Include="Zeroconf, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Zeroconf.3.0.30\lib\netstandard2.0\Zeroconf.dll</HintPath>
+    <Reference Include="Zeroconf, Version=3.4.0.0, Culture=neutral, PublicKeyToken=dbbfcdb374507df0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zeroconf.3.4.2\lib\net46\Zeroconf.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
