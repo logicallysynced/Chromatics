@@ -404,7 +404,7 @@
             this.btn_doc.Name = "btn_doc";
             this.btn_doc.Size = new System.Drawing.Size(56, 24);
             this.btn_doc.TabIndex = 4;
-            this.btn_doc.Text = "Guide";
+            this.btn_doc.Text = "Docs";
             this.tooltip_main.SetToolTip(this.btn_doc, "Opens the Chromatics guide in your default browser.\r\n");
             this.btn_doc.UseVisualStyleBackColor = true;
             this.btn_doc.Click += new System.EventHandler(this.btn_doc_Click);
@@ -3507,7 +3507,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.5.0";
+            this.Text = "Chromatics 2.6.0";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
