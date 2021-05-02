@@ -42,7 +42,7 @@ namespace Chromatics
         private string jobClass = "PLD";
         private string _jobClass = "PLD";
 
-        private Cooldowns.CardTypes _currentCard;
+        private Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard _currentCard;
         private string _currentStatus = "";
         private bool _dfcount;
         private bool _dfpop;
@@ -4576,7 +4576,6 @@ namespace Chromatics
                             if (IsDx11)
                             {
 
-                                Cooldowns.RefreshData();
                                 Sharlayan.Models.ReadResults.ActionResult hotbars = null;
 
                                 //Hotbars        
@@ -6516,12 +6515,13 @@ namespace Chromatics
 
 
                                 //Cooldowns
+                                var Cooldowns = Sharlayan.Reader.GetJobResources();
 
-
+                                /*
                                 var gcdHot = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdHot);
                                 var gcdReady = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdReady);
                                 var gcdEmpty = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdEmpty);
-
+                                
                                 var gcdTotal = Cooldowns.GlobalCooldownTotal;
                                 var gcdRemain = Cooldowns.GlobalCooldownRemaining;
                                 var polGcd = (gcdRemain - 0) * (30 - 0) / (gcdTotal - 0) + 0;
@@ -6587,6 +6587,7 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("Insert", gcdReady, false);
                                     GlobalApplyMapKeyLighting("Delete", gcdReady, false);
                                 }
+                                */
 
                                 //Experience Bar
 
@@ -6860,7 +6861,7 @@ namespace Chromatics
 
 
                                 //Job Gauges
-                                ImplementJobGauges(_playerInfo.StatusItems.ToList(), _baseColor, hotbars);
+                                ImplementJobGauges(_playerInfo.StatusItems.ToList(), _baseColor, hotbars, Cooldowns);
 
 
                                 //Pull Countdown

@@ -20,7 +20,7 @@ namespace Chromatics
     {
         private Color _burstastcol = Color.Black;
         private Color _burstastcolX = Color.Black;
-        public void ImplementJobGauges(List<StatusItem> statEffects, Color baseColor, Sharlayan.Models.ReadResults.ActionResult hotbars)
+        public void ImplementJobGauges(List<StatusItem> statEffects, Color baseColor, Sharlayan.Models.ReadResults.ActionResult hotbars, Sharlayan.Models.ReadResults.JobResourceResult Cooldowns)
         { 
             if (ChromaticsSettings.ChromaticsSettingsJobGaugeToggle)
             {
@@ -34,7 +34,7 @@ namespace Chromatics
                         var negwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARNegative);
                         var defiancecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARDefiance);
                         var nondefiancecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARNonDefiance);
-                        var wrath = Cooldowns.Wrath;
+                        var wrath = Cooldowns.Warrior.BeastGauge;
                         var polWrath = (wrath - 0) * (50 - 0) / (100 - 0) + 0;
                         
                         //Lightbar
@@ -258,7 +258,7 @@ namespace Chromatics
                         var swordcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDSwordOath);
                         var ironwillcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDIronWill);
 
-                        var oathgauge = Cooldowns.OathGauge;
+                        var oathgauge = Cooldowns.Paladin.OathGauge;
                         
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
@@ -391,8 +391,7 @@ namespace Chromatics
 
                         break;
                     case Actor.Job.MNK:
-                        var greased = Cooldowns.GreasedLightningStacks;
-                        var greaseRemaining = Cooldowns.GreasedLightningTimeRemaining;
+                        var chakra = Cooldowns.Monk.Chakra;
                         var burstmnkcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKGreased);
                         var burstmnkempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKNegative);
 
@@ -401,7 +400,7 @@ namespace Chromatics
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = ((int)greaseRemaining - 0) * (JobLightbar_Collection.Length - 0) / (16 - 0) + 0;
+                            var JobLightbar_Interpolate = ((int)chakra - 0) * (JobLightbar_Collection.Length - 0) / (5 - 0) + 0;
                             
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
@@ -415,7 +414,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = ((int)greaseRemaining - 0) * (JobFunction_Collection.Length - 0) / (16 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)chakra - 0) * (JobFunction_Collection.Length - 0) / (5 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -427,7 +426,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
                             var JobFunction_Collection = DeviceEffects.Function2;
-                            var JobFunction_Interpolate = ((int)greaseRemaining - 0) * (JobFunction_Collection.Length - 0) / (16 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)chakra - 0) * (JobFunction_Collection.Length - 0) / (5 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -436,59 +435,77 @@ namespace Chromatics
                             }
                         }
 
-                        if (greased > 0)
+                        if (chakra > 0)
                         {
-                            if (greaseRemaining > 0 && greaseRemaining <= 5)
+                            ToggleGlobalFlash3(false);
+
+                            switch (chakra)
                             {
-                                ToggleGlobalFlash3(true);
-                                GlobalFlash3(burstmnkcol, 150);
-                            }
-                            else
-                            {
-                                ToggleGlobalFlash3(false);
+                                case 5:
+                                    GlobalApplyMapKeyLighting("Num9", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num6", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num3", burstmnkcol, false);
 
-                                switch (greased)
-                                {
-                                    case 3:
-                                        GlobalApplyMapKeyLighting("Num9", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num6", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num3", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
 
-                                        GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+                                    break;
+                                case 4:
+                                    GlobalApplyMapKeyLighting("Num9", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num6", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num3", burstmnkcol, false);
 
-                                        GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
-                                        break;
-                                    case 2:
-                                        GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
 
-                                        GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+                                    break;
+                                case 3:
+                                    GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
 
-                                        GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
-                                        break;
-                                    case 1:
-                                        GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num8", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num5", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num2", burstmnkcol, false);
 
-                                        GlobalApplyMapKeyLighting("Num8", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num5", burstmnkempty, false);
-                                        GlobalApplyMapKeyLighting("Num2", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+                                    break;
+                                case 2:
+                                    GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
 
-                                        GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
-                                        GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
-                                        break;
-                                }
+                                    GlobalApplyMapKeyLighting("Num8", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num5", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num2", burstmnkempty, false);
+
+                                    GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+                                    break;
+                                case 1:
+                                    GlobalApplyMapKeyLighting("Num9", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num6", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num3", burstmnkempty, false);
+
+                                    GlobalApplyMapKeyLighting("Num8", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num5", burstmnkempty, false);
+                                    GlobalApplyMapKeyLighting("Num2", burstmnkempty, false);
+
+                                    GlobalApplyMapKeyLighting("Num7", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num4", burstmnkcol, false);
+                                    GlobalApplyMapKeyLighting("Num1", burstmnkcol, false);
+                                    break;
                             }
                         }
                         else
@@ -514,10 +531,10 @@ namespace Chromatics
                         var burstdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
                         var burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
                         var negdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGNegative);
-                        var bloodremain = Cooldowns.BloodOfTheDragonTimeRemaining;
-                        var polBlood = (bloodremain - 0) * (50 - 0) / (30 - 0) + 0;
+                        var bloodremain = Cooldowns.Dragoon.Timer;
+                        var polBlood = ((int)bloodremain.TotalSeconds - 0) * (50 - 0) / (30 - 0) + 0;
 
-                        if (Cooldowns.LifeOfTheDragon)
+                        if (Cooldowns.Dragoon.Mode == Sharlayan.Models.ReadResults.JobResourceResult.DragoonResources.DragoonMode.Life)
                         {
                             burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon);
                             GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon), false);
@@ -528,7 +545,7 @@ namespace Chromatics
                         }
                         else
                         {
-                            switch (Cooldowns.DragonGauge)
+                            switch (Cooldowns.Dragoon.DragonGaze)
                             {
                                 case 2:
                                     burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge2);
@@ -561,7 +578,7 @@ namespace Chromatics
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = (bloodremain - 0) * (JobLightbar_Collection.Length - 0) / (30 - 0) + 0;
+                            var JobLightbar_Interpolate = ((int)bloodremain.TotalSeconds - 0) * (JobLightbar_Collection.Length - 0) / (30 - 0) + 0;
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
@@ -574,7 +591,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = (bloodremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)bloodremain.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -586,7 +603,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
                             var JobFunction_Collection = DeviceEffects.Function2;
-                            var JobFunction_Interpolate = (bloodremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)bloodremain.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -596,7 +613,7 @@ namespace Chromatics
                         }
                         
 
-                        if (bloodremain > 0)
+                        if ((int)bloodremain.TotalSeconds > 0)
                         {
                             if (polBlood > 50)
                             {
@@ -737,13 +754,13 @@ namespace Chromatics
 
                         //Console.WriteLine(@"Song: " + Cooldowns.Song.ToString());
                         
-                        if (Cooldowns.Song != Cooldowns.BardSongs.None)
+                        if (Cooldowns.Bard.ActiveSong != Sharlayan.Models.ReadResults.JobResourceResult.BardResources.BardSong.None)
                         {
-                            var songremain = Cooldowns.SongTimeRemaining;
+                            var songremain = (int)Cooldowns.Bard.Timer.TotalSeconds;
 
-                            switch (Cooldowns.Song)
+                            switch (Cooldowns.Bard.ActiveSong)
                             {
-                                case Cooldowns.BardSongs.ArmysPaeon:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.BardResources.BardSong.ArmysPaeon:
                                     burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDArmys);
                                     negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
 
@@ -751,7 +768,7 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                     GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                     break;
-                                case Cooldowns.BardSongs.MagesBallad:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.BardResources.BardSong.MagesBallad:
                                     burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDBallad);
                                     negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
 
@@ -759,13 +776,13 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                     GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                     break;
-                                case Cooldowns.BardSongs.WanderersMinuet:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.BardResources.BardSong.WanderersMinuet:
                                     burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDMinuet);
                                     negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
 
                                     //Console.WriteLine(Cooldowns.RepertoireStacks);
 
-                                    switch (Cooldowns.RepertoireStacks)
+                                    switch (Cooldowns.Bard.Repertoire)
                                     {
                                         case 1:
                                             GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
@@ -975,8 +992,9 @@ namespace Chromatics
                         var cureproc = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMFreecure);
                         var bloodlilycol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMBloodLily);
 
-                        var petalcount = Cooldowns.FlowerPetals;
-                        var flowercharge = Cooldowns.FlowerCharge;
+                        var petalcount = Cooldowns.WhiteMage.Lily;
+                        var flowercharge = (int)Cooldowns.WhiteMage.Timer.TotalSeconds;
+                        var BloodFlowerReady = Cooldowns.WhiteMage.BloodLily == 1;
                         //Console.WriteLine(Cooldowns.FlowerCharge * 100);
 
 
@@ -1005,7 +1023,7 @@ namespace Chromatics
 
                         //Lightbar
                         var flowerchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMFlowerCharge);
-                        if (Cooldowns.BloodFlowerReady)
+                        if (BloodFlowerReady)
                             flowerchargecol = bloodlilycol;
 
                         if (_LightbarMode == LightbarMode.JobGauge)
@@ -1054,30 +1072,30 @@ namespace Chromatics
                         switch (petalcount)
                         {
                             case 3:
-                                GlobalApplyMapKeyLighting("Num9", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num6", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num3", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num9", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num6", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num3", BloodFlowerReady ? bloodlilycol : flowercol, false);
 
-                                GlobalApplyMapKeyLighting("Num8", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num5", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num2", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num8", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num5", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num2", BloodFlowerReady ? bloodlilycol : flowercol, false);
 
-                                GlobalApplyMapKeyLighting("Num7", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num4", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num1", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num7", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num4", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num1", BloodFlowerReady ? bloodlilycol : flowercol, false);
                                 break;
                             case 2:
                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
                                 GlobalApplyMapKeyLighting("Num6", negwhmcol, false);
                                 GlobalApplyMapKeyLighting("Num3", negwhmcol, false);
 
-                                GlobalApplyMapKeyLighting("Num8", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num5", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num2", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num8", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num5", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num2", BloodFlowerReady ? bloodlilycol : flowercol, false);
 
-                                GlobalApplyMapKeyLighting("Num7", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num4", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num1", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num7", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num4", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num1", BloodFlowerReady ? bloodlilycol : flowercol, false);
                                 break;
                             case 1:
                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
@@ -1088,9 +1106,9 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num5", negwhmcol, false);
                                 GlobalApplyMapKeyLighting("Num2", negwhmcol, false);
 
-                                GlobalApplyMapKeyLighting("Num7", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num4", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
-                                GlobalApplyMapKeyLighting("Num1", Cooldowns.BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num7", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num4", BloodFlowerReady ? bloodlilycol : flowercol, false);
+                                GlobalApplyMapKeyLighting("Num1", BloodFlowerReady ? bloodlilycol : flowercol, false);
                                 break;
                             default:
                                 GlobalApplyMapKeyLighting("Num9", negwhmcol, false);
@@ -1119,11 +1137,11 @@ namespace Chromatics
                         var enochcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochianCountdown);
                         var enochchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochianCharge);
 
-                        var firestacks = Cooldowns.AstralFire;
-                        var icestacks = Cooldowns.UmbralIce;
-                        var heartstacks = Cooldowns.UmbralHearts;
+                        var firestacks = Cooldowns.BlackMage.UmbralStacks;
+                        var icestacks = Cooldowns.BlackMage.AstralStacks;
+                        var heartstacks = Cooldowns.BlackMage.UmbralHearts;
 
-                        if (Cooldowns.PolyglotActive)
+                        if (Cooldowns.BlackMage.PolyglotCount > 0)
                         {
                             enochchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMPolyglot);
                         }
@@ -1205,15 +1223,16 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("NumMultiply", negblmcol, false);
                         }
                         
-                        if (Cooldowns.EnochianActive)
+                        if (Cooldowns.BlackMage.Enochian)
                         {
-                            var enochtime = (Cooldowns.EnochianTimeRemaining - 0) * (40 - 0) / (15 - 0) + 0;
+                            var enochtime = ((int)Cooldowns.BlackMage.Timer.TotalSeconds - 0) * (40 - 0) / (15 - 0) + 0;
 
+                            /*
                             //Lightbar
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                var JobLightbar_Interpolate = ((int)Cooldowns.EnochianCharge - 0) * (JobLightbar_Collection.Length - 0) / (116 - 0) + 0;
+                                var JobLightbar_Interpolate = ((int)Cooldowns.BlackMage. - 0) * (JobLightbar_Collection.Length - 0) / (116 - 0) + 0;
 
                                 
 
@@ -1248,6 +1267,7 @@ namespace Chromatics
                                         JobFunction_Interpolate > i ? enochchargecol : negblmcol, false);
                                 }
                             }
+                            */
 
                             if (enochtime <= 40 && enochtime > 30)
                             {
@@ -1361,7 +1381,7 @@ namespace Chromatics
 
                         break;
                     case Actor.Job.SMN:
-                        var aetherflowsmn = Cooldowns.AetherflowCount;
+                        var aetherflowsmn = Cooldowns.Summoner.AetherFlow;
 
                         var burstsmncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNAetherflow);
                         var burstsmnempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNNegative);
@@ -1371,7 +1391,7 @@ namespace Chromatics
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobLightbar_Collection.Length - 0) / (15 - 0) + 0;
+                            var JobLightbar_Interpolate = ((int)Cooldowns.Summoner.Timer.TotalSeconds - 0) * (JobLightbar_Collection.Length - 0) / (15 - 0) + 0;
 
                             
 
@@ -1386,7 +1406,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)Cooldowns.Summoner.Timer.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1398,7 +1418,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
                             var JobFunction_Collection = DeviceEffects.Function2;
-                            var JobFunction_Interpolate = ((int)Cooldowns.BloodOfTheDragonTimeRemaining - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)Cooldowns.Summoner.Timer.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1457,7 +1477,7 @@ namespace Chromatics
                         break;
                     case Actor.Job.SCH:
 
-                        var aetherflowsch = Cooldowns.AetherflowCount;
+                        var aetherflowsch = Cooldowns.Scholar.Aetherflow;
 
                         var burstschcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHAetherflow);
                         var faerieccol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHFaerieGauge);
@@ -1468,7 +1488,7 @@ namespace Chromatics
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
                             var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.FaerieGauge, 0, 100,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.Scholar.FaerieGauge, 0, 100,
                                     JobLightbar_Collection.Length, 0);
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
@@ -1483,7 +1503,7 @@ namespace Chromatics
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
                             var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.FaerieGauge, 0, 100,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.Scholar.FaerieGauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1497,7 +1517,7 @@ namespace Chromatics
                         {
                             var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.FaerieGauge, 0, 100,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.Scholar.FaerieGauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1573,14 +1593,14 @@ namespace Chromatics
                         var negnincol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINNegative);
                         var ninkicol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINNinkiGauge);
                         var hutoncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHuton);
-
-                        var polHuton = ((int)Cooldowns.HutonTimeRemaining - 0) * (50 - 0) / (70 - 0) + 0;
+                        
+                        var polHuton = ((int)Cooldowns.Ninja.Timer.TotalSeconds - 0) * (50 - 0) / (70 - 0) + 0;
                         
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = (Cooldowns.NinkiGauge - 0) * (JobLightbar_Collection.Length - 0) / (100 - 0) + 0;
+                            var JobLightbar_Interpolate = (Cooldowns.Ninja.NinkiGauge - 0) * (JobLightbar_Collection.Length - 0) / (100 - 0) + 0;
                             
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
@@ -1593,7 +1613,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = (Cooldowns.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
+                            var JobFunction_Interpolate = (Cooldowns.Ninja.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1605,7 +1625,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
                             var JobFunction_Collection = DeviceEffects.Function2;
-                            var JobFunction_Interpolate = (Cooldowns.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
+                            var JobFunction_Interpolate = (Cooldowns.Ninja.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1726,7 +1746,7 @@ namespace Chromatics
                         var bloodcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKBloodGauge);
                         var gritcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKGrit);
 
-                        var bloodgauge = Cooldowns.BloodGauge;
+                        var bloodgauge = Cooldowns.Darkknight.BlackBlood;
                         var bloodPol = (bloodgauge - 0) * (50 - 0) / (100 - 0) + 0;
                         
                         GlobalApplyMapKeyLighting("NumSubtract", negdrkcol, false);
@@ -2052,8 +2072,9 @@ namespace Chromatics
                     case Actor.Job.AST:
                         var burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative);
                         
-                        var cardheld = Cooldowns.CurrentCard;
+                        var cardheld = Cooldowns.Astrologian.Arcana;
 
+                        /*
                         if (statEffects.Find(i => i.StatusName == "Lady of Crowns Drawn") != null)
                         {
                             cardheld = Cooldowns.CardTypes.Lady;
@@ -2062,44 +2083,45 @@ namespace Chromatics
                         {
                             cardheld = Cooldowns.CardTypes.Lord;
                         }
+                        */
 
-                        if (cardheld != Cooldowns.CardTypes.None)
+                        if (cardheld != Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.None)
                         {
                             switch (cardheld)
                             {
-                                case Cooldowns.CardTypes.Arrow:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Arrow:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTArrow);
 
                                     break;
-                                case Cooldowns.CardTypes.Balance:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Balance:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBalance);
                                     break;
-                                case Cooldowns.CardTypes.Bole:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Bole:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBole);
                                     break;
-                                case Cooldowns.CardTypes.Ewer:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Ewer:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTEwer);
                                     break;
-                                case Cooldowns.CardTypes.Spear:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Spear:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpear);
                                     break;
-                                case Cooldowns.CardTypes.Spire:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Spire:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpire);
                                     break;
-                                case Cooldowns.CardTypes.Lady:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.LadyofCrowns:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTLady);
                                     break;
-                                case Cooldowns.CardTypes.Lord:
+                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.LordofCrowns:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTLord);
                                     break;
                             }
                             
-                            if (Cooldowns.CurrentCard != _currentCard)
+                            if (Cooldowns.Astrologian.Arcana != _currentCard)
                             {
-                                if (Cooldowns.CurrentCard != Cooldowns.CardTypes.None)
+                                if (Cooldowns.Astrologian.Arcana != Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.None)
                                     GlobalRipple1(burstastcol, 80, baseColor);
 
-                                _currentCard = Cooldowns.CurrentCard;
+                                _currentCard = Cooldowns.Astrologian.Arcana;
                                 _burstastcol = burstastcol;
                             }
                             
@@ -2236,7 +2258,7 @@ namespace Chromatics
                         break;
                     case Actor.Job.MCH:
                         //Machinist
-                        var ammo = Cooldowns.Battery;
+                        var ammo = Cooldowns.Machinist.Battery;
 
                         var ammoburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHAmmo);
                         var negmchburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHNegative);
@@ -2269,9 +2291,9 @@ namespace Chromatics
                         }
 
 
-                        var mchgb = Cooldowns.HeatGauge;
+                        var mchgb = Cooldowns.Machinist.Heat;
 
-                        if (Cooldowns.HyperchargeActive)
+                        if ((int)Cooldowns.Machinist.OverheatTimer.TotalSeconds > 0)
                         {
                             //Overheating
                             GlobalApplyMapKeyLighting("NumLock", heatover, false);
@@ -2493,8 +2515,8 @@ namespace Chromatics
                         var kacol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMKa); //Right
                         var kenkicol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMKenki);
 
-                        var sen = Cooldowns.SenGauge;
-                        var kenkicharge = Cooldowns.KenkiCharge;
+                        var sen = Cooldowns.Samurai.Sen;
+                        var kenkicharge = Cooldowns.Samurai.Kenki;
                         var PolKenki = (kenkicharge - 0) * (40 - 0) / (100 - 0) + 0;
                         
                         //Lightbar
@@ -2543,39 +2565,19 @@ namespace Chromatics
 
                         switch (sen)
                         {
-                            case 1:
+                            case Sharlayan.Models.ReadResults.JobResourceResult.SamuraiResources.Iaijutsu.Setsu:
                                 GlobalApplyMapKeyLighting("Num8", setsucol, false);
-                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
-                                GlobalApplyMapKeyLighting("Num3", negsamcol, false);
+                                GlobalApplyMapKeyLighting("Num1", setsucol, false);
+                                GlobalApplyMapKeyLighting("Num3", setsucol, false);
                                 break;
-                            case 2:
-                                GlobalApplyMapKeyLighting("Num8", negsamcol, false);
+                            case Sharlayan.Models.ReadResults.JobResourceResult.SamuraiResources.Iaijutsu.Getsu:
+                                GlobalApplyMapKeyLighting("Num8", getsucol, false);
                                 GlobalApplyMapKeyLighting("Num1", getsucol, false);
-                                GlobalApplyMapKeyLighting("Num3", negsamcol, false);
-                                break;
-                            case 3:
-                                GlobalApplyMapKeyLighting("Num8", setsucol, false);
-                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
                                 GlobalApplyMapKeyLighting("Num3", getsucol, false);
                                 break;
-                            case 4:
-                                GlobalApplyMapKeyLighting("Num8", negsamcol, false);
-                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
-                                GlobalApplyMapKeyLighting("Num3", kacol, false);
-                                break;
-                            case 5:
-                                GlobalApplyMapKeyLighting("Num8", setsucol, false);
-                                GlobalApplyMapKeyLighting("Num1", negsamcol, false);
-                                GlobalApplyMapKeyLighting("Num3", kacol, false);
-                                break;
-                            case 6:
-                                GlobalApplyMapKeyLighting("Num8", negsamcol, false);
-                                GlobalApplyMapKeyLighting("Num1", getsucol, false);
-                                GlobalApplyMapKeyLighting("Num3", kacol, false);
-                                break;
-                            case 7:
-                                GlobalApplyMapKeyLighting("Num8", setsucol, false);
-                                GlobalApplyMapKeyLighting("Num1", getsucol, false);
+                            case Sharlayan.Models.ReadResults.JobResourceResult.SamuraiResources.Iaijutsu.Ka:
+                                GlobalApplyMapKeyLighting("Num8", kacol, false);
+                                GlobalApplyMapKeyLighting("Num1", kacol, false);
                                 GlobalApplyMapKeyLighting("Num3", kacol, false);
                                 break;
                             default:
@@ -2634,8 +2636,8 @@ namespace Chromatics
 
                         break;
                     case Actor.Job.RDM:
-                        var blackmana = Cooldowns.BlackMana;
-                        var whitemana = Cooldowns.WhiteMana;
+                        var blackmana = Cooldowns.RedMage.BlackMana;
+                        var whitemana = Cooldowns.RedMage.WhiteMana;
                         var polBlack = (blackmana - 0) * (40 - 0) / (100 - 0) + 0;
                         var polWhite = (whitemana - 0) * (40 - 0) / (100 - 0) + 0;
                         
@@ -2813,7 +2815,6 @@ namespace Chromatics
 
                         break;
                     case Actor.Job.DNC:
-
                         if (hotbars != null)
                         { 
                             if (statEffects.Find(i => i.StatusName == "Technical Finish") != null)
