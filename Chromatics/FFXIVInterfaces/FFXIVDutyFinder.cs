@@ -90,11 +90,12 @@ namespace Chromatics.FFXIVInterfaces
                         var address = _memoryHandler.Scanner.Locations["DUTYFINDER"];
 
                         //PluginController.debug(" " + address.ToString("X8"));
-                        var contentFinderState = _memoryHandler.GetByte(address.GetAddress(), 0x71);
+                        var contentFinderState = _memoryHandler.GetByte(address.GetAddress(), 0x51);
                         //var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 7);
                         //_isPopped = isPopped == 2;
+                        //Console.WriteLine(contentFinderState);
 
-                        _isPopped = contentFinderState == 2;
+                        _isPopped = contentFinderState == 3;
 
                         //_countdown = MemoryHandler.Instance.GetInt32(address.GetAddress(), 4);
                         _initialized = true;
