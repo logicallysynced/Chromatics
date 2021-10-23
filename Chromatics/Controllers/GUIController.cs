@@ -1087,6 +1087,7 @@ namespace Chromatics
             chk_cutscenes.Checked = ChromaticsSettings.ChromaticsSettingsCutsceneAnimation;
             chk_vegasmode.Checked = ChromaticsSettings.ChromaticsSettingsVegasMode;
             chk_quickclose.Checked = ChromaticsSettings.ChromaticsSettingsQuickClose;
+            chk_quickclose_boot.Checked = ChromaticsSettings.ChromaticsSettingsQuickCloseBoot;
 
             cb_qwerty.SelectedIndex = (int)ChromaticsSettings.ChromaticsSettingsQwertyMode;
 
@@ -3827,6 +3828,15 @@ namespace Chromatics
             SaveChromaticsSettings(1);
         }
 
+        private void chk_quickclose_boot_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsQuickCloseBoot = chk_quickclose_boot.Checked;
+            
+            SaveChromaticsSettings(1);
+        }
+
         private void cb_lang_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Startup == false) return;
@@ -3909,13 +3919,14 @@ namespace Chromatics
             tb.AppendText(@"Naxterra" + Environment.NewLine);
             tb.AppendText(@"MoikeZ" + Environment.NewLine);
             tb.AppendText(@"ravegrunt" + Environment.NewLine);
+            tb.AppendText(@"KardinalZyn" + Environment.NewLine);
             tb.AppendText(Environment.NewLine);
             tb.SelectionFont = new Font(tb.Font, FontStyle.Bold);
             tb.AppendText(@"Disclaimer" + Environment.NewLine);
             tb.SelectionFont = new Font(tb.Font, FontStyle.Regular);
             tb.AppendText(@"Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners." + Environment.NewLine);
             tb.AppendText(Environment.NewLine);
-            tb.AppendText(@"© 2010-2019 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN, HEAVENSWARD, STORMBLOOD, SHADOWBRINGERS is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd." + Environment.NewLine);
+            tb.AppendText(@"© 2010-2022 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN, HEAVENSWARD, STORMBLOOD, SHADOWBRINGERS, ENDWALKER is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd." + Environment.NewLine);
         }
 
         private delegate void ResetGridDelegate();

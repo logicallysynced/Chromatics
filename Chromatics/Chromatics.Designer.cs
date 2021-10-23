@@ -268,6 +268,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_quickclose_boot = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -2075,6 +2076,7 @@
             // 
             // gB_General
             // 
+            this.gB_General.Controls.Add(this.chk_quickclose_boot);
             this.gB_General.Controls.Add(this.chk_quickclose);
             this.gB_General.Controls.Add(this.chk_releasedevices);
             this.gB_General.Controls.Add(this.lbl_polling);
@@ -2113,7 +2115,7 @@
             // chk_releasedevices
             // 
             this.chk_releasedevices.AutoSize = true;
-            this.chk_releasedevices.Location = new System.Drawing.Point(17, 167);
+            this.chk_releasedevices.Location = new System.Drawing.Point(17, 188);
             this.chk_releasedevices.Margin = new System.Windows.Forms.Padding(2);
             this.chk_releasedevices.Name = "chk_releasedevices";
             this.chk_releasedevices.Size = new System.Drawing.Size(214, 17);
@@ -2160,7 +2162,7 @@
             // chk_debugopt
             // 
             this.chk_debugopt.AutoSize = true;
-            this.chk_debugopt.Location = new System.Drawing.Point(17, 144);
+            this.chk_debugopt.Location = new System.Drawing.Point(17, 165);
             this.chk_debugopt.Margin = new System.Windows.Forms.Padding(2);
             this.chk_debugopt.Name = "chk_debugopt";
             this.chk_debugopt.Size = new System.Drawing.Size(172, 17);
@@ -2216,7 +2218,7 @@
             // chk_lcdtoggle
             // 
             this.chk_lcdtoggle.AutoSize = true;
-            this.chk_lcdtoggle.Location = new System.Drawing.Point(17, 121);
+            this.chk_lcdtoggle.Location = new System.Drawing.Point(17, 142);
             this.chk_lcdtoggle.Margin = new System.Windows.Forms.Padding(2);
             this.chk_lcdtoggle.Name = "chk_lcdtoggle";
             this.chk_lcdtoggle.Size = new System.Drawing.Size(125, 17);
@@ -3392,7 +3394,7 @@
             this.lbl_about_ver.Name = "lbl_about_ver";
             this.lbl_about_ver.Size = new System.Drawing.Size(725, 28);
             this.lbl_about_ver.TabIndex = 5;
-            this.lbl_about_ver.Text = "Version 2.6.0";
+            this.lbl_about_ver.Text = "Version 2.7.0";
             this.lbl_about_ver.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pB_about_logo
@@ -3443,7 +3445,7 @@
             this.mi_updatecheck,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(196, 142);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(195, 142);
             // 
             // mi_effectsenable
             // 
@@ -3451,44 +3453,44 @@
             this.mi_effectsenable.CheckOnClick = true;
             this.mi_effectsenable.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mi_effectsenable.Name = "mi_effectsenable";
-            this.mi_effectsenable.Size = new System.Drawing.Size(195, 22);
+            this.mi_effectsenable.Size = new System.Drawing.Size(194, 22);
             this.mi_effectsenable.Text = "Toggle Lighting Effects";
             // 
             // mi_arxenable
             // 
             this.mi_arxenable.CheckOnClick = true;
             this.mi_arxenable.Name = "mi_arxenable";
-            this.mi_arxenable.Size = new System.Drawing.Size(195, 22);
+            this.mi_arxenable.Size = new System.Drawing.Size(194, 22);
             this.mi_arxenable.Text = "Enable Arx";
             // 
             // mi_winstart
             // 
             this.mi_winstart.CheckOnClick = true;
             this.mi_winstart.Name = "mi_winstart";
-            this.mi_winstart.Size = new System.Drawing.Size(195, 22);
+            this.mi_winstart.Size = new System.Drawing.Size(194, 22);
             this.mi_winstart.Text = "Enable on Startup";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(191, 6);
             // 
             // mi_showwindow
             // 
             this.mi_showwindow.Name = "mi_showwindow";
-            this.mi_showwindow.Size = new System.Drawing.Size(195, 22);
+            this.mi_showwindow.Size = new System.Drawing.Size(194, 22);
             this.mi_showwindow.Text = "Show Window";
             // 
             // mi_updatecheck
             // 
             this.mi_updatecheck.Name = "mi_updatecheck";
-            this.mi_updatecheck.Size = new System.Drawing.Size(195, 22);
+            this.mi_updatecheck.Size = new System.Drawing.Size(194, 22);
             this.mi_updatecheck.Text = "Check for Updates";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // notify_master
@@ -3497,6 +3499,20 @@
             this.notify_master.Text = "Chromatics";
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
+            // 
+            // chk_quickclose_boot
+            // 
+            this.chk_quickclose_boot.AutoSize = true;
+            this.chk_quickclose_boot.Location = new System.Drawing.Point(17, 121);
+            this.chk_quickclose_boot.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_quickclose_boot.Name = "chk_quickclose_boot";
+            this.chk_quickclose_boot.Size = new System.Drawing.Size(154, 17);
+            this.chk_quickclose_boot.TabIndex = 13;
+            this.chk_quickclose_boot.Text = "Minimise to Tray on Startup";
+            this.tooltip_main.SetToolTip(this.chk_quickclose_boot, "When checked, Chromatics will minimise to the system tray when the X is selected." +
+        "\r\nDefault: ON");
+            this.chk_quickclose_boot.UseVisualStyleBackColor = true;
+            this.chk_quickclose_boot.CheckedChanged += new System.EventHandler(this.chk_quickclose_boot_CheckedChanged);
             // 
             // Chromatics
             // 
@@ -3507,7 +3523,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Chromatics";
-            this.Text = "Chromatics 2.6.0";
+            this.Text = "Chromatics 2.7.0";
             this.tb_controlA.ResumeLayout(false);
             this.tP_debug.ResumeLayout(false);
             this.tP_debug.PerformLayout();
@@ -3827,6 +3843,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column1;
         private System.Windows.Forms.DataGridViewComboBoxColumn col_mod;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.CheckBox chk_quickclose_boot;
     }
 }
 

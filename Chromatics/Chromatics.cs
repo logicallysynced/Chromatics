@@ -416,6 +416,16 @@ namespace Chromatics
             LoadChromaticsSettings();
             LoadColorMappings();
 
+            if (ChromaticsSettings.ChromaticsSettingsQuickCloseBoot)
+            {
+                //to minimize window
+                this.WindowState = FormWindowState.Minimized;
+
+                //to hide from taskbar
+                this.Hide();
+                this.Visible = false;
+                this.ShowInTaskbar = false;
+            }
 
             //Check Administrator permissions
             if (!IsAdministrator())
@@ -939,7 +949,6 @@ namespace Chromatics
 
         private delegate void BlinkDelegate();
 
-        
     }
 
     public static class ExceptionExtensions
