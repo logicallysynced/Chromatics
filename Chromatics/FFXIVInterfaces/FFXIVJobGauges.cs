@@ -34,7 +34,7 @@ namespace Chromatics
                         var negwarcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARNegative);
                         var defiancecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARDefiance);
                         var nondefiancecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWARNonDefiance);
-                        var wrath = Cooldowns.Warrior.BeastGauge;
+                        var wrath = Cooldowns.JobResourcesContainer.Warrior.BeastGauge;
                         var polWrath = (wrath - 0) * (50 - 0) / (100 - 0) + 0;
                         
                         //Lightbar
@@ -258,7 +258,7 @@ namespace Chromatics
                         var swordcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDSwordOath);
                         var ironwillcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobPLDIronWill);
 
-                        var oathgauge = Cooldowns.Paladin.OathGauge;
+                        var oathgauge = Cooldowns.JobResourcesContainer.Paladin.OathGauge;
                         
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
@@ -391,7 +391,7 @@ namespace Chromatics
 
                         break;
                     case Actor.Job.MNK:
-                        var chakra = Cooldowns.Monk.Chakra;
+                        var chakra = Cooldowns.JobResourcesContainer.Monk.Chakra;
                         var burstmnkcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKGreased);
                         var burstmnkempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMNKNegative);
 
@@ -531,10 +531,10 @@ namespace Chromatics
                         var burstdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
                         var burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGBloodDragon);
                         var negdrgcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGNegative);
-                        var bloodremain = Cooldowns.Dragoon.Timer;
+                        var bloodremain = Cooldowns.JobResourcesContainer.Dragoon.Timer;
                         var polBlood = ((int)bloodremain.TotalSeconds - 0) * (50 - 0) / (30 - 0) + 0;
 
-                        if (Cooldowns.Dragoon.Mode == Sharlayan.Models.ReadResults.JobResourceResult.DragoonResources.DragoonMode.Life)
+                        if (Cooldowns.JobResourcesContainer.Dragoon.Mode == Sharlayan.Core.JobResources.Enums.DragoonMode.Life)
                         {
                             burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon);
                             GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGLifeOfTheDragon), false);
@@ -545,7 +545,7 @@ namespace Chromatics
                         }
                         else
                         {
-                            switch (Cooldowns.Dragoon.DragonGaze)
+                            switch (Cooldowns.JobResourcesContainer.Dragoon.DragonGaze)
                             {
                                 case 2:
                                     burstdrgeyecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRGDragonGauge2);
@@ -752,15 +752,15 @@ namespace Chromatics
                         GlobalApplyMapKeyLighting("Num0", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                         GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
 
-                        //Console.WriteLine(@"Song: " + Cooldowns.Song.ToString());
+                        //Console.WriteLine(@"Song: " + Cooldowns.JobResourcesContainer.Song.ToString());
                         
-                        if (Cooldowns.Bard.ActiveSong != Sharlayan.Models.ReadResults.JobResourceResult.BardResources.BardSong.None)
+                        if (Cooldowns.JobResourcesContainer.Bard.ActiveSong != Sharlayan.Core.JobResources.Enums.BardSong.None)
                         {
-                            var songremain = (int)Cooldowns.Bard.Timer.TotalSeconds;
+                            var songremain = (int)Cooldowns.JobResourcesContainer.Bard.Timer.TotalSeconds;
 
-                            switch (Cooldowns.Bard.ActiveSong)
+                            switch (Cooldowns.JobResourcesContainer.Bard.ActiveSong)
                             {
-                                case Sharlayan.Models.ReadResults.JobResourceResult.BardResources.BardSong.ArmysPaeon:
+                                case Sharlayan.Core.JobResources.Enums.BardSong.ArmysPaeon:
                                     burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDArmys);
                                     negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
 
@@ -768,7 +768,7 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                     GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.BardResources.BardSong.MagesBallad:
+                                case Sharlayan.Core.JobResources.Enums.BardSong.MagesBallad:
                                     burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDBallad);
                                     negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
 
@@ -776,13 +776,13 @@ namespace Chromatics
                                     GlobalApplyMapKeyLighting("NumAdd", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                     GlobalApplyMapKeyLighting("NumEnter", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.BardResources.BardSong.WanderersMinuet:
+                                case Sharlayan.Core.JobResources.Enums.BardSong.WanderersMinuet:
                                     burstcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDMinuet);
                                     negcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative);
 
-                                    //Console.WriteLine(Cooldowns.RepertoireStacks);
+                                    //Console.WriteLine(Cooldowns.JobResourcesContainer.RepertoireStacks);
 
-                                    switch (Cooldowns.Bard.Repertoire)
+                                    switch (Cooldowns.JobResourcesContainer.Bard.Repertoire)
                                     {
                                         case 1:
                                             GlobalApplyMapKeyLighting("NumSubtract", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
@@ -992,10 +992,10 @@ namespace Chromatics
                         var cureproc = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMFreecure);
                         var bloodlilycol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobWHMBloodLily);
 
-                        var petalcount = Cooldowns.WhiteMage.Lily;
-                        var flowercharge = (int)Cooldowns.WhiteMage.Timer.TotalSeconds;
-                        var BloodFlowerReady = Cooldowns.WhiteMage.BloodLily == 1;
-                        //Console.WriteLine(Cooldowns.FlowerCharge * 100);
+                        var petalcount = Cooldowns.JobResourcesContainer.WhiteMage.Lily;
+                        var flowercharge = (int)Cooldowns.JobResourcesContainer.WhiteMage.Timer.TotalSeconds;
+                        var BloodFlowerReady = Cooldowns.JobResourcesContainer.WhiteMage.BloodLily == 1;
+                        //Console.WriteLine(Cooldowns.JobResourcesContainer.FlowerCharge * 100);
 
 
                         if (statEffects.Find(i => i.StatusName == "Freecure") != null)
@@ -1137,11 +1137,11 @@ namespace Chromatics
                         var enochcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochianCountdown);
                         var enochchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMEnochianCharge);
 
-                        var firestacks = Cooldowns.BlackMage.UmbralStacks;
-                        var icestacks = Cooldowns.BlackMage.AstralStacks;
-                        var heartstacks = Cooldowns.BlackMage.UmbralHearts;
+                        var firestacks = Cooldowns.JobResourcesContainer.BlackMage.UmbralStacks;
+                        var icestacks = Cooldowns.JobResourcesContainer.BlackMage.AstralStacks;
+                        var heartstacks = Cooldowns.JobResourcesContainer.BlackMage.UmbralHearts;
 
-                        if (Cooldowns.BlackMage.PolyglotCount > 0)
+                        if (Cooldowns.JobResourcesContainer.BlackMage.PolyglotCount > 0)
                         {
                             enochchargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLMPolyglot);
                         }
@@ -1223,16 +1223,16 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("NumMultiply", negblmcol, false);
                         }
                         
-                        if (Cooldowns.BlackMage.Enochian)
+                        if (Cooldowns.JobResourcesContainer.BlackMage.Enochian)
                         {
-                            var enochtime = ((int)Cooldowns.BlackMage.Timer.TotalSeconds - 0) * (40 - 0) / (15 - 0) + 0;
+                            var enochtime = ((int)Cooldowns.JobResourcesContainer.BlackMage.Timer.TotalSeconds - 0) * (40 - 0) / (15 - 0) + 0;
 
                             /*
                             //Lightbar
                             if (_LightbarMode == LightbarMode.JobGauge)
                             {
                                 var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                                var JobLightbar_Interpolate = ((int)Cooldowns.BlackMage. - 0) * (JobLightbar_Collection.Length - 0) / (116 - 0) + 0;
+                                var JobLightbar_Interpolate = ((int)Cooldowns.JobResourcesContainer.BlackMage. - 0) * (JobLightbar_Collection.Length - 0) / (116 - 0) + 0;
 
                                 
 
@@ -1247,7 +1247,7 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
                                 var JobFunction_Collection = DeviceEffects.Functions;
-                                var JobFunction_Interpolate = ((int)Cooldowns.EnochianCharge - 0) * (JobFunction_Collection.Length - 0) / (116 - 0) + 0;
+                                var JobFunction_Interpolate = ((int)Cooldowns.JobResourcesContainer.EnochianCharge - 0) * (JobFunction_Collection.Length - 0) / (116 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
                                 {
@@ -1259,7 +1259,7 @@ namespace Chromatics
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
                                 var JobFunction_Collection = DeviceEffects.Function2;
-                                var JobFunction_Interpolate = ((int)Cooldowns.EnochianCharge - 0) * (JobFunction_Collection.Length - 0) / (116 - 0) + 0;
+                                var JobFunction_Interpolate = ((int)Cooldowns.JobResourcesContainer.EnochianCharge - 0) * (JobFunction_Collection.Length - 0) / (116 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
                                 {
@@ -1381,7 +1381,7 @@ namespace Chromatics
 
                         break;
                     case Actor.Job.SMN:
-                        var aetherflowsmn = Cooldowns.Summoner.AetherFlow;
+                        var aetherflowsmn = Cooldowns.JobResourcesContainer.Summoner.AetherFlow;
 
                         var burstsmncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNAetherflow);
                         var burstsmnempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNNegative);
@@ -1391,7 +1391,7 @@ namespace Chromatics
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = ((int)Cooldowns.Summoner.Timer.TotalSeconds - 0) * (JobLightbar_Collection.Length - 0) / (15 - 0) + 0;
+                            var JobLightbar_Interpolate = ((int)Cooldowns.JobResourcesContainer.Summoner.Timer.TotalSeconds - 0) * (JobLightbar_Collection.Length - 0) / (15 - 0) + 0;
 
                             
 
@@ -1406,7 +1406,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = ((int)Cooldowns.Summoner.Timer.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)Cooldowns.JobResourcesContainer.Summoner.Timer.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1418,7 +1418,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
                             var JobFunction_Collection = DeviceEffects.Function2;
-                            var JobFunction_Interpolate = ((int)Cooldowns.Summoner.Timer.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
+                            var JobFunction_Interpolate = ((int)Cooldowns.JobResourcesContainer.Summoner.Timer.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1477,7 +1477,7 @@ namespace Chromatics
                         break;
                     case Actor.Job.SCH:
 
-                        var aetherflowsch = Cooldowns.Scholar.Aetherflow;
+                        var aetherflowsch = Cooldowns.JobResourcesContainer.Scholar.Aetherflow;
 
                         var burstschcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHAetherflow);
                         var faerieccol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSCHFaerieGauge);
@@ -1488,7 +1488,7 @@ namespace Chromatics
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
                             var JobLightbar_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.Scholar.FaerieGauge, 0, 100,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.JobResourcesContainer.Scholar.FaerieGauge, 0, 100,
                                     JobLightbar_Collection.Length, 0);
 
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
@@ -1503,7 +1503,7 @@ namespace Chromatics
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
                             var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.Scholar.FaerieGauge, 0, 100,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.JobResourcesContainer.Scholar.FaerieGauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1517,7 +1517,7 @@ namespace Chromatics
                         {
                             var JobFunction_Collection = DeviceEffects.Function2;
                             var JobFunction_Interpolate =
-                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.Scholar.FaerieGauge, 0, 100,
+                                Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.JobResourcesContainer.Scholar.FaerieGauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1594,13 +1594,13 @@ namespace Chromatics
                         var ninkicol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINNinkiGauge);
                         var hutoncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobNINHuton);
                         
-                        var polHuton = ((int)Cooldowns.Ninja.Timer.TotalSeconds - 0) * (50 - 0) / (70 - 0) + 0;
+                        var polHuton = ((int)Cooldowns.JobResourcesContainer.Ninja.Timer.TotalSeconds - 0) * (50 - 0) / (70 - 0) + 0;
                         
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
                         {
                             var JobLightbar_Collection = DeviceEffects.LightbarZones;
-                            var JobLightbar_Interpolate = (Cooldowns.Ninja.NinkiGauge - 0) * (JobLightbar_Collection.Length - 0) / (100 - 0) + 0;
+                            var JobLightbar_Interpolate = (Cooldowns.JobResourcesContainer.Ninja.NinkiGauge - 0) * (JobLightbar_Collection.Length - 0) / (100 - 0) + 0;
                             
                             for (int i = 0; i < JobLightbar_Collection.Length; i++)
                             {
@@ -1613,7 +1613,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
                             var JobFunction_Collection = DeviceEffects.Functions;
-                            var JobFunction_Interpolate = (Cooldowns.Ninja.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
+                            var JobFunction_Interpolate = (Cooldowns.JobResourcesContainer.Ninja.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1625,7 +1625,7 @@ namespace Chromatics
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
                             var JobFunction_Collection = DeviceEffects.Function2;
-                            var JobFunction_Interpolate = (Cooldowns.Ninja.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
+                            var JobFunction_Interpolate = (Cooldowns.JobResourcesContainer.Ninja.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
                             {
@@ -1746,7 +1746,7 @@ namespace Chromatics
                         var bloodcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKBloodGauge);
                         var gritcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKGrit);
 
-                        var bloodgauge = Cooldowns.Darkknight.BlackBlood;
+                        var bloodgauge = Cooldowns.JobResourcesContainer.DarkKnight.BlackBlood;
                         var bloodPol = (bloodgauge - 0) * (50 - 0) / (100 - 0) + 0;
                         
                         GlobalApplyMapKeyLighting("NumSubtract", negdrkcol, false);
@@ -2072,56 +2072,56 @@ namespace Chromatics
                     case Actor.Job.AST:
                         var burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTNegative);
                         
-                        var cardheld = Cooldowns.Astrologian.Arcana;
+                        var cardheld = Cooldowns.JobResourcesContainer.Astrologian.Arcana;
 
                         /*
                         if (statEffects.Find(i => i.StatusName == "Lady of Crowns Drawn") != null)
                         {
-                            cardheld = Cooldowns.CardTypes.Lady;
+                            cardheld = Cooldowns.JobResourcesContainer.CardTypes.Lady;
                         }
                         else if (statEffects.Find(i => i.StatusName == "Lord of Crowns Drawn") != null)
                         {
-                            cardheld = Cooldowns.CardTypes.Lord;
+                            cardheld = Cooldowns.JobResourcesContainer.CardTypes.Lord;
                         }
                         */
 
-                        if (cardheld != Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.None)
+                        if (cardheld != Sharlayan.Core.JobResources.Enums.AstrologianCard.None)
                         {
                             switch (cardheld)
                             {
-                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Arrow:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.Arrow:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTArrow);
 
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Balance:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.Balance:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBalance);
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Bole:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.Bole:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTBole);
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Ewer:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.Ewer:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTEwer);
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Spear:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.Spear:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpear);
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.Spire:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.Spire:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpire);
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.LadyofCrowns:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.LadyofCrowns:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTLady);
                                     break;
-                                case Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.LordofCrowns:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.LordofCrowns:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTLord);
                                     break;
                             }
                             
-                            if (Cooldowns.Astrologian.Arcana != _currentCard)
+                            if (Cooldowns.JobResourcesContainer.Astrologian.Arcana != _currentCard)
                             {
-                                if (Cooldowns.Astrologian.Arcana != Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard.None)
+                                if (Cooldowns.JobResourcesContainer.Astrologian.Arcana != Sharlayan.Core.JobResources.Enums.AstrologianCard.None)
                                     GlobalRipple1(burstastcol, 80, baseColor);
 
-                                _currentCard = Cooldowns.Astrologian.Arcana;
+                                _currentCard = Cooldowns.JobResourcesContainer.Astrologian.Arcana;
                                 _burstastcol = burstastcol;
                             }
                             
@@ -2258,7 +2258,7 @@ namespace Chromatics
                         break;
                     case Actor.Job.MCH:
                         //Machinist
-                        var ammo = Cooldowns.Machinist.Battery;
+                        var ammo = Cooldowns.JobResourcesContainer.Machinist.Battery;
 
                         var ammoburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHAmmo);
                         var negmchburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobMCHNegative);
@@ -2291,9 +2291,9 @@ namespace Chromatics
                         }
 
 
-                        var mchgb = Cooldowns.Machinist.Heat;
+                        var mchgb = Cooldowns.JobResourcesContainer.Machinist.Heat;
 
-                        if ((int)Cooldowns.Machinist.OverheatTimer.TotalSeconds > 0)
+                        if ((int)Cooldowns.JobResourcesContainer.Machinist.OverheatTimer.TotalSeconds > 0)
                         {
                             //Overheating
                             GlobalApplyMapKeyLighting("NumLock", heatover, false);
@@ -2515,8 +2515,8 @@ namespace Chromatics
                         var kacol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMKa); //Right
                         var kenkicol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSAMKenki);
 
-                        var sen = Cooldowns.Samurai.Sen;
-                        var kenkicharge = Cooldowns.Samurai.Kenki;
+                        var sen = Cooldowns.JobResourcesContainer.Samurai.Sen;
+                        var kenkicharge = Cooldowns.JobResourcesContainer.Samurai.Kenki;
                         var PolKenki = (kenkicharge - 0) * (40 - 0) / (100 - 0) + 0;
                         
                         //Lightbar
@@ -2565,17 +2565,17 @@ namespace Chromatics
 
                         switch (sen)
                         {
-                            case Sharlayan.Models.ReadResults.JobResourceResult.SamuraiResources.Iaijutsu.Setsu:
+                            case Sharlayan.Core.JobResources.Enums.Iaijutsu.Setsu:
                                 GlobalApplyMapKeyLighting("Num8", setsucol, false);
                                 GlobalApplyMapKeyLighting("Num1", setsucol, false);
                                 GlobalApplyMapKeyLighting("Num3", setsucol, false);
                                 break;
-                            case Sharlayan.Models.ReadResults.JobResourceResult.SamuraiResources.Iaijutsu.Getsu:
+                            case Sharlayan.Core.JobResources.Enums.Iaijutsu.Getsu:
                                 GlobalApplyMapKeyLighting("Num8", getsucol, false);
                                 GlobalApplyMapKeyLighting("Num1", getsucol, false);
                                 GlobalApplyMapKeyLighting("Num3", getsucol, false);
                                 break;
-                            case Sharlayan.Models.ReadResults.JobResourceResult.SamuraiResources.Iaijutsu.Ka:
+                            case Sharlayan.Core.JobResources.Enums.Iaijutsu.Ka:
                                 GlobalApplyMapKeyLighting("Num8", kacol, false);
                                 GlobalApplyMapKeyLighting("Num1", kacol, false);
                                 GlobalApplyMapKeyLighting("Num3", kacol, false);
@@ -2636,8 +2636,8 @@ namespace Chromatics
 
                         break;
                     case Actor.Job.RDM:
-                        var blackmana = Cooldowns.RedMage.BlackMana;
-                        var whitemana = Cooldowns.RedMage.WhiteMana;
+                        var blackmana = Cooldowns.JobResourcesContainer.RedMage.BlackMana;
+                        var whitemana = Cooldowns.JobResourcesContainer.RedMage.WhiteMana;
                         var polBlack = (blackmana - 0) * (40 - 0) / (100 - 0) + 0;
                         var polWhite = (whitemana - 0) * (40 - 0) / (100 - 0) + 0;
                         

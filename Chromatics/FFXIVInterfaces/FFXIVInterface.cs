@@ -19,6 +19,7 @@ using Chromatics.ACTInterfaces;
 using System.Timers;
 using System.Net.Http;
 using EasyHttp.Http;
+using Sharlayan.Enums;
 
 
 /* Contains the code to read the FFXIV Memory Stream, parse the data and convert to lighting commands
@@ -42,7 +43,7 @@ namespace Chromatics
         private string jobClass = "PLD";
         private string _jobClass = "PLD";
 
-        private Sharlayan.Models.ReadResults.JobResourceResult.AstrologianResources.AstrologianCard _currentCard;
+        private Sharlayan.Core.JobResources.Enums.AstrologianCard _currentCard;
         private string _currentStatus = "";
         private bool _dfcount;
         private bool _dfpop;
@@ -75,6 +76,9 @@ namespace Chromatics
         private FFXIVUnsafeMethods _unsafe = new FFXIVUnsafeMethods();
         private readonly object _CallLcdData = new object();
         private readonly object _CallFFXIVData = new object();
+
+        private ProcessModel processModel;
+        private MemoryHandler memoryHandler;
 
         public void FfxivGameStop()
         {
@@ -114,7 +118,8 @@ namespace Chromatics
                 _lcd.SetStartupFlag = false;
             }
 
-            MemoryHandler.Instance.UnsetProcess();
+            //MemoryHandler.Instance.UnsetProcess();
+            SharlayanMemoryManager.Instance.RemoveHandler(processModel.ProcessID);
             _call = null;
 
             //HoldReader = false;
@@ -176,6 +181,7 @@ namespace Chromatics
 
                     Init = false;
                     // supported: English, Chinese, Japanese, French, German, Korean
+                    /*
                     var gameLanguage = "English";
 
                     switch (ChromaticsSettings.ChromaticsSettingsLanguage)
@@ -219,7 +225,7 @@ namespace Chromatics
                     initiated = true;
                     Init = true;
                     IsDx11 = false;
-
+                    */
                     WriteConsole(ConsoleTypes.Ffxiv, @"DX9 Initiated");
                     WriteConsole(ConsoleTypes.Error,
                         "DX9 support has been phased out from Chromatics. Please use DX11 when using Chromatics.");
@@ -241,35 +247,67 @@ namespace Chromatics
 
                     Init = false;
                     // supported: English, Chinese, Japanese, French, German, Korean
-                    var gameLanguage = "English";
+                    // supported: Global, Chinese, Korean
+
+                    GameRegion gameRegion = GameRegion.Global;
+                    GameLanguage gameLanguage = GameLanguage.English;
 
                     switch (ChromaticsSettings.ChromaticsSettingsLanguage)
                     {
                         case 0:
                             //English
-                            gameLanguage = "English";
+                            gameRegion = GameRegion.Global;
+                            gameLanguage = GameLanguage.English;
                             break;
                         case 1:
                             //Chinese
-                            gameLanguage = "Chinese";
+                            gameRegion = GameRegion.China;
+                            gameLanguage = GameLanguage.Chinese;
                             break;
                         case 2:
                             //Japanese
-                            gameLanguage = "Japanese";
+                            gameRegion = GameRegion.Global;
+                            gameLanguage = GameLanguage.Japanese;
                             break;
                         case 3:
                             //French
-                            gameLanguage = "French";
+                            gameRegion = GameRegion.Global;
+                            gameLanguage = GameLanguage.French;
                             break;
                         case 4:
                             //German
-                            gameLanguage = "German";
+                            gameRegion = GameRegion.Global;
+                            gameLanguage = GameLanguage.German;
                             break;
                         case 5:
                             //Korean
-                            gameLanguage = "Korean";
+                            gameRegion = GameRegion.Korea;
+                            gameLanguage = GameLanguage.Korean;
                             break;
                     }
+
+                    
+	                // whether to always hit API on start to get the latest sigs based on patchVersion, or use the local json cache (if the file doesn't exist, API will be hit)
+	                bool useLocalCache = true;
+	                // patchVersion of game, or latest
+	                string patchVersion = "latest";
+                    Process process = processes11[0];
+                    processModel = new ProcessModel {
+                        Process = process
+                    };
+                    SharlayanConfiguration configuration = new SharlayanConfiguration {
+                        ProcessModel = processModel,
+                        GameLanguage = gameLanguage,
+                        GameRegion = gameRegion,
+                        PatchVersion = patchVersion,
+                        UseLocalCache = ChromaticsSettings.ChromaticsSettingsMemoryCache
+                    };
+                    memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
+                    initiated = true;
+                    Init = true;
+                    IsDx11 = true;
+                    /*
+                    
 
                     var ignoreJsonCache = !ChromaticsSettings.ChromaticsSettingsMemoryCache;
                     // patchVersion of game, or latest
@@ -284,7 +322,7 @@ namespace Chromatics
                     initiated = true;
                     Init = true;
                     IsDx11 = true;
-
+                    */
                     WriteConsole(ConsoleTypes.Ffxiv, @"DX11 Initiated");
                 }
             }
@@ -362,8 +400,8 @@ namespace Chromatics
                     if (processes11.Length == 0)
                         FfxivGameStop();
 
-                    _playerInfoX = Reader.GetActors().CurrentPCs;
-                    _menuInfo = ActorItem.CurrentUser; //Reader.GetPlayerInfo().PlayerEntity;
+                    _playerInfoX = memoryHandler.Reader.GetActors().CurrentPCs;
+                    _menuInfo = memoryHandler.Reader.GetCurrentPlayer().Entity; //ActorItem.CurrentUser; //Reader.GetPlayerInfo().PlayerEntity;
                     
                     if (_playerInfoX.Count == 0)
                     {
@@ -584,34 +622,36 @@ namespace Chromatics
                     //var personalInfo = new PlayerEntity();
 
 
-                    Reader.GetActors();
+                    //Reader.GetActors();
+                    memoryHandler.Reader.GetActors();
                     //_playerInfoX = Reader.GetActors()?.PCEntities;
-                    _playerInfo = ActorItem.CurrentUser;
-                    var _playerData = Reader.GetCurrentPlayer();
+                    _playerInfo = memoryHandler.Reader.GetCurrentPlayer().Entity;
+                    var _playerData = memoryHandler.Reader.GetCurrentPlayer().PlayerInfo;
 
 
                     try
                     {
                         if (_playerInfo.Name != "" && _playerInfo.TargetType != Actor.TargetType.Unknown)
                         {
-                            if (Reader.CanGetTargetInfo())
+
+                            if (memoryHandler.Reader.CanGetTargetInfo())
                             {
-                                targetInfo = Reader.GetTargetInfo()?.TargetInfo?.CurrentTarget;
+                                targetInfo = memoryHandler.Reader.GetTargetInfo()?.TargetInfo?.CurrentTarget;
                             }
 
-                            if (Reader.CanGetEnmityEntities())
+                            if (memoryHandler.Reader.CanGetEnmityEntities())
                             {
-                                targetEmnityInfo = Reader.GetTargetInfo()?.TargetInfo?.EnmityItems;
+                                targetEmnityInfo = memoryHandler.Reader.GetTargetInfo()?.TargetInfo?.EnmityItems;
                             }
 
                             //Console.WriteLine(@"Name:" + targetInfo.Name);
                         }
 
 
-                        partyInfo = Reader.GetPartyMembers()?.PartyMembers;
+                        partyInfo = memoryHandler.Reader.GetPartyMembers()?.PartyMembers;
 
-                        partyListNew = Reader.GetPartyMembers()?.NewPartyMembers;
-                        partyListOld = Reader.GetPartyMembers()?.RemovedPartyMembers;
+                        partyListNew = memoryHandler.Reader.GetPartyMembers()?.NewPartyMembers;
+                        partyListOld = memoryHandler.Reader.GetPartyMembers()?.RemovedPartyMembers;
 
                         //personalInfo = Reader.GetPlayerInfo()?.PlayerEntity;
 
@@ -624,7 +664,7 @@ namespace Chromatics
 
 
                     //Cutscenes
-                    FfxivMenu.RefreshData();
+                    FfxivMenu.RefreshData(memoryHandler);
 
                     if (ChromaticsSettings.ChromaticsSettingsCutsceneAnimation && !_inVegas)
                     {
@@ -674,7 +714,7 @@ namespace Chromatics
                     }
 
                     //DF Bell
-                    FfxivDutyFinder.RefreshData();
+                    FfxivDutyFinder.RefreshData(memoryHandler);
 
 
                     DebugMapID = _playerInfo.MapTerritory.ToString();
@@ -1522,7 +1562,7 @@ namespace Chromatics
 
 
                             //Reactive Weather
-                            FFXIVWeather.RefreshData();
+                            FFXIVWeather.RefreshData(memoryHandler);
                             var currentWeather = FFXIVWeather.WeatherIconID();
 
                             if (_lastWeather != currentWeather)
@@ -4580,9 +4620,9 @@ namespace Chromatics
 
                                 //Hotbars        
 
-                                if (Reader.CanGetActions())
+                                if (memoryHandler.Reader.CanGetActions())
                                 {
-                                    hotbars = Reader.GetActions();
+                                    hotbars = memoryHandler.Reader.GetActions();
 
                                     if (ChromaticsSettings.ChromaticsSettingsKeybindToggle)
                                     {
@@ -6515,7 +6555,7 @@ namespace Chromatics
 
 
                                 //Cooldowns
-                                var Cooldowns = Sharlayan.Reader.GetJobResources();
+                                var Cooldowns = memoryHandler.Reader.GetJobResources();
 
                                 /*
                                 var gcdHot = ColorTranslator.FromHtml(ColorMappings.ColorMappingGcdHot);
@@ -6591,7 +6631,7 @@ namespace Chromatics
 
                                 //Experience Bar
 
-                                var _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
+                                var _role = _playerData.WVR_CurrentEXP;
                                 var _currentlvl = 0;
 
                                 var expcolempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingExpEmpty);
@@ -6601,202 +6641,202 @@ namespace Chromatics
                                 switch (_playerInfo.Job)
                                 {
                                     case Actor.Job.Unknown:
-                                        _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
+                                        _role = _playerData.WVR_CurrentEXP;
                                         _currentlvl = 0;
                                         jobClass = "Unknown";
                                         break;
                                     case Actor.Job.GLD:
-                                        _role = _playerData.CurrentPlayer.GLD_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.GLD;
+                                        _role = _playerData.GLD_CurrentEXP;
+                                        _currentlvl = _playerData.GLD;
                                         jobClass = "PLD";
                                         break;
                                     case Actor.Job.PGL:
-                                        _role = _playerData.CurrentPlayer.PGL_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.PGL;
+                                        _role = _playerData.PGL_CurrentEXP;
+                                        _currentlvl = _playerData.PGL;
                                         jobClass = "MNK";
                                         break;
                                     case Actor.Job.MRD:
-                                        _role = _playerData.CurrentPlayer.MRD_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.MRD;
+                                        _role = _playerData.MRD_CurrentEXP;
+                                        _currentlvl = _playerData.MRD;
                                         jobClass = "WAR";
                                         break;
                                     case Actor.Job.LNC:
-                                        _role = _playerData.CurrentPlayer.LNC_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.LNC;
+                                        _role = _playerData.LNC_CurrentEXP;
+                                        _currentlvl = _playerData.LNC;
                                         jobClass = "DRG";
                                         break;
                                     case Actor.Job.ARC:
-                                        _role = _playerData.CurrentPlayer.ARC_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ARC;
+                                        _role = _playerData.ARC_CurrentEXP;
+                                        _currentlvl = _playerData.ARC;
                                         jobClass = "BRD";
                                         break;
                                     case Actor.Job.CNJ:
-                                        _role = _playerData.CurrentPlayer.CNJ_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.CNJ;
+                                        _role = _playerData.CNJ_CurrentEXP;
+                                        _currentlvl = _playerData.CNJ;
                                         jobClass = "WHM";
                                         break;
                                     case Actor.Job.THM:
-                                        _role = _playerData.CurrentPlayer.THM_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.THM;
+                                        _role = _playerData.THM_CurrentEXP;
+                                        _currentlvl = _playerData.THM;
                                         jobClass = "BLM";
                                         break;
                                     case Actor.Job.CPT:
-                                        _role = _playerData.CurrentPlayer.CPT_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.CPT;
+                                        _role = _playerData.CPT_CurrentEXP;
+                                        _currentlvl = _playerData.CPT;
                                         jobClass = "CPT";
                                         break;
                                     case Actor.Job.BSM:
-                                        _role = _playerData.CurrentPlayer.BSM_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.BSM;
+                                        _role = _playerData.BSM_CurrentEXP;
+                                        _currentlvl = _playerData.BSM;
                                         jobClass = "BSM";
                                         break;
                                     case Actor.Job.ARM:
-                                        _role = _playerData.CurrentPlayer.ARM_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ARM;
+                                        _role = _playerData.ARM_CurrentEXP;
+                                        _currentlvl = _playerData.ARM;
                                         jobClass = "ARM";
                                         break;
                                     case Actor.Job.GSM:
-                                        _role = _playerData.CurrentPlayer.GSM_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.GSM;
+                                        _role = _playerData.GSM_CurrentEXP;
+                                        _currentlvl = _playerData.GSM;
                                         jobClass = "GSM";
                                         break;
                                     case Actor.Job.LTW:
-                                        _role = _playerData.CurrentPlayer.LTW_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.LTW;
+                                        _role = _playerData.LTW_CurrentEXP;
+                                        _currentlvl = _playerData.LTW;
                                         jobClass = "LTW";
                                         break;
                                     case Actor.Job.WVR:
-                                        _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.WVR;
+                                        _role = _playerData.WVR_CurrentEXP;
+                                        _currentlvl = _playerData.WVR;
                                         jobClass = "WVR";
                                         break;
                                     case Actor.Job.ALC:
-                                        _role = _playerData.CurrentPlayer.ALC_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ALC;
+                                        _role = _playerData.ALC_CurrentEXP;
+                                        _currentlvl = _playerData.ALC;
                                         jobClass = "ALC";
                                         break;
                                     case Actor.Job.CUL:
-                                        _role = _playerData.CurrentPlayer.CUL_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.CUL;
+                                        _role = _playerData.CUL_CurrentEXP;
+                                        _currentlvl = _playerData.CUL;
                                         jobClass = "CUL";
                                         break;
                                     case Actor.Job.MIN:
-                                        _role = _playerData.CurrentPlayer.MIN_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.MIN;
+                                        _role = _playerData.MIN_CurrentEXP;
+                                        _currentlvl = _playerData.MIN;
                                         jobClass = "MIN";
                                         break;
                                     case Actor.Job.BTN:
-                                        _role = _playerData.CurrentPlayer.BTN_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.BTN;
+                                        _role = _playerData.BTN_CurrentEXP;
+                                        _currentlvl = _playerData.BTN;
                                         jobClass = "BTN";
                                         break;
                                     case Actor.Job.FSH:
-                                        _role = _playerData.CurrentPlayer.FSH_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.FSH;
+                                        _role = _playerData.FSH_CurrentEXP;
+                                        _currentlvl = _playerData.FSH;
                                         jobClass = "FSH";
                                         break;
                                     case Actor.Job.PLD:
-                                        _role = _playerData.CurrentPlayer.GLD_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.GLD;
+                                        _role = _playerData.GLD_CurrentEXP;
+                                        _currentlvl = _playerData.GLD;
                                         jobClass = "PLD";
                                         break;
                                     case Actor.Job.MNK:
-                                        _role = _playerData.CurrentPlayer.PGL_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.PGL;
+                                        _role = _playerData.PGL_CurrentEXP;
+                                        _currentlvl = _playerData.PGL;
                                         jobClass = "MNK";
                                         break;
                                     case Actor.Job.WAR:
-                                        _role = _playerData.CurrentPlayer.MRD_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.MRD;
+                                        _role = _playerData.MRD_CurrentEXP;
+                                        _currentlvl = _playerData.MRD;
                                         jobClass = "WAR";
                                         break;
                                     case Actor.Job.DRG:
-                                        _role = _playerData.CurrentPlayer.LNC_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.LNC;
+                                        _role = _playerData.LNC_CurrentEXP;
+                                        _currentlvl = _playerData.LNC;
                                         jobClass = "DRG";
                                         break;
                                     case Actor.Job.BRD:
-                                        _role = _playerData.CurrentPlayer.ARC_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ARC;
+                                        _role = _playerData.ARC_CurrentEXP;
+                                        _currentlvl = _playerData.ARC;
                                         jobClass = "BRD";
                                         break;
                                     case Actor.Job.WHM:
-                                        _role = _playerData.CurrentPlayer.CNJ_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.CNJ;
+                                        _role = _playerData.CNJ_CurrentEXP;
+                                        _currentlvl = _playerData.CNJ;
                                         jobClass = "WHM";
                                         break;
                                     case Actor.Job.BLM:
-                                        _role = _playerData.CurrentPlayer.THM_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.THM;
+                                        _role = _playerData.THM_CurrentEXP;
+                                        _currentlvl = _playerData.THM;
                                         jobClass = "BLM";
                                         break;
                                     case Actor.Job.ACN:
-                                        _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ACN;
+                                        _role = _playerData.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.ACN;
                                         jobClass = "SMN";
                                         break;
                                     case Actor.Job.SMN:
-                                        _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ACN;
+                                        _role = _playerData.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.ACN;
                                         jobClass = "SMN";
                                         break;
                                     case Actor.Job.SCH:
-                                        _role = _playerData.CurrentPlayer.ACN_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ACN;
+                                        _role = _playerData.ACN_CurrentEXP;
+                                        _currentlvl = _playerData.ACN;
                                         jobClass = "SCH";
                                         break;
                                     case Actor.Job.ROG:
-                                        _role = _playerData.CurrentPlayer.ROG_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ROG;
+                                        _role = _playerData.ROG_CurrentEXP;
+                                        _currentlvl = _playerData.ROG;
                                         jobClass = "NIN";
                                         break;
                                     case Actor.Job.NIN:
-                                        _role = _playerData.CurrentPlayer.ROG_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.ROG;
+                                        _role = _playerData.ROG_CurrentEXP;
+                                        _currentlvl = _playerData.ROG;
                                         jobClass = "NIN";
                                         break;
                                     case Actor.Job.MCH:
-                                        _role = _playerData.CurrentPlayer.MCH_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.MCH;
+                                        _role = _playerData.MCH_CurrentEXP;
+                                        _currentlvl = _playerData.MCH;
                                         jobClass = "MCH";
                                         break;
                                     case Actor.Job.DRK:
-                                        _role = _playerData.CurrentPlayer.DRK_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.DRK;
+                                        _role = _playerData.DRK_CurrentEXP;
+                                        _currentlvl = _playerData.DRK;
                                         jobClass = "DRK";
                                         break;
                                     case Actor.Job.AST:
-                                        _role = _playerData.CurrentPlayer.AST_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.AST;
+                                        _role = _playerData.AST_CurrentEXP;
+                                        _currentlvl = _playerData.AST;
                                         jobClass = "AST";
                                         break;
                                     case Actor.Job.SAM:
-                                        _role = _playerData.CurrentPlayer.SAM_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.SAM;
+                                        _role = _playerData.SAM_CurrentEXP;
+                                        _currentlvl = _playerData.SAM;
                                         jobClass = "SAM";
                                         break;
                                     case Actor.Job.RDM:
-                                        _role = _playerData.CurrentPlayer.RDM_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.RDM;
+                                        _role = _playerData.RDM_CurrentEXP;
+                                        _currentlvl = _playerData.RDM;
                                         jobClass = "RDM";
                                         break;
                                     case Actor.Job.DNC:
-                                        _role = _playerData.CurrentPlayer.DNC_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.DNC;
+                                        _role = _playerData.DNC_CurrentEXP;
+                                        _currentlvl = _playerData.DNC;
                                         jobClass = "DNC";
                                         break;
                                     case Actor.Job.GNB:
-                                        _role = _playerData.CurrentPlayer.GNB_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.GNB;
+                                        _role = _playerData.GNB_CurrentEXP;
+                                        _currentlvl = _playerData.GNB;
                                         jobClass = "GNB";
                                         break;
                                     case Actor.Job.BLU:
-                                        _role = _playerData.CurrentPlayer.BLU_CurrentEXP;
-                                        _currentlvl = _playerData.CurrentPlayer.BLU;
+                                        _role = _playerData.BLU_CurrentEXP;
+                                        _currentlvl = _playerData.BLU;
                                         jobClass = "BLU";
                                         break;
                                     default:
-                                        _role = _playerData.CurrentPlayer.WVR_CurrentEXP;
+                                        _role = _playerData.WVR_CurrentEXP;
                                         _currentlvl = 0;
                                         jobClass = "Unknown";
                                         break;
@@ -6873,9 +6913,9 @@ namespace Chromatics
                                     ChatInit = true;
                                 }
 
-                                if (Reader.CanGetChatLog())
+                                if (memoryHandler.Reader.CanGetChatLog())
                                 {
-                                    var ChatReadResult = Reader.GetChatLog(ChatpreviousArrayIndex, ChatpreviousOffset);
+                                    var ChatReadResult = memoryHandler.Reader.GetChatLog(ChatpreviousArrayIndex, ChatpreviousOffset);
                                     ChatpreviousArrayIndex = ChatReadResult.PreviousArrayIndex;
                                     ChatpreviousOffset = ChatReadResult.PreviousOffset;
 

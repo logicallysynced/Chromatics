@@ -27,7 +27,7 @@ namespace Chromatics.FFXIVInterfaces
 
         private static readonly object CacheLock = new object();
         private static Dictionary<int, string> WeatherMap = new Dictionary<int, string>();
-
+        private static MemoryHandler _memoryHandler;
 
         public static void GetWeatherAPI()
         {
@@ -66,12 +66,14 @@ namespace Chromatics.FFXIVInterfaces
 
         
 
-        public static void RefreshData()
+        public static void RefreshData(MemoryHandler memoryHandler)
         {
             lock (RefreshLock)
             {
+                _memoryHandler = memoryHandler;
+
                 if (!_memoryready)
-                    if (!Scanner.Instance.Locations.ContainsKey("WEATHER") || !_siginit)
+                    if (!_memoryHandler.Scanner.Locations.ContainsKey("WEATHER") || !_siginit)
                     {
                         _sList = new List<Signature>
                         {
@@ -109,14 +111,14 @@ namespace Chromatics.FFXIVInterfaces
                         });
                         */
 
-                        Scanner.Instance.LoadOffsets(_sList);
+                        _memoryHandler.Scanner.LoadOffsets(_sList.ToArray());
 
                         Thread.Sleep(100);
 
-                        if (Scanner.Instance.Locations.ContainsKey("WEATHER"))
+                        if (_memoryHandler.Scanner.Locations.ContainsKey("WEATHER"))
                         {
                             Debug.WriteLine("Initializing WEATHER done: " +
-                                            Scanner.Instance.Locations["WEATHER"].GetAddress().ToInt64()
+                                            _memoryHandler.Scanner.Locations["WEATHER"].GetAddress().ToInt64()
                                                 .ToString("X"));
 
                             _siginit = true;
@@ -128,12 +130,12 @@ namespace Chromatics.FFXIVInterfaces
 
                 if (_memoryready)
                 {
-                    if (Scanner.Instance.Locations.ContainsKey("WEATHER"))
+                    if (_memoryHandler.Scanner.Locations.ContainsKey("WEATHER"))
                     {
-                        var address = Scanner.Instance.Locations["WEATHER"];
+                        var address = _memoryHandler.Scanner.Locations["WEATHER"];
 
                         //PluginController.debug(" " + address.ToString("X8"));
-                        _weatherIconID = MemoryHandler.Instance.GetInt32(address.GetAddress(), 0);
+                        _weatherIconID = _memoryHandler.GetInt32(address.GetAddress(), 0);
 
                         
                         _initialized = true;
@@ -151,7 +153,7 @@ namespace Chromatics.FFXIVInterfaces
             lock (CacheLock)
             {
                 if (LastUpdated + UpdateInterval <= DateTime.Now)
-                    RefreshData();
+                    RefreshData(_memoryHandler);
             }
         }
 

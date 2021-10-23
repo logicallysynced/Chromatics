@@ -1,13 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Chromatics.FFXIVInterfaces
-{
-    using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Sharlayan;
@@ -28,17 +20,18 @@ namespace Chromatics.FFXIVInterfaces
         private static bool _initialized;
 
         private static readonly object RefreshLock = new object();
-
         private static readonly object CacheLock = new object();
+        private static MemoryHandler _memoryHandler;
 
-        public static void RefreshData()
+        public static void RefreshData(MemoryHandler memoryHandler)
         {
             lock (RefreshLock)
             {
-                if (!_memoryready)
-                    if (!Scanner.Instance.Locations.ContainsKey("FATEFINDER") || !_siginit)
-                    {
+                _memoryHandler = memoryHandler;
 
+                if (!_memoryready)
+                    if (!_memoryHandler.Scanner.Locations.ContainsKey("FATEFINDER") || !_siginit)
+                    {
                         _sList = new List<Signature>
                         {
                             new Signature
@@ -54,32 +47,15 @@ namespace Chromatics.FFXIVInterfaces
                             }
                         };
 
-                        /*
-                        _sList = new List<Signature>
-                        {
-                            new Signature
-                            {
-                                Key = "DUTYFINDER",
-                                PointerPath = new List<long>
-                                {
-                                    //0x018ECB30,
-                                    //0x24
-                                    //0x18EDB40
-                                    0x193A8F5
-                                }
-                            }
-                        };
-                        */
 
-
-                        Scanner.Instance.LoadOffsets(_sList);
+                        _memoryHandler.Scanner.LoadOffsets(_sList.ToArray());
 
                         Thread.Sleep(100);
 
-                        if (Scanner.Instance.Locations.ContainsKey("FATEFINDER"))
+                        if (_memoryHandler.Scanner.Locations.ContainsKey("FATEFINDER"))
                         {
                             Debug.WriteLine("Initializing FATEFINDER done: " +
-                                            Scanner.Instance.Locations["FATEFINDER"].GetAddress().ToInt64()
+                                            _memoryHandler.Scanner.Locations["FATEFINDER"].GetAddress().ToInt64()
                                                 .ToString("X"));
 
                             _siginit = true;
@@ -91,12 +67,12 @@ namespace Chromatics.FFXIVInterfaces
 
                 if (_memoryready)
                 {
-                    if (Scanner.Instance.Locations.ContainsKey("FATEFINDER"))
+                    if (_memoryHandler.Scanner.Locations.ContainsKey("FATEFINDER"))
                     {
-                        var address = Scanner.Instance.Locations["FATEFINDER"];
+                        var address = _memoryHandler.Scanner.Locations["FATEFINDER"];
 
                         //PluginController.debug(" " + address.ToString("X8"));
-                        var contentFinderState = MemoryHandler.Instance.GetByte(address.GetAddress(), 0x71);
+                        var contentFinderState = _memoryHandler.GetByte(address.GetAddress(), 0x71);
                         //var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 7);
                         //_isPopped = isPopped == 2;
 
@@ -118,7 +94,7 @@ namespace Chromatics.FFXIVInterfaces
             lock (CacheLock)
             {
                 if (LastUpdated + UpdateInterval <= DateTime.Now)
-                    RefreshData();
+                    RefreshData(_memoryHandler);
             }
         }
 
@@ -142,5 +118,4 @@ namespace Chromatics.FFXIVInterfaces
             return _countdown;
         }
     }
-}
 }

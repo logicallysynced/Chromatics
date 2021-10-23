@@ -20,15 +20,17 @@ namespace Chromatics.FFXIVInterfaces
         private static bool _initialized;
 
         private static readonly object RefreshLock = new object();
-
         private static readonly object CacheLock = new object();
+        private static MemoryHandler _memoryHandler;
 
-        public static void RefreshData()
+        public static void RefreshData(MemoryHandler memoryHandler)
         {
             lock (RefreshLock)
             {
+                _memoryHandler = memoryHandler;
+
                 if (!_memoryready)
-                    if (!Scanner.Instance.Locations.ContainsKey("DUTYFINDER") || !_siginit)
+                    if (!_memoryHandler.Scanner.Locations.ContainsKey("DUTYFINDER") || !_siginit)
                     {
 
                         _sList = new List<Signature>
@@ -64,14 +66,14 @@ namespace Chromatics.FFXIVInterfaces
                         */
 
 
-                        Scanner.Instance.LoadOffsets(_sList);
+                        _memoryHandler.Scanner.LoadOffsets(_sList.ToArray());
 
                         Thread.Sleep(100);
 
-                        if (Scanner.Instance.Locations.ContainsKey("DUTYFINDER"))
+                        if (_memoryHandler.Scanner.Locations.ContainsKey("DUTYFINDER"))
                         {
                             Debug.WriteLine("Initializing DUTYFINDER done: " +
-                                            Scanner.Instance.Locations["DUTYFINDER"].GetAddress().ToInt64()
+                                            _memoryHandler.Scanner.Locations["DUTYFINDER"].GetAddress().ToInt64()
                                                 .ToString("X"));
 
                             _siginit = true;
@@ -83,12 +85,12 @@ namespace Chromatics.FFXIVInterfaces
 
                 if (_memoryready)
                 {
-                    if (Scanner.Instance.Locations.ContainsKey("DUTYFINDER"))
+                    if (_memoryHandler.Scanner.Locations.ContainsKey("DUTYFINDER"))
                     {
-                        var address = Scanner.Instance.Locations["DUTYFINDER"];
+                        var address = _memoryHandler.Scanner.Locations["DUTYFINDER"];
 
                         //PluginController.debug(" " + address.ToString("X8"));
-                        var contentFinderState = MemoryHandler.Instance.GetByte(address.GetAddress(), 0x71);
+                        var contentFinderState = _memoryHandler.GetByte(address.GetAddress(), 0x71);
                         //var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 7);
                         //_isPopped = isPopped == 2;
 
@@ -110,7 +112,7 @@ namespace Chromatics.FFXIVInterfaces
             lock (CacheLock)
             {
                 if (LastUpdated + UpdateInterval <= DateTime.Now)
-                    RefreshData();
+                    RefreshData(_memoryHandler);
             }
         }
 

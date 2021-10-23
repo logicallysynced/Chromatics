@@ -26,16 +26,18 @@ namespace Chromatics.FFXIVInterfaces
         private static int _Contentraw;
 
         private static readonly object RefreshLock = new object();
-
         private static readonly object CacheLock = new object();
+        private static MemoryHandler _memoryHandler;
 
-        public static void RefreshData()
+        public static void RefreshData(MemoryHandler memoryHandler)
         {
             lock (RefreshLock)
             {
+                _memoryHandler = memoryHandler;
+
                 if (!_memoryreadyA)
                 {
-                    if (!Scanner.Instance.Locations.ContainsKey("MENUTRACK") || !_siginitA)
+                    if (!_memoryHandler.Scanner.Locations.ContainsKey("MENUTRACK") || !_siginitA)
                     {
 
 
@@ -78,14 +80,14 @@ namespace Chromatics.FFXIVInterfaces
                         };
                         */
 
-                        Scanner.Instance.LoadOffsets(_sList);
+                        _memoryHandler.Scanner.LoadOffsets(_sList.ToArray());
 
                         Thread.Sleep(100);
 
-                        if (Scanner.Instance.Locations.ContainsKey("MENUTRACK"))
+                        if (_memoryHandler.Scanner.Locations.ContainsKey("MENUTRACK"))
                         {
                             Debug.WriteLine("Initializing MENUTRACK done: " +
-                                            Scanner.Instance.Locations["MENUTRACK"].GetAddress().ToInt64()
+                                            _memoryHandler.Scanner.Locations["MENUTRACK"].GetAddress().ToInt64()
                                                 .ToString("X"));
 
                             _siginitA = true;
@@ -95,7 +97,7 @@ namespace Chromatics.FFXIVInterfaces
                             _memoryreadyA = true;
                     }
 
-                    if (!Scanner.Instance.Locations.ContainsKey("CONTENTFINDER") || !_siginitB)
+                    if (!_memoryHandler.Scanner.Locations.ContainsKey("CONTENTFINDER") || !_siginitB)
                     {
                         _sList = new List<Signature>
                         {
@@ -128,14 +130,14 @@ namespace Chromatics.FFXIVInterfaces
                         });
                         */
 
-                        Scanner.Instance.LoadOffsets(_sList);
+                        _memoryHandler.Scanner.LoadOffsets(_sList.ToArray());
 
                         Thread.Sleep(100);
 
-                        if (Scanner.Instance.Locations.ContainsKey("CONTENTFINDER"))
+                        if (_memoryHandler.Scanner.Locations.ContainsKey("CONTENTFINDER"))
                         {
                             Debug.WriteLine("Initializing CONTENTFINDER done: " +
-                                            Scanner.Instance.Locations["CONTENTFINDER"].GetAddress().ToInt64()
+                                            _memoryHandler.Scanner.Locations["CONTENTFINDER"].GetAddress().ToInt64()
                                                 .ToString("X"));
 
                             _siginitB = true;
@@ -148,12 +150,12 @@ namespace Chromatics.FFXIVInterfaces
 
                 if (_memoryreadyA)
                 {
-                    if (Scanner.Instance.Locations.ContainsKey("MENUTRACK"))
+                    if (_memoryHandler.Scanner.Locations.ContainsKey("MENUTRACK"))
                     {
-                        var address = Scanner.Instance.Locations["MENUTRACK"];
+                        var address = _memoryHandler.Scanner.Locations["MENUTRACK"];
 
                         //PluginController.debug(" " + address.ToString("X8"));
-                        var MenuState = MemoryHandler.Instance.GetByte(address.GetAddress(), 0x0);
+                        var MenuState = _memoryHandler.GetByte(address.GetAddress(), 0x0);
                         //var instanceLock = MemoryHandler.Instance.GetByte(address.GetAddress(), 7);
                         //_isPopped = isPopped == 2;
 
@@ -173,11 +175,11 @@ namespace Chromatics.FFXIVInterfaces
 
                 if (_memoryreadyB)
                 {
-                    if (Scanner.Instance.Locations.ContainsKey("CONTENTFINDER"))
+                    if (_memoryHandler.Scanner.Locations.ContainsKey("CONTENTFINDER"))
                     {
-                        var address = Scanner.Instance.Locations["CONTENTFINDER"];
+                        var address = _memoryHandler.Scanner.Locations["CONTENTFINDER"];
 
-                        var MenuState = MemoryHandler.Instance.GetByte(address.GetAddress(), 0xC);
+                        var MenuState = _memoryHandler.GetByte(address.GetAddress(), 0xC);
 
                         _Contentraw = MenuState;
 
@@ -195,7 +197,7 @@ namespace Chromatics.FFXIVInterfaces
             lock (CacheLock)
             {
                 if (LastUpdated + UpdateInterval <= DateTime.Now)
-                    RefreshData();
+                    RefreshData(_memoryHandler);
             }
         }
 
