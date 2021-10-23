@@ -202,6 +202,7 @@ namespace Chromatics.Datastore
         public int ChromaticsSettingsPollingInterval = 200;
         public bool ChromaticsSettingsExtraBulbEffects = false;
         public bool ChromaticsSettingsReleaseDevices = false;
+        public bool ChromaticsSettingsSwitchFunctionKeys = false;
 
         public int[][] ChromaticsSettingsACTDPS =
         {

@@ -41,6 +41,7 @@
             this.tP_devicesnew = new System.Windows.Forms.TabPage();
             this.tb_controldev = new System.Windows.Forms.TabControl();
             this.tP_keys = new System.Windows.Forms.TabPage();
+            this.chk_switchkeys = new System.Windows.Forms.CheckBox();
             this.chk_keymulti_rev = new System.Windows.Forms.CheckBox();
             this.lbl_multiledcnt = new System.Windows.Forms.Label();
             this.nm_keymulti_led = new System.Windows.Forms.NumericUpDown();
@@ -161,6 +162,7 @@
             this.chk_castanimatetoggle = new System.Windows.Forms.CheckBox();
             this.chk_castchargetoggle = new System.Windows.Forms.CheckBox();
             this.gB_General = new System.Windows.Forms.GroupBox();
+            this.chk_quickclose_boot = new System.Windows.Forms.CheckBox();
             this.chk_quickclose = new System.Windows.Forms.CheckBox();
             this.chk_releasedevices = new System.Windows.Forms.CheckBox();
             this.lbl_polling = new System.Windows.Forms.Label();
@@ -268,7 +270,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notify_master = new System.Windows.Forms.NotifyIcon(this.components);
             this.tooltip_main = new System.Windows.Forms.ToolTip(this.components);
-            this.chk_quickclose_boot = new System.Windows.Forms.CheckBox();
             this.tb_controlA.SuspendLayout();
             this.tP_debug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pB_logo1)).BeginInit();
@@ -468,6 +469,7 @@
             // tP_keys
             // 
             this.tP_keys.BackColor = System.Drawing.SystemColors.Control;
+            this.tP_keys.Controls.Add(this.chk_switchkeys);
             this.tP_keys.Controls.Add(this.chk_keymulti_rev);
             this.tP_keys.Controls.Add(this.lbl_multiledcnt);
             this.tP_keys.Controls.Add(this.nm_keymulti_led);
@@ -489,6 +491,20 @@
             this.tP_keys.Size = new System.Drawing.Size(717, 373);
             this.tP_keys.TabIndex = 0;
             this.tP_keys.Text = "Keyboard";
+            // 
+            // chk_switchkeys
+            // 
+            this.chk_switchkeys.AutoSize = true;
+            this.chk_switchkeys.Location = new System.Drawing.Point(419, 133);
+            this.chk_switchkeys.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_switchkeys.Name = "chk_switchkeys";
+            this.chk_switchkeys.Size = new System.Drawing.Size(174, 17);
+            this.chk_switchkeys.TabIndex = 43;
+            this.chk_switchkeys.Text = "Swap Function Keys with Digits";
+            this.tooltip_main.SetToolTip(this.chk_switchkeys, "Swaps the function key lighting with the digit keys.\r\nOnly available on per-key R" +
+        "GB lighting.");
+            this.chk_switchkeys.UseVisualStyleBackColor = true;
+            this.chk_switchkeys.CheckedChanged += new System.EventHandler(this.chk_switchkeys_CheckedChanged);
             // 
             // chk_keymulti_rev
             // 
@@ -2098,6 +2114,20 @@
             this.gB_General.TabStop = false;
             this.gB_General.Text = "General";
             // 
+            // chk_quickclose_boot
+            // 
+            this.chk_quickclose_boot.AutoSize = true;
+            this.chk_quickclose_boot.Location = new System.Drawing.Point(17, 121);
+            this.chk_quickclose_boot.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_quickclose_boot.Name = "chk_quickclose_boot";
+            this.chk_quickclose_boot.Size = new System.Drawing.Size(154, 17);
+            this.chk_quickclose_boot.TabIndex = 13;
+            this.chk_quickclose_boot.Text = "Minimise to Tray on Startup";
+            this.tooltip_main.SetToolTip(this.chk_quickclose_boot, "When checked, Chromatics will minimise to the system tray on startup.\r\nDefault: O" +
+        "FF");
+            this.chk_quickclose_boot.UseVisualStyleBackColor = true;
+            this.chk_quickclose_boot.CheckedChanged += new System.EventHandler(this.chk_quickclose_boot_CheckedChanged);
+            // 
             // chk_quickclose
             // 
             this.chk_quickclose.AutoSize = true;
@@ -3500,20 +3530,6 @@
             this.notify_master.Visible = true;
             this.notify_master.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notify_master_MouseDoubleClick);
             // 
-            // chk_quickclose_boot
-            // 
-            this.chk_quickclose_boot.AutoSize = true;
-            this.chk_quickclose_boot.Location = new System.Drawing.Point(17, 121);
-            this.chk_quickclose_boot.Margin = new System.Windows.Forms.Padding(2);
-            this.chk_quickclose_boot.Name = "chk_quickclose_boot";
-            this.chk_quickclose_boot.Size = new System.Drawing.Size(154, 17);
-            this.chk_quickclose_boot.TabIndex = 13;
-            this.chk_quickclose_boot.Text = "Minimise to Tray on Startup";
-            this.tooltip_main.SetToolTip(this.chk_quickclose_boot, "When checked, Chromatics will minimise to the system tray when the X is selected." +
-        "\r\nDefault: ON");
-            this.chk_quickclose_boot.UseVisualStyleBackColor = true;
-            this.chk_quickclose_boot.CheckedChanged += new System.EventHandler(this.chk_quickclose_boot_CheckedChanged);
-            // 
             // Chromatics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3844,6 +3860,7 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn col_mod;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.CheckBox chk_quickclose_boot;
+        private System.Windows.Forms.CheckBox chk_switchkeys;
     }
 }
 

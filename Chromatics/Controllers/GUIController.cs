@@ -1088,6 +1088,7 @@ namespace Chromatics
             chk_vegasmode.Checked = ChromaticsSettings.ChromaticsSettingsVegasMode;
             chk_quickclose.Checked = ChromaticsSettings.ChromaticsSettingsQuickClose;
             chk_quickclose_boot.Checked = ChromaticsSettings.ChromaticsSettingsQuickCloseBoot;
+            chk_switchkeys.Checked = ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys;
 
             cb_qwerty.SelectedIndex = (int)ChromaticsSettings.ChromaticsSettingsQwertyMode;
 
@@ -2516,6 +2517,7 @@ namespace Chromatics
                 lbl_multiledcnt.Enabled = false;
                 nm_keymulti_led.Enabled = false;
                 chk_keymulti_rev.Enabled = false;
+                chk_switchkeys.Enabled = false;
             }
             else
             {
@@ -2527,6 +2529,7 @@ namespace Chromatics
                 lbl_multiledcnt.Enabled = true;
                 nm_keymulti_led.Enabled = true;
                 chk_keymulti_rev.Enabled = true;
+                chk_switchkeys.Enabled = true;
             }
 
             SetKeysbase = false;
@@ -2549,6 +2552,7 @@ namespace Chromatics
                 _KeysSingleKeyModeEnabled = false;
                 chk_keys_singlemode.Enabled = false;
                 cb_singlezonemode.Enabled = false;
+                chk_switchkeys.Enabled = false;
             }
             else
             {
@@ -2560,6 +2564,7 @@ namespace Chromatics
 
                 chk_keys_singlemode.Enabled = true;
                 cb_singlezonemode.Enabled = true;
+                chk_switchkeys.Enabled = true;
             }
 
             SetKeysbase = false;
@@ -3833,6 +3838,15 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsQuickCloseBoot = chk_quickclose_boot.Checked;
+            
+            SaveChromaticsSettings(1);
+        }
+
+        private void chk_switchkeys_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys = chk_switchkeys.Checked;
             
             SaveChromaticsSettings(1);
         }

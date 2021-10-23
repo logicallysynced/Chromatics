@@ -133,6 +133,46 @@ namespace Chromatics.DeviceInterfaces.EffectLibrary
             "F9", "F10", "F11", "F12"
         };
 
+        public static readonly string[] Functions_Switch =
+        {
+            "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D0", "OemMinus", "OemEquals"
+        };
+
+        public static readonly string[] FunctionL_Switch =
+        {
+            "D1", "D2", "D3", "D4", "D5", "D6"
+        };
+
+        public static readonly string[] FunctionR_Switch =
+        {
+            "D7", "D8", "D9", "D0", "OemMinus", "OemEquals"
+        };
+
+        public static readonly string[] Function2L_Switch =
+        {
+            "D5", "D6"
+        };
+
+        public static readonly string[] Function2R_Switch =
+        {
+            "D7", "D8"
+        };
+
+        public static readonly string[] Function1_Switch =
+        {
+            "D1", "D2", "D3", "D4"
+        };
+
+        public static readonly string[] Function2_Switch =
+        {
+            "D5", "D6", "D7", "D8"
+        };
+
+        public static readonly string[] Function3_Switch =
+        {
+            "D9", "D0", "OemMinus", "OemEquals"
+        };
+
         public static readonly string[] Keypadzones =
         {
             "0", "1", "2", "3", "4"
@@ -172,6 +212,23 @@ namespace Chromatics.DeviceInterfaces.EffectLibrary
         {
             "Macro5", "Macro4", "Macro3", "Macro2", "Macro1"
         };
+
+        public static readonly Dictionary<string, string> DigitKeys_SwitchKey = new Dictionary<string, string>()
+        {
+            { "1","D1" },
+            { "2","D2" },
+            { "3","D3" },
+            { "4","D4" },
+            { "5","D5" },
+            { "6","D6" },
+            { "7","D7" },
+            { "8","D8" },
+            { "9","D9" },
+            { "0","D0" },
+            { "-","OemMinus" },
+            { "=","OemEquals" }
+        };
+
     }
 
     public class ColorFader

@@ -439,7 +439,7 @@ namespace Chromatics.FFXIVInterfaces
 
         public static List<string> KeybindsHighlights = new List<string>();
         
-        public static readonly Dictionary<string, string> Keybindtranslation = new Dictionary<string, string>
+        public static Dictionary<string, string> Keybindtranslation = new Dictionary<string, string>
         {
             //Keys
             {"1", "D1"},
@@ -515,7 +515,7 @@ namespace Chromatics.FFXIVInterfaces
             
         };
 
-        public static readonly Dictionary<string, string> KeybindtranslationAZERTY = new Dictionary<string, string>
+        public static Dictionary<string, string> KeybindtranslationAZERTY = new Dictionary<string, string>
         {
             //Keys
             {"1", "D1"},
@@ -600,7 +600,7 @@ namespace Chromatics.FFXIVInterfaces
             {"Num-", "NumSubtract" }
         };
 
-        public static readonly Dictionary<string, string> KeybindtranslationESDF = new Dictionary<string, string>
+        public static Dictionary<string, string> KeybindtranslationESDF = new Dictionary<string, string>
         {
             //Keys
             {"1", "D1"},

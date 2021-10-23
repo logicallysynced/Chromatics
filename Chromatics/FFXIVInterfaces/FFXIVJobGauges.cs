@@ -55,7 +55,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(wrath, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -69,7 +69,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(wrath, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -278,7 +278,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(oathgauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -292,7 +292,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(oathgauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -413,7 +413,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate = ((int)chakra - 0) * (JobFunction_Collection.Length - 0) / (5 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -425,7 +425,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate = ((int)chakra - 0) * (JobFunction_Collection.Length - 0) / (5 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -590,7 +590,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate = ((int)bloodremain.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -602,7 +602,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate = ((int)bloodremain.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -830,7 +830,7 @@ namespace Chromatics
                             //FKeys
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                var JobFunction_Collection = DeviceEffects.Functions;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                 var JobFunction_Interpolate = ((int)songremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -842,7 +842,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                var JobFunction_Collection = DeviceEffects.Function2;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                                 var JobFunction_Interpolate = ((int)songremain - 0) * (JobFunction_Collection.Length - 0) / (30 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -970,7 +970,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                foreach (var f in DeviceEffects.Functions)
+                                foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                 {
                                     GlobalApplyMapKeyLighting(f, negcol, false);
                                 }
@@ -978,7 +978,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                foreach (var f in DeviceEffects.Function2)
+                                foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2)
                                 {
                                     GlobalApplyMapKeyLighting(f, negcol, false);
                                 }
@@ -1043,7 +1043,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int((int)flowercharge, 0, 116,
                                     JobFunction_Collection.Length, 0);
@@ -1057,7 +1057,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int((int)flowercharge, 0, 116,
                                     JobFunction_Collection.Length, 0);
@@ -1246,7 +1246,7 @@ namespace Chromatics
                             //FKeys
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                var JobFunction_Collection = DeviceEffects.Functions;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                 var JobFunction_Interpolate = ((int)Cooldowns.JobResourcesContainer.EnochianCharge - 0) * (JobFunction_Collection.Length - 0) / (116 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1258,7 +1258,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                var JobFunction_Collection = DeviceEffects.Function2;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                                 var JobFunction_Interpolate = ((int)Cooldowns.JobResourcesContainer.EnochianCharge - 0) * (JobFunction_Collection.Length - 0) / (116 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1364,7 +1364,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                foreach (var f in DeviceEffects.Functions)
+                                foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                 {
                                     GlobalApplyMapKeyLighting(f, negblmcol, false);
                                 }
@@ -1372,7 +1372,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                foreach (var f in DeviceEffects.Function2)
+                                foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2)
                                 {
                                     GlobalApplyMapKeyLighting(f, negblmcol, false);
                                 }
@@ -1405,7 +1405,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate = ((int)Cooldowns.JobResourcesContainer.Summoner.Timer.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1417,7 +1417,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate = ((int)Cooldowns.JobResourcesContainer.Summoner.Timer.TotalSeconds - 0) * (JobFunction_Collection.Length - 0) / (15 - 0) + 0;
                             
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1501,7 +1501,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.JobResourcesContainer.Scholar.FaerieGauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -1515,7 +1515,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(Cooldowns.JobResourcesContainer.Scholar.FaerieGauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -1612,7 +1612,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate = (Cooldowns.JobResourcesContainer.Ninja.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1624,7 +1624,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate = (Cooldowns.JobResourcesContainer.Ninja.NinkiGauge - 0) * (JobFunction_Collection.Length - 0) / (100 - 0) + 0;
 
                             for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -1779,7 +1779,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(bloodgauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -1801,7 +1801,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(bloodgauge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -2230,7 +2230,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(cardRemain, 0, 1500,
                                     JobFunction_Collection.Length, 0);
@@ -2244,7 +2244,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(cardRemain, 0, 1500,
                                     JobFunction_Collection.Length, 0);
@@ -2329,7 +2329,7 @@ namespace Chromatics
                             //FKeys
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                var JobFunction_Collection = DeviceEffects.Functions;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                 var JobFunction_Interpolate = ((int)mchgb - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -2341,7 +2341,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                var JobFunction_Collection = DeviceEffects.Function2;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                                 var JobFunction_Interpolate = ((int)mchgb - 0) * (JobFunction_Collection.Length - 0) / (1.0 - 0) + 0;
 
                                 for (int i = 0; i < JobFunction_Collection.Length; i++)
@@ -2374,7 +2374,7 @@ namespace Chromatics
                             //FKeys
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                var JobFunction_Collection = DeviceEffects.Functions;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                 var JobFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(mchgb, 0, 100,
                                         JobFunction_Collection.Length, 0);
@@ -2388,7 +2388,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                var JobFunction_Collection = DeviceEffects.Function2;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                                 var JobFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(mchgb, 0, 100,
                                         JobFunction_Collection.Length, 0);
@@ -2537,7 +2537,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_Collection = DeviceEffects.Functions;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(kenkicharge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -2551,7 +2551,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_Collection = DeviceEffects.Function2;
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                             var JobFunction_Interpolate =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(kenkicharge, 0, 100,
                                     JobFunction_Collection.Length, 0);
@@ -2675,7 +2675,7 @@ namespace Chromatics
                         //FKeys
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            var JobFunction_CollectionA = DeviceEffects.FunctionR.ToList();
+                            var JobFunction_CollectionA = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.FunctionR_Switch.ToList():DeviceEffects.FunctionR.ToList();
                             JobFunction_CollectionA.Reverse();
                             var JobFunction_InterpolateA =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(blackmana, 0, 100,
@@ -2687,7 +2687,7 @@ namespace Chromatics
                                     JobFunction_InterpolateA > i ? blackburst : negburst, false);
                             }
 
-                            var JobFunction_CollectionB = DeviceEffects.FunctionL;
+                            var JobFunction_CollectionB = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.FunctionL_Switch:DeviceEffects.FunctionL;
                             var JobFunction_InterpolateB =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(whitemana, 0, 100,
                                     JobFunction_CollectionB.Length, 0);
@@ -2701,7 +2701,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            var JobFunction_CollectionA = DeviceEffects.Function2R.ToList();
+                            var JobFunction_CollectionA = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2R_Switch.ToList():DeviceEffects.Function2R.ToList();
                             JobFunction_CollectionA.Reverse();
                             var JobFunction_InterpolateA =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(blackmana, 0, 100,
@@ -2713,7 +2713,7 @@ namespace Chromatics
                                     JobFunction_InterpolateA > i ? blackburst : negburst, false);
                             }
 
-                            var JobFunction_CollectionB = DeviceEffects.Function2L;
+                            var JobFunction_CollectionB = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2L_Switch:DeviceEffects.Function2L;
                             var JobFunction_InterpolateB =
                                 Helpers.FFXIVInterpolation.Interpolate_Int(whitemana, 0, 100,
                                     JobFunction_CollectionB.Length, 0);
@@ -2936,7 +2936,7 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.JobGauge)
                                                             {
-                                                                var JobFunction_Collection = DeviceEffects.Functions.ToList();
+                                                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch.ToList():DeviceEffects.Functions.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -2948,7 +2948,7 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.HpJobMp)
                                                             {
-                                                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+                                                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch.ToList():DeviceEffects.Function2.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -3018,7 +3018,7 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.JobGauge)
                                                             {
-                                                                var JobFunction_Collection = DeviceEffects.Functions.ToList();
+                                                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch.ToList():DeviceEffects.Functions.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -3030,7 +3030,7 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.HpJobMp)
                                                             {
-                                                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+                                                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch.ToList():DeviceEffects.Function2.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -3101,7 +3101,7 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.JobGauge)
                                                             {
-                                                                var JobFunction_Collection = DeviceEffects.Functions.ToList();
+                                                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch.ToList():DeviceEffects.Functions.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -3113,7 +3113,7 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.HpJobMp)
                                                             {
-                                                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+                                                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch.ToList():DeviceEffects.Function2.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -3184,7 +3184,7 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.JobGauge)
                                                             {
-                                                                var JobFunction_Collection = DeviceEffects.Functions.ToList();
+                                                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch.ToList():DeviceEffects.Functions.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -3196,7 +3196,7 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.HpJobMp)
                                                             {
-                                                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+                                                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch.ToList():DeviceEffects.Function2.ToList();
 
                                                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                                                 {
@@ -3266,9 +3266,9 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.JobGauge)
                                                             {
-                                                                var JobFunction_CollectionA = DeviceEffects.Function1.ToList();
-                                                                var JobFunction_CollectionB = DeviceEffects.Function2.ToList();
-                                                                var JobFunction_CollectionC = DeviceEffects.Function3.ToList();
+                                                                var JobFunction_CollectionA = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function1_Switch.ToList():DeviceEffects.Function1.ToList();
+                                                                var JobFunction_CollectionB = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch.ToList():DeviceEffects.Function2.ToList();
+                                                                var JobFunction_CollectionC = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function3_Switch.ToList():DeviceEffects.Function3.ToList();
 
                                                                 for (int i = 0; i < JobFunction_CollectionA.Count; i++)
                                                                 {
@@ -3294,8 +3294,8 @@ namespace Chromatics
 
                                                             if (_FKeyMode == FKeyMode.HpJobMp)
                                                             {
-                                                                var JobFunction_CollectionA = DeviceEffects.Function2L.ToList();
-                                                                var JobFunction_CollectionB = DeviceEffects.Function2R.ToList();
+                                                                var JobFunction_CollectionA = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2L_Switch.ToList():DeviceEffects.Function2L.ToList();
+                                                                var JobFunction_CollectionB = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2R_Switch.ToList():DeviceEffects.Function2R.ToList();
 
                                                                 for (int i = 0; i < JobFunction_CollectionA.Count; i++)
                                                                 {
@@ -3397,7 +3397,7 @@ namespace Chromatics
 
                                 if (_FKeyMode == FKeyMode.JobGauge)
                                 {
-                                    var JobFunction_Collection = DeviceEffects.Functions.ToList();
+                                    var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch.ToList():DeviceEffects.Functions.ToList();
 
                                     for (int i = 0; i < JobFunction_Collection.Count; i++)
                                     {
@@ -3409,7 +3409,7 @@ namespace Chromatics
 
                                 if (_FKeyMode == FKeyMode.HpJobMp)
                                 {
-                                    var JobFunction_Collection = DeviceEffects.Function2.ToList();
+                                    var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch.ToList():DeviceEffects.Function2.ToList();
 
                                     for (int i = 0; i < JobFunction_Collection.Count; i++)
                                     {
@@ -3504,7 +3504,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                var JobFunction_Collection = DeviceEffects.Functions.ToList();
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch.ToList():DeviceEffects.Functions.ToList();
 
                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                 {
@@ -3516,7 +3516,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch.ToList():DeviceEffects.Function2.ToList();
 
                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                 {
@@ -3607,7 +3607,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                var JobFunction_Collection = DeviceEffects.Functions.ToList();
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch.ToList():DeviceEffects.Functions.ToList();
 
                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                 {
@@ -3619,7 +3619,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                var JobFunction_Collection = DeviceEffects.Function2.ToList();
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch.ToList():DeviceEffects.Function2.ToList();
 
                                 for (int i = 0; i < JobFunction_Collection.Count; i++)
                                 {
@@ -3691,7 +3691,7 @@ namespace Chromatics
                             //FKeys
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                var JobFunction_Collection = DeviceEffects.Functions;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                 var JobFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(IQStacks, 0, 12,
                                         JobFunction_Collection.Length, 0);
@@ -3705,7 +3705,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                var JobFunction_Collection = DeviceEffects.Function2;
+                                var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
                                 var JobFunction_Interpolate =
                                     Helpers.FFXIVInterpolation.Interpolate_Int(IQStacks, 0, 12,
                                         JobFunction_Collection.Length, 0);
@@ -3943,7 +3943,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.JobGauge)
                             {
-                                foreach (var f in DeviceEffects.Functions)
+                                foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                 {
                                     GlobalApplyMapKeyLighting(f, negcraftercol, false);
                                 }
@@ -3951,7 +3951,7 @@ namespace Chromatics
 
                             if (_FKeyMode == FKeyMode.HpJobMp)
                             {
-                                foreach (var f in DeviceEffects.Function2)
+                                foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2)
                                 {
                                     GlobalApplyMapKeyLighting(f, negcraftercol, false);
                                 }
@@ -3997,7 +3997,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.JobGauge)
                         {
-                            foreach (var f in DeviceEffects.Functions)
+                            foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                             {
                                 GlobalApplyMapKeyLighting(f, baseColor, false);
                             }
@@ -4005,7 +4005,7 @@ namespace Chromatics
 
                         if (_FKeyMode == FKeyMode.HpJobMp)
                         {
-                            foreach (var f in DeviceEffects.Function2)
+                            foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2)
                             {
                                 GlobalApplyMapKeyLighting(f, baseColor, false);
                             }
@@ -4050,7 +4050,7 @@ namespace Chromatics
 
                 if (_FKeyMode == FKeyMode.JobGauge)
                 {
-                    foreach (var f in DeviceEffects.Functions)
+                    foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                     {
                         GlobalApplyMapKeyLighting(f, baseColor, false);
                     }
@@ -4058,7 +4058,7 @@ namespace Chromatics
 
                 if (_FKeyMode == FKeyMode.HpJobMp)
                 {
-                    foreach (var f in DeviceEffects.Function2)
+                    foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2)
                     {
                         GlobalApplyMapKeyLighting(f, baseColor, false);
                     }

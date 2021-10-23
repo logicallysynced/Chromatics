@@ -633,6 +633,95 @@ namespace Chromatics
 
                     try
                     {
+                        //Function Key Swap
+                        if (!ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)
+                        {
+                            //Remove Function Keys
+                            foreach (var switchkey in DeviceEffects.Functions)
+                            {
+                                if (FfxivHotbar.Keybindtranslation.ContainsKey(switchkey))
+                                {
+                                    FfxivHotbar.Keybindtranslation.Remove(switchkey);
+                                }
+
+                                if (FfxivHotbar.KeybindtranslationAZERTY.ContainsKey(switchkey))
+                                {
+                                    FfxivHotbar.KeybindtranslationAZERTY.Remove(switchkey);
+                                }
+
+                                if (FfxivHotbar.KeybindtranslationESDF.ContainsKey(switchkey))
+                                {
+                                    FfxivHotbar.KeybindtranslationESDF.Remove(switchkey);
+                                }
+                            }
+
+                            //Add Digit Keys
+                            foreach (var switchkey in DeviceEffects.DigitKeys_SwitchKey)
+                            {
+                                if (!FfxivHotbar.Keybindtranslation.ContainsKey(switchkey.Key))
+                                {
+                                    FfxivHotbar.Keybindtranslation.Add(switchkey.Key, switchkey.Value);
+                                    GlobalApplyMapKeyLighting(switchkey.Key, _baseColor, false);
+                                }
+
+                                if (!FfxivHotbar.KeybindtranslationAZERTY.ContainsKey(switchkey.Key))
+                                {
+                                    FfxivHotbar.KeybindtranslationAZERTY.Add(switchkey.Key, switchkey.Value);
+                                    GlobalApplyMapKeyLighting(switchkey.Key, _baseColor, false);
+                                }
+
+                                if (!FfxivHotbar.KeybindtranslationESDF.ContainsKey(switchkey.Key))
+                                {
+                                    FfxivHotbar.KeybindtranslationESDF.Add(switchkey.Key, switchkey.Value);
+                                    GlobalApplyMapKeyLighting(switchkey.Key, _baseColor, false);
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            //Remove Digit Keys
+                            foreach (var switchkey in DeviceEffects.DigitKeys_SwitchKey)
+                            {
+                                if (FfxivHotbar.Keybindtranslation.ContainsKey(switchkey.Key))
+                                {
+                                    FfxivHotbar.Keybindtranslation.Remove(switchkey.Key);
+                                }
+
+                                if (FfxivHotbar.KeybindtranslationAZERTY.ContainsKey(switchkey.Key))
+                                {
+                                    FfxivHotbar.KeybindtranslationAZERTY.Remove(switchkey.Key);
+                                }
+
+                                if (FfxivHotbar.KeybindtranslationESDF.ContainsKey(switchkey.Key))
+                                {
+                                    FfxivHotbar.KeybindtranslationESDF.Remove(switchkey.Key);
+                                }
+                            }
+
+                            //Add Function Keys
+                            foreach (var switchkey in DeviceEffects.Functions)
+                            {
+                                if (!FfxivHotbar.Keybindtranslation.ContainsKey(switchkey))
+                                {
+                                    FfxivHotbar.Keybindtranslation.Add(switchkey, switchkey);
+                                    GlobalApplyMapKeyLighting(switchkey, _baseColor, false);
+                                }
+
+                                if (!FfxivHotbar.KeybindtranslationAZERTY.ContainsKey(switchkey))
+                                {
+                                    FfxivHotbar.KeybindtranslationAZERTY.Add(switchkey, switchkey);
+                                    GlobalApplyMapKeyLighting(switchkey, _baseColor, false);
+                                }
+
+                                if (!FfxivHotbar.KeybindtranslationESDF.ContainsKey(switchkey))
+                                {
+                                    FfxivHotbar.KeybindtranslationESDF.Add(switchkey, switchkey);
+                                    GlobalApplyMapKeyLighting(switchkey, _baseColor, false);
+                                }
+                            }
+                        }
+
                         if (memoryHandler.Reader.CanGetActors() && _playerInfo != null)
                         {
                             if (_playerInfo.Name != "" && _playerInfo.TargetType != Actor.TargetType.Unknown)
@@ -1277,10 +1366,11 @@ namespace Chromatics
                                 //Fkeys
                                 if (_FKeyMode == FKeyMode.BattleStance)
                                 {
-                                    foreach (var f in DeviceEffects.Functions)
+                                    foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                     {
                                         GlobalApplyMapKeyLighting(f, _baseStanceColor, false, false);
                                     }
+                                    
                                 }
 
 
@@ -1534,7 +1624,7 @@ namespace Chromatics
                                 //Fkeys
                                 if (_FKeyMode == FKeyMode.JobClass)
                                 {
-                                    foreach (var f in DeviceEffects.Functions)
+                                    foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                     {
                                         GlobalApplyMapKeyLighting(f, _baseJobColor, false, false);
                                     }
@@ -1625,7 +1715,7 @@ namespace Chromatics
                                         //Fkeys
                                         if (_FKeyMode == FKeyMode.ReactiveWeather)
                                         {
-                                            foreach (var f in DeviceEffects.Functions)
+                                            foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                             {
                                                 GlobalApplyMapKeyLighting(f, ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), false, false);
                                             }
@@ -1701,7 +1791,7 @@ namespace Chromatics
                                         //Fkeys
                                         if (_FKeyMode == FKeyMode.ReactiveWeather)
                                         {
-                                            foreach (var f in DeviceEffects.Functions)
+                                            foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                             {
                                                 GlobalApplyMapKeyLighting(f, ColorTranslator.FromHtml(weatherMapbase), false, false);
                                             }
@@ -1926,14 +2016,14 @@ namespace Chromatics
 
                                     if (_FKeyMode == FKeyMode.BaseMode)
                                     {
-                                        foreach (var f in DeviceEffects.Functions)
+                                        foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                         {
                                             GlobalApplyMapKeyLighting(f, _baseColor, false, false);
                                         }
                                     }
                                     else if (_FKeyMode == FKeyMode.HighlightColor)
                                     {
-                                        foreach (var f in DeviceEffects.Functions)
+                                        foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                         {
                                             GlobalApplyMapKeyLighting(f, highlightColor, false, false);
                                         }
@@ -2654,7 +2744,8 @@ namespace Chromatics
                                         //Function Keys
                                         if (_FKeyMode == FKeyMode.TargetHp)
                                         {
-                                            var FKTargetHp_Collection = DeviceEffects.Functions;
+
+                                            var FKTargetHp_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                             var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(
                                                 currentThp,
                                                 0, maxThp, FKTargetHp_Collection.Length, 0);
@@ -2693,7 +2784,7 @@ namespace Chromatics
                                         //Function Keys
                                         if (_FKeyMode == FKeyMode.TargetCastbar)
                                         {
-                                            var FKTargetHp_Collection = DeviceEffects.Functions;
+                                            var FKTargetHp_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                             var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Double(
                                                 targetInfo.CastingPercentage,
                                                 0.0, 1.0, FKTargetHp_Collection.Length, 0);
@@ -3002,7 +3093,7 @@ namespace Chromatics
                                         //Function Keys
                                         if (_FKeyMode == FKeyMode.TargetHp)
                                         {
-                                            var FKTargetHp_Collection = DeviceEffects.Functions;
+                                            var FKTargetHp_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                             var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(
                                                 currentThp,
                                                 0, maxThp, FKTargetHp_Collection.Length, 0);
@@ -3041,7 +3132,7 @@ namespace Chromatics
                                         //Function Keys
                                         if (_FKeyMode == FKeyMode.TargetCastbar)
                                         {
-                                            var FKTargetHp_Collection = DeviceEffects.Functions;
+                                            var FKTargetHp_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                             var FKTargetHp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Double(
                                                 targetInfo.CastingPercentage,
                                                 0.0, 1.0, FKTargetHp_Collection.Length, 0);
@@ -3414,7 +3505,7 @@ namespace Chromatics
                                                     //Function Keys
                                                     if (_FKeyMode == FKeyMode.EnmityTracker)
                                                     {
-                                                        foreach (var f in DeviceEffects.Functions)
+                                                        foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                                         {
                                                             GlobalApplyMapKeyLighting(f, colEm0, false);
                                                         }
@@ -3495,7 +3586,7 @@ namespace Chromatics
                                                     //Function Keys
                                                     if (_FKeyMode == FKeyMode.EnmityTracker)
                                                     {
-                                                        foreach (var f in DeviceEffects.Functions)
+                                                        foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                                         {
                                                             GlobalApplyMapKeyLighting(f, colEm1, false);
                                                         }
@@ -3576,7 +3667,7 @@ namespace Chromatics
                                                     //Function Keys
                                                     if (_FKeyMode == FKeyMode.EnmityTracker)
                                                     {
-                                                        foreach (var f in DeviceEffects.Functions)
+                                                        foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                                         {
                                                             GlobalApplyMapKeyLighting(f, colEm2, false);
                                                         }
@@ -3657,7 +3748,7 @@ namespace Chromatics
                                                     //Function Keys
                                                     if (_FKeyMode == FKeyMode.EnmityTracker)
                                                     {
-                                                        foreach (var f in DeviceEffects.Functions)
+                                                        foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                                         {
                                                             GlobalApplyMapKeyLighting(f, colEm3, false);
                                                         }
@@ -3738,7 +3829,7 @@ namespace Chromatics
                                                     //Function Keys
                                                     if (_FKeyMode == FKeyMode.EnmityTracker)
                                                     {
-                                                        foreach (var f in DeviceEffects.Functions)
+                                                        foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                                         {
                                                             GlobalApplyMapKeyLighting(f, colEm4, false);
                                                         }
@@ -3817,7 +3908,7 @@ namespace Chromatics
                                                 //Function Keys
                                                 if (_FKeyMode == FKeyMode.EnmityTracker)
                                                 {
-                                                    foreach (var f in DeviceEffects.Functions)
+                                                    foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                                     {
                                                         GlobalApplyMapKeyLighting(f, colEm0, false);
                                                     }
@@ -3894,7 +3985,7 @@ namespace Chromatics
                                         //Function Keys
                                         if (_FKeyMode == FKeyMode.TargetHp || _FKeyMode == FKeyMode.EnmityTracker || _FKeyMode == FKeyMode.TargetCastbar)
                                         {
-                                            foreach (var f in DeviceEffects.Functions)
+                                            foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                             {
                                                 GlobalApplyMapKeyLighting(f, _baseColor, false);
                                             }
@@ -4012,7 +4103,7 @@ namespace Chromatics
                                     //Function Keys
                                     if (_FKeyMode == FKeyMode.TargetHp || _FKeyMode == FKeyMode.EnmityTracker || _FKeyMode == FKeyMode.TargetCastbar)
                                     {
-                                        foreach (var f in DeviceEffects.Functions)
+                                        foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                         {
                                             GlobalApplyMapKeyLighting(f, _baseColor, false);
                                         }
@@ -4062,7 +4153,7 @@ namespace Chromatics
 
 
                                     //Cast Charge Keys
-                                    var Castcharge_Collection = DeviceEffects.Functions;
+                                    var Castcharge_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                     var Castcharge_Interpolate =
                                         Helpers.FFXIVInterpolation.Interpolate_Double(castPercentage, 0.0, 1.0,
@@ -4164,18 +4255,11 @@ namespace Chromatics
                                     {
                                         if (ChromaticsSettings.ChromaticsSettingsCastToggle)
                                         {
-                                            GlobalApplyMapKeyLighting("F1", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F2", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F3", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F4", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F5", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F6", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F7", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F8", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F9", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F10", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F11", _baseColor, false);
-                                            GlobalApplyMapKeyLighting("F12", _baseColor, false);
+                                            foreach (var function in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
+                                            {
+                                                GlobalApplyMapKeyLighting(function, _baseColor, false);
+                                            }
+                                            
 
                                             GlobalApplyStripMouseLighting(DevModeTypes.Castbar, "LeftSide1", "RightSide1",
                                                 baseColor, false);
@@ -4289,7 +4373,7 @@ namespace Chromatics
                                     //FKeys
                                     if (_FKeyMode == FKeyMode.HpMp)
                                     {
-                                        var HpFunction_Collection = DeviceEffects.FunctionL;
+                                        var HpFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.FunctionL_Switch:DeviceEffects.FunctionL;
 
 
                                         var HpFunction_Interpolate =
@@ -4317,7 +4401,7 @@ namespace Chromatics
 
                                     if (_FKeyMode == FKeyMode.HpJobMp)
                                     {
-                                        var HpFunction_Collection = DeviceEffects.Function1;
+                                        var HpFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function1_Switch:DeviceEffects.Function1;
 
 
                                         var HpFunction_Interpolate =
@@ -4345,7 +4429,7 @@ namespace Chromatics
 
                                     if (_FKeyMode == FKeyMode.HpTracker)
                                     {
-                                        var HpFunction_Collection = DeviceEffects.Functions;
+                                        var HpFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                         var HpFunction_Interpolate =
                                             Helpers.FFXIVInterpolation.Interpolate_Int(currentHp, 0, maxHp,
                                                 HpFunction_Collection.Length, 0);
@@ -4492,7 +4576,7 @@ namespace Chromatics
                                     //FKeys
                                     if (_FKeyMode == FKeyMode.HpMp)
                                     {
-                                        var MpFunction_Collection = DeviceEffects.FunctionR;
+                                        var MpFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.FunctionR_Switch:DeviceEffects.FunctionR;
 
                                         var MpFunction_Interpolate =
                                             Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
@@ -4512,7 +4596,7 @@ namespace Chromatics
 
                                     if (_FKeyMode == FKeyMode.HpJobMp)
                                     {
-                                        var MpFunction_Collection = DeviceEffects.Function3;
+                                        var MpFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function3_Switch:DeviceEffects.Function3;
 
                                         var MpFunction_Interpolate =
                                             Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
@@ -4532,7 +4616,7 @@ namespace Chromatics
 
                                     if (_FKeyMode == FKeyMode.MpTracker)
                                     {
-                                        var MpFunction_Collection = DeviceEffects.Functions;
+                                        var MpFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                         var MpFunction_Interpolate =
                                             Helpers.FFXIVInterpolation.Interpolate_Int(currentMp, 0, maxMp,
                                                 MpFunction_Collection.Length, 0);
@@ -6875,7 +6959,7 @@ namespace Chromatics
 
                                         if (_FKeyMode == FKeyMode.CurrentExp)
                                         {
-                                            foreach (var f in DeviceEffects.Functions)
+                                            foreach (var f in (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions)
                                             {
                                                 GlobalApplyMapKeyLighting(f, ColorTranslator.FromHtml(ColorMappings.ColorMappingExpMax), false, false);
                                             }
@@ -6905,7 +6989,7 @@ namespace Chromatics
                                         {
                                             if (FFXIVHelpers.ExperienceTable.ContainsKey(_currentlvl))
                                             {
-                                                var FKExp_Collection = DeviceEffects.Functions;
+                                                var FKExp_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                                 var FKExp_Interpolate = Helpers.FFXIVInterpolation.Interpolate_Int(_role, 0,
                                                     FFXIVHelpers.ExperienceTable[_currentlvl], FKExp_Collection.Length, 0);
 
@@ -6954,7 +7038,7 @@ namespace Chromatics
 
                                             if (_FKeyMode == FKeyMode.PullCountdown)
                                             {
-                                                var FKPullCount_Collection = DeviceEffects.Functions;
+                                                var FKPullCount_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                                 var FKPullCount_Interpolate =
                                                     Helpers.FFXIVInterpolation.Interpolate_Int(pullCountInterval, 0,
                                                         pullCountMax, 0, FKPullCount_Collection.Length);
@@ -7002,7 +7086,7 @@ namespace Chromatics
                                         {
                                             if (_FKeyMode == FKeyMode.PullCountdown)
                                             {
-                                                var FKPullCount_Collection = DeviceEffects.Functions;
+                                                var FKPullCount_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                 for (var i2 = 0; i2 < FKPullCount_Collection.Length; i2++)
                                                 {
@@ -7357,7 +7441,7 @@ namespace Chromatics
 
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTTrigger_Collection = DeviceEffects.Functions;
+                                                            var FKACTTrigger_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                                             for (var i2 = 0; i2 < FKACTTrigger_Collection.Length; i2++)
                                                             {
                                                                 GlobalApplyMapKeyLighting(FKACTTrigger_Collection[i2],
@@ -7400,7 +7484,7 @@ namespace Chromatics
 
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTTrigger_Collection = DeviceEffects.Functions;
+                                                            var FKACTTrigger_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                                             for (var i2 = 0; i2 < FKACTTrigger_Collection.Length; i2++)
                                                             {
                                                                 if (_playerInfo.IsCasting)
@@ -7480,7 +7564,7 @@ namespace Chromatics
 
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTTimer_Collection = DeviceEffects.Functions;
+                                                            var FKACTTimer_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                                             for (var i2 = 0; i2 < FKACTTimer_Collection.Length; i2++)
                                                             {
                                                                 GlobalApplyMapKeyLighting(FKACTTimer_Collection[i2],
@@ -7528,7 +7612,7 @@ namespace Chromatics
 
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTTimer_Collection = DeviceEffects.Functions;
+                                                            var FKACTTimer_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                                             for (var i2 = 0; i2 < FKACTTimer_Collection.Length; i2++)
                                                             {
                                                                 if (_playerInfo.IsCasting)
@@ -7577,7 +7661,7 @@ namespace Chromatics
                                                         {
                                                             if (_FKeyMode == FKeyMode.ACTEnrage)
                                                             {
-                                                                var FKACTEnrage_Collection = DeviceEffects.Functions;
+                                                                var FKACTEnrage_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
                                                                 var FKACTEnrage_Interpolate =
                                                                     Helpers.FFXIVInterpolation.Interpolate_Long(
                                                                         (long)_ACTData.CurrentEncounterTime, 0,
@@ -7782,7 +7866,7 @@ namespace Chromatics
                                                         //Functions
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTDPS_Collection = DeviceEffects.Functions;
+                                                            var FKACTDPS_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                             if ((long)_ACTData.PlayerCurrentDPS >=
                                                                 ChromaticsSettings.ChromaticsSettingsACTDPS[jobkey][0])
@@ -8110,7 +8194,7 @@ namespace Chromatics
                                                         //Functions
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTHPS_Collection = DeviceEffects.Functions;
+                                                            var FKACTHPS_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                             if ((long)_ACTData.PlayerCurrentHPS >=
                                                                 ChromaticsSettings.ChromaticsSettingsACTHPS[jobkey][0])
@@ -8437,7 +8521,7 @@ namespace Chromatics
                                                         //Functions
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTGroupDPS_Collection = DeviceEffects.Functions;
+                                                            var FKACTGroupDPS_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                             if ((long)_ACTData.PlayerCurrentGroupDPS >=
                                                                 ChromaticsSettings.ChromaticsSettingsACTGroupDPS[jobkey][0])
@@ -8775,7 +8859,7 @@ namespace Chromatics
                                                         //Functions
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTCrit_Collection = DeviceEffects.Functions;
+                                                            var FKACTCrit_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                             if ((long)_ACTData.PlayerCurrentCrit >=
                                                                 ChromaticsSettings.ChromaticsSettingsACTTargetCrit[jobkey][
@@ -9102,7 +9186,7 @@ namespace Chromatics
                                                         //Functions
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTDH_Collection = DeviceEffects.Functions;
+                                                            var FKACTDH_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                             if ((long)_ACTData.PlayerCurrentDH >=
                                                                 ChromaticsSettings.ChromaticsSettingsACTTargetDH[jobkey][0])
@@ -9431,7 +9515,7 @@ namespace Chromatics
                                                         //Functions
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTCritDH_Collection = DeviceEffects.Functions;
+                                                            var FKACTCritDH_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                             if ((long)_ACTData.PlayerCurrentCritDH >=
                                                                 ChromaticsSettings
@@ -9767,7 +9851,7 @@ namespace Chromatics
                                                         //Functions
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTOverheal_Collection = DeviceEffects.Functions;
+                                                            var FKACTOverheal_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                             if ((long)_ACTData.PlayerCurrentOverheal >=
                                                                 ChromaticsSettings.ChromaticsSettingsACTOverheal[jobkey][0])
@@ -10100,7 +10184,7 @@ namespace Chromatics
                                                         //Functions
                                                         if (_FKeyMode == FKeyMode.ACTTracker)
                                                         {
-                                                            var FKACTDamage_Collection = DeviceEffects.Functions;
+                                                            var FKACTDamage_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                             if ((long)_ACTData.PlayerCurrentDamage >=
                                                                 ChromaticsSettings.ChromaticsSettingsACTDamage[jobkey][0])
@@ -10341,7 +10425,7 @@ namespace Chromatics
                                                     //Functions
                                                     if (_FKeyMode == FKeyMode.ACTTracker)
                                                     {
-                                                        var FKACTDPS_Collection = DeviceEffects.Functions;
+                                                        var FKACTDPS_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                         for (var i2 = 0; i2 < FKACTDPS_Collection.Length; i2++)
                                                         {
@@ -10358,7 +10442,7 @@ namespace Chromatics
 
                                                     if (_FKeyMode == FKeyMode.ACTEnrage)
                                                     {
-                                                        var FKACTEnrage_Collection = DeviceEffects.Functions;
+                                                        var FKACTEnrage_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
 
                                                         for (var i2 = 0; i2 < FKACTEnrage_Collection.Length; i2++)
                                                         {
