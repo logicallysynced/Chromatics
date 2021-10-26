@@ -21,7 +21,7 @@ namespace Chromatics.DeviceInterfaces
         public static SteelLib InitializeSteelSdk()
         {
             SteelLib steel = null;
-            if (Process.GetProcessesByName("SteelSeriesEngine3").Length > 0)
+            if (Process.GetProcessesByName("SteelSeriesEngine3").Length > 0 || Process.GetProcessesByName("SteelSeriesEngine").Length > 0)
             {
                 steel = new SteelLib();
                 var result = steel.InitializeLights();
@@ -197,7 +197,7 @@ namespace Chromatics.DeviceInterfaces
 
                         if (Process.GetProcessesByName("Discord").Length > 0)
                         {
-                            Write.WriteConsole(ConsoleTypes.Steel, @"Please disable the Discord profile in Engine Apps.");
+                            Write.WriteConsole(ConsoleTypes.Steel, @"Note: Please disable the Discord profile in Engine Apps.");
                         }
 
                         isInitialized = true;
