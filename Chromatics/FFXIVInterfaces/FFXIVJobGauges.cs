@@ -2043,8 +2043,8 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("Num2", negdrkcol, false);
                                 GlobalApplyMapKeyLighting("Num3", negdrkcol, false);
 
-                                GlobalApplyMapKeyLighting("Num0", negdrkcol, false);
-                                GlobalApplyMapKeyLighting("NumDecimal", negdrkcol, false);
+                                GlobalApplyMapKeyLighting("Num0", bloodcol, false);
+                                GlobalApplyMapKeyLighting("NumDecimal", bloodcol, false);
                             }
                         }
                         else if (bloodPol <= 0)
