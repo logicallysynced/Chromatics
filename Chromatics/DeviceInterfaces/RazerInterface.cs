@@ -91,6 +91,8 @@ namespace Chromatics.DeviceInterfaces
         void ParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts,
             int speed = 50);
 
+        void ParticleEffectChroma(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts,
+            int speed = 50);
         void RaidParticleEffect(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts,
             int speed = 50);
         void FadeColourAll(Color toColor, Color fromColor, uint interval);
@@ -232,6 +234,7 @@ namespace Chromatics.DeviceInterfaces
         private KeyboardCustom _keyboardGrid = KeyboardCustom.Create();
         private MouseCustom _mouseGrid = MouseCustom.Create();
         private MousepadCustom _mousepadGrid = MousepadCustom.Create();
+        private ChromaLinkCustom _chromalinkGrid = ChromaLinkCustom.Create();
 
         private IChroma Chroma;
         private IKeyboard Keyboard;
@@ -251,6 +254,8 @@ namespace Chromatics.DeviceInterfaces
 
         private bool _isInitialized;
         private bool _isCrashed;
+
+        private Random _random = new Random(); 
 
         //Handle device send/recieve
         private readonly CancellationTokenSource _rcts = new CancellationTokenSource();
@@ -945,7 +950,6 @@ namespace Chromatics.DeviceInterfaces
             if (!_isInitialized) return;
             if (pos >= ChromaLinkConstants.MaxLeds) return;
             uint rzCol = ToColoreCol(col);
-            
             try
             {
                 if (_razerDeviceChromaLink)
@@ -2769,7 +2773,6 @@ namespace Chromatics.DeviceInterfaces
             var _effectGrid = KeyboardCustom.Create();
             _effectGrid = refreshKeyGrid;
 
-
             Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
 
             try
@@ -2817,6 +2820,7 @@ namespace Chromatics.DeviceInterfaces
 
                 var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
 
+                
                 foreach (var key in _regions)
                 {
                     if (cts.IsCancellationRequested) return;
@@ -2851,9 +2855,76 @@ namespace Chromatics.DeviceInterfaces
                     }
 
                     Keyboard.SetCustomAsync(_effectGrid);
+
                     //_effectGrid.Clear();
                     Thread.Sleep(speed);
                 }
+
+            }
+        }
+
+        public void ParticleEffectChroma(Color[] toColor, string[] regions, uint interval, CancellationTokenSource cts,
+            int speed = 50)
+        {
+            if (!_isInitialized) return;
+            if (!_razerDeviceChromaLink) return;
+            if (cts.IsCancellationRequested) return;
+
+            var refreshKeyGridChroma = ChromaLinkCustom.Create();
+            refreshKeyGridChroma = _chromalinkGrid;
+
+            var _effectGridChroma = ChromaLinkCustom.Create();
+            _effectGridChroma = refreshKeyGridChroma;
+
+            Dictionary<string, ColorFader> colorFaderDict = new Dictionary<string, ColorFader>();
+
+            try
+            {
+                refreshKeyGridChroma.Set(ToColoreCol(toColor[0]));
+
+                ChromaLink.SetCustomAsync(refreshKeyGridChroma);
+                Thread.Sleep(500);
+            }
+            catch (Exception ex)
+            {
+                CheckRazerEx(ex);
+            }
+
+            while (!cts.IsCancellationRequested)
+            {
+                if (cts.IsCancellationRequested) break;
+
+                var rnd = new Random();
+                var rndCol = toColor[rnd.Next(toColor.Length)];
+
+                //Thread.Sleep(500);
+
+                var _regions = regions.OrderBy(x => rnd.Next()).ToArray();
+
+                
+                var rzCol = ToColoreCol(rndCol);
+
+                try
+                {
+                    for (var i = 0; i < ChromaLinkConstants.MaxLeds; i++)
+                    {
+                        if (_effectGridChroma[i].Value != rzCol)
+                        {
+                            _effectGridChroma[i] = rzCol;
+                        }
+                    }
+                    
+
+                }
+                catch (Exception ex)
+                {
+                    CheckRazerEx(ex);
+                }
+
+                ChromaLink.SetCustomAsync(_effectGridChroma);
+
+                //_effectGrid.Clear();
+                Thread.Sleep(speed*10);
 
             }
         }

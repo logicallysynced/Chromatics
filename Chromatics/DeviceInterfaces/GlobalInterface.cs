@@ -89,6 +89,8 @@ namespace Chromatics
         private bool _globalParticleRunning;
         private Task _rzPart;
         private CancellationTokenSource _rzPartCts = new CancellationTokenSource();
+        private Task _rzPartChroma;
+        private CancellationTokenSource _rzPartCtsChroma = new CancellationTokenSource();
         private Task _logiPart;
         private CancellationTokenSource _logiPartCts = new CancellationTokenSource();
         private Task _corsairPart;
@@ -2732,6 +2734,16 @@ namespace Chromatics
 
                 MemoryTasks.Add(_rzPart);
                 MemoryTasks.Run(_rzPart);
+
+                _rzPartChroma = null;
+                _rzPartCtsChroma = new CancellationTokenSource();
+                _rzPartChroma = new Task(() =>
+                {
+                    _razer.ParticleEffectChroma(toColor, regions, interval, _rzPartCtsChroma, speed);
+                }, _rzPartCtsChroma.Token);
+
+                MemoryTasks.Add(_rzPartChroma);
+                MemoryTasks.Run(_rzPartChroma);
             }
 
             if (LogitechSdkCalled == 1)
@@ -2812,6 +2824,8 @@ namespace Chromatics
             {
                 _rzPartCts.Cancel();
                 MemoryTasks.Remove(_rzPart);
+                _rzPartCtsChroma.Cancel();
+                MemoryTasks.Remove(_rzPartChroma);
             }
 
             if (LogitechSdkCalled == 1)
