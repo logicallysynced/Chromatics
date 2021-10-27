@@ -1747,7 +1747,7 @@ namespace Chromatics
                         var gritcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobDRKGrit);
 
                         var bloodgauge = Cooldowns.JobResourcesContainer.DarkKnight.BlackBlood;
-                        var bloodPol = (bloodgauge - 0) * (50 - 0) / (100 - 0) + 0;
+                        var bloodPol = Helpers.FFXIVInterpolation.Interpolate_Int(bloodgauge, 0, 100, 50, 0);
                         
                         GlobalApplyMapKeyLighting("NumSubtract", negdrkcol, false);
                         GlobalApplyMapKeyLighting("NumAdd", negdrkcol, false);
