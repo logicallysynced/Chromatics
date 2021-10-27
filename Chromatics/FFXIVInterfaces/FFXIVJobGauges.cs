@@ -2047,7 +2047,7 @@ namespace Chromatics
                                 GlobalApplyMapKeyLighting("NumDecimal", negdrkcol, false);
                             }
                         }
-                        else
+                        else if (bloodPol <= 0)
                         {
                             GlobalApplyMapKeyLighting("NumLock", negdrkcol, false);
                             GlobalApplyMapKeyLighting("NumDivide", negdrkcol, false);
