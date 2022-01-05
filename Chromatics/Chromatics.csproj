@@ -153,7 +153,8 @@
       <HintPath>..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
     </Reference>
     <Reference Include="LifxNet, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LifxNet.2.2.0\lib\netstandard1.3\LifxNet.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Build Dependencies\LifxNet.dll</HintPath>
     </Reference>
     <Reference Include="Logitech-LCD, Version=1.0.4.0, Culture=neutral, PublicKeyToken=06ced2f874d832d0, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -180,6 +181,9 @@
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.7.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Piksel.Graphics.Colour, Version=0.3.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Colour.0.3.1\lib\net461\Piksel.Graphics.Colour.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net, Version=3.0.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.3.0.101\lib\net461\protobuf-net.dll</HintPath>

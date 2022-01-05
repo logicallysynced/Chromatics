@@ -1,0 +1,366 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LifxNet</name>
+    </assembly>
+    <members>
+        <member name="T:LifxNet.Color">
+            <summary>
+            RGB Color structure
+            </summary>
+        </member>
+        <member name="P:LifxNet.Color.R">
+            <summary>
+            Red
+            </summary>
+        </member>
+        <member name="P:LifxNet.Color.G">
+            <summary>
+            Green
+            </summary>
+        </member>
+        <member name="P:LifxNet.Color.B">
+            <summary>
+            Blue
+            </summary>
+        </member>
+        <member name="T:LifxNet.LifxClient">
+            <summary>
+            LIFX Client for communicating with bulbs
+            </summary>
+        </member>
+        <member name="M:LifxNet.LifxClient.CreateAsync">
+            <summary>
+            Creates a new LIFX client.
+            </summary>
+            <returns>client</returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.Dispose">
+            <summary>
+            Disposes the client
+            </summary>
+        </member>
+        <member name="M:LifxNet.LifxClient.TurnDeviceOnAsync(LifxNet.Device)">
+            <summary>
+            Turns the device on
+            </summary>
+        </member>
+        <member name="M:LifxNet.LifxClient.TurnDeviceOffAsync(LifxNet.Device)">
+            <summary>
+            Turns the device off
+            </summary>
+            <param name="device"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.SetDevicePowerStateAsync(LifxNet.Device,System.Boolean)">
+            <summary>
+            Sets the device power state
+            </summary>
+            <param name="device"></param>
+            <param name="isOn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.GetDeviceLabelAsync(LifxNet.Device)">
+            <summary>
+            Gets the label for the device
+            </summary>
+            <param name="device"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.SetDeviceLabelAsync(LifxNet.Device,System.String)">
+            <summary>
+            Sets the label on the device
+            </summary>
+            <param name="device"></param>
+            <param name="label"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.GetDeviceVersionAsync(LifxNet.Device)">
+            <summary>
+            Gets the device version
+            </summary>
+        </member>
+        <member name="M:LifxNet.LifxClient.GetDeviceHostFirmwareAsync(LifxNet.Device)">
+            <summary>
+            Gets the device's host firmware
+            </summary>
+            <param name="device"></param>
+            <returns></returns>
+        </member>
+        <member name="E:LifxNet.LifxClient.DeviceDiscovered">
+            <summary>
+            Event fired when a LIFX bulb is discovered on the network
+            </summary>
+        </member>
+        <member name="E:LifxNet.LifxClient.DeviceLost">
+            <summary>
+            Event fired when a LIFX bulb hasn't been seen on the network for a while (for more than 5 minutes)
+            </summary>
+        </member>
+        <member name="P:LifxNet.LifxClient.Devices">
+            <summary>
+            Gets a list of currently known devices
+            </summary>
+        </member>
+        <member name="T:LifxNet.LifxClient.DeviceDiscoveryEventArgs">
+            <summary>
+            Event args for <see cref="E:LifxNet.LifxClient.DeviceDiscovered"/> and <see cref="E:LifxNet.LifxClient.DeviceLost"/> events.
+            </summary>
+        </member>
+        <member name="P:LifxNet.LifxClient.DeviceDiscoveryEventArgs.Device">
+            <summary>
+            The device the event relates to
+            </summary>
+        </member>
+        <member name="M:LifxNet.LifxClient.StartDeviceDiscovery">
+            <summary>
+            Begins searching for bulbs.
+            </summary>
+            <seealso cref="E:LifxNet.LifxClient.DeviceDiscovered"/>
+            <seealso cref="E:LifxNet.LifxClient.DeviceLost"/>
+            <seealso cref="M:LifxNet.LifxClient.StopDeviceDiscovery"/>
+        </member>
+        <member name="M:LifxNet.LifxClient.StopDeviceDiscovery">
+            <summary>
+            Stops device discovery
+            </summary>
+            <seealso cref="M:LifxNet.LifxClient.StartDeviceDiscovery"/>
+        </member>
+        <member name="M:LifxNet.LifxClient.TurnBulbOnAsync(LifxNet.LightBulb,System.TimeSpan)">
+            <summary>
+            Turns a bulb on using the provided transition time
+            </summary>
+            <param name="bulb"></param>
+            <param name="transitionDuration"></param>
+            <returns></returns>
+            <seealso cref="M:LifxNet.LifxClient.TurnBulbOffAsync(LifxNet.LightBulb,System.TimeSpan)"/>
+            <seealso cref="M:LifxNet.LifxClient.TurnDeviceOnAsync(LifxNet.Device)"/>
+            <seealso cref="M:LifxNet.LifxClient.TurnDeviceOffAsync(LifxNet.Device)"/>
+            <seealso cref="M:LifxNet.LifxClient.SetLightPowerAsync(LifxNet.LightBulb,System.TimeSpan,System.Boolean)"/>
+            <seealso cref="M:LifxNet.LifxClient.SetDevicePowerStateAsync(LifxNet.Device,System.Boolean)"/>
+            <seealso cref="M:LifxNet.LifxClient.GetLightPowerAsync(LifxNet.LightBulb)"/>
+        </member>
+        <member name="M:LifxNet.LifxClient.TurnBulbOffAsync(LifxNet.LightBulb,System.TimeSpan)">
+            <summary>
+            Turns a bulb off using the provided transition time
+            </summary>
+            <seealso cref="M:LifxNet.LifxClient.TurnBulbOnAsync(LifxNet.LightBulb,System.TimeSpan)"/>
+            <seealso cref="M:LifxNet.LifxClient.TurnDeviceOnAsync(LifxNet.Device)"/>
+            <seealso cref="M:LifxNet.LifxClient.TurnDeviceOffAsync(LifxNet.Device)"/>
+            <seealso cref="M:LifxNet.LifxClient.SetLightPowerAsync(LifxNet.LightBulb,System.TimeSpan,System.Boolean)"/>
+            <seealso cref="M:LifxNet.LifxClient.SetDevicePowerStateAsync(LifxNet.Device,System.Boolean)"/>
+            <seealso cref="M:LifxNet.LifxClient.GetLightPowerAsync(LifxNet.LightBulb)"/>
+        </member>
+        <member name="M:LifxNet.LifxClient.SetLightPowerAsync(LifxNet.LightBulb,System.TimeSpan,System.Boolean)">
+            <summary>
+            Turns a bulb on or off using the provided transition time
+            </summary>
+            <param name="bulb"></param>
+            <param name="transitionDuration"></param>
+            <param name="isOn">True to turn on, false to turn off</param>
+            <returns></returns>
+            <seealso cref="M:LifxNet.LifxClient.TurnBulbOffAsync(LifxNet.LightBulb,System.TimeSpan)"/>
+            <seealso cref="M:LifxNet.LifxClient.TurnBulbOnAsync(LifxNet.LightBulb,System.TimeSpan)"/>
+            <seealso cref="M:LifxNet.LifxClient.TurnDeviceOnAsync(LifxNet.Device)"/>
+            <seealso cref="M:LifxNet.LifxClient.TurnDeviceOffAsync(LifxNet.Device)"/>
+            <seealso cref="M:LifxNet.LifxClient.SetDevicePowerStateAsync(LifxNet.Device,System.Boolean)"/>
+            <seealso cref="M:LifxNet.LifxClient.GetLightPowerAsync(LifxNet.LightBulb)"/>
+        </member>
+        <member name="M:LifxNet.LifxClient.GetLightPowerAsync(LifxNet.LightBulb)">
+            <summary>
+            Gets the current power state for a light bulb
+            </summary>
+            <param name="bulb"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.SetColorAsync(LifxNet.LightBulb,LifxNet.Color,System.UInt16)">
+            <summary>
+            Sets color and temperature for a bulb
+            </summary>
+            <param name="bulb"></param>
+            <param name="color"></param>
+            <param name="kelvin"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.SetColorAsync(LifxNet.LightBulb,LifxNet.Color,System.UInt16,System.TimeSpan)">
+            <summary>
+            Sets color and temperature for a bulb and uses a transition time to the provided state
+            </summary>
+            <param name="bulb"></param>
+            <param name="color"></param>
+            <param name="kelvin"></param>
+            <param name="transitionDuration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.SetColorAsync(LifxNet.LightBulb,System.UInt16,System.UInt16,System.UInt16,System.UInt16,System.TimeSpan)">
+            <summary>
+            Sets color and temperature for a bulb and uses a transition time to the provided state
+            </summary>
+            <param name="bulb">Light bulb</param>
+            <param name="hue">0..65535</param>
+            <param name="saturation">0..65535</param>
+            <param name="brightness">0..65535</param>
+            <param name="kelvin">2700..9000</param>
+            <param name="transitionDuration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.GetLightStateAsync(LifxNet.LightBulb)">
+            <summary>
+            Gets the current state of the bulb
+            </summary>
+            <param name="bulb"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.GetInfraredAsync(LifxNet.LightBulb)">
+            <summary>
+            Gets the current maximum power level of the Infrared channel
+            </summary>
+            <param name="bulb"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LifxNet.LifxClient.SetInfraredAsync(LifxNet.Device,System.UInt16)">
+            <summary>
+            Sets the infrared brightness level
+            </summary>
+            <param name="device"></param>
+            <param name="brightness"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LifxNet.Device">
+            <summary>
+            LIFX Generic Device
+            </summary>
+        </member>
+        <member name="P:LifxNet.Device.HostName">
+            <summary>
+            Hostname for the device
+            </summary>
+        </member>
+        <member name="P:LifxNet.Device.Service">
+            <summary>
+            Service ID
+            </summary>
+        </member>
+        <member name="P:LifxNet.Device.Port">
+            <summary>
+            Service port
+            </summary>
+        </member>
+        <member name="P:LifxNet.Device.MacAddress">
+            <summary>
+            Gets the MAC address
+            </summary>
+        </member>
+        <member name="P:LifxNet.Device.MacAddressName">
+            <summary>
+            Gets the MAC address
+            </summary>
+        </member>
+        <member name="T:LifxNet.LightBulb">
+            <summary>
+            LIFX light bulb
+            </summary>
+        </member>
+        <member name="M:LifxNet.LightBulb.#ctor(System.String,System.Byte[],System.Byte,System.UInt32)">
+            <summary>
+            Initializes a new instance of a bulb instead of relying on discovery. At least the host name must be provide for the device to be usable.
+            </summary>
+            <param name="hostname">Required</param>
+            <param name="macAddress"></param>
+            <param name="service"></param>
+            <param name="port"></param>
+        </member>
+        <member name="T:LifxNet.LifxResponse">
+            <summary>
+            Base class for LIFX response types
+            </summary>
+        </member>
+        <member name="T:LifxNet.AcknowledgementResponse">
+            <summary>
+            Response to any message sent with ack_required set to 1. 
+            </summary>
+        </member>
+        <member name="T:LifxNet.StateServiceResponse">
+            <summary>
+            Response to GetService message.
+            Provides the device Service and port.
+            If the Service is temporarily unavailable, then the port value will be 0.
+            </summary>
+        </member>
+        <member name="T:LifxNet.StateLabelResponse">
+            <summary>
+            Response to GetLabel message. Provides device label.
+            </summary>
+        </member>
+        <member name="T:LifxNet.LightStateResponse">
+            <summary>
+            Sent by a device to provide the current light state
+            </summary>
+        </member>
+        <member name="P:LifxNet.LightStateResponse.Hue">
+            <summary>
+            Hue
+            </summary>
+        </member>
+        <member name="P:LifxNet.LightStateResponse.Saturation">
+            <summary>
+            Saturation (0=desaturated, 65535 = fully saturated)
+            </summary>
+        </member>
+        <member name="P:LifxNet.LightStateResponse.Brightness">
+            <summary>
+            Brightness (0=off, 65535=full brightness)
+            </summary>
+        </member>
+        <member name="P:LifxNet.LightStateResponse.Kelvin">
+            <summary>
+            Bulb color temperature
+            </summary>
+        </member>
+        <member name="P:LifxNet.LightStateResponse.IsOn">
+            <summary>
+            Power state
+            </summary>
+        </member>
+        <member name="P:LifxNet.LightStateResponse.Label">
+            <summary>
+            Light label
+            </summary>
+        </member>
+        <member name="T:LifxNet.StateVersionResponse">
+            <summary>
+            Response to GetVersion message.	Provides the hardware version of the device.
+            </summary>
+        </member>
+        <member name="P:LifxNet.StateVersionResponse.Vendor">
+            <summary>
+            Vendor ID
+            </summary>
+        </member>
+        <member name="P:LifxNet.StateVersionResponse.Product">
+            <summary>
+            Product ID
+            </summary>
+        </member>
+        <member name="P:LifxNet.StateVersionResponse.Version">
+            <summary>
+            Hardware version
+            </summary>
+        </member>
+        <member name="T:LifxNet.StateHostFirmwareResponse">
+            <summary>
+            Response to GetHostFirmware message. Provides host firmware information.
+            </summary>
+        </member>
+        <member name="P:LifxNet.StateHostFirmwareResponse.Build">
+            <summary>
+            Firmware build time
+            </summary>
+        </member>
+        <member name="P:LifxNet.StateHostFirmwareResponse.Version">
+            <summary>
+            Firmware version
+            </summary>
+        </member>
+    </members>
+</doc>
