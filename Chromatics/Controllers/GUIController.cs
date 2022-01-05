@@ -1129,6 +1129,9 @@ namespace Chromatics
             chk_castreadycheck.Checked = ChromaticsSettings.ChromaticsSettingsCastReadyCheckAlert;
             cb_bcm.SelectedIndex = cb_bcm.FindStringExact(ChromaticsSettings.ChromaticsSettingsBaseMode);
 
+            trackbar_globalbrightness.Value = ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness;
+            lbl_globalbrightness_value.Text = ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness.ToString() + "%";
+
             nm_ledcount_z1.Value = _ChromaLinkLEDCountZ1;
             nm_ledcount_z2.Value = _ChromaLinkLEDCountZ2;
             nm_ledcount_z3.Value = _ChromaLinkLEDCountZ3;
@@ -3853,6 +3856,19 @@ namespace Chromatics
             if (Startup == false) return;
 
             ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys = chk_switchkeys.Checked;
+            
+            SaveChromaticsSettings(1);
+        }
+
+        private void trackbar_globalbrightness_Scroll(object sender, EventArgs e)
+        {
+            if (Startup == false) return;
+
+            ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness = trackbar_globalbrightness.Value;
+            lbl_globalbrightness_value.Text = trackbar_globalbrightness.Value.ToString() + "%";
+
+            //var correctionFactor = (((trackbar_globalbrightness.Value - 0) * ((float)0 - (float)-1)) / (100 - 0)) + (float)-1;
+            //Debug.WriteLine($"Correction: {correctionFactor}");
             
             SaveChromaticsSettings(1);
         }

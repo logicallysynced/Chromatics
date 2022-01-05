@@ -158,7 +158,8 @@ namespace Chromatics
                     RazerSdkCalled = 1;
                     razerFirstSet = true;
                     //WriteConsole(ConsoleTypes.Razer, @"Razer SDK Loaded");
-                    _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                    
+                    _razer.InitializeLights(Helpers.ControlGlobalBrightness(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness));
 
                     if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                     {
@@ -196,7 +197,7 @@ namespace Chromatics
             if (_SDKCorsair && CorsairSdkCalled == 0)
             {
                 WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
-                _corsair = CorsairInterface.InitializeCorsairSdk(Color.DarkBlue);
+                _corsair = CorsairInterface.InitializeCorsairSdk(Helpers.ControlGlobalBrightness(Color.DarkBlue, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness));
                 if (_corsair != null)
                 {
                     CorsairSdk = true;
@@ -346,7 +347,7 @@ namespace Chromatics
                     RazerSdk = true;
                     RazerSdkCalled = 1;
                     //WriteConsole(ConsoleTypes.Razer, @"Razer SDK Loaded");
-                    _razer.InitializeLights(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor));
+                    _razer.InitializeLights(Helpers.ControlGlobalBrightness(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness));
 
                     if (ChromaticsSettings.ChromaticsSettingsDebugOpt)
                     {
@@ -383,7 +384,7 @@ namespace Chromatics
             if (_SDKCorsair && CorsairSdkCalled == 0 && corsairFirstSet)
             {
                 WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
-                _corsair = CorsairInterface.InitializeCorsairSdk(Color.DarkBlue);
+                _corsair = CorsairInterface.InitializeCorsairSdk(Helpers.ControlGlobalBrightness(Color.DarkBlue, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness));
                 if (_corsair != null)
                 {
                     CorsairSdk = true;
@@ -607,7 +608,7 @@ namespace Chromatics
 
         public void GlobalResetDevices()
         {
-            var baseColor = ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor);
+            var baseColor = Helpers.ControlGlobalBrightness(ColorTranslator.FromHtml(ColorMappings.ColorMappingBaseColor), ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (RazerSdkCalled == 1)
                 _razer.ResetRazerDevices(_razerDeviceKeyboard, _razerDeviceKeypad, _razerDeviceMouse, _razerDeviceMousepad,
@@ -641,7 +642,7 @@ namespace Chromatics
                 _razer.SetWave();
 
             if (LogitechSdkCalled == 1)
-                _logitech.SetWave(_baseColor);
+                _logitech.SetWave(Helpers.ControlGlobalBrightness(_baseColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness));
 
             if (CorsairSdkCalled == 1)
                 return;
@@ -676,10 +677,10 @@ namespace Chromatics
                 }
 
                 if (mode == BulbModeTypes.Standby)
-                    _lifx.LifxUpdateState(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled),
+                    _lifx.LifxUpdateState(mode, Helpers.ControlGlobalBrightness(ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness),
                         transition);
                 else
-                    _lifx.LifxUpdateState(mode, col, transition);
+                    _lifx.LifxUpdateState(mode, Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness), transition);
             }
         }
 
@@ -694,9 +695,9 @@ namespace Chromatics
                 }
 
                 if (mode == BulbModeTypes.Standby)
-                    _lifx.LifxUpdateStateBrightness(mode, ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), brightness, transition);
+                    _lifx.LifxUpdateStateBrightness(mode, Helpers.ControlGlobalBrightness(ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled), ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness), brightness, transition);
                 else
-                    _lifx.LifxUpdateStateBrightness(mode, col, brightness, transition);
+                    _lifx.LifxUpdateStateBrightness(mode, Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness), brightness, transition);
             }
         }
 
@@ -719,6 +720,8 @@ namespace Chromatics
 
         public void GlobalApplyAllDeviceLighting(Color col)
         {
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (_KeysSingleKeyModeEnabled) GlobalApplySingleZoneLighting(col);
             //if (_KeysMultiKeyModeEnabled) GlobalApplyMultiZoneLighting(col, "All");
 
@@ -761,6 +764,8 @@ namespace Chromatics
 
         public void GlobalApplyAllKeyLighting(Color col)
         {
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (RazerSdkCalled == 1)
                 _razer.SetLights(col);
 
@@ -793,6 +798,8 @@ namespace Chromatics
 
         public void GlobalApplySingleZoneLighting(Color col)
         {
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (!_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
@@ -817,6 +824,8 @@ namespace Chromatics
 
         public void GlobalApplyMultiZoneLighting(Color col, string region)
         {
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (!_KeysMultiKeyModeEnabled)
                 return;
 
@@ -842,6 +851,8 @@ namespace Chromatics
         //Send a lighting command to a specific Keyboard LED
         public void GlobalApplyMapKeyLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
@@ -941,6 +952,8 @@ namespace Chromatics
 
         public void GlobalApplyMapLightbarLighting(string key, Color col, bool clear, [Optional] bool bypasswhitelist)
         {
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
@@ -952,6 +965,7 @@ namespace Chromatics
         {
             if (!_KeysSingleKeyModeEnabled || mode == DevModeTypes.Disabled || mode != _KeysSingleKeyMode) return;
 
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
             GlobalApplySingleZoneLighting(col);
         }
 
@@ -959,6 +973,9 @@ namespace Chromatics
         {
             if (!_KeysMultiKeyModeEnabled)
                 return;
+
+            empty = Helpers.ControlGlobalBrightness(empty, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            full = Helpers.ControlGlobalBrightness(full, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (mode == DevMultiModeTypes.Disabled)
             {
@@ -978,12 +995,16 @@ namespace Chromatics
         {
             if (!_KeysMultiKeyModeEnabled || mode == DevMultiModeTypes.Disabled || mode != _KeysMultiKeyMode) return;
 
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
             GlobalApplyMultiZoneLighting(col, region);
         }
 
         public void GlobalApplyKeySingleLightingBrightness(DevModeTypes mode, Color colMin, Color colMax, double val)
         {
             if (!_KeysSingleKeyModeEnabled || mode != _KeysSingleKeyMode) return;
+
+            colMin = Helpers.ControlGlobalBrightness(colMin, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            colMax = Helpers.ControlGlobalBrightness(colMax, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (mode == DevModeTypes.Disabled)
             {
@@ -1000,6 +1021,9 @@ namespace Chromatics
         {
             if (!_KeysMultiKeyModeEnabled || mode != _KeysMultiKeyMode) return;
 
+            colMin = Helpers.ControlGlobalBrightness(colMin, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            colMax = Helpers.ControlGlobalBrightness(colMax, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (mode == DevMultiModeTypes.Disabled)
             {
                 return;
@@ -1014,6 +1038,8 @@ namespace Chromatics
         //Send a lighting command to a specific Keyboard LED outside of MapKey scope
         public void GlobalApplyMapLogoLighting(string key, Color col, bool clear)
         {
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (RazerSdkCalled == 1)
                 _razer.ApplyMapLogoLighting(Localization.LocalizeKey(key), col, clear);
 
@@ -1045,12 +1071,15 @@ namespace Chromatics
         public void GlobalApplyMapMouseLighting(DevModeTypes mode, Color col, bool clear)
         {
             if (mode != _MouseZone1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
+
             
             if (mode == DevModeTypes.Disabled)
             {
                 col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
 
             }
+
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             //Logo
             if (mode == _MouseZone1Mode)
@@ -1158,6 +1187,8 @@ namespace Chromatics
                 Console.WriteLine(mode + "//" + _MouseStrip1Mode);
             }
 
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             //Logo
             if (mode == _MouseStrip1Mode)
             {
@@ -1202,6 +1233,9 @@ namespace Chromatics
 
             if (mode != _MouseZone1Mode && mode != _MouseZone2Mode && mode != _MouseZone3Mode) return;
 
+            colMin = Helpers.ControlGlobalBrightness(colMin, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            colMax = Helpers.ControlGlobalBrightness(colMax, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
 
             var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
@@ -1218,6 +1252,8 @@ namespace Chromatics
             }
 
             if (mode != _HeadsetZone1Mode && mode != _HeadsetZone2Mode) return;
+
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             //Logo
             if (mode == _HeadsetZone1Mode)
@@ -1300,6 +1336,9 @@ namespace Chromatics
 
             if (mode != _HeadsetZone1Mode) return;
 
+            colMin = Helpers.ControlGlobalBrightness(colMin, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            colMax = Helpers.ControlGlobalBrightness(colMax, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
 
@@ -1318,6 +1357,8 @@ namespace Chromatics
             }
 
             if (mode != _KeypadZone1Mode) return;
+
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             //Logo
             if (mode == _KeypadZone1Mode)
@@ -1353,6 +1394,8 @@ namespace Chromatics
             
             if (!_EnableKeypadBinds) return;
 
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (RazerSdkCalled == 1)
                 _razer.ApplyMapKeypadLightingZone(col, clear, Helpers.DeviceHelpers.RazerKeypadCoordinates(key)[1], Helpers.DeviceHelpers.RazerKeypadCoordinates(key)[0]);
 
@@ -1387,6 +1430,9 @@ namespace Chromatics
             
             if (mode != _KeypadZone1Mode) return;
 
+            colMin = Helpers.ControlGlobalBrightness(colMin, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            colMax = Helpers.ControlGlobalBrightness(colMax, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
 
@@ -1400,6 +1446,9 @@ namespace Chromatics
             {
                 empty = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
             }
+
+            empty = Helpers.ControlGlobalBrightness(empty, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            full = Helpers.ControlGlobalBrightness(full, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
 
@@ -1465,6 +1514,8 @@ namespace Chromatics
             {
                 col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
             }
+
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
             
@@ -1551,6 +1602,9 @@ namespace Chromatics
 
             if (mode != _CLZone1Mode && mode != _CLZone2Mode && mode != _CLZone3Mode && mode != _CLZone4Mode && mode != _CLZone5Mode && mode != _CLZone6Mode) return;
 
+            colMin = Helpers.ControlGlobalBrightness(colMin, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            colMax = Helpers.ControlGlobalBrightness(colMax, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             //var c2 = ControlPaint.Dark(col, 100 - Convert.ToSingle(val));
             var c2 = ColorInterpolator.InterpolateBetween(colMin, colMax, val);
 
@@ -1564,6 +1618,8 @@ namespace Chromatics
             {
                 col = ColorTranslator.FromHtml(ColorMappings.ColorMappingDeviceDisabled);
             }
+
+            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (mode != _PadZone1Mode && mode != _PadZone2Mode && mode != _PadZone3Mode) return;
 
@@ -1845,6 +1901,8 @@ namespace Chromatics
             if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
 
+            baseColor = Helpers.ControlGlobalBrightness(baseColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (RazerSdkCalled == 1)
             {
                 var rippleTask = _razer.Ripple1(burstcol, speed);
@@ -1895,6 +1953,8 @@ namespace Chromatics
             if (_KeysSingleKeyModeEnabled)
                 return;
 
+            baseColor = Helpers.ControlGlobalBrightness(baseColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (RazerSdkCalled == 1)
             {
                 var rippleTask = _razer.MultiRipple1(burstcol, speed, _KeysMultiKeyModeEnabled, _deviceKeypad);
@@ -1939,6 +1999,8 @@ namespace Chromatics
         public void GlobalRipple2(Color burstcol, int speed)
         {
             MemoryTasks.Cleanup();
+
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
@@ -1993,6 +2055,8 @@ namespace Chromatics
             if (_KeysSingleKeyModeEnabled)
                 return;
 
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
             if (RazerSdkCalled == 1)
             {
                 var rippleTask2 = _razer.MultiRipple2(burstcol, speed, _KeysMultiKeyModeEnabled, _deviceKeypad);
@@ -2041,6 +2105,8 @@ namespace Chromatics
                 return;
 
             MemoryTasks.Cleanup();
+
+            baseColor = Helpers.ControlGlobalBrightness(baseColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (RazerSdkCalled == 1)
             {
@@ -2161,6 +2227,8 @@ namespace Chromatics
         public void GlobalFlash1(Color burstcol, int speed, string[] regions)
         {
             MemoryTasks.Cleanup();
+
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
             
             if (RazerSdkCalled == 1)
             {
@@ -2270,6 +2338,8 @@ namespace Chromatics
         public void GlobalFlash2(Color burstcol, int speed, string[] template)
         {
             MemoryTasks.Cleanup();
+
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
             
             if (!_globalFlash2Running)
             {
@@ -2414,6 +2484,7 @@ namespace Chromatics
         public void GlobalFlash3(Color burstcol, int speed)
         {
             MemoryTasks.Cleanup();
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (_KeysSingleKeyModeEnabled || _KeysMultiKeyModeEnabled)
                 return;
@@ -2544,6 +2615,9 @@ namespace Chromatics
         public void GlobalFlash4(Color basecol, Color burstcol, int speed, string[] template)
         {
             MemoryTasks.Cleanup();
+
+            basecol = Helpers.ControlGlobalBrightness(basecol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
             
             if (!_globalFlash4Running)
             {
@@ -2723,6 +2797,13 @@ namespace Chromatics
 
             MemoryTasks.Cleanup();
 
+            var i = 0;
+            foreach (var col in toColor)
+            {
+                toColor[i] = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+                i++;
+            }
+
             if (RazerSdkCalled == 1)
             {
                 _rzPart = null;
@@ -2870,6 +2951,13 @@ namespace Chromatics
                 return;
             
             MemoryTasks.Cleanup();
+
+            var i = 0;
+            foreach (var col in toColor)
+            {
+                toColor[i] = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+                i++;
+            }
 
             if (RazerSdkCalled == 1)
             {
@@ -3183,6 +3271,8 @@ namespace Chromatics
                             var col = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255),
                                 (int) Math.Ceiling((double) (x * 100) / 255), 0);
 
+                            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
                             if (_KeysSingleKeyModeEnabled)
                                 GlobalApplySingleZoneLighting(col);
 
@@ -3210,6 +3300,8 @@ namespace Chromatics
                             Color col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255),
                                 (int) Math.Ceiling((double) (250 * 100) / 255), 0);
 
+                            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
                             if (_KeysSingleKeyModeEnabled)
                                 GlobalApplySingleZoneLighting(col);
 
@@ -3235,6 +3327,8 @@ namespace Chromatics
 
                             Color col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255),
                                 (int) Math.Ceiling((double) (250 * 100) / 255), 0);
+
+                            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
                             if (_KeysSingleKeyModeEnabled)
                                 GlobalApplySingleZoneLighting(col);
@@ -3262,6 +3356,8 @@ namespace Chromatics
                             Color col = Color.FromArgb(0, (int) Math.Ceiling((double) (x * 100) / 255),
                                 (int) Math.Ceiling((double) (250 * 100) / 255));
 
+                            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
                             if (_KeysSingleKeyModeEnabled)
                                 GlobalApplySingleZoneLighting(col);
 
@@ -3288,6 +3384,8 @@ namespace Chromatics
                             Color col = Color.FromArgb((int) Math.Ceiling((double) (x * 100) / 255), 0,
                                 (int) Math.Ceiling((double) (250 * 100) / 255));
 
+                            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+
                             if (_KeysSingleKeyModeEnabled)
                                 GlobalApplySingleZoneLighting(col);
 
@@ -3313,6 +3411,8 @@ namespace Chromatics
 
                             Color col = Color.FromArgb((int) Math.Ceiling((double) (250 * 100) / 255), 0,
                                 (int) Math.Ceiling((double) (x * 100) / 255));
+
+                            col = Helpers.ControlGlobalBrightness(col, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
                             if (_KeysSingleKeyModeEnabled)
                                 GlobalApplySingleZoneLighting(col);
@@ -3341,6 +3441,9 @@ namespace Chromatics
                 return;
 
             MemoryTasks.Cleanup();
+
+            toColor = Helpers.ControlGlobalBrightness(toColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            fromColor = Helpers.ControlGlobalBrightness(fromColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (RazerSdkCalled == 1)
             {

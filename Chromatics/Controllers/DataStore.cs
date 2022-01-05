@@ -203,9 +203,12 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsExtraBulbEffects = false;
         public bool ChromaticsSettingsReleaseDevices = false;
         public bool ChromaticsSettingsSwitchFunctionKeys = false;
+        public int ChromaticsSettingsGlobalDeviceBrightness = 100;
 
         public int[][] ChromaticsSettingsACTDPS =
         {
+            new[] { 5000 },
+            new[] { 5000 },
             new[] { 5000 },
             new[] { 5000 },
             new[] { 5000 },
@@ -263,11 +266,15 @@ namespace Chromatics.Datastore
             new[] { 5000 },
             new[] { 5000 },
             new[] { 5000 },
+            new[] { 5000 },
+            new[] { 5000 },
             new[] { 5000 }
         };
 
         public int[][] ChromaticsSettingsACTGroupDPS =
         {
+            new[] { 25000 },
+            new[] { 25000 },
             new[] { 25000 },
             new[] { 25000 },
             new[] { 25000 },
@@ -325,11 +332,15 @@ namespace Chromatics.Datastore
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 }
         };
 
         public int[][] ChromaticsSettingsACTTargetDH =
         {
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
@@ -387,6 +398,8 @@ namespace Chromatics.Datastore
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 }
         };
 
@@ -418,11 +431,15 @@ namespace Chromatics.Datastore
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 }
         };
 
         public int[][] ChromaticsSettingsACTDamage =
         {
+            new[] { 10 },
+            new[] { 10 },
             new[] { 10 },
             new[] { 10 },
             new[] { 10 },

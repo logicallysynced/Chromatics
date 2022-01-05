@@ -948,9 +948,7 @@ namespace Chromatics
         }
 
         private delegate void BlinkDelegate();
-
-
-        
+                
     }
 
     public static class ExceptionExtensions
