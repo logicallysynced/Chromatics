@@ -3866,6 +3866,7 @@ namespace Chromatics
 
             ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness = trackbar_globalbrightness.Value;
             lbl_globalbrightness_value.Text = trackbar_globalbrightness.Value.ToString() + "%";
+            SetKeysbase = false;
 
             //var correctionFactor = (((trackbar_globalbrightness.Value - 0) * ((float)0 - (float)-1)) / (100 - 0)) + (float)-1;
             //Debug.WriteLine($"Correction: {correctionFactor}");

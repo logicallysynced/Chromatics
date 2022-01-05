@@ -1381,6 +1381,7 @@ namespace Chromatics
 
                         break;
                     case Actor.Job.SMN:
+                        /*
                         var aetherflowsmn = Cooldowns.JobResourcesContainer.Summoner.AetherFlow;
 
                         var burstsmncol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSMNAetherflow);
@@ -1473,7 +1474,7 @@ namespace Chromatics
                             GlobalApplyMapKeyLighting("Num4", burstsmnempty, false);
                             GlobalApplyMapKeyLighting("Num1", burstsmnempty, false);
                         }
-
+                        */
                         break;
                     case Actor.Job.SCH:
 
@@ -2108,10 +2109,10 @@ namespace Chromatics
                                 case Sharlayan.Core.JobResources.Enums.AstrologianCard.Spire:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTSpire);
                                     break;
-                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.LadyofCrowns:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.Lady:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTLady);
                                     break;
-                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.LordofCrowns:
+                                case Sharlayan.Core.JobResources.Enums.AstrologianCard.Lord:
                                     burstastcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobASTLord);
                                     break;
                             }

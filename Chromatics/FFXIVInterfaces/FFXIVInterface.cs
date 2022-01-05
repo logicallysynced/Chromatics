@@ -308,23 +308,7 @@ namespace Chromatics
                     initiated = true;
                     Init = true;
                     IsDx11 = true;
-                    /*
                     
-
-                    var ignoreJsonCache = !ChromaticsSettings.ChromaticsSettingsMemoryCache;
-                    // patchVersion of game, or latest
-                    var patchVersion = "latest";
-                    var process = processes11[0];
-                    var processModel = new ProcessModel
-                    {
-                        Process = process,
-                        IsWin64 = true
-                    };
-                    MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, ignoreJsonCache);
-                    initiated = true;
-                    Init = true;
-                    IsDx11 = true;
-                    */
                     WriteConsole(ConsoleTypes.Ffxiv, @"DX11 Initiated");
                 }
             }
@@ -757,6 +741,7 @@ namespace Chromatics
 
 
                     //Cutscenes
+                    /*
                     FfxivMenu.RefreshData(memoryHandler);
 
                     if (ChromaticsSettings.ChromaticsSettingsCutsceneAnimation && !_inVegas)
@@ -809,6 +794,7 @@ namespace Chromatics
                         if (!_inVegas)
                             GlobalStopParticleEffects();
                     }
+                    */
 
                     //DF Bell
                     FfxivDutyFinder.RefreshData(memoryHandler);

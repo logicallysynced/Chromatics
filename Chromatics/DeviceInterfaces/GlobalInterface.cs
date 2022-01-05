@@ -1902,6 +1902,7 @@ namespace Chromatics
                 return;
 
             baseColor = Helpers.ControlGlobalBrightness(baseColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (RazerSdkCalled == 1)
             {
@@ -1954,6 +1955,7 @@ namespace Chromatics
                 return;
 
             baseColor = Helpers.ControlGlobalBrightness(baseColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (RazerSdkCalled == 1)
             {
@@ -2107,6 +2109,7 @@ namespace Chromatics
             MemoryTasks.Cleanup();
 
             baseColor = Helpers.ControlGlobalBrightness(baseColor, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
+            burstcol = Helpers.ControlGlobalBrightness(burstcol, ChromaticsSettings.ChromaticsSettingsGlobalDeviceBrightness);
 
             if (RazerSdkCalled == 1)
             {
