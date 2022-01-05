@@ -200,7 +200,8 @@
       <HintPath>..\packages\Rssdp.4.0.4\lib\net45\Rssdp.dll</HintPath>
     </Reference>
     <Reference Include="Sharlayan, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sharlayan.7.0.1\lib\net462\Sharlayan.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Build Dependencies\Sharlayan.dll</HintPath>
     </Reference>
     <Reference Include="Sockets.Plugin, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sharpcaster.SocketsForPCL.2.0.4\lib\net45\Sockets.Plugin.dll</HintPath>

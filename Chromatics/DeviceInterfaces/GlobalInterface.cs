@@ -196,7 +196,7 @@ namespace Chromatics
             if (_SDKCorsair && CorsairSdkCalled == 0)
             {
                 WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
-                _corsair = CorsairInterface.InitializeCorsairSdk(Color.BlueViolet);
+                _corsair = CorsairInterface.InitializeCorsairSdk(Color.DarkBlue);
                 if (_corsair != null)
                 {
                     CorsairSdk = true;
@@ -383,7 +383,7 @@ namespace Chromatics
             if (_SDKCorsair && CorsairSdkCalled == 0 && corsairFirstSet)
             {
                 WriteConsole(ConsoleTypes.Corsair, @"Attempting to load Corsair SDK..");
-                _corsair = CorsairInterface.InitializeCorsairSdk(Color.BlueViolet);
+                _corsair = CorsairInterface.InitializeCorsairSdk(Color.DarkBlue);
                 if (_corsair != null)
                 {
                     CorsairSdk = true;

@@ -447,11 +447,11 @@ namespace Chromatics
                                 //GlobalUpdateState("static", Color.DeepSkyBlue, false);
                                 GlobalStopParticleEffects();
                                 GlobalStopCycleEffects();
-                                GlobalApplyAllDeviceLighting(Color.BlueViolet);
+                                GlobalApplyAllDeviceLighting(Color.DarkBlue);
 
                                 if (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects)
                                 {
-                                    GlobalUpdateBulbState(BulbModeTypes.Unknown, Color.BlueViolet, 5);
+                                    GlobalUpdateBulbState(BulbModeTypes.Unknown, Color.DarkBlue, 5);
                                 }
 
                                 //WriteConsole(ConsoleTypes.Ffxiv, @"Returning to Main Menu..");
@@ -480,11 +480,11 @@ namespace Chromatics
                             //GlobalSetWave();
                             GlobalStopParticleEffects();
                             GlobalStopCycleEffects();
-                            GlobalApplyAllDeviceLighting(Color.BlueViolet);
+                            GlobalApplyAllDeviceLighting(Color.DarkBlue);
 
                             if (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects)
                             {
-                                GlobalUpdateBulbState(BulbModeTypes.Unknown, Color.BlueViolet, 1000);
+                                GlobalUpdateBulbState(BulbModeTypes.Unknown, Color.DarkBlue, 1000);
                             }
 
                             Attatched = 2;
@@ -564,16 +564,16 @@ namespace Chromatics
                                 //Main Menu Still Active
                                 if (_countMainMenuHold == 5)
                                 {
-                                    GlobalApplyAllDeviceLighting(Color.BlueViolet);
+                                    GlobalApplyAllDeviceLighting(Color.DarkBlue);
                                     GlobalParticleEffects(
                                         new Color[]
                                         {
-                                            Color.BlueViolet, Color.MediumBlue, Color.Salmon, Color.Purple
+                                            Color.DarkBlue, Color.White, Color.Blue, Color.Blue
                                         }, null, 20);
 
                                     if (ChromaticsSettings.ChromaticsSettingsExtraBulbEffects)
                                     {
-                                        GlobalUpdateBulbState(BulbModeTypes.Unknown, Color.BlueViolet, 1000);
+                                        GlobalUpdateBulbState(BulbModeTypes.Unknown, Color.DarkBlue, 1000);
                                     }
                                 }
 
@@ -1215,6 +1215,14 @@ namespace Chromatics
                                                         ptType = "player";
                                                         ptJob = "Bluemage";
                                                         break;
+                                                    case Actor.Job.RPR:
+                                                        ptType = "player";
+                                                        ptJob = "Reaper";
+                                                        break;
+                                                    case Actor.Job.SGE:
+                                                        ptType = "player";
+                                                        ptJob = "Sage";
+                                                        break;
                                                     default:
                                                         ptType = "unknown";
                                                         ptJob = "Chocobo";
@@ -1592,6 +1600,18 @@ namespace Chromatics
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUBase);
                                             _highlightJobColor =
                                                 ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBLUHighlight);
+                                            break;
+                                        case "RPR":
+                                            _baseJobColor =
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRPRBase);
+                                            _highlightJobColor =
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRPRHighlight);
+                                            break;
+                                        case "SGE":
+                                            _baseJobColor =
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSGEBase);
+                                            _highlightJobColor =
+                                                ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSGEHighlight);
                                             break;
                                         default:
                                             _baseJobColor =
@@ -6938,6 +6958,16 @@ namespace Chromatics
                                             _currentlvl = _playerData.BLU;
                                             jobClass = "BLU";
                                             break;
+                                        case Actor.Job.RPR:
+                                            _role = _playerData.RPR_CurrentEXP;
+                                            _currentlvl = _playerData.RPR;
+                                            jobClass = "RPR";
+                                            break;
+                                        case Actor.Job.SGE:
+                                            _role = _playerData.SGE_CurrentEXP;
+                                            _currentlvl = _playerData.SGE;
+                                            jobClass = "SGE";
+                                            break;
                                         default:
                                             _role = _playerData.WVR_CurrentEXP;
                                             _currentlvl = 0;
@@ -7390,6 +7420,14 @@ namespace Chromatics
                                                     case Actor.Job.BLU:
                                                         if (!blockACTVersion && GetACTJob() != "Bluemage")
                                                             SwitchACTJob("Bluemage");
+                                                        break;
+                                                    case Actor.Job.RPR:
+                                                        if (!blockACTVersion && GetACTJob() != "Reaper")
+                                                            SwitchACTJob("Reaper");
+                                                        break;
+                                                    case Actor.Job.SGE:
+                                                        if (!blockACTVersion && GetACTJob() != "Sage")
+                                                            SwitchACTJob("Sage");
                                                         break;
                                                 }
 

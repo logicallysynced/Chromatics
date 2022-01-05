@@ -188,7 +188,7 @@ namespace Chromatics.Datastore
         public bool ChromaticsSettingsMemoryCache = false;
         public bool ChromaticsSettingsDesktopNotifications = true;
         public bool ChromaticsSettingsLcdEnabled = false;
-        public string FinalFantasyXivVersion = "5.0";
+        public string FinalFantasyXivVersion = "6.0";
         public bool FirstRun = false;
         public bool ChromaticsSettingsCastEnabled = false;
         public string ChromaticsSettingsCastDevice = "";
@@ -774,6 +774,10 @@ namespace Chromatics.Datastore
         public string ColorMappingJobDNCHighlight = ColorTranslator.ToHtml(Color.CornflowerBlue);
         public string ColorMappingJobGNBBase = ColorTranslator.ToHtml(Color.DarkMagenta);
         public string ColorMappingJobGNBHighlight = ColorTranslator.ToHtml(Color.Blue);
+        public string ColorMappingJobRPRBase = ColorTranslator.ToHtml(Color.DarkRed);
+        public string ColorMappingJobRPRHighlight = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingJobSGEBase = ColorTranslator.ToHtml(Color.LimeGreen);
+        public string ColorMappingJobSGEHighlight = ColorTranslator.ToHtml(Color.DodgerBlue);
         public string ColorMappingJobBLUBase = ColorTranslator.ToHtml(Color.DeepSkyBlue);
         public string ColorMappingJobBLUHighlight = ColorTranslator.ToHtml(Color.Blue);
         public string ColorMappingJobCPTBase = ColorTranslator.ToHtml(Color.DarkOrange);

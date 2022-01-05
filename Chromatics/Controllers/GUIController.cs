@@ -174,6 +174,8 @@ namespace Chromatics
             {24, "Blue Mage" }, //BLU
             {25, "Dancer" }, //DNC
             {26, "Gunbreaker" }, //GNB
+            {27, "Reaper" }, //RPR
+            {28, "Sage" }, //SGE
         };
 
         private readonly Dictionary<string, string[]> _mappingPalette = new Dictionary<string, string[]>
@@ -497,6 +499,10 @@ namespace Chromatics
             {"ColorMappingJobDNCHighlight", new[] { "DNC (Highlight)", "12", "Black", "White"}},
             {"ColorMappingJobGNBBase", new[] { "GNB (Base)", "12", "Black", "White"}},
             {"ColorMappingJobGNBHighlight", new[] { "GNB (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobRPRBase", new[] { "RPR (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobRPRHighlight", new[] { "RPR (Highlight)", "12", "Black", "White"}},
+            {"ColorMappingJobSGEBase", new[] { "SGE (Base)", "12", "Black", "White"}},
+            {"ColorMappingJobSGEHighlight", new[] { "SGE (Highlight)", "12", "Black", "White"}},
             {"ColorMappingJobBLUBase", new[] { "BLU (Base)", "12", "Black", "White"}},
             {"ColorMappingJobBLUHighlight", new[] { "BLU (Highlight)", "12", "Black", "White"}},
             {"ColorMappingJobCPTBase", new[] { "CPT (Base)", "12", "Black", "White"}},
