@@ -3654,7 +3654,7 @@ namespace Chromatics
                         var sgerecharge = (int)Cooldowns.JobResourcesContainer.Sage.Timer.TotalSeconds;
                         var sgerechargemax = 46;
 
-                        //Debug.WriteLine($"SGE: Addersgall: {addersgall} Adderssting: {adderssting} Eukrasia: {eukrasia} Active: {eukrasia_active} Timer: {sgerecharge}");
+                        Debug.WriteLine($"SGE: Addersgall: {addersgall} Adderssting: {adderssting} Eukrasia: {eukrasia} Active: {eukrasia_active} Timer: {sgerecharge}");
 
                         var burstsgecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSGEAddersgallStacks);
                         var eukrasiasgecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSGEEukrasiaActive);
