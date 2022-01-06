@@ -630,6 +630,16 @@ namespace Chromatics.Datastore
         public string ColorMappingJobDNCTechnicalFinish = ColorTranslator.ToHtml(Color.MediumVioletRed);
         public string ColorMappingJobGNBNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobGNBRoyalGuard = ColorTranslator.ToHtml(Color.OrangeRed);
+
+        public string ColorMappingJobSGENegative = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingJobSGEAddersgallStacks = ColorTranslator.ToHtml(Color.LightBlue);
+        public string ColorMappingJobSGEEukrasiaActive = ColorTranslator.ToHtml(Color.DodgerBlue);
+        public string ColorMappingJobSGEAddersgallRecharge = ColorTranslator.ToHtml(Color.LightBlue);
+
+        public string ColorMappingJobRPRNegative = ColorTranslator.ToHtml(Color.Black);
+        public string ColorMappingJobRPRSouls = ColorTranslator.ToHtml(Color.Red);
+        public string ColorMappingJobRPRShrouds = ColorTranslator.ToHtml(Color.DodgerBlue);
+
         public string ColorMappingMenuBase = ColorTranslator.ToHtml(Color.OrangeRed);
         public string ColorMappingJobCrafterNegative = ColorTranslator.ToHtml(Color.Black);
         public string ColorMappingJobCrafterInnerquiet = ColorTranslator.ToHtml(Color.BlueViolet);

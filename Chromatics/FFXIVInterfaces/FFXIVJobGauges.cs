@@ -752,7 +752,7 @@ namespace Chromatics
                         GlobalApplyMapKeyLighting("Num0", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
                         GlobalApplyMapKeyLighting("NumDecimal", ColorTranslator.FromHtml(ColorMappings.ColorMappingJobBRDNegative), false);
 
-                        //Console.WriteLine(@"Song: " + Cooldowns.JobResourcesContainer.Song.ToString());
+                        Console.WriteLine(@"Song: " + Cooldowns.JobResourcesContainer.Bard.ActiveSong.ToString());
                         
                         if (Cooldowns.JobResourcesContainer.Bard.ActiveSong != Sharlayan.Core.JobResources.Enums.BardSong.None)
                         {
@@ -1753,6 +1753,8 @@ namespace Chromatics
                         GlobalApplyMapKeyLighting("NumSubtract", negdrkcol, false);
                         GlobalApplyMapKeyLighting("NumAdd", negdrkcol, false);
                         GlobalApplyMapKeyLighting("NumEnter", negdrkcol, false);
+
+                        Console.WriteLine(@"Gauge: " + Cooldowns.JobResourcesContainer.DarkKnight.BlackBlood.ToString());
 
                         //Lightbar
                         if (_LightbarMode == LightbarMode.JobGauge)
@@ -3642,6 +3644,307 @@ namespace Chromatics
                                 }
                             }
                         }
+                        break;
+                    case Actor.Job.SGE:
+                        var addersgall = Cooldowns.JobResourcesContainer.Sage.Addersgall;
+                        var adderssting = Cooldowns.JobResourcesContainer.Sage.Addersting;
+                        var eukrasia = Cooldowns.JobResourcesContainer.Sage.Eukrasia;
+                        var eukrasia_active = Cooldowns.JobResourcesContainer.Sage.EukrasiaActive;
+
+                        var sgerecharge = (int)Cooldowns.JobResourcesContainer.Sage.Timer.TotalSeconds;
+                        var sgerechargemax = 46;
+
+                        //Debug.WriteLine($"SGE: Addersgall: {addersgall} Adderssting: {adderssting} Eukrasia: {eukrasia} Active: {eukrasia_active} Timer: {sgerecharge}");
+
+                        var burstsgecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSGEAddersgallStacks);
+                        var eukrasiasgecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSGEEukrasiaActive);
+                        var rechargecol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSGEAddersgallRecharge);
+                        var burstsgeempty = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobSGENegative);
+                        
+                        //Lightbar
+                        if (_LightbarMode == LightbarMode.JobGauge)
+                        {
+                            var JobLightbar_Collection = DeviceEffects.LightbarZones;
+                            var JobLightbar_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(sgerecharge, 0, sgerechargemax,
+                                    JobLightbar_Collection.Length, 0);
+
+                            for (int i = 0; i < JobLightbar_Collection.Length; i++)
+                            {
+                                GlobalApplyMapLightbarLighting(JobLightbar_Collection[i],
+                                    JobLightbar_Interpolate > i ? rechargecol : burstsgeempty, false, false);
+                            }
+                        }
+
+                        //FKeys
+                        if (_FKeyMode == FKeyMode.JobGauge)
+                        {
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Functions_Switch:DeviceEffects.Functions;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(sgerecharge, 0, sgerechargemax,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? rechargecol : burstsgeempty, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_Collection = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2_Switch:DeviceEffects.Function2;
+                            var JobFunction_Interpolate =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(sgerecharge, 0, sgerechargemax,
+                                    JobFunction_Collection.Length, 0);
+
+                            for (int i = 0; i < JobFunction_Collection.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_Collection[i],
+                                    JobFunction_Interpolate > i ? rechargecol : burstsgeempty, false);
+                            }
+                        }
+
+                        if (addersgall > 0)
+                        {
+                            switch (addersgall)
+                            {
+                                case 3:
+                                    GlobalApplyMapKeyLighting("Num9", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num6", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num3", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+
+                                    GlobalApplyMapKeyLighting("Num8", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num5", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num2", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+
+                                    GlobalApplyMapKeyLighting("Num7", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num4", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num1", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    break;
+                                case 2:
+                                    GlobalApplyMapKeyLighting("Num9", burstsgeempty, false);
+                                    GlobalApplyMapKeyLighting("Num6", burstsgeempty, false);
+                                    GlobalApplyMapKeyLighting("Num3", burstsgeempty, false);
+
+                                    GlobalApplyMapKeyLighting("Num8", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num5", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num2", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+
+                                    GlobalApplyMapKeyLighting("Num7", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num4", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num1", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    break;
+                                case 1:
+                                    GlobalApplyMapKeyLighting("Num9", burstsgeempty, false);
+                                    GlobalApplyMapKeyLighting("Num6", burstsgeempty, false);
+                                    GlobalApplyMapKeyLighting("Num3", burstsgeempty, false);
+
+                                    GlobalApplyMapKeyLighting("Num8", burstsgeempty, false);
+                                    GlobalApplyMapKeyLighting("Num5", burstsgeempty, false);
+                                    GlobalApplyMapKeyLighting("Num2", burstsgeempty, false);
+
+                                    GlobalApplyMapKeyLighting("Num7", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num4", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    GlobalApplyMapKeyLighting("Num1", eukrasia_active ? eukrasiasgecol : burstsgecol, false);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            GlobalApplyMapKeyLighting("Num9", burstsgeempty, false);
+                            GlobalApplyMapKeyLighting("Num6", burstsgeempty, false);
+                            GlobalApplyMapKeyLighting("Num3", burstsgeempty, false);
+
+                            GlobalApplyMapKeyLighting("Num8", burstsgeempty, false);
+                            GlobalApplyMapKeyLighting("Num5", burstsgeempty, false);
+                            GlobalApplyMapKeyLighting("Num2", burstsgeempty, false);
+
+                            GlobalApplyMapKeyLighting("Num7", burstsgeempty, false);
+                            GlobalApplyMapKeyLighting("Num4", burstsgeempty, false);
+                            GlobalApplyMapKeyLighting("Num1", burstsgeempty, false);
+                        }
+
+                        break;
+                    case Actor.Job.RPR:
+                        var soul = Cooldowns.JobResourcesContainer.Reaper.Soul;
+                        var shroud = Cooldowns.JobResourcesContainer.Reaper.Shroud;
+
+                        var polSoul = (soul - 0) * (40 - 0) / (100 - 0) + 0;
+                        var polShroud = (shroud - 0) * (40 - 0) / (100 - 0) + 0;
+                        
+                        var shroudburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRPRShrouds);
+                        var soulburst = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRPRSouls);
+                        var rprnegcol = ColorTranslator.FromHtml(ColorMappings.ColorMappingJobRPRNegative);
+
+                        //Lightbar
+                        if (_LightbarMode == LightbarMode.JobGauge)
+                        {
+                            var JobLightbar_CollectionA = DeviceEffects.LightbarZonesR.ToList();
+                            JobLightbar_CollectionA.Reverse();
+                            var JobLightbar_InterpolateA =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(shroud, 0, 100,
+                                    JobLightbar_CollectionA.Count, 0);
+
+                            for (int i = 0; i < JobLightbar_CollectionA.Count; i++)
+                            {
+                                GlobalApplyMapLightbarLighting(JobLightbar_CollectionA[i],
+                                    JobLightbar_InterpolateA > i ? shroudburst : rprnegcol, false, false);
+                            }
+
+                            var JobLightbar_CollectionB = DeviceEffects.LightbarZonesL;
+                            var JobLightbar_InterpolateB =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(soul, 0, 100,
+                                    JobLightbar_CollectionB.Length, 0);
+
+                            for (int i = 0; i < JobLightbar_CollectionB.Length; i++)
+                            {
+                                GlobalApplyMapLightbarLighting(JobLightbar_CollectionB[i],
+                                    JobLightbar_InterpolateB > i ? soulburst : rprnegcol, false, false);
+                            }
+                        }
+
+                        //FKeys
+                        if (_FKeyMode == FKeyMode.JobGauge)
+                        {
+                            var JobFunction_CollectionA = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.FunctionR_Switch.ToList():DeviceEffects.FunctionR.ToList();
+                            JobFunction_CollectionA.Reverse();
+                            var JobFunction_InterpolateA =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(shroud, 0, 100,
+                                    JobFunction_CollectionA.Count, 0);
+
+                            for (int i = 0; i < JobFunction_CollectionA.Count; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_CollectionA[i],
+                                    JobFunction_InterpolateA > i ? shroudburst : rprnegcol, false);
+                            }
+
+                            var JobFunction_CollectionB = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.FunctionL_Switch:DeviceEffects.FunctionL;
+                            var JobFunction_InterpolateB =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(soul, 0, 100,
+                                    JobFunction_CollectionB.Length, 0);
+
+                            for (int i = 0; i < JobFunction_CollectionB.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_CollectionB[i],
+                                    JobFunction_InterpolateB > i ? soulburst : rprnegcol, false);
+                            }
+                        }
+
+                        if (_FKeyMode == FKeyMode.HpJobMp)
+                        {
+                            var JobFunction_CollectionA = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2R_Switch.ToList():DeviceEffects.Function2R.ToList();
+                            JobFunction_CollectionA.Reverse();
+                            var JobFunction_InterpolateA =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(shroud, 0, 100,
+                                    JobFunction_CollectionA.Count, 0);
+
+                            for (int i = 0; i < JobFunction_CollectionA.Count; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_CollectionA[i],
+                                    JobFunction_InterpolateA > i ? shroudburst : rprnegcol, false);
+                            }
+
+                            var JobFunction_CollectionB = (ChromaticsSettings.ChromaticsSettingsSwitchFunctionKeys)?DeviceEffects.Function2L_Switch:DeviceEffects.Function2L;
+                            var JobFunction_InterpolateB =
+                                Helpers.FFXIVInterpolation.Interpolate_Int(soul, 0, 100,
+                                    JobFunction_CollectionB.Length, 0);
+
+                            for (int i = 0; i < JobFunction_CollectionB.Length; i++)
+                            {
+                                GlobalApplyMapKeyLighting(JobFunction_CollectionB[i],
+                                    JobFunction_InterpolateB > i ? soulburst : rprnegcol, false);
+                            }
+                        }
+
+                        GlobalApplyMapKeyLighting("NumDivide", Color.Black, false);
+                        GlobalApplyMapKeyLighting("Num8", Color.Black, false);
+                        GlobalApplyMapKeyLighting("Num5", Color.Black, false);
+                        GlobalApplyMapKeyLighting("Num2", Color.Black, false);
+
+                        //Black
+                        if (polShroud <= 40 && polShroud > 30)
+                        {
+                            GlobalApplyMapKeyLighting("NumMultiply", shroudburst, false);
+                            GlobalApplyMapKeyLighting("Num9", shroudburst, false);
+                            GlobalApplyMapKeyLighting("Num6", shroudburst, false);
+                            GlobalApplyMapKeyLighting("Num3", shroudburst, false);
+                        }
+                        else if (polShroud <= 30 && polShroud > 20)
+                        {
+                            GlobalApplyMapKeyLighting("NumMultiply", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num9", shroudburst, false);
+                            GlobalApplyMapKeyLighting("Num6", shroudburst, false);
+                            GlobalApplyMapKeyLighting("Num3", shroudburst, false);
+                        }
+                        else if (polShroud <= 20 && polShroud > 10)
+                        {
+                            GlobalApplyMapKeyLighting("NumMultiply", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num9", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num6", shroudburst, false);
+                            GlobalApplyMapKeyLighting("Num3", shroudburst, false);
+                           
+                        }
+                        else if (polShroud <= 10 && polShroud > 0)
+                        {
+                            GlobalApplyMapKeyLighting("NumMultiply", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num9", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num6", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num3", shroudburst, false);
+                            
+                        }
+                        else if (polShroud == 0)
+                        {
+                            GlobalApplyMapKeyLighting("NumMultiply", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num9", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num6", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num3", rprnegcol, false);
+                            
+                        }
+
+
+                        //White
+                        if (polSoul <= 40 && polSoul > 30)
+                        {
+                            GlobalApplyMapKeyLighting("NumLock", soulburst, false);
+                            GlobalApplyMapKeyLighting("Num7", soulburst, false);
+                            GlobalApplyMapKeyLighting("Num4", soulburst, false);
+                            GlobalApplyMapKeyLighting("Num1", soulburst, false);
+                            
+                        }
+                        else if (polSoul <= 30 && polSoul > 20)
+                        {
+                            GlobalApplyMapKeyLighting("NumLock", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num7", soulburst, false);
+                            GlobalApplyMapKeyLighting("Num4", soulburst, false);
+                            GlobalApplyMapKeyLighting("Num1", soulburst, false);
+                            
+                        }
+                        else if (polSoul <= 20 && polSoul > 10)
+                        {
+                            GlobalApplyMapKeyLighting("NumLock", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num7", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num4", soulburst, false);
+                            GlobalApplyMapKeyLighting("Num1", soulburst, false);
+                            
+                        }
+                        else if (polSoul <= 10 && polSoul > 0)
+                        {
+                            GlobalApplyMapKeyLighting("NumLock", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num7", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num4", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num1", soulburst, false);
+                            
+                        }
+                        else if (polSoul == 0)
+                        {
+                            GlobalApplyMapKeyLighting("NumLock", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num7", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num4", rprnegcol, false);
+                            GlobalApplyMapKeyLighting("Num1", rprnegcol, false);
+                            
+                        }
+
                         break;
                     case Actor.Job.ALC:
                     case Actor.Job.ARM:
