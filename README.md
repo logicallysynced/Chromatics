@@ -11,8 +11,10 @@ It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET t
 
 Chromatics 3.x is built in .NET 6.
 
+
 **Open Source Libraries**
 * [RGB.NET](https://github.com/DarthAffe/RGB.NET) - used for RGB device integration
 * [Sharlayan](https://github.com/FFXIVAPP/sharlayan) - used for FFXIV memory reading
 * [MetroFramework](https://github.com/dennismagno/metroframework-modern-ui) - used as a user interface base in winforms
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) - used for everything JSON
+* [Aurora](https://github.com/antonpup/Aurora) - borrowed some code base, not actually a dependency
