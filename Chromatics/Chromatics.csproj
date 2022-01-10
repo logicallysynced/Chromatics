@@ -152,8 +152,8 @@
     <Reference Include="JsonFx, Version=2.0.1209.2802, Culture=neutral, PublicKeyToken=315052dd637f8a52, processorArchitecture=MSIL">
       <HintPath>..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
     </Reference>
-    <Reference Include="LifxNet, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LifxNet.2.2.0\lib\netstandard1.3\LifxNet.dll</HintPath>
+    <Reference Include="LifxNet">
+      <HintPath>..\Build Dependencies\LifxNet.dll</HintPath>
     </Reference>
     <Reference Include="Logitech-LCD, Version=1.0.4.0, Culture=neutral, PublicKeyToken=06ced2f874d832d0, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
