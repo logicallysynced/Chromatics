@@ -1,0 +1,1357 @@
+<?xml version="1.0"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Corsair K95 RGB PLATINUM XT - Physical UK</Name>
+  <Description>Physical UK-Layout of Corsairs K95 RGB PLATINUM (Logical: BE, CH, DE, ES, EU_Int, FR, IT, ND, MEX, PT, TR, UK)</Description>
+  <Author>Darth Affe &amp; SpoinkyNL</Author>
+  <Type>Keyboard</Type>
+  <Vendor>Corsair</Vendor>
+  <Model>K95 RGB Platinum XT</Model>
+  <Width>465</Width>
+  <Height>169</Height>
+  <Leds>
+    <Led Id="Keyboard_Brightness">
+      <X>91.5</X>
+      <Y>8.333</Y>
+      <Width>14.5mm</Width>
+      <Height>12mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Brightness.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Brightness.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Brightness.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_WinLock">
+      <Width>14.5mm</Width>
+      <Height>12mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/WinLock.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/WinLock.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/WinLock.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_MediaMute">
+      <X>382</X>
+      <Y>8.333</Y>
+      <Height>12mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Mute.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Mute.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Mute.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Escape">
+      <X>30</X>
+      <Y>32</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Escape.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Escape.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Escape.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F1">
+      <X>+12.667</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F1.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F1.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F2.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F2.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F2.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F3.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F3.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F3.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F4">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F4.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F4.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F4.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F5">
+      <X>+12.667</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F5.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F5.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F5.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F6.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F6.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F6.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F7">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F7.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F7.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F7.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F8.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F8.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F8.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F9">
+      <X>+12.667</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F9.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F9.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F9.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F10">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F10.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F10.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F10.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F11">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F11.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F11.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F11.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F12">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F12.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F12.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F12.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PrintScreen">
+      <X>+5</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Drucken.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/PrintScreen.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/PrintScreen.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ScrollLock">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Rollen.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/ScrollLock.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/ScrollLock.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PauseBreak">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/PauseUntbr.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/PauseBreak.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/PauseBreak.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_MediaStop">
+      <X>+5</X>
+      <Y>31</Y>
+      <Height>17mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Stop.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Stop.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Stop.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_MediaPreviousTrack">
+      <Height>17mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/PreviousTrack.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/PreviousTrack.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/PreviousTrack.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_MediaPlay">
+      <Height>17mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/PlayPause.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/PlayPause.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/PlayPause.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_MediaNextTrack">
+      <Height>17mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/NextTrack.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/NextTrack.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/NextTrack.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_GraveAccentAndTilde">
+      <X>30</X>
+      <Y>53</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Circumflex_Degree.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/AccentGrave_Tilde.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Paragraph_Pipe_Half.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_1">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/1_ExclamationMark.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/1_ExclamationMark.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/1_ExclamationMark.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/2_QuotationMark_Exponent2.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/2_At.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/2_At_Quote.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/3_SectionSign_Exponent3.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/3_Hash.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/3_Hash.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_4">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/4_Dollar.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/4_Dollar.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/4_Dollar_O.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_5">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/5_Percent.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/5_Percent_Euro.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/5_Percent.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/6_Ampersand.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/6_Circumflex.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/6_Ampersand.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_7">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/7_Slash_CurlyBracketLeft.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/7_Ampersand.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/7_Slash_CurlyBracketLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/8_BracketLeft_SquareBracketLeft.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/8_Asterisk.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/8_BracketLeft_SquareBracketLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_9">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/9_BracketRight_SquareBracketRight.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/9_BracketRight.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/9_BracketRight_SquareBracketRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_0">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/0_Equals_CurlyBracketRight.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/0_BracketRight.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/0_Equals_CurlyBracketRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_MinusAndUnderscore">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/QuestionMark_SharpS_Backslash.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Hyphen_Underscore.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Plus_Backslash_QuestionMark.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_EqualsAndPlus">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/AccentGrave_AccentAcute.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Equals_Plus.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/AccentGrave_Pipe_AccentGrave.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Backspace">
+      <Width>2</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Backspace.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Backspace.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Backspace.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Insert">
+      <X>+5</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Einfg.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Insert.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Insert.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Home">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Pos1.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Home.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Home.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PageUp">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/BildUp.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/PageUp.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/PageUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumLock">
+      <X>+5</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/NumLock.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/NumLock.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumSlash">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Slash.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Slash.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Slash.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumAsterisk">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Asterisk.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Asterisk.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Asterisk.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumMinus">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Minus.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Minus.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Minus.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Tab">
+      <X>30</X>
+      <Y>+</Y>
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Tab.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Tab.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Tab.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Q">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Q_At.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Q.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Q.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_W">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/W.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/W.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/W.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_E">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/E_Euro.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/E.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/E.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_R">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/R.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/R.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/R.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_T">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/T.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/T.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/T.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Y">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Z.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Y.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Y.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_U">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/U.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/U.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/U.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_I">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/I.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/I.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/I.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_O">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/O.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/O.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/O.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_P">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/P.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/P.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/P.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_BracketLeft">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/UE.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/SquareBracketLeft_CurlyBracketLeft.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/ARing.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_BracketRight">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Plus_Asterisk_Tilde.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/SquareBracketRight_CurlyBracketRight.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/DoubleDecimal_Tilde.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Enter">
+      <Shape>M0,0 L0,0.5 L0.16666666666,0.5 L0.16666666666,1 L1,1 L1,0 Z</Shape>
+      <Width>1.5</Width>
+      <Height>2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Enter.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Enter.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Enter.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Delete">
+      <X>+5</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Entf.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Delete.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Delete.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_End">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Ende.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/End.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/End.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PageDown">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/BildDown.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/PageDown.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/PageDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num7">
+      <X>+5</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num7_Pos1.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num7_Home.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num7_Home.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num8_ArrowUp.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num8_ArrowUp.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num8_ArrowUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num9">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num9_BildUp.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num9_PgUp.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num9_PgUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumPlus">
+      <Height>2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/NumPlus.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/NumPlus.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/NumPlus.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_CapsLock">
+      <X>30</X>
+      <Y>~</Y>
+      <Width>1.75</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/CapsLock.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/CapsLock.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/CapsLock.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_A">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/A.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/A.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/A.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_S">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/S.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/S.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/S.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_D">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/D.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/D.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/D.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/F.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/F.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/F.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_G">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/G.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/G.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/G.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_H">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/H.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/H.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/H.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_J">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/J.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/J.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/J.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_K">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/K.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/K.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/K.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_L">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/L.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/L.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/L.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_SemicolonAndColon">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/OE.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Semicolon_Colon.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Semicolon_Colon.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ApostropheAndDoubleQuote">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/AE.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Apostrophe_QuotationMark.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Apostrophe_QuotationMark.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NonUsTilde">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Hash_Apostrophe.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Blackslash_Pipe.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Blackslash_Pipe.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num4">
+      <X>+90.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num4_ArrowLeft.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num4_ArrowLeft.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num4_ArrowLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num5">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num5.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num5.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num5.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num6_ArrowRight.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num6_ArrowRight.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num6_ArrowRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftShift">
+      <X>30</X>
+      <Y>+</Y>
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Shift.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Shift.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Shift.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NonUsBackslash">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/LessThan_GreaterThan_Pipe.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Blackslash_Pipe.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/LessThan_GreaterThan_Pipe.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Z">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Y.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Z.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Z.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_X">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/X.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/X.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/X.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_C">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/C.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/C.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/C.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_V">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/V.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/V.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/V.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_B">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/B.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/B.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/B.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_N">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/N.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/N.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/N.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_M">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/M_Mu.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/M.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/M.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_CommaAndLessThan">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Comma_Semicolon.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/LessThan_Comma.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Comma_Semicolon.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PeriodAndBiggerThan">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Dot_Colon.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/GreaterThan_Dot.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Dot_Colon.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_SlashAndQuestionMark">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Hyphen_Underscore.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/QuestionMark_Slash.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Hyphen_Underscore.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightShift">
+      <Width>2.75</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/ShiftBig.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/ShiftBig.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/ShiftBig.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowUp">
+      <X>+24</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/CaretUp.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/CaretUp.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/CaretUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num1">
+      <X>+24</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num1_Ende.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num1_End.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num1_End.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num2_ArrowDown.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num2_ArrowDown.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num2_ArrowDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num3_BildDown.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num3_PgDwn.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num3_PgDwn.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumEnter">
+      <Height>2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/NumEnter.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/NumEnter.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/NumEnter.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftCtrl">
+      <X>30</X>
+      <Y>~</Y>
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Strg.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Ctrl.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Ctrl.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftGui">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Windows.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Windows.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Windows.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftAlt">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Alt.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Alt.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Alt.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Space">
+      <Width>6.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Space.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Space.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Space.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightAlt">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/AltGr.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/AltGr.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/AltGr.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightGui">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Windows.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Windows.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Windows.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Application">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Menu.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Menu.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Menu.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightCtrl">
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Strg.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Ctrl.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Ctrl.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowLeft">
+      <X>+5</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/CaretLeft.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/CaretLeft.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/CaretLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowDown">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/CaretDown.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/CaretDown.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/CaretDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowRight">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/CaretRight.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/CaretRight.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/CaretRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num0">
+      <X>+5</X>
+      <Width>2</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Num0_Einfg.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Num0_Ins.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Num0_Ins.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumPeriodAndDelete">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Comma_Entf.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Dot_Del.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Dot_Del.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable3">
+      <X>7</X>
+      <Y>32</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/G1.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/G1.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/G1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable6">
+      <X>7</X>
+      <Y>+</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/G2.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/G2.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/G2.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable1">
+      <X>7</X>
+      <Y>+1</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/G3.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/G3.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/G3.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable2">
+      <X>7</X>
+      <Y>+</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/G4.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/G4.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/G4.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable4">
+      <X>7</X>
+      <Y>+1</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/G5.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/G5.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/G5.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable5">
+      <X>7</X>
+      <Y>+</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/G6.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/G6.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/G6.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe1">
+      <X>0</X>
+      <Y>0</Y>
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe2">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe3">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe4">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe5">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe6">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe7">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe8">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe9">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe10">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe11">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe12">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe13">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe14">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe15">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe16">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe17">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe18">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedStripe19">
+      <Width>24.47368mm</Width>
+      <Height>4mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="EU_Int" Image="Strafe_Keys/Empty.png" />
+          <LogicalLayout Name="ND" Image="Strafe_Keys/Empty.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>K95 RGB Platinum.png</DeviceImage>
+  </CustomData>
+</Device>

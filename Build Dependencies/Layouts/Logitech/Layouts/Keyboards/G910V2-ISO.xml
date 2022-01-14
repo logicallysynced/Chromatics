@@ -1,0 +1,890 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Logitech G910v2 - Physical UK</Name>
+  <Description>Physical UK-Layout of Logitech G910v2 (Logical: ???)</Description>
+  <Author>Darth Affe</Author>
+  <Type>Keyboard</Type>
+  <Lighting>Key</Lighting>
+  <Vendor>Logitech</Vendor>
+  <Model>G910v2</Model>
+  <Width>491</Width>
+  <Height>238</Height>
+  <Leds>
+    <!-- Esc -> Pause -->
+    <Led Id="Keyboard_Escape">
+      <X>42</X>
+      <Y>28</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Escape.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F1">
+      <X>+12.667</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F2.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F3.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F4">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F4.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F5">
+      <X>+12.667</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F5.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F6.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F7">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F7.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F8.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F9">
+      <X>+12.667</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F9.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F10">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F10.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F11">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F11.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F12">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F12.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PrintScreen">
+      <X>+6.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Drucken.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ScrollLock">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Rollen.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PauseBreak">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/PauseUntbr.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <!-- ^ -> Num- -->
+    <Led Id="Keyboard_GraveAccentAndTilde">
+      <X>42</X>
+      <Y>52</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Circumflex_Degree.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_1">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/1_ExclamationMark.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/2_QuotationMark_Exponent2.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/3_SectionSign_Exponent3.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_4">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/4_Dollar.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_5">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/5_Percent.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/6_Ampersand.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_7">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/7_Slash_CurlyBracketLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/8_BracketLeft_SquareBracketLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_9">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/9_BracketRight_SquareBracketRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_0">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/0_Equals_CurlyBracketRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_MinusAndUnderscore">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/QuestionMark_SharpS_Backslash.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_EqualsAndPlus">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/AccentGrave_AccentAcute.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Backspace">
+      <Width>2</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Backspace.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Insert">
+      <X>+6.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Einfg.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Home">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Pos1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PageUp">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/BildUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumLock">
+      <X>+6.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumSlash">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Slash.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumAsterisk">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Asterisk.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumMinus">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Minus.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <!-- Tab -> Num+ -->
+    <Led Id="Keyboard_Tab">
+      <X>42</X>
+      <Y>+</Y>
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Tab.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Q">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Q_At.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_W">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/W.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_E">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/E_Euro.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_R">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/R.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_T">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/T.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Y">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Z.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_U">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/U.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_I">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/I.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_O">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/O.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_P">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/P.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_BracketLeft">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/UE.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_BracketRight">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Plus_Asterisk_Tilde.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Enter">
+      <Shape>M0,0 L0,0.5 L0.16666666666,0.5 L0.16666666666,1 L1,1 L1,0 Z</Shape>
+      <Width>1.5</Width>
+      <Height>2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Enter.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Delete">
+      <X>+6.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Entf.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_End">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Ende.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PageDown">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/BildDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num7">
+      <X>+6.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num7_Pos1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num8_ArrowUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num9">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num9_BildUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumPlus">
+      <Height>2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/NumPlus.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <!-- CapsLock -> Num6 -->
+    <Led Id="Keyboard_CapsLock">
+      <X>42</X>
+      <Y>~</Y>
+      <Width>1.75</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/CapsLockA.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_A">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/A.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_S">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/S.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_D">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/D.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/F.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_G">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_H">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/H.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_J">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/J.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_K">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/K.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_L">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/L.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_SemicolonAndColon">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/OE.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ApostropheAndDoubleQuote">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/AE.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NonUsTilde">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Hash_Apostrophe.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num4">
+      <X>+94.25</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num4_ArrowLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num5">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num5.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num6_ArrowRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <!-- LShift -> NumEnter -->
+    <Led Id="Keyboard_LeftShift">
+      <X>42</X>
+      <Y>+</Y>
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Shift.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NonUsBackslash">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/LessThan_GreaterThan_Pipe.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Z">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Y.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_X">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/X.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_C">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/C.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_V">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/V.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_B">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/B.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_N">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/N.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_M">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/M_Mu.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_CommaAndLessThan">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Comma_Semicolon.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PeriodAndBiggerThan">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Dot_Colon.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_SlashAndQuestionMark">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Hyphen_Underscore.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightShift">
+      <Width>2.75</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/ShiftBig.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowUp">
+      <X>+25.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/CaretUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num1">
+      <X>+25.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num1_Ende.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num2_ArrowDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num3_BildDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumEnter">
+      <Height>2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/NumEnter.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <!-- LCtrl -> NumPeriod -->
+    <Led Id="Keyboard_LeftCtrl">
+      <X>42</X>
+      <Y>~</Y>
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Strg.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftGui">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Windows.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftAlt">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Alt.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Space">
+      <Width>5.75</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Space.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightAlt">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/AltGr.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightGui">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Windows.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Application">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Menu.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightCtrl">
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Strg.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowLeft">
+      <X>+6.75</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/CaretLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowDown">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/CaretDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowRight">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/CaretRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num0">
+      <X>+6.75</X>
+      <Width>2</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Num0_Einfg.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumPeriodAndDelete">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/Comma_Entf.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <!-- G-Keys -->
+    <Led Id="Keyboard_Programmable1">
+      <X>18</X>
+      <Y>52</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable2">
+      <X>18</X>
+      <Y>+</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G2.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable3">
+      <X>18</X>
+      <Y>+</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G3.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable4">
+      <X>18</X>
+      <Y>+</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G4.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable5">
+      <X>18</X>
+      <Y>+</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G5.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable6">
+      <X>73.667</X>
+      <Y>9</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G6.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable7">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G7.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G8.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Programmable9">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="DE" Image="Raptor_Keys/G9.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Logo">
+      <Shape>M 0.43535,0.91509 c -0.083,-0.013 -0.1809,-0.0541 -0.24123,-0.11683 -0.21672,-0.2247 -0.10831,-0.63995 0.19645,-0.71442 0.044,-0.0108 0.44173,-0.0156 0.47505,-0.006 0.0632,0.0184 0.0708,0.15184 0.0119,0.18175 -0.0174,0.009 -0.0369,0.009 -0.21797,0.009 -0.23755,0 -0.25559,-0.002 -0.3144,0.067 -0.14073,0.16404 -0.0357,0.36697 0.16357,0.40076 0.0569,0.01 0.0835,0.0391 0.0831,0.0846 -4.5e-4,0.0636 -0.0621,0.10873 -0.15647,0.0941 z m 0.36491,6.7e-4 c -0.0366,-0.0138 -0.0539,-0.0325 -0.0567,-0.0973 -0.006,-0.14226 -0.0741,-0.23758 -0.21563,-0.24355 -0.0562,-0.003 -0.0629,-0.004 -0.0811,-0.0233 -0.0344,-0.0359 -0.021,-0.11984 0.0238,-0.14402 0.0129,-0.007 0.0145,-0.007 0.19631,-0.007 0.25897,0 0.25297,0.005 0.25151,0.27271 -8e-4,0.17441 -8e-4,0.19394 -0.0107,0.20972 -0.0183,0.0297 -0.0769,0.0443 -0.10753,0.0326 Z</Shape>
+      <X>18</X>
+      <Y>28</Y>
+    </Led>
+    <Led Id="Keyboard_Custom1">
+      <Shape>M 0,0 L0.15,1 0.85,1 L 1,0 Z</Shape>
+      <X>92.5</X>
+      <Y>166.5</Y>
+      <Width>55mm</Width>
+      <Height>9mm</Height>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>G910.png</DeviceImage>
+  </CustomData>
+</Device>

@@ -16,8 +16,12 @@ namespace Chromatics.Layers
     {
         private static int _layerAutoID = 0;
 
-        private static bool _preview;
+        private static int _version = 0;
 
+        private static int _prev = 0;
+
+        private static bool _preview;
+        
         private static ConcurrentDictionary<int, Layer> _layers = new ConcurrentDictionary<int, Layer>();
 
         public static int AddLayer(int index, LayerType rootLayerType, RGBDeviceType devicetype, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds)
@@ -27,6 +31,7 @@ namespace Chromatics.Layers
             var id = _layerAutoID;
             var layer = new Layer(id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds);
             _layers.GetOrAdd(id, layer);
+            _version++;
 
             return id;
         }
@@ -36,7 +41,8 @@ namespace Chromatics.Layers
             if (_layers.ContainsKey(layer.layerID))
             {
                 var kvp = _layers.FirstOrDefault(x => x.Value.layerID == layer.layerID);
-                _layers.TryUpdate(kvp.Key, layer, kvp.Value);  
+                _layers.TryUpdate(kvp.Key, layer, kvp.Value);
+                _version++;
             }
         }
 
@@ -46,6 +52,7 @@ namespace Chromatics.Layers
             {
                 var kvp = _layers.GetValueOrDefault(id);
                 var result = _layers.TryRemove(new KeyValuePair<int, Layer>(id, kvp));
+                _version++;
             }
         }
 
@@ -82,6 +89,7 @@ namespace Chromatics.Layers
                 _layers.Clear();
                 _layers = FileOperationsHelper.LoadLayerMappings();
                 _layerAutoID = _layers.LastOrDefault().Key;
+                _version++;
 
                 return true;
             }
@@ -104,6 +112,22 @@ namespace Chromatics.Layers
         public static void SetPreview(bool value)
         {
             _preview = value;
+        }
+
+        public static bool HasChanged()
+        {
+            if (_version != _prev)
+            {
+                _prev = _version;
+                return true;
+            }
+
+            return false;
+        }
+
+        public static int ChangeVersion()
+        {
+            return _version;
         }
     }
 

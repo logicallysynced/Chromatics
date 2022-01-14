@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Asus Prime X570-PRO</Name>
+  <Description>Asus Prime X570-PRO Mainboard</Description>
+  <Author>Psych0D0g</Author>
+  <Type>Mainboard</Type>
+  <Lighting>Key</Lighting>
+  <Vendor>Asus</Vendor>
+  <Model>Prime X570-PRO</Model>
+  <Width>252</Width>
+  <Height>305</Height>
+  <Leds>
+    <Led Id="Mainboard1">
+      <Shape> M0.404,0.271 L0.832,0.436 L0.475,0.82 L0.029,0.655z</Shape>
+      <X>50</X>
+      <Y>40</Y>
+      <Width>35mm</Width>
+      <Height>57mm</Height>
+    </Led>
+    <Led Id="Mainboard2">
+      <Shape> M0.377,0.067 L0.673,0.226 L0.421,0.643 L0.125,0.474z</Shape>
+      <X>32</X>
+      <Y>75</Y>
+      <Width>50mm</Width>
+      <Height>55mm</Height>
+    </Led>
+    <Led Id="Mainboard3">
+      <Shape> M0.352,0.237 L0.64,0.425 L0.344,0.957 L0.06,0.725z</Shape>
+      <X>20</X>
+      <Y>90</Y>
+      <Width>50mm</Width>
+      <Height>50mm</Height>
+    </Led>
+    <Led Id="Mainboard4">
+      <X>180</X>
+      <Y>170</Y>
+      <Width>25mm</Width>
+      <Height>10mm</Height>
+    </Led>
+    <Led Id="Mainboard5">
+      <Width>1.5</Width>
+      <Height>1.5</Height>
+    </Led>
+    <Led Id="Mainboard6">
+      <X>224</X>
+      <Y>+</Y>
+      <Width>0.5</Width>
+      <Height>1.5</Height>
+    </Led>
+    <Led Id="Mainboard7">
+      <X>190</X>
+      <Y>13</Y>
+      <Width>20mm</Width>
+      <Height>10mm</Height>
+    </Led>
+    <Led Id="Mainboard8">
+      <X>227</X>
+      <Y>54</Y>
+      <Width>10mm</Width>
+      <Height>20mm</Height>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>Prime X570-PRO.png</DeviceImage>
+  </CustomData>
+</Device>

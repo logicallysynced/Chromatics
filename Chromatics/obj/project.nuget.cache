@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "8f+PeKIsXJPV6zUVdI8ZInbE+Tx8OCDoUvGiGb0ubaxqPRu5vLVT7+7fA11u7UV13a1khPwQQX/pRVqdWoG2TQ==",
+  "dgSpecHash": "8+ywmZoM40941QrFBiIREMq2kCLwOUw+VkQxAKXobaqs8DHYaAfZ7qG9AAKnhtxEPDnI11ljDBtT3v8Jj4uLTQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj",
+  "projectFilePath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Dani\\.nuget\\packages\\cyotek.windows.forms.colorpicker\\2.0.0-beta.7\\cyotek.windows.forms.colorpicker.2.0.0-beta.7.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\hidsharp\\2.1.0\\hidsharp.2.1.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\metromodernui\\1.4.0\\metromodernui.1.4.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
@@ -16,7 +17,6 @@
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.logitech\\1.0.0-prerelease7\\rgb.net.devices.logitech.1.0.0-prerelease7.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.msi\\1.0.0-prerelease7\\rgb.net.devices.msi.1.0.0-prerelease7.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.novation\\1.0.0-prerelease7\\rgb.net.devices.novation.1.0.0-prerelease7.nupkg.sha512",
-    "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.razer\\1.0.0-prerelease7\\rgb.net.devices.razer.1.0.0-prerelease7.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.steelseries\\1.0.0-prerelease7\\rgb.net.devices.steelseries.1.0.0-prerelease7.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.wooting\\1.0.0-prerelease7\\rgb.net.devices.wooting.1.0.0-prerelease7.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.hid\\1.0.0-prerelease7\\rgb.net.hid.1.0.0-prerelease7.nupkg.sha512",

@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Corsair LT100</Name>
+  <Description>Physical layout of Corsairs LT100</Description>
+  <Author>SpoinkyNL</Author>
+  <Type>Unknown</Type>
+  <Vendor>Corsair</Vendor>
+  <Model>ST100RGB</Model>
+  <Width>94</Width>
+  <Height>411</Height>
+  <LedUnitWidth>1</LedUnitWidth>
+  <LedUnitHeight>1</LedUnitHeight>
+  <Leds>
+    <Led Id="Custom1">
+      <Shape> M0.987,0.651 L0.986,0.829 L0.98,0.888 L0.956,0.913 L0.922,0.938 L0.872,0.947 L0.089,0.918 L0.053,0.903 L0.019,0.868 L0.008,0.834 L0.008,0.636 L0.021,0.656 L0.051,0.676 L0.087,0.7 L0.894,0.715 L0.952,0.695z</Shape>
+      <X>0</X>
+      <Y>388</Y>
+      <Width>94</Width>
+      <Height>23</Height>
+    </Led>
+    <Led Id="Custom2">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom3">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom4">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom5">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom6">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom7">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom8">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom9">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom10">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom11">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom12">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom13">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom14">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom15">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom16">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom17">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom18">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom19">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom20">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom21">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom22">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom23">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom24">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom25">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom26">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+    <Led Id="Custom27">
+      <X>42</X>
+      <Y>-</Y>
+      <Width>10.0</Width>
+      <Height>14.8</Height>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>LT100.png</DeviceImage>
+  </CustomData>
+</Device>

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Asus ROG STRIX Z490-E GAMING</Name>
+  <Description>Asus ROG STRIX Z490-E GAMING</Description>
+  <Type>Mainboard</Type>
+  <Vendor>Asus</Vendor>
+  <Model>ROG STRIX Z490-E GAMING</Model>
+  <Width>244</Width>
+  <Height>305</Height>
+  <LedUnitWidth>13</LedUnitWidth>
+  <LedUnitHeight>57</LedUnitHeight>
+  <Leds>
+    <Led Id="Mainboard1">
+      <Shape>M0,0 L0,0.85 L1,1 L1,0.17 Z</Shape>
+      <X>1</X>
+      <Y>94</Y>
+    </Led>
+    <Led Id="Mainboard2">
+      <Shape>M0,0 L0,0.85 L1,1 L1,0.17 Z</Shape>
+      <Y>103</Y>
+    </Led>
+    <Led Id="Mainboard3">
+      <Shape>M0,0 L0,1 L0.5,1 L1,0.8 L1,0.19 Z</Shape>
+      <Y>113.5</Y>
+      <Height>0.82</Height>
+    </Led>
+    <Led Id="Mainboard4">
+      <Shape>M0,0 L0,1 L1,0.37 Z</Shape>
+      <Y>123</Y>
+      <Height>0.48</Height>
+    </Led>
+    <Led Id="Mainboard5">
+      <X>150</X>
+      <Y>200</Y>
+      <Width>1</Width>
+      <Height>0.95</Height>
+    </Led>
+    <Led Id="Mainboard6">
+      <Height>0.95</Height>
+    </Led>
+    <Led Id="Mainboard7">
+      <Height>0.95</Height>
+    </Led>
+    <Led Id="Mainboard8">
+      <Height>0.95</Height>
+    </Led>
+    <Led Id="Mainboard9">
+      <Height>0.95</Height>
+    </Led>
+    <Led Id="Mainboard10">
+      <Height>0.95</Height>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>ROG STRIX Z490-E GAMING.png</DeviceImage>
+  </CustomData>
+  <Author>piechade</Author>
+</Device>

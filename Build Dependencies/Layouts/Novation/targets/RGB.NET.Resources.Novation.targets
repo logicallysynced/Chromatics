@@ -1,0 +1,143 @@
+<!--
+ * Build targets hacked from SQLite (thanks!)
+ * System.Data.SQLite.Core.targets -
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+  ******************************************************************************
+  **                                Build Items                               **
+  ******************************************************************************
+  -->
+
+  <ItemGroup>
+    <NovationSDKFiles Condition="'$(MSBuildThisFileDirectory)' != '' And
+                                   HasTrailingSlash('$(MSBuildThisFileDirectory)')"
+                        Include="$(MSBuildThisFileDirectory)resources\**\*.*" />
+  </ItemGroup>
+
+  <!--
+  ******************************************************************************
+  **                               Content Items                              **
+  ******************************************************************************
+  -->
+
+  <ItemGroup Condition="'$(ContentNovationSDKFiles)' != '' And
+                        '$(ContentNovationSDKFiles)' != 'false' And
+                        '@(NovationSDKFiles)' != ''">
+    <Content Include="@(NovationSDKFiles)">
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--
+  ******************************************************************************
+  **                              Build Targets*                              **
+  ******************************************************************************
+  -->
+
+  <Target Name="CopyNovationSDKFiles"
+          Condition="'$(CopyNovationSDKFiles)' != 'false' And
+                     '$(OutDir)' != '' And
+                     HasTrailingSlash('$(OutDir)') And
+                     Exists('$(OutDir)')"
+          Inputs="@(NovationSDKFiles)"
+          Outputs="@(NovationSDKFiles -> '$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')">
+    <!--
+        NOTE: Copy "AURA_SDK.dll" and all related files, for every
+              architecture that we support, to the build output directory.
+    -->
+    <Message Text="Copying SDK files..." Importance="high" />
+    <Copy SourceFiles="@(NovationSDKFiles)"
+          DestinationFiles="@(NovationSDKFiles -> '$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <!--
+  ******************************************************************************
+  -->
+
+  <Target Name="CleanNovationSDKFiles"
+          Condition="'$(CleanNovationSDKFiles)' != 'false' And
+                     '$(OutDir)' != '' And
+                     HasTrailingSlash('$(OutDir)') And
+                     Exists('$(OutDir)')">
+
+    <!--
+        NOTE: Delete "NovationSDK*.dll" and all related files, for every
+              architecture that we support, from the build output directory.
+    -->
+    <Message Text="this file $(MSBuildThisFileDirectory)" Importance="high"/>
+    <Message Text="Cleaning SDK files..." Importance="high" />
+
+    <Delete Files="@(NovationSDKFiles -> '$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <!--
+  ******************************************************************************
+  -->
+
+  <Target Name="CollectNovationSDKFiles"
+          Condition="'$(CollectNovationSDKFiles)' != 'false'">
+    <Message Text="Collecting SDK files..." Importance="high" />
+    <ItemGroup>
+      <FilesForPackagingFromProject Include="@(NovationSDKFiles)">
+        <DestinationRelativePath>bin\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+  </Target>
+
+  <!--
+  ******************************************************************************
+  -->
+
+  <Target Name="BeforePublish">
+    <Touch Files="@(IntermediateAssembly)" />
+  </Target>
+  <Target Name="BeforeBuild">
+    <CreateItem Include="@(AdditionalPublishFilex86)" AdditionalMetadata="TargetPath=x86\%(FileName)%(Extension);IsDataFile=false">
+      <Output TaskParameter="Include" ItemName="_DeploymentManifestFiles" />
+    </CreateItem>
+    <CreateItem Include="@(AdditionalPublishFilex64)" AdditionalMetadata="TargetPath=x64\%(FileName)%(Extension);IsDataFile=false">
+      <Output TaskParameter="Include" ItemName="_DeploymentManifestFiles" />
+    </CreateItem>
+  </Target>
+  
+  <!--
+  ******************************************************************************
+  **                            Build Properties                              **
+  ******************************************************************************
+  -->
+
+  <PropertyGroup>
+    <PostBuildEventDependsOn>
+      $(PostBuildEventDependsOn);
+      CopyNovationSDKFiles;
+    </PostBuildEventDependsOn>
+    <BuildDependsOn>
+      $(BuildDependsOn);
+      CopyNovationSDKFiles;
+    </BuildDependsOn>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      CleanNovationSDKFiles;
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <!--
+  ******************************************************************************
+  **                 Publish Properties for Visual Studio 201x                **
+  ******************************************************************************
+  -->
+
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' Or
+                            '$(VisualStudioVersion)' == '10.0' Or
+                            '$(VisualStudioVersion)' == '11.0' Or
+                            '$(VisualStudioVersion)' == '12.0'">
+    <PipelineCollectFilesPhaseDependsOn>
+      CollectNovationSDKFiles;
+      $(PipelineCollectFilesPhaseDependsOn);
+    </PipelineCollectFilesPhaseDependsOn>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>iCUE H150i RGB PRO XT Liquid CPU Cooler</Name>
+  <Type>Cooler</Type>
+  <Vendor>Corsair</Vendor>
+  <Model>H150i RGB PRO XT </Model>
+  <Width>60</Width>
+  <Height>60</Height>
+  <LedUnitWidth>10</LedUnitWidth>
+  <LedUnitHeight>10</LedUnitHeight>
+  <Leds>
+    <Led Id="Cooler12">
+      <Shape> M0.031,0.404 L0.93,0.334 L0.93,0.521 L0.094,0.6z</Shape>
+      <X>15</X>
+      <Y>5</Y>
+    </Led>
+    <Led Id="Cooler13">
+      <Shape> M0.055,0.326 L0.945,0.326 L0.922,0.514 L0.062,0.529z</Shape>
+    </Led>
+    <Led Id="Cooler14">
+      <Shape> M0.047,0.35 L0.883,0.381 L0.836,0.584 L0.062,0.553z</Shape>
+    </Led>
+    <Led Id="Cooler15">
+      <Shape> M0.531,-0.072 L0.656,0.865 L0.461,0.881 L0.352,0.021z</Shape>
+      <Y>15</Y>
+    </Led>
+    <Led Id="Cooler16">
+      <Shape> M0.672,0.037 L0.672,0.904 L0.453,0.904 L0.453,0.037z</Shape>
+      <X>45</X>
+      <Y>25</Y>
+    </Led>
+    <Led Id="Cooler5">
+      <Shape> M0.641,0.053 L0.617,0.889 L0.391,0.85 L0.445,0.029z</Shape>
+      <X>45</X>
+      <Y>35</Y>
+    </Led>
+    <Led Id="Cooler6">
+      <Shape> M0.062,0.436 L0.852,0.381 L0.922,0.584 L0.031,0.639z</Shape>
+      <X>35</X>
+      <Y>45</Y>
+    </Led>
+    <Led Id="Cooler7">
+      <Shape> M0.055,0.475 L0.938,0.459 L0.945,0.654 L0.062,0.654z</Shape>
+      <X>25</X>
+      <Y>45</Y>
+    </Led>
+    <Led Id="Cooler8">
+      <Shape> M0.086,0.389 L0.891,0.459 L0.914,0.654 L0.039,0.615z</Shape>
+      <X>15</X>
+      <Y>45</Y>
+    </Led>
+    <Led Id="Cooler9">
+      <Shape> M0.336,0.123 L0.523,0.131 L0.586,0.896 L0.375,0.943z</Shape>
+      <X>5</X>
+      <Y>35</Y>
+    </Led>
+    <Led Id="Cooler10">
+      <Shape> M0.336,0.1 L0.547,0.1 L0.531,0.99 L0.336,0.99z</Shape>
+      <X>5</X>
+      <Y>25</Y>
+    </Led>
+    <Led Id="Cooler11">
+      <Shape> M0.391,0.061 L0.594,0.092 L0.539,0.998 L0.336,0.998z</Shape>
+      <X>5</X>
+      <Y>15</Y>
+    </Led>
+    <Led Id="Cooler1">
+      <X>15</X>
+      <Y>25</Y>
+    </Led>
+    <Led Id="Cooler2">
+      <X>25</X>
+      <Y>15</Y>
+    </Led>
+    <Led Id="Cooler3">
+      <X>35</X>
+      <Y>25</Y>
+    </Led>
+    <Led Id="Cooler4">
+      <X>25</X>
+      <Y>35</Y>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>H115i PRO XT RGB Pump.png</DeviceImage>
+  </CustomData>
+</Device>

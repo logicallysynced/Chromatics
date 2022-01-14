@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Razer Firefly v2</Name>
+  <Description>Physical layout of Razers Firefly v2</Description>
+  <Author>GarettTracer</Author>
+  <Type>Mousepad</Type>
+  <Vendor>Razer</Vendor>
+  <Model>Firefly v2</Model>
+  <Width>356</Width>
+  <Height>254</Height>
+  <LedUnitWidth>22.5</LedUnitWidth>
+  <LedUnitHeight>76.5</LedUnitHeight>
+  <Leds>
+    <Led Id="Mousepad15">
+      <Shape>M1,0 L0,0 L0,1 L1,1z M0,0.23 L0.1,0.17 L0.3,0.1 L0.5,0.05 L0.7,0.02 L1,0 L0,0z</Shape>
+      <X>0</X>
+      <Y>14</Y>
+      <Height>.70</Height>
+    </Led>
+    <Led Id="Mousepad14">
+      <X>=</X>
+      <Y>+</Y>
+      <Height>.70</Height>
+    </Led>
+    <Led Id="Mousepad13">
+      <X>=</X>
+      <Y>+</Y>
+      <Height>.70</Height>
+    </Led>
+    <Led Id="Mousepad12">
+      <X>=</X>
+      <Y>+</Y>
+      <Height>.70</Height>
+    </Led>
+    <Led Id="Mousepad11">
+      <Shape>M1,0 L0,0 L0,1 L1,1z M0,0.3783783784 L0.03144654088,0.5405405405 L0.09433962264,0.7297297297 L0.1572327044,0.8648648649 L0.2201257862,0.9459459459 L0.3144654088,1 L0,1z</Shape>
+      <X>=</X>
+      <Y>+</Y>
+      <Width>2.265</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad10">
+      <Y>~</Y>
+      <Width>2.265</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad9">
+      <Width>2.265</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad8">
+      <Width>2.265</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad7">
+      <Width>2.265</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad6">
+      <Width>2.265</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad5">
+      <Shape>M1,0 L0,0 L0,1 L1,1z M1,0.3783783784 L0.9685534591,0.5405405405 L0.9056603774,0.7297297297 L0.8427672956,0.8648648649 L0.7798742138,0.9459459459 L0.6855345912,1 L1,1z</Shape>
+      <Y>~</Y>
+      <Width>2.265</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad4">
+      <X>~</X>
+      <Y>-</Y>
+      <Height>.70</Height>
+    </Led>
+    <Led Id="Mousepad3">
+      <X>=</X>
+      <Y>-</Y>
+      <Height>.70</Height>
+    </Led>
+    <Led Id="Mousepad2">
+      <X>=</X>
+      <Y>-</Y>
+      <Height>.70</Height>
+    </Led>
+    <Led Id="Mousepad1">
+      <Shape>M1,0 L0,0 L0,1 L1,1z M1,0.23 L0.9,0.17 L0.7,0.1 L0.5,0.05 L0.3,0.02 L0,0 L1,0z</Shape>
+      <X>=</X>
+      <Y>-</Y>
+      <Height>.70</Height>
+    </Led>
+    <Led Id="Mousepad19">
+      <X>-</X>
+      <Width>2.5</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad18">
+      <X>-</X>
+      <Width>2.5</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad17">
+      <X>-</X>
+      <Width>2.5</Width>
+      <Height>0.370</Height>
+    </Led>
+    <Led Id="Mousepad16">
+      <X>-</X>
+      <Width>2.5</Width>
+      <Height>0.370</Height>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>Firefly v2.png</DeviceImage>
+  </CustomData>
+</Device>

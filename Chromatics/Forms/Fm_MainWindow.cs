@@ -9,6 +9,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace Chromatics.Forms
     public partial class Fm_MainWindow : MetroForm
     {
         private MetroStyleManager metroStyleManager;
+        private Thread _ChromaticsThread;
 
         public Fm_MainWindow()
         {
@@ -27,7 +29,7 @@ namespace Chromatics.Forms
             //Start Form
             InitializeComponent();
 
-            metroStyleManager = new MetroStyleManager();
+            metroStyleManager = new MetroStyleManager(); 
             metroStyleManager.Owner = this;
             metroStyleManager.Theme = MetroFramework.MetroThemeStyle.Default;
             metroStyleManager.Style = MetroFramework.MetroColorStyle.Pink;
@@ -35,6 +37,7 @@ namespace Chromatics.Forms
             this.Theme = metroStyleManager.Theme;
             this.Style = metroStyleManager.Style;
             this.Size = new Size(1400, 885);
+
 
             //Initiate Tabs
             var uC_Console = new Uc_Console
@@ -47,8 +50,16 @@ namespace Chromatics.Forms
                 Dock = DockStyle.Fill
             };
 
+            var uC_Palette = new Uc_Palette
+            {
+                Dock = DockStyle.Fill
+            };
+
             tP_console.Controls.Add(uC_Console);
             tP_mappings.Controls.Add(uC_Mappings);
+            tP_palette.Controls.Add(uC_Palette);
+
+            uC_Mappings.TabManager = mT_TabManager;
 
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
         }
@@ -60,20 +71,35 @@ namespace Chromatics.Forms
                 mT_TabManager.SelectedIndex = i;
 
             mT_TabManager.SelectedIndex = 0;
-
+            
             //Setup Chromatics
             SetupChromatics();
+
+            
         }
 
         private void SetupChromatics()
         {
             //make static?
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics 3.0 has loaded");
+
+            //Create new thread for FFXIV/RGB processing
+            _ChromaticsThread = new Thread(new ThreadStart(this.RunChromaticsThread));
+            _ChromaticsThread.IsBackground = true;
+            _ChromaticsThread.Start();
+        }
+
+        private void RunChromaticsThread()
+        {
+            RGBController.Setup();
+
         }
 
         private void OnResize(object sender, EventArgs e)
         {
             //Debug.WriteLine($"Form Resize: W: {this.Width} / H: {this.Height}");
         }
+
+        
     }
 }

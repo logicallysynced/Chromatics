@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj": {}
+    "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj": {
+    "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
       "version": "3.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj",
+        "projectUniqueName": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
-        "projectPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj",
+        "projectPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "packagesPath": "C:\\Users\\Dani\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\obj\\",
+        "outputPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -45,6 +45,10 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "dependencies": {
+            "Cyotek.Windows.Forms.ColorPicker": {
+              "target": "Package",
+              "version": "[2.0.0-beta.7, )"
+            },
             "MetroModernUI": {
               "target": "Package",
               "version": "[1.4.0, )"
@@ -78,10 +82,6 @@
               "version": "[1.0.0-prerelease7, )"
             },
             "RGB.NET.Devices.Novation": {
-              "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
-            },
-            "RGB.NET.Devices.Razer": {
               "target": "Package",
               "version": "[1.0.0-prerelease7, )"
             },

@@ -36,9 +36,10 @@ namespace Chromatics.Forms
             this.pn_right = new System.Windows.Forms.Panel();
             this.flp_layers = new System.Windows.Forms.FlowLayoutPanel();
             this.tlp_frame = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tlp_controls = new System.Windows.Forms.TableLayoutPanel();
             this.btn_clearselection = new MetroFramework.Controls.MetroButton();
             this.btn_reverseselection = new MetroFramework.Controls.MetroButton();
+            this.btn_undoselection = new MetroFramework.Controls.MetroButton();
             this.pn_top = new System.Windows.Forms.Panel();
             this.tlp_top = new System.Windows.Forms.TableLayoutPanel();
             this.cb_addlayer = new MetroFramework.Controls.MetroComboBox();
@@ -46,12 +47,11 @@ namespace Chromatics.Forms
             this.cb_deviceselect = new MetroFramework.Controls.MetroComboBox();
             this.btn_preview = new MetroFramework.Controls.MetroButton();
             this.pn_bottom = new System.Windows.Forms.Panel();
-            this.btn_undoselection = new MetroFramework.Controls.MetroButton();
             this.tlp_base.SuspendLayout();
             this.tlp_mid.SuspendLayout();
             this.pn_right.SuspendLayout();
             this.tlp_frame.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tlp_controls.SuspendLayout();
             this.pn_top.SuspendLayout();
             this.tlp_top.SuspendLayout();
             this.SuspendLayout();
@@ -119,7 +119,7 @@ namespace Chromatics.Forms
             this.tlp_frame.ColumnCount = 2;
             this.tlp_frame.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 93.37442F));
             this.tlp_frame.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.625578F));
-            this.tlp_frame.Controls.Add(this.tableLayoutPanel1, 1, 0);
+            this.tlp_frame.Controls.Add(this.tlp_controls, 1, 0);
             this.tlp_frame.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_frame.Location = new System.Drawing.Point(3, 3);
             this.tlp_frame.Name = "tlp_frame";
@@ -129,24 +129,24 @@ namespace Chromatics.Forms
             this.tlp_frame.Size = new System.Drawing.Size(1298, 924);
             this.tlp_frame.TabIndex = 2;
             // 
-            // tableLayoutPanel1
+            // tlp_controls
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.btn_clearselection, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btn_reverseselection, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btn_undoselection, 0, 2);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(1215, 3);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(80, 339);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tlp_controls.ColumnCount = 1;
+            this.tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlp_controls.Controls.Add(this.btn_clearselection, 0, 0);
+            this.tlp_controls.Controls.Add(this.btn_reverseselection, 0, 1);
+            this.tlp_controls.Controls.Add(this.btn_undoselection, 0, 2);
+            this.tlp_controls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlp_controls.Location = new System.Drawing.Point(1215, 3);
+            this.tlp_controls.Name = "tlp_controls";
+            this.tlp_controls.RowCount = 4;
+            this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlp_controls.Size = new System.Drawing.Size(80, 339);
+            this.tlp_controls.TabIndex = 0;
             // 
             // btn_clearselection
             // 
@@ -177,6 +177,20 @@ namespace Chromatics.Forms
             this.btn_reverseselection.Text = "Reverse";
             this.btn_reverseselection.UseSelectable = true;
             this.btn_reverseselection.Click += new System.EventHandler(this.btn_reverseselection_Click);
+            // 
+            // btn_undoselection
+            // 
+            this.btn_undoselection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_undoselection.AutoSize = true;
+            this.btn_undoselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btn_undoselection.Location = new System.Drawing.Point(3, 171);
+            this.btn_undoselection.Name = "btn_undoselection";
+            this.btn_undoselection.Size = new System.Drawing.Size(74, 30);
+            this.btn_undoselection.TabIndex = 2;
+            this.btn_undoselection.Text = "Undo";
+            this.btn_undoselection.UseSelectable = true;
+            this.btn_undoselection.Click += new System.EventHandler(this.btn_undoselection_Click);
             // 
             // pn_top
             // 
@@ -271,20 +285,6 @@ namespace Chromatics.Forms
             this.pn_bottom.Size = new System.Drawing.Size(1864, 46);
             this.pn_bottom.TabIndex = 2;
             // 
-            // btn_undoselection
-            // 
-            this.btn_undoselection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_undoselection.AutoSize = true;
-            this.btn_undoselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btn_undoselection.Location = new System.Drawing.Point(3, 171);
-            this.btn_undoselection.Name = "btn_undoselection";
-            this.btn_undoselection.Size = new System.Drawing.Size(74, 30);
-            this.btn_undoselection.TabIndex = 2;
-            this.btn_undoselection.Text = "Undo";
-            this.btn_undoselection.UseSelectable = true;
-            this.btn_undoselection.Click += new System.EventHandler(this.btn_undoselection_Click);
-            // 
             // Uc_Mappings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -299,8 +299,8 @@ namespace Chromatics.Forms
             this.tlp_mid.ResumeLayout(false);
             this.pn_right.ResumeLayout(false);
             this.tlp_frame.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tlp_controls.ResumeLayout(false);
+            this.tlp_controls.PerformLayout();
             this.pn_top.ResumeLayout(false);
             this.tlp_top.ResumeLayout(false);
             this.tlp_top.PerformLayout();
@@ -322,7 +322,7 @@ namespace Chromatics.Forms
         private MetroFramework.Controls.MetroButton btn_addlayer;
         private MetroFramework.Controls.MetroComboBox cb_deviceselect;
         private System.Windows.Forms.TableLayoutPanel tlp_frame;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tlp_controls;
         private MetroFramework.Controls.MetroButton btn_clearselection;
         private MetroFramework.Controls.MetroButton btn_reverseselection;
         private MetroFramework.Controls.MetroButton btn_preview;

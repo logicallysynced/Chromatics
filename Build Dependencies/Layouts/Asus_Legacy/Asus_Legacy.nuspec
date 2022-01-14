@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>RGB.NET.Resources.Asus_Legacy</id>
+    <title>RGB.NET.Resources.Asus_Legacy</title>
+    <version>0.1.0.0</version>
+    <authors>Darth Affe</authors>
+    <owners>Darth Affe</owners>
+    <iconUrl>http://lib.arge.be/icon_package.png</iconUrl>
+    <projectUrl>https://github.com/DarthAffe/RGB.NET-Resources</projectUrl>
+    <licenseUrl>https://github.com/DarthAffe/RGB.NET-Resources/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Resources for Asus-Devices of RGB.NET (using the v2-SDK)</description>
+    <releaseNotes></releaseNotes>
+    <summary>Resources for Asus-Devices of RGB.NET, a C# (.NET) library for accessing various RGB-peripherals</summary>
+    <copyright>Copyright @ Wyrez 2018</copyright>
+    <language>en-US</language>
+  </metadata>
+  <files>
+    <file src="Images\**\*.*" target="build\resources\Images\Asus\" />
+    <file src="Layouts\**\*.*" target="build\resources\Layouts\Asus\" />
+    <file src="libs\**\*.*" target="build\libs\" />
+    <file src="targets\*.targets" target="build\" />
+  </files>
+</package>

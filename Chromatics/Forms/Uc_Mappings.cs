@@ -28,6 +28,8 @@ namespace Chromatics.Forms
 {
     public partial class Uc_Mappings : UserControl
     {
+        public MetroTabControl TabManager { get; set; }
+
         private List<Pn_LayerDisplay> _layers = new List<Pn_LayerDisplay>();
         private List<VirtualDevice> _vDevices = new List<VirtualDevice>();
         private List<KeyButton> _currentSelectedKeys = new List<KeyButton>();
@@ -177,6 +179,9 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.btn_clearselection, "Clear all keys on layer");
             tt_mappings.SetToolTip(this.btn_reverseselection, "Reverse keys on layer");
             tt_mappings.SetToolTip(this.btn_undoselection, "Undo key selection on layer");
+
+            //Handle Events
+            this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
 
             //Set init to true
             init = true;
@@ -385,30 +390,199 @@ namespace Chromatics.Forms
                     _vDevices.Add(vMouse);
                     break;
                 case RGBDeviceType.Headset:
+                    var vHeadset = new Uc_VirtualHeadset
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vHeadset, 0, 0);
+
+                    vHeadset._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vHeadset);
                     break;
                 case RGBDeviceType.Mousepad:
+                    var vMousepad = new Uc_VirtualMousePad
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vMousepad, 0, 0);
+
+                    vMousepad._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vMousepad);
                     break;
                 case RGBDeviceType.LedStripe:
+                    var vLedStripe = new Uc_VirtualLedStrip
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vLedStripe, 0, 0);
+
+                    vLedStripe._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vLedStripe);
                     break;
                 case RGBDeviceType.LedMatrix:
+                    var vLedMatrix = new Uc_VirtualLedMatrix
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vLedMatrix, 0, 0);
+
+                    vLedMatrix._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vLedMatrix);
                     break;
                 case RGBDeviceType.Mainboard:
+                    var vMainboard = new Uc_VirtualMainboard
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vMainboard, 0, 0);
+
+                    vMainboard._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vMainboard);
                     break;
                 case RGBDeviceType.GraphicsCard:
+                    var vGraphicsCard = new Uc_VirtualGraphicsCard
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vGraphicsCard, 0, 0);
+
+                    vGraphicsCard._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vGraphicsCard);
                     break;
                 case RGBDeviceType.DRAM:
+                    var vDRAM = new Uc_VirtualDRAM
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vDRAM, 0, 0);
+
+                    vDRAM._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vDRAM);
                     break;
                 case RGBDeviceType.HeadsetStand:
+                    var vHeadsetStand = new Uc_VirtualHeadsetStand
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vHeadsetStand, 0, 0);
+
+                    vHeadsetStand._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vHeadsetStand);
                     break;
                 case RGBDeviceType.Keypad:
+                    var vKeypad = new Uc_VirtualKeypad
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vKeypad, 0, 0);
+
+                    vKeypad._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vKeypad);
                     break;
                 case RGBDeviceType.Fan:
+                    var vFan = new Uc_VirtualFan
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vFan, 0, 0);
+
+                    vFan._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vFan);
                     break;
                 case RGBDeviceType.Speaker:
+                    var vSpeaker = new Uc_VirtualSpeaker
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vSpeaker, 0, 0);
+
+                    vSpeaker._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vSpeaker);
                     break;
                 case RGBDeviceType.Cooler:
+                    var vCooler = new Uc_VirtualCooler
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vCooler, 0, 0);
+
+                    vCooler._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vCooler);
                     break;
                 case RGBDeviceType.Monitor:
+                    var vMonitor = new Uc_VirtualMonitor
+                    {
+                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                        Dock = DockStyle.Top,
+                        MinimumSize = new Size(1200, 300),
+                        AutoSize = false,
+                    };
+
+                    tlp_frame.Controls.Add(vMonitor, 0, 0);
+
+                    vMonitor._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _vDevices.Add(vMonitor);
                     break;
                 default:
                     break;
@@ -483,6 +657,32 @@ namespace Chromatics.Forms
             {
                 layer.Size = new Size(flp_layers.Width - _layerPad, 50);
                 layer.Invalidate();
+            }
+        }
+
+        private void mT_TabManager_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (IsAddingLayer) return;
+
+            var current = (sender as TabControl).SelectedTab.ToString();
+            
+            if (current == "tP_mappings")
+            {
+                if (MappingLayers.IsPreview())
+                {
+                    btn_preview.BackColor = System.Drawing.Color.LimeGreen;
+                    MappingLayers.SetPreview(true);
+                }
+                else
+                {
+                    btn_preview.BackColor = SystemColors.Control;
+                    MappingLayers.SetPreview(false);
+                }
+            }
+            else
+            {
+                btn_preview.BackColor = SystemColors.Control;
+                MappingLayers.SetPreview(false);
             }
         }
 
@@ -705,6 +905,8 @@ namespace Chromatics.Forms
             }
             
             parent.Invalidate();
+            var thisbtn = (MetroButton)sender;
+            this.ActiveControl = thisbtn.Parent;
         }
 
         private void OnDeleteButtonPressed(object sender, EventArgs e)
@@ -782,6 +984,8 @@ namespace Chromatics.Forms
                     break;
             }
 
+            var thisbtn = (MetroButton)sender;
+            this.ActiveControl = thisbtn.Parent;
         }
 
         private void OnKeyCapPressed(object sender, EventArgs e)
@@ -890,6 +1094,8 @@ namespace Chromatics.Forms
             }
 
             SaveLayers();
+            var thisbtn = (MetroButton)sender;
+            this.ActiveControl = thisbtn.Parent;
         }
 
         private void cb_addlayer_SelectedIndexChanged(object sender, EventArgs e)
@@ -947,10 +1153,11 @@ namespace Chromatics.Forms
             else
             {
                 btn.BackColor = System.Drawing.Color.LimeGreen;
-                MappingLayers.SetPreview(false);
+                MappingLayers.SetPreview(true);
             }
 
-            //this.ActiveControl = null;
+            var thisbtn = (MetroButton)sender;
+            this.ActiveControl = thisbtn.Parent;
         }
 
         private void btn_clearselection_Click(object sender, EventArgs e)
@@ -958,9 +1165,32 @@ namespace Chromatics.Forms
             if (!init) return;
             if (IsAddingLayer) return;
 
+            var parent = currentlyEditing;
+
+            var ms = MappingLayers.GetLayer(parent.ID);
+            ms.deviceLeds.Clear();
+
+            foreach (var led in currentKeySelection)
+            {
+                if (ms.deviceLeds.ContainsKey(led.Key))
+                    ms.deviceLeds.Remove(led.Key);
+            }
+
+            MappingLayers.UpdateLayer(ms);
+
+            SaveLayers();
             RevertButtons();
 
-            Debug.WriteLine($"Clearing Layer {currentlyEditing.ID}");
+            btn_clearselection.Enabled = false;
+            btn_reverseselection.Enabled = false;
+            btn_undoselection.Enabled = false;
+            currentlyEditing.editing = false;
+            currentlyEditing = null;
+            parent.Invalidate();
+
+            Debug.WriteLine($"Clearing Layer {parent.ID}");
+            var thisbtn = (MetroButton)sender;
+            this.ActiveControl = thisbtn.Parent;
         }
 
         private void btn_reverseselection_Click(object sender, EventArgs e)
@@ -1005,6 +1235,8 @@ namespace Chromatics.Forms
             }
 
             Debug.WriteLine($"Reversing Layer {currentlyEditing.ID}");
+            var thisbtn = (MetroButton)sender;
+            this.ActiveControl = thisbtn.Parent;
         }
 
         private void btn_undoselection_Click(object sender, EventArgs e)
@@ -1088,6 +1320,9 @@ namespace Chromatics.Forms
 
                 currentlyEditing.Invalidate();
             }
+
+            var thisbtn = (MetroButton)sender;
+            this.ActiveControl = thisbtn.Parent;
         }
     }
 }

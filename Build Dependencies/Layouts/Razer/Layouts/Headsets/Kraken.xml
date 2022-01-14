@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Razer Kraken</Name>
+  <Description>Razer Kraken Headset layout</Description>
+  <Author>Fluto</Author>
+  <Type>Headset</Type>
+  <Vendor>Razer</Vendor>
+  <Model>Kraken</Model>
+  <Width>180</Width>
+  <Height>220</Height>
+  <Leds>
+    <Led Id="Headset1">
+      <Shape> M0.042,0.075 L0.048,0.241 L0.135,0.755 L0.192,0.947 L0.178,0.981 L0.084,0.794 L0.004,0.367 L0.018,0.082z M0.960,0.053 L0.975,0.065 L0.99,0.38 L0.910,0.83 L0.815,0.986 L0.798,0.955 L0.858,0.782 L0.939,0.323z</Shape>
+      <X>5</X>
+      <Y>120</Y>
+      <Width>9</Width>
+      <Height>4</Height>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>Razer Kraken.png</DeviceImage>
+  </CustomData>
+</Device>

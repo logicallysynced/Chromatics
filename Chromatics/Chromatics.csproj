@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
     <PackageReference Include="MetroModernUI" Version="1.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RGB.NET.Core" Version="1.0.0-prerelease7" />
@@ -32,7 +33,6 @@
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0-prerelease7" />
     <PackageReference Include="RGB.NET.Devices.Msi" Version="1.0.0-prerelease7" />
     <PackageReference Include="RGB.NET.Devices.Novation" Version="1.0.0-prerelease7" />
-    <PackageReference Include="RGB.NET.Devices.Razer" Version="1.0.0-prerelease7" />
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="1.0.0-prerelease7" />
     <PackageReference Include="RGB.NET.Devices.Wooting" Version="1.0.0-prerelease7" />
     <PackageReference Include="RGB.NET.Layout" Version="1.0.0-prerelease7" />
@@ -40,6 +40,51 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="RGB.NET.Devices.Razer">
+      <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Forms\vDevices\Uc_VirtualDRAM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualFan.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualCooler.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualGraphicsCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualMonitor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualSpeaker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualKeypad.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualHeadsetStand.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualMainboard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualLedMatrix.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualLedStrip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualMousePad.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualHeadset.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

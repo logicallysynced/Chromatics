@@ -1,0 +1,805 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Asus ROG Strix Flare Keyboard Layout</Name>
+  <Description>This was a result of alcohol and caffeine abuse</Description>
+  <Author>Exinity#9420</Author>
+  <Type>Keyboard</Type>
+  <Vendor>Asus</Vendor>
+  <Model>Asus ROG Strix Flare</Model>
+  <Width>454</Width>
+  <Height>155</Height>
+  <Leds>
+    <Led Id="Keyboard_Custom34">
+      <X>0</X>
+      <Y>24</Y>
+      <Width>0.2</Width>
+      <Height>5</Height>
+    </Led>
+    <Led Id="Keyboard_Custom35">
+      <X>450.5</X>
+      <Y>24</Y>
+      <Width>0.2</Width>
+      <Height>5</Height>
+    </Led>
+    <Led Id="Logo">
+      <Shape> M0.044,0.043 L0.656,0.893 L0.963,0.018z</Shape>
+      <X>346</X>
+      <Y>0</Y>
+      <Width>3.5</Width>
+      <Height>1.4</Height>
+    </Led>
+    <Led Id="Keyboard_Escape">
+      <X>8</X>
+      <Y>30</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Escape.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F1">
+      <X>+20</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F2.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F3.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F4">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F4.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F5">
+      <X>+11</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F5.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F6.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F7">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F7.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F8.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F9">
+      <X>+11</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F9.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F10">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F10.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F11">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F11.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F12">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F12.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PrintScreen">
+      <X>+7</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/PrintScreen.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ScrollLock">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/ScrollLock.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PauseBreak">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/PauseBreak.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_GraveAccentAndTilde">
+      <X>8</X>
+      <Y>56</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/AccentGrave_Tilde.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_1">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/1_ExclamationMark.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/2_At.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/3_Hash.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_4">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/4_Dollar.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_5">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/5_Percent.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/6_Circumflex.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_7">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/7_Ampersand.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/8_Asterisk.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_9">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/9_BracketRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_0">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/0_BracketRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_MinusAndUnderscore">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Hyphen_Underscore.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_EqualsAndPlus">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Equals_Plus.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Backspace">
+      <Width>2</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Backspace.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Insert">
+      <X>+11</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Insert.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Home">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Home.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PageUp">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/PageUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumLock">
+      <X>+5</X>
+      <Y>~</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/NumLock.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumSlash">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Slash.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumAsterisk">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Asterisk.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumMinus">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Minus.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Tab">
+      <X>8</X>
+      <Y>+</Y>
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Tab.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Q">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Q.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_W">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/W.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_E">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/E.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_R">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/R.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_T">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/T.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Y">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Y.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_U">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/U.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_I">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/I.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_O">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/O.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_P">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/P.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_BracketLeft">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/SquareBracketLeft_CurlyBracketLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_BracketRight">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/SquareBracketRight_CurlyBracketRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Backslash">
+      <Width>1.5</Width>
+      <Height>1</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Blackslash_Pipe_Wide.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Delete">
+      <X>+11</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Delete.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_End">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/End.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PageDown">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/PageDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num7">
+      <X>+5</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num7.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num8">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num8.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num9">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num9.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumPlus">
+      <Height>2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/NumPlus.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_CapsLock">
+      <X>8</X>
+      <Y>~</Y>
+      <Width>1.75</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/CapsLock.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_A">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/A.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_S">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/S.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_D">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/D.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_F">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/F.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_G">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/G.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_H">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/H.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_J">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/J.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_K">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/K.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_L">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/L.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_SemicolonAndColon">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Semicolon_Colon.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ApostropheAndDoubleQuote">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Apostrophe_QuotationMark.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Enter">
+      <Width>2.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/EnterAnsi.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num4">
+      <X>+73</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num4.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num5">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num5.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num6">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num6.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftShift">
+      <X>8</X>
+      <Y>+</Y>
+      <Width>2.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/ShiftBig.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Z">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Z.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_X">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/X.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_C">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/C.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_V">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/V.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_B">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/B.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_N">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/N.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_M">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/M.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_CommaAndLessThan">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/LessThan_Comma.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_PeriodAndBiggerThan">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/GreaterThan_Dot.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_SlashAndQuestionMark">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/QuestionMark_Slash.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightShift">
+      <Width>2.75</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/ShiftBig.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowUp">
+      <X>+30</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/CaretUp.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num1">
+      <X>+24</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num2">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num2.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num3">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num3.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumEnter">
+      <Height>2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/NumEnter.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftCtrl">
+      <X>8</X>
+      <Y>~</Y>
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Ctrl.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftGui">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Gui.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_LeftAlt">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Alt.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Space">
+      <Width>6.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Space.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightAlt">
+      <Width>1.25</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Alt.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Function">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Gui.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Application">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Menu.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_RightCtrl">
+      <Width>1.5</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Ctrl.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowLeft">
+      <X>+11</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/CaretLeft.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowDown">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/CaretDown.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_ArrowRight">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/CaretRight.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_Num0">
+      <X>+5</X>
+      <Width>2</Width>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Num0_Ins.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Keyboard_NumPeriodAndDelete">
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys(SpoinkyNL)/Dot_Del.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>BG ver3.png</DeviceImage>
+  </CustomData>
+</Device>

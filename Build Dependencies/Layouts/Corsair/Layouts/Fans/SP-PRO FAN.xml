@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Corsair SP-PRO Fan</Name>
+  <Description>Physical layout of Corsairs SP-PRO Fan</Description>
+  <Type>Fan</Type>
+  <Vendor>Corsair</Vendor>
+  <Model>SP-PRO</Model>
+  <Width>120</Width>
+  <Height>120</Height>
+  <LedUnitWidth>20</LedUnitWidth>
+  <LedUnitHeight>20</LedUnitHeight>
+  <Leds>
+    <Led Id="Fan1">
+      <Shape>Circle</Shape>
+      <X>80</X>
+      <Y>40</Y>
+    </Led>
+    <Led Id="Fan2">
+      <Shape>Circle</Shape>
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="Fan3">
+      <Shape>Circle</Shape>
+      <X>-</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="Fan4">
+      <Shape>Circle</Shape>
+      <X>-</X>
+    </Led>
+    <Led Id="Fan5">
+      <Shape>Circle</Shape>
+      <X>-</X>
+      <Y>-</Y>
+    </Led>
+    <Led Id="Fan6">
+      <Shape>Circle</Shape>
+      <X>=</X>
+      <Y>-</Y>
+    </Led>
+    <Led Id="Fan7">
+      <Shape>Circle</Shape>
+      <Y>-</Y>
+    </Led>
+    <Led Id="Fan8">
+      <Shape>Circle</Shape>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>SP-PRO RGB.png</DeviceImage>
+  </CustomData>
+</Device>

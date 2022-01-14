@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>ASUS ROG Pugio</Name>
+  <Description>Mouse Layouts</Description>
+  <Author>Fluto</Author>
+  <Type>Mouse</Type>
+  <Vendor>ASUS</Vendor>
+  <Model>ROG PUGIO</Model>
+  <Width>75</Width>
+  <Height>126</Height>
+  <Leds>
+    <Led Id="Mouse1">
+      <X>25</X>
+      <Y>90</Y>
+      <Width>1.5</Width>
+      <Height>1</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys/Asus_Pugio_logo.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Mouse2">
+      <X>34</X>
+      <Y>12</Y>
+      <Width>.35</Width>
+      <Height>1.2</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys/Asus_Pugio_wheel.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Mouse3">
+      <Shape> M0.920,0.005 L0.957,-0.00 L0.997,0.408 L0.983,0.549 L0.898,0.749 L0.769,0.913 L0.666,0.97 L0.567,0.991 L0.476,0.997 L0.36,0.976 L0.231,0.892 L0.147,0.797 L0.095,0.701 L0.041,0.602 L0.001,0.429 L0.06,0.007 L0.09,0.019 L0.043,0.426 L0.083,0.564 L0.175,0.749 L0.25,0.839 L0.363,0.922 L0.466,0.949 L0.562,0.952 L0.652,0.916 L0.743,0.863 L0.859,0.716 L0.943,0.528 L0.964,0.402z</Shape>
+      <X>4</X>
+      <Y>70</Y>
+      <Width>3.5</Width>
+      <Height>2.75</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="NA" Image="Keys/Asus_Pugio_backlights.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>Asus_Pugio.png</DeviceImage>
+  </CustomData>
+</Device>

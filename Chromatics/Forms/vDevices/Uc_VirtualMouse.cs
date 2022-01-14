@@ -33,55 +33,58 @@ namespace Chromatics.Forms
             var currentrow = 0;
             var i = 0;
 
-            foreach (var key in keycaps)
+            if (keycaps != null)
             {
-                var width = _width;
-                var height = _height;
-
-                var keycap = new KeyButton
+                foreach (var key in keycaps)
                 {
-                    KeyName = key.Value.ToString(),
-                    KeyType = key.Value,
-                    Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                    FlatStyle = FlatStyle.Flat,
-                    Dock = DockStyle.Fill,
-                    Text = key.Value.ToString().Replace("Mouse", ""),
-                    Padding = new Padding(0),
-                    Margin = new Padding(0),
-                    Width = width,
-                    Height = height,
-                    MaximumSize = new System.Drawing.Size(width, height),
-                    AutoSize = false,
-                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    Cursor = Cursors.Hand,
-                    UseCompatibleTextRendering = true
-                };
+                    var width = _width;
+                    var height = _height;
 
-                keycap.FlatAppearance.BorderSize = 0;
-                keycap.Font = new Font(keycap.Font.FontFamily, keycap.Size.Height / 8, FontStyle.Bold);
-                keycap.ForeColor = System.Drawing.Color.White;
-                keycap.BackColor = System.Drawing.Color.DarkGray;
+                    var keycap = new KeyButton
+                    {
+                        KeyName = key.Value.ToString(),
+                        KeyType = key.Value,
+                        Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                        FlatStyle = FlatStyle.Flat,
+                        Dock = DockStyle.Fill,
+                        Text = key.Value.ToString().Replace("Mouse", ""),
+                        Padding = new Padding(0),
+                        Margin = new Padding(0),
+                        Width = width,
+                        Height = height,
+                        MaximumSize = new System.Drawing.Size(width, height),
+                        AutoSize = false,
+                        AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                        Cursor = Cursors.Hand,
+                        UseCompatibleTextRendering = true
+                    };
 
-                keycap.Click += new EventHandler(OnKeycapPressed);
+                    keycap.FlatAppearance.BorderSize = 0;
+                    keycap.Font = new Font(keycap.Font.FontFamily, keycap.Size.Height / 8, FontStyle.Bold);
+                    keycap.ForeColor = System.Drawing.Color.White;
+                    keycap.BackColor = System.Drawing.Color.DarkGray;
 
-                //Draw Border over button
-                keycap.Invalidate();
+                    keycap.Click += new EventHandler(OnKeycapPressed);
 
-                //Cycle Through
-                _keybuttons.Add(keycap);
+                    //Draw Border over button
+                    keycap.Invalidate();
 
-                tlp_main.Controls.Add(keycap, i, currentrow);
-                tlp_main.ColumnCount++;
+                    //Cycle Through
+                    _keybuttons.Add(keycap);
 
-                if (i == columnlimit)
-                {
-                    tlp_main.RowCount++;
-                    currentrow++;
-                    i = 0;
-                }
-                else
-                {
-                    i++;
+                    tlp_main.Controls.Add(keycap, i, currentrow);
+                    tlp_main.ColumnCount++;
+
+                    if (i == columnlimit)
+                    {
+                        tlp_main.RowCount++;
+                        currentrow++;
+                        i = 0;
+                    }
+                    else
+                    {
+                        i++;
+                    }
                 }
             }
 

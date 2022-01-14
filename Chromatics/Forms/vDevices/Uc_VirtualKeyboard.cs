@@ -39,90 +39,93 @@ namespace Chromatics.Forms
             currentTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             currentTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
-            foreach (var key in keycaps)
+            if (keycaps != null)
             {
-                var width = Convert.ToInt16(key.width) + 5;
-                var height = Convert.ToInt16(key.height) + 5;
-
-                if (height >= _height)
+                foreach (var key in keycaps)
                 {
-                    height = _height;
-                }
+                    var width = Convert.ToInt16(key.width) + 5;
+                    var height = Convert.ToInt16(key.height) + 5;
 
-                var keycap = new KeyButton
-                {
-                    KeyName = key.visualName,
-                    KeyType = key.LedType,
-                    Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                    FlatStyle = FlatStyle.Flat,
-                    Dock = DockStyle.Fill,
-                    Text = key.visualName,
-                    Padding = new Padding(0),
-                    Margin = new Padding(0),
-                    Width = width,
-                    Height = height,
-                    MaximumSize = new System.Drawing.Size(width, height),
-                    AutoSize = false,
-                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    Cursor = Cursors.Hand,
-                    UseCompatibleTextRendering = true
-                };
-
-                keycap.FlatAppearance.BorderSize = 0;
-                keycap.Font = new Font(keycap.Font.FontFamily, keycap.Size.Height / 8, FontStyle.Bold);
-                keycap.ForeColor = System.Drawing.Color.White;
-                keycap.BackColor = System.Drawing.Color.DarkGray;
-
-                keycap.Click += new EventHandler(OnKeycapPressed);
-
-                //Draw Border over button
-                keycap.Invalidate();
-
-                //Cycle Through
-
-                if (key.margin_left > 7)
-                {
-                    var margin_width = Convert.ToInt16(key.margin_left);
-
-                    var panel = new Panel
+                    if (height >= _height)
                     {
+                        height = _height;
+                    }
+
+                    var keycap = new KeyButton
+                    {
+                        KeyName = key.visualName,
+                        KeyType = key.LedType,
                         Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                        FlatStyle = FlatStyle.Flat,
                         Dock = DockStyle.Fill,
+                        Text = key.visualName,
                         Padding = new Padding(0),
                         Margin = new Padding(0),
-                        Height = (_height - 5),
-                        Width = margin_width,
-                        MaximumSize = new System.Drawing.Size(margin_width, (_height - 5)),
+                        Width = width,
+                        Height = height,
+                        MaximumSize = new System.Drawing.Size(width, height),
                         AutoSize = false,
                         AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                        Cursor = Cursors.Hand,
+                        UseCompatibleTextRendering = true
                     };
 
-                    currentTable.Controls.Add(panel, currentTable.ColumnCount, tlp_main.RowCount);
-                    currentTable.ColumnCount++;
-                }
+                    keycap.FlatAppearance.BorderSize = 0;
+                    keycap.Font = new Font(keycap.Font.FontFamily, keycap.Size.Height / 8, FontStyle.Bold);
+                    keycap.ForeColor = System.Drawing.Color.White;
+                    keycap.BackColor = System.Drawing.Color.DarkGray;
 
-                currentTable.Controls.Add(keycap, currentTable.ColumnCount, tlp_main.RowCount);
-                currentTable.ColumnCount++;
+                    keycap.Click += new EventHandler(OnKeycapPressed);
 
-                if (key.line_break == true)
-                {
-                    tlp_main.Controls.Add(currentTable, 0, tlp_main.RowCount);
-                    tlp_main.RowCount++;
+                    //Draw Border over button
+                    keycap.Invalidate();
 
-                    currentTable = new TableLayoutPanel
+                    //Cycle Through
+
+                    if (key.margin_left > 7)
                     {
-                        Dock = DockStyle.Top,
-                        AutoSize = false,
-                        Padding = new Padding(0),
-                        Margin = new Padding(0)
+                        var margin_width = Convert.ToInt16(key.margin_left);
 
-                    };
+                        var panel = new Panel
+                        {
+                            Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                            Dock = DockStyle.Fill,
+                            Padding = new Padding(0),
+                            Margin = new Padding(0),
+                            Height = (_height - 5),
+                            Width = margin_width,
+                            MaximumSize = new System.Drawing.Size(margin_width, (_height - 5)),
+                            AutoSize = false,
+                            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                        };
 
-                    currentTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                    currentTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+                        currentTable.Controls.Add(panel, currentTable.ColumnCount, tlp_main.RowCount);
+                        currentTable.ColumnCount++;
+                    }
+
+                    currentTable.Controls.Add(keycap, currentTable.ColumnCount, tlp_main.RowCount);
+                    currentTable.ColumnCount++;
+
+                    if (key.line_break == true)
+                    {
+                        tlp_main.Controls.Add(currentTable, 0, tlp_main.RowCount);
+                        tlp_main.RowCount++;
+
+                        currentTable = new TableLayoutPanel
+                        {
+                            Dock = DockStyle.Top,
+                            AutoSize = false,
+                            Padding = new Padding(0),
+                            Margin = new Padding(0)
+
+                        };
+
+                        currentTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                        currentTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+                    }
+
+                    _keybuttons.Add(keycap);
                 }
-
-                _keybuttons.Add(keycap);
             }
 
             tlp_main.RowStyles.Add(new RowStyle(SizeType.AutoSize));

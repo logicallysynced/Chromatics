@@ -16,6 +16,9 @@
     <Compile Update="Forms\Uc_Mappings.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Forms\Uc_Palette.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Forms\vDevices\Uc_VirtualKeyboard.cs">
       <SubType>UserControl</SubType>
     </Compile>

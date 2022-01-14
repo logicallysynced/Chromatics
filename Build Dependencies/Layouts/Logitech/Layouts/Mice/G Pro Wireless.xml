@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>G Pro Wireless</Name>
+  <Description>gpro wireless layout</Description>
+  <Author>DrMeteor</Author>
+  <Type>Mouse</Type>
+  <Vendor>Logitech</Vendor>
+  <Model>G Pro Wireless</Model>
+  <Width>65</Width>
+  <Height>125</Height>
+  <Leds>
+    <Led Id="Mouse2">
+      <Shape> M0.443,0.296 L0.443,0.379 L0.51,0.368 L0.5,0.291z M0.438,0.513 L0.52,0.513 L0.515,0.601 L0.438,0.596z M0.443,0.719 L0.448,0.797 L0.515,0.786 L0.515,0.714z</Shape>
+      <X>23.2</X>
+      <Y>54.2</Y>
+    </Led>
+    <Led Id="Mouse1">
+      <Shape> M0.527,0.442 L0.841,0.437 L0.841,0.739 L0.701,0.739 L0.69,0.582 L0.527,0.582z M0.516,0.168 L0.404,0.196 L0.27,0.258 L0.203,0.33 L0.158,0.442 L0.158,0.56 L0.191,0.644 L0.264,0.722 L0.348,0.784 L0.438,0.818 L0.522,0.829 L0.522,0.694 L0.427,0.666 L0.343,0.588 L0.315,0.498 L0.359,0.398 L0.427,0.33 L0.516,0.319z</Shape>
+      <X>22.8</X>
+      <Y>84.6</Y>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>G Pro Wireless.png</DeviceImage>
+  </CustomData>
+</Device>

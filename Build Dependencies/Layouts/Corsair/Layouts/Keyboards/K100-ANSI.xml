@@ -1,0 +1,730 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Corsair K100</Name>
+  <Description>Corsair K100 - US Layout</Description>
+  <Author>Rarti</Author>
+  <Type>Keyboard</Type>
+  <Vendor>Corsair</Vendor>
+  <Model>K100</Model>
+  <Width>480</Width>
+  <Height>169</Height>
+  <LedUnitWidth>17</LedUnitWidth>
+  <LedUnitHeight>17</LedUnitHeight>
+  <Leds>
+    <Led Id="Keyboard_Escape">
+      <X>40</X>
+      <Y>45</Y>
+      <Width>1</Width>
+      <Height>1</Height>
+    </Led>
+    <Led Id="Keyboard_F1">
+      <X>+14.677</X>
+    </Led>
+    <Led Id="Keyboard_F2">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F3">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F4">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F5">
+      <X>+14.677</X>
+    </Led>
+    <Led Id="Keyboard_F6">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F7">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F8">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F9">
+      <X>+14.677</X>
+    </Led>
+    <Led Id="Keyboard_F10">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F11">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F12">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_PrintScreen">
+      <X>+7.5</X>
+    </Led>
+    <Led Id="Keyboard_ScrollLock">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_PauseBreak">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_MediaStop">
+      <X>+7.5</X>
+      <Y>~6.7</Y>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Keyboard_MediaPreviousTrack">
+      <X>+2</X>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Keyboard_MediaPlay">
+      <X>+2</X>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Keyboard_MediaNextTrack">
+      <X>+2</X>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Keyboard_MediaMute">
+      <X>-40</X>
+      <Y>-14.3</Y>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Keyboard_GraveAccentAndTilde">
+      <X>40</X>
+      <Y>66</Y>
+    </Led>
+    <Led Id="Keyboard_1">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_2">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_3">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_4">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_5">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_6">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_7">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_8">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_9">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_0">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_MinusAndUnderscore">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_EqualsAndPlus">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Backspace">
+      <X>+2</X>
+      <Width>36mm</Width>
+      <Height>1</Height>
+    </Led>
+    <Led Id="Keyboard_Insert">
+      <X>+7.5</X>
+    </Led>
+    <Led Id="Keyboard_Home">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_PageUp">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_NumLock">
+      <X>+7.5</X>
+    </Led>
+    <Led Id="Keyboard_NumSlash">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_NumAsterisk">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_NumMinus">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Tab">
+      <X>40</X>
+      <Y>85</Y>
+      <Width>27mm</Width>
+    </Led>
+    <Led Id="Keyboard_Q">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_W">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_E">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_R">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_T">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Y">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_U">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_I">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_O">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_P">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_BracketLeft">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_BracketRight">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Backslash">
+      <X>+2</X>
+      <Width>26mm</Width>
+      <Height>1</Height>
+    </Led>
+    <Led Id="Keyboard_Delete">
+      <X>+7.5</X>
+    </Led>
+    <Led Id="Keyboard_End">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_PageDown">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Num7">
+      <X>+7.5</X>
+    </Led>
+    <Led Id="Keyboard_Num8">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Num9">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_NumPlus">
+      <X>+2</X>
+      <Height>36mm</Height>
+    </Led>
+    <Led Id="Keyboard_CapsLock">
+      <X>40</X>
+      <Y>104</Y>
+      <Width>32mm</Width>
+    </Led>
+    <Led Id="Keyboard_A">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_S">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_D">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_F">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_G">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_H">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_J">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_K">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_L">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_SemicolonAndColon">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_ApostropheAndDoubleQuote">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Enter">
+      <X>+2</X>
+      <Width>40mm</Width>
+    </Led>
+    <Led Id="Keyboard_Num4">
+      <X>+70</X>
+    </Led>
+    <Led Id="Keyboard_Num5">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Num6">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_LeftShift">
+      <X>40</X>
+      <Y>123</Y>
+      <Width>41mm</Width>
+    </Led>
+    <Led Id="Keyboard_Z">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_X">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_C">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_V">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_B">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_N">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_M">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_CommaAndLessThan">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_PeriodAndBiggerThan">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_SlashAndQuestionMark">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_RightShift">
+      <X>+2</X>
+      <Width>50mm</Width>
+    </Led>
+    <Led Id="Keyboard_ArrowUp">
+      <X>+26.5</X>
+    </Led>
+    <Led Id="Keyboard_Num1">
+      <X>+26.5</X>
+    </Led>
+    <Led Id="Keyboard_Num2">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Num3">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_NumEnter">
+      <X>+2</X>
+      <Height>36mm</Height>
+    </Led>
+    <Led Id="Keyboard_LeftCtrl">
+      <X>40.1</X>
+      <Y>142</Y>
+      <Width>23mm</Width>
+    </Led>
+    <Led Id="Keyboard_LeftGui">
+      <X>+2</X>
+      <Width>21mm</Width>
+    </Led>
+    <Led Id="Keyboard_LeftAlt">
+      <X>+2</X>
+      <Width>21mm</Width>
+    </Led>
+    <Led Id="Keyboard_Space">
+      <X>+2</X>
+      <Width>118mm</Width>
+    </Led>
+    <Led Id="Keyboard_RightAlt">
+      <X>+2</X>
+      <Width>21mm</Width>
+    </Led>
+    <Led Id="Keyboard_Function">
+      <X>+2</X>
+      <Width>21mm</Width>
+    </Led>
+    <Led Id="Keyboard_Application">
+      <X>+2</X>
+      <Width>21mm</Width>
+    </Led>
+    <Led Id="Keyboard_RightCtrl">
+      <X>+2</X>
+      <Width>23mm</Width>
+    </Led>
+    <Led Id="Keyboard_ArrowLeft">
+      <X>+7.5</X>
+    </Led>
+    <Led Id="Keyboard_ArrowDown">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_ArrowRight">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Num0">
+      <X>+7.5</X>
+      <Width>36mm</Width>
+    </Led>
+    <Led Id="Keyboard_NumPeriodAndDelete">
+      <X>+2</X>
+    </Led>
+    <Led Id="Keyboard_Programmable1">
+      <X>12</X>
+      <Y>45</Y>
+      <Width>20mm</Width>
+    </Led>
+    <Led Id="Keyboard_Programmable2">
+      <X>=</X>
+      <Y>+2</Y>
+      <Width>20mm</Width>
+    </Led>
+    <Led Id="Keyboard_Programmable3">
+      <X>=</X>
+      <Y>+3</Y>
+      <Width>20mm</Width>
+    </Led>
+    <Led Id="Keyboard_Programmable4">
+      <X>=</X>
+      <Y>+2</Y>
+      <Width>20mm</Width>
+    </Led>
+    <Led Id="Keyboard_Programmable5">
+      <X>=</X>
+      <Y>123</Y>
+      <Width>20mm</Width>
+    </Led>
+    <Led Id="Keyboard_Programmable6">
+      <X>=</X>
+      <Y>+2</Y>
+      <Width>20mm</Width>
+    </Led>
+    <Led Id="Keyboard_Profile">
+      <X>30</X>
+      <Y>15</Y>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Keyboard_WinLock">
+      <X>+33</X>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Custom1">
+      <X>+134</X>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Custom2">
+      <X>+1</X>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Custom3">
+      <X>+1</X>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="Custom4">
+      <X>58</X>
+      <Y>15</Y>
+      <Width>11mm</Width>
+      <Height>12mm</Height>
+    </Led>
+    <Led Id="Custom5">
+      <X>65</X>
+      <Y>6</Y>
+      <Width>7mm</Width>
+      <Height>7mm</Height>
+    </Led>
+    <Led Id="Custom6">
+      <X>72</X>
+      <Y>13</Y>
+      <Width>7mm</Width>
+      <Height>7mm</Height>
+    </Led>
+    <Led Id="Custom7">
+      <X>72</X>
+      <Y>23</Y>
+      <Width>7mm</Width>
+      <Height>7mm</Height>
+    </Led>
+    <Led Id="Custom8">
+      <X>65</X>
+      <Y>30</Y>
+      <Width>7mm</Width>
+      <Height>7mm</Height>
+    </Led>
+    <Led Id="Custom9">
+      <X>55</X>
+      <Y>30</Y>
+      <Width>7mm</Width>
+      <Height>7mm</Height>
+    </Led>
+    <Led Id="Custom10">
+      <X>48</X>
+      <Y>23</Y>
+      <Width>7mm</Width>
+      <Height>7mm</Height>
+    </Led>
+    <Led Id="Custom11">
+      <X>48</X>
+      <Y>13</Y>
+      <Width>7mm</Width>
+      <Height>7mm</Height>
+    </Led>
+    <Led Id="Custom12">
+      <X>55</X>
+      <Y>6</Y>
+      <Width>7mm</Width>
+      <Height>7mm</Height>
+    </Led>
+    <Led Id="LedStripe1">
+      <X>2</X>
+      <Y>152</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe2">
+      <X>=</X>
+      <Y>-1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe3">
+      <X>=</X>
+      <Y>-1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe4">
+      <X>=</X>
+      <Y>-2</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe5">
+      <X>=</X>
+      <Y>-1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe6">
+      <X>=</X>
+      <Y>-1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe7">
+      <X>=</X>
+      <Y>-2</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe8">
+      <X>=</X>
+      <Y>-1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe9">
+      <X>=</X>
+      <Y>-1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe10">
+      <X>=</X>
+      <Y>-2</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe11">
+      <X>=</X>
+      <Y>-1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe35">
+      <X>+465</X>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe36">
+      <X>=</X>
+      <Y>+1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe37">
+      <X>=</X>
+      <Y>+2</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe38">
+      <X>=</X>
+      <Y>+1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe39">
+      <X>=</X>
+      <Y>+1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe40">
+      <X>=</X>
+      <Y>+2</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe41">
+      <X>=</X>
+      <Y>+1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe42">
+      <X>=</X>
+      <Y>+1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe43">
+      <X>=</X>
+      <Y>+2</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe44">
+      <X>=</X>
+      <Y>+1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe45">
+      <X>=</X>
+      <Y>+1</Y>
+      <Width>5mm</Width>
+      <Height>13mm</Height>
+    </Led>
+    <Led Id="LedStripe12">
+      <X>10</X>
+      <Y>0</Y>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe13">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe14">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe15">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe16">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe17">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe18">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe19">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe21">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe22">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe23">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe24">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe25">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe26">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe27">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe28">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe29">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe30">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe31">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe32">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe33">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+    <Led Id="LedStripe34">
+      <X>+1</X>
+      <Width>20mm</Width>
+      <Height>5mm</Height>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>K100-ANSI.png</DeviceImage>
+  </CustomData>
+</Device>

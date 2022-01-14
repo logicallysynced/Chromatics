@@ -1,0 +1,730 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Launchpad S</Name>
+  <Description>Launchpad S (8x8-Pad Grid)</Description>
+  <Author>Darth Affe</Author>
+  <Type>LedMatrix</Type>
+  <Vendor>Novation</Vendor>
+  <Model>Launchpad S</Model>
+  <Width>240</Width>
+  <Height>240</Height>
+  <LedUnitWidth>20</LedUnitWidth>
+  <LedUnitHeight>20</LedUnitHeight>
+  <Leds>
+    <!-- Custom-buttons -->
+    <Led Id="Custom1">
+      <Shape>Circle</Shape>
+      <X>16</X>
+      <Y>18</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom2">
+      <Shape>Circle</Shape>
+      <X>+8</X>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom3">
+      <Shape>Circle</Shape>
+      <X>+8</X>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom4">
+      <Shape>Circle</Shape>
+      <X>+8</X>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom5">
+      <Shape>Circle</Shape>
+      <X>+8</X>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom6">
+      <Shape>Circle</Shape>
+      <X>+8</X>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom7">
+      <Shape>Circle</Shape>
+      <X>+8</X>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom8">
+      <Shape>Circle</Shape>
+      <X>+8</X>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <!-- Grid -->
+    <Led Id="LedMatrix1">
+      <X>14</X>
+      <Y>+4</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix2">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix3">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix4">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix5">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix6">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix7">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix8">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix9">
+      <X>14</X>
+      <Y>+4</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix10">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix11">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix12">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix13">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix14">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix15">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix16">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix17">
+      <X>14</X>
+      <Y>+4</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix18">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix19">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix20">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix21">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix22">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix23">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix24">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix25">
+      <X>14</X>
+      <Y>+4</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix26">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix27">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix28">
+      <X>+4</X>
+      <Shape>M0,0 L0,1 L0.75,1 L1,0.75 L1,0 Z</Shape>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/GridCenter1.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix29">
+      <X>+4</X>
+      <Shape>M0,0 L0,0.75 L0.25,1 L1,1 L1,0 Z</Shape>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/GridCenter2.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix30">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix31">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix32">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix33">
+      <X>14</X>
+      <Y>+4</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix34">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix35">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix36">
+      <X>+4</X>
+      <Shape>M0,0 L0,1 L1,1 L1,0.25 L0.75,0 Z</Shape>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/GridCenter3.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix37">
+      <X>+4</X>
+      <Shape>M0,0.25 L0,1 L1,1 L1,0 L0.25,0 Z</Shape>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/GridCenter4.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix38">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix39">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix40">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix41">
+      <X>14</X>
+      <Y>+4</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix42">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix43">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix44">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix45">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix46">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix47">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix48">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix49">
+      <X>14</X>
+      <Y>+4</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix50">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix51">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix52">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix53">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix54">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix55">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix56">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix57">
+      <X>14</X>
+      <Y>+4</Y>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix58">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix59">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix60">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix61">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix62">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix63">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="LedMatrix64">
+      <X>+4</X>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Grid.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <!-- Scene-buttons -->
+    <Led Id="Custom9">
+      <Shape>Circle</Shape>
+      <X>+4</X>
+      <Y>40</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom10">
+      <Shape>Circle</Shape>
+      <X>~</X>
+      <Y>+8</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom11">
+      <Shape>Circle</Shape>
+      <X>~</X>
+      <Y>+8</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom12">
+      <Shape>Circle</Shape>
+      <X>~</X>
+      <Y>+8</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom13">
+      <Shape>Circle</Shape>
+      <X>~</X>
+      <Y>+8</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom14">
+      <Shape>Circle</Shape>
+      <X>~</X>
+      <Y>+8</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom15">
+      <Shape>Circle</Shape>
+      <X>~</X>
+      <Y>+8</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+    <Led Id="Custom16">
+      <Shape>Circle</Shape>
+      <X>~</X>
+      <Y>+8</Y>
+      <Width>16mm</Width>
+      <Height>16mm</Height>
+      <CustomData>
+        <LogicalLayouts>
+          <LogicalLayout Name="Default" Image="Buttons/Round.png" />
+        </LogicalLayouts>
+      </CustomData>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>Launchpad S.png</DeviceImage>
+  </CustomData>
+</Device>

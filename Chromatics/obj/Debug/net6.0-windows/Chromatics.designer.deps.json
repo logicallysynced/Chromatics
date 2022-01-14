@@ -6,6 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
+      "Cyotek.Windows.Forms.ColorPicker/2.0.0-beta.7": {
+        "runtime": {
+          "lib/net5.0-windows7.0/Cyotek.Windows.Forms.ColorPicker.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
       "HidSharp/2.1.0": {
         "runtime": {
           "lib/netstandard2.0/HidSharp.dll": {
@@ -135,18 +143,6 @@
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Devices.Novation.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Devices.Razer/1.0.0-prerelease7": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease7",
-          "RGB.NET.HID": "1.0.0-prerelease7"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Razer.dll": {
             "assemblyVersion": "0.0.1.0",
             "fileVersion": "0.0.1.0"
           }
@@ -291,6 +287,13 @@
     }
   },
   "libraries": {
+    "Cyotek.Windows.Forms.ColorPicker/2.0.0-beta.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zl3Y3ybhehCbkRCTc+LMgya3HKBR02pO7gohfhEcnvh24WkZH5YFMjm3id7AHZrnxDvzFms3sXcTmU5zzETsQA==",
+      "path": "cyotek.windows.forms.colorpicker/2.0.0-beta.7",
+      "hashPath": "cyotek.windows.forms.colorpicker.2.0.0-beta.7.nupkg.sha512"
+    },
     "HidSharp/2.1.0": {
       "type": "package",
       "serviceable": true,
@@ -374,13 +377,6 @@
       "sha512": "sha512-hlexsoitlXB5pAXT5rYGF7rnmNz5rtpaaWT2kNiHLPrflZkR64JRcYHGwLTqdieXX0tIhDVGo6P1/gI2XjZq5w==",
       "path": "rgb.net.devices.novation/1.0.0-prerelease7",
       "hashPath": "rgb.net.devices.novation.1.0.0-prerelease7.nupkg.sha512"
-    },
-    "RGB.NET.Devices.Razer/1.0.0-prerelease7": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Fs9PghXsqZ66kxNmydhQzq2ql5azws5ctearIUKXCCv+KSgsmXVpxc95fhulNeBwF/3AxhUKoDsBFeaxH6CaLw==",
-      "path": "rgb.net.devices.razer/1.0.0-prerelease7",
-      "hashPath": "rgb.net.devices.razer.1.0.0-prerelease7.nupkg.sha512"
     },
     "RGB.NET.Devices.SteelSeries/1.0.0-prerelease7": {
       "type": "package",

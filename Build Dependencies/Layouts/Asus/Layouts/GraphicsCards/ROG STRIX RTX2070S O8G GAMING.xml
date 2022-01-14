@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Asus ROG STRIX RTX2070S O8G GAMING</Name>
+  <Description>Asus ROG STRIX RTX2070S O8G GAMING</Description>
+  <Type>GraphicsCard</Type>
+  <Vendor>Asus</Vendor>
+  <Model>ROG STRIX RTX2070S O8G GAMING</Model>
+  <Width>172.51</Width>
+  <Height>82.81</Height>
+  <Leds>
+    <Led Id="GraphicsCard1">
+      <Shape>M321.7 8.3C260.2 14.4 243.3 22 202.7 61.6 155.3 107.9 116.9 142.4 113 142.4 111.1 142.4 99.5 137.4 87.3 131.3 75.1 125.2 64.4 120.9 63.6 121.7 58.9 126.4 94.1 184 111.1 199.6 137.1 223.4 150.8 225.9 132.2 203.5 108.6 175.1 109.4 172.9 160.8 132.4 231.4 76.8 296.2 36.9 343.2 20.4 365.5 12.5 371.8 8.2 361.1 8.1 357.6 8.1 352.3 7.6 349.3 7 346.3 6.6 333.9 7.1 321.7 8.3M340.9 46.2C254.8 84.7 114.4 169.7 123.9 177.4 150.9 199.4 263 216.1 285.1 201.5 310.1 185 369.8 79.4 354.1 79.4 347.1 79.4 227.1 143.4 214.1 154.1 202.7 163.5 220.3 159.2 256 143.9 278.6 134.3 297.5 126.8 298 127.4 302.4 131.7 268.8 173.6 255.4 180.5 243.8 186.5 169.9 179.3 162 171.4 158.5 167.9 241.1 119.2 316.9 80.2 370.5 52.6 380.6 45.4 380.6 35 380.8 28.3 381.1 28.2 340.9 46.2M13.7 98.1C13.7 122.6 31.7 147.5 59.1 161 80.1 171.3 79.8 167.9 57.4 142 46.5 129.4 33.2 113.4 27.7 106.3 17 92.3 13.7 90.4 13.7 98.1</Shape>
+      <X>121</X>
+      <Y>40</Y>
+      <Width>2.08</Width>
+      <Height>1.3</Height>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>ROG-STRIX-RTX2070S-O8G-GAMING.png</DeviceImage>
+  </CustomData>
+  <Author>piechade</Author>
+</Device>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Corsair VENGEANCE RGB PRO</Name>
+  <Description>Physical layout of Corsairs VENGEANCE RGB PRO</Description>
+  <Author>KanzakiRanko1 &amp; WeedWyvern</Author>
+  <Type>DRAM</Type>
+  <Lighting>Key</Lighting>
+  <Vendor>Corsair</Vendor>
+  <Model>VENGEANCE RGB PRO</Model>
+  <Width>7.5</Width>
+  <Height>135</Height>
+  <LedUnitWidth>7.5</LedUnitWidth>
+  <LedUnitHeight>13.5</LedUnitHeight>
+  <Leds>
+    <Led Id="DRAM1" />
+    <Led Id="DRAM2">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="DRAM3">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="DRAM4">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="DRAM5">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="DRAM6">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="DRAM7">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="DRAM8">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="DRAM9">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+    <Led Id="DRAM10">
+      <X>=</X>
+      <Y>+</Y>
+    </Led>
+  </Leds>
+  <CustomData>
+    <DeviceImage>VANGEANCE RGB PRO.png</DeviceImage>
+  </CustomData>
+</Device>
