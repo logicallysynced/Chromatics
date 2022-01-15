@@ -343,6 +343,7 @@ namespace Chromatics.Forms
             this.palette_colormanager.ColorGrid = this.palette_grid;
             this.palette_colormanager.ColorWheel = this.palette_wheel;
             this.palette_colormanager.ScreenColorPicker = this.palette_picker;
+            this.palette_colormanager.ColorChanged += new System.EventHandler(this.palette_colormanager_colorchanged);
             // 
             // Uc_Palette
             // 

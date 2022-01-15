@@ -1,5 +1,6 @@
 ﻿using Chromatics.Helpers;
 using Chromatics.Layers;
+using Chromatics.Models;
 using RGB.NET.Core;
 using RGB.NET.Devices.Asus;
 using RGB.NET.Devices.CoolerMaster;
@@ -29,13 +30,13 @@ namespace Chromatics.Core
 
         private static bool _loaded;
 
-        private static int _version = -1;
-
         private static List<IRGBDevice> _devices = new List<IRGBDevice>();
 
         private static Dictionary<int, ListLedGroup> _layergroups = new Dictionary<int, ListLedGroup>();
 
         private static List<Led> _layergroupledcollection = new List<Led>();
+
+        private static PaletteColorModel _colorPalette = new PaletteColorModel();
 
         public static void Setup()
         {
@@ -99,6 +100,11 @@ namespace Chromatics.Core
         public static bool IsLoaded()
         {
             return _loaded;
+        }
+
+        public static PaletteColorModel GetActivePalette()
+        {
+            return _colorPalette;
         }
 
         private static void Surface_Updating(UpdatingEventArgs args)
@@ -193,7 +199,6 @@ namespace Chromatics.Core
                     //Debug.WriteLine($"Layer {mapping.layerID} at zindex {mapping.zindex} to {highlight_col}");
                 }
 
-                _version = MappingLayers.ChangeVersion();
             }
         }
 

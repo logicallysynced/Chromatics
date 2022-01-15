@@ -1,6 +1,8 @@
-﻿using Chromatics.Enums;
+﻿using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Helpers;
+using Chromatics.Models;
 using MetroFramework.Components;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Chromatics.Enums.Palette;
 
 namespace Chromatics.Forms
 {
@@ -69,7 +72,7 @@ namespace Chromatics.Forms
         private void InitColorMappingGrid()
         {
             //Enumerate Palette Types to category selection
-            for (int i = 0; i <= Enums.Palette.TypeCount; i++)
+            for (int i = 0; i <= Palette.TypeCount; i++)
             {
                 var name = EnumExtensions.GetAttribute<DisplayAttribute>((Palette.PaletteTypes)i).Name;
                 var item = new ComboboxItem { Value = (Palette.PaletteTypes)i, Text = name };
@@ -97,25 +100,28 @@ namespace Chromatics.Forms
 
         private void SetupMappingsDataGrid()
         {
-            /*
             MappingGridStartup = false;
             dG_mappings.AllowUserToAddRows = true;
             dG_mappings.Rows.Clear();
 
-            DrawMappingsDict();
+            //DrawMappingsDict();
             var i = 0;
-            DataGridViewRow[] dgV = new DataGridViewRow[_mappingPalette.Count];
+            var active = RGBController.GetActivePalette();
+            var palette = active.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
 
-            foreach (var palette in _mappingPalette)
+            DataGridViewRow[] dgV = new DataGridViewRow[palette.Length];
+
+            foreach (var p in palette)
             {
+                var mapping = (ColorMapping)p.GetValue(active);
                 var paletteItem = (DataGridViewRow)dG_mappings.Rows[0].Clone();
-                paletteItem.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value = palette.Key;
-                paletteItem.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value = palette.Value[1];
-                paletteItem.Cells[dG_mappings.Columns["mappings_col_type"].Index].Value = palette.Value[0];
+                paletteItem.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value = p.Name;
+                paletteItem.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value = mapping.Type;
+                paletteItem.Cells[dG_mappings.Columns["mappings_col_type"].Index].Value = mapping.Name;
 
                 var paletteBtn = new DataGridViewTextBoxCell();
-                paletteBtn.Style.BackColor = ColorTranslator.FromHtml(palette.Value[2]);
-                paletteBtn.Style.SelectionBackColor = ColorTranslator.FromHtml(palette.Value[2]);
+                paletteBtn.Style.BackColor = mapping.Color;
+                paletteBtn.Style.SelectionBackColor = mapping.Color;
 
                 paletteBtn.Value = "";
 
@@ -131,17 +137,21 @@ namespace Chromatics.Forms
 
             dG_mappings.AllowUserToAddRows = false;
             MappingGridStartup = true;
-            */
+            
         }
 
         private void DrawMappingsDict()
         {
             /*
-            foreach (var p in typeof(FfxivColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
+            var palettes = RGBController.GetActivePalette();
+            
+            //foreach (var p in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var palette in palettes.GetType().GetProperties())
             {
-                var var = p.Name;
-                var color = (string)p.GetValue(ColorMappings);
-                var _data = _mappingPalette[var];
+                var mapping = (ColorMapping)palette.GetValue(palettes, null);
+                var var = mapping.Name;
+                var color = mapping.Color;
+                var _data = palettes[var];
                 string[] data = { _data[0], _data[1], color, _data[3] };
                 _mappingPalette[var] = data;
             }
@@ -160,34 +170,32 @@ namespace Chromatics.Forms
 
         private void btn_paletteundo_Click(object sender, EventArgs e)
         {
-            /*
             var pmcs = dG_mappings.CurrentRow;
             var pcmsid = (string)pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
 
-            var cm = new FfxivColorMappings();
+            var cm = new PaletteColorModel();
             var _restore = ColorTranslator.ToHtml(Color.Black);
 
-            foreach (var p in typeof(FfxivColorMappings).GetFields(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var p in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
                 if (p.Name == pcmsid)
                     _restore = (string)p.GetValue(cm);
 
             var restore = ColorTranslator.FromHtml(_restore);
             palette_colormanager.Color = restore;
-            */
         }
 
         private void cb_palette_categories_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (MappingGridStartup)
             {
-                var filter = (Palette.PaletteTypes)cb_palette_categories.SelectedItem;
+                var filter = (ComboboxItem)cb_palette_categories.SelectedItem;
 
-                if (filter == Palette.PaletteTypes.All)
+                if ((PaletteTypes)filter.Value == PaletteTypes.All)
                     foreach (DataGridViewRow row in dG_mappings.Rows)
                         row.Visible = true;
                 else
                     foreach (DataGridViewRow row in dG_mappings.Rows)
-                        if ((Palette.PaletteTypes)row.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value == filter)
+                        if ((PaletteTypes)row.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value == (PaletteTypes)filter.Value)
                             row.Visible = true;
                         else
                             row.Visible = false;
@@ -207,5 +215,39 @@ namespace Chromatics.Forms
             palette_preview.BackColor = color;
         }
 
+        private void palette_colormanager_colorchanged(object sender, EventArgs e)
+        {
+            var pmcs = dG_mappings.CurrentRow;
+            var pcmsid = (string)pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
+            var pcmsColor = pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor;
+            var col = palette_colormanager.Color;
+
+            palette_preview.BackColor = col;
+
+            if (pcmsColor != palette_colormanager.Color)
+            {
+                var active = RGBController.GetActivePalette();
+                foreach (var p in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (p.Name == pcmsid)
+                    {
+                        var mapping = (ColorMapping)p.GetValue(active);
+                        var new_mapping = new ColorMapping(mapping.Name, mapping.Type, col); 
+                        p.SetValue(active, new_mapping);
+                    }
+                        
+                }
+                   
+
+                DrawMappingsDict();
+                pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor = col;
+                pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.SelectionBackColor = col;
+
+                //SetKeysbase = false;
+                //SetMousebase = false;
+                //SetPadbase = false;
+                //SaveColorMappings(0);
+            }
+        }
     }
 }
