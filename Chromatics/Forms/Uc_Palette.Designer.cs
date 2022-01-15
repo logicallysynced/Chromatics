@@ -353,6 +353,7 @@ namespace Chromatics.Forms
             this.Name = "Uc_Palette";
             this.Size = new System.Drawing.Size(1261, 725);
             this.Load += new System.EventHandler(this.OnLoad);
+            this.Resize += new System.EventHandler(this.OnResize);
             this.tlp_main.ResumeLayout(false);
             this.tlp_palette.ResumeLayout(false);
             this.tlp_palette.PerformLayout();

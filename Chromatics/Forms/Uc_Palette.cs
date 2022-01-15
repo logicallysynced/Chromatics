@@ -22,7 +22,6 @@ namespace Chromatics.Forms
 {
     public partial class Uc_Palette : UserControl
     {
-        private bool toggle;
         private bool MappingGridStartup;
         private MetroToolTip tt_mappings;
         private delegate void ResetMappingsDelegate();
@@ -30,7 +29,11 @@ namespace Chromatics.Forms
         public Uc_Palette()
         {
             InitializeComponent();
+            cb_palette_categories.DrawMode = DrawMode.OwnerDrawFixed;
+            cb_palette_categories.ItemHeight = tlp_controls.Height;
+            cb_palette_categories.Margin = new Padding(0, tlp_controls.Height / 4, 3, 0);
         }
+
         private void OnLoad(object sender, EventArgs e)
         {
             //Create tooltop manager
@@ -43,12 +46,24 @@ namespace Chromatics.Forms
 
             tt_mappings.SetToolTip(btn_paletteexport, @"Export Chromatics color palette to file");
             tt_mappings.SetToolTip(btn_paletteimport, @"Import Chromatics color palette from file");
-            tt_mappings.SetToolTip(btn_paletteundo, @"Reload color palette from memory");
+            tt_mappings.SetToolTip(btn_paletteundo, @"Restore selected color mapping");
             tt_mappings.SetToolTip(cb_palette_categories, @"Filter color mappings");
+
+            //Load Color Mappings
+            if (RGBController.LoadColorPalette())
+            {
+                Logger.WriteConsole(LoggerTypes.System, $"Loaded palette from palette.chromatics3");
+
+            }
+            else
+            {
+                Logger.WriteConsole(LoggerTypes.System, @"No palette file found. Creating default color palette..");
+                RGBController.SaveColorPalette();
+            }
 
             InitColorMappingGrid();
 
-            Debug.WriteLine("Hello World");
+            
         }
 
         private void ToggleMappingControls(bool toggle)
@@ -104,7 +119,6 @@ namespace Chromatics.Forms
             dG_mappings.AllowUserToAddRows = true;
             dG_mappings.Rows.Clear();
 
-            //DrawMappingsDict();
             var i = 0;
             var active = RGBController.GetActivePalette();
             var palette = active.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
@@ -140,32 +154,15 @@ namespace Chromatics.Forms
             
         }
 
-        private void DrawMappingsDict()
-        {
-            /*
-            var palettes = RGBController.GetActivePalette();
-            
-            //foreach (var p in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
-            foreach (var palette in palettes.GetType().GetProperties())
-            {
-                var mapping = (ColorMapping)palette.GetValue(palettes, null);
-                var var = mapping.Name;
-                var color = mapping.Color;
-                var _data = palettes[var];
-                string[] data = { _data[0], _data[1], color, _data[3] };
-                _mappingPalette[var] = data;
-            }
-            */
-        }
-
         private void btn_paletteimport_Click(object sender, EventArgs e)
         {
-
+            RGBController.ImportColorPalette();
+            ResetMappingsDataGrid();
         }
 
         private void btn_paletteexport_Click(object sender, EventArgs e)
         {
-
+            RGBController.ExportColorPalette();
         }
 
         private void btn_paletteundo_Click(object sender, EventArgs e)
@@ -174,14 +171,18 @@ namespace Chromatics.Forms
             var pcmsid = (string)pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
 
             var cm = new PaletteColorModel();
-            var _restore = ColorTranslator.ToHtml(Color.Black);
+            var _restore = Color.Black;
 
             foreach (var p in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
+            {
                 if (p.Name == pcmsid)
-                    _restore = (string)p.GetValue(cm);
-
-            var restore = ColorTranslator.FromHtml(_restore);
-            palette_colormanager.Color = restore;
+                {
+                    var mapping = (ColorMapping)p.GetValue(cm);
+                    _restore = mapping.Color;
+                }
+            }
+                               
+            palette_colormanager.Color = _restore;
         }
 
         private void cb_palette_categories_SelectedIndexChanged(object sender, EventArgs e)
@@ -238,16 +239,19 @@ namespace Chromatics.Forms
                         
                 }
                    
-
-                DrawMappingsDict();
                 pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.BackColor = col;
                 pmcs.Cells[dG_mappings.Columns["mappings_col_color"].Index].Style.SelectionBackColor = col;
 
                 //SetKeysbase = false;
                 //SetMousebase = false;
                 //SetPadbase = false;
-                //SaveColorMappings(0);
+                RGBController.SaveColorPalette();
             }
+        }
+
+        private void OnResize(object sender, EventArgs e)
+        {
+            cb_palette_categories.Margin = new Padding(0, tlp_controls.Height / 4, 3, 0);
         }
     }
 }

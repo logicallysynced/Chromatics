@@ -107,6 +107,37 @@ namespace Chromatics.Core
             return _colorPalette;
         }
 
+        public static bool LoadColorPalette()
+        {
+            if (FileOperationsHelper.CheckColorMappingsExist())
+            {
+                _colorPalette = FileOperationsHelper.LoadColorMappings();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool SaveColorPalette()
+        {
+            FileOperationsHelper.SaveColorMappings(_colorPalette);
+            return true;
+        }
+
+        public static bool ImportColorPalette()
+        {
+            _colorPalette = FileOperationsHelper.ImportColorMappings();
+            SaveColorPalette();
+            return true;
+        }
+
+        public static bool ExportColorPalette()
+        {
+            FileOperationsHelper.ExportColorMappings(_colorPalette);
+            return true;
+        }
+
         private static void Surface_Updating(UpdatingEventArgs args)
         {
             if (!_loaded) return;
