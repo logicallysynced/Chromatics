@@ -5,12 +5,15 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Chromatics.Helpers
 {
@@ -147,7 +150,7 @@ namespace Chromatics.Helpers
         {
             var open = new OpenFileDialog
             {
-                Filter = "Chromatics Palette Files|*.chromatics3",
+                Filter = "Chromatics Palette Files|*.chromatics3|Legacy Palette Files|*.chromatics",
                 Title = "Import Color Palette",
                 AddExtension = true,
                 AutoUpgradeEnabled = true,
@@ -168,33 +171,94 @@ namespace Chromatics.Helpers
 
             if (open.ShowDialog() == DialogResult.OK)
             {
-                Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Color Palette..");
+                var ext = Path.GetExtension(open.FileName);
 
-                try
+                if (ext == ".chromatics3")
                 {
-                    var result = new PaletteColorModel();
+                    Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Color Palette..");
 
-                    using (var sr = new StreamReader(open.FileName))
+                    try
                     {
-                        result = JsonConvert.DeserializeObject<PaletteColorModel>(sr.ReadToEnd());
-                        sr.Close();
+                        var result = new PaletteColorModel();
 
-                        Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported Color Palette from {open.FileName}.");
-                        open.Dispose();
+                        using (var sr = new StreamReader(open.FileName))
+                        {
+                            result = JsonConvert.DeserializeObject<PaletteColorModel>(sr.ReadToEnd());
+                            sr.Close();
+
+                            Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported Color Palette from {open.FileName}.");
+                            open.Dispose();
+                        }
+
+                        return result;
+
                     }
-
-                    return result;
-
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing Color Palette. Error: {ex.Message}");
+                        open.Dispose();
+                        return null;
+                    }
                 }
-                catch (Exception ex)
+                else if (ext == ".chromatics")
                 {
-                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing Color Palette. Error: {ex.Message}");
-                    open.Dispose();
-                    return null;
+                    //Import color mappings from Chromatics 2.x and convert
+                    Logger.WriteConsole(Enums.LoggerTypes.System, @"Converting legacy Color Palette..");
+
+                    try
+                    {
+                        Debug.WriteLine("Legacy file detected");
+                        var result = new PaletteColorModel();
+
+                        using (var sr = new StreamReader(open.FileName))
+                        {
+                            var reader = new XmlSerializer(typeof(LegacyColorMappings));
+                            var data = sr.ReadToEnd();
+                            sr.Close();
+
+                            data = data.Replace("FfxivColorMappings", "LegacyColorMappings");
+                            var bytes = Encoding.ASCII.GetBytes(data);
+                            var _sr = new MemoryStream(bytes);
+
+                            var colorMappings = (LegacyColorMappings)reader.Deserialize(_sr);
+                            
+                            _sr.Close();
+
+                            foreach (var p in colorMappings.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                            {
+                                foreach (var f in result.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+                                {
+                                    if (p.Name.Contains(f.Name))
+                                    {
+                                        var color = ColorTranslator.FromHtml((string)p.GetValue(colorMappings));
+
+                                        var mapping = (ColorMapping)f.GetValue(result);
+                                        var new_mapping = new ColorMapping(mapping.Name, mapping.Type, color);
+                                        f.SetValue(result, new_mapping);            
+                                    }
+                                }
+                            }
+
+                            Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully converted & imported legacy Color Palette from {open.FileName}.");
+                            open.Dispose();
+                            return result;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing legacy Color Palette. Error: {ex.Message}");
+                        open.Dispose();
+                        return null;
+                    }
                 }
+
+                Logger.WriteConsole(Enums.LoggerTypes.Error, @"Error importing legacy Color Palette.");
+                return null;
+                
             }
             else
             {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, @"Error importing Color Palette.");
                 return null;
             }
         }

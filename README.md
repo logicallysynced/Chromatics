@@ -19,3 +19,4 @@ Chromatics 3.x is built in .NET 6.
 * [Cyotek ColorPicker](https://github.com/cyotek/Cyotek.Windows.Forms.ColorPicker) - user interface components for choosing colors
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) - used for everything JSON
 * [Aurora](https://github.com/antonpup/Aurora) - borrowed some code base, not actually a dependency
+* [Artemis](https://github.com/Artemis-RGB/Artemis) - borrowed some code base and RGB.NET profiles, not actually a dependency

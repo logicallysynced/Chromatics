@@ -127,9 +127,17 @@ namespace Chromatics.Core
 
         public static bool ImportColorPalette()
         {
-            _colorPalette = FileOperationsHelper.ImportColorMappings();
-            SaveColorPalette();
-            return true;
+            var colorPalette = FileOperationsHelper.ImportColorMappings();
+
+            if (colorPalette != null)
+            {
+                _colorPalette = colorPalette;
+
+                SaveColorPalette();
+                return true;
+            }
+
+            return false;
         }
 
         public static bool ExportColorPalette()
