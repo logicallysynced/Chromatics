@@ -11,6 +11,9 @@ using RGB.NET.Devices.Novation;
 using RGB.NET.Devices.Razer;
 using RGB.NET.Devices.SteelSeries;
 using RGB.NET.Devices.Wooting;
+using RGB.NET.Presets.Decorators;
+using RGB.NET.Presets.Groups;
+using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
 using System;
 using System.Collections;
@@ -38,6 +41,8 @@ namespace Chromatics.Core
 
         private static PaletteColorModel _colorPalette = new PaletteColorModel();
 
+        private static List<ListLedGroup> _runningEffects = new List<ListLedGroup>();
+
         public static void Setup()
         {
             //Bind to console
@@ -47,10 +52,10 @@ namespace Chromatics.Core
 
             //Load devices
             //surface.Load(LogitechDeviceProvider.Instance);
-            //surface.Load(CorsairDeviceProvider.Instance, RGBDeviceType.All, true);
+            surface.Load(CorsairDeviceProvider.Instance, RGBDeviceType.All);
             //surface.Load(CoolerMasterDeviceProvider.Instance);
             //surface.Load(NovationDeviceProvider.Instance);
-            surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All, true);
+            surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All);
             //surface.Load(AsusDeviceProvider.Instance);
             //surface.Load(MsiDeviceProvider.Instance);
             //surface.Load(SteelSeriesDeviceProvider.Instance);
@@ -72,14 +77,30 @@ namespace Chromatics.Core
             surface.RegisterUpdateTrigger(TimerTrigger);
 
             surface.AlignDevices();
-
             surface.Updating += Surface_Updating;
 
-            
-            var default_ledgroup = new ListLedGroup(surface, surface.Leds);
-            var c = new Color(0, 0, 0);
-            default_ledgroup.Brush = new SolidColorBrush(c);
-            
+            //Startup Effects
+            var move = new MoveGradientDecorator(surface)
+            {
+                IsEnabled = true,
+                Speed = 100,
+            };
+
+            var devices = surface.GetDevices(RGBDeviceType.All);
+            foreach (var device in devices)
+            {
+                var gradient = new RainbowGradient();
+                var ledgroup = new ListLedGroup(surface);
+                foreach (var led in device)
+                {
+                    ledgroup.AddLed(led);
+                }
+
+                gradient.AddDecorator(move);
+                ledgroup.Brush = new TextureBrush(new ConicalGradientTexture(new Size(100, 100), gradient));
+                _runningEffects.Add(ledgroup);
+            }
+
 
             Logger.WriteConsole(Enums.LoggerTypes.Devices, $"{deviceCount} devices loaded.");
             _loaded = true;
@@ -155,6 +176,13 @@ namespace Chromatics.Core
             if (MappingLayers.IsPreview())
             {
                 var layers = MappingLayers.GetLayers().OrderBy(x => x.Value.zindex);
+
+                foreach (var effects in _runningEffects)
+                {
+                    effects.RemoveAllDecorators();
+                }
+
+                _runningEffects.Clear();
 
                 foreach (var layer in layers)
                 {
