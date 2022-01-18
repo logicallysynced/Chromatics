@@ -23,7 +23,11 @@ namespace Chromatics.Enums
         [Display(Name="Static")]
         Static = 0,
         [Display(Name="Reactive Weather")]
-        ReactiveWeather = 1
+        ReactiveWeather = 1,
+        [Display(Name = "Battle Stance")]
+        BattleStance = 2,
+        [Display(Name = "Job Classes")]
+        JobClasses = 3,
     };
     public enum DynamicLayerType
     {
@@ -32,7 +36,27 @@ namespace Chromatics.Enums
         [Display(Name="Highlight")]
         Highlight = 1,
         [Display(Name="Keybinds")]
-        Keybinds = 2
+        Keybinds = 2,
+        [Display(Name = "Enmity Tracker")]
+        EnmityTracker = 3,
+        [Display(Name = "Target HP")]
+        TargetHP = 4,
+        [Display(Name = "Target Castbar")]
+        TargetCastbar = 5,
+        [Display(Name = "HP Tracker")]
+        HPTracker = 6,
+        [Display(Name = "MP Tracker")]
+        MPTracker = 7,
+        [Display(Name = "Job Gauge")]
+        JobGauge = 8,
+        [Display(Name = "Experience Tracker")]
+        ExperienceTracker = 9,
+        [Display(Name = "Battle Stance")]
+        BattleStance = 10,
+        [Display(Name = "Castbar")]
+        Castbar = 11,
+        [Display(Name = "Job Class")]
+        JobClass = 12,
     };
     public enum EffectLayerType
     {

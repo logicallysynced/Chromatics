@@ -223,7 +223,8 @@ namespace Chromatics.Forms
                 Size = new Size(this.ClientRectangle.Width - (Padding.Left + LeftBarSize + StatusBarSize + RightBarSize + Padding.Right) + 10, this.ClientRectangle.Height - Padding.Bottom - Padding.Top),
                 DisplayMember = "Text",
                 ValueMember = "Value",
-                Font = new Font("Arial", 8)
+                Font = new Font("Arial", 8),
+                DropDownWidth = 150
             };
 
             _chk_enabled = new CheckBox
