@@ -1,4 +1,5 @@
-﻿using Chromatics.Helpers;
+﻿using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
 using RGB.NET.Core;
@@ -40,6 +41,8 @@ namespace Chromatics.Core
         private static List<Led> _layergroupledcollection = new List<Led>();
 
         private static PaletteColorModel _colorPalette = new PaletteColorModel();
+
+        private static EffectTypesModel _effects = new EffectTypesModel();
 
         private static List<ListLedGroup> _runningEffects = new List<ListLedGroup>();
 
@@ -87,21 +90,38 @@ namespace Chromatics.Core
             };
 
             var devices = surface.GetDevices(RGBDeviceType.All);
+
+            //Add base black layer
+            
+            //var background = new ListLedGroup(surface, surface.Leds);
+            //background.Brush = new SolidColorBrush(new Color(0, 0, 0));
+
             foreach (var device in devices)
             {
                 var gradient = new RainbowGradient();
                 var ledgroup = new ListLedGroup(surface);
+
+                ledgroup.ZIndex = 1;
                 foreach (var led in device)
                 {
                     ledgroup.AddLed(led);
                 }
 
                 gradient.AddDecorator(move);
-                ledgroup.Brush = new TextureBrush(new ConicalGradientTexture(new Size(100, 100), gradient));
+
+                if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                {
+                    ledgroup.Brush = new TextureBrush(new ConicalGradientTexture(new Size(100, 100), gradient));
+                }
+                else
+                {
+                    ledgroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), gradient));
+                }
+                    
+
                 _runningEffects.Add(ledgroup);
             }
-
-
+            
             Logger.WriteConsole(Enums.LoggerTypes.Devices, $"{deviceCount} devices loaded.");
             _loaded = true;
         }
@@ -167,6 +187,29 @@ namespace Chromatics.Core
             return true;
         }
 
+        public static EffectTypesModel GetEffectsSettings()
+        {
+            return _effects;
+        }
+
+        public static bool LoadEffectsSettings()
+        {
+            if (FileOperationsHelper.CheckEffectSettingsExist())
+            {
+                _effects = FileOperationsHelper.LoadEffectSettings();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool SaveEffectsSettings()
+        {
+            FileOperationsHelper.SaveEffectSettings(_effects);
+            return true;
+        }
+
         private static void Surface_Updating(UpdatingEventArgs args)
         {
             if (!_loaded) return;
@@ -177,16 +220,23 @@ namespace Chromatics.Core
             {
                 var layers = MappingLayers.GetLayers().OrderBy(x => x.Value.zindex);
 
+                //Release any running effects
                 foreach (var effects in _runningEffects)
                 {
+                    foreach (var decorator in effects.Decorators)
+                    {
+                        decorator.IsEnabled = false;
+                    }
+                                        
                     effects.RemoveAllDecorators();
+                    effects.Detach();
                 }
 
                 _runningEffects.Clear();
 
+                //Display mappings on devices
                 foreach (var layer in layers)
                 {
-                    //Display mappings on devices
                     var mapping = layer.Value;
 
                     if (mapping.rootLayerType == Enums.LayerType.EffectLayer) continue;

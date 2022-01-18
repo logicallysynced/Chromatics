@@ -13,6 +13,9 @@
     <Compile Update="Forms\Uc_Console.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Forms\Uc_Effects.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Forms\Uc_Mappings.cs">
       <SubType>UserControl</SubType>
     </Compile>

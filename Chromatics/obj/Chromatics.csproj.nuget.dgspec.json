@@ -59,47 +59,51 @@
             },
             "RGB.NET.Core": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Devices.Asus": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Devices.CoolerMaster": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Devices.Corsair": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Devices.Logitech": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Devices.Msi": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Devices.Novation": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Devices.SteelSeries": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
+            },
+            "RGB.NET.Devices.WS281X": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Devices.Wooting": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Layout": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             },
             "RGB.NET.Presets": {
               "target": "Package",
-              "version": "[1.0.0-prerelease7, )"
+              "version": "[1.0.0-prerelease.11, )"
             }
           },
           "imports": [

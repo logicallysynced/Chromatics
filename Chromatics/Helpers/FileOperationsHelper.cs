@@ -314,5 +314,69 @@ namespace Chromatics.Helpers
                 }
             }
         }
+
+        public static void SaveEffectSettings(EffectTypesModel palette)
+        {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = $"{enviroment}/effects.chromatics3";
+
+            try
+            {
+                using (var sw = new StreamWriter(path, false))
+                {
+                    var serializer = new JsonSerializer
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    };
+
+                    serializer.Serialize(sw, palette);
+                    sw.WriteLine();
+                    sw.Close();
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Saving Effects: {ex.Message}");
+            }
+        }
+
+        public static EffectTypesModel LoadEffectSettings()
+        {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = $"{enviroment}/effects.chromatics3";
+            var result = new EffectTypesModel();
+
+            try
+            {
+                using (var sr = new StreamReader(path))
+                {
+                    result = JsonConvert.DeserializeObject<EffectTypesModel>(sr.ReadToEnd());
+                    sr.Close();
+                }
+
+                if (result != null)
+                    return result;
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Effects: {ex.Message}");
+                return null;
+            }
+        }
+
+        public static bool CheckEffectSettingsExist()
+        {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = $"{enviroment}/effects.chromatics3";
+
+            if (File.Exists(path))
+                return true;
+
+            return false;
+        }
     }
 }

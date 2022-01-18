@@ -55,9 +55,15 @@ namespace Chromatics.Forms
                 Dock = DockStyle.Fill
             };
 
+            var uC_Effects = new Uc_Effects
+            {
+                Dock = DockStyle.Fill
+            };
+
             tP_console.Controls.Add(uC_Console);
             tP_mappings.Controls.Add(uC_Mappings);
             tP_palette.Controls.Add(uC_Palette);
+            tP_Effects.Controls.Add(uC_Effects);
 
             uC_Mappings.TabManager = mT_TabManager;
 

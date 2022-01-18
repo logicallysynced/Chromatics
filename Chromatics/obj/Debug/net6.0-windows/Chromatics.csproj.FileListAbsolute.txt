@@ -111,3 +111,13 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\Cyotek.Windows.Forms.ColorPicker.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Razer.pdb
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Razer.xml
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_Effects.resources
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.WS281X.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\System.IO.Ports.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\linux-arm\native\libSystem.IO.Ports.Native.so
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\linux-arm64\native\libSystem.IO.Ports.Native.so
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\linux-x64\native\libSystem.IO.Ports.Native.so
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\osx-x64\native\libSystem.IO.Ports.Native.dylib
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\linux\lib\netstandard2.0\System.IO.Ports.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\osx\lib\netstandard2.0\System.IO.Ports.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\win\lib\netstandard2.0\System.IO.Ports.dll
