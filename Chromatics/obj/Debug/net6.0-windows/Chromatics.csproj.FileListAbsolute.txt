@@ -121,3 +121,4 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\linux\lib\netstandard2.0\System.IO.Ports.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\osx\lib\netstandard2.0\System.IO.Ports.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\win\lib\netstandard2.0\System.IO.Ports.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_Settings.resources

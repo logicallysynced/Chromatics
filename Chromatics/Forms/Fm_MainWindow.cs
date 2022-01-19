@@ -38,6 +38,9 @@ namespace Chromatics.Forms
             this.Style = metroStyleManager.Style;
             this.Size = new Size(1400, 885);
 
+            //Load Settings
+            AppSettings.Startup();
+
 
             //Initiate Tabs
             var uC_Console = new Uc_Console
@@ -60,14 +63,22 @@ namespace Chromatics.Forms
                 Dock = DockStyle.Fill
             };
 
+            var uC_Settings = new Uc_Settings
+            {
+                Dock = DockStyle.Fill
+            };
+
             tP_console.Controls.Add(uC_Console);
             tP_mappings.Controls.Add(uC_Mappings);
             tP_palette.Controls.Add(uC_Palette);
             tP_Effects.Controls.Add(uC_Effects);
+            tP_Settings.Controls.Add(uC_Settings);
 
             uC_Mappings.TabManager = mT_TabManager;
 
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
+
+            
         }
 
         private void OnLoad(object sender, EventArgs e)

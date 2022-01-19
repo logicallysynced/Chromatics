@@ -32,9 +32,10 @@ namespace Chromatics.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fm_MainWindow));
             this.mT_TabManager = new MetroFramework.Controls.MetroTabControl();
             this.tP_console = new System.Windows.Forms.TabPage();
-            this.tP_Effects = new System.Windows.Forms.TabPage();
+            this.tP_Settings = new System.Windows.Forms.TabPage();
             this.tP_mappings = new System.Windows.Forms.TabPage();
             this.tP_palette = new System.Windows.Forms.TabPage();
+            this.tP_Effects = new System.Windows.Forms.TabPage();
             this.mT_TabManager.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,6 +45,7 @@ namespace Chromatics.Forms
             this.mT_TabManager.Controls.Add(this.tP_mappings);
             this.mT_TabManager.Controls.Add(this.tP_palette);
             this.mT_TabManager.Controls.Add(this.tP_Effects);
+            this.mT_TabManager.Controls.Add(this.tP_Settings);
             this.mT_TabManager.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mT_TabManager.Location = new System.Drawing.Point(20, 60);
             this.mT_TabManager.Name = "mT_TabManager";
@@ -62,13 +64,13 @@ namespace Chromatics.Forms
             this.tP_console.TabIndex = 0;
             this.tP_console.Text = "Console";
             // 
-            // tP_Effects
+            // tP_Settings
             // 
-            this.tP_Effects.Location = new System.Drawing.Point(4, 38);
-            this.tP_Effects.Name = "tP_Effects";
-            this.tP_Effects.Size = new System.Drawing.Size(1337, 684);
-            this.tP_Effects.TabIndex = 3;
-            this.tP_Effects.Text = "Effects";
+            this.tP_Settings.Location = new System.Drawing.Point(4, 38);
+            this.tP_Settings.Name = "tP_Settings";
+            this.tP_Settings.Size = new System.Drawing.Size(1337, 684);
+            this.tP_Settings.TabIndex = 4;
+            this.tP_Settings.Text = "Settings";
             // 
             // tP_mappings
             // 
@@ -85,6 +87,14 @@ namespace Chromatics.Forms
             this.tP_palette.Size = new System.Drawing.Size(1337, 684);
             this.tP_palette.TabIndex = 2;
             this.tP_palette.Text = "Color Palette";
+            // 
+            // tP_Effects
+            // 
+            this.tP_Effects.Location = new System.Drawing.Point(4, 38);
+            this.tP_Effects.Name = "tP_Effects";
+            this.tP_Effects.Size = new System.Drawing.Size(1337, 684);
+            this.tP_Effects.TabIndex = 3;
+            this.tP_Effects.Text = "Effects";
             // 
             // Fm_MainWindow
             // 
@@ -109,5 +119,6 @@ namespace Chromatics.Forms
         private System.Windows.Forms.TabPage tP_mappings;
         private System.Windows.Forms.TabPage tP_palette;
         private System.Windows.Forms.TabPage tP_Effects;
+        private System.Windows.Forms.TabPage tP_Settings;
     }
 }

@@ -488,5 +488,69 @@ namespace Chromatics.Helpers
 
             return false;
         }
+
+        public static void SaveSettings(SettingsModel settings)
+        {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = $"{enviroment}/settings.chromatics3";
+
+            try
+            {
+                using (var sw = new StreamWriter(path, false))
+                {
+                    var serializer = new JsonSerializer
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    };
+
+                    serializer.Serialize(sw, settings);
+                    sw.WriteLine();
+                    sw.Close();
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Saving Settings: {ex.Message}");
+            }
+        }
+
+        public static SettingsModel LoadSettings()
+        {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = $"{enviroment}/settings.chromatics3";
+            var result = new SettingsModel();
+
+            try
+            {
+                using (var sr = new StreamReader(path))
+                {
+                    result = JsonConvert.DeserializeObject<SettingsModel>(sr.ReadToEnd());
+                    sr.Close();
+                }
+
+                if (result != null)
+                    return result;
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Settings: {ex.Message}");
+                return null;
+            }
+        }
+
+        public static bool CheckSettingsExist()
+        {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = $"{enviroment}/settings.chromatics3";
+
+            if (File.Exists(path))
+                return true;
+
+            return false;
+        }
     }
 }

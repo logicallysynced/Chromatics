@@ -173,12 +173,12 @@ namespace Chromatics.Forms
             }
                         
             //Add tooltips
-            tt_mappings.SetToolTip(this.cb_addlayer, "Add New Layer of selected type");
-            tt_mappings.SetToolTip(this.cb_deviceselect, "Change to another device");
-            tt_mappings.SetToolTip(this.btn_preview, "Display layers on physical devices");
-            tt_mappings.SetToolTip(this.btn_clearselection, "Clear all keys on layer");
-            tt_mappings.SetToolTip(this.btn_reverseselection, "Reverse keys on layer");
-            tt_mappings.SetToolTip(this.btn_undoselection, "Undo key selection on layer");
+            tt_mappings.SetToolTip(this.cb_addlayer, @"Add New Layer of selected type");
+            tt_mappings.SetToolTip(this.cb_deviceselect, @"Change to another device");
+            tt_mappings.SetToolTip(this.btn_preview, @"Display layers on physical devices");
+            tt_mappings.SetToolTip(this.btn_clearselection, @"Clear all keys on layer");
+            tt_mappings.SetToolTip(this.btn_reverseselection, @"Reverse keys on layer");
+            tt_mappings.SetToolTip(this.btn_undoselection, @"Undo key selection on layer");
 
             //Handle Events
             this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
