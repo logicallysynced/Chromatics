@@ -82,6 +82,116 @@ namespace Chromatics.Helpers
             return false;
         }
 
+        public static ConcurrentDictionary<int, Layer> ImportLayerMappings()
+        {
+            var open = new OpenFileDialog
+            {
+                Filter = "Chromatics Layer Files|*.chromatics3",
+                Title = "Import Chromatics Layers",
+                AddExtension = true,
+                AutoUpgradeEnabled = true,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                DefaultExt = "chromatics3",
+                DereferenceLinks = true,
+                FileName = "layers",
+                FilterIndex = 1,
+                Multiselect = false,
+                ReadOnlyChecked = false,
+                RestoreDirectory = false,
+                ShowHelp = false,
+                ShowReadOnly = false,
+                SupportMultiDottedExtensions = false,
+                ValidateNames = true
+            };
+
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                var ext = Path.GetExtension(open.FileName);
+
+                Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Layers..");
+
+                try
+                {
+                    var result = new ConcurrentDictionary<int, Layer>();
+
+                    using (var sr = new StreamReader(open.FileName))
+                    {
+                        result = JsonConvert.DeserializeObject<ConcurrentDictionary<int, Layer>>(sr.ReadToEnd(), new DictionaryConverter());
+                        sr.Close();
+
+                        Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported layers from {open.FileName}.");
+                        open.Dispose();
+                    }
+
+                    return result;
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing layers. Error: {ex.Message}");
+                    open.Dispose();
+                    return null;
+                }
+
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static void ExportLayerMappings(ConcurrentDictionary<int, Layer> layers)
+        {
+            var save = new SaveFileDialog
+            {
+                AddExtension = true,
+                AutoUpgradeEnabled = true,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                CreatePrompt = false,
+                DefaultExt = "chromatics3",
+                DereferenceLinks = true,
+                FileName = "layers",
+                Filter = "Chromatics Layer Files|*.chromatics3",
+                FilterIndex = 1,
+                InitialDirectory = "",
+                OverwritePrompt = true,
+                RestoreDirectory = false,
+                ShowHelp = false,
+                SupportMultiDottedExtensions = false,
+                Title = "Export Chromatics Layers",
+                ValidateNames = true
+            };
+
+
+            if (save.ShowDialog() == DialogResult.OK)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.System, @"Exporting Layers..");
+
+                try
+                {
+                    using (var sw = new StreamWriter(save.FileName, false))
+                    {
+                        var serializer = new JsonSerializer();
+                        serializer.Converters.Add(new DictionaryConverter());
+                        serializer.NullValueHandling = NullValueHandling.Ignore;
+
+                        serializer.Serialize(sw, layers);
+                        sw.WriteLine();
+                        sw.Close();
+                    }
+
+                    Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully exported layers to {save.FileName}.");
+                    save.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error exporting layers. Error: {ex.Message}");
+                }
+            }
+        }
+
         public static void SaveColorMappings(PaletteColorModel palette)
         {
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;

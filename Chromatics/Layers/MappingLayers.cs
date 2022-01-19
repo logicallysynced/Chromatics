@@ -104,6 +104,29 @@ namespace Chromatics.Layers
             return true;
         }
 
+        public static bool ImportMappings()
+        {
+            var layers = FileOperationsHelper.ImportLayerMappings();
+
+            if (layers != null)
+            {
+                _layers.Clear();
+                _layers = layers;
+                _layerAutoID = _layers.LastOrDefault().Key;
+                _version++;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool ExportMappings()
+        {
+            FileOperationsHelper.ExportLayerMappings(_layers);
+            return true;
+        }
+
         public static bool IsPreview()
         {
             return _preview;

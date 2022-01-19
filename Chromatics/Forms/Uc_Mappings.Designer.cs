@@ -47,6 +47,8 @@ namespace Chromatics.Forms
             this.cb_deviceselect = new MetroFramework.Controls.MetroComboBox();
             this.btn_preview = new MetroFramework.Controls.MetroButton();
             this.pn_bottom = new System.Windows.Forms.Panel();
+            this.btn_import = new MetroFramework.Controls.MetroButton();
+            this.btn_export = new MetroFramework.Controls.MetroButton();
             this.tlp_base.SuspendLayout();
             this.tlp_mid.SuspendLayout();
             this.pn_right.SuspendLayout();
@@ -204,13 +206,15 @@ namespace Chromatics.Forms
             // tlp_top
             // 
             this.tlp_top.ColumnCount = 6;
-            this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.79828F));
+            this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.349785F));
+            this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.38412F));
+            this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.403433F));
             this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 13F));
             this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7F));
             this.tlp_top.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlp_top.Controls.Add(this.btn_export, 0, 0);
+            this.tlp_top.Controls.Add(this.btn_import, 0, 0);
             this.tlp_top.Controls.Add(this.cb_addlayer, 4, 0);
             this.tlp_top.Controls.Add(this.btn_addlayer, 5, 0);
             this.tlp_top.Controls.Add(this.cb_deviceselect, 0, 0);
@@ -228,7 +232,7 @@ namespace Chromatics.Forms
             this.cb_addlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cb_addlayer.FormattingEnabled = true;
             this.cb_addlayer.ItemHeight = 24;
-            this.cb_addlayer.Location = new System.Drawing.Point(1491, 13);
+            this.cb_addlayer.Location = new System.Drawing.Point(1493, 13);
             this.cb_addlayer.Name = "cb_addlayer";
             this.cb_addlayer.Size = new System.Drawing.Size(236, 30);
             this.cb_addlayer.TabIndex = 0;
@@ -239,7 +243,7 @@ namespace Chromatics.Forms
             // 
             this.btn_addlayer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_addlayer.Location = new System.Drawing.Point(1733, 3);
+            this.btn_addlayer.Location = new System.Drawing.Point(1735, 3);
             this.btn_addlayer.Name = "btn_addlayer";
             this.btn_addlayer.Size = new System.Drawing.Size(94, 40);
             this.btn_addlayer.TabIndex = 1;
@@ -266,7 +270,7 @@ namespace Chromatics.Forms
             this.btn_preview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_preview.AutoSize = true;
-            this.btn_preview.Location = new System.Drawing.Point(1371, 3);
+            this.btn_preview.Location = new System.Drawing.Point(1373, 3);
             this.btn_preview.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.btn_preview.Name = "btn_preview";
             this.btn_preview.Size = new System.Drawing.Size(97, 40);
@@ -284,6 +288,38 @@ namespace Chromatics.Forms
             this.pn_bottom.Name = "pn_bottom";
             this.pn_bottom.Size = new System.Drawing.Size(1864, 46);
             this.pn_bottom.TabIndex = 2;
+            // 
+            // btn_import
+            // 
+            this.btn_import.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_import.AutoSize = true;
+            this.btn_import.Location = new System.Drawing.Point(1117, 3);
+            this.btn_import.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
+            this.btn_import.Name = "btn_import";
+            this.btn_import.Size = new System.Drawing.Size(96, 40);
+            this.btn_import.TabIndex = 4;
+            this.btn_import.Text = "Import";
+            this.btn_import.UseCustomBackColor = true;
+            this.btn_import.UseCustomForeColor = true;
+            this.btn_import.UseSelectable = true;
+            this.btn_import.Click += new System.EventHandler(this.btn_import_Click);
+            // 
+            // btn_export
+            // 
+            this.btn_export.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_export.AutoSize = true;
+            this.btn_export.Location = new System.Drawing.Point(1236, 3);
+            this.btn_export.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
+            this.btn_export.Name = "btn_export";
+            this.btn_export.Size = new System.Drawing.Size(96, 40);
+            this.btn_export.TabIndex = 5;
+            this.btn_export.Text = "Export";
+            this.btn_export.UseCustomBackColor = true;
+            this.btn_export.UseCustomForeColor = true;
+            this.btn_export.UseSelectable = true;
+            this.btn_export.Click += new System.EventHandler(this.btn_export_Click);
             // 
             // Uc_Mappings
             // 
@@ -327,5 +363,7 @@ namespace Chromatics.Forms
         private MetroFramework.Controls.MetroButton btn_reverseselection;
         private MetroFramework.Controls.MetroButton btn_preview;
         private MetroFramework.Controls.MetroButton btn_undoselection;
+        private MetroFramework.Controls.MetroButton btn_export;
+        private MetroFramework.Controls.MetroButton btn_import;
     }
 }

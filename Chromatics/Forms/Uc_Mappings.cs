@@ -1324,5 +1324,26 @@ namespace Chromatics.Forms
             var thisbtn = (MetroButton)sender;
             this.ActiveControl = thisbtn.Parent;
         }
+
+        private void btn_import_Click(object sender, EventArgs e)
+        {
+            if (!init) return;
+            if (IsAddingLayer) return;
+
+            if (MappingLayers.ImportMappings())
+            {
+                MappingLayers.SaveMappings();
+                ChangeDeviceType();
+            }
+            
+        }
+
+        private void btn_export_Click(object sender, EventArgs e)
+        {
+            if (!init) return;
+            if (IsAddingLayer) return;
+
+            MappingLayers.ExportMappings();
+        }
     }
 }
