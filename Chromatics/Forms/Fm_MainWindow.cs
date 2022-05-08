@@ -101,9 +101,11 @@ namespace Chromatics.Forms
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics 3.0 has loaded");
 
             //Create new thread for FFXIV/RGB processing
-            _ChromaticsThread = new Thread(new ThreadStart(this.RunChromaticsThread));
-            _ChromaticsThread.IsBackground = true;
-            _ChromaticsThread.Start();
+            
+            //_ChromaticsThread = new Thread(new ThreadStart(this.RunChromaticsThread));
+            //_ChromaticsThread.IsBackground = true;
+            //_ChromaticsThread.Start();
+            RunChromaticsThread();
         }
 
         private void RunChromaticsThread()

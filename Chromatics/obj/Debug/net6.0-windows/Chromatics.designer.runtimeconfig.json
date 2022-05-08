@@ -14,7 +14,6 @@
     "additionalProbingPaths": [
       "C:\\Users\\Dani\\.dotnet\\store\\|arch|\\|tfm|",
       "C:\\Users\\Dani\\.nuget\\packages",
-      "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
       "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
     ],
     "configProperties": {

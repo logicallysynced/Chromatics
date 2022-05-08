@@ -17,5 +17,6 @@ namespace Chromatics.Helpers
         {
             return new RGB.NET.Core.Color(col.A, col.R, col.G, col.B);
         }
+
     }
 }

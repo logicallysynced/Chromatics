@@ -34,6 +34,8 @@ namespace Chromatics.Core
 
         private static bool _loaded;
 
+        private static bool _wasPreviewed;
+
         private static List<IRGBDevice> _devices = new List<IRGBDevice>();
 
         private static Dictionary<int, ListLedGroup> _layergroups = new Dictionary<int, ListLedGroup>();
@@ -83,45 +85,9 @@ namespace Chromatics.Core
             surface.Updating += Surface_Updating;
 
             //Startup Effects
-            var move = new MoveGradientDecorator(surface)
-            {
-                IsEnabled = true,
-                Speed = 100,
-            };
+            RunStartupEffects();
 
-            var devices = surface.GetDevices(RGBDeviceType.All);
-
-            //Add base black layer
-            
-            //var background = new ListLedGroup(surface, surface.Leds);
-            //background.Brush = new SolidColorBrush(new Color(0, 0, 0));
-
-            foreach (var device in devices)
-            {
-                var gradient = new RainbowGradient();
-                var ledgroup = new ListLedGroup(surface);
-
-                ledgroup.ZIndex = 1;
-                foreach (var led in device)
-                {
-                    ledgroup.AddLed(led);
-                }
-
-                gradient.AddDecorator(move);
-
-                if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
-                {
-                    ledgroup.Brush = new TextureBrush(new ConicalGradientTexture(new Size(100, 100), gradient));
-                }
-                else
-                {
-                    ledgroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), gradient));
-                }
-                    
-
-                _runningEffects.Add(ledgroup);
-            }
-            
+                        
             Logger.WriteConsole(Enums.LoggerTypes.Devices, $"{deviceCount} devices loaded.");
             _loaded = true;
         }
@@ -210,29 +176,92 @@ namespace Chromatics.Core
             return true;
         }
 
+        private static void RunStartupEffects()
+        {
+            var devices = surface.GetDevices(RGBDeviceType.All);
+
+            var move = new MoveGradientDecorator(surface)
+            {
+                IsEnabled = true,
+                Speed = 100,
+            };
+
+            //Add base black layer
+            
+            //var background = new ListLedGroup(surface, surface.Leds);
+            //background.Brush = new SolidColorBrush(new Color(0, 0, 0));
+
+            foreach (var device in devices)
+            {
+                var gradient = new RainbowGradient();
+                var ledgroup = new ListLedGroup(surface);
+
+                ledgroup.ZIndex = 1;
+                foreach (var led in device)
+                {
+                    ledgroup.AddLed(led);
+                }
+
+                gradient.AddDecorator(move);
+
+                if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                {
+                    ledgroup.Brush = new TextureBrush(new ConicalGradientTexture(new Size(100, 100), gradient));
+                }
+                else
+                {
+                    ledgroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), gradient));
+                }
+                    
+
+                _runningEffects.Add(ledgroup);
+            }
+        }
+
+        private static void StopEffects()
+        {
+            foreach (var effects in _runningEffects)
+            {
+                foreach (var decorator in effects.Decorators)
+                {
+                    decorator.IsEnabled = false;
+                }
+                                        
+                effects.RemoveAllDecorators();
+                effects.Detach();
+            }
+
+            _runningEffects.Clear();
+        }
+
+        private static void ResetLayerGroups()
+        {
+            foreach (var layergroup in _layergroups)
+            {
+                surface.Detach(layergroup.Value);
+            }
+
+            _layergroups.Clear();
+            _layergroupledcollection.Clear();
+        }
+
         private static void Surface_Updating(UpdatingEventArgs args)
         {
             if (!_loaded) return;
 
             //If Previewing layers - update RGB on each refresh cycle
-
             if (MappingLayers.IsPreview())
             {
+                if (!_wasPreviewed)
+                {
+                    ResetLayerGroups();
+                    _wasPreviewed = true;
+                }
+
                 var layers = MappingLayers.GetLayers().OrderBy(x => x.Value.zindex);
 
                 //Release any running effects
-                foreach (var effects in _runningEffects)
-                {
-                    foreach (var decorator in effects.Decorators)
-                    {
-                        decorator.IsEnabled = false;
-                    }
-                                        
-                    effects.RemoveAllDecorators();
-                    effects.Detach();
-                }
-
-                _runningEffects.Clear();
+                StopEffects();
 
                 //Display mappings on devices
                 foreach (var layer in layers)
@@ -260,7 +289,7 @@ namespace Chromatics.Core
 
 
                     var drawing_col = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(mapping.rootLayerType).Value;
-                    var highlight_col = ConvertSystemColor(drawing_col);
+                    var highlight_col = ColorHelper.ColorToRGBColor(drawing_col);
 
                     foreach (var device in devices)
                     {
@@ -278,7 +307,7 @@ namespace Chromatics.Core
                             if (!mapping.Enabled && mapping.rootLayerType == Enums.LayerType.BaseLayer)
                             {
                                 drawing_col = System.Drawing.Color.Black;
-                                highlight_col = ConvertSystemColor(drawing_col);
+                                highlight_col = ColorHelper.ColorToRGBColor(drawing_col);
                             }
                             else if (!mapping.Enabled)
                             {
@@ -304,7 +333,6 @@ namespace Chromatics.Core
 
                             layergroup.AddLed(led);
 
-
                         }
 
                     }
@@ -315,14 +343,33 @@ namespace Chromatics.Core
                     layergroup.Brush = brush;
                     //Debug.WriteLine($"Layer {mapping.layerID} at zindex {mapping.zindex} to {highlight_col}");
                 }
-
             }
+            else
+            {
+                if (_wasPreviewed)
+                {
+                    var black = new Color(0, 0, 0);                    
+                    ResetLayerGroups();
+                    
+                    /*
+                    var background = new ListLedGroup(surface, surface.Leds)
+                    {
+                        Brush = new SolidColorBrush(black)
+                    };
+                    */                    
+
+                    RunStartupEffects();
+                    _wasPreviewed = false;
+                                       
+
+                    Debug.WriteLine($"Set to Black");
+                }
+            }
+
+
         }
 
-        private static Color ConvertSystemColor(System.Drawing.Color col)
-        {
-            return new Color(col.R, col.G, col.B);
-        }
+        
 
     }
 }

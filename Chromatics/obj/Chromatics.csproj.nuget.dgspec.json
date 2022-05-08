@@ -14,12 +14,10 @@
         "outputPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
           "C:\\Users\\Dani\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -59,51 +57,51 @@
             },
             "RGB.NET.Core": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.Asus": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.CoolerMaster": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.Corsair": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.Logitech": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.Msi": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.Novation": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.SteelSeries": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.WS281X": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Devices.Wooting": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Layout": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             },
             "RGB.NET.Presets": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.11, )"
+              "version": "[1.0.0-prerelease.32, )"
             }
           },
           "imports": [
@@ -124,7 +122,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.104\\RuntimeIdentifierGraph.json"
         }
       }
     }
