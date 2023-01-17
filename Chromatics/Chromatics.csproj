@@ -25,19 +25,19 @@
   <ItemGroup>
     <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
     <PackageReference Include="MetroModernUI" Version="1.4.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RGB.NET.Core" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.Asus" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.Corsair" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.Msi" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.Novation" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.Wooting" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Devices.WS281X" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Layout" Version="1.0.0-prerelease.32" />
-    <PackageReference Include="RGB.NET.Presets" Version="1.0.0-prerelease.32" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="RGB.NET.Core" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.Asus" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.Corsair" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.Msi" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.Novation" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.Wooting" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.WS281X" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Layout" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Presets" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

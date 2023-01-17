@@ -53,55 +53,55 @@
             },
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[13.0.1, )"
+              "version": "[13.0.2, )"
             },
             "RGB.NET.Core": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.Asus": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.CoolerMaster": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.Corsair": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.Logitech": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.Msi": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.Novation": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.SteelSeries": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.WS281X": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.Wooting": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Layout": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             },
             "RGB.NET.Presets": {
               "target": "Package",
-              "version": "[1.0.0-prerelease.32, )"
+              "version": "[1.0.0, )"
             }
           },
           "imports": [
@@ -122,7 +122,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.104\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.113\\RuntimeIdentifierGraph.json"
         }
       }
     }

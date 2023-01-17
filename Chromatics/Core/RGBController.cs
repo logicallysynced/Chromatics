@@ -347,29 +347,14 @@ namespace Chromatics.Core
             else
             {
                 if (_wasPreviewed)
-                {
-                    var black = new Color(0, 0, 0);                    
+                {            
                     ResetLayerGroups();
                     
-                    /*
-                    var background = new ListLedGroup(surface, surface.Leds)
-                    {
-                        Brush = new SolidColorBrush(black)
-                    };
-                    */                    
-
                     RunStartupEffects();
                     _wasPreviewed = false;
-                                       
-
-                    Debug.WriteLine($"Set to Black");
+                    
                 }
             }
-
-
         }
-
-        
-
     }
 }
