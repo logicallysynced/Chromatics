@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ld0glGeZWRKxKxPmavgg44yRkEjW3GsM2KbWfiPhZjb2hw5Od9AR65N6j+gIkCyQzMbFKr9lgpj+Bcn2tr/pPg==",
+  "dgSpecHash": "rB6qi6wNcvUM9+DcLN3u7kdvdETPPpUQyjAhgfgqxHg6/06hqv4hNUnqONdnf3tx03obADBblqdFRfgiWTE5Tw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
   "expectedPackageFiles": [
@@ -17,6 +17,7 @@
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.logitech\\1.0.0\\rgb.net.devices.logitech.1.0.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.msi\\1.0.0\\rgb.net.devices.msi.1.0.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.novation\\1.0.0\\rgb.net.devices.novation.1.0.0.nupkg.sha512",
+    "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.razer\\1.0.0\\rgb.net.devices.razer.1.0.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.steelseries\\1.0.0\\rgb.net.devices.steelseries.1.0.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.wooting\\1.0.0\\rgb.net.devices.wooting.1.0.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\rgb.net.devices.ws281x\\1.0.0\\rgb.net.devices.ws281x.1.0.0.nupkg.sha512",

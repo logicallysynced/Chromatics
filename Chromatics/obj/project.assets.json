@@ -159,6 +159,19 @@
           "lib/net6.0/RGB.NET.Devices.Novation.dll": {}
         }
       },
+      "RGB.NET.Devices.Razer/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0",
+          "RGB.NET.HID": "1.0.0"
+        },
+        "compile": {
+          "lib/net6.0/RGB.NET.Devices.Razer.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Razer.dll": {}
+        }
+      },
       "RGB.NET.Devices.SteelSeries/1.0.0": {
         "type": "package",
         "dependencies": {
@@ -665,6 +678,25 @@
         "rgb.net.devices.novation.nuspec"
       ]
     },
+    "RGB.NET.Devices.Razer/1.0.0": {
+      "sha512": "qF+C4rIlzsAWYgWYFHoDXl83GXwluQbNdsGczXV7VkoS5NciHhI4azgyDYUYVo1w0gVNkRWM1H4128DzbIFaNg==",
+      "type": "package",
+      "path": "rgb.net.devices.razer/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net5.0/RGB.NET.Devices.Razer.dll",
+        "lib/net5.0/RGB.NET.Devices.Razer.xml",
+        "lib/net6.0/RGB.NET.Devices.Razer.dll",
+        "lib/net6.0/RGB.NET.Devices.Razer.xml",
+        "lib/net7.0/RGB.NET.Devices.Razer.dll",
+        "lib/net7.0/RGB.NET.Devices.Razer.xml",
+        "rgb.net.devices.razer.1.0.0.nupkg.sha512",
+        "rgb.net.devices.razer.nuspec"
+      ]
+    },
     "RGB.NET.Devices.SteelSeries/1.0.0": {
       "sha512": "WVKNZsDZzV9cqBHmF0K/gUIQUxAH3NZOuC0T1LGA8njLD9yCe1ZlDCJkrd8RrWXbMOv1JjaavVFmXZu/nVr8tg==",
       "type": "package",
@@ -1077,6 +1109,7 @@
       "RGB.NET.Devices.Logitech >= 1.0.0",
       "RGB.NET.Devices.Msi >= 1.0.0",
       "RGB.NET.Devices.Novation >= 1.0.0",
+      "RGB.NET.Devices.Razer >= 1.0.0",
       "RGB.NET.Devices.SteelSeries >= 1.0.0",
       "RGB.NET.Devices.WS281X >= 1.0.0",
       "RGB.NET.Devices.Wooting >= 1.0.0",
@@ -1164,6 +1197,10 @@
             "version": "[1.0.0, )"
           },
           "RGB.NET.Devices.Novation": {
+            "target": "Package",
+            "version": "[1.0.0, )"
+          },
+          "RGB.NET.Devices.Razer": {
             "target": "Package",
             "version": "[1.0.0, )"
           },

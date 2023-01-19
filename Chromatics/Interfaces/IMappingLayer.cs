@@ -17,6 +17,7 @@ namespace Chromatics.Interfaces
         LayerType rootLayerType { get; }
         RGBDeviceType deviceType {get; set;}
         bool Enabled { get; set; }
+        bool allowBleed { get; set; }
         int layerTypeindex { get; set; }
         Dictionary<int, LedId> deviceLeds { get; set; }
 

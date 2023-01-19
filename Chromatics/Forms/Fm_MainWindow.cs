@@ -111,7 +111,7 @@ namespace Chromatics.Forms
         private void RunChromaticsThread()
         {
             RGBController.Setup();
-
+            GameController.Setup();
         }
 
         private void OnResize(object sender, EventArgs e)

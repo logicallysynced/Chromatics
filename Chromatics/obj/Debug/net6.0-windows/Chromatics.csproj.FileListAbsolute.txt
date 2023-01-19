@@ -67,6 +67,7 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Logitech.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Msi.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Novation.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Razer.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.SteelSeries.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Wooting.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.WS281X.dll
@@ -84,9 +85,8 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\osx\lib\netstandard2.0\System.IO.Ports.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\win\lib\netstandard2.0\System.IO.Ports.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\runtimes\win\lib\netcoreapp2.0\System.Management.dll
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Razer.dll
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Razer.pdb
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Razer.xml
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\Sharlayan.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\Sharlayan.xml
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Chromatics.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Fm_MainWindow.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Pn_LayerDisplay.resources
@@ -122,5 +122,3 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.pdb
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.genruntimeconfig.cache
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.csproj.AssemblyReference.cache
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\Sharlayan.dll
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\Sharlayan.xml

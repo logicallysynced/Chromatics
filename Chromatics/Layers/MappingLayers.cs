@@ -162,6 +162,7 @@ namespace Chromatics.Layers
         public RGBDeviceType deviceType { get; set; }
         public bool Enabled { get; set; }
         public int zindex { get; set; }
+        public bool allowBleed { get; set; }
         public int layerTypeindex { get; set; }
         public Dictionary<int, LedId> deviceLeds { get; set; }
 
