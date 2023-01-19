@@ -44,6 +44,9 @@
     <Reference Include="RGB.NET.Devices.Razer">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
     </Reference>
+    <Reference Include="Sharlayan">
+      <HintPath>..\Build Dependencies\Sharlayan.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
