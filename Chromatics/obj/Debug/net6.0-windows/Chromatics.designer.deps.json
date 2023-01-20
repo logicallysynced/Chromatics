@@ -59,15 +59,15 @@
           }
         }
       },
-      "Newtonsoft.Json/13.0.1": {
+      "Newtonsoft.Json/13.0.2": {
         "runtime": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
             "assemblyVersion": "13.0.0.0",
-            "fileVersion": "13.0.1.25517"
+            "fileVersion": "13.0.2.27524"
           }
         }
       },
-      "RGB.NET.Core/1.0.0-prerelease.32": {
+      "RGB.NET.Core/1.0.0": {
         "runtime": {
           "lib/net6.0/RGB.NET.Core.dll": {
             "assemblyVersion": "0.0.1.0",
@@ -75,9 +75,9 @@
           }
         }
       },
-      "RGB.NET.Devices.Asus/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.Asus/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32",
+          "RGB.NET.Core": "1.0.0",
           "System.Management": "5.0.0"
         },
         "runtime": {
@@ -91,9 +91,9 @@
           }
         }
       },
-      "RGB.NET.Devices.CoolerMaster/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.CoolerMaster/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Devices.CoolerMaster.dll": {
@@ -102,9 +102,9 @@
           }
         }
       },
-      "RGB.NET.Devices.Corsair/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.Corsair/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Devices.Corsair.dll": {
@@ -113,10 +113,10 @@
           }
         }
       },
-      "RGB.NET.Devices.Logitech/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.Logitech/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32",
-          "RGB.NET.HID": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0",
+          "RGB.NET.HID": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Devices.Logitech.dll": {
@@ -125,9 +125,9 @@
           }
         }
       },
-      "RGB.NET.Devices.Msi/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.Msi/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Devices.Msi.dll": {
@@ -136,9 +136,9 @@
           }
         }
       },
-      "RGB.NET.Devices.Novation/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.Novation/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32",
+          "RGB.NET.Core": "1.0.0",
           "Sanford.Multimedia.Midi.Standard": "6.6.0"
         },
         "runtime": {
@@ -148,10 +148,22 @@
           }
         }
       },
-      "RGB.NET.Devices.SteelSeries/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.Razer/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32",
-          "RGB.NET.HID": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0",
+          "RGB.NET.HID": "1.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Razer.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.SteelSeries/1.0.0": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0",
+          "RGB.NET.HID": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Devices.SteelSeries.dll": {
@@ -160,9 +172,9 @@
           }
         }
       },
-      "RGB.NET.Devices.Wooting/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.Wooting/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Devices.Wooting.dll": {
@@ -171,9 +183,9 @@
           }
         }
       },
-      "RGB.NET.Devices.WS281X/1.0.0-prerelease.32": {
+      "RGB.NET.Devices.WS281X/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32",
+          "RGB.NET.Core": "1.0.0",
           "System.IO.Ports": "5.0.1"
         },
         "runtime": {
@@ -183,10 +195,10 @@
           }
         }
       },
-      "RGB.NET.HID/1.0.0-prerelease.32": {
+      "RGB.NET.HID/1.0.0": {
         "dependencies": {
           "HidSharp": "2.1.0",
-          "RGB.NET.Core": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.HID.dll": {
@@ -195,9 +207,9 @@
           }
         }
       },
-      "RGB.NET.Layout/1.0.0-prerelease.32": {
+      "RGB.NET.Layout/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Layout.dll": {
@@ -206,9 +218,9 @@
           }
         }
       },
-      "RGB.NET.Presets/1.0.0-prerelease.32": {
+      "RGB.NET.Presets/1.0.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0-prerelease.32"
+          "RGB.NET.Core": "1.0.0"
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Presets.dll": {
@@ -410,103 +422,110 @@
       "path": "microsoft.win32.registry/5.0.0",
       "hashPath": "microsoft.win32.registry.5.0.0.nupkg.sha512"
     },
-    "Newtonsoft.Json/13.0.1": {
+    "Newtonsoft.Json/13.0.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A==",
-      "path": "newtonsoft.json/13.0.1",
-      "hashPath": "newtonsoft.json.13.0.1.nupkg.sha512"
+      "sha512": "sha512-R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg==",
+      "path": "newtonsoft.json/13.0.2",
+      "hashPath": "newtonsoft.json.13.0.2.nupkg.sha512"
     },
-    "RGB.NET.Core/1.0.0-prerelease.32": {
+    "RGB.NET.Core/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-HlhhikrkV7OQIRszn6RT6+6N4QGGHaN6NDHK1YssZEJTtE2MIdeRajeQFFziPc4OVOvMgxY13unw/v25r/YALw==",
-      "path": "rgb.net.core/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.core.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-wQd1tSyldamEhKAAU/E+zraiz5FRttcDYnQ3uQiat9Uf1tx8obV4MkFOKh2wY0JLZbOD832cCg3RQttHkbEbdw==",
+      "path": "rgb.net.core/1.0.0",
+      "hashPath": "rgb.net.core.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.Asus/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.Asus/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-WuqPV23QTTyz6rYE57BigusE2p/BipNU2t7mIcpLxcTulH0pdXqDPb3WL/+G+p7jPdPH49xOOIcK7fBBtKL0WQ==",
-      "path": "rgb.net.devices.asus/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.asus.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-lMWKfPBwhbB9rkCQ+HgJc1KWo2OdgwJGv5oiJw2hBdcjQDdWBvH/Dhw0IlgABAWN+cqvuOIcHee8eLq5ytZZ2w==",
+      "path": "rgb.net.devices.asus/1.0.0",
+      "hashPath": "rgb.net.devices.asus.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.CoolerMaster/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.CoolerMaster/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-TJEpTYRKsT7t4qRES5EgAiTDQnuQFribtJdH+LYD9a5Za0Lgj1sbCKCHL7kUEd/dLfONqtJzB/0nGsV7Cyf1qA==",
-      "path": "rgb.net.devices.coolermaster/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.coolermaster.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-cIl80zdpG7vw+vV2MfDYjaIamvt3U0QNszlauSba3Xm7xTbGwwYyWMwnIDHYoWoFQopG6z40pAy+z0pPeBZvkg==",
+      "path": "rgb.net.devices.coolermaster/1.0.0",
+      "hashPath": "rgb.net.devices.coolermaster.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.Corsair/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.Corsair/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-+s0CCB1FIUxXmVfpUTlxqE8o+1ZnTVjSksGjYGdgCrXNpObkaFKbrQgg5IVgVCRsDtKjiyGnkld66e2wDaGJFQ==",
-      "path": "rgb.net.devices.corsair/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.corsair.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-KMyPyPL/qwDS8qoTViJBWHJlJY9ANb4dH7pe5wKybFXkPeaJETN+CARBUIjJfD/9sHK2zw14/h1pMOM4rHNhlA==",
+      "path": "rgb.net.devices.corsair/1.0.0",
+      "hashPath": "rgb.net.devices.corsair.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.Logitech/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.Logitech/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-vvqFm8+QwpIkVraMlgoyR8i2X4hiLTgalTDVOcdwcX2KbU6GtsPBqcj1PZ+hufE9Zhis99PjDGQWC1YHlF3OVA==",
-      "path": "rgb.net.devices.logitech/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.logitech.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-Ga63eUXZRCpGyQKgmS+khfKq8CNRRElDacymoOewbTJk74nwWeX6Gel/kYXivLJurmhN51aG/vaeLX8jcHyXbA==",
+      "path": "rgb.net.devices.logitech/1.0.0",
+      "hashPath": "rgb.net.devices.logitech.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.Msi/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.Msi/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-yk5LmiCRIG1VHo4v/n5XWxDAKISmFPR9GH5iXszAtzKZPjSY1Z4JHKjMRggdr2br8rvEnnO6flNJyZ/G57++Dg==",
-      "path": "rgb.net.devices.msi/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.msi.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-fRHELMe4eX4sA7MzNyyP5SWSDlfxEVguzlRVl2YRPajMLmXJ22UOlyw4x62gKYITTOFsfrEmFz5QQr3AFQhwVg==",
+      "path": "rgb.net.devices.msi/1.0.0",
+      "hashPath": "rgb.net.devices.msi.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.Novation/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.Novation/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wmX3yW3gulpMFtMKsfKB1nOawHSxjHUOjage66O2qh9iQxU8UZO3OxLKNcWHfR+4dB5mnQgNDv4gAnBun5oNSw==",
-      "path": "rgb.net.devices.novation/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.novation.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-A36qcB42VP6zykYEFMJnVHSP3ANs9J8/G+lzgE9ZPya0+r658Jifuwp6jeoGoP4Ng8YuXRtUF9NJsffoVKn+OQ==",
+      "path": "rgb.net.devices.novation/1.0.0",
+      "hashPath": "rgb.net.devices.novation.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.SteelSeries/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.Razer/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-nCo2jY16iGfOZvN+iDnhB4F5GPe8WXyH4r+8lMRnov9Y8CqqxSVhbb0G3xmZyBSFqiwe/3Jdyd3VTg3nx1qWCg==",
-      "path": "rgb.net.devices.steelseries/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.steelseries.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-qF+C4rIlzsAWYgWYFHoDXl83GXwluQbNdsGczXV7VkoS5NciHhI4azgyDYUYVo1w0gVNkRWM1H4128DzbIFaNg==",
+      "path": "rgb.net.devices.razer/1.0.0",
+      "hashPath": "rgb.net.devices.razer.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.Wooting/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.SteelSeries/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UOqa2bU7eCk2cl+Yx8SeLjhUcgE+w7Rux0+ITUDCFq2xST159j4GVfJNioBPnPexEtJCPJO83XbgRvdmFpXPvA==",
-      "path": "rgb.net.devices.wooting/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.wooting.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-WVKNZsDZzV9cqBHmF0K/gUIQUxAH3NZOuC0T1LGA8njLD9yCe1ZlDCJkrd8RrWXbMOv1JjaavVFmXZu/nVr8tg==",
+      "path": "rgb.net.devices.steelseries/1.0.0",
+      "hashPath": "rgb.net.devices.steelseries.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.WS281X/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.Wooting/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-df2eL8LtOYL8ArLNw8FKiD7pFYkSh1BejfVSgKnjGpg0r9W8DViET2jPYjD0FJCM1vu6848AushqPjXpY4r1gA==",
-      "path": "rgb.net.devices.ws281x/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.devices.ws281x.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-ZIeHncm2+/QNrFOpf7sRfbVE5txgmOrHJUIJfFN5GixZDGajawfEt7B5gCo72YMQDEfjTYN6RrNz4iBDsYxS3w==",
+      "path": "rgb.net.devices.wooting/1.0.0",
+      "hashPath": "rgb.net.devices.wooting.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.HID/1.0.0-prerelease.32": {
+    "RGB.NET.Devices.WS281X/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-N2Yh8PSrcNVhp59l1WIaKfY+PV8Gte6t3R/TWGWl2GCJ6veCjXdhOI0M9pHEMjdvYbvZLB63fXqkrKfI2nocCQ==",
-      "path": "rgb.net.hid/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.hid.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-s6qsG1p/FOFsVlmUtZVlTtEWd+PkQL7pTemjha626r1WXe0JajmRhWPZnsTX9e2pE9bDGPcR4cKr+wQwXCiv7w==",
+      "path": "rgb.net.devices.ws281x/1.0.0",
+      "hashPath": "rgb.net.devices.ws281x.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Layout/1.0.0-prerelease.32": {
+    "RGB.NET.HID/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-O7I8zR5Hy+joSLCJW10lkIPNMDS1gXe8hQuwm+T5DEDDpykVyc4tnO55WlO5GDmDCS/cXhcwq+qNpLez5Th4Xw==",
-      "path": "rgb.net.layout/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.layout.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-I13nZuYOvgFQkMl5IeCRKsombSS2MMUFY9AgGoG2LW6tiH9cCx88Vdw5otBYGCpQpHUd0nveRWQdF0xj88/7Hw==",
+      "path": "rgb.net.hid/1.0.0",
+      "hashPath": "rgb.net.hid.1.0.0.nupkg.sha512"
     },
-    "RGB.NET.Presets/1.0.0-prerelease.32": {
+    "RGB.NET.Layout/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-tqPUA/KUG1hw5pT4D7OLXI6buXxpUIUYNET90gHnVXbadYi0C0OJZ703XDsaPpj4Db8/B2k8f1T4tM4s2KCJhw==",
-      "path": "rgb.net.presets/1.0.0-prerelease.32",
-      "hashPath": "rgb.net.presets.1.0.0-prerelease.32.nupkg.sha512"
+      "sha512": "sha512-ItXByGVBcZ6Th2S1U0Rms6KE7oqHBstrDsG1PZ45qaAlOMUR+KFtq+FGs0/L/MZRxbKSAr5OWtl24eJK+mtzAg==",
+      "path": "rgb.net.layout/1.0.0",
+      "hashPath": "rgb.net.layout.1.0.0.nupkg.sha512"
+    },
+    "RGB.NET.Presets/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DB1EvGWrtkeVrNentBioKaLX9sh+hyExEMm9AU2cWb7S9dfE7I0ygPW9lhZ8iVLRNj+Fxg+L+CA7csDc1W6EgQ==",
+      "path": "rgb.net.presets/1.0.0",
+      "hashPath": "rgb.net.presets.1.0.0.nupkg.sha512"
     },
     "runtime.linux-arm.runtime.native.System.IO.Ports/5.0.0": {
       "type": "package",

@@ -68,7 +68,7 @@ namespace Chromatics.Forms
                 { RGBDeviceType.Fan, new Uc_VirtualFan() },
                 { RGBDeviceType.Speaker, new Uc_VirtualSpeaker() },
                 { RGBDeviceType.Cooler, new Uc_VirtualCooler() },
-                { RGBDeviceType.Monitor, new Uc_VirtualMonitor() }
+                { RGBDeviceType.LedController, new Uc_VirtualLedController() }
             };
 
             // Add each virtual device control to the form
@@ -167,8 +167,7 @@ namespace Chromatics.Forms
             //Enumerate DeviceTypes into Device Combobox
             foreach (Enum lt in Enum.GetValues(typeof(RGBDeviceType)))
             {
-                if ((RGBDeviceType)lt == RGBDeviceType.None || (RGBDeviceType)lt == RGBDeviceType.Unknown || (RGBDeviceType)lt == RGBDeviceType.All)
-                    continue;
+                if (!_virtualDevices.ContainsKey((RGBDeviceType)lt)) continue;
 
                 cb_deviceselect.Items.Add(lt);
             }
@@ -336,6 +335,9 @@ namespace Chromatics.Forms
 
         private void ChangeDeviceType()
         {
+            if (_virtualDevices.Count <= 0 || !_virtualDevices.ContainsKey(selectedDevice))
+                return;
+
             // Hide all virtual device controls and show the selected one
             HideAllVirtualDevices();
             _virtualDevices[selectedDevice].Visible = true;

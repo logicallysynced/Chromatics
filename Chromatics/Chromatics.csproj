@@ -51,6 +51,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Forms\vDevices\Uc_VirtualLedController.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Forms\vDevices\Uc_VirtualDRAM.cs">
       <SubType>UserControl</SubType>
     </Compile>

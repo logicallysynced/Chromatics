@@ -63,6 +63,9 @@ namespace Chromatics.Helpers
                 case RGBDeviceType.Monitor:
                     AllKeys = null;
                     break;
+                case RGBDeviceType.LedController:
+                    AllKeys = AllCustomKeys;
+                    break;
                 case RGBDeviceType.Unknown:
                     AllKeys = null;
                     break;
