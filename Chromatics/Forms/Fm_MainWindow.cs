@@ -18,7 +18,7 @@ namespace Chromatics.Forms
     public partial class Fm_MainWindow : MetroForm
     {
         private MetroStyleManager metroStyleManager;
-        private Thread _ChromaticsThread;
+        //private Thread _ChromaticsThread;
 
         public Fm_MainWindow()
         {

@@ -31,9 +31,10 @@ namespace Chromatics.Forms
         public MetroTabControl TabManager { get; set; }
 
         private List<Pn_LayerDisplay> _layers = new List<Pn_LayerDisplay>();
-        private List<VirtualDevice> _vDevices = new List<VirtualDevice>();
         private List<KeyButton> _currentSelectedKeys = new List<KeyButton>();
         private Dictionary<int, LedId> currentKeySelection = new Dictionary<int,LedId>();
+        private Dictionary<RGBDeviceType, VirtualDevice> _virtualDevices;
+        private HashSet<int> _visibleLayers = new HashSet<int>();
         private int _layerPad = 5;
         private MetroToolTip tt_mappings;
         private LayerType selectedAddType;
@@ -42,17 +43,48 @@ namespace Chromatics.Forms
         private Pn_LayerDisplay currentlySelected;
         private bool init;
         private bool IsAddingLayer;
-        private BackgroundWorker _bgWorker;
-
 
         public Uc_Mappings()
         {
             InitializeComponent();
             tlp_base.Size = this.Size;
-            
+
             this.flp_layers.DragEnter += new DragEventHandler(flp_layers_DragEnter);
             this.flp_layers.DragDrop += new DragEventHandler(flp_layers_DragDrop);
 
+            _virtualDevices = new Dictionary<RGBDeviceType, VirtualDevice>()
+            {
+                { RGBDeviceType.Keyboard, new Uc_VirtualKeyboard() },
+                { RGBDeviceType.Mouse, new Uc_VirtualMouse() },
+                { RGBDeviceType.Headset, new Uc_VirtualHeadset() },
+                { RGBDeviceType.Mousepad, new Uc_VirtualMousePad() },
+                { RGBDeviceType.LedStripe, new Uc_VirtualLedStrip() },
+                { RGBDeviceType.LedMatrix, new Uc_VirtualLedMatrix() },
+                { RGBDeviceType.Mainboard, new Uc_VirtualMainboard() },
+                { RGBDeviceType.GraphicsCard, new Uc_VirtualGraphicsCard() },
+                { RGBDeviceType.DRAM, new Uc_VirtualDRAM() },
+                { RGBDeviceType.HeadsetStand, new Uc_VirtualHeadsetStand() },
+                { RGBDeviceType.Keypad, new Uc_VirtualKeypad() },
+                { RGBDeviceType.Fan, new Uc_VirtualFan() },
+                { RGBDeviceType.Speaker, new Uc_VirtualSpeaker() },
+                { RGBDeviceType.Cooler, new Uc_VirtualCooler() },
+                { RGBDeviceType.Monitor, new Uc_VirtualMonitor() }
+            };
+
+            // Add each virtual device control to the form
+            foreach (var virtualDevice in _virtualDevices.Values)
+            {
+                virtualDevice.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+                virtualDevice.Dock = DockStyle.Top;
+                virtualDevice.MinimumSize = new Size(1200, 300);
+                virtualDevice.AutoSize = false;
+                tlp_frame.Controls.Add(virtualDevice, 0, 0);
+
+                virtualDevice._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+            }
+
+            // Hide all virtual device controls initially
+            HideAllVirtualDevices();
         }
 
         void flp_layers_DragDrop(object sender, DragEventArgs e)
@@ -300,15 +332,21 @@ namespace Chromatics.Forms
             SaveLayers();
         }
 
+        
+
         private void ChangeDeviceType()
         {
+            // Hide all virtual device controls and show the selected one
+            HideAllVirtualDevices();
+            _virtualDevices[selectedDevice].Visible = true;
+
             // Suspend layout while making multiple changes
             tlp_frame.SuspendLayout();
             flp_layers.SuspendLayout();
 
             Debug.WriteLine($"Changing device type to {selectedDevice}.");
 
-            //Disable Editing and remove layers for existing device types
+            // Disable Editing and remove layers for existing device types
             btn_clearselection.Enabled = false;
             btn_reverseselection.Enabled = false;
             btn_undoselection.Enabled = false;
@@ -316,7 +354,7 @@ namespace Chromatics.Forms
             currentlySelected = null;
 
             RevertButtons();
-            
+
             foreach (var layer in _layers)
             {
                 if (layer.editing)
@@ -328,7 +366,7 @@ namespace Chromatics.Forms
 
                 flp_layers.Controls.Remove(layer);
 
-                //Cleanup
+                // Cleanup
                 layer.GotFocus -= new EventHandler(OnLayerPressed);
                 layer.cb_selector.SelectedIndexChanged -= new EventHandler(OnSelectedIndexChanged);
                 layer.chk_enabled.CheckedChanged -= new EventHandler(OnCheckChanged);
@@ -345,261 +383,47 @@ namespace Chromatics.Forms
             flp_layers.Controls.Clear();
             _layers.Clear();
 
-            //Add layers for new device types
+            // Add layers for new device types
             var _NewLayers = MappingLayers.GetLayers().Where(r => r.Value.deviceType.Equals(selectedDevice));
 
             foreach (var layers in _NewLayers.OrderByDescending(r => r.Value.zindex))
             {
                 AddLayer(layers.Value.rootLayerType, selectedDevice, layers.Key, layers.Value.zindex, false);
             }
-
-            //Change Visualiser
-            foreach(var control in _vDevices)
-            {
-                tlp_frame.Controls.Remove(control);
-
-                control._OnKeycapPressed -= new EventHandler(OnKeyCapPressed);
-            }
-
-            _vDevices.Clear();
-
-            switch (selectedDevice)
-            {
-                case RGBDeviceType.Keyboard:
-                    var vKeyboard = new Uc_VirtualKeyboard
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vKeyboard, 0, 0);
-
-                    vKeyboard._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vKeyboard);
-                    break;
-                case RGBDeviceType.Mouse:
-                    var vMouse = new Uc_VirtualMouse
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vMouse, 0, 0);
-
-                    vMouse._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vMouse);
-                    break;
-                case RGBDeviceType.Headset:
-                    var vHeadset = new Uc_VirtualHeadset
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vHeadset, 0, 0);
-
-                    vHeadset._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vHeadset);
-                    break;
-                case RGBDeviceType.Mousepad:
-                    var vMousepad = new Uc_VirtualMousePad
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vMousepad, 0, 0);
-
-                    vMousepad._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vMousepad);
-                    break;
-                case RGBDeviceType.LedStripe:
-                    var vLedStripe = new Uc_VirtualLedStrip
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vLedStripe, 0, 0);
-
-                    vLedStripe._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vLedStripe);
-                    break;
-                case RGBDeviceType.LedMatrix:
-                    var vLedMatrix = new Uc_VirtualLedMatrix
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vLedMatrix, 0, 0);
-
-                    vLedMatrix._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vLedMatrix);
-                    break;
-                case RGBDeviceType.Mainboard:
-                    var vMainboard = new Uc_VirtualMainboard
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vMainboard, 0, 0);
-
-                    vMainboard._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vMainboard);
-                    break;
-                case RGBDeviceType.GraphicsCard:
-                    var vGraphicsCard = new Uc_VirtualGraphicsCard
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vGraphicsCard, 0, 0);
-
-                    vGraphicsCard._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vGraphicsCard);
-                    break;
-                case RGBDeviceType.DRAM:
-                    var vDRAM = new Uc_VirtualDRAM
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vDRAM, 0, 0);
-
-                    vDRAM._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vDRAM);
-                    break;
-                case RGBDeviceType.HeadsetStand:
-                    var vHeadsetStand = new Uc_VirtualHeadsetStand
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vHeadsetStand, 0, 0);
-
-                    vHeadsetStand._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vHeadsetStand);
-                    break;
-                case RGBDeviceType.Keypad:
-                    var vKeypad = new Uc_VirtualKeypad
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vKeypad, 0, 0);
-
-                    vKeypad._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vKeypad);
-                    break;
-                case RGBDeviceType.Fan:
-                    var vFan = new Uc_VirtualFan
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vFan, 0, 0);
-
-                    vFan._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vFan);
-                    break;
-                case RGBDeviceType.Speaker:
-                    var vSpeaker = new Uc_VirtualSpeaker
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vSpeaker, 0, 0);
-
-                    vSpeaker._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vSpeaker);
-                    break;
-                case RGBDeviceType.Cooler:
-                    var vCooler = new Uc_VirtualCooler
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vCooler, 0, 0);
-
-                    vCooler._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vCooler);
-                    break;
-                case RGBDeviceType.Monitor:
-                    var vMonitor = new Uc_VirtualMonitor
-                    {
-                        Anchor = AnchorStyles.Left | AnchorStyles.Right,
-                        Dock = DockStyle.Top,
-                        MinimumSize = new Size(1200, 300),
-                        AutoSize = false,
-                    };
-
-                    tlp_frame.Controls.Add(vMonitor, 0, 0);
-
-                    vMonitor._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-
-                    _vDevices.Add(vMonitor);
-                    break;
-                default:
-                    break;
-            }
+                       
 
             // Resume layout
             tlp_frame.ResumeLayout();
             flp_layers.ResumeLayout();
-
+    
             VisualiseLayers();
         }
+
+        private void HideAllVirtualDevices()
+        {
+            foreach (var virtualDevice in _virtualDevices.Values)
+            {
+                virtualDevice.Visible = false;
+            }
+        }       
+
+        private void VisualiseLayers()
+        {
+            if (_virtualDevices.Count <= 0) return;
+
+            var layers = MappingLayers.GetLayers().Where(x => x.Value.deviceType == selectedDevice).OrderBy(x => x.Value.zindex);
+            
+            foreach (var layer in layers)
+            {
+                var allKeyButtons = _virtualDevices.Values.SelectMany(x => x._keybuttons).ToList();
+
+                foreach (var virtualDevice in _virtualDevices.Values)
+                {
+                    virtualDevice.VisualiseLayers(layers, allKeyButtons);
+                }
+            }
+        }
+
         private void RevertButtons()
         {
             foreach (var button in _currentSelectedKeys)
@@ -613,52 +437,6 @@ namespace Chromatics.Forms
 
             currentKeySelection.Clear();
             _currentSelectedKeys.Clear();
-        }
-
-        private void VisualiseLayers()
-        {
-            if (_vDevices.Count <= 0) return;
-
-            var layers = MappingLayers.GetLayers().Where(x => x.Value.deviceType == selectedDevice).OrderBy(x => x.Value.zindex);
-
-            foreach (var layer in layers)
-            {
-                var mapping = layer.Value;
-
-                if (mapping.rootLayerType == LayerType.BaseLayer && !mapping.Enabled)
-                {
-                    foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
-                    {
-                        if (mapping.deviceLeds.ContainsValue(key.KeyType))
-                        {
-                            if (!key.IsEditing)
-                            {
-                                key.BackColor = System.Drawing.Color.DarkGray;
-                                key.Update();
-                            }
-                        }
-                    }
-
-                    continue;
-                }
-
-                if (!mapping.Enabled) continue;
-                if (mapping.rootLayerType == LayerType.EffectLayer) continue;
-                
-                var highlight_col = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(mapping.rootLayerType).Value;
-
-                foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
-                {
-                    if (mapping.deviceLeds.ContainsValue(key.KeyType))
-                    {
-                        if (!key.IsEditing)
-                        {
-                            key.BackColor = highlight_col;
-                            key.Update();
-                        }
-                    }
-                }
-            }
         }
 
         private void OnResize(object sender, EventArgs e)
@@ -738,14 +516,14 @@ namespace Chromatics.Forms
 
             var obj = (Pn_LayerDisplay)sender;
             
-            if (_vDevices.Count > 0)
+            if (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice))
             {
                 if (currentlySelected != null)
                 {
                     currentlySelected.selected = false;
                     currentlySelected = null;
 
-                    foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
+                    foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                     {
                         if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
                         {
@@ -759,7 +537,7 @@ namespace Chromatics.Forms
 
                 foreach (var selection in layer.deviceLeds)
                 {
-                    foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
+                    foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                     {
                         if (key.KeyType == selection.Value && !key.IsEditing)
                         {
@@ -823,12 +601,12 @@ namespace Chromatics.Forms
                 //Load Layer for editing
                 RevertButtons();
 
-                if (currentlySelected != null)
+                if (currentlySelected != null && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
                 {
                     currentlySelected.selected = false;
                     currentlySelected = null;
 
-                    foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
+                    foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                     {
                         if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
                         {
@@ -858,7 +636,7 @@ namespace Chromatics.Forms
 
                 Debug.WriteLine($"Loaded {_selection.Count} leds for layer {ml.layerID}");
 
-                if (_selection.Count > 0 && _vDevices.Count > 0)
+                if (_selection.Count > 0 && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
                 {
                     var i = 1;
 
@@ -866,7 +644,7 @@ namespace Chromatics.Forms
                     {
                         foreach (var selection in _selection)
                         {
-                            foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
+                            foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                             {
                                 if (key.KeyType == selection.Value)
                                 {
@@ -890,7 +668,7 @@ namespace Chromatics.Forms
                         foreach (var selection in _selection)
                         {
 
-                            foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
+                            foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                             {
                                 if (key.KeyType == selection.Value)
                                 {
@@ -932,12 +710,12 @@ namespace Chromatics.Forms
                 case DialogResult.OK:
 
                     //Cleanup
-                    if (currentlySelected != null)
+                    if (currentlySelected != null && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
                     {
                         currentlySelected.selected = false;
                         currentlySelected = null;
 
-                        foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
+                        foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                         {
                             if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
                             {
@@ -1253,7 +1031,7 @@ namespace Chromatics.Forms
         {
             if (!init) return;
             if (IsAddingLayer) return;
-            if (_vDevices.Count <= 0) return;
+            if (_virtualDevices.Count <= 0) return;
             
             if (currentKeySelection.Count > 0 && currentlyEditing != null)
             {
@@ -1273,7 +1051,7 @@ namespace Chromatics.Forms
 
                 Debug.WriteLine($"Reloaded {_selection.Count} leds for layer {ml.layerID}");
 
-                if (_selection.Count > 0 && _vDevices.Count > 0)
+                if (_selection.Count > 0 && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
                 {
                     var i = 1;
 
@@ -1281,7 +1059,7 @@ namespace Chromatics.Forms
                     {
                         foreach (var selection in _selection)
                         {
-                            foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
+                            foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                             {
                                 if (key.KeyType == selection.Value)
                                 {
@@ -1305,7 +1083,7 @@ namespace Chromatics.Forms
                         foreach (var selection in _selection)
                         {
 
-                            foreach (var key in _vDevices.FirstOrDefault()._keybuttons)
+                            foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                             {
                                 if (key.KeyType == selection.Value)
                                 {

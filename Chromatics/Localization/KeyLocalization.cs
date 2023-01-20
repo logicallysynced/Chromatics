@@ -185,7 +185,7 @@ namespace Chromatics.Localization
 
             new KeyboardKey("LEFT", LedId.Keyboard_ArrowLeft, true, false, 9, 12),
             new KeyboardKey("DOWN", LedId.Keyboard_ArrowDown, true, false, 9),
-            new KeyboardKey("RIGHT", LedId.Keyboard_ArrowDown, true, false, 9),
+            new KeyboardKey("RIGHT", LedId.Keyboard_ArrowRight, true, false, 9),
 
             new KeyboardKey("0", LedId.Keyboard_Num0, true, false, 12, 14, 0, 65),
             new KeyboardKey(".", LedId.Keyboard_NumPeriodAndDelete, true, true),

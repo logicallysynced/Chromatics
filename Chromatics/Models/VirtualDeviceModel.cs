@@ -1,12 +1,19 @@
-﻿using RGB.NET.Core;
+﻿using Chromatics.Enums;
+using Chromatics.Helpers;
+using Chromatics.Interfaces;
+using Chromatics.Layers;
+using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Color = System.Drawing.Color;
 
 namespace Chromatics.Models
 {
@@ -17,10 +24,87 @@ namespace Chromatics.Models
         public bool init;
         public List<KeyButton> _keybuttons = new List<KeyButton>();
         public event EventHandler _OnKeycapPressed;
+        private Dictionary<LedId, Color> _currentColors;
+
         public void OnKeycapPressed(object sender, EventArgs e)
         {
             if (_OnKeycapPressed != null)
                 _OnKeycapPressed(sender, e);
+        }
+
+        public VirtualDevice()
+        {
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+        }
+
+        public void VisualiseLayers(IOrderedEnumerable<KeyValuePair<int, Layer>> _layers, List<KeyButton> _keyButtons)
+        {
+            if (_currentColors == null)
+            {
+                _currentColors = new Dictionary<LedId, Color>();
+            }
+
+            // Code to visualize the layers on the virtual device control
+            foreach (var layer in _layers)
+            {
+                var mapping = layer.Value;
+                var blank_col = Color.DarkGray;
+
+                if (mapping.rootLayerType == LayerType.BaseLayer && !mapping.Enabled)
+                {
+                    foreach (var key in _keybuttons)
+                    {
+                        if (mapping.deviceLeds.ContainsValue(key.KeyType))
+                        {
+                            if (_currentColors.ContainsKey(key.KeyType))
+                            {
+                                if (_currentColors[key.KeyType] != blank_col)
+                                {
+                                    _currentColors[key.KeyType] = blank_col;
+                                    key.BackColor = blank_col;
+                                }
+                            }
+                            else
+                            {
+                                _currentColors.Add(key.KeyType, blank_col);
+                                key.BackColor = blank_col;
+                            }
+                        }
+
+                    }
+
+                    continue;
+                }
+
+                if (!mapping.Enabled || mapping.rootLayerType == LayerType.EffectLayer) continue;
+
+                var highlight_col = (Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(mapping.rootLayerType).Value;
+
+                foreach (var key in _keybuttons)
+                {
+                    if (mapping.deviceLeds.ContainsValue(key.KeyType))
+                    {
+                        if (!key.IsEditing)
+                        {
+                            if (_currentColors.ContainsKey(key.KeyType))
+                            {
+                                if (_currentColors[key.KeyType] != highlight_col)
+                                {
+                                    _currentColors[key.KeyType] = highlight_col;
+                                    key.BackColor = highlight_col;
+                                }
+                            }
+                            else
+                            {
+                                _currentColors.Add(key.KeyType, highlight_col);
+                                key.BackColor = highlight_col;
+                            }
+                        }
+
+                    }
+                }
+            }
+
         }
 
         public class KeyButton : Button

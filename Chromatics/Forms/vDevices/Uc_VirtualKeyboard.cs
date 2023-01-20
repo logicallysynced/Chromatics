@@ -1,7 +1,12 @@
 ﻿using Chromatics.Enums;
+using Chromatics.Helpers;
+using Chromatics.Interfaces;
 using Chromatics.Localization;
 using Chromatics.Models;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -18,7 +23,6 @@ namespace Chromatics.Forms
         {
             //Get Keycap image
             var keycap_img = Properties.Resources.keycap_backglow;
-
 
             //Assign a keycap per cell
             var keycaps = KeyLocalization.GetLocalizedKeys(KeyboardLocalization.None);
@@ -131,7 +135,7 @@ namespace Chromatics.Forms
             tlp_main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             tlp_main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             init = true;
-        }
 
+        }
     }
 }
