@@ -1,0 +1,133 @@
+﻿using Chromatics.Enums;
+using Chromatics.Helpers;
+using Chromatics.Interfaces;
+using RGB.NET.Core;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Chromatics.Layers
+{
+    public static class MappingLayers
+    {
+        private static int _layerAutoID = 0;
+
+        private static bool _preview;
+
+        private static ConcurrentDictionary<int, Layer> _layers = new ConcurrentDictionary<int, Layer>();
+
+        public static int AddLayer(int index, LayerType rootLayerType, RGBDeviceType devicetype, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds)
+        {
+            _layerAutoID++;
+
+            var id = _layerAutoID;
+            var layer = new Layer(id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds);
+            _layers.GetOrAdd(id, layer);
+
+            return id;
+        }
+
+        public static void UpdateLayer(Layer layer)
+        {
+            if (_layers.ContainsKey(layer.layerID))
+            {
+                var kvp = _layers.FirstOrDefault(x => x.Value.layerID == layer.layerID);
+                _layers.TryUpdate(kvp.Key, layer, kvp.Value);  
+            }
+        }
+
+        public static void RemoveLayer(int id)
+        {
+            if (_layers.ContainsKey(id))
+            {
+                var kvp = _layers.GetValueOrDefault(id);
+                var result = _layers.TryRemove(new KeyValuePair<int, Layer>(id, kvp));
+            }
+        }
+
+        public static ConcurrentDictionary<int, Layer> GetLayers()
+        {
+            return _layers;
+        }
+
+        public static Layer GetLayer(int index)
+        {
+            if (_layers.Any(x => x.Value.layerID == index))
+            {
+                var kvp = _layers.FirstOrDefault(x => x.Value.layerID == index);
+                return kvp.Value;
+            }
+
+            return null;
+        }
+
+        public static int CountLayers()
+        {
+            return _layers.Count;
+        }
+
+        public static int GetNextLayerID()
+        {
+            return _layerAutoID + 1;
+        }
+
+        public static bool LoadMappings()
+        {
+            if (FileOperationsHelper.CheckLayerMappingsExist())
+            {
+                _layers.Clear();
+                _layers = FileOperationsHelper.LoadLayerMappings();
+                _layerAutoID = _layers.LastOrDefault().Key;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool SaveMappings()
+        {
+            FileOperationsHelper.SaveLayerMappings(_layers);
+
+            return true;
+        }
+
+        public static bool IsPreview()
+        {
+            return _preview;
+        }
+
+        public static void SetPreview(bool value)
+        {
+            _preview = value;
+        }
+    }
+
+    public class Layer : IMappingLayer
+    {
+        public int layerID { get; set; }
+        public int layerIndex { get; set; }
+        public LayerType rootLayerType { get; set; }
+        public RGBDeviceType deviceType { get; set; }
+        public bool Enabled { get; set; }
+        public int zindex { get; set; }
+        public int layerTypeindex { get; set; }
+        public Dictionary<int, LedId> deviceLeds { get; set; }
+
+        public Layer(int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds)
+        {
+            layerID = _id;
+            layerIndex = _index;
+            rootLayerType = _rootLayerType;
+            deviceType = _devicetype;
+            layerTypeindex = _layerTypeIndex;
+            zindex = _zindex;
+            Enabled = _enabled;
+            deviceLeds = _deviceLeds;
+        }
+    }
+}

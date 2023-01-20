@@ -1,0 +1,128 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj": {
+      "version": "3.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj",
+        "projectName": "Chromatics",
+        "projectPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\Chromatics.csproj",
+        "packagesPath": "C:\\Users\\Dani\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics3\\Chromatics\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Dani\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0-windows7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
+          "dependencies": {
+            "MetroModernUI": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "RGB.NET.Core": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.Asus": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.CoolerMaster": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.Corsair": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.Logitech": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.Msi": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.Novation": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.Razer": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.SteelSeries": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Devices.Wooting": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Layout": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            },
+            "RGB.NET.Presets": {
+              "target": "Package",
+              "version": "[1.0.0-prerelease7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,452 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "HidSharp/2.1.0": {
+        "runtime": {
+          "lib/netstandard2.0/HidSharp.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
+          }
+        }
+      },
+      "MetroModernUI/1.4.0": {
+        "runtime": {
+          "lib/net/MetroFramework.Design.dll": {
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.0"
+          },
+          "lib/net/MetroFramework.Fonts.dll": {
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.0"
+          },
+          "lib/net/MetroFramework.dll": {
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.0"
+          }
+        }
+      },
+      "Microsoft.NETCore.Platforms/5.0.0": {},
+      "Microsoft.Win32.Registry/5.0.0": {
+        "dependencies": {
+          "System.Security.AccessControl": "5.0.0",
+          "System.Security.Principal.Windows": "5.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.1": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.1.25517"
+          }
+        }
+      },
+      "RGB.NET.Core/1.0.0-prerelease1": {
+        "runtime": {
+          "lib/net5.0/RGB.NET.Core.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Asus/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1",
+          "System.Management": "5.0.0"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.Asus.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.CoolerMaster/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.CoolerMaster.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Corsair/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.Corsair.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Logitech/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1",
+          "RGB.NET.HID": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.Logitech.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Msi/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.Msi.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Novation/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1",
+          "Sanford.Multimedia.Midi.Standard": "6.6.0"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.Novation.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Razer/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1",
+          "RGB.NET.HID": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.Razer.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.SteelSeries/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1",
+          "RGB.NET.HID": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.SteelSeries.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Wooting/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Devices.Wooting.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.HID/1.0.0-prerelease1": {
+        "dependencies": {
+          "HidSharp": "2.1.0",
+          "RGB.NET.Core": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.HID.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Layout/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Layout.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Presets/1.0.0-prerelease1": {
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease1"
+        },
+        "runtime": {
+          "lib/net5.0/RGB.NET.Presets.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "Sanford.Multimedia.Midi.Standard/6.6.0": {
+        "runtime": {
+          "lib/netstandard2.0/Sanford.Multimedia.Midi.dll": {
+            "assemblyVersion": "6.6.0.0",
+            "fileVersion": "6.6.0.0"
+          }
+        }
+      },
+      "System.CodeDom/5.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/System.CodeDom.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      },
+      "System.Management/5.0.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "5.0.0",
+          "Microsoft.Win32.Registry": "5.0.0",
+          "System.CodeDom": "5.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Management.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netcoreapp2.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      },
+      "System.Security.AccessControl/5.0.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "5.0.0",
+          "System.Security.Principal.Windows": "5.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Security.AccessControl.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      },
+      "System.Security.Principal.Windows/5.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
+            "rid": "unix",
+            "assetType": "runtime",
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          },
+          "runtimes/win/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HidSharp/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UTdxWvbgp2xzT1Ajaa2va+Qi3oNHJPasYmVhbKI2VVdu1VYP6yUG+RikhsHvpD7iM0S8e8UYb5Qm/LTWxx9QAA==",
+      "path": "hidsharp/2.1.0",
+      "hashPath": "hidsharp.2.1.0.nupkg.sha512"
+    },
+    "MetroModernUI/1.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-p2F3w8bF1tb0tpkDceEVO65UYMKnJxdQyNxVyl/OjrFZHighicLYZDppKkiqmvBZ10XUi2mqHiIJUzXBP3GElQ==",
+      "path": "metromodernui/1.4.0",
+      "hashPath": "metromodernui.1.4.0.nupkg.sha512"
+    },
+    "Microsoft.NETCore.Platforms/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VyPlqzH2wavqquTcYpkIIAQ6WdenuKoFN0BdYBbCWsclXacSOHNQn66Gt4z5NBqEYW0FAPm5rlvki9ZiCij5xQ==",
+      "path": "microsoft.netcore.platforms/5.0.0",
+      "hashPath": "microsoft.netcore.platforms.5.0.0.nupkg.sha512"
+    },
+    "Microsoft.Win32.Registry/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dDoKi0PnDz31yAyETfRntsLArTlVAVzUzCIvvEDsDsucrl33Dl8pIJG06ePTJTI3tGpeyHS9Cq7Foc/s4EeKcg==",
+      "path": "microsoft.win32.registry/5.0.0",
+      "hashPath": "microsoft.win32.registry.5.0.0.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A==",
+      "path": "newtonsoft.json/13.0.1",
+      "hashPath": "newtonsoft.json.13.0.1.nupkg.sha512"
+    },
+    "RGB.NET.Core/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-aaCPk++kr1TaV/qWYeol5975IN3XifDuuQ9wrCD+nw1cy05BMdGVhuQ72ITb0YRBedssd/btkM51ZABsBd8CEQ==",
+      "path": "rgb.net.core/1.0.0-prerelease1",
+      "hashPath": "rgb.net.core.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Asus/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fKoQ3W7n5dNfju+9tRcc2x9f0Hiklb6WNOuoRRQxx7hcgCXRZYsGKgnZhjk/Bq2JlQIulE16/o0n2Ds7cc+aUw==",
+      "path": "rgb.net.devices.asus/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.asus.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.CoolerMaster/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pPptCzWL+gR6jLJV+XoF/Mte231FJ937nd2tQZbD7veIK4qEYn/4g7lItan1449+0NTluXmHZvjq/Irdci5AsQ==",
+      "path": "rgb.net.devices.coolermaster/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.coolermaster.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Corsair/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/PNkNDbYfZnht+Bua/T0VL/heT1d4xdMeyk2FzkKH2n/63kbpu17rGsEtKPQlG4Qv4yRlqOMEcb3JA6nrzqSMw==",
+      "path": "rgb.net.devices.corsair/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.corsair.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Logitech/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IMORrlX7Sycc3nmdHTusiOeq8c3Rr9XIh/4UO3a/H5ix6UoGGZNUuBq7sRw0aPO18l1SeYmAWN2QdIZ2bpu4hg==",
+      "path": "rgb.net.devices.logitech/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.logitech.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Msi/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MPiZd2y6IvYISfulxVgpdfOukBZknpOUNncdPY1dE0TCCGMljNj59D4cWXxu/Ab83+GRx5iBh6ZyEYvumRDgBQ==",
+      "path": "rgb.net.devices.msi/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.msi.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Novation/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-63YB5LWCcbO/WVy7nE8WYmyg4zJIcDXvFj0j4WXxUhZsXm5Tixs/DMWOFDrwte9KnKaCAPcMc03P6iGAnnDB9A==",
+      "path": "rgb.net.devices.novation/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.novation.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Razer/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VmS085XUnbnPNCFP5ExDZDaAqwvmogpvj3vHgKpkq0XQPJLmB3e1khcXglQnye34uNYRo6ZWP7jFI8cyKOLG/w==",
+      "path": "rgb.net.devices.razer/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.razer.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.SteelSeries/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EYJzYa6OdjksFQPztw6mGjZYoA+XRQVVPxvxEn68NV85hz1sUv81fozDiip7j1s+fNpnM9jWL/gLWzvgiS55Vw==",
+      "path": "rgb.net.devices.steelseries/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.steelseries.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Wooting/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-w6AgUZpLTr3RrEiMdCGDbF6qzG3cOU5Myw467Q860Z4FsoPd+ZHXEHry3/u0krH4SgxOAXpqMdXAlXvB5zaEeQ==",
+      "path": "rgb.net.devices.wooting/1.0.0-prerelease1",
+      "hashPath": "rgb.net.devices.wooting.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.HID/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sjHvlUay6mSW05UaHu2djjM7+50oOtTVIB3W0UG7/DwymLQ+S//CHhZxellfh5MD6gsvv6JVexQPtRpHcw8NUA==",
+      "path": "rgb.net.hid/1.0.0-prerelease1",
+      "hashPath": "rgb.net.hid.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Layout/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nbaHbcY59tzFSeTDbImhrcR1ZyJpoC0x6WawXdtGXO7x3F91ajM7kM5SJwi/5jHdD61vGV0ARuznmR8ErAWegQ==",
+      "path": "rgb.net.layout/1.0.0-prerelease1",
+      "hashPath": "rgb.net.layout.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "RGB.NET.Presets/1.0.0-prerelease1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XU8XeI0fQF26fd0pQHgoe9RaROuvENmZlX/1QyyaN9P3j0LtYmy6ycWZbsXp8byLT0UcGbS+odMiQQAnK+kxgg==",
+      "path": "rgb.net.presets/1.0.0-prerelease1",
+      "hashPath": "rgb.net.presets.1.0.0-prerelease1.nupkg.sha512"
+    },
+    "Sanford.Multimedia.Midi.Standard/6.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j3pdu0UoSgYfAN/XDUmnBZ7kcvkyGODB1Vylk+KAcVFfhziVJIn1WXn9/b2UkF2yQpsJyKp8d+J55HcByvLcgQ==",
+      "path": "sanford.multimedia.midi.standard/6.6.0",
+      "hashPath": "sanford.multimedia.midi.standard.6.6.0.nupkg.sha512"
+    },
+    "System.CodeDom/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JPJArwA1kdj8qDAkY2XGjSWoYnqiM7q/3yRNkt6n28Mnn95MuEGkZXUbPBf7qc3IjwrGY5ttQon7yqHZyQJmOQ==",
+      "path": "system.codedom/5.0.0",
+      "hashPath": "system.codedom.5.0.0.nupkg.sha512"
+    },
+    "System.Management/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MF1CHaRcC+MLFdnDthv4/bKWBZnlnSpkGqa87pKukQefgEdwtb9zFW6zs0GjPp73qtpYYg4q6PEKbzJbxCpKfw==",
+      "path": "system.management/5.0.0",
+      "hashPath": "system.management.5.0.0.nupkg.sha512"
+    },
+    "System.Security.AccessControl/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dagJ1mHZO3Ani8GH0PHpPEe/oYO+rVdbQjvjJkBRNQkX4t0r1iaeGn8+/ybkSLEan3/slM0t59SVdHzuHf2jmw==",
+      "path": "system.security.accesscontrol/5.0.0",
+      "hashPath": "system.security.accesscontrol.5.0.0.nupkg.sha512"
+    },
+    "System.Security.Principal.Windows/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-t0MGLukB5WAVU9bO3MGzvlGnyJPgUlcwerXn1kzBRjwLKixT96XV0Uza41W49gVd8zEMFu9vQEFlv0IOrytICA==",
+      "path": "system.security.principal.windows/5.0.0",
+      "hashPath": "system.security.principal.windows.5.0.0.nupkg.sha512"
+    }
+  }
+}
