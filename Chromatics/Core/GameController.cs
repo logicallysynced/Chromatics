@@ -285,10 +285,14 @@ namespace Chromatics.Core
                         break;
 
                     case LayerType.EffectLayer:
+                        //Redo this logic by calling each type of layer manually or all of them from a loop
 
+                        /*
                         var effectLayerProcessors = EffectLayerProcessorFactory.GetProcessors();
                         effectLayerProcessors[(EffectLayerType)layer.layerTypeindex].Process(layer);
+                        */
                         break;
+                       
                 }
 
 
