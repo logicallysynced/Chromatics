@@ -293,7 +293,7 @@ namespace Chromatics.Core
             }
         }
 
-        private static void ResetLayerGroups()
+        public static void ResetLayerGroups()
         {
             foreach (var layergroup in _layergroups)
             {

@@ -424,6 +424,7 @@ namespace Chromatics.Forms
                     virtualDevice.VisualiseLayers(layers, allKeyButtons);
                 }
             }
+
         }
 
         private void RevertButtons()

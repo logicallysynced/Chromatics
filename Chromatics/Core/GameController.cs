@@ -280,19 +280,18 @@ namespace Chromatics.Core
 
                     case LayerType.DynamicLayer:
 
-                        if (!layer.Enabled) continue;
                         var dynamicLayerProcessors = DynamicLayerProcessorFactory.GetProcessors();
                         dynamicLayerProcessors[(DynamicLayerType)layer.layerTypeindex].Process(layer);
                         break;
 
                     case LayerType.EffectLayer:
 
-                        if (!layer.Enabled) continue;
                         var effectLayerProcessors = EffectLayerProcessorFactory.GetProcessors();
                         effectLayerProcessors[(EffectLayerType)layer.layerTypeindex].Process(layer);
                         break;
                 }
-                
+
+
             }
             
         }

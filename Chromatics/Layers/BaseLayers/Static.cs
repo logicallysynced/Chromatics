@@ -22,60 +22,60 @@ namespace Chromatics.Layers
 
             //Static Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
-            var _layergroupledcollection = RGBController.GetLiveLayerGroupCollection();
+            var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.BaseColor.Color);
+            var _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
             var _layergroups = RGBController.GetLiveLayerGroups();
+            HashSet<Led> _layergroupledcollection;
 
-            //Loop through all LED's and assign to device layer
+            //loop through all LED's and assign to device layer
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
-            var layergroup = new ListLedGroup(surface)
+            ListLedGroup layergroup;
+            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+
+            if (_layergroupledcollections.ContainsKey(layer.layerID))
             {
-                ZIndex = layer.zindex,
-            };
+                _layergroupledcollection = _layergroupledcollections[layer.layerID];
+            }
+            else
+            {
+                _layergroupledcollection = new HashSet<Led>();
+                _layergroupledcollections.Add(layer.layerID, _layergroupledcollection);
+            }
 
             if (_layergroups.ContainsKey(layer.layerID))
             {
                 layergroup = _layergroups[layer.layerID];
+                layergroup.ZIndex = layer.zindex;
             }
             else
             {
+                layergroup = new ListLedGroup(surface, ledArray)
+                {
+                    ZIndex = layer.zindex,
+                };
+
                 _layergroups.Add(layer.layerID, layergroup);
             }
 
-            var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.BaseColor.Color);
-
-            foreach (var device in devices)
+            if (!layer.Enabled)
             {
-                if (!RGBController.GetLiveDevices().Contains(device)) continue;
+                highlight_col = ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
+                //layergroup.Detach();
+                //return;
+            }
 
-                foreach (var led in device)
+            foreach (var led in layergroup)
+            {
+                if (!_layergroupledcollection.Contains(led))
                 {
-                    if (!layer.deviceLeds.Any(v => v.Value.Equals(led.Id)))
-                    {
-                        layergroup.RemoveLed(led);
-                        _layergroupledcollection.Remove(led);
-                        continue;
-                    }
+                    _layergroupledcollection.Add(led);
+                }
 
-                    if (!layer.Enabled)
-                    {
-                        highlight_col = ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
-                    }
-                    
-                    if (led.Color != highlight_col)
-                    {
-                        layergroup.RemoveLed(led);
-                        led.Color = highlight_col;
-                    }
-
-                    if (!_layergroupledcollection.Contains(led))
-                    {
-                        _layergroupledcollection.Add(led);
-                    }
-
-                    layergroup.AddLed(led);
-
+                if (led.Color != highlight_col)
+                {
+                    led.Color = highlight_col;
                 }
 
             }
@@ -83,6 +83,7 @@ namespace Chromatics.Layers
             //Apply lighting
             var brush = new SolidColorBrush(highlight_col);
             layergroup.Brush = brush;
+            _init = true;
 
             //Debug.WriteLine(@"Applying LED");
         }
