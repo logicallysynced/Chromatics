@@ -235,6 +235,26 @@ namespace Chromatics.Core
 
         }
 
+        public static RGBSurface GetLiveSurfaces()
+        {
+            return surface;
+        }
+
+        public static List<IRGBDevice> GetLiveDevices()
+        {
+            return _devices;
+        }
+
+        public static List<Led> GetLiveLayerGroupCollection()
+        {
+            return _layergroupledcollection;
+        }
+
+        public static Dictionary<int, ListLedGroup> GetLiveLayerGroups()
+        {
+            return _layergroups;
+        }
+
         private static void FadeAllToBlack(IRGBDevice[] exempt = null)
         {
             var devices = surface.GetDevices(RGBDeviceType.All);

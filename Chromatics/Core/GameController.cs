@@ -250,6 +250,8 @@ namespace Chromatics.Core
                 {
                     //Game is still on Main Menu or Character Screen
                     _isInGame = false;
+
+
                 }
                 else
                 {
@@ -266,10 +268,8 @@ namespace Chromatics.Core
             foreach (IMappingLayer layer in _layers.Values.OrderBy(x => x.zindex, comparer))
             {
                 // Perform processing on the layer
-                if (!layer.Enabled) continue;
-                               
-
-                /*
+                //if (!layer.Enabled) continue;
+                
                 switch (layer.rootLayerType)
                 {
                     case LayerType.BaseLayer:
@@ -279,18 +279,20 @@ namespace Chromatics.Core
                         break;
 
                     case LayerType.DynamicLayer:
-                        
+
+                        if (!layer.Enabled) continue;
                         var dynamicLayerProcessors = DynamicLayerProcessorFactory.GetProcessors();
                         dynamicLayerProcessors[(DynamicLayerType)layer.layerTypeindex].Process(layer);
                         break;
 
                     case LayerType.EffectLayer:
 
+                        if (!layer.Enabled) continue;
                         var effectLayerProcessors = EffectLayerProcessorFactory.GetProcessors();
                         effectLayerProcessors[(EffectLayerType)layer.layerTypeindex].Process(layer);
                         break;
                 }
-                */
+                
             }
             
         }
