@@ -51,6 +51,10 @@
               "target": "Package",
               "version": "[1.4.0, )"
             },
+            "NLog": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.2, )"

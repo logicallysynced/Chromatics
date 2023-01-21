@@ -26,6 +26,7 @@
     <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
     <PackageReference Include="MetroModernUI" Version="1.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="NLog" Version="4.7.0" />
     <PackageReference Include="RGB.NET.Core" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Asus" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="1.0.0" />
@@ -42,9 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="NLog">
-      <HintPath>..\Build Dependencies\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="RGB.NET.Devices.Razer">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
     </Reference>
