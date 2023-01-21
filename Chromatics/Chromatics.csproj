@@ -42,6 +42,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="NLog">
+      <HintPath>..\Build Dependencies\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="RGB.NET.Devices.Razer">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
     </Reference>

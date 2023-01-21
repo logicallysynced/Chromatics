@@ -85,7 +85,7 @@ namespace Chromatics.Core
             surface.Updating += Surface_Updating;
 
             //Startup Effects
-            RunStartupEffects();
+            //RunStartupEffects();
 
                         
             Logger.WriteConsole(Enums.LoggerTypes.Devices, $"{deviceCount} devices loaded.");
@@ -176,7 +176,7 @@ namespace Chromatics.Core
             return true;
         }
 
-        private static void RunStartupEffects()
+        public static void RunStartupEffects()
         {
             var devices = surface.GetDevices(RGBDeviceType.All);
 
@@ -218,7 +218,7 @@ namespace Chromatics.Core
             }
         }
 
-        private static void StopEffects()
+        public static void StopEffects(bool gameFirstConnected = false)
         {
             foreach (var effects in _runningEffects)
             {
@@ -232,6 +232,45 @@ namespace Chromatics.Core
             }
 
             _runningEffects.Clear();
+
+        }
+
+        private static void FadeAllToBlack(IRGBDevice[] exempt = null)
+        {
+            var devices = surface.GetDevices(RGBDeviceType.All);
+
+            var fade = new FlashDecorator(surface)
+            {
+                IsEnabled = true,
+                Attack = 0,
+                Release = 2,
+                Repetitions = 1,
+            };
+
+            //Add base black layer
+            
+            //var background = new ListLedGroup(surface, surface.Leds);
+            //background.Brush = new SolidColorBrush(new Color(0, 0, 0));
+
+            foreach (var device in devices)
+            {
+                if (exempt.Contains(device)) continue;
+
+                var brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
+                var ledgroup = new ListLedGroup(surface);
+
+                ledgroup.ZIndex = 1;
+                foreach (var led in device)
+                {
+                    ledgroup.AddLed(led);
+                }
+
+                brush.AddDecorator(fade);
+                ledgroup.Brush = brush;
+                    
+
+                //_runningEffects.Add(ledgroup);
+            }
         }
 
         private static void ResetLayerGroups()
@@ -350,7 +389,9 @@ namespace Chromatics.Core
                 {            
                     ResetLayerGroups();
                     
-                    RunStartupEffects();
+                    if (!GameController.IsGameConnected())
+                        RunStartupEffects();
+                    
                     _wasPreviewed = false;
                     
                 }

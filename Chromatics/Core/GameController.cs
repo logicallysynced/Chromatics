@@ -27,6 +27,7 @@ namespace Chromatics.Core
         private static bool gameConnected;
         private static bool gameSetup;
         private static bool memoryEfficientLoop;
+        private static bool _isInGame;
 
         public static void Setup()
         {
@@ -36,6 +37,7 @@ namespace Chromatics.Core
             
             if (!gameConnected)
             {
+                RGBController.RunStartupEffects();
                 Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token));
             }
 
@@ -44,9 +46,15 @@ namespace Chromatics.Core
 
         public static void Stop(bool reconnect = false)
         {
+            RGBController.StopEffects();
             Logger.WriteConsole(LoggerTypes.FFXIV, @"Stopping FFXIV Connection..");
             StopGameLoop(reconnect);
             _GameConnectionCancellationTokenSource.Cancel();
+        }
+
+        public static bool IsGameConnected()
+        {
+            return gameConnected;
         }
 
         public static MemoryHandler GetGameData()
@@ -67,10 +75,17 @@ namespace Chromatics.Core
         {
             _GameLoopCancellationTokenSource.Cancel();
 
+            if (_memoryHandler != null)
+            {
+                Debug.WriteLine(@"Disposed Memory Handler object.");
+                _memoryHandler.Dispose();
+            }
+
             if (reconnect)
             {
                 _GameConnectionCancellationTokenSource.Dispose();
                 _GameConnectionCancellationTokenSource = new CancellationTokenSource();
+                RGBController.RunStartupEffects();
                 Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token));
             }
         }
@@ -86,6 +101,7 @@ namespace Chromatics.Core
                 else
                 {
                     gameConnected = false;
+                    _isInGame = false;
 
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Lost connection to FFXIV. Will attempt to reconnect.");
 
@@ -120,8 +136,9 @@ namespace Chromatics.Core
             {
                 if (gameConnected)
                 {
-                    _GameConnectionCancellationTokenSource.Cancel();
-                    StartGameLoop();
+                    //_GameConnectionCancellationTokenSource.Cancel();
+                    //RGBController.StopEffects(true);
+                    //StartGameLoop();
                     break;
                 }
                 else
@@ -188,8 +205,8 @@ namespace Chromatics.Core
                         GameRegion = gameRegion,
                         PatchVersion = patchVersion,
                         UseLocalCache = AppSettings.GetSettings().localcache
-                    };
-                
+                    };             
+
                     _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
 
                     gameConnected = true;
@@ -200,6 +217,10 @@ namespace Chromatics.Core
                 {
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Attached to FFXIV.");
                     _connectionAttempts = 0;
+
+                    _GameConnectionCancellationTokenSource.Cancel();
+                    RGBController.StopEffects(true);
+                    StartGameLoop();
                 }
             }
             catch (Exception ex)
@@ -219,14 +240,36 @@ namespace Chromatics.Core
         {
             if (!gameConnected) return;
 
-            /*
+            //Check if game has logged in
+            
+            if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
+            {
+                var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+
+                if (getCurrentPlayer.Entity == null)
+                {
+                    //Game is still on Main Menu or Character Screen
+                    _isInGame = false;
+                }
+                else
+                {
+                    //Character has logged in
+                    _isInGame = true;
+                }
+                
+            }
+            
+            if (!_isInGame) return;
+
             var _layers = MappingLayers.GetLayers();
 
             foreach (IMappingLayer layer in _layers.Values.OrderBy(x => x.zindex, comparer))
             {
                 // Perform processing on the layer
                 if (!layer.Enabled) continue;
+                               
 
+                /*
                 switch (layer.rootLayerType)
                 {
                     case LayerType.BaseLayer:
@@ -247,8 +290,9 @@ namespace Chromatics.Core
                         effectLayerProcessors[(EffectLayerType)layer.layerTypeindex].Process(layer);
                         break;
                 }
+                */
             }
-            */
+            
         }
 
     }
