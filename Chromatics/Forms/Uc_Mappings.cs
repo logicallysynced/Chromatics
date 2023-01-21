@@ -135,7 +135,7 @@ namespace Chromatics.Forms
                         layer.LeftText = i.ToString();
 
 
-                        layer.Update();
+                        layer.Invalidate();
                     }
 
                     SaveLayers();                    
@@ -409,7 +409,7 @@ namespace Chromatics.Forms
             }
         }       
 
-        private void VisualiseLayers()
+        private void VisualiseLayers(bool requestUpdate = true)
         {
             if (_virtualDevices.Count <= 0) return;
 
@@ -423,6 +423,7 @@ namespace Chromatics.Forms
                 {
                     virtualDevice.VisualiseLayers(layers, allKeyButtons);
                 }
+                                    
             }
 
         }
@@ -436,7 +437,7 @@ namespace Chromatics.Forms
                 button.RemoveCircle();
             }
 
-            VisualiseLayers();
+            VisualiseLayers(false);
 
             currentKeySelection.Clear();
             _currentSelectedKeys.Clear();
@@ -509,7 +510,7 @@ namespace Chromatics.Forms
             layer.Enabled = obj.Checked;
             MappingLayers.UpdateLayer(layer);
             SaveLayers();
-            VisualiseLayers();
+            VisualiseLayers(false);
         }
 
         private void OnLayerPressed(object sender, EventArgs e)
@@ -531,7 +532,7 @@ namespace Chromatics.Forms
                         if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
                         {
                             key.BorderCol = System.Drawing.Color.Black;
-                            key.Update();
+                            key.Invalidate();
                         }
                     }
                 }                               
@@ -545,14 +546,14 @@ namespace Chromatics.Forms
                         if (key.KeyType == selection.Value && !key.IsEditing)
                         {
                             key.BorderCol = System.Drawing.Color.SandyBrown; //(System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(obj.LayerType).Value;
-                            key.Update();
+                            key.Invalidate();
                         }
                     }
                 }
 
                 obj.selected = true;
                 currentlySelected = obj;
-                obj.Update();
+                obj.Invalidate();
             }
         }
 
@@ -571,7 +572,7 @@ namespace Chromatics.Forms
                 if (layers.editing)
                 {
                     layers.editing = false;
-                    layers.Update();
+                    layers.Invalidate();
                 }
             }
 
@@ -592,12 +593,14 @@ namespace Chromatics.Forms
                     ms.deviceLeds.Add(led.Key, led.Value);
                 }
 
+                ms.requestUpdate = true;
                 MappingLayers.UpdateLayer(ms);
 
                 Debug.WriteLine($"Saved {ms.deviceLeds.Count} leds for layer {ms.layerID}");
 
                 SaveLayers();
                 RevertButtons();
+                                
             }
             else
             {
@@ -614,7 +617,7 @@ namespace Chromatics.Forms
                         if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
                         {
                             key.BorderCol = System.Drawing.Color.Black;
-                            key.Update();
+                            key.Invalidate();
                         }
                     }
                 }
@@ -695,7 +698,7 @@ namespace Chromatics.Forms
                 }
             }
             
-            parent.Update();
+            parent.Invalidate();
             var thisbtn = (MetroButton)sender;
             this.ActiveControl = thisbtn.Parent;
         }
@@ -723,7 +726,7 @@ namespace Chromatics.Forms
                             if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
                             {
                                 key.BorderCol = System.Drawing.Color.Black;
-                                key.Update();
+                                key.Invalidate();
                             }
                         }
                     }
@@ -751,15 +754,18 @@ namespace Chromatics.Forms
                         var i = flp_layers.Controls.Count - flp_layers.Controls.GetChildIndex(layer);
 
                         _layer.zindex = i;
+                                                
                         MappingLayers.UpdateLayer(_layer);
                         layer.LeftText = i.ToString();
 
-                        layer.Update();
+                        layer.Invalidate();
                     }
 
                     //Remove Element
                     _layers.Remove(parent);
+                    RGBController.RemoveLayerGroup(targetid);
                     MappingLayers.RemoveLayer(targetid);
+
                     
                     SaveLayers();
 
@@ -768,7 +774,7 @@ namespace Chromatics.Forms
                     parent.btn_edit.Click -= new EventHandler(OnEditButtonPressed);
                     parent.btn_delete.Click -= new EventHandler(OnDeleteButtonPressed);
 
-                    VisualiseLayers();
+                    VisualiseLayers(false);
                     parent.Dispose();
                     break;
                 case DialogResult.Cancel:
@@ -863,11 +869,15 @@ namespace Chromatics.Forms
         {
             if (!init) return;
 
+            if (selectedAddType != LayerType.DynamicLayer)
+                selectedAddType = LayerType.DynamicLayer;
+
             var newid = AddLayer(selectedAddType, selectedDevice, 0, 2, true, true);
 
             foreach(Pn_LayerDisplay layer in flp_layers.Controls)
             {
                 if (layer.ID == newid) continue;
+
                 var _layer = MappingLayers.GetLayer(layer.ID);
 
                 if (_layer.zindex == 1)
@@ -880,8 +890,10 @@ namespace Chromatics.Forms
                     MappingLayers.UpdateLayer(_layer);
 
                     layer.LeftText = $"{_layer.zindex}";
-                    layer.Update();
+                    layer.Invalidate();
                 }
+
+                Debug.WriteLine(@"NEW Layer: " + layer.ID + @". Layer ID: " + _layer.layerID + @". zindex: " + _layer.zindex + @". Type: " + _layer.rootLayerType);
             }
 
             SaveLayers();
@@ -967,6 +979,7 @@ namespace Chromatics.Forms
                     ms.deviceLeds.Remove(led.Key);
             }
 
+            ms.requestUpdate = true;
             MappingLayers.UpdateLayer(ms);
 
             SaveLayers();

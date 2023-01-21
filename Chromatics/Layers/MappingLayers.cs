@@ -29,9 +29,12 @@ namespace Chromatics.Layers
             _layerAutoID++;
 
             var id = _layerAutoID;
+
             var layer = new Layer(id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds);
             _layers.GetOrAdd(id, layer);
             _version++;
+
+            Debug.WriteLine(@"New Layer: " + id + @". zindex: " + zindex + @". Type: " + rootLayerType + @". Device: " + devicetype);
 
             return id;
         }
@@ -165,6 +168,8 @@ namespace Chromatics.Layers
         public bool allowBleed { get; set; }
         public int layerTypeindex { get; set; }
         public Dictionary<int, LedId> deviceLeds { get; set; }
+        public LayerModes layerModes { get; set; }
+        public bool requestUpdate { get; set; }
 
         public Layer(int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds)
         {

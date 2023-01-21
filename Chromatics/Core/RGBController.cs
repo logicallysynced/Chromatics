@@ -293,6 +293,17 @@ namespace Chromatics.Core
             }
         }
 
+        public static void RemoveLayerGroup(int targetId)
+        {
+            if (_layergroups.ContainsKey(targetId))
+            {
+                _layergroups[targetId].Detach();
+                _layergroups.Remove(targetId);
+
+                Debug.WriteLine(@"Remove Layer Requested: " + targetId);
+            }
+        }
+
         public static void ResetLayerGroups()
         {
             foreach (var layergroup in _layergroups)
@@ -302,6 +313,8 @@ namespace Chromatics.Core
 
             _layergroups.Clear();
             _layergroupledcollection.Clear();
+
+            Debug.WriteLine(@"Reset Layer Groups");
         }
 
         private static void Surface_Updating(UpdatingEventArgs args)

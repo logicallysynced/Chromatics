@@ -16,9 +16,11 @@ namespace Chromatics.Interfaces
         int zindex { get; set; }
         LayerType rootLayerType { get; }
         RGBDeviceType deviceType {get; set;}
+        LayerModes layerModes { get; set; }
         bool Enabled { get; set; }
         bool allowBleed { get; set; }
         int layerTypeindex { get; set; }
+        bool requestUpdate { get; set; }
         Dictionary<int, LedId> deviceLeds { get; set; }
 
     }

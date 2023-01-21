@@ -67,4 +67,14 @@ namespace Chromatics.Enums
         [Display(Name="Damage Flash")]
         DamageFlash = 2
     };
+
+    public enum LayerModes
+    {
+        [Display(Name="None")]
+        None = 0,
+        [Display(Name="Interpolate")]
+        Interpolate = 1,
+        [Display(Name="Fade")]
+        Fade = 2
+    };
 }
