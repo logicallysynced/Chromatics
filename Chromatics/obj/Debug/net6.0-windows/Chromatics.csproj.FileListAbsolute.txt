@@ -59,6 +59,7 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\MetroFramework.Fonts.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\MetroFramework.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\NLog.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Core.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\Interop.AuraServiceLib.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\RGB.NET.Devices.Asus.dll
@@ -103,6 +104,7 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualHeadsetStand.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualKeyboard.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualKeypad.resources
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualLedController.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualLedMatrix.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualLedStrip.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualMainboard.resources
@@ -110,6 +112,7 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualMouse.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualMousePad.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualSpeaker.resources
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Models.VirtualDevice.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Properties.Resources.resources
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.csproj.GenerateResource.cache
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.GeneratedMSBuildEditorConfig.editorconfig
@@ -121,7 +124,3 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\ref\Chromatics.dll
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.pdb
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.genruntimeconfig.cache
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.csproj.AssemblyReference.cache
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualLedController.resources
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\bin\Debug\net6.0-windows\NLog.dll
-C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Models.VirtualDevice.resources

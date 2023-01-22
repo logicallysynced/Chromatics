@@ -275,7 +275,7 @@ namespace Chromatics.Forms
             this.tlp_top.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_top.Location = new System.Drawing.Point(0, 0);
             this.tlp_top.Name = "tlp_top";
-            this.tlp_top.RowCount = 2;
+            this.tlp_top.RowCount = 1;
             this.tlp_top.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlp_top.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlp_top.Size = new System.Drawing.Size(1864, 46);
@@ -289,7 +289,7 @@ namespace Chromatics.Forms
             this.btn_export.Location = new System.Drawing.Point(1236, 3);
             this.btn_export.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.btn_export.Name = "btn_export";
-            this.btn_export.Size = new System.Drawing.Size(96, 20);
+            this.btn_export.Size = new System.Drawing.Size(96, 40);
             this.btn_export.TabIndex = 5;
             this.btn_export.Text = "Export";
             this.btn_export.UseCustomBackColor = true;
@@ -305,7 +305,7 @@ namespace Chromatics.Forms
             this.btn_import.Location = new System.Drawing.Point(1117, 3);
             this.btn_import.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.btn_import.Name = "btn_import";
-            this.btn_import.Size = new System.Drawing.Size(96, 20);
+            this.btn_import.Size = new System.Drawing.Size(96, 40);
             this.btn_import.TabIndex = 4;
             this.btn_import.Text = "Import";
             this.btn_import.UseCustomBackColor = true;
@@ -318,7 +318,7 @@ namespace Chromatics.Forms
             this.cb_addlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cb_addlayer.FormattingEnabled = true;
             this.cb_addlayer.ItemHeight = 24;
-            this.cb_addlayer.Location = new System.Drawing.Point(1493, 3);
+            this.cb_addlayer.Location = new System.Drawing.Point(1493, 13);
             this.cb_addlayer.Name = "cb_addlayer";
             this.cb_addlayer.Size = new System.Drawing.Size(236, 30);
             this.cb_addlayer.TabIndex = 0;
@@ -331,7 +331,7 @@ namespace Chromatics.Forms
             | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_addlayer.Location = new System.Drawing.Point(1735, 3);
             this.btn_addlayer.Name = "btn_addlayer";
-            this.btn_addlayer.Size = new System.Drawing.Size(94, 20);
+            this.btn_addlayer.Size = new System.Drawing.Size(94, 40);
             this.btn_addlayer.TabIndex = 1;
             this.btn_addlayer.Text = "Add Layer";
             this.btn_addlayer.UseCustomBackColor = true;
@@ -344,7 +344,7 @@ namespace Chromatics.Forms
             this.cb_deviceselect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cb_deviceselect.FormattingEnabled = true;
             this.cb_deviceselect.ItemHeight = 24;
-            this.cb_deviceselect.Location = new System.Drawing.Point(3, 3);
+            this.cb_deviceselect.Location = new System.Drawing.Point(3, 13);
             this.cb_deviceselect.Name = "cb_deviceselect";
             this.cb_deviceselect.Size = new System.Drawing.Size(236, 30);
             this.cb_deviceselect.TabIndex = 2;
@@ -359,7 +359,7 @@ namespace Chromatics.Forms
             this.btn_preview.Location = new System.Drawing.Point(1373, 3);
             this.btn_preview.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.btn_preview.Name = "btn_preview";
-            this.btn_preview.Size = new System.Drawing.Size(97, 20);
+            this.btn_preview.Size = new System.Drawing.Size(97, 40);
             this.btn_preview.TabIndex = 3;
             this.btn_preview.Text = "Preview";
             this.btn_preview.UseCustomBackColor = true;

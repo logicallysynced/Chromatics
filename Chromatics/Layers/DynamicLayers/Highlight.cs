@@ -1,4 +1,5 @@
 ﻿using Chromatics.Core;
+using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
@@ -27,10 +28,11 @@ namespace Chromatics.Layers
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
             var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+                       
 
-            // Add new ListLedGroup to _layergroups with updated leds and create a new instance of it
+            // Add new PublicListLedGroup to _layergroups with updated leds and create a new instance of it
 
-            if (_layergroups.TryGetValue(layer.layerID, out ListLedGroup updatedLayerGroup))
+            if (_layergroups.TryGetValue(layer.layerID, out PublicListLedGroup updatedLayerGroup))
             {
                 if (layer.requestUpdate)
                 {
@@ -40,7 +42,7 @@ namespace Chromatics.Layers
 
                 }
             } else {
-                updatedLayerGroup = new ListLedGroup(surface, ledArray)
+                updatedLayerGroup = new PublicListLedGroup(surface, ledArray)
                 {
                     ZIndex = layer.zindex,
                 };
@@ -60,7 +62,7 @@ namespace Chromatics.Layers
             {
                 if (led.Color != highlight_col)
                 {
-                    Debug.WriteLine(@"1: Layer ID: " + layer.layerID + @". LED: " + led.Id + @". Col: " + led.Color);
+                    //Debug.WriteLine(@"1: Layer ID: " + layer.layerID + @". LED: " + led.Id + @". Col: " + led.Color);
                     led.Color = highlight_col;
                 }
 

@@ -181,6 +181,9 @@ namespace Chromatics.Layers
             zindex = _zindex;
             Enabled = _enabled;
             deviceLeds = _deviceLeds;
+            allowBleed = false;
+            requestUpdate = false;
+            layerModes = LayerModes.Interpolate;
         }
     }
 }

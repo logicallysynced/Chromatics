@@ -1,4 +1,5 @@
 ﻿using Chromatics.Core;
+using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
@@ -31,7 +32,7 @@ namespace Chromatics.Layers
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
-            ListLedGroup layergroup;
+            PublicListLedGroup layergroup;
             var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
             if (_layergroupledcollections.ContainsKey(layer.layerID))
@@ -51,7 +52,7 @@ namespace Chromatics.Layers
             }
             else
             {
-                layergroup = new ListLedGroup(surface, ledArray)
+                layergroup = new PublicListLedGroup(surface, ledArray)
                 {
                     ZIndex = layer.zindex,
                 };

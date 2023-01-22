@@ -269,7 +269,7 @@ namespace Chromatics.Core
             {
                 // Perform processing on the layer
                 //if (!layer.Enabled) continue;
-                
+                                
                 switch (layer.rootLayerType)
                 {
                     case LayerType.BaseLayer:

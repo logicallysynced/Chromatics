@@ -1,4 +1,5 @@
-﻿using Chromatics.Extensions.RGB.NET.Decorators;
+﻿using Chromatics.Extensions.RGB.NET;
+using Chromatics.Extensions.RGB.NET.Decorators;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -38,7 +39,7 @@ namespace Chromatics.Core
 
         private static List<IRGBDevice> _devices = new List<IRGBDevice>();
 
-        private static Dictionary<int, ListLedGroup> _layergroups = new Dictionary<int, ListLedGroup>();
+        private static Dictionary<int, PublicListLedGroup> _layergroups = new Dictionary<int, PublicListLedGroup>();
 
         private static List<Led> _layergroupledcollection = new List<Led>();
 
@@ -46,7 +47,7 @@ namespace Chromatics.Core
 
         private static EffectTypesModel _effects = new EffectTypesModel();
 
-        private static List<ListLedGroup> _runningEffects = new List<ListLedGroup>();
+        private static List<PublicListLedGroup> _runningEffects = new List<PublicListLedGroup>();
 
         public static void Setup()
         {
@@ -188,13 +189,13 @@ namespace Chromatics.Core
 
             //Add base black layer
             
-            //var background = new ListLedGroup(surface, surface.Leds);
+            //var background = new PublicListLedGroup(surface, surface.Leds);
             //background.Brush = new SolidColorBrush(new Color(0, 0, 0));
 
             foreach (var device in devices)
             {
                 var gradient = new RainbowGradient();
-                var ledgroup = new ListLedGroup(surface);
+                var ledgroup = new PublicListLedGroup(surface);
 
                 ledgroup.ZIndex = 1;
                 foreach (var led in device)
@@ -250,7 +251,7 @@ namespace Chromatics.Core
             return _layergroupledcollection;
         }
 
-        public static Dictionary<int, ListLedGroup> GetLiveLayerGroups()
+        public static Dictionary<int, PublicListLedGroup> GetLiveLayerGroups()
         {
             return _layergroups;
         }
@@ -269,7 +270,7 @@ namespace Chromatics.Core
 
             //Add base black layer
             
-            //var background = new ListLedGroup(surface, surface.Leds);
+            //var background = new PublicListLedGroup(surface, surface.Leds);
             //background.Brush = new SolidColorBrush(new Color(0, 0, 0));
 
             foreach (var device in devices)
@@ -277,7 +278,7 @@ namespace Chromatics.Core
                 if (exempt.Contains(device)) continue;
 
                 var brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
-                var ledgroup = new ListLedGroup(surface);
+                var ledgroup = new PublicListLedGroup(surface);
 
                 ledgroup.ZIndex = 1;
                 foreach (var led in device)
@@ -299,6 +300,7 @@ namespace Chromatics.Core
             {
                 _layergroups[targetId].Detach();
                 _layergroups.Remove(targetId);
+
 
                 Debug.WriteLine(@"Remove Layer Requested: " + targetId);
             }
@@ -345,7 +347,7 @@ namespace Chromatics.Core
                     //Loop through all LED's and assign to device layer
                     var devices = surface.GetDevices(mapping.deviceType);
 
-                    var layergroup = new ListLedGroup(surface)
+                    var layergroup = new PublicListLedGroup(surface)
                     {
                         ZIndex = mapping.zindex,
                     };
