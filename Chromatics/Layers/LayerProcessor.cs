@@ -38,6 +38,7 @@ namespace Chromatics.Layers
             var devices = surface.GetDevices(layer.deviceType);
 
             PublicListLedGroup layergroup;
+
             var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
             if (_layergroupledcollections.ContainsKey(layer.layerID))
@@ -52,8 +53,9 @@ namespace Chromatics.Layers
 
             if (_layergroups.ContainsKey(layer.layerID))
             {
-                layergroup = _layergroups[layer.layerID];
+                layergroup = _layergroups[layer.layerID].FirstOrDefault();
                 layergroup.ZIndex = layer.zindex;
+                
             }
             else
             {
@@ -62,7 +64,8 @@ namespace Chromatics.Layers
                     ZIndex = layer.zindex,
                 };
 
-                _layergroups.Add(layer.layerID, layergroup);
+                var lg = new PublicListLedGroup[] { layergroup };
+                _layergroups.Add(layer.layerID, lg);
             }
 
             layergroup.Detach();

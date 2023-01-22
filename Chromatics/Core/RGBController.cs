@@ -39,7 +39,7 @@ namespace Chromatics.Core
 
         private static List<IRGBDevice> _devices = new List<IRGBDevice>();
 
-        private static Dictionary<int, PublicListLedGroup> _layergroups = new Dictionary<int, PublicListLedGroup>();
+        private static Dictionary<int, PublicListLedGroup[]> _layergroups = new Dictionary<int, PublicListLedGroup[]>();
 
         private static List<Led> _layergroupledcollection = new List<Led>();
 
@@ -251,7 +251,7 @@ namespace Chromatics.Core
             return _layergroupledcollection;
         }
 
-        public static Dictionary<int, PublicListLedGroup> GetLiveLayerGroups()
+        public static Dictionary<int, PublicListLedGroup[]> GetLiveLayerGroups()
         {
             return _layergroups;
         }
@@ -298,7 +298,11 @@ namespace Chromatics.Core
         {
             if (_layergroups.ContainsKey(targetId))
             {
-                _layergroups[targetId].Detach();
+                foreach (var layer in _layergroups[targetId])
+                {
+                    layer.Detach();
+                }
+                
                 _layergroups.Remove(targetId);
 
 
@@ -310,7 +314,10 @@ namespace Chromatics.Core
         {
             foreach (var layergroup in _layergroups)
             {
-                surface.Detach(layergroup.Value);
+                foreach (var layer in layergroup.Value)
+                {
+                    surface.Detach(layer);
+                }
             }
 
             _layergroups.Clear();
@@ -354,11 +361,13 @@ namespace Chromatics.Core
 
                     if (_layergroups.ContainsKey(mapping.layerID))
                     {
-                        layergroup = _layergroups[mapping.layerID];
+                        layergroup = _layergroups[mapping.layerID].FirstOrDefault();
                     }
                     else
                     {
-                        _layergroups.Add(mapping.layerID, layergroup);
+                        var lg = new PublicListLedGroup[1];
+                        lg[0] = layergroup;
+                        _layergroups.Add(mapping.layerID, lg);
                     }
 
 

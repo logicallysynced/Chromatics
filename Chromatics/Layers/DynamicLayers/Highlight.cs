@@ -31,9 +31,13 @@ namespace Chromatics.Layers
                        
 
             // Add new PublicListLedGroup to _layergroups with updated leds and create a new instance of it
+            PublicListLedGroup updatedLayerGroup;
 
-            if (_layergroups.TryGetValue(layer.layerID, out PublicListLedGroup updatedLayerGroup))
+
+            if (_layergroups.ContainsKey(layer.layerID))
             {
+                updatedLayerGroup = _layergroups[layer.layerID].FirstOrDefault();
+
                 if (layer.requestUpdate)
                 {
                     // Replace the existing leds
@@ -47,7 +51,8 @@ namespace Chromatics.Layers
                     ZIndex = layer.zindex,
                 };
 
-                _layergroups.Add(layer.layerID, updatedLayerGroup);
+                var lg = new PublicListLedGroup[] { updatedLayerGroup };
+                _layergroups.Add(layer.layerID, lg);
                 updatedLayerGroup.Detach();
 
             }
