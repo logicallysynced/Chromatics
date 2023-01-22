@@ -9,7 +9,7 @@ namespace Chromatics.Helpers
 {
     public static class LedKeyHelper
     {
-        public static Dictionary<int, LedId> GetAllKeysForDevice(RGBDeviceType device)
+        public static List<Tuple<int, LedId>> GetAllKeysForDevice(RGBDeviceType device)
         {
             var AllKeys = new List<LedId>();
 
@@ -82,15 +82,11 @@ namespace Chromatics.Helpers
 
 
             var i = 0;
-            var _keys = new Dictionary<int, LedId>();
+            var _keys = new List<Tuple<int, LedId>>();
 
             foreach (var key in AllKeys)
             {
-                if (!_keys.ContainsKey(i))
-                {
-                    _keys.Add(i, key);
-                }
-
+                _keys.Add(new Tuple<int, LedId>(i, key));
                 i++;
             }
 

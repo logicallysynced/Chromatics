@@ -33,7 +33,7 @@ namespace Chromatics.Layers
             var devices = surface.GetDevices(layer.deviceType);
 
             PublicListLedGroup layergroup;
-            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Item2.Equals(led.Id))).ToArray();
 
             if (_layergroupledcollections.ContainsKey(layer.layerID))
             {

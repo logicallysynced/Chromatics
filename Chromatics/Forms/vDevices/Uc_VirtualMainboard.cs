@@ -42,12 +42,12 @@ namespace Chromatics.Forms
 
                     var keycap = new KeyButton
                     {
-                        KeyName = key.Value.ToString(),
-                        KeyType = key.Value,
+                        KeyName = key.Item2.ToString(),
+                        KeyType = key.Item2,
                         Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                         FlatStyle = FlatStyle.Flat,
                         Dock = DockStyle.Fill,
-                        Text = key.Value.ToString().Replace("Mainboard", ""),
+                        Text = key.Item2.ToString().Replace("Mainboard", ""),
                         Padding = new Padding(0),
                         Margin = new Padding(0),
                         Width = width,
