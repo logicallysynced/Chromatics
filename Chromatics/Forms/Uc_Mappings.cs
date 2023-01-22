@@ -647,9 +647,12 @@ namespace Chromatics.Forms
                 var ms = MappingLayers.GetLayer(parent.ID);
                 ms.deviceLeds.Clear();
 
-                foreach (var led in currentKeySelection)
+                int i = 1;
+                foreach (var led in currentKeySelection.OrderBy(kvp => kvp.Key))
                 {
-                    ms.deviceLeds.Add(led.Key, led.Value);
+                    Debug.WriteLine($"Order 3: {i}: {led.Value}");
+                    ms.deviceLeds.Add(i, led.Value);
+                    i++;
                 }
 
                 ms.requestUpdate = true;
@@ -935,7 +938,17 @@ namespace Chromatics.Forms
                             }
                         }
 
+                        foreach (var led in _selection)
+                        {
+                            Debug.WriteLine($"Order 1: {led.Value}");
+                        }
+                        
                         currentKeySelection = _selection;
+
+                        foreach (var led in currentKeySelection)
+                        {
+                            Debug.WriteLine($"Order 2: {led.Value}");
+                        }
                     }
                 }
                 else
@@ -1124,6 +1137,7 @@ namespace Chromatics.Forms
                 }
 
                 currentKeySelection = _selection;
+
             }
 
             Debug.WriteLine($"Reversing Layer {currentlyEditing.ID}");

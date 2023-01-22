@@ -15,7 +15,7 @@ namespace Chromatics.Layers
 {
     public class HPTrackerProcessor : LayerProcessor
     {
-        private HashSet<PublicListLedGroup> _layergroups = new HashSet<PublicListLedGroup>();
+        private List<PublicListLedGroup> _localgroups = new List<PublicListLedGroup>();
         private SolidColorBrush hp_critical_brush;
         private SolidColorBrush hp_empty_brush;
         private SolidColorBrush hp_full_brush;
@@ -23,14 +23,31 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
+            //Do not apply if currently in Preview mode
+            if (MappingLayers.IsPreview()) return;
+
             //HP Tracker Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
 
-            //loop through all LED's and assign to device layer
+            //loop through all LED's and assign to device layer (must maintain order of LEDs)
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
-            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
-                        
+            var _layergroups = RGBController.GetLiveLayerGroups();
+            var ledArray = (from led in devices.SelectMany(d => d).Select((led, index) => new { Index = index, Led = led }) join id in layer.deviceLeds.Values.Select((id, index) => new { Index = index, Id = id }) on led.Led.Id equals id.Id orderby id.Index select led.Led).ToArray();
+            
+
+            var countKeys = ledArray.Count();
+
+            if (layer.requestUpdate)
+            {
+                var x = 1;
+                foreach (var led in ledArray)
+                {
+                    Debug.WriteLine($"Order 4: LED {x}: {led.Id}");
+                    x++;
+                }
+            }
+            
             //Process data from FFXIV
             var hp_full_col = ColorHelper.ColorToRGBColor(_colorPalette.HpFull.Color);
             var hp_critical_col = ColorHelper.ColorToRGBColor(_colorPalette.HpCritical.Color);
@@ -53,25 +70,27 @@ namespace Chromatics.Layers
                 if (layer.layerModes == Enums.LayerModes.Interpolate)
                 {
                     //Interpolate implementation
-
-                    var countKeys = ledArray.Count();
+                                        
                     
                     //Check if layer has been updated or if layer is disabled or if currently in Preview mode
-                    if (_groupCount != countKeys || !layer.Enabled || MappingLayers.IsPreview())
+                    
+                    if (_init && (layer.requestUpdate || !layer.Enabled))
                     {
-                        foreach (var layergroup in _layergroups)
+                        foreach (var layergroup in _localgroups)
                         {
-                            layergroup.Detach();
+                            if (layergroup != null)
+                                layergroup.Detach();
                         }
-
-                        _layergroups.Clear();
-                        _groupCount = countKeys;
 
                         Debug.WriteLine(@"Clearing");
 
-                        if (!layer.Enabled || MappingLayers.IsPreview())
+                        _localgroups.Clear();
+                        _groupCount = countKeys;
+
+                        if (!layer.Enabled)
                             return;
                     }
+                    
 
                     var currentHp_Interpolate = LinearInterpolation.Interpolate(currentHp, 0, maxHp, 0, countKeys);
                     if (currentHp_Interpolate < 0) currentHp_Interpolate = 0;
@@ -86,11 +105,8 @@ namespace Chromatics.Layers
                     }
                     else
                     {
-                        
-                        var ledGroups = new HashSet<PublicListLedGroup>();
-
-
-                        
+                        var ledGroups = new List<PublicListLedGroup>();
+                                                
                         for (int i = 0; i < countKeys; i++)
                         {
                             var ledGroup = new PublicListLedGroup(surface, ledArray[i])
@@ -122,17 +138,33 @@ namespace Chromatics.Layers
                             }
                             
                             ledGroups.Add(ledGroup);
-                            Debug.WriteLine($"Key {i}: {ledArray[i].Color}");
+                            
                         }
                         
-                        foreach (var layergroup in _layergroups)
+                        foreach (var layergroup in _localgroups)
                         {
                             layergroup.Detach();
                         }
 
-                                                                       
-                        _layergroups = ledGroups;
+                        _localgroups = ledGroups;
 
+                        
+                        
+                        foreach (var group in _localgroups)
+                        {
+                            var lg = _localgroups.ToArray();
+
+                            if (_layergroups.ContainsKey(layer.layerID))
+                            {
+                                _layergroups[layer.layerID] = lg;
+                            }
+                            else
+                            {
+                                _layergroups.Add(layer.layerID, lg);
+                            }
+                            
+                        }
+                                                
                     }
                 }
                 else if (layer.layerModes == Enums.LayerModes.Fade)
@@ -144,12 +176,8 @@ namespace Chromatics.Layers
 
             //Apply lighting
             
-            var x = 1;
-            foreach (var layergroup in _layergroups)
+            foreach (var layergroup in _localgroups)
             {
-                var col = layergroup.Brush as SolidColorBrush;
-                //Debug.WriteLine($"Layer Group {x}: {col.Color}");
-                x++;
                 layergroup.Attach(surface);
             }
             

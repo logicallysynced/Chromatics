@@ -28,7 +28,7 @@ namespace Chromatics.Layers
             var _layergroups = RGBController.GetLiveLayerGroups();
             HashSet<Led> _layergroupledcollection;
 
-            //loop through all LED's and assign to device layer
+            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
