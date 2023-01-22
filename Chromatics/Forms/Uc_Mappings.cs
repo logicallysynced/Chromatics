@@ -512,8 +512,13 @@ namespace Chromatics.Forms
             var selectedindex = obj.SelectedIndex;
 
             var layer = MappingLayers.GetLayer(id);
+            
             layer.layerTypeindex = selectedindex;
+            layer.requestUpdate = true;
+
+            RGBController.RemoveLayerGroup(layer.layerID);
             MappingLayers.UpdateLayer(layer);
+            
             SaveLayers();
         }
 
