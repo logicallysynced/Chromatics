@@ -54,7 +54,7 @@ namespace Chromatics.Models
                 {
                     foreach (var key in _keybuttons)
                     {
-                        if (mapping.deviceLeds.Any(v => v.Item2.Equals(key.KeyType)))
+                        if (mapping.deviceLeds.ContainsValue(key.KeyType))
                         {
                             if (_currentColors.ContainsKey(key.KeyType))
                             {
@@ -82,7 +82,7 @@ namespace Chromatics.Models
 
                 foreach (var key in _keybuttons)
                 {
-                    if (mapping.deviceLeds.Any(v => v.Item2.Equals(key.KeyType)))
+                    if (mapping.deviceLeds.ContainsValue(key.KeyType))
                     {
                         if (!key.IsEditing)
                         {

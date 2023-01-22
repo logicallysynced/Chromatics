@@ -32,7 +32,7 @@ namespace Chromatics.Forms
 
         private List<Pn_LayerDisplay> _layers = new List<Pn_LayerDisplay>();
         private List<KeyButton> _currentSelectedKeys = new List<KeyButton>();
-        private List<Tuple<int, LedId>> currentKeySelection = new List<Tuple<int, LedId>>();
+        private Dictionary<int, LedId> currentKeySelection = new Dictionary<int,LedId>();
         private Dictionary<RGBDeviceType, VirtualDevice> _virtualDevices;
         private HashSet<int> _visibleLayers = new HashSet<int>();
         private int _layerPad = 5;
@@ -242,7 +242,7 @@ namespace Chromatics.Forms
             }
         }
 
-        private int AddLayer(LayerType layertype, RGBDeviceType devicetype, int id = 0, int index = 0, bool initialize = false, bool bypass = false, bool enabled = false, List<Tuple<int, LedId>> leds = null)
+        private int AddLayer(LayerType layertype, RGBDeviceType devicetype, int id = 0, int index = 0, bool initialize = false, bool bypass = false, bool enabled = false, Dictionary<int, LedId> leds = null)
         {
             IsAddingLayer = true;
             var s = new Size(flp_layers.Width - _layerPad, 50);
@@ -281,7 +281,7 @@ namespace Chromatics.Forms
 
                 if (leds == null)
                 {
-                    leds = new List<Tuple<int, LedId>>();
+                    leds = new Dictionary<int, LedId>();
                 }
 
                 pgb.ID = MappingLayers.AddLayer(MappingLayers.CountLayers(), layertype, devicetype, 0, _index, enabled, leds);
@@ -565,7 +565,7 @@ namespace Chromatics.Forms
                 {
                     foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                     {
-                        if (key.KeyType == selection.Item2 && !key.IsEditing)
+                        if (key.KeyType == selection.Value && !key.IsEditing)
                         {
                             key.BorderCol = System.Drawing.Color.SandyBrown; //(System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(obj.LayerType).Value;
                             key.Invalidate();
@@ -647,7 +647,13 @@ namespace Chromatics.Forms
                 var ms = MappingLayers.GetLayer(parent.ID);
                 ms.deviceLeds.Clear();
 
-                ms.deviceLeds.AddRange(currentKeySelection.Select((led, index) => new Tuple<int, LedId>(index+1, led.Item2)));
+                int i = 1;
+                foreach (var led in currentKeySelection.OrderBy(kvp => kvp.Key))
+                {
+                    Debug.WriteLine($"Order 3: {i}: {led.Value}");
+                    ms.deviceLeds.Add(i, led.Value);
+                    i++;
+                }
 
                 ms.requestUpdate = true;
                 MappingLayers.UpdateLayer(ms);
@@ -690,7 +696,7 @@ namespace Chromatics.Forms
                 _currentSelectedKeys.Clear();
 
                 var ml = MappingLayers.GetLayer(parent.ID);
-                var _selection = new List<Tuple<int, LedId>>();
+                var _selection = new Dictionary<int, LedId>();
 
                 if (ml.allowBleed)
                 {
@@ -716,7 +722,10 @@ namespace Chromatics.Forms
                     }
                 }
 
-                _selection.AddRange(ml.deviceLeds);
+                foreach (var led in ml.deviceLeds)
+                {
+                    _selection.Add(led.Key, led.Value);
+                }
 
                 Debug.WriteLine($"Loaded {_selection.Count} leds for layer {ml.layerID}");
 
@@ -724,13 +733,13 @@ namespace Chromatics.Forms
                 {
                     var i = 1;
 
-                    if (_selection.First().Item1 == 1)
+                    if (_selection.First().Key == 1)
                     {
                         foreach (var selection in _selection)
                         {
                             foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                             {
-                                if (key.KeyType == selection.Item2)
+                                if (key.KeyType == selection.Value)
                                 {
                                     key.RemoveCircle();
 
@@ -754,7 +763,7 @@ namespace Chromatics.Forms
 
                             foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                             {
-                                if (key.KeyType == selection.Item2)
+                                if (key.KeyType == selection.Value)
                                 {
                                     key.RemoveCircle();
 
@@ -874,29 +883,32 @@ namespace Chromatics.Forms
 
             if (currentlyEditing != null)
             {
-                if (currentKeySelection.Any(x => x.Item2 == keycap.KeyType))
+                if (currentKeySelection.ContainsValue(keycap.KeyType))
                 {
                     //Remove key from holding dictionary and revert button
                     keycap.BackColor = System.Drawing.Color.DarkGray;
                     keycap.BorderCol = System.Drawing.Color.Black;
                     keycap.RemoveCircle();
 
-                    currentKeySelection.RemoveAll(kvp => kvp.Item2 == keycap.KeyType);
-                    _currentSelectedKeys.Remove(keycap);
+                    foreach (var item in currentKeySelection.Where(kvp => kvp.Value == keycap.KeyType).ToList())
+                    {
+                        currentKeySelection.Remove(item.Key);
+                        _currentSelectedKeys.Remove(keycap);
+                    }
 
                     if (currentKeySelection.Count > 0)
                     {
-                        var _selection = new List<Tuple<int, LedId>>();
+                        var _selection = new Dictionary<int, LedId>();
                         var i = 1;
 
-                        if (currentKeySelection.First().Item1 == 1)
+                        if (currentKeySelection.First().Key == 1)
                         {
                             foreach (var selection in currentKeySelection)
                             {
-                                _selection.Add(new Tuple<int, LedId>(i, selection.Item2));
+                                _selection.Add(i, selection.Value);
                                 foreach (var key in _currentSelectedKeys)
                                 {
-                                    if (key.KeyType == selection.Item2)
+                                    if (key.KeyType == selection.Value)
                                     {
                                         key.RemoveCircle();
                                         key.AddCircle((i).ToString());
@@ -911,11 +923,11 @@ namespace Chromatics.Forms
                             i = 0;
                             foreach (var selection in currentKeySelection)
                             {
-                                _selection.Add(new Tuple<int, LedId>(currentKeySelection.Count - i, selection.Item2));
+                                _selection.Add(currentKeySelection.Count - i, selection.Value);
 
                                 foreach (var key in _currentSelectedKeys)
                                 {
-                                    if (key.KeyType == selection.Item2)
+                                    if (key.KeyType == selection.Value)
                                     {
                                         key.RemoveCircle();
                                         key.AddCircle((currentKeySelection.Count - i).ToString());
@@ -928,14 +940,14 @@ namespace Chromatics.Forms
 
                         foreach (var led in _selection)
                         {
-                            Debug.WriteLine($"Order 1: {led.Item2}");
+                            Debug.WriteLine($"Order 1: {led.Value}");
                         }
                         
                         currentKeySelection = _selection;
 
                         foreach (var led in currentKeySelection)
                         {
-                            Debug.WriteLine($"Order 2: {led.Item2}");
+                            Debug.WriteLine($"Order 2: {led.Value}");
                         }
                     }
                 }
@@ -946,7 +958,7 @@ namespace Chromatics.Forms
                     keycap.BorderCol = System.Drawing.Color.Red;
                     keycap.AddCircle((currentKeySelection.Count + 1).ToString());
 
-                    currentKeySelection.Add(new Tuple<int, LedId>(currentKeySelection.Count + 1, keycap.KeyType));
+                    currentKeySelection.Add(currentKeySelection.Count + 1, keycap.KeyType);
                     _currentSelectedKeys.Add(keycap);
                 }
             }
@@ -1062,7 +1074,8 @@ namespace Chromatics.Forms
 
             foreach (var led in currentKeySelection)
             {
-                ms.deviceLeds.RemoveAll(x => x.Item2 == led.Item2);
+                if (ms.deviceLeds.ContainsKey(led.Key))
+                    ms.deviceLeds.Remove(led.Key);
             }
 
             ms.requestUpdate = true;
@@ -1092,17 +1105,17 @@ namespace Chromatics.Forms
 
             if (currentKeySelection.Count > 0)
             {
-                var _selection = new List<Tuple<int, LedId>>();
+                var _selection = new Dictionary<int, LedId>();
                 var i = 0;
 
-                if (currentKeySelection.First().Item1 == 1)
+                if (currentKeySelection.First().Key == 1)
                 {
                     //Forward Reverse
                     foreach (var selection in currentKeySelection)
                     {
-                        _selection.Add(new Tuple<int, LedId>(currentKeySelection.Count - i, selection.Item2));
+                        _selection.Add(currentKeySelection.Count - i, selection.Value);
 
-                        var keycap = _currentSelectedKeys.Where(value => value.KeyType == selection.Item2).FirstOrDefault();
+                        var keycap = _currentSelectedKeys.Where(value => value.KeyType == selection.Value).FirstOrDefault();
                         keycap.RemoveCircle();
                         keycap.AddCircle((currentKeySelection.Count - i).ToString());
                         i++;
@@ -1114,9 +1127,9 @@ namespace Chromatics.Forms
                     i = 1;
                     foreach (var selection in currentKeySelection)
                     {
-                        _selection.Add(new Tuple<int, LedId>(i, selection.Item2));
+                        _selection.Add(i, selection.Value);
 
-                        var keycap = _currentSelectedKeys.Where(value => value.KeyType == selection.Item2).FirstOrDefault();
+                        var keycap = _currentSelectedKeys.Where(value => value.KeyType == selection.Value).FirstOrDefault();
                         keycap.RemoveCircle();
                         keycap.AddCircle((i).ToString());
                         i++;
@@ -1146,12 +1159,12 @@ namespace Chromatics.Forms
                 _currentSelectedKeys.Clear();
 
                 var ml = MappingLayers.GetLayer(currentlyEditing.ID);
-                var _selection = new List<Tuple<int, LedId>>();
+                var _selection = new Dictionary<int, LedId>();
 
 
                 foreach (var led in ml.deviceLeds)
                 {
-                    _selection.Add(new Tuple<int, LedId>(led.Item1, led.Item2));
+                    _selection.Add(led.Key, led.Value);
                 }
 
                 Debug.WriteLine($"Reloaded {_selection.Count} leds for layer {ml.layerID}");
@@ -1160,13 +1173,13 @@ namespace Chromatics.Forms
                 {
                     var i = 1;
 
-                    if (_selection.First().Item1 == 1)
+                    if (_selection.First().Key == 1)
                     {
                         foreach (var selection in _selection)
                         {
                             foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                             {
-                                if (key.KeyType == selection.Item2)
+                                if (key.KeyType == selection.Value)
                                 {
                                     key.RemoveCircle();
 
@@ -1190,7 +1203,7 @@ namespace Chromatics.Forms
 
                             foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
                             {
-                                if (key.KeyType == selection.Item2)
+                                if (key.KeyType == selection.Value)
                                 {
                                     key.RemoveCircle();
 

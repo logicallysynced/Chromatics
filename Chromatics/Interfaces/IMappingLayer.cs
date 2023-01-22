@@ -21,7 +21,7 @@ namespace Chromatics.Interfaces
         bool allowBleed { get; set; }
         int layerTypeindex { get; set; }
         bool requestUpdate { get; set; }
-        List<Tuple<int, LedId>> deviceLeds { get; set; }
+        Dictionary<int, LedId> deviceLeds { get; set; }
 
     }
 }

@@ -380,7 +380,7 @@ namespace Chromatics.Core
 
                         foreach (var led in device)
                         {
-                            if (!mapping.deviceLeds.Any(v => v.Item2.Equals(led.Id)))
+                            if (!mapping.deviceLeds.Any(v => v.Value.Equals(led.Id)))
                             {
                                 layergroup.RemoveLed(led);
                                 _layergroupledcollection.Remove(led);

@@ -24,7 +24,7 @@ namespace Chromatics.Layers
         
         private static ConcurrentDictionary<int, Layer> _layers = new ConcurrentDictionary<int, Layer>();
 
-        public static int AddLayer(int index, LayerType rootLayerType, RGBDeviceType devicetype, int layerTypeIndex, int zindex, bool enabled, List<Tuple<int, LedId>> deviceLeds)
+        public static int AddLayer(int index, LayerType rootLayerType, RGBDeviceType devicetype, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds)
         {
             _layerAutoID++;
 
@@ -167,11 +167,11 @@ namespace Chromatics.Layers
         public int zindex { get; set; }
         public bool allowBleed { get; set; }
         public int layerTypeindex { get; set; }
-        public List<Tuple<int, LedId>> deviceLeds { get; set; }
+        public Dictionary<int, LedId> deviceLeds { get; set; }
         public LayerModes layerModes { get; set; }
         public bool requestUpdate { get; set; }
 
-        public Layer(int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, List<Tuple<int, LedId>> _deviceLeds)
+        public Layer(int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds)
         {
             layerID = _id;
             layerIndex = _index;
