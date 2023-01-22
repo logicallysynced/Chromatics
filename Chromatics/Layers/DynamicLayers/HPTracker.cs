@@ -35,9 +35,9 @@ namespace Chromatics.Layers
             var _layergroups = RGBController.GetLiveLayerGroups();
             var ledArray = (from led in devices.SelectMany(d => d).Select((led, index) => new { Index = index, Led = led }) join id in layer.deviceLeds.Values.Select((id, index) => new { Index = index, Id = id }) on led.Led.Id equals id.Id orderby id.Index select led.Led).ToArray();
             
-
             var countKeys = ledArray.Count();
 
+            /*
             if (layer.requestUpdate)
             {
                 var x = 1;
@@ -47,6 +47,7 @@ namespace Chromatics.Layers
                     x++;
                 }
             }
+            */
             
             //Process data from FFXIV
             var hp_full_col = ColorHelper.ColorToRGBColor(_colorPalette.HpFull.Color);
@@ -56,7 +57,16 @@ namespace Chromatics.Layers
 
             if (hp_critical_brush == null) hp_critical_brush = new SolidColorBrush(hp_critical_col);
             if (hp_full_brush == null) hp_full_brush = new SolidColorBrush(hp_full_col);
-            if (hp_empty_brush == null) hp_empty_brush = new SolidColorBrush(hp_empty_col);
+
+            if (layer.allowBleed)
+            {
+                //Allow bleeding of other layers
+                hp_empty_brush = new SolidColorBrush(Color.Transparent);
+            }
+            else
+            {
+                hp_empty_brush = new SolidColorBrush(hp_empty_col);
+            }
 
             var _memoryHandler = GameController.GetGameData();
 
@@ -82,7 +92,7 @@ namespace Chromatics.Layers
                                 layergroup.Detach();
                         }
 
-                        Debug.WriteLine(@"Clearing");
+                        //Debug.WriteLine(@"Clearing");
 
                         _localgroups.Clear();
                         _groupCount = countKeys;
@@ -99,72 +109,64 @@ namespace Chromatics.Layers
                     //Debug.WriteLine($"Interpolate HP Tracker: {currentHp_Interpolate}/{countKeys}.");
 
                     //Process Lighting
-                    if (layer.allowBleed)
+                    var ledGroups = new List<PublicListLedGroup>();
+                                        
+                    for (int i = 0; i < countKeys; i++)
                     {
-                        //Allow bleeding of other layers
-                    }
-                    else
-                    {
-                        var ledGroups = new List<PublicListLedGroup>();
-                                                
-                        for (int i = 0; i < countKeys; i++)
+                        var ledGroup = new PublicListLedGroup(surface, ledArray[i])
                         {
-                            var ledGroup = new PublicListLedGroup(surface, ledArray[i])
+                            ZIndex = layer.zindex,
+                        };
+
+                        ledGroup.Detach();
+
+                        if (i <= currentHp_Interpolate)
+                        {
+                            if (currentHp < hp_threshold)
                             {
-                                ZIndex = layer.zindex,
-                            };
-
-                            ledGroup.Detach();
-
-                            if (i <= currentHp_Interpolate)
+                                ledGroup.Brush = hp_critical_brush;
+                            }
+                            else
                             {
-                                if (currentHp < hp_threshold)
-                                {
-                                    ledGroup.Brush = hp_critical_brush;
-                                }
-                                else
-                                {
-                                    ledGroup.Brush = hp_full_brush;
-                                }
+                                ledGroup.Brush = hp_full_brush;
+                            }
 
-                                var currentBrush = ledGroup.Brush as SolidColorBrush;
+                            var currentBrush = ledGroup.Brush as SolidColorBrush;
                                 
-                            }
-                            else
-                            {
-                                ledGroup.Brush = hp_empty_brush;
-
-                                var currentBrush = ledGroup.Brush as SolidColorBrush;
-                            }
-                            
-                            ledGroups.Add(ledGroup);
-                            
                         }
-                        
-                        foreach (var layergroup in _localgroups)
+                        else
                         {
-                            layergroup.Detach();
+                            ledGroup.Brush = hp_empty_brush;
+
+                            var currentBrush = ledGroup.Brush as SolidColorBrush;
                         }
-
-                        _localgroups = ledGroups;
-
-                        
-                        
-                        foreach (var group in _localgroups)
-                        {
-                            var lg = _localgroups.ToArray();
-
-                            if (_layergroups.ContainsKey(layer.layerID))
-                            {
-                                _layergroups[layer.layerID] = lg;
-                            }
-                            else
-                            {
-                                _layergroups.Add(layer.layerID, lg);
-                            }
                             
+                        ledGroups.Add(ledGroup);
+                            
+                    }
+
+                    foreach (var layergroup in _localgroups)
+                    {
+                        layergroup.Detach();
+                    }
+
+                    _localgroups = ledGroups;
+
+                        
+                        
+                    foreach (var group in _localgroups)
+                    {
+                        var lg = _localgroups.ToArray();
+
+                        if (_layergroups.ContainsKey(layer.layerID))
+                        {
+                            _layergroups[layer.layerID] = lg;
                         }
-                                                
+                        else
+                        {
+                            _layergroups.Add(layer.layerID, lg);
+                        }
+                            
                     }
                 }
                 else if (layer.layerModes == Enums.LayerModes.Fade)
