@@ -40,20 +40,24 @@ namespace Chromatics.Forms
             this.btn_clearselection = new MetroFramework.Controls.MetroButton();
             this.btn_reverseselection = new MetroFramework.Controls.MetroButton();
             this.btn_undoselection = new MetroFramework.Controls.MetroButton();
+            this.tlp_layercontrols = new System.Windows.Forms.TableLayoutPanel();
+            this.cb_changemode = new MetroFramework.Controls.MetroComboBox();
+            this.btn_togglebleed = new MetroFramework.Controls.MetroButton();
             this.pn_top = new System.Windows.Forms.Panel();
             this.tlp_top = new System.Windows.Forms.TableLayoutPanel();
+            this.btn_export = new MetroFramework.Controls.MetroButton();
+            this.btn_import = new MetroFramework.Controls.MetroButton();
             this.cb_addlayer = new MetroFramework.Controls.MetroComboBox();
             this.btn_addlayer = new MetroFramework.Controls.MetroButton();
             this.cb_deviceselect = new MetroFramework.Controls.MetroComboBox();
             this.btn_preview = new MetroFramework.Controls.MetroButton();
             this.pn_bottom = new System.Windows.Forms.Panel();
-            this.btn_import = new MetroFramework.Controls.MetroButton();
-            this.btn_export = new MetroFramework.Controls.MetroButton();
             this.tlp_base.SuspendLayout();
             this.tlp_mid.SuspendLayout();
             this.pn_right.SuspendLayout();
             this.tlp_frame.SuspendLayout();
             this.tlp_controls.SuspendLayout();
+            this.tlp_layercontrols.SuspendLayout();
             this.pn_top.SuspendLayout();
             this.tlp_top.SuspendLayout();
             this.SuspendLayout();
@@ -122,12 +126,14 @@ namespace Chromatics.Forms
             this.tlp_frame.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 93.37442F));
             this.tlp_frame.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.625578F));
             this.tlp_frame.Controls.Add(this.tlp_controls, 1, 0);
+            this.tlp_frame.Controls.Add(this.tlp_layercontrols, 0, 1);
             this.tlp_frame.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_frame.Location = new System.Drawing.Point(3, 3);
             this.tlp_frame.Name = "tlp_frame";
-            this.tlp_frame.RowCount = 2;
-            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 37.33766F));
-            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 62.66234F));
+            this.tlp_frame.RowCount = 3;
+            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 37.5603F));
+            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.117445F));
+            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 56.32226F));
             this.tlp_frame.Size = new System.Drawing.Size(1298, 924);
             this.tlp_frame.TabIndex = 2;
             // 
@@ -147,7 +153,7 @@ namespace Chromatics.Forms
             this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_controls.Size = new System.Drawing.Size(80, 339);
+            this.tlp_controls.Size = new System.Drawing.Size(80, 341);
             this.tlp_controls.TabIndex = 0;
             // 
             // btn_clearselection
@@ -172,7 +178,7 @@ namespace Chromatics.Forms
             this.btn_reverseselection.AutoSize = true;
             this.btn_reverseselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_reverseselection.Enabled = false;
-            this.btn_reverseselection.Location = new System.Drawing.Point(3, 87);
+            this.btn_reverseselection.Location = new System.Drawing.Point(3, 88);
             this.btn_reverseselection.Name = "btn_reverseselection";
             this.btn_reverseselection.Size = new System.Drawing.Size(74, 30);
             this.btn_reverseselection.TabIndex = 1;
@@ -186,13 +192,60 @@ namespace Chromatics.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_undoselection.AutoSize = true;
             this.btn_undoselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btn_undoselection.Location = new System.Drawing.Point(3, 171);
+            this.btn_undoselection.Location = new System.Drawing.Point(3, 173);
             this.btn_undoselection.Name = "btn_undoselection";
             this.btn_undoselection.Size = new System.Drawing.Size(74, 30);
             this.btn_undoselection.TabIndex = 2;
             this.btn_undoselection.Text = "Undo";
             this.btn_undoselection.UseSelectable = true;
             this.btn_undoselection.Click += new System.EventHandler(this.btn_undoselection_Click);
+            // 
+            // tlp_layercontrols
+            // 
+            this.tlp_layercontrols.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlp_layercontrols.ColumnCount = 4;
+            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlp_layercontrols.Controls.Add(this.cb_changemode, 3, 0);
+            this.tlp_layercontrols.Controls.Add(this.btn_togglebleed, 2, 0);
+            this.tlp_layercontrols.Location = new System.Drawing.Point(3, 350);
+            this.tlp_layercontrols.Name = "tlp_layercontrols";
+            this.tlp_layercontrols.RowCount = 1;
+            this.tlp_layercontrols.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_layercontrols.Size = new System.Drawing.Size(1206, 50);
+            this.tlp_layercontrols.TabIndex = 1;
+            // 
+            // cb_changemode
+            // 
+            this.cb_changemode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.cb_changemode.FormattingEnabled = true;
+            this.cb_changemode.ItemHeight = 24;
+            this.cb_changemode.Location = new System.Drawing.Point(906, 10);
+            this.cb_changemode.Name = "cb_changemode";
+            this.cb_changemode.Size = new System.Drawing.Size(297, 30);
+            this.cb_changemode.TabIndex = 6;
+            this.cb_changemode.UseSelectable = true;
+            this.cb_changemode.SelectedIndexChanged += new System.EventHandler(this.cb_changemode_SelectedIndexChanged);
+            // 
+            // btn_togglebleed
+            // 
+            this.btn_togglebleed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_togglebleed.AutoSize = true;
+            this.btn_togglebleed.Location = new System.Drawing.Point(763, 3);
+            this.btn_togglebleed.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
+            this.btn_togglebleed.Name = "btn_togglebleed";
+            this.btn_togglebleed.Size = new System.Drawing.Size(120, 44);
+            this.btn_togglebleed.TabIndex = 4;
+            this.btn_togglebleed.Text = "Bleed Disabled";
+            this.btn_togglebleed.UseCustomBackColor = true;
+            this.btn_togglebleed.UseCustomForeColor = true;
+            this.btn_togglebleed.UseSelectable = true;
+            this.btn_togglebleed.Click += new System.EventHandler(this.btn_togglebleed_Click);
             // 
             // pn_top
             // 
@@ -222,17 +275,50 @@ namespace Chromatics.Forms
             this.tlp_top.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_top.Location = new System.Drawing.Point(0, 0);
             this.tlp_top.Name = "tlp_top";
-            this.tlp_top.RowCount = 1;
+            this.tlp_top.RowCount = 2;
             this.tlp_top.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_top.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlp_top.Size = new System.Drawing.Size(1864, 46);
             this.tlp_top.TabIndex = 0;
+            // 
+            // btn_export
+            // 
+            this.btn_export.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_export.AutoSize = true;
+            this.btn_export.Location = new System.Drawing.Point(1236, 3);
+            this.btn_export.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
+            this.btn_export.Name = "btn_export";
+            this.btn_export.Size = new System.Drawing.Size(96, 20);
+            this.btn_export.TabIndex = 5;
+            this.btn_export.Text = "Export";
+            this.btn_export.UseCustomBackColor = true;
+            this.btn_export.UseCustomForeColor = true;
+            this.btn_export.UseSelectable = true;
+            this.btn_export.Click += new System.EventHandler(this.btn_export_Click);
+            // 
+            // btn_import
+            // 
+            this.btn_import.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_import.AutoSize = true;
+            this.btn_import.Location = new System.Drawing.Point(1117, 3);
+            this.btn_import.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
+            this.btn_import.Name = "btn_import";
+            this.btn_import.Size = new System.Drawing.Size(96, 20);
+            this.btn_import.TabIndex = 4;
+            this.btn_import.Text = "Import";
+            this.btn_import.UseCustomBackColor = true;
+            this.btn_import.UseCustomForeColor = true;
+            this.btn_import.UseSelectable = true;
+            this.btn_import.Click += new System.EventHandler(this.btn_import_Click);
             // 
             // cb_addlayer
             // 
             this.cb_addlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cb_addlayer.FormattingEnabled = true;
             this.cb_addlayer.ItemHeight = 24;
-            this.cb_addlayer.Location = new System.Drawing.Point(1493, 13);
+            this.cb_addlayer.Location = new System.Drawing.Point(1493, 3);
             this.cb_addlayer.Name = "cb_addlayer";
             this.cb_addlayer.Size = new System.Drawing.Size(236, 30);
             this.cb_addlayer.TabIndex = 0;
@@ -245,7 +331,7 @@ namespace Chromatics.Forms
             | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_addlayer.Location = new System.Drawing.Point(1735, 3);
             this.btn_addlayer.Name = "btn_addlayer";
-            this.btn_addlayer.Size = new System.Drawing.Size(94, 40);
+            this.btn_addlayer.Size = new System.Drawing.Size(94, 20);
             this.btn_addlayer.TabIndex = 1;
             this.btn_addlayer.Text = "Add Layer";
             this.btn_addlayer.UseCustomBackColor = true;
@@ -258,7 +344,7 @@ namespace Chromatics.Forms
             this.cb_deviceselect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cb_deviceselect.FormattingEnabled = true;
             this.cb_deviceselect.ItemHeight = 24;
-            this.cb_deviceselect.Location = new System.Drawing.Point(3, 13);
+            this.cb_deviceselect.Location = new System.Drawing.Point(3, 3);
             this.cb_deviceselect.Name = "cb_deviceselect";
             this.cb_deviceselect.Size = new System.Drawing.Size(236, 30);
             this.cb_deviceselect.TabIndex = 2;
@@ -273,7 +359,7 @@ namespace Chromatics.Forms
             this.btn_preview.Location = new System.Drawing.Point(1373, 3);
             this.btn_preview.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.btn_preview.Name = "btn_preview";
-            this.btn_preview.Size = new System.Drawing.Size(97, 40);
+            this.btn_preview.Size = new System.Drawing.Size(97, 20);
             this.btn_preview.TabIndex = 3;
             this.btn_preview.Text = "Preview";
             this.btn_preview.UseCustomBackColor = true;
@@ -288,38 +374,6 @@ namespace Chromatics.Forms
             this.pn_bottom.Name = "pn_bottom";
             this.pn_bottom.Size = new System.Drawing.Size(1864, 46);
             this.pn_bottom.TabIndex = 2;
-            // 
-            // btn_import
-            // 
-            this.btn_import.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_import.AutoSize = true;
-            this.btn_import.Location = new System.Drawing.Point(1117, 3);
-            this.btn_import.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
-            this.btn_import.Name = "btn_import";
-            this.btn_import.Size = new System.Drawing.Size(96, 40);
-            this.btn_import.TabIndex = 4;
-            this.btn_import.Text = "Import";
-            this.btn_import.UseCustomBackColor = true;
-            this.btn_import.UseCustomForeColor = true;
-            this.btn_import.UseSelectable = true;
-            this.btn_import.Click += new System.EventHandler(this.btn_import_Click);
-            // 
-            // btn_export
-            // 
-            this.btn_export.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_export.AutoSize = true;
-            this.btn_export.Location = new System.Drawing.Point(1236, 3);
-            this.btn_export.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
-            this.btn_export.Name = "btn_export";
-            this.btn_export.Size = new System.Drawing.Size(96, 40);
-            this.btn_export.TabIndex = 5;
-            this.btn_export.Text = "Export";
-            this.btn_export.UseCustomBackColor = true;
-            this.btn_export.UseCustomForeColor = true;
-            this.btn_export.UseSelectable = true;
-            this.btn_export.Click += new System.EventHandler(this.btn_export_Click);
             // 
             // Uc_Mappings
             // 
@@ -337,6 +391,8 @@ namespace Chromatics.Forms
             this.tlp_frame.ResumeLayout(false);
             this.tlp_controls.ResumeLayout(false);
             this.tlp_controls.PerformLayout();
+            this.tlp_layercontrols.ResumeLayout(false);
+            this.tlp_layercontrols.PerformLayout();
             this.pn_top.ResumeLayout(false);
             this.tlp_top.ResumeLayout(false);
             this.tlp_top.PerformLayout();
@@ -365,5 +421,8 @@ namespace Chromatics.Forms
         private MetroFramework.Controls.MetroButton btn_undoselection;
         private MetroFramework.Controls.MetroButton btn_export;
         private MetroFramework.Controls.MetroButton btn_import;
+        private System.Windows.Forms.TableLayoutPanel tlp_layercontrols;
+        private MetroFramework.Controls.MetroComboBox cb_changemode;
+        private MetroFramework.Controls.MetroButton btn_togglebleed;
     }
 }

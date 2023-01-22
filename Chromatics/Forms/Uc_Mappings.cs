@@ -190,6 +190,18 @@ namespace Chromatics.Forms
             cb_addlayer.SelectedIndex = 0;
             selectedAddType = LayerType.DynamicLayer;
 
+            //Enumerate LayerModes into Mode Combobox
+            foreach (Enum lt in Enum.GetValues(typeof(LayerModes)))
+            {
+                var name = EnumExtensions.GetAttribute<DisplayAttribute>(lt).Name;
+                var item = new ComboboxItem { Value = lt, Text = name };
+
+                cb_changemode.Items.Add(item);
+            }
+
+            cb_changemode.SelectedIndex = 0;
+
+
             //Check for existing mappings and load, or else create defaults
             if (MappingLayers.LoadMappings())
             {
@@ -212,6 +224,8 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.btn_clearselection, @"Clear all keys on layer");
             tt_mappings.SetToolTip(this.btn_reverseselection, @"Reverse keys on layer");
             tt_mappings.SetToolTip(this.btn_undoselection, @"Undo key selection on layer");
+            tt_mappings.SetToolTip(this.btn_togglebleed, @"For layers which have a negative colour, allow lower layers to bleed through instead of showing the negative colour.");
+            tt_mappings.SetToolTip(this.cb_changemode, @"Change the layer mode." + Environment.NewLine + @"Interpolate: Shows the layer as a bar on your device." + Environment.NewLine + @"Fade: Fades the colour of the RGB keys.");
 
             //Handle Events
             this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
@@ -352,8 +366,15 @@ namespace Chromatics.Forms
             btn_clearselection.Enabled = false;
             btn_reverseselection.Enabled = false;
             btn_undoselection.Enabled = false;
+            btn_togglebleed.Enabled = false;
+            cb_changemode.Enabled = false;
             currentlyEditing = null;
             currentlySelected = null;
+
+            var item = new ComboboxItem { Value = LayerModes.None, Text = EnumExtensions.GetAttribute<DisplayAttribute>(LayerModes.None).Name };
+                        
+            cb_changemode.Items.Add(item);
+            cb_changemode.SelectedItem = item;
 
             RevertButtons();
 
@@ -517,6 +538,7 @@ namespace Chromatics.Forms
         {
             if (!init) return;
             if (IsAddingLayer) return;
+            if (currentlyEditing != null) return;
 
             var obj = (Pn_LayerDisplay)sender;
             
@@ -551,6 +573,41 @@ namespace Chromatics.Forms
                     }
                 }
 
+                if (layer.allowBleed)
+                {
+                    btn_togglebleed.Text = @"Bleed Enabled";
+                    
+                }
+                else
+                {
+                    btn_togglebleed.Text = @"Bleed Disabled";
+                }
+
+                var item = new ComboboxItem { Value = LayerModes.None, Text = EnumExtensions.GetAttribute<DisplayAttribute>(LayerModes.None).Name };
+
+                if (layer.rootLayerType == LayerType.BaseLayer || layer.rootLayerType == LayerType.EffectLayer)
+                {
+                    cb_changemode.Items.Add(item);
+                    cb_changemode.SelectedItem = item;
+                }
+                else
+                {
+                    foreach (ComboboxItem cb in cb_changemode.Items)
+                    {
+                        if ((LayerModes)cb.Value == LayerModes.None)
+                        {
+                            cb_changemode.Items.Remove(cb);
+                        }
+
+                        if ((LayerModes)cb.Value == layer.layerModes)
+                        {
+                            cb_changemode.SelectedItem = cb;
+                        }
+                    }
+                }
+
+                
+
                 obj.selected = true;
                 currentlySelected = obj;
                 obj.Invalidate();
@@ -582,6 +639,8 @@ namespace Chromatics.Forms
                 btn_clearselection.Enabled = false;
                 btn_reverseselection.Enabled = false;
                 btn_undoselection.Enabled = false;
+                btn_togglebleed.Enabled = false;
+                cb_changemode.Enabled = false;
                 parent.editing = false;
                 currentlyEditing = null;
 
@@ -625,6 +684,8 @@ namespace Chromatics.Forms
                 btn_clearselection.Enabled = true;
                 btn_reverseselection.Enabled = true;
                 btn_undoselection.Enabled = true;
+                btn_togglebleed.Enabled = true;
+                cb_changemode.Enabled = true;
                 parent.editing = true;
                 currentlyEditing = parent;
 
@@ -634,6 +695,29 @@ namespace Chromatics.Forms
                 var ml = MappingLayers.GetLayer(parent.ID);
                 var _selection = new Dictionary<int, LedId>();
 
+                if (ml.allowBleed)
+                {
+                    btn_togglebleed.Text = @"Bleed Enabled";
+                    btn_togglebleed.BackColor = System.Drawing.Color.Lime;
+                }
+                else
+                {
+                    btn_togglebleed.Text = @"Bleed Disabled";
+                    btn_togglebleed.BackColor = System.Drawing.Color.Red;
+                }
+
+                foreach (ComboboxItem item in cb_changemode.Items)
+                {
+                    if ((LayerModes)item.Value == LayerModes.None)
+                    {
+                        cb_changemode.Items.Remove(item);
+                    }
+
+                    if ((LayerModes)item.Value == ml.layerModes)
+                    {
+                        cb_changemode.SelectedItem = item;
+                    }
+                }
 
                 foreach (var led in ml.deviceLeds)
                 {
@@ -737,6 +821,8 @@ namespace Chromatics.Forms
                         btn_clearselection.Enabled = false;
                         btn_reverseselection.Enabled = false;
                         btn_undoselection.Enabled = false;
+                        btn_togglebleed.Enabled = false;
+                        cb_changemode.Enabled = false;
 
                         RevertButtons();
 
@@ -988,6 +1074,8 @@ namespace Chromatics.Forms
             btn_clearselection.Enabled = false;
             btn_reverseselection.Enabled = false;
             btn_undoselection.Enabled = false;
+            btn_togglebleed.Enabled = false;
+            cb_changemode.Enabled = false;
             currentlyEditing.editing = false;
             currentlyEditing = null;
             parent.Update();
@@ -1148,6 +1236,75 @@ namespace Chromatics.Forms
             if (IsAddingLayer) return;
 
             MappingLayers.ExportMappings();
+        }
+
+        private void btn_togglebleed_Click(object sender, EventArgs e)
+        {
+            if (!init) return;
+            if (IsAddingLayer) return;
+            if (_virtualDevices.Count <= 0) return;
+            
+            if (currentKeySelection.Count > 0 && currentlyEditing != null)
+            {
+                var parent = currentlyEditing;
+                var thisbtn = (MetroButton)sender;
+
+                var ms = MappingLayers.GetLayer(parent.ID);
+                
+                if (ms.allowBleed)
+                {
+                    //Disable Bleed
+                    thisbtn.Text = @"Bleed Disabled";
+                    thisbtn.BackColor = System.Drawing.Color.Red;
+                    ms.allowBleed = false;
+                }
+                else
+                {
+                    //Allow Bleed
+                    thisbtn.Text = @"Bleed Enabled";
+                    thisbtn.BackColor = System.Drawing.Color.Lime;
+                    ms.allowBleed = true;
+                }
+
+                MappingLayers.UpdateLayer(ms);
+
+                SaveLayers();
+
+
+                Debug.WriteLine($"Toggle bleeding on Layer {parent.ID}: {ms.allowBleed}");
+                
+                this.ActiveControl = thisbtn.Parent;
+            }
+        }
+
+        private void cb_changemode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!init) return;
+            if (IsAddingLayer) return;
+            if (_virtualDevices.Count <= 0) return;
+            
+            var cmb = (MetroComboBox)sender;
+
+            if (cmb.Items.Count > 0)
+            {
+                if (currentKeySelection.Count > 0 && currentlyEditing != null)
+                {
+                    var parent = currentlyEditing;
+
+                    var value = (ComboboxItem)cmb.SelectedItem;
+
+                    if (value != null)
+                    {
+                        var ms = MappingLayers.GetLayer(parent.ID);
+                        ms.layerModes = (LayerModes)Enum.Parse(typeof(LayerModes), value.Value.ToString());
+
+                        MappingLayers.UpdateLayer(ms);
+                        SaveLayers();
+                    }
+
+                    this.ActiveControl = cmb.Parent;
+                }
+            }
         }
     }
 }

@@ -284,7 +284,7 @@ namespace Chromatics.Forms
         protected override void OnGotFocus(EventArgs e)
         {
             this.BackColor = Color.SandyBrown;
-            
+                        
             base.OnGotFocus(e);
         }
 

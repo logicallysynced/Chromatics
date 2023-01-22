@@ -43,6 +43,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="MetroFramework">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\metromodernui\1.4.0\lib\net\MetroFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Design">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\metromodernui\1.4.0\lib\net\MetroFramework.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\metromodernui\1.4.0\lib\net\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
     <Reference Include="RGB.NET.Devices.Razer">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
     </Reference>
