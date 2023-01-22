@@ -608,6 +608,19 @@ namespace Chromatics.Forms
                         {
                             cb_changemode.SelectedItem = cb;
                         }
+                                                
+                    }
+
+                    if (cb_changemode.SelectedIndex < 0)
+                    {
+                        foreach (ComboboxItem cb in cb_changemode.Items)
+                        {
+                            if ((LayerModes)cb.Value == layer.layerModes)
+                            {
+                                cb_changemode.SelectedItem = cb;
+                            }
+                                                
+                        }
                     }
                 }
 
@@ -723,7 +736,19 @@ namespace Chromatics.Forms
 
                     if ((LayerModes)item.Value == ml.layerModes)
                     {
-                        cb_changemode.SelectedItem = item;
+                        cb_changemode.SelectedItem = item.Value;
+                    }
+                }
+
+                if (cb_changemode.SelectedIndex < 0)
+                {
+                    foreach (ComboboxItem cb in cb_changemode.Items)
+                    {
+                        if ((LayerModes)cb.Value == ml.layerModes)
+                        {
+                            cb_changemode.SelectedItem = cb;
+                        }
+                                                
                     }
                 }
 
