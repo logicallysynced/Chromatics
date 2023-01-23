@@ -622,9 +622,7 @@ namespace Chromatics.Forms
                                                 
                         }
                     }
-                }
-
-                
+                }               
 
                 obj.selected = true;
                 currentlySelected = obj;
@@ -668,7 +666,6 @@ namespace Chromatics.Forms
                 int i = 1;
                 foreach (var led in currentKeySelection.OrderBy(kvp => kvp.Key))
                 {
-                    Debug.WriteLine($"Order 3: {i}: {led.Value}");
                     ms.deviceLeds.Add(i, led.Value);
                     i++;
                 }

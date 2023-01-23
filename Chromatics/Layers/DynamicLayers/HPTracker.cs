@@ -58,14 +58,31 @@ namespace Chromatics.Layers
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
             {
-                
+                var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+
+                var currentVal = getCurrentPlayer.Entity.HPCurrent;
+                var minVal = 0;
+                var maxVal = getCurrentPlayer.Entity.HPMax;
+                var valPercentage = MathHelper.CalculatePercentage(currentVal, maxVal);
+                var valThreshold = 20.0; 
+
                 var full_col = ColorHelper.ColorToRGBColor(_colorPalette.HpFull.Color);
                 var critical_col = ColorHelper.ColorToRGBColor(_colorPalette.HpCritical.Color);
                 var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.HpEmpty.Color); //Bleed layer
             
+                if (maxVal <= 0) maxVal = currentVal + 1;
 
-                if (critical_brush == null) critical_brush = new SolidColorBrush(critical_col);
-                if (full_brush == null) full_brush = new SolidColorBrush(full_col);
+                if (critical_brush == null || critical_brush.Color != critical_col) critical_brush = new SolidColorBrush(critical_col);
+                if (full_brush == null || full_brush.Color != full_col) full_brush = new SolidColorBrush(full_col);
+
+                if (valPercentage < valThreshold)
+                {
+                    full_brush = critical_brush;
+                }
+                else
+                {
+                    full_brush.Color = full_col;
+                }
 
                 if (layer.allowBleed)
                 {
@@ -77,23 +94,6 @@ namespace Chromatics.Layers
                     empty_brush = new SolidColorBrush(empty_col);
                 }
                                 
-
-                var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
-
-                var currentVal = getCurrentPlayer.Entity.HPCurrent;
-                var minVal = 0;
-                var maxVal = getCurrentPlayer.Entity.HPMax;
-                var valPercentage = MathHelper.CalculatePercentage(currentVal, maxVal);
-                var valThreshold = 20.0;
-
-                if (valPercentage < valThreshold)
-                {
-                    full_brush = critical_brush;
-                }
-                else
-                {
-                    full_brush.Color = full_col;
-                }
 
                 //Check if layer mode has changed
                 if (_currentMode != layer.layerModes)
