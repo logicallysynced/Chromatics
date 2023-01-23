@@ -207,6 +207,8 @@ namespace Chromatics.Core
                         UseLocalCache = AppSettings.GetSettings().localcache
                     };             
 
+                    Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
+
                     _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
 
                     gameConnected = true;
