@@ -21,5 +21,13 @@ namespace Chromatics.Helpers
                 return (T)((c - mn) * (th - tl) / (mx - mn) + tl);
             }
         }
+
+        public static double CalculatePercentage<T>(T current, T max) where T : IComparable
+        {
+            double c = Convert.ToDouble(current);
+            double mx = Convert.ToDouble(max);
+
+            return (c / mx) * 100;
+        }
     }
 }
