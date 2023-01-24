@@ -17,6 +17,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -321,7 +322,7 @@ namespace Chromatics.Forms
         {
             //Create Default Layers
             Logger.WriteConsole(LoggerTypes.System, @"No layer file found. Creating default layers..");
-
+            
             foreach (Enum lt in Enum.GetValues(typeof(RGBDeviceType)))
             {
                 var i = 1;
@@ -402,6 +403,7 @@ namespace Chromatics.Forms
             tt_mappings.RemoveAll();
             tt_mappings.SetToolTip(this.cb_addlayer, "Add New Layer of selected type");
             tt_mappings.SetToolTip(this.cb_deviceselect, "Change to another device");
+            rtb_layerhelper.Text = @"";
 
             flp_layers.Controls.Clear();
             _layers.Clear();
@@ -513,6 +515,19 @@ namespace Chromatics.Forms
 
             var layer = MappingLayers.GetLayer(id);
             
+            if (layer.rootLayerType == LayerType.DynamicLayer)
+            {
+                rtb_layerhelper.Text = ((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), selectedindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+            }
+            else if (layer.rootLayerType == LayerType.BaseLayer)
+            {
+                rtb_layerhelper.Text = ((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), selectedindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+            }
+            else if (layer.rootLayerType == LayerType.EffectLayer)
+            {
+                rtb_layerhelper.Text = @"";
+            }
+
             layer.layerTypeindex = selectedindex;
             layer.requestUpdate = true;
 
@@ -622,8 +637,21 @@ namespace Chromatics.Forms
                                                 
                         }
                     }
-                }               
+                }
 
+                if (layer.rootLayerType == LayerType.DynamicLayer)
+                {
+                    rtb_layerhelper.Text = ((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                }
+                else if (layer.rootLayerType == LayerType.BaseLayer)
+                {
+                    rtb_layerhelper.Text = ((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                }
+                else if (layer.rootLayerType == LayerType.EffectLayer)
+                {
+                    rtb_layerhelper.Text = @"";
+                }
+                
                 obj.selected = true;
                 currentlySelected = obj;
                 obj.Invalidate();
@@ -723,7 +751,7 @@ namespace Chromatics.Forms
                     btn_togglebleed.Text = @"Bleed Disabled";
                     btn_togglebleed.BackColor = System.Drawing.Color.Red;
                 }
-
+                
                 foreach (ComboboxItem item in cb_changemode.Items)
                 {
                     if ((LayerModes)item.Value == LayerModes.None)
@@ -747,6 +775,21 @@ namespace Chromatics.Forms
                         }
                                                 
                     }
+                }
+
+
+                //Change this to reflect pre-save value
+                if (ml.rootLayerType == LayerType.DynamicLayer)
+                {
+                    rtb_layerhelper.Text = ((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                }
+                else if (ml.rootLayerType == LayerType.BaseLayer)
+                {
+                    rtb_layerhelper.Text = ((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                }
+                else if (ml.rootLayerType == LayerType.EffectLayer)
+                {
+                    rtb_layerhelper.Text = @"";
                 }
 
                 foreach (var led in ml.deviceLeds)
@@ -882,6 +925,7 @@ namespace Chromatics.Forms
                     RGBController.RemoveLayerGroup(targetid);
                     MappingLayers.RemoveLayer(targetid);
 
+                    rtb_layerhelper.Text = @"";
                     
                     SaveLayers();
 
@@ -1345,6 +1389,45 @@ namespace Chromatics.Forms
 
                     this.ActiveControl = cmb.Parent;
                 }
+            }
+        }
+
+        private void rtb_layerhelper_TextChanged(object sender, EventArgs e)
+        {
+            // Set a maximum font size
+            int maxFontSize = 10;
+
+            // Get the RichTextBox control
+            RichTextBox rtb = (RichTextBox)sender;
+
+            // Get the font size for the current text
+            float fontSize = rtb.Font.Size;
+
+            // Set a flag to indicate if the text has overflowed
+            bool textOverflowed = false;
+
+            // Keep reducing the font size until the text fits within the RichTextBox
+            while (rtb.ClientRectangle.Height < rtb.GetPositionFromCharIndex(rtb.Text.Length - 1).Y + rtb.Font.Height && fontSize > 1)
+            {
+                // Reduce the font size by 1
+                fontSize -= 1;
+
+                // Update the font size for the RichTextBox
+                rtb.Font = new Font(rtb.Font.FontFamily, fontSize);
+
+                // Set the flag to indicate that the text has overflowed
+                textOverflowed = true;
+
+                // Check if the font size exceeds the maximum
+                if (fontSize <= maxFontSize)
+                {
+                    break;
+                }
+            }
+
+            if (textOverflowed)
+            {
+                rtb.Text = @"";
             }
         }
     }

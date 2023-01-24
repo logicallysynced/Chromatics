@@ -20,51 +20,51 @@ namespace Chromatics.Enums
     }
     public enum BaseLayerType
     {
-        [Display(Name="Static")]
+        [Display(Name="Static", Description = "Displays a single colour over the entire base layer.")]
         Static = 0,
-        [Display(Name="Reactive Weather")]
+        [Display(Name="Reactive Weather", Description = "Base layer changes colour depending on the current zone's weather.")]
         ReactiveWeather = 1,
-        [Display(Name = "Battle Stance")]
+        [Display(Name = "Battle Stance", Description = "Base layer changes colour depending on whether the character is engaged in battle or not.")]
         BattleStance = 2,
-        [Display(Name = "Job Classes")]
+        [Display(Name = "Job Classes", Description = "Base layer changes colour depending on the character's current class.")]
         JobClasses = 3,
     };
     public enum DynamicLayerType
     {
-        [Display(Name="None")]
+        [Display(Name="None", Description = "Disables this layer.")]
         None = 0,
-        [Display(Name="Highlight")]
+        [Display(Name="Highlight", Description = "Displays the highlight colour over all selected keys.")]
         Highlight = 1,
-        [Display(Name="Keybinds")]
+        [Display(Name="Keybinds", Description = "Displays different colours across selected keys based on keybind status of selected keys.")]
         Keybinds = 2,
-        [Display(Name = "Enmity Tracker")]
+        [Display(Name = "Enmity Tracker", Description = "Displays different colours across selected keys depending on enmity status of target.")]
         EnmityTracker = 3,
-        [Display(Name = "Target HP")]
+        [Display(Name = "Target HP", Description = "Shows current target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         TargetHP = 4,
-        [Display(Name = "Target Castbar")]
+        [Display(Name = "Target Castbar", Description = "Shows current target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         TargetCastbar = 5,
-        [Display(Name = "HP Tracker")]
+        [Display(Name = "HP Tracker", Description = "Shows character's HP across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         HPTracker = 6,
-        [Display(Name = "MP Tracker")]
+        [Display(Name = "MP Tracker", Description = "Shows character's MP/CP/GP across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         MPTracker = 7,
-        [Display(Name = "Job Gauge")]
+        [Display(Name = "Job Gauge", Description = "Shows character's Job Gauge across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         JobGauge = 8,
-        [Display(Name = "Experience Tracker")]
+        [Display(Name = "Experience Tracker", Description = "Shows character's EXP level progress across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         ExperienceTracker = 9,
-        [Display(Name = "Battle Stance")]
+        [Display(Name = "Battle Stance", Description = "Displays different colours across selected kyes depending on whether the character is engaged in battle or not.")]
         BattleStance = 10,
-        [Display(Name = "Castbar")]
+        [Display(Name = "Castbar", Description = "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         Castbar = 11,
-        [Display(Name = "Job Class")]
+        [Display(Name = "Job Class", Description = "Displays different colours across selected keys depending on the character's current class.")]
         JobClass = 12,
     };
     public enum EffectLayerType
     {
-        [Display(Name="None")]
+        [Display(Name="None", Description = "")]
         None = 0,
-        [Display(Name="Duty Finder Bell")]
+        [Display(Name="Duty Finder Bell", Description = "")]
         DutyFinderBell = 1,
-        [Display(Name="Damage Flash")]
+        [Display(Name="Damage Flash", Description = "")]
         DamageFlash = 2
     };
 

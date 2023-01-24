@@ -43,6 +43,7 @@ namespace Chromatics.Forms
             this.tlp_layercontrols = new System.Windows.Forms.TableLayoutPanel();
             this.cb_changemode = new MetroFramework.Controls.MetroComboBox();
             this.btn_togglebleed = new MetroFramework.Controls.MetroButton();
+            this.rtb_layerhelper = new System.Windows.Forms.RichTextBox();
             this.pn_top = new System.Windows.Forms.Panel();
             this.tlp_top = new System.Windows.Forms.TableLayoutPanel();
             this.btn_export = new MetroFramework.Controls.MetroButton();
@@ -131,9 +132,9 @@ namespace Chromatics.Forms
             this.tlp_frame.Location = new System.Drawing.Point(3, 3);
             this.tlp_frame.Name = "tlp_frame";
             this.tlp_frame.RowCount = 3;
-            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 37.5603F));
-            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.117445F));
-            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 56.32226F));
+            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8F));
+            this.tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 52F));
             this.tlp_frame.Size = new System.Drawing.Size(1298, 924);
             this.tlp_frame.TabIndex = 2;
             // 
@@ -153,7 +154,7 @@ namespace Chromatics.Forms
             this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_controls.Size = new System.Drawing.Size(80, 341);
+            this.tlp_controls.Size = new System.Drawing.Size(80, 363);
             this.tlp_controls.TabIndex = 0;
             // 
             // btn_clearselection
@@ -178,7 +179,7 @@ namespace Chromatics.Forms
             this.btn_reverseselection.AutoSize = true;
             this.btn_reverseselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_reverseselection.Enabled = false;
-            this.btn_reverseselection.Location = new System.Drawing.Point(3, 88);
+            this.btn_reverseselection.Location = new System.Drawing.Point(3, 93);
             this.btn_reverseselection.Name = "btn_reverseselection";
             this.btn_reverseselection.Size = new System.Drawing.Size(74, 30);
             this.btn_reverseselection.TabIndex = 1;
@@ -192,7 +193,7 @@ namespace Chromatics.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_undoselection.AutoSize = true;
             this.btn_undoselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btn_undoselection.Location = new System.Drawing.Point(3, 173);
+            this.btn_undoselection.Location = new System.Drawing.Point(3, 183);
             this.btn_undoselection.Name = "btn_undoselection";
             this.btn_undoselection.Size = new System.Drawing.Size(74, 30);
             this.btn_undoselection.TabIndex = 2;
@@ -205,18 +206,21 @@ namespace Chromatics.Forms
             this.tlp_layercontrols.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlp_layercontrols.ColumnCount = 4;
+            this.tlp_layercontrols.ColumnCount = 5;
+            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 1F));
+            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
+            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4F));
+            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
             this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_layercontrols.Controls.Add(this.cb_changemode, 3, 0);
-            this.tlp_layercontrols.Controls.Add(this.btn_togglebleed, 2, 0);
-            this.tlp_layercontrols.Location = new System.Drawing.Point(3, 350);
+            this.tlp_layercontrols.Controls.Add(this.cb_changemode, 4, 0);
+            this.tlp_layercontrols.Controls.Add(this.btn_togglebleed, 3, 0);
+            this.tlp_layercontrols.Controls.Add(this.rtb_layerhelper, 1, 0);
+            this.tlp_layercontrols.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.tlp_layercontrols.Location = new System.Drawing.Point(3, 372);
             this.tlp_layercontrols.Name = "tlp_layercontrols";
             this.tlp_layercontrols.RowCount = 1;
             this.tlp_layercontrols.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_layercontrols.Size = new System.Drawing.Size(1206, 50);
+            this.tlp_layercontrols.Size = new System.Drawing.Size(1206, 67);
             this.tlp_layercontrols.TabIndex = 1;
             // 
             // cb_changemode
@@ -224,7 +228,7 @@ namespace Chromatics.Forms
             this.cb_changemode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cb_changemode.FormattingEnabled = true;
             this.cb_changemode.ItemHeight = 24;
-            this.cb_changemode.Location = new System.Drawing.Point(906, 10);
+            this.cb_changemode.Location = new System.Drawing.Point(906, 18);
             this.cb_changemode.Name = "cb_changemode";
             this.cb_changemode.Size = new System.Drawing.Size(297, 30);
             this.cb_changemode.TabIndex = 6;
@@ -236,16 +240,32 @@ namespace Chromatics.Forms
             this.btn_togglebleed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_togglebleed.AutoSize = true;
-            this.btn_togglebleed.Location = new System.Drawing.Point(763, 3);
+            this.btn_togglebleed.Location = new System.Drawing.Point(732, 3);
             this.btn_togglebleed.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.btn_togglebleed.Name = "btn_togglebleed";
-            this.btn_togglebleed.Size = new System.Drawing.Size(120, 44);
+            this.btn_togglebleed.Size = new System.Drawing.Size(151, 61);
             this.btn_togglebleed.TabIndex = 4;
             this.btn_togglebleed.Text = "Bleed Disabled";
             this.btn_togglebleed.UseCustomBackColor = true;
             this.btn_togglebleed.UseCustomForeColor = true;
             this.btn_togglebleed.UseSelectable = true;
             this.btn_togglebleed.Click += new System.EventHandler(this.btn_togglebleed_Click);
+            // 
+            // rtb_layerhelper
+            // 
+            this.rtb_layerhelper.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtb_layerhelper.BackColor = System.Drawing.SystemColors.Control;
+            this.rtb_layerhelper.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtb_layerhelper.Location = new System.Drawing.Point(15, 3);
+            this.rtb_layerhelper.Name = "rtb_layerhelper";
+            this.rtb_layerhelper.ReadOnly = true;
+            this.rtb_layerhelper.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.rtb_layerhelper.Size = new System.Drawing.Size(657, 61);
+            this.rtb_layerhelper.TabIndex = 7;
+            this.rtb_layerhelper.Text = "";
+            this.rtb_layerhelper.TextChanged += new System.EventHandler(this.rtb_layerhelper_TextChanged);
             // 
             // pn_top
             // 
@@ -424,5 +444,6 @@ namespace Chromatics.Forms
         private System.Windows.Forms.TableLayoutPanel tlp_layercontrols;
         private MetroFramework.Controls.MetroComboBox cb_changemode;
         private MetroFramework.Controls.MetroButton btn_togglebleed;
+        private System.Windows.Forms.RichTextBox rtb_layerhelper;
     }
 }
