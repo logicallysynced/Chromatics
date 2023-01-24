@@ -21,6 +21,8 @@ namespace Chromatics.Layers
         private SolidColorBrush empty_brush;
         private SolidColorBrush full_brush;
         private LayerModes _currentMode;
+        private int _interpolateValue;
+        private Color _faderValue;
 
         public override void Process(IMappingLayer layer)
         {
@@ -115,69 +117,75 @@ namespace Chromatics.Layers
                     var currentVal_Interpolate = LinearInterpolation.Interpolate(currentVal, minVal, maxVal, 0, countKeys);
                     if (currentVal_Interpolate < 0) currentVal_Interpolate = 0;
                     if (currentVal_Interpolate > countKeys) currentVal_Interpolate = countKeys;
+
+                    if (currentVal_Interpolate != _interpolateValue)
+                    {
                                        
-                    //Debug.WriteLine($"Interpolate HP Tracker: {currentHp_Interpolate}/{countKeys}.");
+                        //Debug.WriteLine($"Interpolate HP Tracker: {currentHp_Interpolate}/{countKeys}.");
 
-                    //Process Lighting
-                    var ledGroups = new List<PublicListLedGroup>();
+                        //Process Lighting
+                        var ledGroups = new List<PublicListLedGroup>();
                                         
-                    for (int i = 0; i < countKeys; i++)
-                    {
-                        var ledGroup = new PublicListLedGroup(surface, ledArray[i])
+                        for (int i = 0; i < countKeys; i++)
                         {
-                            ZIndex = layer.zindex,
-                        };
+                            var ledGroup = new PublicListLedGroup(surface, ledArray[i])
+                            {
+                                ZIndex = layer.zindex,
+                            };
 
-                        ledGroup.Detach();
+                            ledGroup.Detach();
 
-                        if (i <= currentVal_Interpolate)
-                        {
-                            ledGroup.Brush = full_brush;
+                            if (i <= currentVal_Interpolate)
+                            {
+                                ledGroup.Brush = full_brush;
                                 
+                            }
+                            else
+                            {
+                                ledGroup.Brush = empty_brush;
+                            }
+                            
+                            ledGroups.Add(ledGroup);
+                            
                         }
-                        else
+
+                        foreach (var layergroup in _localgroups)
                         {
-                            ledGroup.Brush = empty_brush;
+                            layergroup.Detach();
                         }
-                            
-                        ledGroups.Add(ledGroup);
-                            
+
+                        _localgroups = ledGroups;
+                        _interpolateValue = currentVal_Interpolate;
                     }
-
-                    foreach (var layergroup in _localgroups)
-                    {
-                        layergroup.Detach();
-                    }
-
-                    _localgroups = ledGroups;
-
                     
                 }
                 else if (layer.layerModes == Enums.LayerModes.Fade)
                 {
                     //Fade implementation
                     
-                    if (valPercentage < valThreshold)
-                    {
-                        full_brush.Color = full_col;
-                        empty_brush.Color = critical_col;
-                    }
-                    else
-                    {
-                        empty_brush.Color = empty_col;
-                    }
-
                     var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, empty_brush.Color, full_brush.Color);
-                    
-
-                    var ledGroup = new PublicListLedGroup(surface, ledArray)
+                    if (currentVal_Fader != _faderValue)
                     {
-                        ZIndex = layer.zindex,
-                        Brush = new SolidColorBrush(currentVal_Fader)
-                    };
+                        if (valPercentage < valThreshold)
+                        {
+                            full_brush.Color = full_col;
+                            empty_brush.Color = critical_col;
+                        }
+                        else
+                        {
+                            empty_brush.Color = empty_col;
+                        }
 
-                    ledGroup.Detach();
-                    _localgroups.Add(ledGroup);
+                        var ledGroup = new PublicListLedGroup(surface, ledArray)
+                        {
+                            ZIndex = layer.zindex,
+                            Brush = new SolidColorBrush(currentVal_Fader)
+                        };
+
+                        ledGroup.Detach();
+                        _localgroups.Add(ledGroup);
+                        _faderValue = currentVal_Fader;
+                    }
                 }
 
                 //Send layers to _layergroups Dictionary to be tracked outside this method
