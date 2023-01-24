@@ -118,7 +118,7 @@ namespace Chromatics.Layers
                     if (currentVal_Interpolate < 0) currentVal_Interpolate = 0;
                     if (currentVal_Interpolate > countKeys) currentVal_Interpolate = countKeys;
 
-                    if (currentVal_Interpolate != _interpolateValue)
+                    if (currentVal_Interpolate != _interpolateValue || layer.requestUpdate)
                     {
                                        
                         //Debug.WriteLine($"Interpolate HP Tracker: {currentHp_Interpolate}/{countKeys}.");
@@ -164,7 +164,7 @@ namespace Chromatics.Layers
                     //Fade implementation
                     
                     var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, empty_brush.Color, full_brush.Color);
-                    if (currentVal_Fader != _faderValue)
+                    if (currentVal_Fader != _faderValue || layer.requestUpdate)
                     {
                         if (valPercentage < valThreshold)
                         {

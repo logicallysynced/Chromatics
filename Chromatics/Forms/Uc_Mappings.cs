@@ -549,6 +549,7 @@ namespace Chromatics.Forms
 
             var layer = MappingLayers.GetLayer(id);
             layer.Enabled = obj.Checked;
+            layer.requestUpdate = true;
             MappingLayers.UpdateLayer(layer);
             SaveLayers();
             VisualiseLayers(false);
