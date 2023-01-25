@@ -19,7 +19,7 @@ namespace Chromatics.Layers
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
             
-            //Static Base Layer Implementation
+            //Battle Stance Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var engaged_color = ColorHelper.ColorToRGBColor(_colorPalette.BattleEngaged.Color);
             var empty_color = ColorHelper.ColorToRGBColor(_colorPalette.BattleNotEngaged.Color);

@@ -26,7 +26,7 @@ namespace Chromatics.Layers
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
             
-            //Static Base Layer Implementation
+            //Screen Capture Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
             var _layergroups = RGBController.GetLiveLayerGroups();

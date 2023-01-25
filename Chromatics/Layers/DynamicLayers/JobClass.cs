@@ -19,7 +19,7 @@ namespace Chromatics.Layers
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
 
-            //Static Base Layer Implementation
+            //Job Classes Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var highlight_col = Color.Transparent;
             var _layergroups = RGBController.GetLiveLayerGroups();
