@@ -64,6 +64,7 @@ namespace Chromatics.Layers
             else
             {
                 //Get screen capture data
+                /*
                 var screenCapture = GetGameWindowPixelColors();
 
                 if (screenCapture != null)
@@ -85,8 +86,9 @@ namespace Chromatics.Layers
                     //var textureBottom = new LinearGradientTexture(new RGB.NET.Core.Size(100, 100), gradientBottom);
 
                     layergroup.Brush = new RGB.NET.Core.TextureBrush(textureTop);
-                
+                    
                 }
+                */
             }
             
 

@@ -492,17 +492,13 @@ namespace Chromatics.Forms
                     btn_preview.BackColor = SystemColors.Control;
                     MappingLayers.SetPreview(false);
 
-                    var layers = MappingLayers.GetLayers();
-                    foreach (var layer in layers)
-                    {
-                        layer.Value.requestUpdate = true;
-                    }
                 }
             }
             else
             {
                 btn_preview.BackColor = SystemColors.Control;
                 MappingLayers.SetPreview(false);
+
             }
         }
 

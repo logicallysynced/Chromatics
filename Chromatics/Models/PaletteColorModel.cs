@@ -41,6 +41,8 @@ namespace Chromatics.Models
         public ColorMapping ExpMax = new("Experience Bar (Level Cap)", PaletteTypes.PlayerStats, Color.Orange);
         public ColorMapping CastChargeEmpty = new("Cast Bar Charge Empty", PaletteTypes.PlayerStats, Color.Black);
         public ColorMapping CastChargeFull = new("Cast Bar Charge Build", PaletteTypes.PlayerStats, Color.White);
+        public ColorMapping BattleEngaged = new("Battle Stance Engaged", PaletteTypes.PlayerStats, Color.Red);
+        public ColorMapping BattleNotEngaged = new("Battle Stance Not Engaged", PaletteTypes.PlayerStats, Color.Black);
 
         //Enmity/Aggro
         public ColorMapping Emnity0 = new("Minimal Enmity", PaletteTypes.EnmityAggro, Color.Green);

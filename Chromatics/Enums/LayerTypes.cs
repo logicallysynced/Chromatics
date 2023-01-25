@@ -27,7 +27,7 @@ namespace Chromatics.Enums
         ReactiveWeather = 1,
         [Display(Name = "Battle Stance", Description = "Base layer changes colour depending on whether the character is engaged in battle or not.")]
         BattleStance = 2,
-        [Display(Name = "Job Classes", Description = "Base layer changes colour depending on the character's current class.")]
+        [Display(Name = "Job Classes", Description = "Base layer changes colour depending on the character's current class.\nUses base layer colours.")]
         JobClasses = 3,
         [Display(Name = "Screen Capture", Description = "Draws a gradient as your base layer by polling the four corners of your game screen.")]
         ScreenCapture = 4,
@@ -58,7 +58,7 @@ namespace Chromatics.Enums
         BattleStance = 10,
         [Display(Name = "Castbar", Description = "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         Castbar = 11,
-        [Display(Name = "Job Class", Description = "Displays different colours across selected keys depending on the character's current class.")]
+        [Display(Name = "Job Class", Description = "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.")]
         JobClass = 12,
     };
     public enum EffectLayerType
