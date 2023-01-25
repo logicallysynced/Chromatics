@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chromatics.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -43,7 +44,7 @@ namespace Chromatics.Enums
         TargetHP = 4,
         [Display(Name = "Target Castbar", Description = "Shows current target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         TargetCastbar = 5,
-        [Display(Name = "HP Tracker", Description = "Shows character's HP across selected keys.\n[Supported Modes: Interpolate, Fade]")]
+        [Display(Name = "HP Tracker", Description = "Shows character's HP across selected keys. Will switch to critical colour upon falling below {criticalHpPercentage} HP.\n[Supported Modes: Interpolate, Fade]")]
         HPTracker = 6,
         [Display(Name = "MP Tracker", Description = "Shows character's MP/CP/GP across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         MPTracker = 7,

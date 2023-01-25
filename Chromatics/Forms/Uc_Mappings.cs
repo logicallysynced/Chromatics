@@ -35,7 +35,6 @@ namespace Chromatics.Forms
         private List<KeyButton> _currentSelectedKeys = new List<KeyButton>();
         private Dictionary<int, LedId> currentKeySelection = new Dictionary<int,LedId>();
         private Dictionary<RGBDeviceType, VirtualDevice> _virtualDevices;
-        private HashSet<int> _visibleLayers = new HashSet<int>();
         private int _layerPad = 5;
         private MetroToolTip tt_mappings;
         private LayerType selectedAddType;
@@ -517,15 +516,15 @@ namespace Chromatics.Forms
             
             if (layer.rootLayerType == LayerType.DynamicLayer)
             {
-                rtb_layerhelper.Text = ((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), selectedindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), selectedindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
             }
             else if (layer.rootLayerType == LayerType.BaseLayer)
             {
-                rtb_layerhelper.Text = ((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), selectedindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), selectedindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
             }
             else if (layer.rootLayerType == LayerType.EffectLayer)
             {
-                rtb_layerhelper.Text = @"";
+                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
             }
 
             layer.layerTypeindex = selectedindex;
@@ -642,15 +641,15 @@ namespace Chromatics.Forms
 
                 if (layer.rootLayerType == LayerType.DynamicLayer)
                 {
-                    rtb_layerhelper.Text = ((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
                 }
                 else if (layer.rootLayerType == LayerType.BaseLayer)
                 {
-                    rtb_layerhelper.Text = ((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
                 }
                 else if (layer.rootLayerType == LayerType.EffectLayer)
                 {
-                    rtb_layerhelper.Text = @"";
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
                 }
                 
                 obj.selected = true;
@@ -779,18 +778,17 @@ namespace Chromatics.Forms
                 }
 
 
-                //Change this to reflect pre-save value
                 if (ml.rootLayerType == LayerType.DynamicLayer)
                 {
-                    rtb_layerhelper.Text = ((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
                 }
                 else if (ml.rootLayerType == LayerType.BaseLayer)
                 {
-                    rtb_layerhelper.Text = ((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description;
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
                 }
                 else if (ml.rootLayerType == LayerType.EffectLayer)
                 {
-                    rtb_layerhelper.Text = @"";
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
                 }
 
                 foreach (var led in ml.deviceLeds)
@@ -1397,6 +1395,7 @@ namespace Chromatics.Forms
         {
             // Set a maximum font size
             int maxFontSize = 10;
+            int minFontSize = 8;
 
             // Get the RichTextBox control
             RichTextBox rtb = (RichTextBox)sender;
@@ -1404,32 +1403,59 @@ namespace Chromatics.Forms
             // Get the font size for the current text
             float fontSize = rtb.Font.Size;
 
-            // Set a flag to indicate if the text has overflowed
-            bool textOverflowed = false;
+            // Get the current text
+            string text = rtb.Text;
 
-            // Keep reducing the font size until the text fits within the RichTextBox
-            while (rtb.ClientRectangle.Height < rtb.GetPositionFromCharIndex(rtb.Text.Length - 1).Y + rtb.Font.Height && fontSize > 1)
+            // Suspend layout updates
+            rtb.SuspendLayout();
+
+            // Create a new Graphics object
+            using (var g = rtb.CreateGraphics())
             {
-                // Reduce the font size by 1
-                fontSize -= 1;
+                // Measure the size of the current text
+                SizeF textSize = g.MeasureString(text, rtb.Font);
 
-                // Update the font size for the RichTextBox
-                rtb.Font = new Font(rtb.Font.FontFamily, fontSize);
-
-                // Set the flag to indicate that the text has overflowed
-                textOverflowed = true;
-
-                // Check if the font size exceeds the maximum
-                if (fontSize <= maxFontSize)
+                // Check if the text fits within the RichTextBox
+                if (textSize.Width > rtb.Width || textSize.Height > rtb.Height)
                 {
-                    break;
+                    // Reduce the font size until the text fits within the RichTextBox
+                    while (textSize.Width > rtb.Width || textSize.Height > rtb.Height)
+                    {
+                        // Reduce the font size by 1
+                        fontSize--;
+
+                        // Check if the font size exceeds the maximum
+                        if (fontSize <= minFontSize)
+                        {
+                            break;
+                        }
+
+                        // Measure the size of the text with the new font size
+                        textSize = g.MeasureString(text, new Font(rtb.Font.FontFamily, fontSize));
+                    }
+
+                    // Update the font size for the RichTextBox
+                    rtb.Font = new Font(rtb.Font.FontFamily, fontSize);
+                }
+                else if (textSize.Width <= rtb.Width && textSize.Height <= rtb.Height && fontSize < maxFontSize)
+                {
+                    // Increase the font size until the text fits within the RichTextBox
+                    while (textSize.Width <= rtb.Width && textSize.Height <= rtb.Height && fontSize < maxFontSize)
+                    {
+                        // Increase the font size by 1
+                        fontSize++;
+
+                        // Measure the size of the text with the new font size
+                        textSize = g.MeasureString(text, new Font(rtb.Font.FontFamily, fontSize));
+                    }
+
+                    // Update the font size for the RichTextBox
+                    rtb.Font = new Font(rtb.Font.FontFamily, fontSize);
                 }
             }
 
-            if (textOverflowed)
-            {
-                rtb.Text = @"";
-            }
+            // Resume layout updates
+            rtb.ResumeLayout();
         }
     }
 }

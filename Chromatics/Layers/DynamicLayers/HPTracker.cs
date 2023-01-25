@@ -66,7 +66,6 @@ namespace Chromatics.Layers
                 var minVal = 0;
                 var maxVal = getCurrentPlayer.Entity.HPMax;
                 var valPercentage = MathHelper.CalculatePercentage(currentVal, maxVal);
-                var valThreshold = 20.0; 
 
                 var full_col = ColorHelper.ColorToRGBColor(_colorPalette.HpFull.Color);
                 var critical_col = ColorHelper.ColorToRGBColor(_colorPalette.HpCritical.Color);
@@ -77,7 +76,12 @@ namespace Chromatics.Layers
                 if (critical_brush == null || critical_brush.Color != critical_col) critical_brush = new SolidColorBrush(critical_col);
                 if (full_brush == null || full_brush.Color != full_col) full_brush = new SolidColorBrush(full_col);
 
-                if (valPercentage < valThreshold)
+                var criticalHpPercentage = AppSettings.GetSettings().criticalHpPercentage;
+                if (criticalHpPercentage < 0) criticalHpPercentage = 0;
+                if (criticalHpPercentage > maxVal) criticalHpPercentage = maxVal;
+
+
+                if (valPercentage < criticalHpPercentage)
                 {
                     full_brush = critical_brush;
                 }
@@ -166,7 +170,7 @@ namespace Chromatics.Layers
                     var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, empty_brush.Color, full_brush.Color);
                     if (currentVal_Fader != _faderValue || layer.requestUpdate)
                     {
-                        if (valPercentage < valThreshold)
+                        if (valPercentage < criticalHpPercentage)
                         {
                             full_brush.Color = full_col;
                             empty_brush.Color = critical_col;

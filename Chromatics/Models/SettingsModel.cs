@@ -15,10 +15,7 @@ namespace Chromatics.Models
         public bool trayonstartup { get; set; } = false;
         public bool releasedevices { get; set; } = false;
         public int globalbrightness { get; set; } = 100;
-
-
-
-
+        public double criticalHpPercentage { get; set; } = 20.0;
 
 
 
