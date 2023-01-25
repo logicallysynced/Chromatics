@@ -210,7 +210,7 @@ namespace Chromatics.Core
                     Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
 
                     _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
-
+                    
                     gameConnected = true;
                 
                 }
@@ -223,6 +223,15 @@ namespace Chromatics.Core
                     _GameConnectionCancellationTokenSource.Cancel();
                     RGBController.StopEffects(true);
                     StartGameLoop();
+
+                    #if DEBUG
+                        Debug.WriteLine(@"Scanning memory..");
+                        Thread.Sleep(1000);
+                        foreach (var location in _memoryHandler.Scanner.Locations)
+                        {
+                            Debug.WriteLine($"Found {location.Key}. Location: {location.Value.GetAddress().ToInt64():X}");
+                        }
+                    #endif
                 }
             }
             catch (Exception ex)
