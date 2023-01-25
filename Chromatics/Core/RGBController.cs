@@ -316,9 +316,10 @@ namespace Chromatics.Core
             {
                 foreach (var layer in layergroup.Value)
                 {
-                    surface.Detach(layer);
+                    layer.Detach();
                 }
             }
+
 
             _layergroups.Clear();
             _layergroupledcollection.Clear();
