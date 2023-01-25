@@ -338,94 +338,95 @@ namespace Chromatics.Core
                 {
                     ResetLayerGroups();
                     _wasPreviewed = true;
-                }
+                
 
-                var layers = MappingLayers.GetLayers().OrderBy(x => x.Value.zindex);
+                    var layers = MappingLayers.GetLayers().OrderBy(x => x.Value.zindex);
 
-                //Release any running effects
-                StopEffects();
+                    //Release any running effects
+                    StopEffects();
 
-                //Display mappings on devices
-                foreach (var layer in layers)
-                {
-                    var mapping = layer.Value;
-
-                    if (mapping.rootLayerType == Enums.LayerType.EffectLayer) continue;
-
-                    //Loop through all LED's and assign to device layer
-                    var devices = surface.GetDevices(mapping.deviceType);
-
-                    var layergroup = new PublicListLedGroup(surface)
+                    //Display mappings on devices
+                    foreach (var layer in layers)
                     {
-                        ZIndex = mapping.zindex,
-                    };
+                        var mapping = layer.Value;
 
-                    if (_layergroups.ContainsKey(mapping.layerID))
-                    {
-                        layergroup = _layergroups[mapping.layerID].FirstOrDefault();
-                    }
-                    else
-                    {
-                        var lg = new PublicListLedGroup[1];
-                        lg[0] = layergroup;
-                        _layergroups.Add(mapping.layerID, lg);
-                    }
+                        if (mapping.rootLayerType == Enums.LayerType.EffectLayer) continue;
 
+                        //Loop through all LED's and assign to device layer
+                        var devices = surface.GetDevices(mapping.deviceType);
 
-                    var drawing_col = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(mapping.rootLayerType).Value;
-                    var highlight_col = ColorHelper.ColorToRGBColor(drawing_col);
-
-                    foreach (var device in devices)
-                    {
-                        if (!_devices.Contains(device)) continue;
-
-                        foreach (var led in device)
+                        var layergroup = new PublicListLedGroup(surface)
                         {
-                            if (!mapping.deviceLeds.Any(v => v.Value.Equals(led.Id)))
-                            {
-                                layergroup.RemoveLed(led);
-                                _layergroupledcollection.Remove(led);
-                                continue;
-                            }
+                            ZIndex = mapping.zindex,
+                        };
 
-                            if (!mapping.Enabled && mapping.rootLayerType == Enums.LayerType.BaseLayer)
+                        if (_layergroups.ContainsKey(mapping.layerID))
+                        {
+                            layergroup = _layergroups[mapping.layerID].FirstOrDefault();
+                        }
+                        else
+                        {
+                            var lg = new PublicListLedGroup[1];
+                            lg[0] = layergroup;
+                            _layergroups.Add(mapping.layerID, lg);
+                        }
+
+
+                        var drawing_col = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(mapping.rootLayerType).Value;
+                        var highlight_col = ColorHelper.ColorToRGBColor(drawing_col);
+
+                        foreach (var device in devices)
+                        {
+                            if (!_devices.Contains(device)) continue;
+
+                            foreach (var led in device)
                             {
-                                drawing_col = System.Drawing.Color.Black;
-                                highlight_col = ColorHelper.ColorToRGBColor(drawing_col);
-                            }
-                            else if (!mapping.Enabled)
-                            {
-                                if (_layergroupledcollection.Contains(led))
+                                if (!mapping.deviceLeds.Any(v => v.Value.Equals(led.Id)))
                                 {
                                     layergroup.RemoveLed(led);
                                     _layergroupledcollection.Remove(led);
+                                    continue;
                                 }
 
-                                continue;
-                            }
+                                if (!mapping.Enabled && mapping.rootLayerType == Enums.LayerType.BaseLayer)
+                                {
+                                    drawing_col = System.Drawing.Color.Black;
+                                    highlight_col = ColorHelper.ColorToRGBColor(drawing_col);
+                                }
+                                else if (!mapping.Enabled)
+                                {
+                                    if (_layergroupledcollection.Contains(led))
+                                    {
+                                        layergroup.RemoveLed(led);
+                                        _layergroupledcollection.Remove(led);
+                                    }
 
-                            if (led.Color != highlight_col)
-                            {
-                                layergroup.RemoveLed(led);
-                                led.Color = highlight_col;
-                            }
+                                    continue;
+                                }
 
-                            if (!_layergroupledcollection.Contains(led))
-                            {
-                                _layergroupledcollection.Add(led);
-                            }
+                                if (led.Color != highlight_col)
+                                {
+                                    layergroup.RemoveLed(led);
+                                    led.Color = highlight_col;
+                                }
 
-                            layergroup.AddLed(led);
+                                if (!_layergroupledcollection.Contains(led))
+                                {
+                                    _layergroupledcollection.Add(led);
+                                }
+
+                                layergroup.AddLed(led);
+
+                            }
 
                         }
 
+                        //Apply lighting
+                        var brush = new SolidColorBrush(highlight_col);
+
+                        layergroup.Brush = brush;
+                        //Debug.WriteLine($"Layer {mapping.layerID} at zindex {mapping.zindex} to {highlight_col}");
                     }
-
-                    //Apply lighting
-                    var brush = new SolidColorBrush(highlight_col);
-
-                    layergroup.Brush = brush;
-                    //Debug.WriteLine($"Layer {mapping.layerID} at zindex {mapping.zindex} to {highlight_col}");
                 }
             }
             else
