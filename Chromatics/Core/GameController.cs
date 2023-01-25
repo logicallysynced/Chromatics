@@ -64,6 +64,15 @@ namespace Chromatics.Core
 
             return null;
         }
+
+        public static Process GetGameProcess()
+        {
+            if (gameSetup && gameConnected)
+                return _memoryHandler.Configuration.ProcessModel.Process;
+
+            return null;
+        }
+
         private static void StartGameLoop()
         {
             _GameLoopCancellationTokenSource.Dispose();

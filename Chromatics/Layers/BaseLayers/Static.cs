@@ -20,7 +20,7 @@ namespace Chromatics.Layers
         {
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
-
+            
             //Static Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.BaseColor.Color);
@@ -68,6 +68,7 @@ namespace Chromatics.Layers
                 //return;
             }
 
+
             foreach (var led in layergroup)
             {
                 if (!_layergroupledcollection.Contains(led))
@@ -86,8 +87,8 @@ namespace Chromatics.Layers
             var brush = new SolidColorBrush(highlight_col);
             layergroup.Brush = brush;
             _init = true;
+            layer.requestUpdate = false;
 
-            //Debug.WriteLine(@"Applying LED");
         }
     }
 }
