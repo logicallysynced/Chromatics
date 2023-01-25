@@ -16,7 +16,15 @@ namespace Chromatics.Models
         public bool releasedevices { get; set; } = false;
         public int globalbrightness { get; set; } = 100;
         public double criticalHpPercentage { get; set; } = 20.0;
-
+        public bool deviceLogitechEnabled { get; set; } = false;
+        public bool deviceCorsairEnabled { get; set; } = false;
+        public bool deviceCoolermasterEnabled { get; set; } = false;
+        public bool deviceRazerEnabled { get; set; } = true;
+        public bool deviceAsusEnabled { get; set; } = false;
+        public bool deviceMsiEnabled { get; set; } = false;
+        public bool deviceSteelseriesEnabled { get; set; } = false;
+        public bool deviceWootingEnabled { get; set; } = false;
+        public bool deviceNovationEnabled { get; set; } = false;
 
 
     }

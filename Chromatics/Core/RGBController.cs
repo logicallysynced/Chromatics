@@ -54,18 +54,38 @@ namespace Chromatics.Core
             //Bind to console
             Logger.WriteConsole(Enums.LoggerTypes.Devices, @"Looking for RGB Devices..");
 
+            var appSettings = AppSettings.GetSettings();
+
             surface.Exception += args_ => throw args_.Exception;//Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Device Error: {args_.Exception.Message}");
 
             //Load devices
-            //surface.Load(LogitechDeviceProvider.Instance);
-            surface.Load(CorsairDeviceProvider.Instance, RGBDeviceType.All);
-            //surface.Load(CoolerMasterDeviceProvider.Instance);
-            //surface.Load(NovationDeviceProvider.Instance);
-            surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All);
-            //surface.Load(AsusDeviceProvider.Instance);
-            //surface.Load(MsiDeviceProvider.Instance);
-            //surface.Load(SteelSeriesDeviceProvider.Instance);
-            //surface.Load(WootingDeviceProvider.Instance);
+
+            if (appSettings.deviceLogitechEnabled)
+                surface.Load(LogitechDeviceProvider.Instance, RGBDeviceType.All);
+
+            if (appSettings.deviceCorsairEnabled)
+                surface.Load(CorsairDeviceProvider.Instance, RGBDeviceType.All);
+            
+            if (appSettings.deviceCoolermasterEnabled)
+                surface.Load(CoolerMasterDeviceProvider.Instance, RGBDeviceType.All);
+            
+            if (appSettings.deviceNovationEnabled)
+                surface.Load(NovationDeviceProvider.Instance, RGBDeviceType.All);
+            
+            if (appSettings.deviceRazerEnabled)
+                surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All);
+            
+            if (appSettings.deviceAsusEnabled)
+                surface.Load(AsusDeviceProvider.Instance, RGBDeviceType.All);
+            
+            if (appSettings.deviceMsiEnabled)
+                surface.Load(MsiDeviceProvider.Instance, RGBDeviceType.All);
+            
+            if (appSettings.deviceSteelseriesEnabled)
+                surface.Load(SteelSeriesDeviceProvider.Instance, RGBDeviceType.All);
+            
+            if (appSettings.deviceWootingEnabled)
+                surface.Load(WootingDeviceProvider.Instance, RGBDeviceType.All);
 
 
             var deviceCount = 0;
