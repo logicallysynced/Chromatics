@@ -369,7 +369,7 @@ namespace Chromatics.Core
                     foreach (var layer in layers)
                     {
                         var mapping = layer.Value;
-
+                        
                         if (mapping.rootLayerType == Enums.LayerType.EffectLayer) continue;
 
                         //Loop through all LED's and assign to device layer
@@ -403,6 +403,7 @@ namespace Chromatics.Core
                             {
                                 if (!mapping.deviceLeds.Any(v => v.Value.Equals(led.Id)))
                                 {
+
                                     layergroup.RemoveLed(led);
                                     _layergroupledcollection.Remove(led);
                                     continue;
@@ -436,6 +437,7 @@ namespace Chromatics.Core
                                 }
 
                                 layergroup.AddLed(led);
+                                layergroup.Detach();
 
                             }
 
@@ -445,7 +447,8 @@ namespace Chromatics.Core
                         var brush = new SolidColorBrush(highlight_col);
 
                         layergroup.Brush = brush;
-                        //Debug.WriteLine($"Layer {mapping.layerID} at zindex {mapping.zindex} to {highlight_col}");
+                        layergroup.Attach(surface);
+                        //Debug.WriteLine($"2: Layer {mapping.layerID} ({mapping.layerTypeindex}) at zindex {mapping.zindex} to {highlight_col}");
                     }
                 }
             }

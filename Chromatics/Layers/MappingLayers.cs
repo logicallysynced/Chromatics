@@ -137,13 +137,9 @@ namespace Chromatics.Layers
 
         public static void SetPreview(bool value)
         {
-            
-            if (value == false)
+            foreach (var layer in _layers)
             {
-                foreach (var layer in _layers)
-                {
-                    layer.Value.requestUpdate = true;
-                }
+                layer.Value.requestUpdate = true;
             }
             
             _preview = value;
