@@ -24,16 +24,14 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly double fadeSpeed;
         private readonly Color[] colors;
         private readonly Color baseColor;
-        private Dictionary<Led, float> brightnessDict;
-        private Dictionary<Led, Color> originalColorDict = new Dictionary<Led, Color>();
-        private double updateCounter = 0;
-        private ConcurrentDictionary<Led, Color> fadingInLeds = new ConcurrentDictionary<Led, Color>();
-        private ConcurrentDictionary<Led, Color> fadingOutLeds = new ConcurrentDictionary<Led, Color>();
-        private Dictionary<Led, float> currentBrightness = new Dictionary<Led, float>();
-        private Dictionary<Led, Color> currentColors = new Dictionary<Led, Color>();
+        private ConcurrentDictionary<Led, Color> fadingInLeds;
+        private ConcurrentDictionary<Led, Color> fadingOutLeds;
+        private Dictionary<Led, float> currentBrightness;
+        private Dictionary<Led, Color> currentColors;
         private Dictionary<Led, double> startTimes;
         private double Timing;
         private double startDelay;
+        private double updateCounter = 0;
 
         public StarfieldDecorator(PublicListLedGroup _ledGroup, int numberOfLeds, double interval, double fadeSpeed, Color[] colors, RGBSurface surface, bool updateIfDisabled = false, Color baseColor = default(Color)) : base(surface, updateIfDisabled)
         {
@@ -43,9 +41,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             this.fadeSpeed = fadeSpeed;
             this.colors = colors;
             this.baseColor = baseColor == default(Color) ? Color.Transparent : baseColor;
-            brightnessDict = new Dictionary<Led, float>();
 
             startTimes = new Dictionary<Led, double>();
+            fadingInLeds = new ConcurrentDictionary<Led, Color>();
+            fadingOutLeds = new ConcurrentDictionary<Led, Color>();
+            currentBrightness = new Dictionary<Led, float>();
+            currentColors = new Dictionary<Led, Color>();
             Timing = 0;
             startDelay = 0;
         }
@@ -53,8 +54,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         public override void OnAttached(IDecoratable decoratable)
         {
             base.OnAttached(decoratable);
-            ledGroup.Detach();
 
+            ledGroup.Detach();
         }
 
         public override void OnDetached(IDecoratable decoratable)
@@ -68,6 +69,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             startTimes.Clear();
             Timing = 0;
             startDelay = 0;
+
+            currentBrightness = null;
+            fadingInLeds = null;
+            fadingOutLeds = null;
+            currentColors = null;
+            startTimes = null;
         }
 
         protected override void Update(double deltaTime)
