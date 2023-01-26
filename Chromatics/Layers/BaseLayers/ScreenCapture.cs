@@ -1,5 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Extensions.RGB.NET;
+using Chromatics.Extensions.RGB.NET.Gradients;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
@@ -11,11 +12,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Color = RGB.NET.Core.Color;
 
 namespace Chromatics.Layers
 {
@@ -55,40 +59,50 @@ namespace Chromatics.Layers
                 layergroup.Detach();
             }
 
-            var brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
-
             if (!layer.Enabled)
             {
-                layergroup.Brush = brush;
+                layergroup.Brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
             }
             else
             {
                 //Get screen capture data
+
+                var gradient = new RectangularGradient(System.Drawing.Color.Red, System.Drawing.Color.Yellow, System.Drawing.Color.Green, System.Drawing.Color.Blue);
+                var gradientTexture = new RectangularGradientTexture(new RGB.NET.Core.Size(15,6), gradient);
+
+                layergroup.Brush = new RGB.NET.Core.TextureBrush(gradientTexture);
+                
                 /*
                 var screenCapture = GetGameWindowPixelColors();
 
                 if (screenCapture != null)
                 {
-                    var stopTop = new GradientStop[2];
-                    var stopBottom = new GradientStop[2];
+                    
                     Debug.WriteLine($"TL: {screenCapture[0]}. BL: {screenCapture[1]}. TR: {screenCapture[2]}. BR: {screenCapture[3]}");
 
                 
-                    stopTop[0] = new GradientStop(0, ColorHelper.ColorToRGBColor(screenCapture[0]));
-                    stopTop[1] = new GradientStop(0, ColorHelper.ColorToRGBColor(screenCapture[2]));
-                    //stopBottom[0] = new GradientStop(0, ColorHelper.ColorToRGBColor(screenCapture[1]));
-                    //stopBottom[1] = new GradientStop(0, ColorHelper.ColorToRGBColor(screenCapture[4]));
 
-                    var gradientTop = new LinearGradient(stopTop);
-                    //var gradientBottom = new LinearGradient(stopBottom);
+                    var gradient = new RectangularGradient(ColorHelper.ColorToRGBColor(screenCapture[0]), ColorHelper.ColorToRGBColor(screenCapture[2]), ColorHelper.ColorToRGBColor(screenCapture[1]), ColorHelper.ColorToRGBColor(screenCapture[3]));
 
-                    var textureTop = new LinearGradientTexture(new RGB.NET.Core.Size(100, 100), gradientTop);
-                    //var textureBottom = new LinearGradientTexture(new RGB.NET.Core.Size(100, 100), gradientBottom);
+                    RGB.NET.Core.Point[] points = {
+                        new Point(0, 0),
+                        new Point(100, 0),
+                        new Point(100, 100),
+                        new Point(0, 100),
+                    };
 
-                    layergroup.Brush = new RGB.NET.Core.TextureBrush(textureTop);
+                    using (PathGradientBrush brush = new PathGradientBrush(points))
+                    {
+                        brush.SurroundColors = new Color[] { gradient.GetColor(0.0f), gradient.GetColor(0.25f), gradient.GetColor(0.5f), gradient.GetColor(0.75f) };
+                        g.FillPolygon(brush, points);
+                    }
+
+
+                    layergroup.Brush = brush;
                     
                 }
                 */
+                
             }
             
 

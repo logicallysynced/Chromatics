@@ -29,6 +29,8 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Core
 {
+    public delegate void WasPreviewed();
+
     public static class RGBController
     {
         private static RGBSurface surface = new RGBSurface();
@@ -48,6 +50,9 @@ namespace Chromatics.Core
         private static EffectTypesModel _effects = new EffectTypesModel();
 
         private static List<PublicListLedGroup> _runningEffects = new List<PublicListLedGroup>();
+                
+        public static event WasPreviewed PreviewTriggered;
+
 
         public static void Setup()
         {
@@ -207,17 +212,12 @@ namespace Chromatics.Core
                 Speed = 100,
             };
 
-            //Add base black layer
-            
-            //var background = new PublicListLedGroup(surface, surface.Leds);
-            //background.Brush = new SolidColorBrush(new Color(0, 0, 0));
-
             foreach (var device in devices)
             {
                 var gradient = new RainbowGradient();
                 var ledgroup = new PublicListLedGroup(surface);
 
-                ledgroup.ZIndex = 1;
+                ledgroup.ZIndex = 1000;
                 foreach (var led in device)
                 {
                     ledgroup.AddLed(led);
@@ -255,6 +255,10 @@ namespace Chromatics.Core
             _runningEffects.Clear();
 
         }
+        public static List<PublicListLedGroup> GetRunningEffects()
+        {
+            return _runningEffects;
+        }
 
         public static RGBSurface GetLiveSurfaces()
         {
@@ -276,55 +280,21 @@ namespace Chromatics.Core
             return _layergroups;
         }
 
-        private static void FadeAllToBlack(IRGBDevice[] exempt = null)
-        {
-            var devices = surface.GetDevices(RGBDeviceType.All);
-
-            var fade = new FlashDecorator(surface)
-            {
-                IsEnabled = true,
-                Attack = 0,
-                Release = 2,
-                Repetitions = 1,
-            };
-
-            //Add base black layer
-            
-            //var background = new PublicListLedGroup(surface, surface.Leds);
-            //background.Brush = new SolidColorBrush(new Color(0, 0, 0));
-
-            foreach (var device in devices)
-            {
-                if (exempt.Contains(device)) continue;
-
-                var brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
-                var ledgroup = new PublicListLedGroup(surface);
-
-                ledgroup.ZIndex = 1;
-                foreach (var led in device)
-                {
-                    ledgroup.AddLed(led);
-                }
-
-                brush.AddDecorator(fade);
-                ledgroup.Brush = brush;
-                    
-
-                //_runningEffects.Add(ledgroup);
-            }
-        }
-
         public static void RemoveLayerGroup(int targetId)
         {
             if (_layergroups.ContainsKey(targetId))
             {
                 foreach (var layer in _layergroups[targetId])
                 {
+                    layer.RemoveAllDecorators();
                     layer.Detach();
+
+                    if (_runningEffects.Contains(layer))
+                        _runningEffects.Remove(layer);
                 }
                 
                 _layergroups.Remove(targetId);
-
+                               
 
                 Debug.WriteLine(@"Remove Layer Requested: " + targetId);
             }
@@ -336,15 +306,21 @@ namespace Chromatics.Core
             {
                 foreach (var layer in layergroup.Value)
                 {
+                    layer.RemoveAllDecorators();
                     layer.Detach();
                 }
             }
 
-
+            _runningEffects.Clear();
             _layergroups.Clear();
             _layergroupledcollection.Clear();
 
             Debug.WriteLine(@"Reset Layer Groups");
+        }
+
+        public static bool WasPreviewed()
+        {
+            return _wasPreviewed;
         }
 
         private static void Surface_Updating(UpdatingEventArgs args)
@@ -356,14 +332,14 @@ namespace Chromatics.Core
             {
                 if (!_wasPreviewed)
                 {
+                    //Release any running effects
+                    StopEffects();
                     ResetLayerGroups();
                     _wasPreviewed = true;
                 
 
                     var layers = MappingLayers.GetLayers().OrderBy(x => x.Value.zindex);
-
-                    //Release any running effects
-                    StopEffects();
+                                       
 
                     //Display mappings on devices
                     foreach (var layer in layers)
@@ -462,7 +438,7 @@ namespace Chromatics.Core
                         RunStartupEffects();
                     
                     _wasPreviewed = false;
-                    
+                    PreviewTriggered?.Invoke(); 
                 }
             }
         }

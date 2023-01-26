@@ -12,6 +12,14 @@ using Chromatics.Layers;
 using Chromatics.Interfaces;
 using Chromatics.Enums;
 using System.Threading;
+using Chromatics.Extensions.RGB.NET;
+using RGB.NET.Core;
+using RGB.NET.Presets.Decorators;
+using RGB.NET.Presets.Textures.Gradients;
+using RGB.NET.Presets.Textures;
+using Chromatics.Extensions.RGB.NET.Decorators;
+using static MetroFramework.Drawing.MetroPaint;
+using System.Security.Policy;
 
 namespace Chromatics.Core
 {
@@ -28,7 +36,8 @@ namespace Chromatics.Core
         private static bool gameSetup;
         private static bool memoryEfficientLoop;
         private static bool _isInGame;
-
+        private static bool _onTitle;
+        private static bool wasPreviewed;
         public static void Setup()
         {
             if (gameSetup) return;
@@ -37,11 +46,13 @@ namespace Chromatics.Core
             
             if (!gameConnected)
             {
+                RGBController.StopEffects();
                 RGBController.RunStartupEffects();
                 Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token));
             }
 
             gameSetup = true;
+            RGBController.PreviewTriggered += OnPreviewTriggered;
         }
 
         public static void Stop(bool reconnect = false)
@@ -94,6 +105,7 @@ namespace Chromatics.Core
             {
                 _GameConnectionCancellationTokenSource.Dispose();
                 _GameConnectionCancellationTokenSource = new CancellationTokenSource();
+                RGBController.StopEffects();
                 RGBController.RunStartupEffects();
                 Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token));
             }
@@ -111,6 +123,7 @@ namespace Chromatics.Core
                 {
                     gameConnected = false;
                     _isInGame = false;
+                    _onTitle = false;
 
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Lost connection to FFXIV. Will attempt to reconnect.");
 
@@ -230,7 +243,8 @@ namespace Chromatics.Core
                     _connectionAttempts = 0;
 
                     _GameConnectionCancellationTokenSource.Cancel();
-                    RGBController.StopEffects(true);
+                    RGBController.StopEffects();
+                    RGBController.ResetLayerGroups();
                     StartGameLoop();
 
                     #if DEBUG
@@ -265,18 +279,68 @@ namespace Chromatics.Core
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
             {
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                var runningEffects = RGBController.GetRunningEffects();
 
                 if (getCurrentPlayer.Entity == null)
                 {
                     //Game is still on Main Menu or Character Screen
+                    if (!_onTitle || wasPreviewed)
+                    {
+                        RGBController.StopEffects();
+                        RGBController.ResetLayerGroups();
+
+                        var surface = RGBController.GetLiveSurfaces();
+                        var devices = surface.GetDevices(RGBDeviceType.All);
+                        var _colorPalette = RGBController.GetActivePalette();
+                        var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.MenuBase.Color);
+                        var highlightColors = new Color[] {
+                            ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight1.Color),
+                            ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight2.Color),
+                            ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight3.Color)
+                        };
+
+                        foreach (var device in devices)
+                        {
+                            var ledgroup = new PublicListLedGroup(surface, device);
+                        
+                            //var starfield = new StarfieldDecorator2(5, highlightColors, 500, 1000, baseColor, surface, false);
+                            var starfield = new StarfieldDecorator(ledgroup, (ledgroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
+                            ledgroup.ZIndex = 1000;
+                            
+                            foreach (var led in device)
+                            {
+                                ledgroup.AddLed(led);
+                            }
+
+                            ledgroup.Brush = new SolidColorBrush(baseColor);
+                            ledgroup.AddDecorator(starfield);                    
+
+                            runningEffects.Add(ledgroup);
+
+                        
+                        }
+
+                        Debug.WriteLine(@"User on title or character screen");
+                        _onTitle = true;
+                        wasPreviewed = false;
+                    }
+                    
                     _isInGame = false;
-
-
+                    
                 }
                 else
                 {
                     //Character has logged in
                     _isInGame = true;
+
+                    if (_onTitle)
+                    {
+                        Debug.WriteLine(@"User logging in to FFXIV..");
+                        RGBController.StopEffects();
+                        RGBController.ResetLayerGroups();
+                        _onTitle = false;
+                    }
+                    
                 }
                 
             }
@@ -320,5 +384,12 @@ namespace Chromatics.Core
             
         }
 
+        private static void OnPreviewTriggered()
+        {
+            if (!gameConnected) return;
+            
+            if (!wasPreviewed)
+                wasPreviewed = true;
+        }
     }
 }

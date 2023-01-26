@@ -17,10 +17,14 @@
       "HidSharp/2.1.0": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/HidSharp.dll": {}
+          "lib/netstandard2.0/HidSharp.dll": {
+            "related": ".pdb;.XML"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/HidSharp.dll": {}
+          "lib/netstandard2.0/HidSharp.dll": {
+            "related": ".pdb;.XML"
+          }
         }
       },
       "MetroModernUI/1.4.0": {
@@ -52,10 +56,14 @@
           "System.Security.Principal.Windows": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {}
+          "ref/netstandard2.0/_._": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Win32.Registry.dll": {}
+          "lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
@@ -67,28 +75,40 @@
       "Newtonsoft.Json/13.0.2": {
         "type": "package",
         "compile": {
-          "lib/net6.0/Newtonsoft.Json.dll": {}
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Newtonsoft.Json.dll": {}
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
         }
       },
       "NLog/4.7.0": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/NLog.dll": {}
+          "lib/netstandard2.0/NLog.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/NLog.dll": {}
+          "lib/netstandard2.0/NLog.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Core/1.0.0": {
         "type": "package",
         "compile": {
-          "lib/net6.0/RGB.NET.Core.dll": {}
+          "lib/net6.0/RGB.NET.Core.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Core.dll": {}
+          "lib/net6.0/RGB.NET.Core.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.Asus/1.0.0": {
@@ -99,11 +119,15 @@
         },
         "compile": {
           "lib/net6.0/Interop.AuraServiceLib.dll": {},
-          "lib/net6.0/RGB.NET.Devices.Asus.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Asus.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
           "lib/net6.0/Interop.AuraServiceLib.dll": {},
-          "lib/net6.0/RGB.NET.Devices.Asus.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Asus.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.CoolerMaster/1.0.0": {
@@ -112,10 +136,14 @@
           "RGB.NET.Core": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.CoolerMaster.dll": {}
+          "lib/net6.0/RGB.NET.Devices.CoolerMaster.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.CoolerMaster.dll": {}
+          "lib/net6.0/RGB.NET.Devices.CoolerMaster.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.Corsair/1.0.0": {
@@ -124,10 +152,14 @@
           "RGB.NET.Core": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.Corsair.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Corsair.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Corsair.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Corsair.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.Logitech/1.0.0": {
@@ -137,10 +169,14 @@
           "RGB.NET.HID": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.Logitech.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Logitech.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Logitech.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Logitech.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.Msi/1.0.0": {
@@ -149,10 +185,14 @@
           "RGB.NET.Core": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.Msi.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Msi.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Msi.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Msi.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.Novation/1.0.0": {
@@ -162,10 +202,14 @@
           "Sanford.Multimedia.Midi.Standard": "6.6.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.Novation.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Novation.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Novation.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Novation.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.Razer/1.0.0": {
@@ -175,10 +219,14 @@
           "RGB.NET.HID": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.Razer.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Razer.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Razer.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Razer.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.SteelSeries/1.0.0": {
@@ -188,10 +236,14 @@
           "RGB.NET.HID": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.SteelSeries.dll": {}
+          "lib/net6.0/RGB.NET.Devices.SteelSeries.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.SteelSeries.dll": {}
+          "lib/net6.0/RGB.NET.Devices.SteelSeries.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.Wooting/1.0.0": {
@@ -200,10 +252,14 @@
           "RGB.NET.Core": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.Wooting.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Wooting.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Wooting.dll": {}
+          "lib/net6.0/RGB.NET.Devices.Wooting.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Devices.WS281X/1.0.0": {
@@ -213,10 +269,14 @@
           "System.IO.Ports": "5.0.1"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Devices.WS281X.dll": {}
+          "lib/net6.0/RGB.NET.Devices.WS281X.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.WS281X.dll": {}
+          "lib/net6.0/RGB.NET.Devices.WS281X.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.HID/1.0.0": {
@@ -226,10 +286,14 @@
           "RGB.NET.Core": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.HID.dll": {}
+          "lib/net6.0/RGB.NET.HID.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.HID.dll": {}
+          "lib/net6.0/RGB.NET.HID.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Layout/1.0.0": {
@@ -238,10 +302,14 @@
           "RGB.NET.Core": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Layout.dll": {}
+          "lib/net6.0/RGB.NET.Layout.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Layout.dll": {}
+          "lib/net6.0/RGB.NET.Layout.dll": {
+            "related": ".xml"
+          }
         }
       },
       "RGB.NET.Presets/1.0.0": {
@@ -250,10 +318,14 @@
           "RGB.NET.Core": "1.0.0"
         },
         "compile": {
-          "lib/net6.0/RGB.NET.Presets.dll": {}
+          "lib/net6.0/RGB.NET.Presets.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Presets.dll": {}
+          "lib/net6.0/RGB.NET.Presets.dll": {
+            "related": ".xml"
+          }
         }
       },
       "runtime.linux-arm.runtime.native.System.IO.Ports/5.0.0": {
@@ -304,19 +376,27 @@
       "Sanford.Multimedia.Midi.Standard/6.6.0": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/Sanford.Multimedia.Midi.dll": {}
+          "lib/netstandard2.0/Sanford.Multimedia.Midi.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Sanford.Multimedia.Midi.dll": {}
+          "lib/netstandard2.0/Sanford.Multimedia.Midi.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.CodeDom/5.0.0": {
         "type": "package",
         "compile": {
-          "ref/netstandard2.0/System.CodeDom.dll": {}
+          "ref/netstandard2.0/System.CodeDom.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.CodeDom.dll": {}
+          "lib/netstandard2.0/System.CodeDom.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.IO.Ports/5.0.1": {
@@ -326,10 +406,14 @@
           "runtime.native.System.IO.Ports": "5.0.1"
         },
         "compile": {
-          "ref/netstandard2.0/System.IO.Ports.dll": {}
+          "ref/netstandard2.0/System.IO.Ports.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.IO.Ports.dll": {}
+          "lib/netstandard2.0/System.IO.Ports.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/linux/lib/netstandard2.0/System.IO.Ports.dll": {
@@ -354,10 +438,14 @@
           "System.CodeDom": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/System.Management.dll": {}
+          "ref/netstandard2.0/System.Management.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Management.dll": {}
+          "lib/netstandard2.0/System.Management.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/win/lib/netcoreapp2.0/System.Management.dll": {
@@ -373,10 +461,14 @@
           "System.Security.Principal.Windows": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {}
+          "ref/netstandard2.0/_._": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Security.AccessControl.dll": {}
+          "lib/netstandard2.0/System.Security.AccessControl.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.dll": {
@@ -388,10 +480,14 @@
       "System.Security.Principal.Windows/5.0.0": {
         "type": "package",
         "compile": {
-          "ref/netcoreapp3.0/_._": {}
+          "ref/netcoreapp3.0/_._": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {}
+          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/unix/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
@@ -1181,7 +1277,7 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0-windows7.0"
+        "net6.0-windows"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -1278,7 +1374,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -1290,7 +1387,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.113\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   },
@@ -1299,7 +1396,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'MetroModernUI 1.4.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'MetroModernUI 1.4.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "MetroModernUI",
       "targetGraphs": [
         "net6.0-windows7.0"
