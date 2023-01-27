@@ -51,7 +51,7 @@ namespace Chromatics.Enums
         [Display(Name = "MP Tracker", Description = "Shows character's MP/CP/GP across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         MPTracker = 7,
         [Display(Name = "Job Gauge", Description = "Shows character's Job Gauge across selected keys.\n[Supported Modes: Interpolate, Fade]")]
-        JobGauge = 8,
+        JobGauge = 8, 
         [Display(Name = "Experience Tracker", Description = "Shows character's EXP level progress across selected keys.\n[Supported Modes: Interpolate, Fade]")]
         ExperienceTracker = 9,
         [Display(Name = "Battle Stance", Description = "Displays different colours across selected kyes depending on whether the character is engaged in battle or not.")]
