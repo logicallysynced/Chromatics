@@ -31,9 +31,9 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 
 # Features
 
-* **DX11 & Final Fantasy XIV STORMBLOOD (4.0) Now Supported**
+* **DX11 & Final Fantasy XIV ENDWALKER (6.0) Now Supported**
 * Displays per-keybind lighting feedback on each of your keybinds to show when your actions are ready to use or in combo/proc.
-* Your RGB enabled keyboard will display your HP, MP, TP and other vital stats across easy to see keys so you always have a visual indication of your stats.
+* Your RGB enabled keyboard will display your HP, MP and other vital stats across easy to see keys so you always have a visual indication of your stats.
 * Displays target HP and emnity data as various effects across your devices. See how hostile an enemy is before you engage it and keep track of your hate with various alerts.
 * Animates your casting bar and displays animations when cast is successful across your devices.
 * Reactive Weather, Cutscene & Status Effect animations.
@@ -47,8 +47,8 @@ Chromatics is a lightweight third-party companion app which connects FINAL FANTA
 
 # Prerequisites
  
-* [.Net Framework 4.6.2](https://www.microsoft.com/en-au/download/details.aspx?id=53344)
-* [Visual Studio 2017 C++ Redistributable](https://go.microsoft.com/fwlink/?LinkId=746572)
+* [.Net Framework 4.7.2 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net472)
+* [Visual Studio 2019 C++ Redistributable](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 * [Razer SDK](http://www.razerzone.com/au-en/synapse) (Automatically installed with Razer Synapse) - *For Razer device support*
 * [Logitech Gaming Software](http://support.logitech.com/en_gb/software/gaming-software) - *For Logitech device support*
 * [Corsair Utility Engine](http://www.corsair.com/en-au/support/downloads) - *For Corsair device support*
