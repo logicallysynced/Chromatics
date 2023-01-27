@@ -41,9 +41,9 @@ namespace Chromatics.Forms
 
             tt_mappings.SetToolTip(mt_effect_dfbell, @"Flash devices when Duty Finder pops.");
             tt_mappings.SetToolTip(mt_effect_damageflash, @"Flash devices when damage is taken.");
-            tt_mappings.SetToolTip(mt_effect_castcomplete, @"Animation on keyboard when cast completes.");
+            tt_mappings.SetToolTip(mt_effect_startupanimation, @"Displays rainbow animation on all devices when Chromatics starts but not connected to FFXIV.");
             tt_mappings.SetToolTip(mt_effect_reactiveweather, @"Animated base layers for Reactive Weather.");
-            tt_mappings.SetToolTip(mt_effect_statuseffects, @"Animated base layers for Status Effects.");
+            tt_mappings.SetToolTip(mt_effect_titlescreen, @"Animation on devices when on title and character selection screen.");
             tt_mappings.SetToolTip(mt_effect_cutscenes, @"Animation on devices when cutscenes play.");
             tt_mappings.SetToolTip(mt_effect_vegasmode, @"Color cycle devices when in the Gold Saucer.");
 

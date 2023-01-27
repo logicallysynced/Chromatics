@@ -10,12 +10,11 @@ namespace Chromatics.Models
     {
         public bool effect_dfbell { get; set; } = true;
         public bool effect_damageflash { get; set; } = false;
-        public bool effect_castcomplete { get; set; } = true;
         public bool effect_reactiveweather { get; set; } = true;
-        public bool effect_statuseffects { get; set; } = true;
         public bool effect_cutscenes { get; set; } = true;
         public bool effect_vegasmode { get; set; } = false;
-
+        public bool effect_titlescreen { get; set; } = true;
+        public bool effect_startupanimation { get; set; } = true;
 
     }
 }

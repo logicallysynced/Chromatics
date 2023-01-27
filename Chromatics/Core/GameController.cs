@@ -289,37 +289,39 @@ namespace Chromatics.Core
                         RGBController.StopEffects();
                         RGBController.ResetLayerGroups();
 
-                        var surface = RGBController.GetLiveSurfaces();
-                        var devices = surface.GetDevices(RGBDeviceType.All);
-                        var _colorPalette = RGBController.GetActivePalette();
-                        var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.MenuBase.Color);
-                        var highlightColors = new Color[] {
-                            ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight1.Color),
-                            ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight2.Color),
-                            ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight3.Color)
-                        };
-
-                        foreach (var device in devices)
+                        if (RGBController.GetEffectsSettings().effect_titlescreen)
                         {
-                            var ledgroup = new PublicListLedGroup(surface, device);
-                        
-                            //var starfield = new StarfieldDecorator2(5, highlightColors, 500, 1000, baseColor, surface, false);
-                            var starfield = new StarfieldDecorator(ledgroup, (ledgroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
-                            ledgroup.ZIndex = 1000;
-                            
-                            foreach (var led in device)
+                            var surface = RGBController.GetLiveSurfaces();
+                            var devices = surface.GetDevices(RGBDeviceType.All);
+                            var _colorPalette = RGBController.GetActivePalette();
+                            var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.MenuBase.Color);
+                            var highlightColors = new Color[] {
+                                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight1.Color),
+                                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight2.Color),
+                                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight3.Color)
+                            };
+
+                            foreach (var device in devices)
                             {
-                                ledgroup.AddLed(led);
-                            }
+                                var ledgroup = new PublicListLedGroup(surface, device);
+                        
+                                //var starfield = new StarfieldDecorator2(5, highlightColors, 500, 1000, baseColor, surface, false);
+                                var starfield = new StarfieldDecorator(ledgroup, (ledgroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
+                                ledgroup.ZIndex = 1000;
+                            
+                                foreach (var led in device)
+                                {
+                                    ledgroup.AddLed(led);
+                                }
 
-                            ledgroup.Brush = new SolidColorBrush(baseColor);
-                            ledgroup.AddDecorator(starfield);                    
+                                ledgroup.Brush = new SolidColorBrush(baseColor);
+                                ledgroup.AddDecorator(starfield);                    
 
-                            runningEffects.Add(ledgroup);
+                                runningEffects.Add(ledgroup);
 
                         
+                            }
                         }
-
                         Debug.WriteLine(@"User on title or character screen");
                         _onTitle = true;
                         wasPreviewed = false;

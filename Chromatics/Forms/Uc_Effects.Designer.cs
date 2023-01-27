@@ -32,8 +32,8 @@
             this.mt_effect_vegasmode = new MetroFramework.Controls.MetroTile();
             this.mt_effect_cutscenes = new MetroFramework.Controls.MetroTile();
             this.mt_effect_reactiveweather = new MetroFramework.Controls.MetroTile();
-            this.mt_effect_statuseffects = new MetroFramework.Controls.MetroTile();
-            this.mt_effect_castcomplete = new MetroFramework.Controls.MetroTile();
+            this.mt_effect_titlescreen = new MetroFramework.Controls.MetroTile();
+            this.mt_effect_startupanimation = new MetroFramework.Controls.MetroTile();
             this.mt_effect_dfbell = new MetroFramework.Controls.MetroTile();
             this.mt_effect_damageflash = new MetroFramework.Controls.MetroTile();
             this.tlp_main.SuspendLayout();
@@ -50,10 +50,10 @@
             this.tlp_main.Controls.Add(this.mt_effect_vegasmode, 1, 1);
             this.tlp_main.Controls.Add(this.mt_effect_cutscenes, 0, 1);
             this.tlp_main.Controls.Add(this.mt_effect_reactiveweather, 4, 0);
-            this.tlp_main.Controls.Add(this.mt_effect_statuseffects, 3, 0);
-            this.tlp_main.Controls.Add(this.mt_effect_castcomplete, 2, 0);
-            this.tlp_main.Controls.Add(this.mt_effect_dfbell, 0, 0);
-            this.tlp_main.Controls.Add(this.mt_effect_damageflash, 1, 0);
+            this.tlp_main.Controls.Add(this.mt_effect_damageflash, 3, 0);
+            this.tlp_main.Controls.Add(this.mt_effect_dfbell, 2, 0);
+            this.tlp_main.Controls.Add(this.mt_effect_startupanimation, 0, 0);
+            this.tlp_main.Controls.Add(this.mt_effect_titlescreen, 1, 0);
             this.tlp_main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_main.Location = new System.Drawing.Point(0, 0);
             this.tlp_main.Name = "tlp_main";
@@ -143,57 +143,57 @@
             this.mt_effect_reactiveweather.UseVisualStyleBackColor = false;
             this.mt_effect_reactiveweather.Click += new System.EventHandler(this.OnClick);
             // 
-            // mt_effect_statuseffects
+            // mt_effect_titlescreen
             // 
-            this.mt_effect_statuseffects.ActiveControl = null;
-            this.mt_effect_statuseffects.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.mt_effect_titlescreen.ActiveControl = null;
+            this.mt_effect_titlescreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.mt_effect_statuseffects.AutoSize = true;
-            this.mt_effect_statuseffects.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_effect_statuseffects.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.mt_effect_statuseffects.Image = global::Chromatics.Properties.Resources.debuff;
-            this.mt_effect_statuseffects.Location = new System.Drawing.Point(791, 5);
-            this.mt_effect_statuseffects.Margin = new System.Windows.Forms.Padding(5);
-            this.mt_effect_statuseffects.Name = "mt_effect_statuseffects";
-            this.mt_effect_statuseffects.Size = new System.Drawing.Size(252, 154);
-            this.mt_effect_statuseffects.TabIndex = 2;
-            this.mt_effect_statuseffects.Text = "Animated Status Effects";
-            this.mt_effect_statuseffects.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.mt_effect_statuseffects.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.mt_effect_statuseffects.TileImage = global::Chromatics.Properties.Resources.debuff;
-            this.mt_effect_statuseffects.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.mt_effect_statuseffects.UseCustomBackColor = true;
-            this.mt_effect_statuseffects.UseSelectable = true;
-            this.mt_effect_statuseffects.UseTileImage = true;
-            this.mt_effect_statuseffects.UseVisualStyleBackColor = false;
-            this.mt_effect_statuseffects.Click += new System.EventHandler(this.OnClick);
+            this.mt_effect_titlescreen.AutoSize = true;
+            this.mt_effect_titlescreen.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.mt_effect_titlescreen.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.mt_effect_titlescreen.Image = global::Chromatics.Properties.Resources.crystal;
+            this.mt_effect_titlescreen.Location = new System.Drawing.Point(267, 5);
+            this.mt_effect_titlescreen.Margin = new System.Windows.Forms.Padding(5);
+            this.mt_effect_titlescreen.Name = "mt_effect_titlescreen";
+            this.mt_effect_titlescreen.Size = new System.Drawing.Size(252, 154);
+            this.mt_effect_titlescreen.TabIndex = 2;
+            this.mt_effect_titlescreen.Text = "Title Screen Animation";
+            this.mt_effect_titlescreen.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.mt_effect_titlescreen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.mt_effect_titlescreen.TileImage = global::Chromatics.Properties.Resources.crystal;
+            this.mt_effect_titlescreen.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.mt_effect_titlescreen.UseCustomBackColor = true;
+            this.mt_effect_titlescreen.UseSelectable = true;
+            this.mt_effect_titlescreen.UseTileImage = true;
+            this.mt_effect_titlescreen.UseVisualStyleBackColor = false;
+            this.mt_effect_titlescreen.Click += new System.EventHandler(this.OnClick);
             // 
-            // mt_effect_castcomplete
+            // mt_effect_startupanimation
             // 
-            this.mt_effect_castcomplete.ActiveControl = null;
-            this.mt_effect_castcomplete.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.mt_effect_startupanimation.ActiveControl = null;
+            this.mt_effect_startupanimation.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.mt_effect_castcomplete.AutoSize = true;
-            this.mt_effect_castcomplete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_effect_castcomplete.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.mt_effect_castcomplete.Image = global::Chromatics.Properties.Resources.staff;
-            this.mt_effect_castcomplete.Location = new System.Drawing.Point(529, 5);
-            this.mt_effect_castcomplete.Margin = new System.Windows.Forms.Padding(5);
-            this.mt_effect_castcomplete.Name = "mt_effect_castcomplete";
-            this.mt_effect_castcomplete.Size = new System.Drawing.Size(252, 154);
-            this.mt_effect_castcomplete.TabIndex = 2;
-            this.mt_effect_castcomplete.Text = "Cast Complete Animation";
-            this.mt_effect_castcomplete.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.mt_effect_castcomplete.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.mt_effect_castcomplete.TileImage = global::Chromatics.Properties.Resources.staff;
-            this.mt_effect_castcomplete.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.mt_effect_castcomplete.UseCustomBackColor = true;
-            this.mt_effect_castcomplete.UseSelectable = true;
-            this.mt_effect_castcomplete.UseTileImage = true;
-            this.mt_effect_castcomplete.UseVisualStyleBackColor = false;
-            this.mt_effect_castcomplete.Click += new System.EventHandler(this.OnClick);
+            this.mt_effect_startupanimation.AutoSize = true;
+            this.mt_effect_startupanimation.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.mt_effect_startupanimation.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.mt_effect_startupanimation.Image = global::Chromatics.Properties.Resources.keyboard;
+            this.mt_effect_startupanimation.Location = new System.Drawing.Point(5, 5);
+            this.mt_effect_startupanimation.Margin = new System.Windows.Forms.Padding(5);
+            this.mt_effect_startupanimation.Name = "mt_effect_startupanimation";
+            this.mt_effect_startupanimation.Size = new System.Drawing.Size(252, 154);
+            this.mt_effect_startupanimation.TabIndex = 2;
+            this.mt_effect_startupanimation.Text = "Startup Animation";
+            this.mt_effect_startupanimation.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.mt_effect_startupanimation.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.mt_effect_startupanimation.TileImage = global::Chromatics.Properties.Resources.keyboard;
+            this.mt_effect_startupanimation.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.mt_effect_startupanimation.UseCustomBackColor = true;
+            this.mt_effect_startupanimation.UseSelectable = true;
+            this.mt_effect_startupanimation.UseTileImage = true;
+            this.mt_effect_startupanimation.UseVisualStyleBackColor = false;
+            this.mt_effect_startupanimation.Click += new System.EventHandler(this.OnClick);
             // 
             // mt_effect_dfbell
             // 
@@ -205,7 +205,7 @@
             this.mt_effect_dfbell.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.mt_effect_dfbell.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.mt_effect_dfbell.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.mt_effect_dfbell.Location = new System.Drawing.Point(5, 5);
+            this.mt_effect_dfbell.Location = new System.Drawing.Point(529, 5);
             this.mt_effect_dfbell.Margin = new System.Windows.Forms.Padding(5);
             this.mt_effect_dfbell.Name = "mt_effect_dfbell";
             this.mt_effect_dfbell.Size = new System.Drawing.Size(252, 154);
@@ -231,7 +231,7 @@
             this.mt_effect_damageflash.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.mt_effect_damageflash.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.mt_effect_damageflash.Image = global::Chromatics.Properties.Resources.sword;
-            this.mt_effect_damageflash.Location = new System.Drawing.Point(267, 5);
+            this.mt_effect_damageflash.Location = new System.Drawing.Point(791, 5);
             this.mt_effect_damageflash.Margin = new System.Windows.Forms.Padding(5);
             this.mt_effect_damageflash.Name = "mt_effect_damageflash";
             this.mt_effect_damageflash.Size = new System.Drawing.Size(252, 154);
@@ -270,7 +270,7 @@
         private MetroFramework.Controls.MetroTile mt_effect_vegasmode;
         private MetroFramework.Controls.MetroTile mt_effect_cutscenes;
         private MetroFramework.Controls.MetroTile mt_effect_reactiveweather;
-        private MetroFramework.Controls.MetroTile mt_effect_statuseffects;
-        private MetroFramework.Controls.MetroTile mt_effect_castcomplete;
+        private MetroFramework.Controls.MetroTile mt_effect_titlescreen;
+        private MetroFramework.Controls.MetroTile mt_effect_startupanimation;
     }
 }

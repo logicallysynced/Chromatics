@@ -204,6 +204,8 @@ namespace Chromatics.Core
 
         public static void RunStartupEffects()
         {
+            if (!_effects.effect_startupanimation) return;
+
             var devices = surface.GetDevices(RGBDeviceType.All);
 
             var move = new MoveGradientDecorator(surface)
