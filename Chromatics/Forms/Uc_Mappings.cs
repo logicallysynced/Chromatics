@@ -518,11 +518,11 @@ namespace Chromatics.Forms
             
             if (layer.rootLayerType == LayerType.DynamicLayer)
             {
-                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), selectedindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
+                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), selectedindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
             }
             else if (layer.rootLayerType == LayerType.BaseLayer)
             {
-                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), selectedindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
+                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), selectedindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
             }
             else if (layer.rootLayerType == LayerType.EffectLayer)
             {
@@ -605,49 +605,15 @@ namespace Chromatics.Forms
                     btn_togglebleed.Text = @"Bleed Disabled";
                 }
 
-                var item = new ComboboxItem { Value = LayerModes.None, Text = EnumExtensions.GetAttribute<DisplayAttribute>(LayerModes.None).Name };
-
-                if (layer.rootLayerType == LayerType.BaseLayer || layer.rootLayerType == LayerType.EffectLayer)
-                {
-                    cb_changemode.Items.Add(item);
-                    cb_changemode.SelectedItem = item;
-                }
-                else
-                {
-                    foreach (ComboboxItem cb in cb_changemode.Items)
-                    {
-                        if ((LayerModes)cb.Value == LayerModes.None)
-                        {
-                            cb_changemode.Items.Remove(cb);
-                        }
-
-                        if ((LayerModes)cb.Value == layer.layerModes)
-                        {
-                            cb_changemode.SelectedItem = cb;
-                        }
-                                                
-                    }
-
-                    if (cb_changemode.SelectedIndex < 0)
-                    {
-                        foreach (ComboboxItem cb in cb_changemode.Items)
-                        {
-                            if ((LayerModes)cb.Value == layer.layerModes)
-                            {
-                                cb_changemode.SelectedItem = cb;
-                            }
-                                                
-                        }
-                    }
-                }
+                ChangeLayerMode(layer);
 
                 if (layer.rootLayerType == LayerType.DynamicLayer)
                 {
-                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
                 }
                 else if (layer.rootLayerType == LayerType.BaseLayer)
                 {
-                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
                 }
                 else if (layer.rootLayerType == LayerType.EffectLayer)
                 {
@@ -659,6 +625,7 @@ namespace Chromatics.Forms
                 obj.Invalidate();
             }
         }
+                
 
         private void OnEditButtonPressed(object sender, EventArgs e)
         {
@@ -754,39 +721,16 @@ namespace Chromatics.Forms
                     btn_togglebleed.BackColor = System.Drawing.Color.Red;
                 }
                 
-                foreach (ComboboxItem item in cb_changemode.Items)
-                {
-                    if ((LayerModes)item.Value == LayerModes.None)
-                    {
-                        cb_changemode.Items.Remove(item);
-                    }
-
-                    if ((LayerModes)item.Value == ml.layerModes)
-                    {
-                        cb_changemode.SelectedItem = item.Value;
-                    }
-                }
-
-                if (cb_changemode.SelectedIndex < 0)
-                {
-                    foreach (ComboboxItem cb in cb_changemode.Items)
-                    {
-                        if ((LayerModes)cb.Value == ml.layerModes)
-                        {
-                            cb_changemode.SelectedItem = cb;
-                        }
-                                                
-                    }
-                }
+                ChangeLayerMode(ml);
 
 
                 if (ml.rootLayerType == LayerType.DynamicLayer)
                 {
-                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
                 }
                 else if (ml.rootLayerType == LayerType.BaseLayer)
                 {
-                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((DisplayAttribute)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(DisplayAttribute))).Description);
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
                 }
                 else if (ml.rootLayerType == LayerType.EffectLayer)
                 {
@@ -1390,6 +1334,52 @@ namespace Chromatics.Forms
 
                     this.ActiveControl = cmb.Parent;
                 }
+            }
+        }
+
+        private void ChangeLayerMode(Layer layer)
+        {
+            Type type = typeof(BaseLayerType);
+
+            switch(layer.rootLayerType)
+            {
+                case LayerType.BaseLayer:
+                    type = typeof(BaseLayerType);
+                    break;
+                case LayerType.DynamicLayer:
+                    type = typeof(DynamicLayerType);
+                    break;
+                case LayerType.EffectLayer:
+                    type = typeof(EffectLayerType);
+                    break;
+            }
+
+            var layerTypesSupported = ((LayerDisplay)type.GetField(Enum.GetName(type, layer.layerTypeindex)).GetCustomAttributes(false).FirstOrDefault(x => x is LayerDisplay)).LayerTypeCompatibility;
+
+            cb_changemode.Items.Clear();
+
+            if (layerTypesSupported != null && layerTypesSupported.Length > 0)
+            {
+                foreach (var mode in layerTypesSupported)
+                {
+                    var item = new ComboboxItem { Value = mode, Text = EnumExtensions.GetAttribute<DisplayAttribute>(mode).Name };
+                    cb_changemode.Items.Add(item);
+
+                    if (mode == layer.layerModes)
+                    {
+                        cb_changemode.SelectedItem = item;
+                    }
+                }
+
+                if (cb_changemode.SelectedIndex < 0)
+                    cb_changemode.SelectedIndex = 0;
+            }
+            else
+            {
+                var item = new ComboboxItem { Value = LayerModes.None, Text = EnumExtensions.GetAttribute<DisplayAttribute>(LayerModes.None).Name };
+                cb_changemode.Items.Add(item);
+                cb_changemode.SelectedItem = item;
+                cb_changemode.Enabled = false;
             }
         }
 

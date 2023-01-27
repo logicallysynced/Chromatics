@@ -63,7 +63,7 @@ namespace Chromatics.Forms
                         {
                             foreach (Enum lt in Enum.GetValues(typeof(BaseLayerType)))
                             {
-                                var name = EnumExtensions.GetAttribute<DisplayAttribute>(lt).Name;
+                                var name = EnumExtensions.GetAttribute<LayerDisplay>(lt).Name;
                                 var item = new ComboboxItem { Value = lt, Text = name };
 
                                 _cb_selector.Items.Add(item);
@@ -92,7 +92,7 @@ namespace Chromatics.Forms
                         {
                             foreach (Enum lt in Enum.GetValues(typeof(DynamicLayerType)))
                             {
-                                var name = EnumExtensions.GetAttribute<DisplayAttribute>(lt).Name;
+                                var name = EnumExtensions.GetAttribute<LayerDisplay>(lt).Name;
                                 var item = new ComboboxItem { Value = lt, Text = name };
 
                                 _cb_selector.Items.Add(item);
@@ -121,7 +121,7 @@ namespace Chromatics.Forms
                         {
                             foreach (Enum lt in Enum.GetValues(typeof(EffectLayerType)))
                             {
-                                var name = EnumExtensions.GetAttribute<DisplayAttribute>(lt).Name;
+                                var name = EnumExtensions.GetAttribute<LayerDisplay>(lt).Name;
                                 var item = new ComboboxItem { Value = lt, Text = name };
 
                                 _cb_selector.Items.Add(item);
