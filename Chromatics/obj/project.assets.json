@@ -72,6 +72,18 @@
           }
         }
       },
+      "MouseKeyHook.NetCore/5.6.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0-windows7.0/Gma.System.MouseKeyHook.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/Gma.System.MouseKeyHook.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ]
+      },
       "Newtonsoft.Json/13.0.2": {
         "type": "package",
         "compile": {
@@ -616,6 +628,23 @@
         "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.xml",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "MouseKeyHook.NetCore/5.6.1.1": {
+      "sha512": "MgliDV/5e9kiYQ0D9lPlYRwt1aluIlGM3SQC4UZyT4BQN8KyNimdsDZQQc4t6HdY7QBngt5cbxFTKnOad/rm0w==",
+      "type": "package",
+      "path": "mousekeyhook.netcore/5.6.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/Gma.System.MouseKeyHook.dll",
+        "lib/net472/Gma.System.MouseKeyHook.dll",
+        "lib/net5.0-windows7.0/Gma.System.MouseKeyHook.dll",
+        "lib/net6.0-windows7.0/Gma.System.MouseKeyHook.dll",
+        "lib/netcoreapp3.1/Gma.System.MouseKeyHook.dll",
+        "mouse-keyboard-hook-logo64x64.png",
+        "mousekeyhook.netcore.5.6.1.1.nupkg.sha512",
+        "mousekeyhook.netcore.nuspec"
       ]
     },
     "Newtonsoft.Json/13.0.2": {
@@ -1239,6 +1268,7 @@
     "net6.0-windows7.0": [
       "Cyotek.Windows.Forms.ColorPicker >= 2.0.0-beta.7",
       "MetroModernUI >= 1.4.0",
+      "MouseKeyHook.NetCore >= 5.6.1.1",
       "NLog >= 4.7.0",
       "Newtonsoft.Json >= 13.0.2",
       "RGB.NET.Core >= 1.0.0",
@@ -1306,6 +1336,10 @@
           "MetroModernUI": {
             "target": "Package",
             "version": "[1.4.0, )"
+          },
+          "MouseKeyHook.NetCore": {
+            "target": "Package",
+            "version": "[5.6.1.1, )"
           },
           "NLog": {
             "target": "Package",

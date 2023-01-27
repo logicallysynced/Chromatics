@@ -51,6 +51,10 @@
               "target": "Package",
               "version": "[1.4.0, )"
             },
+            "MouseKeyHook.NetCore": {
+              "target": "Package",
+              "version": "[5.6.1.1, )"
+            },
             "NLog": {
               "target": "Package",
               "version": "[4.7.0, )"

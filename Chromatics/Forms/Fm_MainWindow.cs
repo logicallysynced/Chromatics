@@ -110,6 +110,7 @@ namespace Chromatics.Forms
 
         private void RunChromaticsThread()
         {
+            KeyController.Setup();
             RGBController.Setup();
             GameController.Setup();
         }
