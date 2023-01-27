@@ -53,7 +53,8 @@ namespace Chromatics.Models
         public ColorMapping NoEmnity = new("No Enmity", PaletteTypes.EnmityAggro, Color.Black);
 
         //Target/Enemy
-        public ColorMapping TargetCasting = new("Target Casting", PaletteTypes.TargetEnemy, Color.White);
+        public ColorMapping TargetCastbar = new("Target Cast Bar Charge Build", PaletteTypes.TargetEnemy, Color.Red);
+        public ColorMapping TargetCastbarEmpty = new("Target Cast Bar Charge Empty", PaletteTypes.TargetEnemy, Color.Black);
         public ColorMapping TargetHpFriendly = new("Target HP (Friendly)", PaletteTypes.TargetEnemy, Color.Lime);
         public ColorMapping TargetHpClaimed = new("Target HP (Claimed)", PaletteTypes.TargetEnemy, Color.Red);
         public ColorMapping TargetHpEmpty = new("Target HP (Empty)", PaletteTypes.TargetEnemy, Color.Black);
