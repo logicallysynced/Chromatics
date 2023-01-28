@@ -6,6 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
+      "CsvHelper/30.0.1": {
+        "runtime": {
+          "lib/net6.0/CsvHelper.dll": {
+            "assemblyVersion": "30.0.0.0",
+            "fileVersion": "30.0.1.0"
+          }
+        }
+      },
       "Cyotek.Windows.Forms.ColorPicker/2.0.0-beta.7": {
         "runtime": {
           "lib/net5.0-windows7.0/Cyotek.Windows.Forms.ColorPicker.dll": {
@@ -14,27 +22,22 @@
           }
         }
       },
+      "FFXIVWeather/1.0.16": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/FFXIVWeather.dll": {
+            "assemblyVersion": "1.0.16.0",
+            "fileVersion": "1.0.16.0"
+          }
+        }
+      },
       "HidSharp/2.1.0": {
         "runtime": {
           "lib/netstandard2.0/HidSharp.dll": {
             "assemblyVersion": "2.1.0.0",
             "fileVersion": "2.1.0.0"
-          }
-        }
-      },
-      "MetroModernUI/1.4.0": {
-        "runtime": {
-          "lib/net/MetroFramework.Design.dll": {
-            "assemblyVersion": "1.4.0.0",
-            "fileVersion": "1.4.0.0"
-          },
-          "lib/net/MetroFramework.Fonts.dll": {
-            "assemblyVersion": "1.4.0.0",
-            "fileVersion": "1.4.0.0"
-          },
-          "lib/net/MetroFramework.dll": {
-            "assemblyVersion": "1.4.0.0",
-            "fileVersion": "1.4.0.0"
           }
         }
       },
@@ -403,6 +406,13 @@
     }
   },
   "libraries": {
+    "CsvHelper/30.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rcZtgbWR+As4G3Vpgx0AMNmShGuQLFjkHAPIIflzrfkJCx8/AOd4m96ZRmiU1Wi39qS5UVjV0P8qdgqOo5Cwyg==",
+      "path": "csvhelper/30.0.1",
+      "hashPath": "csvhelper.30.0.1.nupkg.sha512"
+    },
     "Cyotek.Windows.Forms.ColorPicker/2.0.0-beta.7": {
       "type": "package",
       "serviceable": true,
@@ -410,19 +420,19 @@
       "path": "cyotek.windows.forms.colorpicker/2.0.0-beta.7",
       "hashPath": "cyotek.windows.forms.colorpicker.2.0.0-beta.7.nupkg.sha512"
     },
+    "FFXIVWeather/1.0.16": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0hV+ToSSbb4OH3nBDBuMWa0ijf9UuaV3RFSTOe1y45jvzs1zgkhbqCgmSndgiHQEmRorlSMKlr67pZIda+KjYQ==",
+      "path": "ffxivweather/1.0.16",
+      "hashPath": "ffxivweather.1.0.16.nupkg.sha512"
+    },
     "HidSharp/2.1.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-UTdxWvbgp2xzT1Ajaa2va+Qi3oNHJPasYmVhbKI2VVdu1VYP6yUG+RikhsHvpD7iM0S8e8UYb5Qm/LTWxx9QAA==",
       "path": "hidsharp/2.1.0",
       "hashPath": "hidsharp.2.1.0.nupkg.sha512"
-    },
-    "MetroModernUI/1.4.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-p2F3w8bF1tb0tpkDceEVO65UYMKnJxdQyNxVyl/OjrFZHighicLYZDppKkiqmvBZ10XUi2mqHiIJUzXBP3GElQ==",
-      "path": "metromodernui/1.4.0",
-      "hashPath": "metromodernui.1.4.0.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/5.0.0": {
       "type": "package",

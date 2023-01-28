@@ -389,8 +389,6 @@ namespace Chromatics.Forms
 
         public void RePaint()
         {
-            //Debug.WriteLine(@"Pn_LayerDisplay Painting");
-
             LinearGradientBrush _leftAndRightBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Black, LinearGradientMode.Vertical);
             LinearGradientBrush _statusBrush = new LinearGradientBrush(GetMainArea(), StatusColor1, StatusColor2, LinearGradientMode.Vertical);
             LinearGradientBrush _mainBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.SlateGray, LinearGradientMode.Vertical);
@@ -420,58 +418,6 @@ namespace Chromatics.Forms
                 graphics.FillRoundedRectangle(_mainBrush, this.GetMainArea(), this.RoundedCornerAngle, RectangleEdgeFilter.None);
             }
         }
-
-        /*
-        public void RePaint(Graphics _graphics)
-        {
-            //Debug.WriteLine(@"Pn_LayerDisplay Painting");
-            
-            // Textformat
-            StringFormat f = new StringFormat();
-            f.Alignment = StringAlignment.Center;
-            f.LineAlignment = StringAlignment.Center;
-
-            // Misc
-            _graphics = this.CreateGraphics();
-            LinearGradientBrush _LeftAndRightBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Black, LinearGradientMode.Vertical);
-            LinearGradientBrush _StatusBrush = new LinearGradientBrush(GetMainArea(), StatusColor1, StatusColor2, LinearGradientMode.Vertical);
-            LinearGradientBrush _MainBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.SlateGray, LinearGradientMode.Vertical);
-
-            if (editing)
-            {
-                _LeftAndRightBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Black, LinearGradientMode.Vertical);
-                _StatusBrush = new LinearGradientBrush(GetMainArea(), StatusColor1, StatusColor2, LinearGradientMode.Vertical);
-                _MainBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Orange, LinearGradientMode.Vertical);
-            }
-            
-            
-            // Draw left
-            if (LeftBarSize > 0)
-            {
-                _graphics.FillRoundedRectangle(_LeftAndRightBrush, this.GetLeftArea(), this.RoundedCornerAngle, RectangleEdgeFilter.TopLeft | RectangleEdgeFilter.BottomLeft);
-                _graphics.DrawString(this.LeftText, this.Font, Brushes.White, this.GetLeftArea(), f);
-            }
-            
-            // Draw status
-            if (StatusBarSize > 0)
-            {
-                _graphics.FillRoundedRectangle(_StatusBrush, this.GetStatusArea(), this.RoundedCornerAngle, RectangleEdgeFilter.None);
-                _graphics.DrawString(this.StatusText, this.Font, Brushes.White, this.GetStatusArea(), f);
-            }
-
-            // Draw main background
-            _graphics.FillRoundedRectangle(Brushes.DimGray, GetMainAreaBackground(), this.RoundedCornerAngle, RectangleEdgeFilter.None);
-
-            // Draw main
-            _graphics.FillRoundedRectangle(_MainBrush, this.GetMainArea(), this.RoundedCornerAngle, RectangleEdgeFilter.None);
-            //_graphics.DrawString(this.MainText, this.Font, Brushes.White, this.GetMainAreaBackground(), f);
-
-            // Clean up
-            _LeftAndRightBrush.Dispose();
-            _MainBrush.Dispose();
-            _StatusBrush.Dispose();
-        }
-        */
 
         private Rectangle GetLeftArea()
         {

@@ -32,10 +32,10 @@ namespace Chromatics.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fm_MainWindow));
             this.mT_TabManager = new MetroFramework.Controls.MetroTabControl();
             this.tP_console = new System.Windows.Forms.TabPage();
-            this.tP_Settings = new System.Windows.Forms.TabPage();
             this.tP_mappings = new System.Windows.Forms.TabPage();
             this.tP_palette = new System.Windows.Forms.TabPage();
             this.tP_Effects = new System.Windows.Forms.TabPage();
+            this.tP_Settings = new System.Windows.Forms.TabPage();
             this.mT_TabManager.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,45 +64,47 @@ namespace Chromatics.Forms
             this.tP_console.TabIndex = 0;
             this.tP_console.Text = "Console";
             // 
-            // tP_Settings
-            // 
-            this.tP_Settings.Location = new System.Drawing.Point(4, 38);
-            this.tP_Settings.Name = "tP_Settings";
-            this.tP_Settings.Size = new System.Drawing.Size(1337, 684);
-            this.tP_Settings.TabIndex = 4;
-            this.tP_Settings.Text = "Settings";
-            // 
             // tP_mappings
             // 
-            this.tP_mappings.Location = new System.Drawing.Point(4, 38);
+            this.tP_mappings.Location = new System.Drawing.Point(4, 39);
             this.tP_mappings.Name = "tP_mappings";
-            this.tP_mappings.Size = new System.Drawing.Size(1337, 684);
+            this.tP_mappings.Size = new System.Drawing.Size(1337, 683);
             this.tP_mappings.TabIndex = 1;
             this.tP_mappings.Text = "Mappings";
             // 
             // tP_palette
             // 
-            this.tP_palette.Location = new System.Drawing.Point(4, 38);
+            this.tP_palette.Location = new System.Drawing.Point(4, 39);
             this.tP_palette.Name = "tP_palette";
-            this.tP_palette.Size = new System.Drawing.Size(1337, 684);
+            this.tP_palette.Size = new System.Drawing.Size(1337, 683);
             this.tP_palette.TabIndex = 2;
             this.tP_palette.Text = "Color Palette";
             // 
             // tP_Effects
             // 
-            this.tP_Effects.Location = new System.Drawing.Point(4, 38);
+            this.tP_Effects.Location = new System.Drawing.Point(4, 39);
             this.tP_Effects.Name = "tP_Effects";
-            this.tP_Effects.Size = new System.Drawing.Size(1337, 684);
+            this.tP_Effects.Size = new System.Drawing.Size(1337, 683);
             this.tP_Effects.TabIndex = 3;
             this.tP_Effects.Text = "Effects";
+            // 
+            // tP_Settings
+            // 
+            this.tP_Settings.Location = new System.Drawing.Point(4, 39);
+            this.tP_Settings.Name = "tP_Settings";
+            this.tP_Settings.Size = new System.Drawing.Size(1337, 683);
+            this.tP_Settings.TabIndex = 4;
+            this.tP_Settings.Text = "Settings";
             // 
             // Fm_MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackLocation = MetroFramework.Forms.BackLocation.TopRight;
             this.ClientSize = new System.Drawing.Size(1385, 806);
             this.Controls.Add(this.mT_TabManager);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Fm_MainWindow";
             this.Text = "Chromatics";
             this.Load += new System.EventHandler(this.OnLoad);

@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Chromatics.Models.VirtualDevice;
 
 namespace Chromatics.Forms
 {
@@ -39,6 +40,7 @@ namespace Chromatics.Forms
             this.Style = metroStyleManager.Style;
             this.Size = new Size(1400, 885);
 
+            
             //Load Settings
             AppSettings.Startup();
 

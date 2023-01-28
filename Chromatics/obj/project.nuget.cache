@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "4jIpgeLEfA2N9BXTdFjk3Od/HsKOseug2d8cZaoz6ZQ3MAj2RSDiFc7hk1Ff4QOrU93Dl3qvZKOuQEvPPNQnYQ==",
+  "dgSpecHash": "oiQ5PlSjZjaYkM0s+yjXEiY6LAgh1Fg5hbzCOKvZy7v9YOcD4m7pUnRyR7D81RV+0porDA50OMAFUBCTzwEAyA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,6 @@
     "C:\\Users\\Dani\\.nuget\\packages\\cyotek.windows.forms.colorpicker\\2.0.0-beta.7\\cyotek.windows.forms.colorpicker.2.0.0-beta.7.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\ffxivweather\\1.0.16\\ffxivweather.1.0.16.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\hidsharp\\2.1.0\\hidsharp.2.1.0.nupkg.sha512",
-    "C:\\Users\\Dani\\.nuget\\packages\\metromodernui\\1.4.0\\metromodernui.1.4.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\mousekeyhook.netcore\\5.6.1.1\\mousekeyhook.netcore.5.6.1.1.nupkg.sha512",
@@ -40,16 +39,5 @@
     "C:\\Users\\Dani\\.nuget\\packages\\system.security.accesscontrol\\5.0.0\\system.security.accesscontrol.5.0.0.nupkg.sha512",
     "C:\\Users\\Dani\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'MetroModernUI 1.4.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "MetroModernUI",
-      "targetGraphs": [
-        "net6.0-windows7.0"
-      ]
-    }
-  ]
+  "logs": []
 }
