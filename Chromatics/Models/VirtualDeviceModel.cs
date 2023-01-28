@@ -159,6 +159,7 @@ namespace Chromatics.Models
 
             protected override void OnPaint(PaintEventArgs e)
             {
+                this.SuspendLayout();
                 base.OnPaint(e);
 
                 int borderRadius = 10;
@@ -184,6 +185,7 @@ namespace Chromatics.Models
                     e.Graphics.DrawString(_drawIndex, fnt, new SolidBrush(System.Drawing.Color.White), pt);
 
                 }
+                this.ResumeLayout(true);
             }
         }
     }

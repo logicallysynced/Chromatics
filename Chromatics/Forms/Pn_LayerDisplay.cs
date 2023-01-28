@@ -379,8 +379,10 @@ namespace Chromatics.Forms
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            this.SuspendLayout();
             base.OnPaint(e);
             RePaint();
+            this.ResumeLayout(true);
         }
 
         

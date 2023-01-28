@@ -473,11 +473,15 @@ namespace Chromatics.Forms
 
         private void OnResize(object sender, EventArgs e)
         {
+            this.SuspendLayout();
             foreach(var layer in _layers)
             {
                 layer.Size = new Size(flp_layers.Width - _layerPad, 50);
                 layer.Update();
             }
+
+            this.ResumeLayout(true);
+            
         }
 
         /*

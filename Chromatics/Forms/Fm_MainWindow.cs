@@ -77,6 +77,9 @@ namespace Chromatics.Forms
 
             uC_Mappings.TabManager = mT_TabManager;
 
+            this.ResizeBegin += (s, e) => { this.SuspendLayout(); };
+            this.ResizeEnd += (s, e) => { this.ResumeLayout(true); };
+
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
 
             
