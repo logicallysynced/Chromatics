@@ -23,6 +23,7 @@ namespace Chromatics.Layers
     {
         private FFXIVWeatherServiceManual weatherService;
         private string _currentWeather = @"";
+        private string _currentZone = @"";
 
         public override void Process(IMappingLayer layer)
         {
@@ -93,13 +94,15 @@ namespace Chromatics.Layers
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-                        if (_currentWeather != currentWeather || layer.requestUpdate)
+                        if (_currentWeather != currentWeather || _currentZone != currentZone || layer.requestUpdate)
                         {
                             //layergroup.Brush = weather_brush;
                             SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette);
 
                             Debug.WriteLine($"Zone Lookup: {currentZone}. Weather: {currentWeather}");
+
                             _currentWeather = currentWeather;
+                            _currentZone = currentZone;
                         }
                     }
                 }

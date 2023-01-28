@@ -20,6 +20,7 @@ namespace Chromatics.Layers.DynamicLayers
     {
         private FFXIVWeatherServiceManual weatherService;
         private string _currentWeather = @"";
+        private string _currentZone = @"";
 
         public override void Process(IMappingLayer layer)
         {
@@ -38,7 +39,7 @@ namespace Chromatics.Layers.DynamicLayers
                 weatherService = new FFXIVWeatherServiceManual();
             }
 
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
+            //loop through all LED's and assign to device layer  (Order of LEDs is not important for a highlight layer)
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
@@ -86,12 +87,13 @@ namespace Chromatics.Layers.DynamicLayers
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-                        if (_currentWeather != currentWeather || layer.requestUpdate)
+                        if (_currentWeather != currentWeather || _currentZone != currentZone || layer.requestUpdate)
                         {
                             //layergroup.Brush = weather_brush;
                             SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette);
 
                             _currentWeather = currentWeather;
+                            _currentZone = currentZone;
                         }
                     }
                 }

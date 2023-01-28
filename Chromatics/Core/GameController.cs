@@ -276,12 +276,14 @@ namespace Chromatics.Core
 
             //Check if game has logged in
             
-            if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
+            if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors() && _memoryHandler.Reader.CanGetChatLog())
             {
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                var chatLogCount = _memoryHandler.Reader.GetChatLog().ChatLogItems.Count;
+
                 var runningEffects = RGBController.GetRunningEffects();
 
-                if (getCurrentPlayer.Entity == null && !_isInGame)
+                if (getCurrentPlayer.Entity == null && chatLogCount <= 0)
                 {
                     //Game is still on Main Menu or Character Screen
                     if (!_onTitle || wasPreviewed)
@@ -332,9 +334,7 @@ namespace Chromatics.Core
                 else
                 {
                     //Character has logged in
-
-                    if (!_isInGame)
-                        _isInGame = true;
+                    _isInGame = true;
 
                     if (_onTitle)
                     {
