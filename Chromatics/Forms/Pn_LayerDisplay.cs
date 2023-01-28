@@ -23,6 +23,7 @@ namespace Chromatics.Forms
         private CheckBox _chk_enabled;
         private MetroButton _btn_edit;
         private MetroButton _btn_delete;
+        private MetroButton _btn_copy;
         private bool _editing;
 
         public int ID { get; set; }
@@ -42,6 +43,8 @@ namespace Chromatics.Forms
         public event EventHandler Btn_edit_OnPressed;
 
         public event EventHandler Btn_delete_OnPressed;
+
+        public event EventHandler Btn_copy_OnPressed;
 
         public event EventHandler Layer_OnPressed;
 
@@ -78,6 +81,11 @@ namespace Chromatics.Forms
                             _btn_delete.Enabled = false;
                         }
 
+                        if (_btn_copy != null)
+                        {
+                            _btn_copy.Enabled = false;
+                        }
+
                         if (_btn_edit != null)
                         {
                             _btn_edit.Enabled = false;
@@ -105,6 +113,11 @@ namespace Chromatics.Forms
                         if (_btn_delete != null)
                         {
                             _btn_delete.Enabled = true;
+                        }
+
+                        if (_btn_copy != null)
+                        {
+                            _btn_copy.Enabled = true;
                         }
 
                         if (_btn_edit != null)
@@ -137,6 +150,11 @@ namespace Chromatics.Forms
                         if (_btn_delete != null)
                         {
                             _btn_delete.Enabled = false;
+                        }
+
+                        if (_btn_copy != null)
+                        {
+                            _btn_copy.Enabled = false;
                         }
 
                         if (_btn_edit != null)
@@ -177,6 +195,12 @@ namespace Chromatics.Forms
         {
             get { return _btn_delete; }
             set { btn_delete = value; }
+        }
+
+        public MetroButton btn_copy
+        {
+            get { return _btn_copy; }
+            set { btn_copy = value; }
         }
 
         public bool editing
@@ -224,7 +248,7 @@ namespace Chromatics.Forms
                 DisplayMember = "Text",
                 ValueMember = "Value",
                 Font = new Font("Arial", 8),
-                DropDownWidth = 150
+                DropDownWidth = 200
             };
 
             _chk_enabled = new CheckBox
@@ -257,17 +281,31 @@ namespace Chromatics.Forms
                 Text = "Delete",
             };
 
+            _btn_copy = new MetroButton
+            {
+                Name = "btn_copy",
+                Location = new Point(_btn_edit.Location.X + _btn_edit.Size.Width + Padding.Left + 10, Padding.Top + Padding.Bottom + 18),
+                Size = new Size(50, 15),
+                BackColor = this.BackColor,
+                ForeColor = Color.White,
+                Text = "Copy",
+            };
+
 
             this.Controls.Add(cb_selector);
             this.Controls.Add(chk_enabled);
             this.Controls.Add(_btn_edit);
             this.Controls.Add(_btn_delete);
+            this.Controls.Add(_btn_copy);
+
+            _btn_copy.Visible = false;
 
             this.GotFocus += new EventHandler(OnLayerPressed);
             _cb_selector.SelectedIndexChanged += new EventHandler(OnSelectedIndexChanged);
             _chk_enabled.CheckedChanged += new EventHandler(OnCheckChanged);
             _btn_edit.Click += new EventHandler(OnEditButtonPressed);
             _btn_delete.Click += new EventHandler(OnDeleteButtonPressed);
+            _btn_copy.Click += new EventHandler(OnCopyButtonPressed);
         }
 
         protected override void Dispose(bool disposing)
@@ -277,6 +315,7 @@ namespace Chromatics.Forms
             _chk_enabled.CheckedChanged -= new EventHandler(OnCheckChanged);
             _btn_edit.Click -= new EventHandler(OnEditButtonPressed);
             _btn_delete.Click -= new EventHandler(OnDeleteButtonPressed);
+            _btn_copy.Click -= new EventHandler(OnCopyButtonPressed);
 
             base.Dispose(disposing);
         }
@@ -450,6 +489,12 @@ namespace Chromatics.Forms
         {
             if (Btn_delete_OnPressed != null)
                 Btn_delete_OnPressed(sender, e);
+        }
+        
+        private void OnCopyButtonPressed(object sender, EventArgs e)
+        {
+            if (Btn_copy_OnPressed != null)
+                Btn_copy_OnPressed(sender, e);
         }
 
         private void OnLayerPressed(object sender, EventArgs e)

@@ -53,6 +53,8 @@ namespace Chromatics.Forms
             this.cb_deviceselect = new MetroFramework.Controls.MetroComboBox();
             this.btn_preview = new MetroFramework.Controls.MetroButton();
             this.pn_bottom = new System.Windows.Forms.Panel();
+            this.tlp_footer = new System.Windows.Forms.TableLayoutPanel();
+            this.rtb_layerhelp = new System.Windows.Forms.RichTextBox();
             this.tlp_base.SuspendLayout();
             this.tlp_mid.SuspendLayout();
             this.pn_right.SuspendLayout();
@@ -61,6 +63,8 @@ namespace Chromatics.Forms
             this.tlp_layercontrols.SuspendLayout();
             this.pn_top.SuspendLayout();
             this.tlp_top.SuspendLayout();
+            this.pn_bottom.SuspendLayout();
+            this.tlp_footer.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlp_base
@@ -389,11 +393,43 @@ namespace Chromatics.Forms
             // 
             // pn_bottom
             // 
+            this.pn_bottom.Controls.Add(this.tlp_footer);
             this.pn_bottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pn_bottom.Location = new System.Drawing.Point(3, 991);
             this.pn_bottom.Name = "pn_bottom";
             this.pn_bottom.Size = new System.Drawing.Size(1864, 46);
             this.pn_bottom.TabIndex = 2;
+            // 
+            // tlp_footer
+            // 
+            this.tlp_footer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlp_footer.ColumnCount = 2;
+            this.tlp_footer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tlp_footer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tlp_footer.Controls.Add(this.rtb_layerhelp, 1, 0);
+            this.tlp_footer.Location = new System.Drawing.Point(-3, 3);
+            this.tlp_footer.Name = "tlp_footer";
+            this.tlp_footer.RowCount = 1;
+            this.tlp_footer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_footer.Size = new System.Drawing.Size(1864, 43);
+            this.tlp_footer.TabIndex = 3;
+            // 
+            // rtb_layerhelp
+            // 
+            this.rtb_layerhelp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtb_layerhelp.BackColor = System.Drawing.SystemColors.Control;
+            this.rtb_layerhelp.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtb_layerhelp.Location = new System.Drawing.Point(1307, 3);
+            this.rtb_layerhelp.Name = "rtb_layerhelp";
+            this.rtb_layerhelp.ReadOnly = true;
+            this.rtb_layerhelp.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.rtb_layerhelp.Size = new System.Drawing.Size(554, 37);
+            this.rtb_layerhelp.TabIndex = 8;
+            this.rtb_layerhelp.Text = "Hold Shift to copy layers";
             // 
             // Uc_Mappings
             // 
@@ -416,6 +452,8 @@ namespace Chromatics.Forms
             this.pn_top.ResumeLayout(false);
             this.tlp_top.ResumeLayout(false);
             this.tlp_top.PerformLayout();
+            this.pn_bottom.ResumeLayout(false);
+            this.tlp_footer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -445,5 +483,7 @@ namespace Chromatics.Forms
         private MetroFramework.Controls.MetroComboBox cb_changemode;
         private MetroFramework.Controls.MetroButton btn_togglebleed;
         private System.Windows.Forms.RichTextBox rtb_layerhelper;
+        private System.Windows.Forms.TableLayoutPanel tlp_footer;
+        private System.Windows.Forms.RichTextBox rtb_layerhelp;
     }
 }

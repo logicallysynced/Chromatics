@@ -305,7 +305,6 @@ namespace Chromatics.Core
                             {
                                 var ledgroup = new PublicListLedGroup(surface, device);
                         
-                                //var starfield = new StarfieldDecorator2(5, highlightColors, 500, 1000, baseColor, surface, false);
                                 var starfield = new StarfieldDecorator(ledgroup, (ledgroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
                                 ledgroup.ZIndex = 1000;
                             

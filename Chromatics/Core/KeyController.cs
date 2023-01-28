@@ -36,6 +36,15 @@ namespace Chromatics.Core
             
             _mGlobalHook.Dispose();
         }
+        public static IKeyboardMouseEvents GetKeyContoller()
+        {
+            if (_mGlobalHook != null)
+            {
+                return _mGlobalHook;
+            }
+
+            return null;
+        }
 
         public static bool IsCtrlPressed()
         {

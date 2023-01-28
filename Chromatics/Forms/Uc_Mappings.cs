@@ -4,6 +4,7 @@ using Chromatics.Extensions;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
+using Gma.System.MouseKeyHook;
 using MetroFramework;
 using MetroFramework.Components;
 using MetroFramework.Controls;
@@ -30,6 +31,7 @@ namespace Chromatics.Forms
     public partial class Uc_Mappings : UserControl
     {
         public MetroTabControl TabManager { get; set; }
+        private IKeyboardMouseEvents keyController;
 
         private List<Pn_LayerDisplay> _layers = new List<Pn_LayerDisplay>();
         private List<KeyButton> _currentSelectedKeys = new List<KeyButton>();
@@ -51,7 +53,7 @@ namespace Chromatics.Forms
 
             this.flp_layers.DragEnter += new DragEventHandler(flp_layers_DragEnter);
             this.flp_layers.DragDrop += new DragEventHandler(flp_layers_DragDrop);
-
+                        
             _virtualDevices = new Dictionary<RGBDeviceType, VirtualDevice>()
             {
                 { RGBDeviceType.Keyboard, new Uc_VirtualKeyboard() },
@@ -229,6 +231,7 @@ namespace Chromatics.Forms
 
             //Handle Events
             this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
+            this.TabManager.Selected += new TabControlEventHandler(mT_TabManager_Selected);
 
             //Set init to true
             init = true;
@@ -242,7 +245,7 @@ namespace Chromatics.Forms
             }
         }
 
-        private int AddLayer(LayerType layertype, RGBDeviceType devicetype, int id = 0, int index = 0, bool initialize = false, bool bypass = false, bool enabled = false, Dictionary<int, LedId> leds = null)
+        private int AddLayer(LayerType layertype, RGBDeviceType devicetype, int id = 0, int index = 0, bool initialize = false, bool bypass = false, bool enabled = false, Dictionary<int, LedId> leds = null, int layerTypeindex = 0, bool allowBleed = false, LayerModes mode = LayerModes.Interpolate)
         {
             IsAddingLayer = true;
             var s = new Size(flp_layers.Width - _layerPad, 50);
@@ -263,11 +266,13 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(pgb.btn_edit, "Toggle Edit mode for this Layer");
             tt_mappings.SetToolTip(pgb.btn_delete, "Remove this Layer");
 
+            pgb.cb_selector.SelectedIndex = layerTypeindex;
             pgb.GotFocus += new EventHandler(OnLayerPressed);
             pgb.cb_selector.SelectedIndexChanged += new EventHandler(OnSelectedIndexChanged);
             pgb.chk_enabled.CheckedChanged += new EventHandler(OnCheckChanged);
             pgb.btn_edit.Click += new EventHandler(OnEditButtonPressed);
             pgb.btn_delete.Click += new EventHandler(OnDeleteButtonPressed);
+            pgb.btn_copy.Click += new EventHandler(OnCopyButtonPressed);
                        
 
             if (initialize)
@@ -284,7 +289,7 @@ namespace Chromatics.Forms
                     leds = new Dictionary<int, LedId>();
                 }
 
-                pgb.ID = MappingLayers.AddLayer(MappingLayers.CountLayers(), layertype, devicetype, 0, _index, enabled, leds);
+                pgb.ID = MappingLayers.AddLayer(MappingLayers.CountLayers(), layertype, devicetype, layerTypeindex, _index, enabled, leds, allowBleed, mode);
                 pgb.LeftText = _index.ToString();
             }
             else
@@ -395,6 +400,7 @@ namespace Chromatics.Forms
                 layer.chk_enabled.CheckedChanged -= new EventHandler(OnCheckChanged);
                 layer.btn_edit.Click -= new EventHandler(OnEditButtonPressed);
                 layer.btn_delete.Click -= new EventHandler(OnDeleteButtonPressed);
+                layer.btn_copy.Click -= new EventHandler(OnCopyButtonPressed);
 
                 layer.Dispose();
             }
@@ -479,7 +485,8 @@ namespace Chromatics.Forms
             if (IsAddingLayer) return;
 
             var current = (sender as TabControl).SelectedTab.ToString();
-            
+                        
+
             if (current == "tP_mappings")
             {
                 if (MappingLayers.IsPreview())
@@ -493,11 +500,41 @@ namespace Chromatics.Forms
                     MappingLayers.SetPreview(false);
 
                 }
+
             }
             else
             {
                 btn_preview.BackColor = SystemColors.Control;
                 MappingLayers.SetPreview(false);
+
+
+            }
+        }
+
+        private void mT_TabManager_Selected(object sender, TabControlEventArgs e)
+        {
+            if (IsAddingLayer) return;
+
+            var current = (sender as TabControl).SelectedTab.Name;
+
+            keyController = KeyController.GetKeyContoller();
+            if (current == "tP_mappings")
+            {
+                //Key controllers hook
+                if (keyController != null)
+                {
+                    keyController.KeyDown += Kh_KeyDown;
+                    keyController.KeyUp += Kh_KeyUp;
+                }
+            }
+            else
+            {
+                //Key controllers unhook
+                if (keyController != null)
+                {
+                    keyController.KeyDown -= Kh_KeyDown;
+                    keyController.KeyUp -= Kh_KeyUp;
+                }
 
             }
         }
@@ -805,6 +842,57 @@ namespace Chromatics.Forms
             this.ActiveControl = thisbtn.Parent;
         }
 
+        private void OnCopyButtonPressed(object sender, EventArgs e)
+        {
+            if (!init) return;
+            if (IsAddingLayer) return;
+
+            var obj = (MetroButton)sender;
+            var parent = (Pn_LayerDisplay)obj.Parent;
+            
+            if (selectedAddType != parent.LayerType)
+                selectedAddType = parent.LayerType;
+
+            var ms = MappingLayers.GetLayer(parent.ID);
+
+            var newid = AddLayer(selectedAddType, selectedDevice, 0, 2, true, true, false, ms.deviceLeds, ms.layerTypeindex, ms.allowBleed, ms.layerModes);
+
+            foreach(Pn_LayerDisplay layer in flp_layers.Controls)
+            {
+                if (layer.ID == newid) continue;
+
+                var _layer = MappingLayers.GetLayer(layer.ID);
+
+                if (_layer.zindex == 1)
+                {
+                    flp_layers.Controls.SetChildIndex(layer, flp_layers.Controls.Count);
+                }
+                else if (_layer.zindex >= 2)
+                {
+                    _layer.zindex++;
+                    MappingLayers.UpdateLayer(_layer);
+
+                    layer.LeftText = $"{_layer.zindex}";
+                    layer.Invalidate();
+                }
+
+            }
+
+            SaveLayers();
+            
+
+            if (currentlyEditing == null)
+            {
+                this.ActiveControl = flp_layers.Controls[flp_layers.Controls.Count-2];
+            }
+            else
+            {
+                var thisbtn = (MetroButton)sender;
+                this.ActiveControl = thisbtn.Parent;
+            }
+            
+        }
+
         private void OnDeleteButtonPressed(object sender, EventArgs e)
         {
             if (!init) return;
@@ -878,6 +966,7 @@ namespace Chromatics.Forms
                     parent.chk_enabled.CheckedChanged -= new EventHandler(OnCheckChanged);
                     parent.btn_edit.Click -= new EventHandler(OnEditButtonPressed);
                     parent.btn_delete.Click -= new EventHandler(OnDeleteButtonPressed);
+                    parent.btn_copy.Click -= new EventHandler(OnCopyButtonPressed);
 
                     VisualiseLayers(false);
                     parent.Dispose();
@@ -1448,6 +1537,48 @@ namespace Chromatics.Forms
 
             // Resume layout updates
             rtb.ResumeLayout();
+        }
+
+
+        private void Kh_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+            {
+                //Shift key pressed
+                _layers.ForEach(x => { x.SuspendLayout(); });
+
+                foreach (var pgb in _layers)
+                {
+                    if (pgb.btn_delete.Visible == true)
+                    {
+                        pgb.btn_delete.Visible = false;
+                        pgb.btn_copy.Visible = true;
+                    }
+                }
+
+                _layers.ForEach(x => { x.ResumeLayout(); });
+            }
+
+        }
+
+        private void Kh_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+            {
+                _layers.ForEach(x => { x.SuspendLayout(); });
+
+                //Shift key released
+                foreach (var pgb in _layers)
+                {
+                    if (pgb.btn_copy.Visible == true)
+                    {
+                        pgb.btn_copy.Visible = false;
+                        pgb.btn_delete.Visible = true;
+                    }
+                }
+
+                _layers.ForEach(x => { x.ResumeLayout(); });
+            }
         }
     }
 }

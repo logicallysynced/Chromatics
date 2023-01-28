@@ -59,6 +59,14 @@
           }
         }
       },
+      "MouseKeyHook.NetCore/5.6.1.1": {
+        "runtime": {
+          "lib/net6.0-windows7.0/Gma.System.MouseKeyHook.dll": {
+            "assemblyVersion": "5.6.1.1",
+            "fileVersion": "5.6.1.1"
+          }
+        }
+      },
       "Newtonsoft.Json/13.0.2": {
         "runtime": {
           "lib/net6.0/Newtonsoft.Json.dll": {
@@ -429,6 +437,13 @@
       "sha512": "sha512-dDoKi0PnDz31yAyETfRntsLArTlVAVzUzCIvvEDsDsucrl33Dl8pIJG06ePTJTI3tGpeyHS9Cq7Foc/s4EeKcg==",
       "path": "microsoft.win32.registry/5.0.0",
       "hashPath": "microsoft.win32.registry.5.0.0.nupkg.sha512"
+    },
+    "MouseKeyHook.NetCore/5.6.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MgliDV/5e9kiYQ0D9lPlYRwt1aluIlGM3SQC4UZyT4BQN8KyNimdsDZQQc4t6HdY7QBngt5cbxFTKnOad/rm0w==",
+      "path": "mousekeyhook.netcore/5.6.1.1",
+      "hashPath": "mousekeyhook.netcore.5.6.1.1.nupkg.sha512"
     },
     "Newtonsoft.Json/13.0.2": {
       "type": "package",

@@ -30,10 +30,11 @@ namespace Chromatics.Enums
         BattleStance = 2,
         [LayerDisplay(Name = "Job Classes", Description = "Base layer changes colour depending on the character's current class.\nUses base layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         JobClasses = 3,
-        [LayerDisplay(Name = "Screen Capture", Description = "Draws a gradient as your base layer by polling the four corners of your game screen.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        ScreenCapture = 4,
         [LayerDisplay(Name = "Status Effects", Description = "Base layer changes colour depending on the character's current status effects.\nUses base layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        StatusEffects = 5,
+        StatusEffects = 4,
+        [LayerDisplay(Name = "Screen Capture", Description = "Draws a gradient as your base layer by polling the four corners of your game screen.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        ScreenCapture = 5,
+        
     };
     public enum DynamicLayerType
     {
@@ -62,11 +63,11 @@ namespace Chromatics.Enums
         [LayerDisplay(Name = "Castbar", Description = "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         Castbar = 11,
         [LayerDisplay(Name = "Job Classes Highlight", Description = "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        JobClass = 12,
+        JobClassesHighlight = 12,
         [LayerDisplay(Name = "Reactive Weather Highlight", Description = "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         ReactiveWeatherHighlight = 13,
         [LayerDisplay(Name = "Status Effect Highlight", Description = "Displays different colours across selected keys depending on character's current status effects.\nUses highlight layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        StatusEffectHighlight = 13,
+        StatusEffectHighlight = 14,
     };
     public enum EffectLayerType
     {

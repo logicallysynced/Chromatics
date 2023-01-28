@@ -24,17 +24,17 @@ namespace Chromatics.Layers
         
         private static ConcurrentDictionary<int, Layer> _layers = new ConcurrentDictionary<int, Layer>();
 
-        public static int AddLayer(int index, LayerType rootLayerType, RGBDeviceType devicetype, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds)
+        public static int AddLayer(int index, LayerType rootLayerType, RGBDeviceType devicetype, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
         {
             _layerAutoID++;
 
             var id = _layerAutoID;
 
-            var layer = new Layer(id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds);
+            var layer = new Layer(id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
             _layers.GetOrAdd(id, layer);
             _version++;
 
-            Debug.WriteLine(@"New Layer: " + id + @". zindex: " + zindex + @". Type: " + rootLayerType + @". Device: " + devicetype);
+            Debug.WriteLine(@"New Layer: " + id + @". zindex: " + zindex + @". Type: " + rootLayerType + @". Device: " + devicetype + @". LayerType: " + layerTypeIndex);
 
             return id;
         }
@@ -176,7 +176,7 @@ namespace Chromatics.Layers
         public LayerModes layerModes { get; set; }
         public bool requestUpdate { get; set; }
 
-        public Layer(int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds)
+        public Layer(int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds, bool _allowBleed, LayerModes _mode)
         {
             layerID = _id;
             layerIndex = _index;
@@ -186,9 +186,9 @@ namespace Chromatics.Layers
             zindex = _zindex;
             Enabled = _enabled;
             deviceLeds = _deviceLeds;
-            allowBleed = false;
+            allowBleed = _allowBleed;
             requestUpdate = false;
-            layerModes = LayerModes.Interpolate;
+            layerModes = _mode;
         }
     }
 }
