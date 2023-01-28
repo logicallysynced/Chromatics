@@ -281,7 +281,7 @@ namespace Chromatics.Core
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 var runningEffects = RGBController.GetRunningEffects();
 
-                if (getCurrentPlayer.Entity == null)
+                if (getCurrentPlayer.Entity == null && !_isInGame)
                 {
                     //Game is still on Main Menu or Character Screen
                     if (!_onTitle || wasPreviewed)
@@ -332,7 +332,9 @@ namespace Chromatics.Core
                 else
                 {
                     //Character has logged in
-                    _isInGame = true;
+
+                    if (!_isInGame)
+                        _isInGame = true;
 
                     if (_onTitle)
                     {

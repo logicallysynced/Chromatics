@@ -60,6 +60,7 @@ namespace Chromatics.Layers
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
             {
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                if (getCurrentPlayer.Entity == null) return;
 
                 var currentVal = getCurrentPlayer.Entity.CastingPercentage;
                 var minVal = 0.0;

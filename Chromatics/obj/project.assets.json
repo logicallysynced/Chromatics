@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net6.0-windows7.0": {
+      "CsvHelper/30.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/CsvHelper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/CsvHelper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Cyotek.Windows.Forms.ColorPicker/2.0.0-beta.7": {
         "type": "package",
         "compile": {
@@ -13,6 +26,18 @@
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WindowsForms"
         ]
+      },
+      "FFXIVWeather/1.0.16": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "compile": {
+          "lib/netstandard2.0/FFXIVWeather.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/FFXIVWeather.dll": {}
+        }
       },
       "HidSharp/2.1.0": {
         "type": "package",
@@ -515,6 +540,30 @@
     }
   },
   "libraries": {
+    "CsvHelper/30.0.1": {
+      "sha512": "rcZtgbWR+As4G3Vpgx0AMNmShGuQLFjkHAPIIflzrfkJCx8/AOd4m96ZRmiU1Wi39qS5UVjV0P8qdgqOo5Cwyg==",
+      "type": "package",
+      "path": "csvhelper/30.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "csvhelper.30.0.1.nupkg.sha512",
+        "csvhelper.nuspec",
+        "lib/net45/CsvHelper.dll",
+        "lib/net45/CsvHelper.xml",
+        "lib/net47/CsvHelper.dll",
+        "lib/net47/CsvHelper.xml",
+        "lib/net5.0/CsvHelper.dll",
+        "lib/net5.0/CsvHelper.xml",
+        "lib/net6.0/CsvHelper.dll",
+        "lib/net6.0/CsvHelper.xml",
+        "lib/netstandard2.0/CsvHelper.dll",
+        "lib/netstandard2.0/CsvHelper.xml",
+        "lib/netstandard2.1/CsvHelper.dll",
+        "lib/netstandard2.1/CsvHelper.xml"
+      ]
+    },
     "Cyotek.Windows.Forms.ColorPicker/2.0.0-beta.7": {
       "sha512": "zl3Y3ybhehCbkRCTc+LMgya3HKBR02pO7gohfhEcnvh24WkZH5YFMjm3id7AHZrnxDvzFms3sXcTmU5zzETsQA==",
       "type": "package",
@@ -534,6 +583,19 @@
         "lib/net5.0-windows7.0/Cyotek.Windows.Forms.ColorPicker.dll",
         "lib/netcoreapp3.1/Cyotek.Windows.Forms.ColorPicker.dll",
         "nuget-readme.md"
+      ]
+    },
+    "FFXIVWeather/1.0.16": {
+      "sha512": "0hV+ToSSbb4OH3nBDBuMWa0ijf9UuaV3RFSTOe1y45jvzs1zgkhbqCgmSndgiHQEmRorlSMKlr67pZIda+KjYQ==",
+      "type": "package",
+      "path": "ffxivweather/1.0.16",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "ffxivweather.1.0.16.nupkg.sha512",
+        "ffxivweather.nuspec",
+        "lib/netstandard2.0/FFXIVWeather.dll"
       ]
     },
     "HidSharp/2.1.0": {
@@ -1266,7 +1328,9 @@
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
+      "CsvHelper >= 30.0.1",
       "Cyotek.Windows.Forms.ColorPicker >= 2.0.0-beta.7",
+      "FFXIVWeather >= 1.0.16",
       "MetroModernUI >= 1.4.0",
       "MouseKeyHook.NetCore >= 5.6.1.1",
       "NLog >= 4.7.0",
@@ -1329,9 +1393,17 @@
       "net6.0-windows7.0": {
         "targetAlias": "net6.0-windows",
         "dependencies": {
+          "CsvHelper": {
+            "target": "Package",
+            "version": "[30.0.1, )"
+          },
           "Cyotek.Windows.Forms.ColorPicker": {
             "target": "Package",
             "version": "[2.0.0-beta.7, )"
+          },
+          "FFXIVWeather": {
+            "target": "Package",
+            "version": "[1.0.16, )"
           },
           "MetroModernUI": {
             "target": "Package",

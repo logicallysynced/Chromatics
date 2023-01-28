@@ -71,6 +71,8 @@ namespace Chromatics.Layers
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
             {
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                if (getCurrentPlayer.Entity == null) return;
+
                 var inCombat = getCurrentPlayer.Entity.InCombat;
                 
                 if (!inCombat)

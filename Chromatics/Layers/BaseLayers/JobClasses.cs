@@ -73,6 +73,8 @@ namespace Chromatics.Layers
                 if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
                 {
                     var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                    if (getCurrentPlayer.Entity == null) return;
+
                     var currentJob = getCurrentPlayer.Entity.Job;
 
                     highlight_col = GameHelper.GetJobClassColor(currentJob, _colorPalette, false);

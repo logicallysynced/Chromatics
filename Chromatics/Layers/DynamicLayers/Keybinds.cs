@@ -80,6 +80,7 @@ namespace Chromatics.Layers
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActions())
             {
                 var getActions = _memoryHandler.Reader.GetActions();
+                if (getActions.ActionContainers == null) return;
 
                 var keybind_cd_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarCd.Color);
                 var keybind_na_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarNotAvailable.Color);

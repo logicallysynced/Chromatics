@@ -61,6 +61,7 @@ namespace Chromatics.Layers
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
             {
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                if (getCurrentPlayer.Entity == null) return;
 
                 var currentVal = getCurrentPlayer.Entity.HPCurrent;
                 var minVal = 0;

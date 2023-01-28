@@ -60,6 +60,7 @@ namespace Chromatics.Layers
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetTargetInfo())
             {
                 var getCurrentTarget = _memoryHandler.Reader.GetTargetInfo().TargetInfo;
+                if (getCurrentTarget.CurrentTarget == null) return;
 
                 var currentVal = getCurrentTarget.CurrentTarget.CastingPercentage;
                 var minVal = 0.0;

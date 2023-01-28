@@ -80,6 +80,8 @@ namespace Chromatics.Layers
                 }
 
                 var getTargetInfo = _memoryHandler.Reader.GetTargetInfo();
+                if (getTargetInfo.TargetInfo == null) return;
+
                 uint targetId = 0;
 
                 if (getTargetInfo.TargetInfo.CurrentTarget != null)

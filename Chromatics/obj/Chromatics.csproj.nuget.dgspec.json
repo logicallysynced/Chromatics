@@ -43,9 +43,17 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "dependencies": {
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[30.0.1, )"
+            },
             "Cyotek.Windows.Forms.ColorPicker": {
               "target": "Package",
               "version": "[2.0.0-beta.7, )"
+            },
+            "FFXIVWeather": {
+              "target": "Package",
+              "version": "[1.0.16, )"
             },
             "MetroModernUI": {
               "target": "Package",

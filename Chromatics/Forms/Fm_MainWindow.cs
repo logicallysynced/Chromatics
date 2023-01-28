@@ -1,5 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Enums;
+using Chromatics.Helpers;
 using MetroFramework.Components;
 using MetroFramework.Forms;
 using System;
@@ -108,8 +109,12 @@ namespace Chromatics.Forms
             RunChromaticsThread();
         }
 
-        private void RunChromaticsThread()
+        private async void RunChromaticsThread()
         {
+
+            //Start Chromatics
+            await Task.Run(() => FileOperationsHelper.GetUpdatedWeatherData());
+
             KeyController.Setup();
             RGBController.Setup();
             GameController.Setup();
