@@ -380,11 +380,50 @@ namespace Chromatics.Forms
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            RePaint(e.Graphics);
+            RePaint();
         }
 
+        
+
+        public void RePaint()
+        {
+            //Debug.WriteLine(@"Pn_LayerDisplay Painting");
+
+            LinearGradientBrush _leftAndRightBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Black, LinearGradientMode.Vertical);
+            LinearGradientBrush _statusBrush = new LinearGradientBrush(GetMainArea(), StatusColor1, StatusColor2, LinearGradientMode.Vertical);
+            LinearGradientBrush _mainBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.SlateGray, LinearGradientMode.Vertical);
+            StringFormat _stringFormat = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+
+            using (var graphics = this.CreateGraphics())
+            {
+                if (editing)
+                {
+                    _leftAndRightBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Black, LinearGradientMode.Vertical);
+                    _statusBrush = new LinearGradientBrush(GetMainArea(), StatusColor1, StatusColor2, LinearGradientMode.Vertical);
+                    _mainBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Orange, LinearGradientMode.Vertical);
+                }
+
+                if (LeftBarSize > 0)
+                {
+                    graphics.FillRoundedRectangle(_leftAndRightBrush, this.GetLeftArea(), this.RoundedCornerAngle, RectangleEdgeFilter.TopLeft | RectangleEdgeFilter.BottomLeft);
+                    graphics.DrawString(this.LeftText, this.Font, Brushes.White, this.GetLeftArea(), _stringFormat);
+                }
+
+                if (StatusBarSize > 0)
+                {
+                    graphics.FillRoundedRectangle(_statusBrush, this.GetStatusArea(), this.RoundedCornerAngle, RectangleEdgeFilter.None);
+                    graphics.DrawString(this.StatusText, this.Font, Brushes.White, this.GetStatusArea(), _stringFormat);
+                }
+                graphics.FillRoundedRectangle(Brushes.DimGray, GetMainAreaBackground(), this.RoundedCornerAngle, RectangleEdgeFilter.None);
+                graphics.FillRoundedRectangle(_mainBrush, this.GetMainArea(), this.RoundedCornerAngle, RectangleEdgeFilter.None);
+            }
+        }
+
+        /*
         public void RePaint(Graphics _graphics)
         {
+            //Debug.WriteLine(@"Pn_LayerDisplay Painting");
+            
             // Textformat
             StringFormat f = new StringFormat();
             f.Alignment = StringAlignment.Center;
@@ -430,6 +469,7 @@ namespace Chromatics.Forms
             _MainBrush.Dispose();
             _StatusBrush.Dispose();
         }
+        */
 
         private Rectangle GetLeftArea()
         {

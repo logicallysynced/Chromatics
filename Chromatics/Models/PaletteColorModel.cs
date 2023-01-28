@@ -289,11 +289,11 @@ namespace Chromatics.Models
         public ColorMapping WeatherOppressionBase = new("Oppression (Base)", PaletteTypes.ReactiveWeather, Color.LimeGreen);
         public ColorMapping WeatherOppressionHighlight = new("Oppression (Highlight)", PaletteTypes.ReactiveWeather, Color.PaleGreen);
 
-        public ColorMapping WeatherUmbralWindBase = new("Umbral Wind (Base)", PaletteTypes.ReactiveWeather, Color.DarkCyan);
-        public ColorMapping WeatherUmbralWindHighlight = new("Umbral Wind (Highlight)", PaletteTypes.ReactiveWeather, Color.Turquoise);
+        public ColorMapping WeatherUmbralWindBase = new("Umbral Wind (Base)", PaletteTypes.ReactiveWeather, Color.DarkTurquoise);
+        public ColorMapping WeatherUmbralWindHighlight = new("Umbral Wind (Highlight)", PaletteTypes.ReactiveWeather, Color.Azure);
 
-        public ColorMapping WeatherUmbralStaticBase = new("Umbral Static (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
-        public ColorMapping WeatherUmbralStaticHighlight = new("Umbral Static (Highlight)", PaletteTypes.ReactiveWeather, Color.Cyan);
+        public ColorMapping WeatherUmbralStaticBase = new("Umbral Static (Base)", PaletteTypes.ReactiveWeather, Color.DarkTurquoise);
+        public ColorMapping WeatherUmbralStaticHighlight = new("Umbral Static (Highlight)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
 
         public ColorMapping WeatherSmokeBase = new("Smoke (Base)", PaletteTypes.ReactiveWeather, Color.DarkRed);
         public ColorMapping WeatherSmokeHighlight = new("Smoke (Highlight)", PaletteTypes.ReactiveWeather, Color.OrangeRed);
@@ -409,8 +409,10 @@ namespace Chromatics.Models
         public ColorMapping WeatherClimacticBase = new("Climactic (Base)", PaletteTypes.ReactiveWeather, Color.DarkCyan);
         public ColorMapping WeatherClimacticHighlight = new("Climactic (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkOrange);
 
-        public ColorMapping WeatherMoonDustBase = new("Moon Dust (Base)", PaletteTypes.ReactiveWeather, Color.Black);
-        public ColorMapping WeatherMoonDustHighlight = new("Moon Dust (Highlight)", PaletteTypes.ReactiveWeather, Color.DodgerBlue);
+        public ColorMapping WeatherMoonDustBase = new("Moon Dust (Base)", PaletteTypes.ReactiveWeather, Color.MediumBlue);
+        public ColorMapping WeatherMoonDustHighlight = new("Moon Dust (Highlight)", PaletteTypes.ReactiveWeather, Color.White);
+        public ColorMapping WeatherMoonDustAnimationBase = new("Moon Dust (Animation Base)", PaletteTypes.ReactiveWeather, Color.Black);
+        public ColorMapping WeatherMoonDustAnimationHighlight = new("Moon Dust (Animation Highlight)", PaletteTypes.ReactiveWeather, Color.White);
 
         public ColorMapping WeatherAstromagneticStormBase = new("Astromagnetic Storm (Base)", PaletteTypes.ReactiveWeather, Color.MidnightBlue);
         public ColorMapping WeatherAstromagneticStormHighlight = new("Astromagnetic Storm (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumVioletRed);

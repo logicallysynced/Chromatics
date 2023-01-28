@@ -230,7 +230,7 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.cb_changemode, @"Change the layer mode." + Environment.NewLine + @"Interpolate: Shows the layer as a bar on your device." + Environment.NewLine + @"Fade: Fades the colour of the RGB keys.");
 
             //Handle Events
-            this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
+            //this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
             this.TabManager.Selected += new TabControlEventHandler(mT_TabManager_Selected);
 
             //Set init to true
@@ -480,6 +480,7 @@ namespace Chromatics.Forms
             }
         }
 
+        /*
         private void mT_TabManager_Selecting(object sender, TabControlCancelEventArgs e)
         {
             if (IsAddingLayer) return;
@@ -510,6 +511,7 @@ namespace Chromatics.Forms
 
             }
         }
+        */
 
         private void mT_TabManager_Selected(object sender, TabControlEventArgs e)
         {

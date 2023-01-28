@@ -168,7 +168,12 @@ namespace Chromatics.Forms
         private void btn_paletteundo_Click(object sender, EventArgs e)
         {
             var pmcs = dG_mappings.CurrentRow;
-            var pcmsid = (string)pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value;
+            var pcmsid = (string)pmcs.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value ?? "NA";
+
+            if (pcmsid == "NA")
+            {
+                return;
+            }
 
             var cm = new PaletteColorModel();
             var _restore = Color.Black;

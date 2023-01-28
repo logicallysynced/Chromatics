@@ -155,6 +155,12 @@ namespace Chromatics.Core
         public static bool SaveColorPalette()
         {
             FileOperationsHelper.SaveColorMappings(_colorPalette);
+            
+            foreach (var layer in MappingLayers.GetLayers())
+            {
+                layer.Value.requestUpdate = true;
+            }
+
             return true;
         }
 
@@ -255,6 +261,7 @@ namespace Chromatics.Core
             }
 
             _runningEffects.Clear();
+            Debug.WriteLine($"Stopping all effects");
 
         }
         public static List<PublicListLedGroup> GetRunningEffects()
