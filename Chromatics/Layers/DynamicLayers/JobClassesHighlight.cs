@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Layers
 {
-    public class JobClassProcessor : LayerProcessor
+    public class JobClassesHighlightProcessor : LayerProcessor
     {
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
 
-            //Job Classes Dynamic Layer Implementation
+            //Job Classes Highlight Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var highlight_col = Color.Transparent;
             var _layergroups = RGBController.GetLiveLayerGroups();
