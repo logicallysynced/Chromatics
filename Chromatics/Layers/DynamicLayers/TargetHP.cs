@@ -30,7 +30,7 @@ namespace Chromatics.Layers
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
 
-            //Target HP Tracker Layer Implementation
+            //Target HP Tracker Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
 
             //loop through all LED's and assign to device layer (must maintain order of LEDs)
