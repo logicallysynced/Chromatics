@@ -13,7 +13,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
     {
         private readonly PublicListLedGroup ledGroup;
         private readonly Random random = new Random();
-        private readonly int numberOfLeds;
         private readonly int interval;
         private readonly bool randomise;
         private readonly bool oneshot;
@@ -109,12 +108,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         if (GetRandomBoolean(0.35))
                         {
                             startDelay = Timing + (fadeSpeed / 1000);
-                            Debug.WriteLine($"Hit: {(fadeSpeed / 1000)}");
+                            //Debug.WriteLine($"Hit: {(fadeSpeed / 1000)}");
                         }
                         else
                         {
                             startDelay = Timing + (rng / 1000);
-                            Debug.WriteLine($" Random: {rng / 1000}");
+                            //Debug.WriteLine($" Random: {rng / 1000}");
                         }
 
                     

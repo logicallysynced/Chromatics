@@ -3,7 +3,6 @@ using Chromatics.Enums;
 using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
-using Chromatics.Layers.BaseLayers;
 using Chromatics.Layers.DynamicLayers;
 using RGB.NET.Core;
 using System;
@@ -82,7 +81,6 @@ namespace Chromatics.Layers
             { BaseLayerType.ReactiveWeather, new ReactiveWeatherProcessor() },
             { BaseLayerType.BattleStance, new BaseBattleStanceProcessor() },
             { BaseLayerType.JobClasses, new JobClassesProcessor() },
-            { BaseLayerType.StatusEffects, new StatusEffectsProcessor() },
             { BaseLayerType.ScreenCapture, new ScreenCaptureProcessor() }
         };
 
@@ -124,8 +122,7 @@ namespace Chromatics.Layers
             { DynamicLayerType.BattleStance, new DynamicBattleStanceProcessor() },
             { DynamicLayerType.Castbar, new CastbarProcessor() },
             { DynamicLayerType.JobClassesHighlight, new JobClassesHighlightProcessor() },
-            { DynamicLayerType.ReactiveWeatherHighlight, new ReactiveWeatherHighlightProcessor() },
-            { DynamicLayerType.StatusEffectHighlight, new StatusEffectHighlightProcessor() }
+            { DynamicLayerType.ReactiveWeatherHighlight, new ReactiveWeatherHighlightProcessor() }
         };
 
         public static Dictionary<DynamicLayerType, LayerProcessor> GetProcessors()
