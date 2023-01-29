@@ -134,6 +134,9 @@ namespace Chromatics.Forms
                 paletteItem.Cells[dG_mappings.Columns["mappings_col_type"].Index].Value = mapping.Name;
 
                 var paletteBtn = new DataGridViewTextBoxCell();
+
+                if (mapping.Color.A < 255) mapping.Color = Color.FromArgb(255, mapping.Color.R, mapping.Color.G, mapping.Color.B);
+
                 paletteBtn.Style.BackColor = mapping.Color;
                 paletteBtn.Style.SelectionBackColor = mapping.Color;
 

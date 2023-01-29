@@ -3,6 +3,7 @@ using Chromatics.Enums;
 using Chromatics.Helpers;
 using MetroFramework.Components;
 using MetroFramework.Forms;
+using Sharlayan.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -119,6 +120,9 @@ namespace Chromatics.Forms
 
             //Start Chromatics
             await Task.Run(() => FileOperationsHelper.GetUpdatedWeatherData());
+
+            //Start Location Dictionary
+            
 
             KeyController.Setup();
             RGBController.Setup();

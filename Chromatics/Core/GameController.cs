@@ -20,6 +20,7 @@ using RGB.NET.Presets.Textures;
 using Chromatics.Extensions.RGB.NET.Decorators;
 using static MetroFramework.Drawing.MetroPaint;
 using System.Security.Policy;
+using Sharlayan.Utilities;
 
 namespace Chromatics.Core
 {
@@ -319,9 +320,10 @@ namespace Chromatics.Core
                                 ledgroup.AddDecorator(starfield);                    
 
                                 runningEffects.Add(ledgroup);
-
-                        
+                                                        
                             }
+                                                        
+
                         }
                         Debug.WriteLine(@"User on title or character screen");
                         _onTitle = true;

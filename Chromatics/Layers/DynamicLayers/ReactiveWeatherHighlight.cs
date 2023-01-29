@@ -5,6 +5,9 @@ using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
 using RGB.NET.Core;
+using RGB.NET.Presets.Decorators;
+using RGB.NET.Presets.Textures.Gradients;
+using RGB.NET.Presets.Textures;
 using Sharlayan.Utilities;
 using System;
 using System.Collections.Generic;
@@ -91,7 +94,7 @@ namespace Chromatics.Layers.DynamicLayers
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-                        if (_currentWeather != currentWeather || _currentZone != currentZone || _reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate)
+                        if ((_currentWeather != currentWeather || _currentZone != currentZone || _reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
                             SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette);
@@ -120,18 +123,38 @@ namespace Chromatics.Layers.DynamicLayers
         private static void SetReactiveWeather(PublicListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette)
         {
             var color = GetWeatherColor(weather, _colorPalette);
-            var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
+            var reactiveWeatherEffects = RGBController.GetEffectsSettings();
 
             //Filter for zone specific special weather
             switch(zone)
             {
                 case "Mare Lamentorum":
-                    if (weather == "Fair Skies" || weather == "Moon Dust")
+                    if (reactiveWeatherEffects.effect_reactiveweather && (reactiveWeatherEffects.weather_marelametorum_animation || reactiveWeatherEffects.weather_marelametorum_umbralwind_animation))
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
+                    else
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustHighlight.Color);
+                    break;
+                case "Ultima Thule":
+                    if (weather == "Fair Skies")
                     {
-                        if (reactiveWeatherEffects)
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
+                        if (reactiveWeatherEffects.effect_reactiveweather && reactiveWeatherEffects.weather_ultimathule_animation)
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
                         else
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustHighlight.Color);
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
+                    }
+                    else if (weather == "Astromagnetic Storm")
+                    {
+                        if (reactiveWeatherEffects.effect_reactiveweather && reactiveWeatherEffects.weather_astromagneticstorm_animation)
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight.Color);
+                        else
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight.Color);
+                    }
+                    else if (weather == "Umbral Wind")
+                    {
+                        if (reactiveWeatherEffects.effect_reactiveweather && reactiveWeatherEffects.weather_ultimathule_umbralwind_animation)
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
+                        else
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
                     }
                     break;
             }
