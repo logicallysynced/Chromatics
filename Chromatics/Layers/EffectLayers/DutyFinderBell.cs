@@ -11,8 +11,8 @@ namespace Chromatics.Layers
     {
         public override void Process(IMappingLayer layer)
         {
-            //Reactive Weather Base Layer Implementation
-            throw new NotImplementedException();
+            //Duty Finder Bell Effect Layer Implementation
+            //throw new NotImplementedException();
         }
     }
 }

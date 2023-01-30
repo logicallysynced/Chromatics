@@ -28,7 +28,7 @@ namespace Chromatics.Layers
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if currently in Preview mode
-            if (MappingLayers.IsPreview()) return;
+            if (MappingLayers.IsPreview() || RGBController.IsBaseLayerEffectRunning()) return;
             
             //Screen Capture Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();

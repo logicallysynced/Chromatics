@@ -36,7 +36,7 @@ namespace Chromatics.Layers
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if currently in Preview mode
-            if (MappingLayers.IsPreview())
+            if (MappingLayers.IsPreview() || RGBController.IsBaseLayerEffectRunning())
             {
                 //StopEffects(layergroup);
                 return;
@@ -121,7 +121,7 @@ namespace Chromatics.Layers
                             //layergroup.Brush = weather_brush;
                             effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray);
 
-                            Debug.WriteLine($"Zone Lookup: {currentZone}. Weather: {currentWeather}");
+                            Debug.WriteLine($"{layer.deviceType} Zone Lookup: {currentZone}. Weather: {currentWeather}");
 
                             _currentWeather = currentWeather;
                             _currentZone = currentZone;

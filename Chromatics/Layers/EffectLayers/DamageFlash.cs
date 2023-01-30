@@ -11,8 +11,8 @@ namespace Chromatics.Layers
     {
         public override void Process(IMappingLayer layer)
         {
-            //Reactive Weather Base Layer Implementation
-            throw new NotImplementedException();
+            //Damage Flash Effect Layer Implementation
+            //throw new NotImplementedException();
         }
     }
 }

@@ -96,7 +96,8 @@ namespace Chromatics.Layers
         {
             { EffectLayerType.None, new NoneProcessor() },
             { EffectLayerType.DutyFinderBell, new DutyFinderBellProcessor() },
-            { EffectLayerType.DamageFlash, new DamageFlashProcessor() }
+            { EffectLayerType.DamageFlash, new DamageFlashProcessor() },
+            { EffectLayerType.GoldSaucerVegas, new GoldSaucerVegasProcessor() }
         };
 
         public static Dictionary<EffectLayerType, LayerProcessor> GetProcessors()

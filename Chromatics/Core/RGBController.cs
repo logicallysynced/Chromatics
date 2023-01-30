@@ -50,6 +50,8 @@ namespace Chromatics.Core
         private static EffectTypesModel _effects = new EffectTypesModel();
 
         private static List<PublicListLedGroup> _runningEffects = new List<PublicListLedGroup>();
+
+        private static bool _baseLayerEffectRunning;
                 
         public static event WasPreviewed PreviewTriggered;
 
@@ -264,6 +266,17 @@ namespace Chromatics.Core
             Debug.WriteLine($"Stopping all effects");
 
         }
+
+        public static bool IsBaseLayerEffectRunning()
+        {
+            return _baseLayerEffectRunning;
+        }
+
+        public static void SetBaseLayerEffect(bool toggle)
+        {
+            _baseLayerEffectRunning = toggle;
+        }
+
         public static List<PublicListLedGroup> GetRunningEffects()
         {
             return _runningEffects;

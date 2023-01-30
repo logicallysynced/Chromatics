@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Chromatics.Enums
 {
@@ -72,7 +73,9 @@ namespace Chromatics.Enums
         [LayerDisplay(Name="Duty Finder Bell", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         DutyFinderBell = 1,
         [LayerDisplay(Name="Damage Flash", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        DamageFlash = 2
+        DamageFlash = 2,
+        [LayerDisplay(Name="Gold Saucer Vegas Mode", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        GoldSaucerVegas = 3
     };
 
     public enum LayerModes
