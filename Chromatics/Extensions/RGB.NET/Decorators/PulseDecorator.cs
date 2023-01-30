@@ -3,9 +3,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Color = RGB.NET.Core.Color;
 
 namespace Chromatics.Extensions.RGB.NET.Decorators
 {
@@ -22,6 +25,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private ConcurrentDictionary<Led, Color> fadingInLeds;
         private ConcurrentDictionary<Led, Color> fadingOutLeds;
         private Dictionary<Led, float> currentBrightness;
+        private Dictionary<Led, Color> currentColors;
+        private Dictionary<Led, Color> savedColors;
         private double Timing;
         private double stepDelay;
         private double updateCounter = 0;
@@ -41,6 +46,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             fadingInLeds = new ConcurrentDictionary<Led, Color>();
             fadingOutLeds = new ConcurrentDictionary<Led, Color>();
             currentBrightness = new Dictionary<Led, float>();
+            currentColors = new Dictionary<Led, Color>();
+            savedColors = new Dictionary<Led, Color>();
             Timing = 0;
             stepDelay = 0;
             globalStep = 0;
@@ -60,12 +67,16 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             currentBrightness.Clear();
             fadingInLeds.Clear();
             fadingOutLeds.Clear();
+            currentColors.Clear();
+            savedColors.Clear();
             Timing = 0;
             stepDelay = 0;
 
             currentBrightness = null;
             fadingInLeds = null;
             fadingOutLeds = null;
+            currentColors = null;
+            savedColors = null;
         }
 
         protected override void Update(double deltaTime)
@@ -83,17 +94,23 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 if (globalStep == 0)
                 {
                     //Setup Pulse
+                    foreach (var led in Surface.Leds)
+                    {
+                        savedColors.Add(led, led.Color);
+                    }
+
                     if (deviceType == RGBDeviceType.Keyboard)
                     {
                         foreach (var led in ledGroup)
                         {
                             if (pulseSteps[1].Contains(led.Id))
                             {
-                                fadingInLeds.TryAdd(led, baseColor);
+                                fadingInLeds.TryAdd(led, savedColors[led]);
+                                currentColors.Add(led, savedColors[led]);
                             }
                             else
                             {
-                                led.Color = baseColor;
+                                currentColors.Add(led, savedColors[led]);
                             }
                         }
 
@@ -103,7 +120,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         var availableLeds = ledGroup.PublicGroupLeds.Except(fadingInLeds.Keys).Except(fadingOutLeds.Keys);
                         foreach (var led in availableLeds)
                         {
-                            fadingInLeds.TryAdd(led, baseColor);
+                            fadingInLeds.TryAdd(led, savedColors[led]);
+                            currentColors.Add(led, savedColors[led]);
                         }
                     }
 
@@ -139,23 +157,10 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                             // if not, choose a random color from the passed in color array
                                         
                             var lerpAmount = Map(currentBrightness[led.Key], minBrightness, maxBrightness, 0, 1);
-                            var color = Lerp(baseColor, highlightColor, lerpAmount);
+                            var color = Lerp(savedColors[led.Key], highlightColor, lerpAmount);
                             fadingInLeds[led.Key] = color;
-
+                            currentColors[led.Key] = color;
                         }
-                    }
-
-                    foreach (var led in ledGroup.PublicGroupLeds)
-                    {
-                        if (fadingInLeds.ContainsKey(led))
-                        {
-                            led.Color = fadingInLeds[led];
-                        }
-                        else
-                        {
-                            led.Color = baseColor;
-                        }
-                    
                     }
 
                     if (fadingInLeds.Count == 0)
@@ -170,11 +175,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         {
                             if (pulseSteps[2].Contains(led.Id))
                             {
-                                led.Color = highlightColor;
+                                currentColors[led] = highlightColor;
                             }
                             else
                             {
-                                led.Color = baseColor;
+                                currentColors[led] = savedColors[led];
                             }
                         }
                     }
@@ -191,11 +196,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         {
                             if (pulseSteps[3].Contains(led.Id))
                             {
-                                led.Color = highlightColor;
+                                currentColors[led] = highlightColor;
                             }
                             else
                             {
-                                led.Color = baseColor;
+                                currentColors[led] = savedColors[led];
                             }
                         }
                     }
@@ -212,11 +217,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         {
                             if (pulseSteps[4].Contains(led.Id))
                             {
-                                led.Color = highlightColor;
+                                currentColors[led] = highlightColor;
                             }
                             else
                             {
-                                led.Color = baseColor;
+                                currentColors[led] = savedColors[led];
                             }
                         }
                     }
@@ -233,11 +238,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         {
                             if (pulseSteps[5].Contains(led.Id))
                             {
-                                led.Color = highlightColor;
+                                currentColors[led] = highlightColor;
                             }
                             else
                             {
-                                led.Color = baseColor;
+                                currentColors[led] = savedColors[led];
                             }
                         }
                     }
@@ -254,11 +259,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         {
                             if (pulseSteps[6].Contains(led.Id))
                             {
-                                led.Color = highlightColor;
+                                currentColors[led] = highlightColor;
                             }
                             else
                             {
-                                led.Color = baseColor;
+                                currentColors[led] = savedColors[led];
                             }
                         }
                     }
@@ -275,11 +280,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         {
                             if (pulseSteps[7].Contains(led.Id))
                             {
-                                led.Color = highlightColor;
+                                currentColors[led] = highlightColor;
                             }
                             else
                             {
-                                led.Color = baseColor;
+                                currentColors[led] = savedColors[led];
                             }
                         }
                     }
@@ -296,12 +301,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         {
                             if (pulseSteps[8].Contains(led.Id))
                             {
-                                led.Color = highlightColor;
+                                currentColors[led] = highlightColor;
                                 fadingOutLeds.TryAdd(led, highlightColor);
                             }
                             else
                             {
-                                led.Color = baseColor;
+                                currentColors[led] = savedColors[led];
                             }
                         }
                     }
@@ -335,23 +340,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         {
                             // if not, set the LED's color to the base color with the current brightness
                             var lerpAmount = Map(currentBrightness[led.Key], minBrightness, maxBrightness, 0, 1);
-                            var color = Lerp(baseColor, highlightColor, lerpAmount);
+                            var color = Lerp(savedColors[led.Key], highlightColor, lerpAmount);
                             fadingOutLeds[led.Key] = color;
+                            currentColors[led.Key] = color;
 
                         }
-                    }
-
-                    foreach (var led in ledGroup.PublicGroupLeds)
-                    {
-                        if (fadingOutLeds.ContainsKey(led))
-                        {
-                            led.Color = fadingOutLeds[led];
-                        }
-                        else
-                        {
-                            led.Color = baseColor;
-                        }
-                    
                     }
 
                     //Reset
@@ -360,19 +353,37 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         if (oneshot)
                         {
                             Detach();
+                            return;
                         }
                         else
                         {
+                            foreach (var led in ledGroup.PublicGroupLeds)
+                            {
+                                led.Color = savedColors[led];
+                            } 
+
                             currentBrightness.Clear();
                             fadingInLeds.Clear();
                             fadingOutLeds.Clear();
+                            currentColors.Clear();
+                            savedColors.Clear();
                             Timing = 0;
                             globalStep = 0;
                             stepDelay = Timing + (interval / 1000);
                         }
+
+                        Debug.WriteLine(@"Reset!");
                     }
                 }
             }
+
+            foreach (var led in currentColors)
+            {
+                led.Key.Color = led.Value;
+                //Surface.Update(true);
+                Debug.WriteLine($"{led.Key.Id}: {led.Value} ({led.Key.IsDirty})");
+            }
+            
         }
 
 
