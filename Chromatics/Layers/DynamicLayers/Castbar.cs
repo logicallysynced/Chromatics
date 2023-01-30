@@ -16,17 +16,24 @@ namespace Chromatics.Layers
 {
     public class CastbarProcessor : LayerProcessor
     {
-        private List<PublicListLedGroup> _localgroups = new List<PublicListLedGroup>();
-        private SolidColorBrush empty_brush;
-        private SolidColorBrush full_brush;
-        private LayerModes _currentMode;
-        private int _interpolateValue;
-        private Color _faderValue;
-
+        private static Dictionary<int, CastbarDynamicModel> layerProcessorModel = new Dictionary<int, CastbarDynamicModel>();
+        
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
+
+            CastbarDynamicModel model;
+
+            if (!layerProcessorModel.ContainsKey(layer.layerID))
+            {
+                model = new CastbarDynamicModel();
+                layerProcessorModel.Add(layer.layerID, model);
+            }
+            else
+            {
+                model = layerProcessorModel[layer.layerID];
+            }
 
             //Castbar Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
@@ -42,13 +49,13 @@ namespace Chromatics.Layers
             //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
             if (_init && (layer.requestUpdate || !layer.Enabled))
             {
-                foreach (var layergroup in _localgroups)
+                foreach (var layergroup in model._localgroups)
                 {
                     if (layergroup != null)
                         layergroup.Detach();
                 }
 
-                _localgroups.Clear();
+                model._localgroups.Clear();
 
                 if (!layer.Enabled)
                     return;
@@ -72,29 +79,29 @@ namespace Chromatics.Layers
                 Debug.WriteLine($"Casting: {currentVal}. Progress: {getCurrentPlayer.Entity.CastingProgress}. Toggle: {getCurrentPlayer.Entity.IsCasting}");
                 
                 
-                if (full_brush == null || full_brush.Color != full_col) full_brush = new SolidColorBrush(full_col);
+                if (model.full_brush == null || model.full_brush.Color != full_col) model.full_brush = new SolidColorBrush(full_col);
 
                 if (layer.allowBleed)
                 {
                     //Allow bleeding of other layers
-                    empty_brush = new SolidColorBrush(Color.Transparent);
+                    model.empty_brush = new SolidColorBrush(Color.Transparent);
                 }
                 else
                 {
-                    empty_brush = new SolidColorBrush(empty_col);
+                    model.empty_brush = new SolidColorBrush(empty_col);
                 }
 
                 //Check if layer mode has changed
-                if (_currentMode != layer.layerModes)
+                if (model._currentMode != layer.layerModes)
                 {
-                    foreach (var layergroup in _localgroups)
+                    foreach (var layergroup in model._localgroups)
                     {
                         if (layergroup != null)
                             layergroup.Detach();
                     }
 
-                    _localgroups.Clear();
-                    _currentMode = layer.layerModes;
+                    model._localgroups.Clear();
+                    model._currentMode = layer.layerModes;
                 }
             
                 if (layer.layerModes == Enums.LayerModes.Interpolate)
@@ -106,7 +113,7 @@ namespace Chromatics.Layers
                     if (currentVal_Interpolate > countKeys) currentVal_Interpolate = countKeys;
 
                     //Process Lighting
-                    if (currentVal_Interpolate != _interpolateValue || layer.requestUpdate)
+                    if (currentVal_Interpolate != model._interpolateValue || layer.requestUpdate)
                     {
                         var ledGroups = new List<PublicListLedGroup>();
                                         
@@ -121,25 +128,25 @@ namespace Chromatics.Layers
 
                             if (i <= currentVal_Interpolate)
                             {
-                                ledGroup.Brush = full_brush;
+                                ledGroup.Brush = model.full_brush;
                                 
                             }
                             else
                             {
-                                ledGroup.Brush = empty_brush;
+                                ledGroup.Brush = model.empty_brush;
                             }
                             
                             ledGroups.Add(ledGroup);
                             
                         }
 
-                        foreach (var layergroup in _localgroups)
+                        foreach (var layergroup in model._localgroups)
                         {
                             layergroup.Detach();
                         }
 
-                        _localgroups = ledGroups;
-                        _interpolateValue = currentVal_Interpolate;
+                        model._localgroups = ledGroups;
+                        model._interpolateValue = currentVal_Interpolate;
                     }
 
                     
@@ -148,8 +155,8 @@ namespace Chromatics.Layers
                 {
                     //Fade implementation
 
-                    var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, empty_brush.Color, full_brush.Color);
-                    if (currentVal_Fader != _faderValue || layer.requestUpdate)
+                    var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, model.empty_brush.Color, model.full_brush.Color);
+                    if (currentVal_Fader != model._faderValue || layer.requestUpdate)
                     {
                         var ledGroup = new PublicListLedGroup(surface, ledArray)
                         {
@@ -158,15 +165,15 @@ namespace Chromatics.Layers
                         };
 
                         ledGroup.Detach();
-                        _localgroups.Add(ledGroup);
-                        _faderValue = currentVal_Fader;
+                        model._localgroups.Add(ledGroup);
+                        model._faderValue = currentVal_Fader;
                     }
                 }
 
                 //Send layers to _layergroups Dictionary to be tracked outside this method
-                foreach (var group in _localgroups)
+                foreach (var group in model._localgroups)
                 {
-                    var lg = _localgroups.ToArray();
+                    var lg = model._localgroups.ToArray();
 
                     if (_layergroups.ContainsKey(layer.layerID))
                     {
@@ -181,13 +188,23 @@ namespace Chromatics.Layers
             }
 
             //Apply lighting
-            foreach (var layergroup in _localgroups)
+            foreach (var layergroup in model._localgroups)
             {
                 layergroup.Attach(surface);
             }
             
             _init = true;
             layer.requestUpdate = false;
+        }
+
+        private class CastbarDynamicModel
+        {
+            public List<PublicListLedGroup> _localgroups { get; set; } = new List<PublicListLedGroup>();
+            public SolidColorBrush empty_brush { get; set; }
+            public SolidColorBrush full_brush { get; set; }
+            public LayerModes _currentMode  { get; set; }
+            public int _interpolateValue  { get; set; }
+            public Color _faderValue { get; set; }
         }
                 
     }

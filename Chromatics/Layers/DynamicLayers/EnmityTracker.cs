@@ -16,18 +16,25 @@ namespace Chromatics.Layers
 {
     public class EnmityTrackerProcessor : LayerProcessor
     {
-        private List<PublicListLedGroup> _localgroups = new List<PublicListLedGroup>();
-        private SolidColorBrush empty_brush;
-        private SolidColorBrush enmity_brush;
-        private LayerModes _currentMode;
-        private int _enmityPosition;
-        private uint _targetId;
-        private bool _targetReset;
+        private static Dictionary<int, EnmityDynamicModel> layerProcessorModel = new Dictionary<int, EnmityDynamicModel>();
+                
 
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
+
+            EnmityDynamicModel model;
+
+            if (!layerProcessorModel.ContainsKey(layer.layerID))
+            {
+                model = new EnmityDynamicModel();
+                layerProcessorModel.Add(layer.layerID, model);
+            }
+            else
+            {
+                model = layerProcessorModel[layer.layerID];
+            }
 
             //Enmity Tracker Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
@@ -43,13 +50,13 @@ namespace Chromatics.Layers
             //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
             if (_init && (layer.requestUpdate || !layer.Enabled))
             {
-                foreach (var layergroup in _localgroups)
+                foreach (var layergroup in model._localgroups)
                 {
                     if (layergroup != null)
                         layergroup.Detach();
                 }
 
-                _localgroups.Clear();
+                model._localgroups.Clear();
 
                 if (!layer.Enabled)
                     return;
@@ -67,17 +74,17 @@ namespace Chromatics.Layers
                 var enmity_minimal_col = ColorHelper.ColorToRGBColor(_colorPalette.Emnity0.Color);
                 var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.NoEmnity.Color); //Bleed layer
 
-                if (enmity_brush == null || enmity_brush.Color != enmity_minimal_col) enmity_brush = new SolidColorBrush(enmity_minimal_col);
-                if (empty_brush == null || empty_brush.Color != empty_col) empty_brush = new SolidColorBrush(empty_col);
+                if (model.enmity_brush == null || model.enmity_brush.Color != enmity_minimal_col) model.enmity_brush = new SolidColorBrush(enmity_minimal_col);
+                if (model.empty_brush == null || model.empty_brush.Color != empty_col) model.empty_brush = new SolidColorBrush(empty_col);
 
                 if (layer.allowBleed)
                 {
                     //Allow bleeding of other layers
-                    empty_brush.Color = Color.Transparent;
+                    model.empty_brush.Color = Color.Transparent;
                 }
                 else
                 {
-                    empty_brush.Color = empty_col;
+                    model.empty_brush.Color = empty_col;
                 }
 
                 var getTargetInfo = _memoryHandler.Reader.GetTargetInfo();
@@ -93,17 +100,17 @@ namespace Chromatics.Layers
                                         
                 }
                 
-                if (targetId != _targetId)
+                if (targetId != model._targetId)
                 {
-                    foreach (var layergroup in _localgroups)
+                    foreach (var layergroup in model._localgroups)
                     {
                         if (layergroup != null)
                             layergroup.Detach();
                     }
 
-                    _localgroups.Clear();
-                    _targetReset = true;
-                    _targetId = targetId;
+                    model._localgroups.Clear();
+                    model._targetReset = true;
+                    model._targetId = targetId;
                     Debug.WriteLine(@"Target Reset");
                 }
 
@@ -114,11 +121,11 @@ namespace Chromatics.Layers
                     var ledGroup = new PublicListLedGroup(surface, ledArray)
                     {
                         ZIndex = layer.zindex,
-                        Brush = empty_brush
+                        Brush = model.empty_brush
                     };
 
                     ledGroup.Detach();
-                    _localgroups.Add(ledGroup);
+                    model._localgroups.Add(ledGroup);
 
                     //Debug.WriteLine($"Target ID: 0");
                 }
@@ -146,62 +153,62 @@ namespace Chromatics.Layers
 
 
                             //Check if layer mode has changed
-                            if (_currentMode != layer.layerModes)
+                            if (model._currentMode != layer.layerModes)
                             {
-                                foreach (var layergroup in _localgroups)
+                                foreach (var layergroup in model._localgroups)
                                 {
                                     if (layergroup != null)
                                         layergroup.Detach();
                                 }
 
-                                _localgroups.Clear();
-                                _currentMode = layer.layerModes;
+                                model._localgroups.Clear();
+                                model._currentMode = layer.layerModes;
                             }
             
                     
-                            if (enmityPosition != _enmityPosition || _targetReset)
+                            if (enmityPosition != model._enmityPosition || model._targetReset)
                             {
                                 if (enmityPosition < 0)
                                 {
                                     //Engaged & No Aggro
-                                    enmity_brush = empty_brush;
+                                    model.enmity_brush = model.empty_brush;
                                 }
                                 else if (enmityPosition == 0)
                                 {
                                     //Full Aggro
-                                    enmity_brush.Color = enmity_top_col;
+                                    model.enmity_brush.Color = enmity_top_col;
                                 }
                                 else if (enmityPosition == 1)
                                 {
                                     //High Aggro
-                                    enmity_brush.Color = enmity_high_col;
+                                    model.enmity_brush.Color = enmity_high_col;
                                 }
-                                else if (enmityPosition > 1 && _enmityPosition <= 4)
+                                else if (enmityPosition > 1 && model._enmityPosition <= 4)
                                 {
                                     //Moderate Aggro
-                                    enmity_brush.Color = enmity_med_col;
+                                    model.enmity_brush.Color = enmity_med_col;
                                 }
                                 else if (enmityPosition > 4) //&& _enmityPosition <= 8)
                                 {
                                     //Low Aggro
-                                    enmity_brush.Color = enmity_low_col;
+                                    model.enmity_brush.Color = enmity_low_col;
                                 }
                                 else
                                 {
                                     //Not Engaged & No Aggro
-                                    enmity_brush = empty_brush;
+                                    model.enmity_brush = model.empty_brush;
                                 }
 
 
                                 var ledGroup = new PublicListLedGroup(surface, ledArray)
                                 {
                                     ZIndex = layer.zindex,
-                                    Brush = enmity_brush
+                                    Brush = model.enmity_brush
                                 };
 
                                 ledGroup.Detach();
-                                _localgroups.Add(ledGroup);
-                                _enmityPosition = enmityPosition;
+                                model._localgroups.Add(ledGroup);
+                                model._enmityPosition = enmityPosition;
                             }
                         }
                     }
@@ -209,9 +216,9 @@ namespace Chromatics.Layers
 
 
                 //Send layers to _layergroups Dictionary to be tracked outside this method
-                foreach (var group in _localgroups)
+                foreach (var group in model._localgroups)
                 {
-                    var lg = _localgroups.ToArray();
+                    var lg = model._localgroups.ToArray();
 
                     if (_layergroups.ContainsKey(layer.layerID))
                     {
@@ -226,14 +233,25 @@ namespace Chromatics.Layers
             }
 
             //Apply lighting
-            foreach (var layergroup in _localgroups)
+            foreach (var layergroup in model._localgroups)
             {
                 layergroup.Attach(surface);
             }
             
             _init = true;
-            _targetReset = false;
+            model._targetReset = false;
             layer.requestUpdate = false;
+        }
+
+        private class EnmityDynamicModel
+        {
+            public List<PublicListLedGroup> _localgroups { get; set; } = new List<PublicListLedGroup>();
+            public SolidColorBrush empty_brush { get; set; }
+            public SolidColorBrush enmity_brush { get; set; }
+            public LayerModes _currentMode { get; set; }
+            public int _enmityPosition { get; set; }
+            public uint _targetId { get; set; }
+            public bool _targetReset { get; set; }
         }
     }
 }

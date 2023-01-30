@@ -1,38 +1,41 @@
 ﻿using Chromatics.Core;
 using Chromatics.Extensions.RGB.NET;
-using Chromatics.Extensions.RGB.NET.Decorators;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
 using RGB.NET.Core;
-using RGB.NET.Presets.Decorators;
-using RGB.NET.Presets.Textures.Gradients;
-using RGB.NET.Presets.Textures;
 using Sharlayan.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using static Chromatics.Extensions.FFXIVWeatherExtensions;
 
 namespace Chromatics.Layers.DynamicLayers
 {
     public class ReactiveWeatherHighlightProcessor : LayerProcessor
     {
+        private static Dictionary<int, ReactiveWeatherHighlightDynamicLayer> layerProcessorModel = new Dictionary<int, ReactiveWeatherHighlightDynamicLayer>();
         private FFXIVWeatherServiceManual weatherService;
-        private string _currentWeather = @"";
-        private string _currentZone = @"";
-        private bool _reactiveWeatherEffects;
+        
 
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
             
+            ReactiveWeatherHighlightDynamicLayer model;
+
+            if (!layerProcessorModel.ContainsKey(layer.layerID))
+            {
+                model = new ReactiveWeatherHighlightDynamicLayer();
+                layerProcessorModel.Add(layer.layerID, model);
+            }
+            else
+            {
+                model = layerProcessorModel[layer.layerID];
+            }
+
             //Reactive Weather Dynamic Layer Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var weather_color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUnknownHighlight.Color);
@@ -94,13 +97,13 @@ namespace Chromatics.Layers.DynamicLayers
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-                        if ((_currentWeather != currentWeather || _currentZone != currentZone || _reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
                             SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette);
 
-                            _currentWeather = currentWeather;
-                            _currentZone = currentZone;
+                            model._currentWeather = currentWeather;
+                            model._currentZone = currentZone;
                         }
                     }
                 }
@@ -109,9 +112,9 @@ namespace Chromatics.Layers.DynamicLayers
             
 
             //Apply lighting
-            if (_reactiveWeatherEffects != reactiveWeatherEffects)
+            if (model._reactiveWeatherEffects != reactiveWeatherEffects)
             {
-                _reactiveWeatherEffects = reactiveWeatherEffects;
+                model._reactiveWeatherEffects = reactiveWeatherEffects;
             }
 
             layergroup.Attach(surface);
@@ -170,6 +173,13 @@ namespace Chromatics.Layers.DynamicLayers
             }
 
             
+        }
+
+        private class ReactiveWeatherHighlightDynamicLayer
+        {
+            public string _currentWeather { get; set; }
+            public string _currentZone { get; set; }
+            public bool _reactiveWeatherEffects { get; set; }
         }
 
         public static RGB.NET.Core.Color GetWeatherColor(string weatherType, PaletteColorModel colorPalette)

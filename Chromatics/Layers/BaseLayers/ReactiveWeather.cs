@@ -27,12 +27,10 @@ namespace Chromatics.Layers
 {
     public class ReactiveWeatherProcessor : LayerProcessor
     {
-        private FFXIVWeatherServiceManual weatherService;
-        private static HashSet<LinearGradient> _gradientEffects = new HashSet<LinearGradient>();
-        private string _currentWeather = @"";
-        private string _currentZone = @"";
-        private bool _reactiveWeatherEffects;
+        private static Dictionary<int, ReactiveWeatherBaseModel> layerProcessorModel = new Dictionary<int, ReactiveWeatherBaseModel>();
 
+        private FFXIVWeatherServiceManual weatherService;
+        
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if currently in Preview mode
@@ -40,6 +38,18 @@ namespace Chromatics.Layers
             {
                 //StopEffects(layergroup);
                 return;
+            }
+
+            ReactiveWeatherBaseModel model;
+
+            if (!layerProcessorModel.ContainsKey(layer.layerID))
+            {
+                model = new ReactiveWeatherBaseModel();
+                layerProcessorModel.Add(layer.layerID, model);
+            }
+            else
+            {
+                model = layerProcessorModel[layer.layerID];
             }
             
             //Reactive Weather Base Layer Implementation
@@ -81,19 +91,19 @@ namespace Chromatics.Layers
                 layergroup.Detach();
             }
 
-            if (_reactiveWeatherEffects != reactiveWeatherEffects)
+            if (model._reactiveWeatherEffects != reactiveWeatherEffects)
             {
                 if (!reactiveWeatherEffects)
                 {
                     Debug.WriteLine(@"Reactive Weather Disabled");
-                    StopEffects(layergroup);
+                    StopEffects(layergroup, model._gradientEffects);
                 }
             }
             
 
             if (!layer.Enabled)
             {
-                StopEffects(layergroup);
+                StopEffects(layergroup, model._gradientEffects);
                 weather_brush.Color = ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
                 layergroup.Brush = weather_brush;
                 //layergroup.Detach();
@@ -116,15 +126,15 @@ namespace Chromatics.Layers
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-                        if ((_currentWeather != currentWeather || _currentZone != currentZone || _reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
-                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray);
+                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects);
 
                             Debug.WriteLine($"{layer.deviceType} Zone Lookup: {currentZone}. Weather: {currentWeather}");
 
-                            _currentWeather = currentWeather;
-                            _currentZone = currentZone;
+                            model._currentWeather = currentWeather;
+                            model._currentZone = currentZone;
                         }
                     }
                 }
@@ -133,9 +143,9 @@ namespace Chromatics.Layers
             
 
             //Apply lighting
-            if (_reactiveWeatherEffects != reactiveWeatherEffects)
+            if (model._reactiveWeatherEffects != reactiveWeatherEffects)
             {
-                _reactiveWeatherEffects = reactiveWeatherEffects;
+                model._reactiveWeatherEffects = reactiveWeatherEffects;
             }
 
             if (!effectApplied && layergroup.Decorators.Count <= 0)
@@ -149,6 +159,14 @@ namespace Chromatics.Layers
 
         }
 
+        private class ReactiveWeatherBaseModel
+        {
+            public HashSet<LinearGradient> _gradientEffects { get; set; } = new HashSet<LinearGradient>();
+            public string _currentWeather { get; set; }
+            public string _currentZone { get; set; }
+            public bool _reactiveWeatherEffects { get; set; }
+        }
+
         private static void SetEffect(ILedGroupDecorator effect, PublicListLedGroup layer, List<PublicListLedGroup> runningEffects)
         {
             if (runningEffects.Contains(layer))
@@ -160,7 +178,7 @@ namespace Chromatics.Layers
             runningEffects.Add(layer);
         }
 
-        private static void SetLinearGradientEffect(LinearGradient gradient, IGradientDecorator effect, PublicListLedGroup layer, Size boundry, List<PublicListLedGroup> runningEffects)
+        private static void SetLinearGradientEffect(LinearGradient gradient, IGradientDecorator effect, PublicListLedGroup layer, Size boundry, List<PublicListLedGroup> runningEffects, HashSet<LinearGradient> _gradientEffects)
         {
             if (runningEffects.Contains(layer))
                 runningEffects.Remove(layer);
@@ -174,7 +192,7 @@ namespace Chromatics.Layers
             runningEffects.Add(layer);
             _gradientEffects.Add(gradient);
         }
-        private static void SetRadialGradientEffect(LinearGradient gradient, IGradientDecorator effect, PublicListLedGroup layer, Size boundry, List<PublicListLedGroup> runningEffects)
+        private static void SetRadialGradientEffect(LinearGradient gradient, IGradientDecorator effect, PublicListLedGroup layer, Size boundry, List<PublicListLedGroup> runningEffects, HashSet<LinearGradient> _gradientEffects)
         {
             if (runningEffects.Contains(layer))
                 runningEffects.Remove(layer);
@@ -189,7 +207,7 @@ namespace Chromatics.Layers
             _gradientEffects.Add(gradient);
         }
 
-        private static void StopEffects(PublicListLedGroup layer)
+        private static void StopEffects(PublicListLedGroup layer, HashSet<LinearGradient> _gradientEffects)
         {
             var runningEffects = RGBController.GetRunningEffects();
 
@@ -204,7 +222,7 @@ namespace Chromatics.Layers
             layer.RemoveAllDecorators();
         }
 
-        private static bool SetReactiveWeather(PublicListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray)
+        private static bool SetReactiveWeather(PublicListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects)
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
@@ -292,7 +310,7 @@ namespace Chromatics.Layers
 
                             var gradientMove = new MoveGradientDecorator(surface, 120, true);
 
-                            SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects);
+                            SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects, _gradientEffects);
 
                             runningEffects.Add(layer);
 
@@ -359,7 +377,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 180, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects, _gradientEffects);
 
                         return true;
                     }
@@ -377,7 +395,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 220, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects, _gradientEffects);
 
                         return true;
                     }
@@ -396,7 +414,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 220, false);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects, _gradientEffects);
 
                         return true;
                     }
@@ -425,7 +443,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 200, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects, _gradientEffects);
 
                         return true;
                     }
@@ -443,7 +461,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.35, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 100, true);
 
-                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects);
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100,100), runningEffects, _gradientEffects);
 
                         return true;
                     }
@@ -496,7 +514,7 @@ namespace Chromatics.Layers
                         
                         var gradientMove = new MoveGradientDecorator(surface, 80, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(50,50), runningEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(50,50), runningEffects, _gradientEffects);
 
                         return true;
                     }
@@ -509,7 +527,7 @@ namespace Chromatics.Layers
             }
 
             //Apply Standard Lookup Weather
-            StopEffects(layer);
+            StopEffects(layer, _gradientEffects);
             weather_brush.Color = color;
             layer.Brush = weather_brush;
 
