@@ -16,6 +16,10 @@ namespace Chromatics.Models
         public bool effect_titlescreen { get; set; } = true;
         public bool effect_startupanimation { get; set; } = true;
 
+        //Specific Effect Settings
+        public bool effect_damageflash_scaledamage { get; set; } = true;
+        public double effect_damageflash_min_flash { get; set; } = 0.1;
+
 
         //Reactive Weather Effects
         public bool weather_marelametorum_animation { get; set; } = true;

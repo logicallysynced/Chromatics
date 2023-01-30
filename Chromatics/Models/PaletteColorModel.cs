@@ -43,6 +43,7 @@ namespace Chromatics.Models
         public ColorMapping CastChargeFull = new("Cast Bar Charge Build", PaletteTypes.PlayerStats, Color.White);
         public ColorMapping BattleEngaged = new("Battle Stance Engaged", PaletteTypes.PlayerStats, Color.Red);
         public ColorMapping BattleNotEngaged = new("Battle Stance Not Engaged", PaletteTypes.PlayerStats, Color.Black);
+        public ColorMapping DamageFlashAnimation = new("Damage Flash Effect Color", PaletteTypes.PlayerStats, Color.Red);
 
         //Enmity/Aggro
         public ColorMapping Emnity0 = new("Minimal Enmity", PaletteTypes.EnmityAggro, Color.Green);

@@ -48,7 +48,7 @@ namespace Chromatics.Layers
             var countKeys = ledArray.Count();
 
             //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
-            if (_init && (layer.requestUpdate || !layer.Enabled))
+            if (model.init && (layer.requestUpdate || !layer.Enabled))
             {
                 foreach (var layergroup in model._localgroups)
                 {
@@ -116,7 +116,7 @@ namespace Chromatics.Layers
 
 
                 //No target found
-                if (targetId == 0 || !_init)
+                if (targetId == 0 || !model.init)
                 {
                     var ledGroup = new PublicListLedGroup(surface, ledArray)
                     {
@@ -238,7 +238,7 @@ namespace Chromatics.Layers
                 layergroup.Attach(surface);
             }
             
-            _init = true;
+            model.init = true;
             model._targetReset = false;
             layer.requestUpdate = false;
         }
@@ -252,6 +252,8 @@ namespace Chromatics.Layers
             public int _enmityPosition { get; set; }
             public uint _targetId { get; set; }
             public bool _targetReset { get; set; }
+            public bool init { get; set; }
+
         }
     }
 }

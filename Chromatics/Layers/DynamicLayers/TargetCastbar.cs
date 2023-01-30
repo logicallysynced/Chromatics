@@ -47,7 +47,7 @@ namespace Chromatics.Layers
             var countKeys = ledArray.Count();
 
             //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
-            if (_init && (layer.requestUpdate || !layer.Enabled))
+            if (model.init && (layer.requestUpdate || !layer.Enabled))
             {
                 foreach (var layergroup in model._localgroups)
                 {
@@ -193,7 +193,7 @@ namespace Chromatics.Layers
                 layergroup.Attach(surface);
             }
             
-            _init = true;
+            model.init = true;
             layer.requestUpdate = false;
         }
 
@@ -205,6 +205,8 @@ namespace Chromatics.Layers
             public LayerModes _currentMode  { get; set; }
             public int _interpolateValue  { get; set; }
             public Color _faderValue { get; set; }
+            public bool init { get; set; }
+
         }
     }
 }

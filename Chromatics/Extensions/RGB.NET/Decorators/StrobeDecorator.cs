@@ -95,7 +95,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     if (!currentColors.ContainsKey(led))
                         currentColors.Add(led, colors[colorIndex]);
 
-                        
+                    
                 }
 
                 // Update startDelay to be a few milliseconds earlier than the current interval
@@ -200,6 +200,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 if (fadingInLeds.ContainsKey(led))
                 {
                     led.Color = fadingInLeds[led];
+                    Debug.WriteLine($"Fading {led.Id}: {fadingInLeds[led]}");
                 }
                 else if (fadingOutLeds.ContainsKey(led))
                 {
@@ -212,7 +213,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     
             }
 
-            if (oneshot)
+            if (fadingOutLeds.Count == 0 && oneshot)
             {
                 Detach();
             }

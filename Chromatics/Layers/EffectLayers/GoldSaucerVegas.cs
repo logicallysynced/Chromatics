@@ -17,7 +17,7 @@ namespace Chromatics.Layers
 {
     public class GoldSaucerVegasProcessor : LayerProcessor
     {
-        private static Dictionary<int, GoldSaucerVegas> layerProcessorModel = new Dictionary<int, GoldSaucerVegas>();
+        private static Dictionary<int, GoldSaucerVegasEffectModel> layerProcessorModel = new Dictionary<int, GoldSaucerVegasEffectModel>();
 
         public override void Process(IMappingLayer layer)
         {
@@ -29,12 +29,12 @@ namespace Chromatics.Layers
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
-            GoldSaucerVegas model;
+            GoldSaucerVegasEffectModel model;
             PublicListLedGroup layergroup;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
             {
-                model = new GoldSaucerVegas();
+                model = new GoldSaucerVegasEffectModel();
                 layerProcessorModel.Add(layer.layerID, model);
             }
             else
@@ -167,7 +167,7 @@ namespace Chromatics.Layers
             layer.requestUpdate = false;
         }
 
-        private class GoldSaucerVegas
+        private class GoldSaucerVegasEffectModel
         {
             public bool init { get; set; }
             public bool isEnabled { get; set; }
