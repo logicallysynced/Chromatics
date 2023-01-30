@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static Chromatics.Models.VirtualDevice;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
@@ -273,6 +274,20 @@ namespace Chromatics.Forms
             pgb.btn_edit.Click += new EventHandler(OnEditButtonPressed);
             pgb.btn_delete.Click += new EventHandler(OnDeleteButtonPressed);
             pgb.btn_copy.Click += new EventHandler(OnCopyButtonPressed);
+
+            //Remove Keybinds from non-keyboard device types
+            if (selectedDevice != RGBDeviceType.Keyboard)
+            {
+                for (int i = pgb.cb_selector.Items.Count - 1; i >= 0; i--)
+                {
+                    var cb = pgb.cb_selector.Items[i] as ComboboxItem;
+
+                    if (cb != null && cb.Value.Equals(DynamicLayerType.Keybinds))
+                    {
+                        pgb.cb_selector.Items.RemoveAt(i);
+                    }
+                }
+            }
                        
 
             if (initialize)
@@ -393,7 +408,7 @@ namespace Chromatics.Forms
                 }
 
                 flp_layers.Controls.Remove(layer);
-
+                                
                 // Cleanup
                 layer.GotFocus -= new EventHandler(OnLayerPressed);
                 layer.cb_selector.SelectedIndexChanged -= new EventHandler(OnSelectedIndexChanged);
@@ -419,8 +434,9 @@ namespace Chromatics.Forms
             foreach (var layers in _NewLayers.OrderByDescending(r => r.Value.zindex))
             {
                 AddLayer(layers.Value.rootLayerType, selectedDevice, layers.Key, layers.Value.zindex, false);
+                                
             }
-                       
+           
 
             // Resume layout
             tlp_frame.ResumeLayout();

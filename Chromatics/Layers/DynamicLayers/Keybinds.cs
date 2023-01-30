@@ -48,6 +48,9 @@ namespace Chromatics.Layers
             //Do not apply if currently in Preview mode
             if (MappingLayers.IsPreview()) return;
 
+            //Do not apply to devices other than Keyboards
+            if (layer.deviceType != RGBDeviceType.Keyboard) return;
+
             //Keybinds Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
