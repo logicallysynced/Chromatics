@@ -109,7 +109,7 @@
           }
         }
       },
-      "NLog/4.7.0": {
+      "NLog/5.1.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/NLog.dll": {
@@ -712,36 +712,27 @@
         "packageIcon.png"
       ]
     },
-    "NLog/4.7.0": {
-      "sha512": "ch4piF/ifV6ZapFx5Vj8MGaiCZkztHwTMFghJJSOkA/LeWcNdvqW8VzRw7ZMvS8anUmsH81FV334Vay6+ja4Kg==",
+    "NLog/5.1.1": {
+      "sha512": "YBfUDzipCaucs+8ieCDp8XECumiWsQbZwSUVLlt9i7FGV03nOPqoVzLtmlhbTxq4TN92BBsLacqPAE/ZyDDJ1g==",
       "type": "package",
-      "path": "nlog/4.7.0",
+      "path": "nlog/5.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/monoandroid44/NLog.dll",
-        "lib/monoandroid44/NLog.xml",
+        "N.png",
         "lib/net35/NLog.dll",
         "lib/net35/NLog.xml",
-        "lib/net40-client/NLog.dll",
-        "lib/net40-client/NLog.xml",
         "lib/net45/NLog.dll",
         "lib/net45/NLog.xml",
+        "lib/net46/NLog.dll",
+        "lib/net46/NLog.xml",
         "lib/netstandard1.3/NLog.dll",
         "lib/netstandard1.3/NLog.xml",
         "lib/netstandard1.5/NLog.dll",
         "lib/netstandard1.5/NLog.xml",
         "lib/netstandard2.0/NLog.dll",
         "lib/netstandard2.0/NLog.xml",
-        "lib/sl4/NLog.dll",
-        "lib/sl4/NLog.xml",
-        "lib/sl5/NLog.dll",
-        "lib/sl5/NLog.xml",
-        "lib/wp8/NLog.dll",
-        "lib/wp8/NLog.xml",
-        "lib/xamarinios10/NLog.dll",
-        "lib/xamarinios10/NLog.xml",
-        "nlog.4.7.0.nupkg.sha512",
+        "nlog.5.1.1.nupkg.sha512",
         "nlog.nuspec"
       ]
     },
@@ -1305,7 +1296,7 @@
       "Cyotek.Windows.Forms.ColorPicker >= 2.0.0-beta.7",
       "FFXIVWeather >= 1.0.16",
       "MouseKeyHook.NetCore >= 5.6.1.1",
-      "NLog >= 4.7.0",
+      "NLog >= 5.1.1",
       "Newtonsoft.Json >= 13.0.2",
       "RGB.NET.Core >= 1.0.0",
       "RGB.NET.Devices.Asus >= 1.0.0",
@@ -1383,7 +1374,7 @@
           },
           "NLog": {
             "target": "Package",
-            "version": "[4.7.0, )"
+            "version": "[5.1.1, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",
