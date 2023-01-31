@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Layers
 {
-    public class JobGaugeProcessor : LayerProcessor
+    public class JobGaugeAProcessor : LayerProcessor
     {
         public override void Process(IMappingLayer layer)
         {
-            //Reactive Weather Base Layer Implementation
-            throw new NotImplementedException();
+            //Job Gauge A Dynamic Layer Implementation
+            //throw new NotImplementedException();
         }
     }
 }
