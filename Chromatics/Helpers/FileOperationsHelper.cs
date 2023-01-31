@@ -14,12 +14,15 @@ using System.Formats.Asn1;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace Chromatics.Helpers
 {
@@ -564,6 +567,37 @@ namespace Chromatics.Helpers
         public static bool CheckWeatherDataLoaded()
         {
             return weatherDataLoaded;
+        }
+
+        public static string GetCsvData(string url, string csvPath)
+        {
+            var http = new HttpClient();
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = enviroment + @"/" + csvPath;
+
+            var dataStoreResult = http.GetAsync(new Uri(url)).GetAwaiter().GetResult();
+            
+            if (File.Exists(path))
+            {
+                var fileInfo = new FileInfo(path);
+                var lastModified = dataStoreResult.Content.Headers.LastModified;
+
+                if (fileInfo.LastWriteTimeUtc >= lastModified)
+                {
+                    return path;
+                }
+            }
+
+            var dataStore = dataStoreResult.Content.ReadAsStringAsync().Result;
+            File.WriteAllText(csvPath, dataStore);
+
+            if (File.Exists(path))
+            {
+                return path;
+            }
+
+            Debug.WriteLine(@"An error occurred downloading the file " + csvPath + @" from URI: " + url);
+            return string.Empty;
         }
 
         public static void GetUpdatedWeatherData()
