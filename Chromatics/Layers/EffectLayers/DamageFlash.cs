@@ -5,6 +5,7 @@ using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
+using Sharlayan.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -98,10 +99,9 @@ namespace Chromatics.Layers
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 if (getCurrentPlayer.Entity == null) return;
 
-
                 if (getCurrentPlayer.Entity.HPCurrent != model.currentHp)
                 {
-                    if (getCurrentPlayer.Entity.HPCurrent < model.currentHp && !model.wasDisabled)
+                    if (getCurrentPlayer.Entity.HPCurrent < model.currentHp && getCurrentPlayer.Entity.Job == model.currentJob && !model.wasDisabled)
                     {
                         //Scale flash opacity depending on how much damage taken. More damage = brighter flash
                         if (effectSettings.effect_damageflash_scaledamage)
@@ -130,6 +130,7 @@ namespace Chromatics.Layers
                     }
 
                     model.currentHp = getCurrentPlayer.Entity.HPCurrent;
+                    model.currentJob = getCurrentPlayer.Entity.Job;
                     model.wasDisabled = false;
                 }
                 
@@ -151,6 +152,7 @@ namespace Chromatics.Layers
         private class DamageFlashEffectModel
         {   
             public int currentHp { get; set; }
+            public Actor.Job currentJob { get; set; }
             public bool wasDisabled { get; set; }
             public SolidColorBrush activeBrush { get; set;}
             public bool init { get; set; }
