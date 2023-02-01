@@ -252,5 +252,121 @@ namespace Chromatics.Helpers
                     return ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
             }
         }
+
+        public static string GetJobClassDynamicLayerDescriptions(Actor.Job jobClass, string layer)
+        {
+            if (layer == "A")
+            {
+                switch (jobClass)
+                {
+                    case Actor.Job.CPT:
+                    case Actor.Job.BSM:
+                    case Actor.Job.ARM:
+                    case Actor.Job.GSM:
+                    case Actor.Job.LTW:
+                    case Actor.Job.WVR:
+                    case Actor.Job.ALC:
+                    case Actor.Job.CUL:
+                        return @"Crafters' currently not implemented.";
+                    case Actor.Job.PLD:
+                        return @"Shows Paladin's Oath Gauge.";
+                    case Actor.Job.MNK:
+                        return @"Shows Monk's Chakra stacks.";
+                    case Actor.Job.WAR:
+                        return @"Shows Warrior's Beast Gauge.";
+                    case Actor.Job.DRG:
+                        return @"Shows Dragoon's Blood Dragon Gauge.";
+                    case Actor.Job.BRD:
+                        return @"Shows currently playing Bard songs.";
+                    case Actor.Job.WHM:
+                        return @"Shows White Mage's flower charge time.";
+                    case Actor.Job.BLM:
+                        return @"Shows Black Mage's Astral & Umbral stacks";
+                    case Actor.Job.SMN:
+                        return @"Shows Summoner's Attunement timer for each Egi.";
+                    case Actor.Job.SCH:
+                        return @"Shows Scholar's Faerie Gauge.";
+                    case Actor.Job.NIN:
+                        return @"Shows Ninja's Huton Timer.";
+                    case Actor.Job.MCH:
+                        return @"Shows Machinst's Heat and Overheat Gauge.";
+                    case Actor.Job.DRK:
+                        return @"Shows Dark Knight's Grit and Blood Gauge.";
+                    case Actor.Job.AST:
+                        return @"Shows Astrologian's drawn card.";
+                    case Actor.Job.SAM:
+                        return @"Shows Samurai's Kenki Guage.";
+                    case Actor.Job.RDM:
+                        return @"Shows Red Mage's White Manga Gauge.";
+                    case Actor.Job.BLU:
+                        return @"Blue Mage not implemented.";
+                    case Actor.Job.GNB:
+                        return @"Shows Gunbreaker's Royal Gaurd.";
+                    case Actor.Job.DNC:
+                        return @"Shows Dancer's Fourfold Feathers.";
+                    case Actor.Job.RPR:
+                        return @"Shows Reaper's Soul Gauge.";
+                    case Actor.Job.SGE:
+                        return @"Shows Sage Addersgall Recharge Gauge.";
+                }
+            }
+            else if (layer == "B")
+            {
+                switch (jobClass)
+                {
+                    case Actor.Job.CPT:
+                    case Actor.Job.BSM:
+                    case Actor.Job.ARM:
+                    case Actor.Job.GSM:
+                    case Actor.Job.LTW:
+                    case Actor.Job.WVR:
+                    case Actor.Job.ALC:
+                    case Actor.Job.CUL:
+                        return @"Crafters' currently not implemented.";
+                    case Actor.Job.PLD:
+                        return @"Paladin second gauge not implemented.";
+                    case Actor.Job.MNK:
+                        return @"Monk second gauge not implemented.";
+                    case Actor.Job.WAR:
+                        return @"Shows Warrior's Defiance status.";
+                    case Actor.Job.DRG:
+                        return @"Shows Dragoon's Dragon Gaze stacks.";
+                    case Actor.Job.BRD:
+                        return @"Shows Bard's Soul Voice Gauge.";
+                    case Actor.Job.WHM:
+                        return @"Shows White Mage's Flower count.";
+                    case Actor.Job.BLM:
+                        return @"Shows Black Mage's Enochian timer.";
+                    case Actor.Job.SMN:
+                        return @"Shows Summoner's Summon timer.";
+                    case Actor.Job.SCH:
+                        return @"Shows Scholar's Aetherflow stacks.";
+                    case Actor.Job.NIN:
+                        return @"Shows Ninja's Ninki Gauge.";
+                    case Actor.Job.MCH:
+                        return @"Shows Machinst's Battery Gauge.";
+                    case Actor.Job.DRK:
+                        return @"Shows Dark Knight's Darkside timer.";
+                    case Actor.Job.AST:
+                        return @"Astrologian second gauge not implemented.";
+                    case Actor.Job.SAM:
+                        return @"Shows Samurai's Meditation Guage.";
+                    case Actor.Job.RDM:
+                        return @"Shows Red Mage's Black Manga Gauge.";
+                    case Actor.Job.BLU:
+                        return @"Blue Mage not implemented.";
+                    case Actor.Job.GNB:
+                        return @"Shows Gunbreaker's Charge count.";
+                    case Actor.Job.DNC:
+                        return @"Shows Dancer's Espirit Gauge.";
+                    case Actor.Job.RPR:
+                        return @"Shows Reaper's Shroud Gauge.";
+                    case Actor.Job.SGE:
+                        return @"Shows Sage's Addersting Gauge.";
+                }
+            }
+
+            return @"";
+        }
     }
 }

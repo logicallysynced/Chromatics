@@ -264,7 +264,7 @@ namespace Chromatics.Layers
 
                     break;
                 case Actor.Job.DRG:
-                    //Dragoon Life of the Dragon
+                    //Dragoon Blood Dragon Gauge
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobDRGBloodDragon.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobDRGNegative.Color);
 
@@ -510,7 +510,7 @@ namespace Chromatics.Layers
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobDRKGrit.Color);
                     }
 
-                    Debug.WriteLine($"DRK Blood: {jobGauge.currentValue}");
+                    //Debug.WriteLine($"DRK Blood: {jobGauge.currentValue}");
 
                     if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
                     if (jobGauge.currentValue <= jobGauge.minValue)
