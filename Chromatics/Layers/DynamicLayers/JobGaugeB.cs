@@ -412,7 +412,7 @@ namespace Chromatics.Layers
                     }
                     break;
                 case Actor.Job.MCH:
-                    //Machinist Heat Gauge
+                    //Machinist Battery Gauge
                     
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobMCHBatteryGauge.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobMCHNegative.Color);

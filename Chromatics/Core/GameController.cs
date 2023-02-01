@@ -21,15 +21,20 @@ using Chromatics.Extensions.RGB.NET.Decorators;
 using static MetroFramework.Drawing.MetroPaint;
 using System.Security.Policy;
 using Sharlayan.Utilities;
+using Sharlayan.Core.Enums;
 
 namespace Chromatics.Core
 {
+    public delegate void JobChanged();
+
     public static class GameController
     {
         private static MemoryHandler _memoryHandler;
+        public static event JobChanged jobChanged;
         private static CustomComparers.LayerComparer comparer = new();
         private static CancellationTokenSource _GameConnectionCancellationTokenSource = new CancellationTokenSource();
         private static CancellationTokenSource _GameLoopCancellationTokenSource = new CancellationTokenSource();
+        private static Actor.Job _currentJob;
         private static readonly int _loopInterval = 200;
         private static readonly int _connectionInterval = 10000;
         private static int _connectionAttempts = 0;
@@ -83,6 +88,23 @@ namespace Chromatics.Core
                 return _memoryHandler.Configuration.ProcessModel.Process;
 
             return null;
+        }
+
+        public static Actor.Job GetCurrectJob()
+        {
+            if (gameSetup && gameConnected)
+            {
+                if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
+                {
+                    var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                    if (getCurrentPlayer.Entity != null)
+                    {
+                        return getCurrentPlayer.Entity.Job;
+                    }
+                }
+            }
+
+            return Actor.Job.Unknown;
         }
 
         private static void StartGameLoop()
@@ -352,13 +374,25 @@ namespace Chromatics.Core
             
             if (!_isInGame) return;
 
+            //Event Delegates
+            if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
+            {
+                var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                if (getCurrentPlayer.Entity != null)
+                {
+                    if (getCurrentPlayer.Entity.Job != _currentJob)
+                    {
+                        jobChanged?.Invoke();
+                        _currentJob = getCurrentPlayer.Entity.Job;
+                    }
+                }
+            }
+
+            //Process All Layers
             var _layers = MappingLayers.GetLayers();
 
             foreach (IMappingLayer layer in _layers.Values.OrderBy(x => x.zindex, comparer))
-            {
-                // Perform processing on the layer
-                //if (!layer.Enabled) continue;
-                                
+            {                   
                 switch (layer.rootLayerType)
                 {
                     case LayerType.BaseLayer:

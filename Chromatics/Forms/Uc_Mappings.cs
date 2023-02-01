@@ -54,6 +54,7 @@ namespace Chromatics.Forms
 
             this.flp_layers.DragEnter += new DragEventHandler(flp_layers_DragEnter);
             this.flp_layers.DragDrop += new DragEventHandler(flp_layers_DragDrop);
+            GameController.jobChanged += gameJobChanged;
                         
             _virtualDevices = new Dictionary<RGBDeviceType, VirtualDevice>()
             {
@@ -575,18 +576,7 @@ namespace Chromatics.Forms
 
             var layer = MappingLayers.GetLayer(id);
             
-            if (layer.rootLayerType == LayerType.DynamicLayer)
-            {
-                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), selectedindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
-            }
-            else if (layer.rootLayerType == LayerType.BaseLayer)
-            {
-                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), selectedindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
-            }
-            else if (layer.rootLayerType == LayerType.EffectLayer)
-            {
-                rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
-            }
+            ResetLayerText(layer);
 
             layer.layerTypeindex = selectedindex;
             layer.requestUpdate = true;
@@ -666,9 +656,59 @@ namespace Chromatics.Forms
 
                 ChangeLayerMode(layer);
 
+                ResetLayerText(layer);
+                
+                obj.selected = true;
+                currentlySelected = obj;
+                obj.Invalidate();
+            }
+        }
+
+        private void ResetLayerText(Layer layer)
+        {
+            if (!init) return;
+
+            if (rtb_layerhelper.InvokeRequired)
+            {
+                rtb_layerhelper.Invoke((MethodInvoker) delegate
+                {
+                    if (layer.rootLayerType == LayerType.DynamicLayer)
+                    {
+                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
+
+                        if (layer.layerTypeindex == 8)
+                        {
+                            rtb_layerhelper.Text += $"\n{GameHelper.GetJobClassDynamicLayerDescriptions(GameController.GetCurrectJob(), "A")}";
+                        }
+                        else if (layer.layerTypeindex == 9)
+                        {
+                            rtb_layerhelper.Text += $"\n{GameHelper.GetJobClassDynamicLayerDescriptions(GameController.GetCurrectJob(), "B")}";
+                        }
+                    }
+                    else if (layer.rootLayerType == LayerType.BaseLayer)
+                    {
+                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
+                    }
+                    else if (layer.rootLayerType == LayerType.EffectLayer)
+                    {
+                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
+                    }
+                });
+            }
+            else
+            {
                 if (layer.rootLayerType == LayerType.DynamicLayer)
                 {
                     rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), layer.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
+
+                    if (layer.layerTypeindex == 8)
+                    {
+                        rtb_layerhelper.Text += $"\n{GameHelper.GetJobClassDynamicLayerDescriptions(GameController.GetCurrectJob(), "A")}";
+                    }
+                    else if (layer.layerTypeindex == 9)
+                    {
+                        rtb_layerhelper.Text += $"\n{GameHelper.GetJobClassDynamicLayerDescriptions(GameController.GetCurrectJob(), "B")}";
+                    }
                 }
                 else if (layer.rootLayerType == LayerType.BaseLayer)
                 {
@@ -678,11 +718,8 @@ namespace Chromatics.Forms
                 {
                     rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
                 }
-                
-                obj.selected = true;
-                currentlySelected = obj;
-                obj.Invalidate();
             }
+            
         }
                 
 
@@ -1601,6 +1638,15 @@ namespace Chromatics.Forms
 
                 _layers.ForEach(x => { x.ResumeLayout(); });
             }
+        }
+
+        private void gameJobChanged()
+        {
+            foreach (var layer in MappingLayers.GetLayers())
+            {
+                ResetLayerText(layer.Value);
+            }
+            
         }
     }
 }
