@@ -135,8 +135,10 @@ namespace Chromatics.Models
         public ColorMapping JobDRGDragonGauge2 = new("DRG: Dragon Gauge 2", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobDRGLifeOfTheDragon = new("DRG: Life of the Dragon", PaletteTypes.JobGauges, Color.MediumVioletRed);
         public ColorMapping JobBRDNegative = new("BRD: Blank Key", PaletteTypes.JobGauges, Color.Black);
+        public ColorMapping JobBRDSoulVoice = new("BRD: Soul Voice", PaletteTypes.JobGauges, Color.DodgerBlue);
+        public ColorMapping JobBRDSoulVoiceThreshold = new("BRD: Soul Voice Threshold", PaletteTypes.JobGauges, Color.GhostWhite);
         public ColorMapping JobBRDRepertoire = new("BRD: Repertoire Stack", PaletteTypes.JobGauges, Color.GhostWhite);
-        public ColorMapping JobBRDBallad = new("BRD: Mage's Ballad", PaletteTypes.JobGauges, Color.MediumSlateBlue);
+        public ColorMapping JobBRDBallad = new("BRD: Mage's Ballad", PaletteTypes.JobGauges, Color.Purple);
         public ColorMapping JobBRDArmys = new("BRD: Army's Paeon", PaletteTypes.JobGauges, Color.Orange);
         public ColorMapping JobBRDMinuet = new("BRD: The Wanderers' Minuet", PaletteTypes.JobGauges, Color.MediumSpringGreen);
         public ColorMapping JobWHMNegative = new("WHM: Blank Key", PaletteTypes.JobGauges, Color.Black);
