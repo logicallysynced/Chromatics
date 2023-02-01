@@ -108,7 +108,7 @@ namespace Chromatics.Layers
                     //Interpolate implementation
                     var currentVal_Interpolate = LinearInterpolation.Interpolate<double>(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, 0, countKeys + jobGauge.offset);
 
-                    Debug.WriteLine($"Interpolate Value: {currentVal_Interpolate}/{countKeys}.");
+                    //Debug.WriteLine($"Interpolate Value: {currentVal_Interpolate}/{countKeys}.");
 
                     //Process Lighting
                     var ledGroups = new List<PublicListLedGroup>();
@@ -254,8 +254,6 @@ namespace Chromatics.Layers
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBRDNegative.Color);
                         jobGauge.currentValue = jobGauge.minValue;
                     }
-
-                    Debug.WriteLine($"Song: {jobGauge.currentValue}");
 
                     break;
                 case Actor.Job.WHM:
