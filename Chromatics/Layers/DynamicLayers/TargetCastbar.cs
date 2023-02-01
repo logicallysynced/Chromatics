@@ -126,7 +126,7 @@ namespace Chromatics.Layers
 
                             ledGroup.Detach();
 
-                            if (i <= currentVal_Interpolate)
+                            if (i < currentVal_Interpolate)
                             {
                                 ledGroup.Brush = model.full_brush;
                                 
