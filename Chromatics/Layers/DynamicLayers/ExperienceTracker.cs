@@ -354,7 +354,6 @@ namespace Chromatics.Layers
                     if (!levelMap.ContainsKey(id))
                     {
                         levelMap.Add(id, exp);
-                        Debug.WriteLine(id + @"//" + exp);
                     }
                 }
             }

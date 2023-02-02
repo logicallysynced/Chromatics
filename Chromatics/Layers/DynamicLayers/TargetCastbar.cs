@@ -75,9 +75,7 @@ namespace Chromatics.Layers
 
                 var full_col = ColorHelper.ColorToRGBColor(_colorPalette.TargetCastbar.Color);
                 var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.TargetCastbarEmpty.Color); //Bleed layer
-
-                Debug.WriteLine($"Casting: {currentVal}. Progress: {getCurrentTarget.CurrentTarget.CastingProgress}. Toggle: {getCurrentTarget.CurrentTarget.IsCasting}");
-                
+                                
                 
                 if (model.full_brush == null || model.full_brush.Color != full_col) model.full_brush = new SolidColorBrush(full_col);
 

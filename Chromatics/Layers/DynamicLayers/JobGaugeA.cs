@@ -510,8 +510,6 @@ namespace Chromatics.Layers
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobDRKGrit.Color);
                     }
 
-                    //Debug.WriteLine($"DRK Blood: {jobGauge.currentValue}");
-
                     if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
                     if (jobGauge.currentValue <= jobGauge.minValue)
                     {

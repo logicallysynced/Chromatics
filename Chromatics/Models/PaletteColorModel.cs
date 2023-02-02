@@ -46,15 +46,14 @@ namespace Chromatics.Models
         public ColorMapping DamageFlashAnimation = new("Damage Flash Effect Color", PaletteTypes.PlayerStats, Color.Red);
 
         //Enmity/Aggro
-        public ColorMapping Emnity0 = new("Minimal Enmity", PaletteTypes.EnmityAggro, Color.Green);
-        public ColorMapping Emnity1 = new("Low Enmity", PaletteTypes.EnmityAggro, Color.Yellow);
-        public ColorMapping Emnity2 = new("Medium Enmity", PaletteTypes.EnmityAggro, Color.Gold);
-        public ColorMapping Emnity3 = new("High Enmity", PaletteTypes.EnmityAggro, Color.Orange);
-        public ColorMapping Emnity4 = new("Top Enmity", PaletteTypes.EnmityAggro, Color.Red);
+        public ColorMapping EmnityGreen = new("Minimal Enmity", PaletteTypes.EnmityAggro, Color.Green);
+        public ColorMapping EmnityYellow = new("Low Enmity", PaletteTypes.EnmityAggro, Color.Yellow);
+        public ColorMapping EmnityOrange = new("High Enmity", PaletteTypes.EnmityAggro, Color.Orange);
+        public ColorMapping EmnityRed = new("Top Enmity", PaletteTypes.EnmityAggro, Color.Red);
         public ColorMapping NoEmnity = new("No Enmity", PaletteTypes.EnmityAggro, Color.Black);
 
         //Target/Enemy
-        public ColorMapping TargetCastbar = new("Target Cast Bar Charge Build", PaletteTypes.TargetEnemy, Color.Red);
+        public ColorMapping TargetCastbar = new("Target Cast Bar Charge Build", PaletteTypes.TargetEnemy, Color.Orange);
         public ColorMapping TargetCastbarEmpty = new("Target Cast Bar Charge Empty", PaletteTypes.TargetEnemy, Color.Black);
         public ColorMapping TargetHpFriendly = new("Target HP (Friendly)", PaletteTypes.TargetEnemy, Color.Lime);
         public ColorMapping TargetHpClaimed = new("Target HP (Claimed)", PaletteTypes.TargetEnemy, Color.Red);

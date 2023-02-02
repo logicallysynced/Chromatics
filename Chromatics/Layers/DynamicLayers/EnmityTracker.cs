@@ -67,14 +67,13 @@ namespace Chromatics.Layers
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetTargetInfo() && _memoryHandler.Reader.CanGetActors())
             {
-                var enmity_top_col = ColorHelper.ColorToRGBColor(_colorPalette.Emnity4.Color);
-                var enmity_high_col = ColorHelper.ColorToRGBColor(_colorPalette.Emnity3.Color);
-                var enmity_med_col = ColorHelper.ColorToRGBColor(_colorPalette.Emnity2.Color);
-                var enmity_low_col = ColorHelper.ColorToRGBColor(_colorPalette.Emnity1.Color);
-                var enmity_minimal_col = ColorHelper.ColorToRGBColor(_colorPalette.Emnity0.Color);
+                var enmity_top_col = ColorHelper.ColorToRGBColor(_colorPalette.EmnityRed.Color);
+                var enmity_high_col = ColorHelper.ColorToRGBColor(_colorPalette.EmnityOrange.Color);
+                var enmity_med_col = ColorHelper.ColorToRGBColor(_colorPalette.EmnityYellow.Color);
+                var enmity_low_col = ColorHelper.ColorToRGBColor(_colorPalette.EmnityGreen.Color);
                 var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.NoEmnity.Color); //Bleed layer
 
-                if (model.enmity_brush == null || model.enmity_brush.Color != enmity_minimal_col) model.enmity_brush = new SolidColorBrush(enmity_minimal_col);
+                if (model.enmity_brush == null || model.enmity_brush.Color != enmity_low_col) model.enmity_brush = new SolidColorBrush(enmity_low_col);
                 if (model.empty_brush == null || model.empty_brush.Color != empty_col) model.empty_brush = new SolidColorBrush(empty_col);
 
                 if (layer.allowBleed)
@@ -111,7 +110,7 @@ namespace Chromatics.Layers
                     model._localgroups.Clear();
                     model._targetReset = true;
                     model._targetId = targetId;
-                    Debug.WriteLine(@"Target Reset");
+                    //Debug.WriteLine(@"Target Reset");
                 }
 
 
@@ -131,86 +130,137 @@ namespace Chromatics.Layers
                 }
                 else
                 {
-                    if (getTargetInfo.TargetInfo.CurrentTarget != null)
+                    if (getTargetInfo.TargetInfo.CurrentTarget != null && getTargetInfo.TargetInfo.EnmityItems != null && getTargetInfo.TargetInfo.EnmityItems.Count > 0)
                     {
-                        //Debug.WriteLine($"Target ID: {targetId}");
-                        if (getTargetInfo.TargetInfo.EnmityItems != null)
-                        {
-                            var enmityList = getTargetInfo.TargetInfo.EnmityItems;
-                            var enmityTable = enmityList.Select(t => new KeyValuePair<uint, uint>(t.ID, t.Enmity)).OrderBy(kvp => kvp.Value).ToList();
-                            var enmityPosition = enmityTable.FindIndex(a => a.Key == getCurrentPlayer.Entity.ID);
-                                                
+                        var enmityList = getTargetInfo.TargetInfo.EnmityItems;
+                        var enmityProfile = enmityList.FirstOrDefault(item => item.ID == targetId);
+
+                        if (enmityProfile == null) return;
+
+                        Debug.WriteLine($"Target ID: {targetId}//{enmityProfile.ID}. Enmity: {enmityProfile.Enmity}. Count: {enmityList.Count}");
+
+                        var enmityPosition = enmityProfile.Enmity;
+                        
+                        var currentVal = (int)enmityPosition;
+                        var minVal = 0;
+                        var maxVal = 100;
                             
 
-                            Debug.WriteLine($"Target ID: {targetId}. Enmity: {enmityPosition}. Count: {enmityList.Count}");
-
-                            var i = 1;
-                            foreach (var ent in enmityTable)
+                         if (enmityPosition != model._enmityPosition || model._targetReset)
+                         {
+                            if (enmityPosition == 100)
                             {
-                                Debug.WriteLine($"{i}: {ent.Key} // {ent.Value}");
-                                i++;
+                                //Full Aggro
+                                model.enmity_brush.Color = enmity_top_col;
+                            }
+                            else if (enmityPosition >= 80 && enmityPosition < 100)
+                            {
+                                //High Aggro
+                                model.enmity_brush.Color = enmity_high_col;
+                            }
+                            else if (enmityPosition >= 50 && model._enmityPosition < 80)
+                            {
+                                //Moderate Aggro
+                                model.enmity_brush.Color = enmity_med_col;
+                            }
+                            else if (enmityPosition < 50) //&& _enmityPosition <= 8)
+                            {
+                                //Low Aggro
+                                model.enmity_brush.Color = enmity_low_col;
+                            }
+                            else
+                            {
+                                //Not Engaged & No Aggro
+                                model.enmity_brush = model.empty_brush;
                             }
 
+                            
+                         }
 
-                            //Check if layer mode has changed
-                            if (model._currentMode != layer.layerModes)
+                        //Check if layer mode has changed
+                        if (model._currentMode != layer.layerModes)
+                        {
+                            foreach (var layergroup in model._localgroups)
                             {
+                                if (layergroup != null)
+                                    layergroup.Detach();
+                            }
+
+                            model._localgroups.Clear();
+                            model._currentMode = layer.layerModes;
+                        }
+
+                        if (layer.layerModes == Enums.LayerModes.Interpolate)
+                        {
+                            //Interpolate implementation
+                    
+                            var currentVal_Interpolate = LinearInterpolation.Interpolate(currentVal, minVal, maxVal, 0, countKeys);
+                            if (currentVal_Interpolate < 0) currentVal_Interpolate = 0;
+                            if (currentVal_Interpolate > countKeys) currentVal_Interpolate = countKeys;
+
+                            if (currentVal_Interpolate != model._interpolateValue || model._targetReset)
+                            {
+                                       
+                                //Debug.WriteLine($"Interpolate Target HP Tracker: {currentVal_Interpolate}/{countKeys}.");
+
+                                //Process Lighting
+                                var ledGroups = new List<PublicListLedGroup>();
+                                        
+                                for (int i = 0; i < countKeys; i++)
+                                {
+                                    var ledGroup = new PublicListLedGroup(surface, ledArray[i])
+                                    {
+                                        ZIndex = layer.zindex,
+                                    };
+
+                                    ledGroup.Detach();
+
+                                    if (i < currentVal_Interpolate)
+                                    {
+                                        ledGroup.Brush = model.enmity_brush;
+                                
+                                    }
+                                    else
+                                    {
+                                        ledGroup.Brush = model.empty_brush;
+                                    }
+                            
+                                    ledGroups.Add(ledGroup);
+                            
+                                }
+
                                 foreach (var layergroup in model._localgroups)
                                 {
-                                    if (layergroup != null)
-                                        layergroup.Detach();
+                                    layergroup.Detach();
                                 }
 
-                                model._localgroups.Clear();
-                                model._currentMode = layer.layerModes;
+                                model._localgroups = ledGroups;
+                                model._interpolateValue = currentVal_Interpolate;
                             }
-            
                     
-                            if (enmityPosition != model._enmityPosition || model._targetReset)
+                        }
+                        else if (layer.layerModes == Enums.LayerModes.Fade)
+                        {
+                            //Fade implementation
+                    
+                            var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, model.empty_brush.Color, model.enmity_brush.Color);
+                            if (currentVal_Fader != model._faderValue || model._targetReset)
                             {
-                                if (enmityPosition < 0)
-                                {
-                                    //Engaged & No Aggro
-                                    model.enmity_brush = model.empty_brush;
-                                }
-                                else if (enmityPosition == 0)
-                                {
-                                    //Full Aggro
-                                    model.enmity_brush.Color = enmity_top_col;
-                                }
-                                else if (enmityPosition == 1)
-                                {
-                                    //High Aggro
-                                    model.enmity_brush.Color = enmity_high_col;
-                                }
-                                else if (enmityPosition > 1 && model._enmityPosition <= 4)
-                                {
-                                    //Moderate Aggro
-                                    model.enmity_brush.Color = enmity_med_col;
-                                }
-                                else if (enmityPosition > 4) //&& _enmityPosition <= 8)
-                                {
-                                    //Low Aggro
-                                    model.enmity_brush.Color = enmity_low_col;
-                                }
-                                else
-                                {
-                                    //Not Engaged & No Aggro
-                                    model.enmity_brush = model.empty_brush;
-                                }
-
 
                                 var ledGroup = new PublicListLedGroup(surface, ledArray)
                                 {
                                     ZIndex = layer.zindex,
-                                    Brush = model.enmity_brush
+                                    Brush = new SolidColorBrush(currentVal_Fader)
                                 };
 
                                 ledGroup.Detach();
                                 model._localgroups.Add(ledGroup);
-                                model._enmityPosition = enmityPosition;
+                                model._faderValue = currentVal_Fader;
                             }
                         }
+            
+                    
+                        model._enmityPosition = enmityPosition;
                     }
                 }
 
@@ -249,7 +299,9 @@ namespace Chromatics.Layers
             public SolidColorBrush empty_brush { get; set; }
             public SolidColorBrush enmity_brush { get; set; }
             public LayerModes _currentMode { get; set; }
-            public int _enmityPosition { get; set; }
+            public int _interpolateValue { get; set; }
+            public Color _faderValue { get; set; }
+            public uint _enmityPosition { get; set; }
             public uint _targetId { get; set; }
             public bool _targetReset { get; set; }
             public bool init { get; set; }

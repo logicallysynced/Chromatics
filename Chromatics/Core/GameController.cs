@@ -301,127 +301,135 @@ namespace Chromatics.Core
         {
             if (!gameConnected) return;
 
-            //Check if game has logged in
-            
-            if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors() && _memoryHandler.Reader.CanGetChatLog())
+            try
             {
-                var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
-                //var chatLogCount = _memoryHandler.Reader.GetChatLog().ChatLogItems.Count;
-
-                var runningEffects = RGBController.GetRunningEffects();
-
-                if (getCurrentPlayer.Entity == null) //&& chatLogCount <= 0)
+                //Check if game has logged in
+            
+                if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors() && _memoryHandler.Reader.CanGetChatLog())
                 {
-                    //Game is still on Main Menu or Character Screen
-                    if (!_onTitle || wasPreviewed)
+                    var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                    var chatLogCount = _memoryHandler.Reader.GetChatLog().ChatLogItems.Count;
+
+                    var runningEffects = RGBController.GetRunningEffects();
+
+                    if (getCurrentPlayer.Entity == null && chatLogCount <= 0)
                     {
-                        RGBController.StopEffects();
-                        RGBController.ResetLayerGroups();
-
-                        if (RGBController.GetEffectsSettings().effect_titlescreen)
+                        //Game is still on Main Menu or Character Screen
+                        if (!_onTitle || wasPreviewed)
                         {
-                            var surface = RGBController.GetLiveSurfaces();
-                            var devices = surface.GetDevices(RGBDeviceType.All);
-                            var _colorPalette = RGBController.GetActivePalette();
-                            var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.MenuBase.Color);
-                            var highlightColors = new Color[] {
-                                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight1.Color),
-                                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight2.Color),
-                                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight3.Color)
-                            };
+                            RGBController.StopEffects();
+                            RGBController.ResetLayerGroups();
 
-                            foreach (var device in devices)
+                            if (RGBController.GetEffectsSettings().effect_titlescreen)
                             {
-                                var ledgroup = new PublicListLedGroup(surface, device);
-                        
-                                var starfield = new StarfieldDecorator(ledgroup, (ledgroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
-                                ledgroup.ZIndex = 1000;
-                            
-                                foreach (var led in device)
+                                var surface = RGBController.GetLiveSurfaces();
+                                var devices = surface.GetDevices(RGBDeviceType.All);
+                                var _colorPalette = RGBController.GetActivePalette();
+                                var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.MenuBase.Color);
+                                var highlightColors = new Color[] {
+                                    ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight1.Color),
+                                    ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight2.Color),
+                                    ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight3.Color)
+                                };
+
+                                foreach (var device in devices)
                                 {
-                                    ledgroup.AddLed(led);
+                                    var ledgroup = new PublicListLedGroup(surface, device);
+                        
+                                    var starfield = new StarfieldDecorator(ledgroup, (ledgroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
+                                    ledgroup.ZIndex = 1000;
+                            
+                                    foreach (var led in device)
+                                    {
+                                        ledgroup.AddLed(led);
+                                    }
+
+                                    ledgroup.Brush = new SolidColorBrush(baseColor);
+                                    ledgroup.AddDecorator(starfield);                    
+
+                                    runningEffects.Add(ledgroup);
+                                                        
                                 }
-
-                                ledgroup.Brush = new SolidColorBrush(baseColor);
-                                ledgroup.AddDecorator(starfield);                    
-
-                                runningEffects.Add(ledgroup);
                                                         
+
                             }
-                                                        
-
+                            Debug.WriteLine(@"User on title or character screen");
+                            _onTitle = true;
+                            wasPreviewed = false;
                         }
-                        Debug.WriteLine(@"User on title or character screen");
-                        _onTitle = true;
-                        wasPreviewed = false;
+                    
+                        _isInGame = false;
+                    
                     }
-                    
-                    _isInGame = false;
-                    
-                }
-                else
-                {
-                    //Character has logged in
-                    _isInGame = true;
-
-                    if (_onTitle)
+                    else
                     {
-                        Debug.WriteLine(@"User logging in to FFXIV..");
-                        RGBController.StopEffects();
-                        RGBController.ResetLayerGroups();
-                        _onTitle = false;
-                    }
+                        //Character has logged in
+                        _isInGame = true;
+
+                        if (_onTitle)
+                        {
+                            Debug.WriteLine(@"User logging in to FFXIV..");
+                            RGBController.StopEffects();
+                            RGBController.ResetLayerGroups();
+                            _onTitle = false;
+                        }
                     
-                }
+                    }
                 
+                }
+            
+                if (!_isInGame) return;
+
+                //Event Delegates
+                if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
+                {
+                    var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                    if (getCurrentPlayer.Entity != null)
+                    {
+                        if (getCurrentPlayer.Entity.Job != _currentJob)
+                        {
+                            jobChanged?.Invoke();
+                            _currentJob = getCurrentPlayer.Entity.Job;
+                        }
+                    }
+                }
+
+                //Process All Layers
+                var _layers = MappingLayers.GetLayers();
+
+                foreach (IMappingLayer layer in _layers.Values.OrderBy(x => x.zindex, comparer))
+                {                   
+                    switch (layer.rootLayerType)
+                    {
+                        case LayerType.BaseLayer:
+
+                            var baseLayerProcessors = BaseLayerProcessorFactory.GetProcessors();
+                            baseLayerProcessors[(BaseLayerType)layer.layerTypeindex].Process(layer);
+                            break;
+
+                        case LayerType.DynamicLayer:
+
+                            var dynamicLayerProcessors = DynamicLayerProcessorFactory.GetProcessors();
+                            dynamicLayerProcessors[(DynamicLayerType)layer.layerTypeindex].Process(layer);
+                            break;
+
+                        case LayerType.EffectLayer:
+                            foreach (var layerProcessor in EffectLayerProcessorFactory.GetProcessors())
+                            {
+                                layerProcessor.Value.Process(layer);
+                            }
+                            break;
+                       
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception: {ex.Message}");
             }
             
-            if (!_isInGame) return;
-
-            //Event Delegates
-            if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
-            {
-                var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
-                if (getCurrentPlayer.Entity != null)
-                {
-                    if (getCurrentPlayer.Entity.Job != _currentJob)
-                    {
-                        jobChanged?.Invoke();
-                        _currentJob = getCurrentPlayer.Entity.Job;
-                    }
-                }
-            }
-
-            //Process All Layers
-            var _layers = MappingLayers.GetLayers();
-
-            foreach (IMappingLayer layer in _layers.Values.OrderBy(x => x.zindex, comparer))
-            {                   
-                switch (layer.rootLayerType)
-                {
-                    case LayerType.BaseLayer:
-
-                        var baseLayerProcessors = BaseLayerProcessorFactory.GetProcessors();
-                        baseLayerProcessors[(BaseLayerType)layer.layerTypeindex].Process(layer);
-                        break;
-
-                    case LayerType.DynamicLayer:
-
-                        var dynamicLayerProcessors = DynamicLayerProcessorFactory.GetProcessors();
-                        dynamicLayerProcessors[(DynamicLayerType)layer.layerTypeindex].Process(layer);
-                        break;
-
-                    case LayerType.EffectLayer:
-                        foreach (var layerProcessor in EffectLayerProcessorFactory.GetProcessors())
-                        {
-                            layerProcessor.Value.Process(layer);
-                        }
-                        break;
-                       
-                }
-
-
-            }
             
         }
 
