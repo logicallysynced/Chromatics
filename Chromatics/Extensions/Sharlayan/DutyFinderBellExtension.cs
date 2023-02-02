@@ -12,14 +12,16 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.Sharlayan
 {
-    public class JobGaugeExtension
+    public class DutyFinderBellExtension
     {
         public static DateTime LastUpdated = DateTime.MinValue;
 
-        private static readonly string memoryName = @"JOBMANAGER";
+        private static readonly string memoryName = @"DUTYFINDER";
         private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(0.05);
         private static bool _siginit;
         private static bool _memoryready;
+        private static bool _isPopped;
+        private static bool _initialized;
         private static List<Signature> _sList;
         private static readonly object RefreshLock = new object();
         private static readonly object CacheLock = new object();
@@ -41,7 +43,7 @@ namespace Chromatics.Extensions.Sharlayan
                             new Signature
                             {
                                 Key = memoryName,
-                                Value = "488B3D****33ED",
+                                Value = "440fb643**488d51**488d0d",
                                 ASMSignature = true,
                                 PointerPath = new List<long>
                                 {
@@ -71,7 +73,10 @@ namespace Chromatics.Extensions.Sharlayan
                     if (_memoryHandler.Scanner.Locations.ContainsKey(memoryName))
                     {
                         var address = _memoryHandler.Scanner.Locations[memoryName];
+                        var contentFinderState = _memoryHandler.GetByte(address.GetAddress(), 0x145);
+                        _isPopped = contentFinderState == 3; //ContentFinderState of 3 means DF pop but not entered yet
 
+                        _initialized = true;
                     }
 
 
@@ -87,6 +92,16 @@ namespace Chromatics.Extensions.Sharlayan
                 if (LastUpdated + UpdateInterval <= DateTime.Now)
                     RefreshData(_memoryHandler);
             }
+        }
+
+        public static bool IsPopped()
+        {
+            if (!_initialized)
+                return false;
+
+            CheckCache();
+
+            return _isPopped;
         }
     }
 }

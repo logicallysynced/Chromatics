@@ -22,6 +22,7 @@ using static MetroFramework.Drawing.MetroPaint;
 using System.Security.Policy;
 using Sharlayan.Utilities;
 using Sharlayan.Core.Enums;
+using Chromatics.Extensions.Sharlayan;
 
 namespace Chromatics.Core
 {
@@ -256,6 +257,9 @@ namespace Chromatics.Core
 
                     _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
                     
+                    //Load Other Memory Zones
+                    DutyFinderBellExtension.RefreshData(_memoryHandler);
+                    
                     gameConnected = true;
                 
                 }
@@ -302,11 +306,11 @@ namespace Chromatics.Core
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors() && _memoryHandler.Reader.CanGetChatLog())
             {
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
-                var chatLogCount = _memoryHandler.Reader.GetChatLog().ChatLogItems.Count;
+                //var chatLogCount = _memoryHandler.Reader.GetChatLog().ChatLogItems.Count;
 
                 var runningEffects = RGBController.GetRunningEffects();
 
-                if (getCurrentPlayer.Entity == null && chatLogCount <= 0)
+                if (getCurrentPlayer.Entity == null) //&& chatLogCount <= 0)
                 {
                     //Game is still on Main Menu or Character Screen
                     if (!_onTitle || wasPreviewed)
