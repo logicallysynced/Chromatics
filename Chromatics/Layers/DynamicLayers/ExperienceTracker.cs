@@ -4,6 +4,8 @@ using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
+using Sharlayan.Core.Enums;
+using Sharlayan.Models.ReadResults;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -78,7 +80,7 @@ namespace Chromatics.Layers
                 if (getCurrentPlayer.Entity == null) return;
 
                 var currentLvl = getCurrentPlayer.Entity.Level;
-                var currentExp = 4000000; //Insert current EXP value here.
+                var currentExp = GetJobCurrentExperience(getCurrentPlayer);
                 var minExp = 0;
                 var maxExp = 0;
                 
@@ -228,6 +230,97 @@ namespace Chromatics.Layers
             
             model.init = true;
             layer.requestUpdate = false;
+        }
+
+        private int GetJobCurrentExperience(CurrentPlayerResult currentPlayer)
+        {
+            switch (currentPlayer.Entity.Job)
+            {
+                case Actor.Job.Unknown:
+                    return 0;
+                case Actor.Job.GLD:
+                    return currentPlayer.PlayerInfo.GLD_CurrentEXP;
+                case Actor.Job.PGL:
+                    return currentPlayer.PlayerInfo.PGL_CurrentEXP;
+                case Actor.Job.MRD:
+                    return currentPlayer.PlayerInfo.MRD_CurrentEXP;
+                case Actor.Job.LNC:
+                    return currentPlayer.PlayerInfo.LNC_CurrentEXP;
+                case Actor.Job.ARC:
+                    return currentPlayer.PlayerInfo.ARC_CurrentEXP;
+                case Actor.Job.CNJ:
+                    return currentPlayer.PlayerInfo.CNJ_CurrentEXP;
+                case Actor.Job.THM:
+                    return currentPlayer.PlayerInfo.THM_CurrentEXP;
+                case Actor.Job.CPT:
+                    return currentPlayer.PlayerInfo.CPT_CurrentEXP;
+                case Actor.Job.BSM:
+                    return currentPlayer.PlayerInfo.BSM_CurrentEXP;
+                case Actor.Job.ARM:
+                    return currentPlayer.PlayerInfo.ARM_CurrentEXP;
+                case Actor.Job.GSM:
+                    return currentPlayer.PlayerInfo.GSM_CurrentEXP;
+                case Actor.Job.LTW:
+                    return currentPlayer.PlayerInfo.LTW_CurrentEXP;
+                case Actor.Job.WVR:
+                    return currentPlayer.PlayerInfo.WVR_CurrentEXP;
+                case Actor.Job.ALC:
+                    return currentPlayer.PlayerInfo.ALC_CurrentEXP;
+                case Actor.Job.CUL:
+                    return currentPlayer.PlayerInfo.CUL_CurrentEXP;
+                case Actor.Job.MIN:
+                    return currentPlayer.PlayerInfo.MIN_CurrentEXP;
+                case Actor.Job.BTN:
+                    return currentPlayer.PlayerInfo.BTN_CurrentEXP;
+                case Actor.Job.FSH:
+                    return currentPlayer.PlayerInfo.FSH_CurrentEXP;
+                case Actor.Job.PLD:
+                    return currentPlayer.PlayerInfo.GLD_CurrentEXP;
+                case Actor.Job.MNK:
+                    return currentPlayer.PlayerInfo.PGL_CurrentEXP;
+                case Actor.Job.WAR:
+                    return currentPlayer.PlayerInfo.MRD_CurrentEXP;
+                case Actor.Job.DRG:
+                    return currentPlayer.PlayerInfo.LNC_CurrentEXP;
+                case Actor.Job.BRD:
+                    return currentPlayer.PlayerInfo.ARC_CurrentEXP;
+                case Actor.Job.WHM:
+                    return currentPlayer.PlayerInfo.CNJ_CurrentEXP;
+                case Actor.Job.BLM:
+                    return currentPlayer.PlayerInfo.THM_CurrentEXP;
+                case Actor.Job.ACN:
+                    return currentPlayer.PlayerInfo.ACN_CurrentEXP;
+                case Actor.Job.SMN:
+                    return currentPlayer.PlayerInfo.ACN_CurrentEXP;
+                case Actor.Job.SCH:
+                    return currentPlayer.PlayerInfo.ACN_CurrentEXP;
+                case Actor.Job.ROG:
+                    return currentPlayer.PlayerInfo.ROG_CurrentEXP;
+                case Actor.Job.NIN:
+                    return currentPlayer.PlayerInfo.ROG_CurrentEXP;
+                case Actor.Job.MCH:
+                    return currentPlayer.PlayerInfo.MCH_CurrentEXP;
+                case Actor.Job.DRK:
+                    return currentPlayer.PlayerInfo.DRK_CurrentEXP;
+                case Actor.Job.AST:
+                    return currentPlayer.PlayerInfo.AST_CurrentEXP;
+                case Actor.Job.SAM:
+                    return currentPlayer.PlayerInfo.SAM_CurrentEXP;
+                case Actor.Job.RDM:
+                    return currentPlayer.PlayerInfo.RDM_CurrentEXP;
+                case Actor.Job.BLU:
+                    return currentPlayer.PlayerInfo.BLU_CurrentEXP;
+                case Actor.Job.GNB:
+                    return currentPlayer.PlayerInfo.GNB_CurrentEXP;
+                case Actor.Job.DNC:
+                    return currentPlayer.PlayerInfo.DNC_CurrentEXP;
+                case Actor.Job.RPR:
+                    return currentPlayer.PlayerInfo.RPR_CurrentEXP;
+                case Actor.Job.SGE:
+                    return currentPlayer.PlayerInfo.SGE_CurrentEXP;
+                default:
+                    return 0;
+            }
         }
 
         private void GetLevelAPI()
