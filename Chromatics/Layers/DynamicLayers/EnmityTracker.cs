@@ -137,7 +137,7 @@ namespace Chromatics.Layers
 
                         if (enmityProfile == null) return;
 
-                        Debug.WriteLine($"Target ID: {targetId}//{enmityProfile.ID}. Enmity: {enmityProfile.Enmity}. Count: {enmityList.Count}");
+                        //Debug.WriteLine($"Target ID: {targetId}//{enmityProfile.ID}. Enmity: {enmityProfile.Enmity}. Count: {enmityList.Count}");
 
                         var enmityPosition = enmityProfile.Enmity;
                         

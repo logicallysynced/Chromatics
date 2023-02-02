@@ -22,7 +22,7 @@ namespace Chromatics.Models
         public ColorMapping MenuHighlight3 = new("Main Menu Animation Color 3", PaletteTypes.Chromatics, Color.White);
         public ColorMapping CutsceneBase = new("Cutscene Base Color", PaletteTypes.Chromatics, Color.DeepSkyBlue);
         public ColorMapping CutsceneHighlight1 = new("Cutscene Animation Color 1", PaletteTypes.Chromatics, Color.White);
-        public ColorMapping CutsceneHighlight2 = new("Cutscene Animation Color 2", PaletteTypes.Chromatics, Color.DeepSkyBlue);
+        public ColorMapping CutsceneHighlight2 = new("Cutscene Animation Color 2", PaletteTypes.Chromatics, Color.White);
         public ColorMapping CutsceneHighlight3 = new("Cutscene Animation Color 3", PaletteTypes.Chromatics, Color.White);
 
         //Player Stats
