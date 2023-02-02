@@ -59,7 +59,7 @@ namespace Chromatics.Extensions.Sharlayan
 
                         if (_memoryHandler.Scanner.Locations.ContainsKey(memoryName))
                         {
-                            Debug.WriteLine($"Found {memoryName}. Location: {_memoryHandler.Scanner.Locations[memoryName].GetAddress().ToInt64()}");
+                            Debug.WriteLine($"Found {memoryName}. Location: {_memoryHandler.Scanner.Locations[memoryName].GetAddress().ToInt64():X}");
 
                             _siginit = true;
                         }

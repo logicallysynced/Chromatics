@@ -43,7 +43,7 @@ namespace Chromatics.Enums
         Highlight = 1,
         [LayerDisplay(Name="Keybinds", Description = "Displays different colours across selected keys based on keybind status of selected keys.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         Keybinds = 2,
-        [LayerDisplay(Name = "Enmity Tracker", Description = "Displays different colours across selected keys depending on enmity status of target.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        [LayerDisplay(Name = "Enmity Tracker", Description = "Displays different colours across selected keys depending on enmity status of target.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         EnmityTracker = 3,
         [LayerDisplay(Name = "Target HP", Description = "Shows current target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         TargetHP = 4,

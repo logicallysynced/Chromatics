@@ -106,7 +106,6 @@ namespace Chromatics.Layers
                     model._localgroups.Clear();
                     model._targetReset = true;
                     model._targetId = targetId;
-                    Debug.WriteLine(@"Target Reset");
                 }
 
 
@@ -137,11 +136,11 @@ namespace Chromatics.Layers
                     
                         if (maxVal <= 0) maxVal = currentVal + 1;
                         
-                        if (getTargetInfo.TargetInfo.CurrentTarget.IsClaimed && getTargetInfo.TargetInfo.CurrentTarget.IsAggressive)
+                        if (getTargetInfo.TargetInfo.CurrentTarget.InCombat && getTargetInfo.TargetInfo.CurrentTarget.IsAggressive)
                         {
                             model.full_brush.Color = full_col;
                         }
-                        else if (getTargetInfo.TargetInfo.CurrentTarget.IsClaimed && !getTargetInfo.TargetInfo.CurrentTarget.IsAggressive)
+                        else if (getTargetInfo.TargetInfo.CurrentTarget.InCombat && !getTargetInfo.TargetInfo.CurrentTarget.IsAggressive)
                         {
                             model.full_brush.Color = friendly_col;
                         }
@@ -150,8 +149,7 @@ namespace Chromatics.Layers
                             model.full_brush.Color = idle_col;
                         }
 
-                        Debug.WriteLine($"Target ID: {targetId}. Claimed: {getTargetInfo.TargetInfo.CurrentTarget.IsAgroed}. IsAggressive: {getTargetInfo.TargetInfo.CurrentTarget.IsAggressive}");
-
+                        //Debug.WriteLine($"Target ID: {targetId}. IsClaimed: {getTargetInfo.TargetInfo.CurrentTarget.IsClaimed}. InCombat: {getTargetInfo.TargetInfo.CurrentTarget.InCombat}. IsAggressive: {getTargetInfo.TargetInfo.CurrentTarget.IsAggressive}");
 
                         //Check if layer mode has changed
                         if (model._currentMode != layer.layerModes)
@@ -177,7 +175,7 @@ namespace Chromatics.Layers
                             if (currentVal_Interpolate != model._interpolateValue || model._targetReset)
                             {
                                        
-                                Debug.WriteLine($"Interpolate Target HP Tracker: {currentVal_Interpolate}/{countKeys}.");
+                                //Debug.WriteLine($"Interpolate Target HP Tracker: {currentVal_Interpolate}/{countKeys}.");
 
                                 //Process Lighting
                                 var ledGroups = new List<PublicListLedGroup>();
@@ -191,7 +189,7 @@ namespace Chromatics.Layers
 
                                     ledGroup.Detach();
 
-                                    if (i <=currentVal_Interpolate)
+                                    if (i < currentVal_Interpolate)
                                     {
                                         ledGroup.Brush = model.full_brush;
                                 

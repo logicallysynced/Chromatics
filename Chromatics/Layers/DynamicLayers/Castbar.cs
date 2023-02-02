@@ -70,13 +70,17 @@ namespace Chromatics.Layers
                 if (getCurrentPlayer.Entity == null) return;
 
                 var currentVal = getCurrentPlayer.Entity.CastingPercentage;
+                                    
                 var minVal = 0.0;
                 var maxVal = 1.0;
+
+                if (currentVal > maxVal) currentVal = maxVal;
+                if (currentVal < minVal) currentVal = minVal;
 
                 var full_col = ColorHelper.ColorToRGBColor(_colorPalette.CastChargeFull.Color);
                 var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.CastChargeEmpty.Color); //Bleed layer
 
-                Debug.WriteLine($"Casting: {currentVal}. Progress: {getCurrentPlayer.Entity.CastingProgress}. Toggle: {getCurrentPlayer.Entity.IsCasting}");
+                //Debug.WriteLine($"Casting: {currentVal}. IsCasting: {getCurrentPlayer.Entity.IsCasting} Progress: {getCurrentPlayer.Entity.CastingPercentage}. Time: {getCurrentPlayer.Entity.CastingTime}. Toggle: {getCurrentPlayer.Entity.IsCasting}");
                 
                 
                 if (model.full_brush == null || model.full_brush.Color != full_col) model.full_brush = new SolidColorBrush(full_col);
@@ -103,7 +107,7 @@ namespace Chromatics.Layers
                     model._localgroups.Clear();
                     model._currentMode = layer.layerModes;
                 }
-            
+                
                 if (layer.layerModes == Enums.LayerModes.Interpolate)
                 {
                     //Interpolate implementation
