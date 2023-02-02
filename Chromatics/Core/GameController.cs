@@ -348,7 +348,7 @@ namespace Chromatics.Core
                                     ledgroup.AddDecorator(starfield);                    
 
                                     runningEffects.Add(ledgroup);
-                                                        
+                                    
                                 }
                                                         
 

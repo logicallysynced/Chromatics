@@ -77,7 +77,9 @@ namespace Chromatics.Enums
         [LayerDisplay(Name="Damage Flash", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         DamageFlash = 2,
         [LayerDisplay(Name="Gold Saucer Vegas Mode", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        GoldSaucerVegas = 3
+        GoldSaucerVegas = 3,
+        [LayerDisplay(Name="Cutscene Animation", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        CutsceneAnimation = 4,
     };
 
     public enum LayerModes
