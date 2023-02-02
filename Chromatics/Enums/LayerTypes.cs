@@ -31,8 +31,8 @@ namespace Chromatics.Enums
         BattleStance = 2,
         [LayerDisplay(Name = "Job Classes", Description = "Base layer changes colour depending on the character's current class.\nUses base layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         JobClasses = 3,
-        [LayerDisplay(Name = "Screen Capture", Description = "Draws a gradient as your base layer by polling the four corners of your game screen.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        ScreenCapture = 4,
+        //[LayerDisplay(Name = "Screen Capture", Description = "Draws a gradient as your base layer by polling the four corners of your game screen.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        //ScreenCapture = 4,
         
     };
     public enum DynamicLayerType
