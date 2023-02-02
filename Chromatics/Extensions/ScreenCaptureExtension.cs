@@ -20,12 +20,12 @@ namespace Chromatics.Extensions
         private const int DARK_PIXEL_LIMIT = 100;
         private const int SKIP_PIXEL = 10;
         private const int DEFAULT_SEGMENT_NUMBER = 2;
-        private const int refreshFrequency = 0;
+        private const int refreshFrequency = 500;
 
         private bool isStarted;
         private bool _stopRequested;
         private Thread background;
-        private ConcurrentDictionary<int, Color> _screenTracker = new ConcurrentDictionary<int, Color>();
+        private ScreenColor _screenTracker;
 
         public void Start()
         {
@@ -36,8 +36,8 @@ namespace Chromatics.Extensions
             background = new Thread(startAnalyzeInBackground);
             background.IsBackground = true;
             background.Start();
-            
-            
+
+
             colorGeneratedEvent += ColorGeneratedEventHandler;
             isStarted = true;
 
@@ -52,9 +52,9 @@ namespace Chromatics.Extensions
             isStarted = false;
         }
 
-        public ConcurrentDictionary<int, Color> GetScreenColours()
+        public ScreenColor GetScreenColours()
         {
-            if (!isStarted) return null;
+            if (!isStarted || _screenTracker == null) return null;
 
             return _screenTracker;
         }
@@ -75,7 +75,7 @@ namespace Chromatics.Extensions
 
         private void startAnalyze()
         {
-            Bitmap screenshot = GetSreenshot();
+            Bitmap screenshot = GetScreenshot();
             ScreenColor screenColor = new ScreenColor();
 
             // First of all calculate the color for the whole screen
@@ -88,13 +88,13 @@ namespace Chromatics.Extensions
             // Then divide the screen and calculate the segments            
             int segmentX = 0;
             int segmentY = 0;
-            int segmentWidth = (int) screenshot.Width / DEFAULT_SEGMENT_NUMBER;
+            int segmentWidth = (int)screenshot.Width / DEFAULT_SEGMENT_NUMBER;
             int segmentHeight = (int)screenshot.Height / DEFAULT_SEGMENT_NUMBER;
 
             // Segment cannot be bigger then the screen size
             if (segmentWidth > screenshot.Width) { segmentHeight = screenshot.Width; }
             if (segmentHeight > screenshot.Height) { segmentHeight = screenshot.Height; }
-            
+
 
             // Go troug the segments from the upper left to right and down
             // *-----> |
@@ -110,7 +110,9 @@ namespace Chromatics.Extensions
                     try
                     {
                         screenColor.screenColors.TryAdd(segmentCounter++, segmenColor);
-                    } catch {
+                    }
+                    catch
+                    {
                         Debug.WriteLine("Cannot add color to the list. This should not happen.");
                     }
                 }
@@ -129,7 +131,7 @@ namespace Chromatics.Extensions
             System.GC.Collect();
         }
 
-        private Bitmap GetSreenshot()
+        private Bitmap GetScreenshot()
         {
             Bitmap bmp = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             try
@@ -138,7 +140,8 @@ namespace Chromatics.Extensions
                 g.CopyFromScreen(0, 0, 0, 0, bmp.Size);
 
                 // bmp.Save("screenshot.bmp");
-            } catch
+            }
+            catch
             {
                 Debug.WriteLine("Cannot take a screenshot. Log off screen?");
             }
@@ -149,8 +152,8 @@ namespace Chromatics.Extensions
         private async void ColorGeneratedEventHandler(object sender, EventArgs e)
         {
             // We expecting a ScreenColorEvent here
-            ColorEvent colorEvent = (ColorEvent) e;
-            _screenTracker = colorEvent.screenColor.screenColors;
+            ColorEvent colorEvent = (ColorEvent)e;
+            _screenTracker = colorEvent.screenColor;
         }
 
 
@@ -208,26 +211,33 @@ namespace Chromatics.Extensions
         private System.Drawing.Color getAverageColor()
         {
             RGB avgRGB = getAverageRGB();
+            if (avgRGB.red < 0) { avgRGB.red = 0; }
+            if (avgRGB.green < 0) { avgRGB.green = 0; }
+            if (avgRGB.blue < 0) { avgRGB.blue = 0; }
+            if (avgRGB.red > 255) { avgRGB.red = 255; }
+            if (avgRGB.green > 255) { avgRGB.green = 255; }
+            if (avgRGB.blue > 255) { avgRGB.blue = 255; }
+
             return System.Drawing.Color.FromArgb(avgRGB.red, avgRGB.green, avgRGB.blue);
         }
 
         private RGB getAverageRGB()
         {
-            
+
             double calculatedRed;
             double calculatedGreen;
             double calculatedBlue;
 
             if (allPixels == 0) { allPixels = 1; }
 
-            calculatedRed = (double) colorCollercor.red / allPixels;
-            calculatedGreen = (double) colorCollercor.green / allPixels;
-            calculatedBlue = (double) colorCollercor.blue / allPixels;
+            calculatedRed = (double)colorCollercor.red / allPixels;
+            calculatedGreen = (double)colorCollercor.green / allPixels;
+            calculatedBlue = (double)colorCollercor.blue / allPixels;
 
             // Make darker color if most of the screen surface is black
             if (brightPixels * 2 < darkPixels)
             {
-                double ratio = (double) brightPixels / darkPixels;
+                double ratio = (double)brightPixels / darkPixels;
 
                 calculatedRed = Convert.ToInt32(calculatedRed * ratio);
                 calculatedGreen = Convert.ToInt32(calculatedGreen * ratio);
@@ -238,9 +248,9 @@ namespace Chromatics.Extensions
 
             return new RGB()
             {
-                red = (int) calculatedRed,
-                green = (int) calculatedGreen,
-                blue = (int) calculatedBlue
+                red = (int)calculatedRed,
+                green = (int)calculatedGreen,
+                blue = (int)calculatedBlue
             };
         }
 
@@ -249,17 +259,17 @@ namespace Chromatics.Extensions
             public int red { get; set; }
             public int green { get; set; }
             public int blue { get; set; }
-        
+
         }
 
-        private class ScreenColor
+        public class ScreenColor
         {
             public System.Drawing.Color mainColor { get; set; }
             public ConcurrentDictionary<int, System.Drawing.Color> screenColors = new ConcurrentDictionary<int, System.Drawing.Color>();
         }
 
         private class ColorEvent : EventArgs
-        {   
+        {
             public ScreenColor screenColor { get; set; }
             public ColorEvent(ScreenColor c)
             {
@@ -268,6 +278,6 @@ namespace Chromatics.Extensions
 
         }
 
-        
+
     }
 }

@@ -101,28 +101,28 @@ namespace Chromatics.Layers
                 var screenColours = screenCapture.GetScreenColours();
                 if (screenColours == null) return;
 
-                foreach (var colour in screenColours )
+                foreach (var colour in screenColours.screenColors )
                 {
-                    //Debug.WriteLine($"{colour.Key}: { colour.Value }");
+                    Debug.WriteLine($"{colour.Key}: { colour.Value }");
                 }
                 
-                
+                Debug.WriteLine($"Average: {screenColours.mainColor}. Count Segments: {screenColours.screenColors.Count}");
 
                 //var gradient = new RectangularGradient(System.Drawing.Color.Red, System.Drawing.Color.Yellow, System.Drawing.Color.Green, System.Drawing.Color.Blue);
                 //var gradientTexture = new RectangularGradientTexture(new Size(15,6), gradient);
 
-                if (screenColours.Count == 4)
+                if (screenColours.screenColors.Count == 4)
                 {
-                    var gradientTexture = new LinearGradient(new GradientStop((float)0, ColorHelper.ColorToRGBColor(screenColours[0])), 
-                        new GradientStop((float)0.25, ColorHelper.ColorToRGBColor(screenColours[1])), 
-                        new GradientStop((float)0.85, ColorHelper.ColorToRGBColor(screenColours[2])),
-                        new GradientStop((float)1.0, ColorHelper.ColorToRGBColor(screenColours[3])));
+                    var gradientTexture = new LinearGradient(new GradientStop((float)0, ColorHelper.ColorToRGBColor(screenColours.screenColors[0])), 
+                        new GradientStop((float)0.25, ColorHelper.ColorToRGBColor(screenColours.screenColors[1])), 
+                        new GradientStop((float)0.85, ColorHelper.ColorToRGBColor(screenColours.screenColors[2])),
+                        new GradientStop((float)1.0, ColorHelper.ColorToRGBColor(screenColours.screenColors[3])));
 
-                    layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(15,6), gradientTexture));
+                    layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100,100), gradientTexture));
                 }
                 else
                 {
-                    layergroup.Brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(screenColours.FirstOrDefault().Value));
+                    layergroup.Brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(screenColours.mainColor));
                 }
 
                 

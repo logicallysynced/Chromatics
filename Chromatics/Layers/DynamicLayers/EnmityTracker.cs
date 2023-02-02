@@ -200,9 +200,6 @@ namespace Chromatics.Layers
 
                             if (currentVal_Interpolate != model._interpolateValue || model._targetReset)
                             {
-                                       
-                                //Debug.WriteLine($"Interpolate Target HP Tracker: {currentVal_Interpolate}/{countKeys}.");
-
                                 //Process Lighting
                                 var ledGroups = new List<PublicListLedGroup>();
                                         
