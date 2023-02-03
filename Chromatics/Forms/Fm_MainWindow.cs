@@ -149,7 +149,9 @@ namespace Chromatics.Forms
             await Task.Run(() => FileOperationsHelper.GetUpdatedWeatherData());
 
             KeyController.Setup();
-            RGBController.Setup();
+
+            await Task.Run(() => RGBController.Setup());
+
             GameController.Setup();
         }
 
