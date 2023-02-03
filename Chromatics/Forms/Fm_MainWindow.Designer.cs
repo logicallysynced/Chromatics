@@ -123,7 +123,6 @@ namespace Chromatics.Forms
             this.MaximizeBox = false;
             this.Name = "Fm_MainWindow";
             this.Text = "Chromatics";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.Load += new System.EventHandler(this.OnLoad);
             this.Resize += new System.EventHandler(this.OnResize);
             this.mT_TabManager.ResumeLayout(false);
