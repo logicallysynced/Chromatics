@@ -11,11 +11,11 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("Roxas Keyheart")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Danielle Thompson")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyCopyrightAttribute("Roxas Keyheart 2022")]
+[assembly: System.Reflection.AssemblyCopyrightAttribute("Danielle Thompson 2023")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("3.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.0.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Chromatics")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Chromatics")]
 [assembly: System.Reflection.AssemblyVersionAttribute("3.0.0.0")]

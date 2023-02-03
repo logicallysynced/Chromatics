@@ -89,6 +89,7 @@ namespace Chromatics.Layers
                 return;
             }
 
+
             var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.CutsceneBase.Color);
             var highlightColors = new Color[] {
                 ColorHelper.ColorToRGBColor(_colorPalette.CutsceneHighlight1.Color),
@@ -117,7 +118,7 @@ namespace Chromatics.Layers
 
                 //Debug.WriteLine($"InCutscene: {getCurrentPlayer.Entity.InCutscene}");
 
-                if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model.wasDisabled)
+                if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model.wasDisabled || layer.requestUpdate)
                 {
                     if (getCurrentPlayer.Entity.InCutscene)
                     {
@@ -136,16 +137,11 @@ namespace Chromatics.Layers
 
                         runningEffects.Add(layergroup);
 
-                        if (layer.deviceType == RGBDeviceType.Keyboard)
-                            Debug.WriteLine($"Apply Effect: {layergroup.PublicGroupLeds.Count}. zindex: {layergroup.ZIndex}");
                     }
                     else
                     {
                         if (!model.wasDisabled && layergroup != null)
                         {
-                            if (layer.deviceType == RGBDeviceType.Keyboard)
-                                Debug.WriteLine($"Stop Effect");
-                        
                             layergroup.RemoveAllDecorators();
                             layergroup.Brush = new SolidColorBrush(Color.Transparent);
                             //layergroup.Detach();

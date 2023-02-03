@@ -438,7 +438,7 @@ namespace Chromatics.Forms
                                 
             }
            
-
+            ResizeLayerHelpText(rtb_layerhelp);
             // Resume layout
             tlp_frame.ResumeLayout();
             flp_layers.ResumeLayout();
@@ -500,39 +500,6 @@ namespace Chromatics.Forms
             this.ResumeLayout(true);
             
         }
-
-        /*
-        private void mT_TabManager_Selecting(object sender, TabControlCancelEventArgs e)
-        {
-            if (IsAddingLayer) return;
-
-            var current = (sender as TabControl).SelectedTab.ToString();
-                        
-
-            if (current == "tP_mappings")
-            {
-                if (MappingLayers.IsPreview())
-                {
-                    btn_preview.BackColor = System.Drawing.Color.LimeGreen;
-                    MappingLayers.SetPreview(true);
-                }
-                else
-                {
-                    btn_preview.BackColor = SystemColors.Control;
-                    MappingLayers.SetPreview(false);
-
-                }
-
-            }
-            else
-            {
-                btn_preview.BackColor = SystemColors.Control;
-                MappingLayers.SetPreview(false);
-
-
-            }
-        }
-        */
 
         private void mT_TabManager_Selected(object sender, TabControlEventArgs e)
         {
@@ -657,6 +624,7 @@ namespace Chromatics.Forms
                 ChangeLayerMode(layer);
 
                 ResetLayerText(layer);
+                ResizeLayerHelpText(rtb_layerhelp);
                 
                 obj.selected = true;
                 currentlySelected = obj;
@@ -1531,14 +1499,11 @@ namespace Chromatics.Forms
             }
         }
 
-        private void rtb_layerhelper_TextChanged(object sender, EventArgs e)
+        private void ResizeLayerHelpText(RichTextBox rtb)
         {
             // Set a maximum font size
             int maxFontSize = 10;
             int minFontSize = 8;
-
-            // Get the RichTextBox control
-            RichTextBox rtb = (RichTextBox)sender;
 
             // Get the font size for the current text
             float fontSize = rtb.Font.Size;
@@ -1552,41 +1517,41 @@ namespace Chromatics.Forms
             // Create a new Graphics object
             using (var g = rtb.CreateGraphics())
             {
-                // Measure the size of the current text
-                SizeF textSize = g.MeasureString(text, rtb.Font);
+                // Measure the size of the current text, taking into account the padding value
+                SizeF textSize = g.MeasureString(text, rtb.Font, (int)(rtb.Width - rtb.Padding.Left - rtb.Padding.Right));
 
                 // Check if the text fits within the RichTextBox
-                if (textSize.Width > rtb.Width || textSize.Height > rtb.Height)
+                if (textSize.Height > rtb.Height - rtb.Padding.Top - rtb.Padding.Bottom)
                 {
                     // Reduce the font size until the text fits within the RichTextBox
-                    while (textSize.Width > rtb.Width || textSize.Height > rtb.Height)
+                    while (textSize.Height > rtb.Height - rtb.Padding.Top - rtb.Padding.Bottom)
                     {
                         // Reduce the font size by 1
                         fontSize--;
 
-                        // Check if the font size exceeds the maximum
+                        // Check if the font size exceeds the minimum
                         if (fontSize <= minFontSize)
                         {
                             break;
                         }
 
                         // Measure the size of the text with the new font size
-                        textSize = g.MeasureString(text, new Font(rtb.Font.FontFamily, fontSize));
+                        textSize = g.MeasureString(text, new Font(rtb.Font.FontFamily, fontSize), (int)(rtb.Width - rtb.Padding.Left - rtb.Padding.Right));
                     }
 
                     // Update the font size for the RichTextBox
                     rtb.Font = new Font(rtb.Font.FontFamily, fontSize);
                 }
-                else if (textSize.Width <= rtb.Width && textSize.Height <= rtb.Height && fontSize < maxFontSize)
+                else if (textSize.Height <= rtb.Height - rtb.Padding.Top - rtb.Padding.Bottom && fontSize < maxFontSize)
                 {
                     // Increase the font size until the text fits within the RichTextBox
-                    while (textSize.Width <= rtb.Width && textSize.Height <= rtb.Height && fontSize < maxFontSize)
+                    while (textSize.Height <= rtb.Height - rtb.Padding.Top - rtb.Padding.Bottom && fontSize < maxFontSize)
                     {
                         // Increase the font size by 1
                         fontSize++;
 
                         // Measure the size of the text with the new font size
-                        textSize = g.MeasureString(text, new Font(rtb.Font.FontFamily, fontSize));
+                        textSize = g.MeasureString(text, new Font(rtb.Font.FontFamily, fontSize), (int)(rtb.Width - rtb.Padding.Left - rtb.Padding.Right));
                     }
 
                     // Update the font size for the RichTextBox
@@ -1596,6 +1561,11 @@ namespace Chromatics.Forms
 
             // Resume layout updates
             rtb.ResumeLayout();
+        }
+
+        private void rtb_layerhelper_TextChanged(object sender, EventArgs e)
+        {
+            ResizeLayerHelpText((RichTextBox)sender);
         }
 
 

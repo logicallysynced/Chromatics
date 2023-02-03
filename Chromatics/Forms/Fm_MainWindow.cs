@@ -14,7 +14,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AutoUpdaterDotNET;
 using static Chromatics.Models.VirtualDevice;
+using System.Reflection;
 
 namespace Chromatics.Forms
 {
@@ -104,25 +106,31 @@ namespace Chromatics.Forms
 
         private void SetupChromatics()
         {
-            //make static?
-            Logger.WriteConsole(LoggerTypes.System, @"Chromatics 3.0 has loaded");
+            //Check for updates
+            Logger.WriteConsole(LoggerTypes.System, @"Checking for updates..");
+            AutoUpdater.Start("https://chromaticsffxiv.com/chromatics3/update/update.xml");
+            AutoUpdater.ShowSkipButton = false;
 
-            //Create new thread for FFXIV/RGB processing
+            var assembly = typeof(Program).Assembly;
+
+            if (assembly.GetName().Version.Revision != 0)
+            {
+                Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA) has loaded");
+                this.Text = $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA)";
+            }
+            else
+            {
+                Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor} has loaded");
+            }
             
-            //_ChromaticsThread = new Thread(new ThreadStart(this.RunChromaticsThread));
-            //_ChromaticsThread.IsBackground = true;
-            //_ChromaticsThread.Start();
+
             RunChromaticsThread();
         }
 
         private async void RunChromaticsThread()
         {
-
             //Start Chromatics
             await Task.Run(() => FileOperationsHelper.GetUpdatedWeatherData());
-
-            //Start Location Dictionary
-            
 
             KeyController.Setup();
             RGBController.Setup();
