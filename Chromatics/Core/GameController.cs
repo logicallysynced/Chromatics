@@ -162,6 +162,7 @@ namespace Chromatics.Core
 
                 // Wait for the interval before continuing
                 var delay = _loopInterval;
+                memoryEfficientLoop = false;
                 
                 if (memoryEfficientLoop)
                 {

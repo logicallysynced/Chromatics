@@ -19,6 +19,7 @@ using static Chromatics.Models.VirtualDevice;
 using System.Reflection;
 using System.Windows;
 using Chromatics.Models;
+using System.IO;
 
 namespace Chromatics.Forms
 {
@@ -102,6 +103,13 @@ namespace Chromatics.Forms
                 this.ShowInTaskbar = false;
             }
 
+            //Setup Defaults
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            if (!File.Exists(enviroment + @"/layers.chromatics3"))
+            {
+                File.Copy(enviroment + @"/defaults/layers.chromatics3", enviroment + @"/layers.chromatics3");
+            }
+
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
 
         }
@@ -138,7 +146,6 @@ namespace Chromatics.Forms
             {
                 Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor} has loaded");
             }
-            
 
             RunChromaticsThread();
         }
@@ -168,7 +175,11 @@ namespace Chromatics.Forms
 
         private void OnResize(object sender, EventArgs e)
         {
-            //Not implemented
+            if (WindowState == FormWindowState.Minimized && appSettings.minimizetray)
+            {
+                Hide();
+                ShowInTaskbar = false;
+            }
         }
 
         private void OnNotifyIconDoubleClick(object sender, EventArgs e)
@@ -197,16 +208,6 @@ namespace Chromatics.Forms
             System.Windows.Forms.Application.Exit();
         }
 
-        private void OnFormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.UserClosing && this.WindowState == FormWindowState.Normal && appSettings.minimizetray)
-            {
-                e.Cancel = true;
-                this.Hide();
-                this.WindowState = FormWindowState.Minimized;
-                this.Visible = false;
-                this.ShowInTaskbar = false;
-            }
-        }
+
     }
 }
