@@ -13,4 +13,7 @@
     <SourceRoot Include="C:\Users\Dani\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files\dotnet\sdk\NuGetFallbackFolder\" />
   </ItemGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgMicrosoft_Web_WebView2 Condition=" '$(PkgMicrosoft_Web_WebView2)' == '' ">C:\Users\Dani\.nuget\packages\microsoft.web.webview2\1.0.1418.22</PkgMicrosoft_Web_WebView2>
+  </PropertyGroup>
 </Project>

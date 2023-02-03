@@ -333,6 +333,11 @@ namespace Chromatics.Core
                 }
             }
 
+            foreach (var mapping in MappingLayers.GetLayers())
+            {
+                mapping.Value.requestUpdate = true;
+            }
+
             _runningEffects.Clear();
             _layergroups.Clear();
             _layergroupledcollection.Clear();
