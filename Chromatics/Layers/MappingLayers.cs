@@ -34,7 +34,9 @@ namespace Chromatics.Layers
             _layers.GetOrAdd(id, layer);
             _version++;
 
-            Debug.WriteLine(@"New Layer: " + id + @". zindex: " + zindex + @". Type: " + rootLayerType + @". Device: " + devicetype + @". LayerType: " + layerTypeIndex);
+            #if DEBUG
+                Debug.WriteLine(@"New Layer: " + id + @". zindex: " + zindex + @". Type: " + rootLayerType + @". Device: " + devicetype + @". LayerType: " + layerTypeIndex);
+            #endif
 
             return id;
         }

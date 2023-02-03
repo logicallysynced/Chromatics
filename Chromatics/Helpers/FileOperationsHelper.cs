@@ -328,7 +328,10 @@ namespace Chromatics.Helpers
 
                     try
                     {
-                        Debug.WriteLine("Legacy file detected");
+                        #if DEBUG
+                            Debug.WriteLine("Legacy file detected");
+                        #endif
+
                         var result = new PaletteColorModel();
 
                         using (var sr = new StreamReader(open.FileName))
@@ -596,7 +599,10 @@ namespace Chromatics.Helpers
                 return path;
             }
 
-            Debug.WriteLine(@"An error occurred downloading the file " + csvPath + @" from URI: " + url);
+            #if DEBUG
+                Debug.WriteLine(@"An error occurred downloading the file " + csvPath + @" from URI: " + url);
+            #endif
+
             return string.Empty;
         }
 
@@ -662,7 +668,10 @@ namespace Chromatics.Helpers
                         
 
             // XIVAPI
-            Debug.WriteLine(@"Requesting data from XIVAPI and FFCafe...");
+            #if DEBUG
+                Debug.WriteLine(@"Requesting data from XIVAPI and FFCafe...");
+            #endif
+
             var terriTypes = new List<TerriType>();
             {
                 var page = 1;

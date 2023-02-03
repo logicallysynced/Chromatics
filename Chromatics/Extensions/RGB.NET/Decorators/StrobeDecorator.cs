@@ -108,12 +108,10 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         if (GetRandomBoolean(0.35))
                         {
                             startDelay = Timing + (fadeSpeed / 1000);
-                            //Debug.WriteLine($"Hit: {(fadeSpeed / 1000)}");
                         }
                         else
                         {
                             startDelay = Timing + (rng / 1000);
-                            //Debug.WriteLine($" Random: {rng / 1000}");
                         }
 
                     
@@ -200,7 +198,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 if (fadingInLeds.ContainsKey(led))
                 {
                     led.Color = fadingInLeds[led];
-                    Debug.WriteLine($"Fading {led.Id}: {fadingInLeds[led]}");
                 }
                 else if (fadingOutLeds.ContainsKey(led))
                 {

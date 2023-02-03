@@ -24,15 +24,15 @@ namespace Chromatics.Models
         public int screenCaptureTopRightOffsetY { get; set; } = 0;
         public int screenCaptureBottomRightOffsetX { get; set; } = 0;
         public int screenCaptureBottomRightOffsetY { get; set; } = 0;
-        public bool deviceLogitechEnabled { get; set; } = false;
-        public bool deviceCorsairEnabled { get; set; } = false;
-        public bool deviceCoolermasterEnabled { get; set; } = false;
+        public bool deviceLogitechEnabled { get; set; } = true;
+        public bool deviceCorsairEnabled { get; set; } = true;
+        public bool deviceCoolermasterEnabled { get; set; } = true;
         public bool deviceRazerEnabled { get; set; } = true;
-        public bool deviceAsusEnabled { get; set; } = false;
-        public bool deviceMsiEnabled { get; set; } = false;
-        public bool deviceSteelseriesEnabled { get; set; } = false;
-        public bool deviceWootingEnabled { get; set; } = false;
-        public bool deviceNovationEnabled { get; set; } = false;
+        public bool deviceAsusEnabled { get; set; } = true;
+        public bool deviceMsiEnabled { get; set; } = true;
+        public bool deviceSteelseriesEnabled { get; set; } = true;
+        public bool deviceWootingEnabled { get; set; } = true;
+        public bool deviceNovationEnabled { get; set; } = true;
 
 
     }

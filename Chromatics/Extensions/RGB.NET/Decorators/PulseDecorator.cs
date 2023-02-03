@@ -89,7 +89,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
             if (Timing >= stepDelay)
             {
-                Debug.WriteLine($"Current Step: {globalStep}");
 
                 if (globalStep == 0)
                 {
@@ -372,7 +371,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                             stepDelay = Timing + (interval / 1000);
                         }
 
-                        Debug.WriteLine(@"Reset!");
                     }
                 }
             }
@@ -381,7 +379,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             {
                 led.Key.Color = led.Value;
                 //Surface.Update(true);
-                Debug.WriteLine($"{led.Key.Id}: {led.Value} ({led.Key.IsDirty})");
             }
             
         }

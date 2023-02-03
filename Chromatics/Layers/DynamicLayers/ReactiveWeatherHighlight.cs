@@ -190,7 +190,10 @@ namespace Chromatics.Layers.DynamicLayers
 
             if (fieldInfo == null)
             {
-                Debug.WriteLine($"Unknown Weather Color Model: {fieldName}");
+                #if DEBUG
+                    Debug.WriteLine($"Unknown Weather Color Model: {fieldName}");
+                #endif
+
                 return ColorHelper.ColorToRGBColor(colorPalette.WeatherUnknownHighlight.Color);
             }
 

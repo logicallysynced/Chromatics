@@ -101,8 +101,6 @@ namespace Chromatics.Layers
                     currentExp = 0;
                 }
 
-                //Debug.WriteLine($"Current Level: {currentLvl}. Current Exp: {currentExp}/{maxExp}");
-
                 if (maxExp <= 0) return;
 
                 var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.ExpFull.Color);
@@ -147,9 +145,6 @@ namespace Chromatics.Layers
 
                     if (currentVal_Interpolate != model._interpolateValue || layer.requestUpdate)
                     {
-                                       
-                        //Debug.WriteLine($"Interpolate HP Tracker: {currentHp_Interpolate}/{countKeys}.");
-
                         //Process Lighting
                         var ledGroups = new List<PublicListLedGroup>();
                                         

@@ -43,7 +43,9 @@ namespace Chromatics.Forms
                 rtb_console.ScrollToCaret();
             }
 
-            Debug.WriteLine(e.Message);
+            #if DEBUG
+                Debug.WriteLine(e.Message);
+            #endif
         }
 
         private void rtb_console_TextChanged(object sender, EventArgs e)

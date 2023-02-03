@@ -66,7 +66,6 @@ namespace Chromatics.Layers
             {
                 if (led.Color != highlight_col)
                 {
-                    //Debug.WriteLine(@"1: Layer ID: " + layer.layerID + @". LED: " + led.Id + @". Col: " + led.Color);
                     led.Color = highlight_col;
                 }
 

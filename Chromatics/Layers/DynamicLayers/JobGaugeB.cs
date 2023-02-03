@@ -125,8 +125,6 @@ namespace Chromatics.Layers
                         //Interpolate implementation
                         var currentVal_Interpolate = LinearInterpolation.Interpolate(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, 0, countKeys + jobGauge.offset);
 
-                        //Debug.WriteLine($"Interpolate Value: {currentVal_Interpolate}/{countKeys}.");
-
                         //Process Lighting
                         var ledGroups = new List<PublicListLedGroup>();
                                         
