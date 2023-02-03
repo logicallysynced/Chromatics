@@ -29,6 +29,7 @@ namespace Chromatics.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fm_MainWindow));
             this.mT_TabManager = new MetroFramework.Controls.MetroTabControl();
             this.tP_console = new System.Windows.Forms.TabPage();
@@ -36,6 +37,8 @@ namespace Chromatics.Forms
             this.tP_palette = new System.Windows.Forms.TabPage();
             this.tP_Effects = new System.Windows.Forms.TabPage();
             this.tP_Settings = new System.Windows.Forms.TabPage();
+            this.notifyIcon_main = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip_main = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mT_TabManager.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,6 +99,19 @@ namespace Chromatics.Forms
             this.tP_Settings.TabIndex = 4;
             this.tP_Settings.Text = "Settings";
             // 
+            // notifyIcon_main
+            // 
+            this.notifyIcon_main.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon_main.Icon")));
+            this.notifyIcon_main.Text = "Chromatics";
+            this.notifyIcon_main.Visible = true;
+            this.notifyIcon_main.DoubleClick += new System.EventHandler(this.OnNotifyIconDoubleClick);
+            // 
+            // contextMenuStrip_main
+            // 
+            this.contextMenuStrip_main.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_main.Name = "contextMenuStrip_main";
+            this.contextMenuStrip_main.Size = new System.Drawing.Size(61, 4);
+            // 
             // Fm_MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -107,6 +123,7 @@ namespace Chromatics.Forms
             this.MaximizeBox = false;
             this.Name = "Fm_MainWindow";
             this.Text = "Chromatics";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.Load += new System.EventHandler(this.OnLoad);
             this.Resize += new System.EventHandler(this.OnResize);
             this.mT_TabManager.ResumeLayout(false);
@@ -122,5 +139,7 @@ namespace Chromatics.Forms
         private System.Windows.Forms.TabPage tP_palette;
         private System.Windows.Forms.TabPage tP_Effects;
         private System.Windows.Forms.TabPage tP_Settings;
+        private System.Windows.Forms.NotifyIcon notifyIcon_main;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_main;
     }
 }
