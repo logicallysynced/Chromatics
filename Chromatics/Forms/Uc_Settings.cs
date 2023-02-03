@@ -2,6 +2,7 @@
 using MetroFramework.Components;
 using MetroFramework.Controls;
 using Microsoft.VisualBasic.FileIO;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,7 @@ namespace Chromatics.Forms
     public partial class Uc_Settings : UserControl
     {
         private MetroToolTip tt_mappings;
+        private readonly RegistryKey _rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
         public Uc_Settings()
         {
@@ -30,12 +32,10 @@ namespace Chromatics.Forms
             //Add tooltips
             tt_mappings = new MetroToolTip();
 
-            tt_mappings.SetToolTip(this.chk_localcache, @"Use saved cache for FFXIV data instead of online source. Default: Disabled");
-            tt_mappings.SetToolTip(this.chk_winstart, @"Start Chromatics when Windows starts. Default: Disabled");
-            tt_mappings.SetToolTip(this.chk_desktopnotify, @"Show notifications on Windows desktop. Default: Disabled");
-            tt_mappings.SetToolTip(this.chk_minimizetray, @"Minimise to system tray. Default: Enabled");
-            tt_mappings.SetToolTip(this.chk_trayonstartup, @"Minimise to system tray when Chromatics starts. Default: Disabled");
-            tt_mappings.SetToolTip(this.chk_releasedevices, @"Release RGB devices when game closes. Default: Disabled");
+            tt_mappings.SetToolTip(this.chk_localcache, "Use saved cache for FFXIV data instead of online source. Default: Disabled");
+            tt_mappings.SetToolTip(this.chk_winstart, "Start Chromatics when Windows starts. Default: Disabled");
+            tt_mappings.SetToolTip(this.chk_minimizetray, "Minimise to system tray. Default: Enabled");
+            tt_mappings.SetToolTip(this.chk_trayonstartup, "Minimise to system tray when Chromatics starts. Default: Disabled");
             tt_mappings.SetToolTip(this.btn_resetchromatics, @"Restore Chromatics to its default state. Requires application restart.");
             tt_mappings.SetToolTip(this.btn_clearcache, @"Clear local FFXIV cache. Requires application restart.");
             tt_mappings.SetToolTip(this.trackbar_lighting, @"Adjust global brightness for all devices.");
@@ -45,10 +45,8 @@ namespace Chromatics.Forms
 
             chk_localcache.Checked = settings.localcache;
             chk_winstart.Checked = settings.winstart;
-            chk_desktopnotify.Checked = settings.desktopnotify;
             chk_minimizetray.Checked = settings.minimizetray;
             chk_trayonstartup.Checked = settings.trayonstartup;
-            chk_releasedevices.Checked = settings.releasedevices;
             trackbar_lighting.Value = settings.globalbrightness;
             lbl_devicebrightpercent.Text = $"{settings.globalbrightness}%";
         }
@@ -71,15 +69,6 @@ namespace Chromatics.Forms
             AppSettings.SaveSettings(settings);
         }
 
-        private void chk_desktopnotify_CheckedChanged(object sender, EventArgs e)
-        {
-            var checkbox = (CheckBox)sender;
-            var settings = AppSettings.GetSettings();
-            settings.desktopnotify = checkbox.Checked;
-
-            AppSettings.SaveSettings(settings);
-        }
-
         private void chk_minimizetray_CheckedChanged(object sender, EventArgs e)
         {
             var checkbox = (CheckBox)sender;
@@ -95,14 +84,14 @@ namespace Chromatics.Forms
             var settings = AppSettings.GetSettings();
             settings.trayonstartup = checkbox.Checked;
 
-            AppSettings.SaveSettings(settings);
-        }
-
-        private void chk_releasedevices_CheckedChanged(object sender, EventArgs e)
-        {
-            var checkbox = (CheckBox)sender;
-            var settings = AppSettings.GetSettings();
-            settings.releasedevices = checkbox.Checked;
+            if (settings.trayonstartup)
+            {
+                _rkApp.SetValue("Chromatics3", Application.ExecutablePath);
+            }
+            else
+            {
+                _rkApp.DeleteValue("Chromatics3", false);
+            }
 
             AppSettings.SaveSettings(settings);
         }
@@ -160,29 +149,49 @@ namespace Chromatics.Forms
             {
                 string enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
 
-                if (File.Exists(enviroment + @"/signatures-x64.json"))
+                if (File.Exists(enviroment + @"/signatures-global-latest.json"))
                 {
-                    FileSystem.DeleteFile(enviroment + @"/signatures-x64.json");
+                    FileSystem.DeleteFile(enviroment + @"/signatures-global-latest.json");
                 }
 
-                if (File.Exists(enviroment + @"/structures-x64.json"))
+                if (File.Exists(enviroment + @"/structures-global-latest.json"))
                 {
-                    FileSystem.DeleteFile(enviroment + @"/structures-x64.json");
+                    FileSystem.DeleteFile(enviroment + @"/structures-global-latest.json");
                 }
 
-                if (File.Exists(enviroment + @"/actions.json"))
+                if (File.Exists(enviroment + @"/actions-latest.json"))
                 {
-                    FileSystem.DeleteFile(enviroment + @"/actions.json");
+                    FileSystem.DeleteFile(enviroment + @"/actions-latest.json");
                 }
 
-                if (File.Exists(enviroment + @"/statuses.json"))
+                if (File.Exists(enviroment + @"/statuses-latest.json"))
                 {
-                    FileSystem.DeleteFile(enviroment + @"/statuses.json");
+                    FileSystem.DeleteFile(enviroment + @"/statuses-latest.json");
                 }
 
-                if (File.Exists(enviroment + @"/zones.json"))
+                if (File.Exists(enviroment + @"/zones-latest.json"))
                 {
-                    FileSystem.DeleteFile(enviroment + @"/zones.json");
+                    FileSystem.DeleteFile(enviroment + @"/zones-latest.json");
+                }
+
+                if (File.Exists(enviroment + @"/terriTypes.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/terriTypes.json");
+                }
+
+                if (File.Exists(enviroment + @"/weatherKinds.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/weatherKinds.json");
+                }
+
+                if (File.Exists(enviroment + @"/weatherRateIndices.json"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/weatherRateIndices.json");
+                }
+
+                if (File.Exists(enviroment + @"/ParamGrow.csv"))
+                {
+                    FileSystem.DeleteFile(enviroment + @"/ParamGrow.csv");
                 }
 
                 MessageBox.Show(@"Cache Cleared. Chromatics will now close.", @"Cache Cleared", MessageBoxButtons.OK);

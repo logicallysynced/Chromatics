@@ -38,10 +38,8 @@
             this.gb_general = new System.Windows.Forms.GroupBox();
             this.btn_clearcache = new MetroFramework.Controls.MetroButton();
             this.btn_resetchromatics = new MetroFramework.Controls.MetroButton();
-            this.chk_releasedevices = new System.Windows.Forms.CheckBox();
             this.chk_trayonstartup = new System.Windows.Forms.CheckBox();
             this.chk_minimizetray = new System.Windows.Forms.CheckBox();
-            this.chk_desktopnotify = new System.Windows.Forms.CheckBox();
             this.chk_winstart = new System.Windows.Forms.CheckBox();
             this.chk_localcache = new System.Windows.Forms.CheckBox();
             this.tlp_main.SuspendLayout();
@@ -150,10 +148,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gb_general.Controls.Add(this.btn_clearcache);
             this.gb_general.Controls.Add(this.btn_resetchromatics);
-            this.gb_general.Controls.Add(this.chk_releasedevices);
             this.gb_general.Controls.Add(this.chk_trayonstartup);
             this.gb_general.Controls.Add(this.chk_minimizetray);
-            this.gb_general.Controls.Add(this.chk_desktopnotify);
             this.gb_general.Controls.Add(this.chk_winstart);
             this.gb_general.Controls.Add(this.chk_localcache);
             this.gb_general.Location = new System.Drawing.Point(3, 3);
@@ -183,21 +179,10 @@
             this.btn_resetchromatics.UseSelectable = true;
             this.btn_resetchromatics.Click += new System.EventHandler(this.btn_resetchromatics_Click);
             // 
-            // chk_releasedevices
-            // 
-            this.chk_releasedevices.AutoSize = true;
-            this.chk_releasedevices.Location = new System.Drawing.Point(24, 194);
-            this.chk_releasedevices.Name = "chk_releasedevices";
-            this.chk_releasedevices.Size = new System.Drawing.Size(241, 24);
-            this.chk_releasedevices.TabIndex = 5;
-            this.chk_releasedevices.Text = "Release Devices on Game Close";
-            this.chk_releasedevices.UseVisualStyleBackColor = true;
-            this.chk_releasedevices.CheckedChanged += new System.EventHandler(this.chk_releasedevices_CheckedChanged);
-            // 
             // chk_trayonstartup
             // 
             this.chk_trayonstartup.AutoSize = true;
-            this.chk_trayonstartup.Location = new System.Drawing.Point(24, 164);
+            this.chk_trayonstartup.Location = new System.Drawing.Point(24, 134);
             this.chk_trayonstartup.Name = "chk_trayonstartup";
             this.chk_trayonstartup.Size = new System.Drawing.Size(213, 24);
             this.chk_trayonstartup.TabIndex = 4;
@@ -208,24 +193,13 @@
             // chk_minimizetray
             // 
             this.chk_minimizetray.AutoSize = true;
-            this.chk_minimizetray.Location = new System.Drawing.Point(24, 134);
+            this.chk_minimizetray.Location = new System.Drawing.Point(24, 104);
             this.chk_minimizetray.Name = "chk_minimizetray";
             this.chk_minimizetray.Size = new System.Drawing.Size(140, 24);
             this.chk_minimizetray.TabIndex = 3;
             this.chk_minimizetray.Text = "Minimise to Tray";
             this.chk_minimizetray.UseVisualStyleBackColor = true;
             this.chk_minimizetray.CheckedChanged += new System.EventHandler(this.chk_minimizetray_CheckedChanged);
-            // 
-            // chk_desktopnotify
-            // 
-            this.chk_desktopnotify.AutoSize = true;
-            this.chk_desktopnotify.Location = new System.Drawing.Point(24, 104);
-            this.chk_desktopnotify.Name = "chk_desktopnotify";
-            this.chk_desktopnotify.Size = new System.Drawing.Size(215, 24);
-            this.chk_desktopnotify.TabIndex = 2;
-            this.chk_desktopnotify.Text = "Show Desktop Notifications";
-            this.chk_desktopnotify.UseVisualStyleBackColor = true;
-            this.chk_desktopnotify.CheckedChanged += new System.EventHandler(this.chk_desktopnotify_CheckedChanged);
             // 
             // chk_winstart
             // 
@@ -273,10 +247,8 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.GroupBox gb_other;
         private System.Windows.Forms.GroupBox gb_general;
-        private System.Windows.Forms.CheckBox chk_releasedevices;
         private System.Windows.Forms.CheckBox chk_trayonstartup;
         private System.Windows.Forms.CheckBox chk_minimizetray;
-        private System.Windows.Forms.CheckBox chk_desktopnotify;
         private System.Windows.Forms.CheckBox chk_winstart;
         private System.Windows.Forms.CheckBox chk_localcache;
         private MetroFramework.Controls.MetroButton btn_clearcache;

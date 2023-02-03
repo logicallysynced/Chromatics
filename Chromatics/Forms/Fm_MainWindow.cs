@@ -17,13 +17,16 @@ using System.Windows.Forms;
 using AutoUpdaterDotNET;
 using static Chromatics.Models.VirtualDevice;
 using System.Reflection;
+using System.Windows;
+using Chromatics.Models;
 
 namespace Chromatics.Forms
 {
     public partial class Fm_MainWindow : MetroForm
     {
         private MetroStyleManager metroStyleManager;
-        //private Thread _ChromaticsThread;
+        private Form mainForm;
+        private SettingsModel appSettings;
 
         public Fm_MainWindow()
         {
@@ -41,12 +44,14 @@ namespace Chromatics.Forms
 
             this.Theme = metroStyleManager.Theme;
             this.Style = metroStyleManager.Style;
-            this.Size = new Size(1400, 885);
+            this.Size = new System.Drawing.Size(1400, 885);
 
+            mainForm = this;
             
             //Load Settings
             AppSettings.Startup();
-
+            appSettings = AppSettings.GetSettings();
+            
 
             //Initiate Tabs
             var uC_Console = new Uc_Console
@@ -85,9 +90,20 @@ namespace Chromatics.Forms
             this.ResizeBegin += (s, e) => { this.SuspendLayout(); };
             this.ResizeEnd += (s, e) => { this.ResumeLayout(true); };
 
+            contextMenuStrip_main.Items.Add(new ToolStripMenuItem(@"Show Window", null, new EventHandler(OnNotifyIconDoubleClick)));
+            contextMenuStrip_main.Items.Add(new ToolStripMenuItem(@"Close", null, new EventHandler(OnNotifyClickClose)));
+            notifyIcon_main.ContextMenuStrip = contextMenuStrip_main;
+
+            if (appSettings.trayonstartup)
+            {
+                Hide();
+                this.WindowState = FormWindowState.Minimized;
+                this.Visible = false;
+                this.ShowInTaskbar = false;
+            }
+
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
 
-            
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -137,11 +153,58 @@ namespace Chromatics.Forms
             GameController.Setup();
         }
 
+        protected void Dispose(bool disposing, bool isMainWindow)
+        { 
+            if( disposing ) 
+            {
+                this.notifyIcon_main.Dispose();
+                this.contextMenuStrip_main.Dispose();
+            }
+
+            base.Dispose( disposing );
+        }
+
         private void OnResize(object sender, EventArgs e)
         {
             //Not implemented
         }
 
-        
+        private void OnNotifyIconDoubleClick(object sender, EventArgs e)
+        {
+            if (!mainForm.Visible)
+            {
+                mainForm.Show();
+                this.WindowState = FormWindowState.Normal;
+                this.Visible = true;
+                this.ShowInTaskbar = true;
+            }
+            else
+            {
+                if (appSettings.minimizetray)
+                {
+                    mainForm.Hide();
+                    this.WindowState = FormWindowState.Minimized;
+                    this.Visible = false;
+                    this.ShowInTaskbar = false;
+                }
+            }
+        }
+
+        private void OnNotifyClickClose(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Application.Exit();
+        }
+
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing && this.WindowState == FormWindowState.Normal && appSettings.minimizetray)
+            {
+                e.Cancel = true;
+                this.Hide();
+                this.WindowState = FormWindowState.Minimized;
+                this.Visible = false;
+                this.ShowInTaskbar = false;
+            }
+        }
     }
 }

@@ -75,6 +75,16 @@ namespace Chromatics.Layers.DynamicLayers
                 layergroup.Detach();
             }
 
+            if (layer.requestUpdate)
+            {
+                foreach (var led in layergroup)
+                {
+                    layergroup.RemoveLed(led);
+                }
+
+                layergroup.AddLeds(ledArray);
+            }
+
             if (!layer.Enabled)
             {
                 layergroup.Detach();
