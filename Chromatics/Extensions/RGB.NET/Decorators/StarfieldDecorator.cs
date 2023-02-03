@@ -81,6 +81,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         {
             try
             {
+                if (ledGroup == null || fadingInLeds == null || fadingOutLeds == null) return;
+
                 // increment the Timing variable
                 Timing += deltaTime;
 
@@ -89,6 +91,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                 if (Timing >= startDelay)
                 {
+
                     var availableLeds = ledGroup.PublicGroupLeds.Except(fadingInLeds.Keys).Except(fadingOutLeds.Keys);
                     var selectedLeds = availableLeds.OrderBy(x => Guid.NewGuid()).Take(numberOfLeds);
 
@@ -96,7 +99,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     {
                     
                         fadingInLeds.TryAdd(led, baseColor);
-
+                        
                         var colorIndex = random.Next(colors.Length);
 
                         if (!currentColors.ContainsKey(led))
@@ -142,12 +145,10 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         else
                         {
                             // if not, choose a random color from the passed in color array
-                    
-                    
+                                        
                             var lerpAmount = Map(currentBrightness[led.Key], minBrightness, maxBrightness, 0, 1);
                             var color = Lerp(baseColor, currentColors[led.Key], lerpAmount);
                             fadingInLeds[led.Key] = color;
-
                         }
                     }
                 }
@@ -190,12 +191,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                 foreach (var led in ledGroup.PublicGroupLeds)
                 {
-                    if (fadingInLeds.ContainsKey(led))
+                    if (fadingInLeds != null && fadingInLeds.ContainsKey(led))
                     {
                         led.Color = fadingInLeds[led];
-                        //Debug.WriteLine($"Apply LED {led.Id} to {led.Color}");
                     }
-                    else if (fadingOutLeds.ContainsKey(led))
+                    else if (fadingOutLeds != null && fadingOutLeds.ContainsKey(led))
                     {
                         led.Color = fadingOutLeds[led];
                     } 
@@ -208,7 +208,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             }
             catch (Exception ex)
             {
-                //
+                Debug.WriteLine($"Exception: {ex.Message}");
             }
         }
 

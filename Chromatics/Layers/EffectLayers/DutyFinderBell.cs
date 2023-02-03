@@ -120,7 +120,6 @@ namespace Chromatics.Layers
                         {
                             model.activeBrush.RemoveAllDecorators();
                             model.wasPopped = false;
-
                         }
                     }
 
@@ -138,7 +137,11 @@ namespace Chromatics.Layers
                 model.activeBrush = null;
             }
 
-            layergroup.Attach(surface);
+            if (layergroup.Decorators.Count == 0)
+            {
+                layergroup.Attach(surface);
+            }
+            
             
             model.init = true;
             layer.requestUpdate = false;

@@ -149,11 +149,12 @@ namespace Chromatics.Extensions
             return bmp;
         }
 
-        private async void ColorGeneratedEventHandler(object sender, EventArgs e)
+        private void ColorGeneratedEventHandler(object sender, EventArgs e)
         {
             // We expecting a ScreenColorEvent here
             ColorEvent colorEvent = (ColorEvent)e;
             _screenTracker = colorEvent.screenColor;
+
         }
 
 
