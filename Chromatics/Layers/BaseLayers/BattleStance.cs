@@ -77,7 +77,6 @@ namespace Chromatics.Layers
                     if (getCurrentPlayer.Entity == null) return;
 
                     var inCombat = getCurrentPlayer.Entity.InCombat;
-                    Debug.WriteLine($"In Combat: {inCombat}");
 
                     if (!inCombat)
                     {

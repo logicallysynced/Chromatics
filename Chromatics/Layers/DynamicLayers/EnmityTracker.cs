@@ -110,7 +110,6 @@ namespace Chromatics.Layers
                     model._localgroups.Clear();
                     model._targetReset = true;
                     model._targetId = targetId;
-                    //Debug.WriteLine(@"Target Reset");
                 }
 
 
@@ -126,7 +125,6 @@ namespace Chromatics.Layers
                     ledGroup.Detach();
                     model._localgroups.Add(ledGroup);
 
-                    //Debug.WriteLine($"Target ID: 0");
                 }
                 else
                 {
@@ -136,8 +134,6 @@ namespace Chromatics.Layers
                         var enmityProfile = enmityList.FirstOrDefault(item => item.ID == targetId);
 
                         if (enmityProfile == null) return;
-
-                        //Debug.WriteLine($"Target ID: {targetId}//{enmityProfile.ID}. Enmity: {enmityProfile.Enmity}. Count: {enmityList.Count}");
 
                         var enmityPosition = enmityProfile.Enmity;
                         

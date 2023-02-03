@@ -208,7 +208,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Exception: {ex.Message}");
+                #if DEBUG
+                    Debug.WriteLine($"Exception: {ex.Message}");
+                #endif
             }
         }
 

@@ -125,7 +125,6 @@ namespace Chromatics.Layers
                         layergroup.Brush = highlight_brush;
                         model.activeBrush = highlight_brush;
 
-                        //Debug.WriteLine($"{layer.deviceType} Damage hit for delta: {damageDelta}. Zindex: {layer.zindex}");
                     }
 
                     model.currentHp = getCurrentPlayer.Entity.HPCurrent;

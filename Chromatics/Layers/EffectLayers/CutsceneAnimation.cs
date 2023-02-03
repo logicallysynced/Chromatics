@@ -116,7 +116,6 @@ namespace Chromatics.Layers
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 if (getCurrentPlayer.Entity == null) return;
 
-                //Debug.WriteLine($"InCutscene: {getCurrentPlayer.Entity.InCutscene}");
 
                 if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model.wasDisabled || layer.requestUpdate)
                 {

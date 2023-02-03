@@ -120,14 +120,11 @@ namespace Chromatics.Layers
 
                     ledGroup.Detach();
                     model._localgroups.Add(ledGroup);
-
-                    //Debug.WriteLine($"Target ID: 0");
                 }
                 else
                 {
                     if (getTargetInfo.TargetInfo.CurrentTarget != null)
                     {
-                        //Debug.WriteLine($"Target ID: {targetId}");
 
                         var currentVal = getTargetInfo.TargetInfo.CurrentTarget.HPCurrent;
                         var minVal = 0;
@@ -149,7 +146,6 @@ namespace Chromatics.Layers
                             model.full_brush.Color = idle_col;
                         }
 
-                        //Debug.WriteLine($"Target ID: {targetId}. IsClaimed: {getTargetInfo.TargetInfo.CurrentTarget.IsClaimed}. InCombat: {getTargetInfo.TargetInfo.CurrentTarget.InCombat}. IsAggressive: {getTargetInfo.TargetInfo.CurrentTarget.IsAggressive}");
 
                         //Check if layer mode has changed
                         if (model._currentMode != layer.layerModes)
@@ -174,8 +170,6 @@ namespace Chromatics.Layers
 
                             if (currentVal_Interpolate != model._interpolateValue || model._targetReset)
                             {
-                                       
-                                //Debug.WriteLine($"Interpolate Target HP Tracker: {currentVal_Interpolate}/{countKeys}.");
 
                                 //Process Lighting
                                 var ledGroups = new List<PublicListLedGroup>();

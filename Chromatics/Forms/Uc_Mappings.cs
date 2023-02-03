@@ -381,7 +381,9 @@ namespace Chromatics.Forms
             tlp_frame.SuspendLayout();
             flp_layers.SuspendLayout();
 
-            Debug.WriteLine($"Changing device type to {selectedDevice}.");
+            #if DEBUG
+                Debug.WriteLine($"Changing device type to {selectedDevice}.");
+            #endif
 
             // Disable Editing and remove layers for existing device types
             btn_clearselection.Enabled = false;
@@ -734,7 +736,9 @@ namespace Chromatics.Forms
                 ms.requestUpdate = true;
                 MappingLayers.UpdateLayer(ms);
 
-                Debug.WriteLine($"Saved {ms.deviceLeds.Count} leds for layer {ms.layerID}");
+                #if DEBUG
+                    Debug.WriteLine($"Saved {ms.deviceLeds.Count} leds for layer {ms.layerID}");
+                #endif
 
                 SaveLayers();
                 RevertButtons();
@@ -806,7 +810,9 @@ namespace Chromatics.Forms
                     _selection.Add(led.Key, led.Value);
                 }
 
-                Debug.WriteLine($"Loaded {_selection.Count} leds for layer {ml.layerID}");
+                #if DEBUG
+                    Debug.WriteLine($"Loaded {_selection.Count} leds for layer {ml.layerID}");
+                #endif
 
                 if (_selection.Count > 0 && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
                 {
@@ -1069,18 +1075,9 @@ namespace Chromatics.Forms
                                 i++;
                             }
                         }
-
-                        foreach (var led in _selection)
-                        {
-                            Debug.WriteLine($"Order 1: {led.Value}");
-                        }
-                        
+                                                
                         currentKeySelection = _selection;
 
-                        foreach (var led in currentKeySelection)
-                        {
-                            Debug.WriteLine($"Order 2: {led.Value}");
-                        }
                     }
                 }
                 else
@@ -1124,7 +1121,9 @@ namespace Chromatics.Forms
                     layer.Invalidate();
                 }
 
-                Debug.WriteLine(@"NEW Layer: " + layer.ID + @". Layer ID: " + _layer.layerID + @". zindex: " + _layer.zindex + @". Type: " + _layer.rootLayerType);
+                #if DEBUG
+                    Debug.WriteLine(@"NEW Layer: " + layer.ID + @". Layer ID: " + _layer.layerID + @". zindex: " + _layer.zindex + @". Type: " + _layer.rootLayerType);
+                #endif
             }
 
             SaveLayers();
@@ -1225,7 +1224,10 @@ namespace Chromatics.Forms
             currentlyEditing = null;
             parent.Update();
 
-            Debug.WriteLine($"Clearing Layer {parent.ID}");
+            #if DEBUG
+                Debug.WriteLine($"Clearing Layer {parent.ID}");
+            #endif
+
             var thisbtn = (MetroButton)sender;
             this.ActiveControl = thisbtn.Parent;
         }
@@ -1272,7 +1274,10 @@ namespace Chromatics.Forms
 
             }
 
-            Debug.WriteLine($"Reversing Layer {currentlyEditing.ID}");
+            #if DEBUG
+                Debug.WriteLine($"Reversing Layer {currentlyEditing.ID}");
+            #endif
+
             var thisbtn = (MetroButton)sender;
             this.ActiveControl = thisbtn.Parent;
         }
@@ -1299,7 +1304,9 @@ namespace Chromatics.Forms
                     _selection.Add(led.Key, led.Value);
                 }
 
-                Debug.WriteLine($"Reloaded {_selection.Count} leds for layer {ml.layerID}");
+                #if DEBUG
+                    Debug.WriteLine($"Reloaded {_selection.Count} leds for layer {ml.layerID}");
+                #endif
 
                 if (_selection.Count > 0 && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
                 {
@@ -1416,9 +1423,10 @@ namespace Chromatics.Forms
 
                 SaveLayers();
 
+                #if DEBUG
+                    Debug.WriteLine($"Toggle bleeding on Layer {parent.ID}: {ms.allowBleed}");
+                #endif
 
-                Debug.WriteLine($"Toggle bleeding on Layer {parent.ID}: {ms.allowBleed}");
-                
                 this.ActiveControl = thisbtn.Parent;
             }
         }

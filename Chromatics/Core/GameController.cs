@@ -121,7 +121,10 @@ namespace Chromatics.Core
 
             if (_memoryHandler != null)
             {
-                Debug.WriteLine(@"Disposed Memory Handler object.");
+                #if DEBUG
+                    Debug.WriteLine(@"Disposed Memory Handler object.");
+                #endif
+
                 _memoryHandler.Dispose();
             }
 
@@ -168,7 +171,6 @@ namespace Chromatics.Core
                     if (currentCpuUsage > _maxCpuUsage)
                     {
                         delay += (int)(currentCpuUsage - _maxCpuUsage) * 10;
-                        Debug.WriteLine(@"Delay: " + delay);
                     }
                 }
                 
@@ -229,7 +231,10 @@ namespace Chromatics.Core
                 }
             
                 _connectionAttempts++;
-                Debug.WriteLine(@"Attempting to attach to FFXIV. Attempt: " + _connectionAttempts);
+
+                #if DEBUG
+                    Debug.WriteLine(@"Attempting to attach to FFXIV. Attempt: " + _connectionAttempts);
+                #endif
 
                 var processes = Process.GetProcessesByName("ffxiv_dx11");
                 if (processes.Length > 0)
@@ -253,8 +258,9 @@ namespace Chromatics.Core
                         UseLocalCache = AppSettings.GetSettings().localcache
                     };             
 
-                    Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
-
+                    #if DEBUG
+                        Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
+                    #endif
                     _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
                     
                     //Load Other Memory Zones
@@ -286,7 +292,9 @@ namespace Chromatics.Core
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(@"Exception: " + ex.Message);
+                #if DEBUG
+                    Debug.WriteLine(@"Exception: " + ex.Message);
+                #endif
 
                 if (ex.Message == "Access is denied.")
                 {
@@ -353,7 +361,11 @@ namespace Chromatics.Core
                                                         
 
                             }
-                            Debug.WriteLine(@"User on title or character screen");
+
+                            #if DEBUG
+                                Debug.WriteLine(@"User on title or character screen");
+                            #endif
+
                             _onTitle = true;
                             wasPreviewed = false;
                         }
@@ -368,7 +380,10 @@ namespace Chromatics.Core
 
                         if (_onTitle)
                         {
-                            Debug.WriteLine(@"User logging in to FFXIV..");
+                            #if DEBUG
+                                Debug.WriteLine(@"User logging in to FFXIV..");
+                            #endif
+
                             RGBController.StopEffects();
                             RGBController.ResetLayerGroups();
                             _onTitle = false;
@@ -427,7 +442,9 @@ namespace Chromatics.Core
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Exception: {ex.Message}");
+                #if DEBUG
+                    Debug.WriteLine($"Exception: {ex.Message}");
+                #endif
             }
             
             

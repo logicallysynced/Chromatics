@@ -139,7 +139,7 @@ namespace Chromatics.Forms
 
         private void OnResize(object sender, EventArgs e)
         {
-            //Debug.WriteLine($"Form Resize: W: {this.Width} / H: {this.Height}");
+            //Not implemented
         }
 
         

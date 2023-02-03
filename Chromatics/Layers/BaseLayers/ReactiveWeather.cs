@@ -95,7 +95,6 @@ namespace Chromatics.Layers
             {
                 if (!reactiveWeatherEffects)
                 {
-                    Debug.WriteLine(@"Reactive Weather Disabled");
                     StopEffects(layergroup, model._gradientEffects);
                 }
             }
@@ -131,7 +130,9 @@ namespace Chromatics.Layers
                             //layergroup.Brush = weather_brush;
                             effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects);
 
-                            Debug.WriteLine($"{layer.deviceType} Zone Lookup: {currentZone}. Weather: {currentWeather}");
+                            #if DEBUG
+                                Debug.WriteLine($"{layer.deviceType} Zone Lookup: {currentZone}. Weather: {currentWeather}");
+                            #endif
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
@@ -542,7 +543,10 @@ namespace Chromatics.Layers
 
             if (fieldInfo == null)
             {
-                Debug.WriteLine($"Unknown Weather Color Model: {fieldName}");
+                #if DEBUG
+                    Debug.WriteLine($"Unknown Weather Color Model: {fieldName}");
+                #endif
+
                 return ColorHelper.ColorToRGBColor(colorPalette.WeatherUnknownBase.Color);
             }
 

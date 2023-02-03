@@ -263,7 +263,10 @@ namespace Chromatics.Core
             }
 
             _runningEffects.Clear();
-            Debug.WriteLine($"Stopping all effects");
+
+            #if DEBUG
+                Debug.WriteLine($"Stopping all effects");
+            #endif
 
         }
 
@@ -317,8 +320,9 @@ namespace Chromatics.Core
                 
                 _layergroups.Remove(targetId);
                                
-
-                Debug.WriteLine(@"Remove Layer Requested: " + targetId);
+                #if DEBUG
+                    Debug.WriteLine(@"Remove Layer Requested: " + targetId);
+                #endif
             }
         }
 
@@ -342,7 +346,9 @@ namespace Chromatics.Core
             _layergroups.Clear();
             _layergroupledcollection.Clear();
 
-            Debug.WriteLine(@"Reset Layer Groups");
+            #if DEBUG
+                Debug.WriteLine(@"Reset Layer Groups");
+            #endif
         }
 
         public static bool WasPreviewed()
@@ -451,7 +457,6 @@ namespace Chromatics.Core
 
                         layergroup.Brush = brush;
                         layergroup.Attach(surface);
-                        //Debug.WriteLine($"2: Layer {mapping.layerID} ({mapping.layerTypeindex}) at zindex {mapping.zindex} to {highlight_col}");
                     }
                 }
             }
