@@ -73,7 +73,6 @@ namespace Chromatics.Layers
                 var lg = new PublicListLedGroup[] { layergroup };
                 _layergroups.Add(layer.layerID, lg);
                 layergroup.Detach();
-                Debug.WriteLine($"Detach");
             }
 
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.DamageFlashAnimation.Color);
@@ -143,8 +142,11 @@ namespace Chromatics.Layers
                 model.activeBrush = null;
             }
 
-            layergroup.Attach(surface);
-            
+            if (layergroup.Decorators.Count == 0)
+            {
+                layergroup.Attach(surface);
+            }
+                        
             model.init = true;
             layer.requestUpdate = false;
         }

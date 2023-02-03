@@ -81,26 +81,31 @@ namespace Chromatics.Layers
                 if (runningEffects.Contains(layergroup))
                     runningEffects.Remove(layergroup);
 
-                if (!layer.Enabled)
-                {
-                    layergroup.Brush = new SolidColorBrush(Color.Transparent);
-                    //layergroup.Detach();
-                }
+                layergroup.Brush = new SolidColorBrush(Color.Transparent);
+                layergroup.Detach();
 
                 model._inCutscene = false;
                 model.wasDisabled = true;
                 return;
             }
 
-            var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.MenuBase.Color);
+            var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.CutsceneBase.Color);
             var highlightColors = new Color[] {
-                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight1.Color),
-                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight2.Color),
-                ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight3.Color)
+                ColorHelper.ColorToRGBColor(_colorPalette.CutsceneHighlight1.Color),
+                ColorHelper.ColorToRGBColor(_colorPalette.CutsceneHighlight2.Color),
+                ColorHelper.ColorToRGBColor(_colorPalette.CutsceneHighlight3.Color)
             };
 
-            var animation = new StarfieldDecorator(layergroup, (layergroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false);
+            var animationGradient = new LinearGradient(new GradientStop((float)0, baseColor), 
+                new GradientStop((float)0.20, highlightColors[0]), 
+                new GradientStop((float)0.35, baseColor),
+                new GradientStop((float)0.50, highlightColors[1]),
+                new GradientStop((float)0.65, baseColor),
+                new GradientStop((float)0.80, highlightColors[2]),
+                new GradientStop((float)1.00, baseColor));
 
+            var gradientMove = new MoveGradientDecorator(surface, 80, true);
+            var animation = new StarfieldDecorator(layergroup, (layergroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
 
             //Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
@@ -117,14 +122,17 @@ namespace Chromatics.Layers
                     if (getCurrentPlayer.Entity.InCutscene)
                     {
                         if (runningEffects.Contains(layergroup))
-                                runningEffects.Remove(layergroup);
+                        {
+                            runningEffects.Remove(layergroup);
+                        }
 
+                        layergroup.RemoveAllDecorators();
+                        animationGradient.WrapGradient = true;
+                        animationGradient.AddDecorator(gradientMove);
+                                                
+                        layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), animationGradient)); //new SolidColorBrush(baseColor);
 
-                        //layergroup.RemoveAllDecorators();
-
-                        layergroup.Brush = new SolidColorBrush(baseColor);
-                        layergroup.AddDecorator(animation);                    
-                        
+                        //layergroup.AddDecorator(animation);
 
                         runningEffects.Add(layergroup);
 
@@ -133,7 +141,7 @@ namespace Chromatics.Layers
                     }
                     else
                     {
-                        if (!model.wasDisabled)
+                        if (!model.wasDisabled && layergroup != null)
                         {
                             if (layer.deviceType == RGBDeviceType.Keyboard)
                                 Debug.WriteLine($"Stop Effect");
@@ -150,18 +158,11 @@ namespace Chromatics.Layers
 
                     model._inCutscene = getCurrentPlayer.Entity.InCutscene;
                 }
-
                 
-
                 model.wasDisabled = false;
                 
             }
 
-            if (layergroup.Decorators.Count == 0)
-            {
-                layergroup.Attach(surface);
-            }
-            
             model.init = true;
             layer.requestUpdate = false;
         }
