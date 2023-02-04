@@ -481,8 +481,8 @@ namespace Chromatics.Models
         public ColorMapping JobMNKHighlight = new("MNK (Highlight)", PaletteTypes.JobClasses, Color.Brown);
         public ColorMapping JobWARBase = new("WAR (Base)", PaletteTypes.JobClasses, Color.Blue);
         public ColorMapping JobWARHighlight = new("WAR (Highlight)", PaletteTypes.JobClasses, Color.White);
-        public ColorMapping JobDRGBase = new("DRG (Base)", PaletteTypes.JobClasses, Color.Maroon);
-        public ColorMapping JobDRGHighlight = new("DRG (Highlight)", PaletteTypes.JobClasses, Color.Red);
+        public ColorMapping JobDRGBase = new("DRG (Base)", PaletteTypes.JobClasses, Color.DarkBlue);
+        public ColorMapping JobDRGHighlight = new("DRG (Highlight)", PaletteTypes.JobClasses, Color.LightSkyBlue);
         public ColorMapping JobBRDBase = new("BRD (Base)", PaletteTypes.JobClasses, Color.Orange);
         public ColorMapping JobBRDHighlight = new("BRD (Highlight)", PaletteTypes.JobClasses, Color.Lime);
         public ColorMapping JobWHMBase = new("WHM (Base)", PaletteTypes.JobClasses, Color.DeepSkyBlue);
@@ -497,8 +497,8 @@ namespace Chromatics.Models
         public ColorMapping JobNINHighlight = new("NIN (Highlight)", PaletteTypes.JobClasses, Color.RosyBrown);
         public ColorMapping JobMCHBase = new("MCH (Base)", PaletteTypes.JobClasses, Color.SaddleBrown);
         public ColorMapping JobMCHHighlight = new("MCH (Highlight)", PaletteTypes.JobClasses, Color.SandyBrown);
-        public ColorMapping JobDRKBase = new("DRK (Base)", PaletteTypes.JobClasses, Color.Blue);
-        public ColorMapping JobDRKHighlight = new("DRK (Highlight)", PaletteTypes.JobClasses, Color.Red);
+        public ColorMapping JobDRKBase = new("DRK (Base)", PaletteTypes.JobClasses, Color.DarkRed);
+        public ColorMapping JobDRKHighlight = new("DRK (Highlight)", PaletteTypes.JobClasses, Color.DarkOrange);
         public ColorMapping JobASTBase = new("AST (Base)", PaletteTypes.JobClasses, Color.White);
         public ColorMapping JobASTHighlight = new("AST (Highlight)", PaletteTypes.JobClasses, Color.MediumSpringGreen);
         public ColorMapping JobSAMBase = new("SAM (Base)", PaletteTypes.JobClasses, Color.DarkOrange);
@@ -509,8 +509,8 @@ namespace Chromatics.Models
         public ColorMapping JobDNCHighlight = new("DNC (Highlight)", PaletteTypes.JobClasses, Color.CornflowerBlue);
         public ColorMapping JobGNBBase = new("GNB (Base)", PaletteTypes.JobClasses, Color.DarkMagenta);
         public ColorMapping JobGNBHighlight = new("GNB (Highlight)", PaletteTypes.JobClasses, Color.Blue);
-        public ColorMapping JobRPRBase = new("RPR (Base)", PaletteTypes.JobClasses, Color.DarkRed);
-        public ColorMapping JobRPRHighlight = new("RPR (Highlight)", PaletteTypes.JobClasses, Color.Red);
+        public ColorMapping JobRPRBase = new("RPR (Base)", PaletteTypes.JobClasses, Color.PaleVioletRed);
+        public ColorMapping JobRPRHighlight = new("RPR (Highlight)", PaletteTypes.JobClasses, Color.DeepSkyBlue);
         public ColorMapping JobSGEBase = new("SGE (Base)", PaletteTypes.JobClasses, Color.LimeGreen);
         public ColorMapping JobSGEHighlight = new("SGE (Highlight)", PaletteTypes.JobClasses, Color.DodgerBlue);
         public ColorMapping JobBLUBase = new("BLU (Base)", PaletteTypes.JobClasses, Color.DeepSkyBlue);

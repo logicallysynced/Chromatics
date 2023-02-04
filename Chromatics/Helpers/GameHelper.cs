@@ -297,7 +297,7 @@ namespace Chromatics.Helpers
                     case Actor.Job.SAM:
                         return @"Shows Samurai's Kenki Guage.";
                     case Actor.Job.RDM:
-                        return @"Shows Red Mage's White Manga Gauge.";
+                        return @"Shows Red Mage's White Mana Gauge.";
                     case Actor.Job.BLU:
                         return @"Blue Mage not implemented.";
                     case Actor.Job.GNB:
@@ -352,7 +352,7 @@ namespace Chromatics.Helpers
                     case Actor.Job.SAM:
                         return @"Shows Samurai's Meditation Guage.";
                     case Actor.Job.RDM:
-                        return @"Shows Red Mage's Black Manga Gauge.";
+                        return @"Shows Red Mage's Black Mana Gauge.";
                     case Actor.Job.BLU:
                         return @"Blue Mage not implemented.";
                     case Actor.Job.GNB:
