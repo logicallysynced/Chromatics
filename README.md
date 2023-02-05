@@ -1,16 +1,35 @@
 **LOOKING FOR C# DEVELOPERS TO HELP MAINTAIN THIS - Please contact me if you're keen to get involved!**
 
-**We now have a support Discord:** [Join Support Discord](https://discord.gg/sK47yFE)
-
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
+[![Github All Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/total.svg)](https://github.com/roxaskeyheart/Chromatics/releases)
+[![Github Latest Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/latest/total.svg)](https://github.com/roxaskeyheart/Chromatics/releases/latest)
+[![Latest Release](https://img.shields.io/github/release/roxaskeyheart/Chromatics.svg)](https://github.com/roxaskeyheart/Chromatics/releases/latest)
+[![Discord](https://img.shields.io/discord/334196655131721741.svg)](https://discord.gg/sK47yFE)
 
-**Important:** This is a new branch for Chromatics 3.x series. It is a complete rebuild of Chromatics from the ground up in .NET 6.
+[Join Support Discord](https://discord.gg/sK47yFE)
 
-It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did)
+
+***Important:** This is a new branch for Chromatics 3.x series. It is a complete rebuild of Chromatics from the ground up in .NET 6. It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did.*
+<br><br>
+Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting effects on your RGB devices. There are many different scenes and effects available including:
+* HP/MP/GP/CP
+* Keybinds - lights your keys depending on your mapped keybind status
+* Castbar progress
+* Target HP/Target Castbar progress
+* Job Gauges
+* Enmity Tracker
+* Battle Stance
+* Reactive Weather - displays static & animation weather effects
+* Duty Finder Bell - flash your device when your DF pops
+* Damage Flash - flash your device when you take damage
+* Gold Saucer Vegas Mode
+* Title screen & cutscene animations
+<br>
+Chromatics is compatible with a wide range of RGB devices, supported by the library RGB.NET. Any devices supported by RGB.NET should be supported by Chromatics.
+
 <br><br>
 ### Changes from Chromatics 2.x ###
-
 
 **Device Compatibility**
 <br>
