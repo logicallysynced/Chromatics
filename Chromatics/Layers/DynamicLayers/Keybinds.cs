@@ -265,7 +265,7 @@ namespace Chromatics.Layers
 
                                 if (action.Category == 49 || action.Category == 51)
                                 {
-                                    if (!action.IsAvailable || !action.InRange || action.CoolDownPercent > 0)
+                                    if (!action.IsAvailable || !action.InRange || !action.ChargeReady || action.CoolDownPercent > 0)
                                     {
                                         ledGroup.Value.Brush = keybind_na_brush;
                                         continue;
@@ -280,7 +280,7 @@ namespace Chromatics.Layers
                                     continue;
                                 }
 
-                                if (action.IsAvailable)
+                                if (action.IsAvailable && action.ChargeReady)
                                 {
                                     if (action.InRange)
                                     {
