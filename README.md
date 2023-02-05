@@ -45,6 +45,9 @@ As this is a rebuild of Chromatics from the ground up, there will be some featur
 <br>
 Chromatics 3.x will still rely on Sharlayan for reading FFXIV memory. The main reason for this is we don't currently have the knowledge to implement our own memory scanner. This means, at least for the time being, compatibility with new major versions of FFXIV will be delayed as Sharlayan has become unmanaged by its original developers. We are considering other options at this time, such as FFXIVClientStructs and Dalamud, but for the time being these libraries don't meet our core requirements.
 <br><br><br>
+### Developers ### 
+If you wish to build Chromatics yourself, you can download the active branch and open in Visual Studio 2022. Please pull all nuget packages and also link any additional libraries from Build Dependencies before building. If you need any further assistance, please contact us on Discord.
+<br><br><br>
 ### Open Source Libraries ### 
 * [RGB.NET](https://github.com/DarthAffe/RGB.NET) - used for RGB device integration
 * [Sharlayan](https://github.com/FFXIVAPP/sharlayan) - used for FFXIV memory reading
