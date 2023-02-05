@@ -28,6 +28,7 @@ namespace Chromatics.Forms
         private MetroStyleManager metroStyleManager;
         private Form mainForm;
         private SettingsModel appSettings;
+        private MetroToolTip tt_main;
 
         public Fm_MainWindow()
         {
@@ -88,6 +89,10 @@ namespace Chromatics.Forms
 
             uC_Mappings.TabManager = mT_TabManager;
 
+            //Add tooltips
+            tt_main = new MetroToolTip();
+            tt_main.SetToolTip(this.btn_help, "Opens Chromatics 3 documentation in your browser");
+
             this.ResizeBegin += (s, e) => { this.SuspendLayout(); };
             this.ResizeEnd += (s, e) => { this.ResumeLayout(true); };
 
@@ -140,7 +145,7 @@ namespace Chromatics.Forms
             if (assembly.GetName().Version.Revision != 0)
             {
                 Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA) has loaded");
-                this.Text = $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA)";
+                //this.Text = $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA)";
             }
             else
             {
@@ -208,6 +213,10 @@ namespace Chromatics.Forms
             System.Windows.Forms.Application.Exit();
         }
 
-
+        private void btn_help_Click(object sender, EventArgs e)
+        {
+            var url = @"https://docs.chromaticsffxiv.com/chromatics-3";
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
     }
 }
