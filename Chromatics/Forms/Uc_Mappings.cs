@@ -72,7 +72,8 @@ namespace Chromatics.Forms
                 { RGBDeviceType.Fan, new Uc_VirtualFan() },
                 { RGBDeviceType.Speaker, new Uc_VirtualSpeaker() },
                 { RGBDeviceType.Cooler, new Uc_VirtualCooler() },
-                { RGBDeviceType.LedController, new Uc_VirtualLedController() }
+                { RGBDeviceType.LedController, new Uc_VirtualLedController() },
+                { RGBDeviceType.Unknown, new Uc_VirtualOtherController() }
             };
 
             // Add each virtual device control to the form
@@ -173,6 +174,13 @@ namespace Chromatics.Forms
             {
                 if (!_virtualDevices.ContainsKey((RGBDeviceType)lt)) continue;
 
+                if ((RGBDeviceType)lt == RGBDeviceType.Unknown)
+                {
+                    var item = new ComboboxItem { Value = lt, Text = @"Other" };
+                    cb_deviceselect.Items.Add(item);
+                    continue;
+                }
+
                 cb_deviceselect.Items.Add(lt);
             }
 
@@ -217,9 +225,11 @@ namespace Chromatics.Forms
             }
             else
             {
-                CreateDefaults();
+                Logger.WriteConsole(LoggerTypes.System, @"No layer file found. Creating default layers..");
                 SaveLayers(true);
             }
+
+            CreateDefaults();
                         
             //Add tooltips
             tt_mappings.SetToolTip(this.cb_addlayer, @"Add New Layer of selected type");
@@ -341,15 +351,26 @@ namespace Chromatics.Forms
         private void CreateDefaults()
         {
             //Create Default Layers
-            Logger.WriteConsole(LoggerTypes.System, @"No layer file found. Creating default layers..");
+            
             
             foreach (Enum lt in Enum.GetValues(typeof(RGBDeviceType)))
             {
+                if (MappingLayers.GetLayers().Values.Any(layer => layer.deviceType == (RGBDeviceType)lt)) continue;
+
                 var i = 1;
 
-                if ((RGBDeviceType)lt == RGBDeviceType.None || (RGBDeviceType)lt == RGBDeviceType.Unknown || (RGBDeviceType)lt == RGBDeviceType.All)
+                if ((RGBDeviceType)lt == RGBDeviceType.None || (RGBDeviceType)lt == RGBDeviceType.All)
                     continue;
 
+                if ((RGBDeviceType)lt == RGBDeviceType.Unknown)
+                {
+                    Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for Other devices.");
+                }
+                else
+                {
+                    Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for {(RGBDeviceType)lt} devices.");
+                }
+                
                 AddLayer(LayerType.BaseLayer, (RGBDeviceType)lt, 0, i, true, false, true, LedKeyHelper.GetAllKeysForDevice((RGBDeviceType)lt));
                 i++;
 
@@ -1161,7 +1182,16 @@ namespace Chromatics.Forms
 
                 if (value != null)
                 {
-                    var _devicetype = (RGBDeviceType)Enum.Parse(typeof(RGBDeviceType), value);
+                    RGBDeviceType _devicetype;
+
+                    if (value == "Other")
+                    {
+                        _devicetype = RGBDeviceType.Unknown;
+                    }
+                    else
+                    {
+                        _devicetype = (RGBDeviceType)Enum.Parse(typeof(RGBDeviceType), value);
+                    }
 
                     if (_devicetype == selectedDevice) return;
 
