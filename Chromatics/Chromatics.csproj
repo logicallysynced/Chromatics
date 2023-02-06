@@ -39,7 +39,6 @@
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Msi" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Novation" Version="1.0.0" />
-    <PackageReference Include="RGB.NET.Devices.Razer" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Wooting" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.WS281X" Version="1.0.0" />
@@ -56,6 +55,12 @@
     </Reference>
     <Reference Include="MetroFramework.Fonts">
       <HintPath>..\Build Dependencies\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Razer">
+      <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.HID">
+      <HintPath>..\Build Dependencies\RGB.NET.HID.dll</HintPath>
     </Reference>
     <Reference Include="Sharlayan">
       <HintPath>..\Build Dependencies\Sharlayan.dll</HintPath>
