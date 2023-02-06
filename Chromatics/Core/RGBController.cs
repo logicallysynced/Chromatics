@@ -103,10 +103,11 @@ namespace Chromatics.Core
                 deviceCount++;
 
             }
-                
+            
+            if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 
             var TimerTrigger = new TimerUpdateTrigger();
-            TimerTrigger.UpdateFrequency = 0.05;
+            TimerTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
             surface.RegisterUpdateTrigger(TimerTrigger);
 
             surface.AlignDevices();
