@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>3.0.0.2</Version>
+    <Version>3.0.0.3</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>Danielle Thompson 2023</Copyright>
@@ -39,7 +39,6 @@
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Msi" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Novation" Version="1.0.0" />
-    <PackageReference Include="RGB.NET.Devices.Razer" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Wooting" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.WS281X" Version="1.0.0" />
@@ -57,12 +56,21 @@
     <Reference Include="MetroFramework.Fonts">
       <HintPath>..\Build Dependencies\MetroFramework.Fonts.dll</HintPath>
     </Reference>
+    <Reference Include="RGB.NET.Devices.Razer">
+      <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.HID">
+      <HintPath>..\Build Dependencies\RGB.NET.HID.dll</HintPath>
+    </Reference>
     <Reference Include="Sharlayan">
       <HintPath>..\Build Dependencies\Sharlayan.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Forms\vDevices\Uc_VirtualOtherController.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Forms\vDevices\Uc_VirtualLedController.cs">
       <SubType>UserControl</SubType>
     </Compile>

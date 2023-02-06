@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
-      "version": "3.0.0.2",
+      "version": "3.0.0.3",
       "restore": {
         "projectUniqueName": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -96,10 +96,6 @@
               "version": "[1.0.0, )"
             },
             "RGB.NET.Devices.Novation": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.Razer": {
               "target": "Package",
               "version": "[1.0.0, )"
             },
