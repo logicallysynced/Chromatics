@@ -99,10 +99,6 @@
               "target": "Package",
               "version": "[1.0.0, )"
             },
-            "RGB.NET.Devices.Razer": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
             "RGB.NET.Devices.SteelSeries": {
               "target": "Package",
               "version": "[1.0.0, )"
