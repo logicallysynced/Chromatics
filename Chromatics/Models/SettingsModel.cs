@@ -12,6 +12,7 @@ namespace Chromatics.Models
         public bool winstart { get; set; } = false;
         public bool minimizetray { get; set; } = false;
         public bool trayonstartup { get; set; } = false;
+        public double rgbRefreshRate { get; set; } = 0.05;
         public int globalbrightness { get; set; } = 100;
         public double criticalHpPercentage { get; set; } = 20.0;
         public int screenCaptureTopLeftOffsetX { get; set; } = 0;
