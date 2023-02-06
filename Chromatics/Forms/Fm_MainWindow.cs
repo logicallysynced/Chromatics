@@ -102,8 +102,9 @@ namespace Chromatics.Forms
 
             if (appSettings.trayonstartup)
             {
-                Hide();
                 this.WindowState = FormWindowState.Minimized;
+
+                this.Hide();
                 this.Visible = false;
                 this.ShowInTaskbar = false;
             }
@@ -182,9 +183,25 @@ namespace Chromatics.Forms
         {
             if (WindowState == FormWindowState.Minimized && appSettings.minimizetray)
             {
+                notifyIcon_main.Visible = true;
                 Hide();
-                ShowInTaskbar = false;
             }
+        }
+
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (appSettings.minimizetray)
+            {
+                if (WindowState == FormWindowState.Minimized)
+                {
+                    notifyIcon_main.Visible = true;
+                    Hide();
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
+            BeginInvoke(new MethodInvoker(Close));
         }
 
         private void OnNotifyIconDoubleClick(object sender, EventArgs e)
@@ -193,18 +210,6 @@ namespace Chromatics.Forms
             {
                 mainForm.Show();
                 this.WindowState = FormWindowState.Normal;
-                this.Visible = true;
-                this.ShowInTaskbar = true;
-            }
-            else
-            {
-                if (appSettings.minimizetray)
-                {
-                    mainForm.Hide();
-                    this.WindowState = FormWindowState.Minimized;
-                    this.Visible = false;
-                    this.ShowInTaskbar = false;
-                }
             }
         }
 

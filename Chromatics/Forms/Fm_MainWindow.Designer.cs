@@ -122,6 +122,7 @@ namespace Chromatics.Forms
             this.btn_help.Size = new System.Drawing.Size(118, 29);
             this.btn_help.TabIndex = 1;
             this.btn_help.Text = "Documentation";
+            this.btn_help.UseSelectable = true;
             this.btn_help.UseVisualStyleBackColor = false;
             this.btn_help.Click += new System.EventHandler(this.btn_help_Click);
             // 
@@ -139,6 +140,7 @@ namespace Chromatics.Forms
             this.MaximizeBox = false;
             this.Name = "Fm_MainWindow";
             this.Padding = new System.Windows.Forms.Padding(20, 80, 20, 20);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.Load += new System.EventHandler(this.OnLoad);
             this.Resize += new System.EventHandler(this.OnResize);
             this.mT_TabManager.ResumeLayout(false);
