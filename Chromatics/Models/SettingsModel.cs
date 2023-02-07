@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chromatics.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace Chromatics.Models
         public bool winstart { get; set; } = false;
         public bool minimizetray { get; set; } = false;
         public bool trayonstartup { get; set; } = false;
+        public KeyboardLocalization keyboardLayout { get; set; } = KeyboardLocalization.qwerty;
         public double rgbRefreshRate { get; set; } = 0.05;
         public int globalbrightness { get; set; } = 100;
         public double criticalHpPercentage { get; set; } = 20.0;
