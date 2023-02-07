@@ -206,11 +206,9 @@ namespace Chromatics.Forms
 
         private void OnNotifyIconDoubleClick(object sender, EventArgs e)
         {
-            if (!mainForm.Visible)
-            {
-                mainForm.Show();
-                this.WindowState = FormWindowState.Normal;
-            }
+            mainForm.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
         }
 
         private void OnNotifyClickClose(object sender, EventArgs e)
