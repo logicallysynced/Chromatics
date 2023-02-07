@@ -1,4 +1,5 @@
-﻿using Chromatics.Enums;
+﻿using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Localization;
@@ -25,7 +26,9 @@ namespace Chromatics.Forms
             var keycap_img = Properties.Resources.keycap_backglow;
 
             //Assign a keycap per cell
-            var keycaps = KeyLocalization.GetLocalizedKeys(KeyboardLocalization.None);
+            var settings = AppSettings.GetSettings();
+
+            var keycaps = KeyLocalization.GetLocalizedKeys(settings.keyboardLayout);
             tlp_main.Controls.Clear();
             tlp_main.RowCount = 0;
             tlp_main.ColumnCount = 0;
