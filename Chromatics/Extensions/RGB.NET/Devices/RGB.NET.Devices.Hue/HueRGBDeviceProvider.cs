@@ -32,7 +32,6 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
     private static HueRGBDeviceProvider _instance;
 
     public static HueRGBDeviceProvider Instance => _instance ?? new HueRGBDeviceProvider();
-    public List<HueClientDefinition> ClientDefinitions { get; } = new();
 
     private string bridgeIP;
     private string bridgeAppKey;
@@ -90,7 +89,9 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
                 appSettings.deviceHueBridgeStreamingKey = clientKey;
                 AppSettings.SaveSettings(appSettings);
 
-                Debug.WriteLine($"Bridge Key: {bridgeAppKey}. Client Key: {clientKey}");
+                #if DEBUG
+                    Debug.WriteLine($"Bridge Key: {bridgeAppKey}. Client Key: {clientKey}");
+                #endif
             }
             catch(AggregateException ex)
             {
@@ -134,6 +135,11 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
 
         // Get the entertainment groups, no point continuing without any entertainment groups
         IReadOnlyList<Group> entertainmentGroups = AsyncHelper.RunSync(client.GetEntertainmentGroups);
+        if (!entertainmentGroups.Any())
+        {
+            Logger.WriteConsole(Enums.LoggerTypes.Error, @"No Hue entertainment groups detected.");
+            yield break;
+        }
 
         // Get all lights once, all devices can use this list to identify themselves
         List<Light> lights = AsyncHelper.RunSync(client.GetLightsAsync).ToList();
@@ -149,6 +155,7 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
             {
                 HueDeviceInfo deviceInfo = new(entertainmentGroup, lightId, lights);
                 HueDevice device = new(deviceInfo, new HueUpdateQueue(updateTrigger, lightId, streamingGroup));
+
                 yield return device;
             }
         }

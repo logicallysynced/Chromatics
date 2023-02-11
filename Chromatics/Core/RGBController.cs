@@ -64,10 +64,10 @@ namespace Chromatics.Core
 
             var appSettings = AppSettings.GetSettings();
 
-            surface.Exception += args_ => throw args_.Exception;//Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Device Error: {args_.Exception.Message}");
+            surface.Exception += args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}");
 
             //Load devices
-
+            
             if (appSettings.deviceLogitechEnabled)
                 surface.Load(LogitechDeviceProvider.Instance, RGBDeviceType.All);
 
