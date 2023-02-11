@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms.Design;
 using Chromatics.Core;
 using Q42.HueApi;
 using Q42.HueApi.Interfaces;
+using Q42.HueApi.Models.Bridge;
 using Q42.HueApi.Models.Groups;
 using Q42.HueApi.Streaming;
 using Q42.HueApi.Streaming.Models;
@@ -53,7 +55,7 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
                 
         if (bridgeIP == "" || bridgeIP == "127.0.0.1")
         {
-            Logger.WriteConsole(Enums.LoggerTypes.Devices, @"Looking for Hue bridges for 10 seconds..");
+            Logger.WriteConsole(Enums.LoggerTypes.Devices, @"Looking for Hue bridges for 10 seconds. Please push the button on the hub!");
             var discovery = HueBridgeDiscovery.FastDiscoveryAsync(new TimeSpan(0,0,10)).GetAwaiter().GetResult();
 
             if (discovery.Count > 0)
@@ -69,8 +71,37 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
                 return;
             }
         }
-        
+
         var client = new LocalHueClient(bridgeIP);
+
+        if (bridgeAppKey == "" || clientKey == "")
+        {
+            try
+            {
+                Task<RegisterEntertainmentResult> task = client.RegisterAsync("Chromatics", "Hue", true);
+                task.Wait();
+
+                var regResult = task.Result;
+
+                bridgeAppKey = regResult.Username;
+                clientKey = regResult.StreamingClientKey;
+
+                appSettings.deviceHueBridgeKey = bridgeAppKey;
+                appSettings.deviceHueBridgeStreamingKey = clientKey;
+                AppSettings.SaveSettings(appSettings);
+
+                Debug.WriteLine($"Bridge Key: {bridgeAppKey}. Client Key: {clientKey}");
+            }
+            catch(AggregateException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue bridge at {bridgeIP} needs to be registered. Please push the button on the hub and restart Chromatics!");
+                _instance.Dispose();
+                return;
+            }
+        }
+        
+        
         client.Initialize(bridgeAppKey);
 
         bool success = client.CheckConnection().GetAwaiter().GetResult();
@@ -82,25 +113,7 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
         }
         else
         {
-            if (bridgeAppKey == "" || clientKey == "")
-            {
-                try
-                {
-                    var regResult = client.RegisterAsync(bridgeIP, "Chromatics", true).GetAwaiter().GetResult();
-                    bridgeAppKey = regResult.Username;
-                    clientKey = regResult.StreamingClientKey;
-
-                    appSettings.deviceHueBridgeKey = bridgeAppKey;
-                    appSettings.deviceHueBridgeStreamingKey = clientKey;
-                    AppSettings.SaveSettings(appSettings);
-                }
-                catch
-                {
-                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue bridge at {bridgeIP} needs to be registered. Please push the button on the hub and restart Chromatics!");
-                    _instance.Dispose();
-                    return;
-                }
-            }
+            
             
             init = true;
 
