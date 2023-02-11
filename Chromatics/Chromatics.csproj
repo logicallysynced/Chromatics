@@ -32,8 +32,9 @@
     <PackageReference Include="MouseKeyHook.NetCore" Version="5.6.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="NLog" Version="5.1.1" />
+    <PackageReference Include="Q42.HueApi" Version="3.21.0" />
+    <PackageReference Include="Q42.HueApi.Entertainment" Version="3.20.1" />
     <PackageReference Include="RGB.NET.Core" Version="1.0.0" />
-    <PackageReference Include="RGB.NET.Devices.Asus" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Corsair" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0" />
@@ -55,6 +56,9 @@
     </Reference>
     <Reference Include="MetroFramework.Fonts">
       <HintPath>..\Build Dependencies\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Asus">
+      <HintPath>..\Build Dependencies\RGB.NET.Devices.Asus.dll</HintPath>
     </Reference>
     <Reference Include="RGB.NET.Devices.Razer">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
@@ -137,6 +141,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\RGB.NET\Devices\" />
   </ItemGroup>
 
 </Project>

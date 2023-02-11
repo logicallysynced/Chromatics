@@ -34,7 +34,10 @@ namespace Chromatics.Models
         public bool deviceSteelseriesEnabled { get; set; } = true;
         public bool deviceWootingEnabled { get; set; } = true;
         public bool deviceNovationEnabled { get; set; } = true;
-
+        public bool deviceHueEnabled { get; set; } = false;
+        public string deviceHueBridgeIP { get; set; } = "127.0.0.1";
+        public string deviceHueBridgeKey { get; set; } = "";
+        public string deviceHueBridgeStreamingKey { get; set; } = "";
 
     }
 }
