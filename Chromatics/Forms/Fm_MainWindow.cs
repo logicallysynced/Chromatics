@@ -54,6 +54,7 @@ namespace Chromatics.Forms
             AppSettings.Startup();
             appSettings = AppSettings.GetSettings();
             
+            AppSettings.SaveSettings(appSettings);
 
             //Initiate Tabs
             var uC_Console = new Uc_Console
