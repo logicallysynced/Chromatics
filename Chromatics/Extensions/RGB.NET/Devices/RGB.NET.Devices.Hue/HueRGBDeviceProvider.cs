@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms.Design;
 using Chromatics.Core;
@@ -49,13 +50,69 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
         bridgeIP = appSettings.deviceHueBridgeIP;
         bridgeAppKey = appSettings.deviceHueBridgeKey;
         clientKey = appSettings.deviceHueBridgeStreamingKey;
+                
+        if (bridgeIP == "" || bridgeIP == "127.0.0.1")
+        {
+            Logger.WriteConsole(Enums.LoggerTypes.Devices, @"Looking for Hue bridges for 10 seconds..");
+            var discovery = HueBridgeDiscovery.FastDiscoveryAsync(new TimeSpan(0,0,10)).GetAwaiter().GetResult();
 
-        init = true;
+            if (discovery.Count > 0)
+            {
+                bridgeIP = discovery.FirstOrDefault().IpAddress;
+                appSettings.deviceHueBridgeIP = bridgeIP;
+                AppSettings.SaveSettings(appSettings);
+            }
+            else
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Devices, @"No Hue bridges can be discovered.");
+                _instance.Dispose();
+                return;
+            }
+        }
+        
+        var client = new LocalHueClient(bridgeIP);
+        client.Initialize(bridgeAppKey);
+
+        bool success = client.CheckConnection().GetAwaiter().GetResult();
+        if (!success)
+        {
+            Logger.WriteConsole(Enums.LoggerTypes.Error, $"Failed to connect to Hue bridge at {bridgeIP}.");
+            _instance.Dispose();
+            return;
+        }
+        else
+        {
+            if (bridgeAppKey == "" || clientKey == "")
+            {
+                try
+                {
+                    var regResult = client.RegisterAsync(bridgeIP, "Chromatics", true).GetAwaiter().GetResult();
+                    bridgeAppKey = regResult.Username;
+                    clientKey = regResult.StreamingClientKey;
+
+                    appSettings.deviceHueBridgeKey = bridgeAppKey;
+                    appSettings.deviceHueBridgeStreamingKey = clientKey;
+                    AppSettings.SaveSettings(appSettings);
+                }
+                catch
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue bridge at {bridgeIP} needs to be registered. Please push the button on the hub and restart Chromatics!");
+                    _instance.Dispose();
+                    return;
+                }
+            }
+            
+            init = true;
+
+        }
+        
     }
 
     /// <inheritdoc />
     protected override IEnumerable<IRGBDevice> LoadDevices()
     {
+        if (!init) yield break;
+
         HueDeviceUpdateTrigger updateTrigger = (HueDeviceUpdateTrigger) GetUpdateTrigger();
         
         // Create a temporary for this definition 

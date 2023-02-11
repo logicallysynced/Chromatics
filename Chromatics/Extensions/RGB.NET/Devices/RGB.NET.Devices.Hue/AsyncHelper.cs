@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chromatics.Core;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,18 +15,26 @@ internal static class AsyncHelper
     public static TResult RunSync<TResult>(Func<Task<TResult>> func)
     {
         return _taskFactory
-            .StartNew(func)
-            .Unwrap()
-            .GetAwaiter()
-            .GetResult();
+                .StartNew(func)
+                .Unwrap()
+                .GetAwaiter()
+                .GetResult();
+        
     }
 
     public static void RunSync(Func<Task> func)
     {
-        _taskFactory
-            .StartNew(func)
-            .Unwrap()
-            .GetAwaiter()
-            .GetResult();
+        try
+        {
+            _taskFactory
+                .StartNew(func)
+                .Unwrap()
+                .GetAwaiter()
+                .GetResult();
+        }
+        catch (Exception ex)
+        {
+            Logger.WriteConsole(Enums.LoggerTypes.Error, ex.Message);
+        }
     }
 }
