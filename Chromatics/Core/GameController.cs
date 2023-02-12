@@ -62,6 +62,12 @@ namespace Chromatics.Core
             RGBController.PreviewTriggered += OnPreviewTriggered;
         }
 
+        public static void Exit()
+        {
+            _GameConnectionCancellationTokenSource.Cancel();
+            _GameLoopCancellationTokenSource.Cancel();
+        }
+
         public static void Stop(bool reconnect = false)
         {
             RGBController.StopEffects();
@@ -175,7 +181,15 @@ namespace Chromatics.Core
                     }
                 }
                 
-                await Task.Delay(delay, cancellationToken);
+                try
+                {
+                    await Task.Delay(delay, cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
+                }
+                
             }
         }
 
@@ -201,7 +215,14 @@ namespace Chromatics.Core
                 // Wait for the interval before continuing
                 var delay = _connectionInterval;
 
-                await Task.Delay(delay, cancellationToken);
+                try
+                {
+                    await Task.Delay(delay, cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
+                }
             }
         }
 

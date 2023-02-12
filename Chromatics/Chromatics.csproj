@@ -48,6 +48,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Interop.AuraServiceLib">
+      <HintPath>..\Build Dependencies\Interop.AuraServiceLib.dll</HintPath>
+    </Reference>
     <Reference Include="MetroFramework">
       <HintPath>..\Build Dependencies\MetroFramework.dll</HintPath>
     </Reference>
@@ -56,6 +59,9 @@
     </Reference>
     <Reference Include="MetroFramework.Fonts">
       <HintPath>..\Build Dependencies\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.Core">
+      <HintPath>..\Build Dependencies\RGB.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="RGB.NET.Devices.Asus">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Asus.dll</HintPath>

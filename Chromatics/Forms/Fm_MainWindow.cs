@@ -227,9 +227,17 @@ namespace Chromatics.Forms
 
         private void ExitApplication()
         {
-            notifyIcon_main.Dispose();
-            contextMenuStrip_main.Dispose();
-            Close();
+            RGBController.Unload();
+
+            if (System.Windows.Forms.Application.MessageLoop)
+            {
+                System.Windows.Forms.Application.Exit();
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
+                
         }
 
         private static void Form_FormClosed(object sender, FormClosedEventArgs e)
