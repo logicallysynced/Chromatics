@@ -144,6 +144,7 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
         // Get all lights once, all devices can use this list to identify themselves
         List<Light> lights = AsyncHelper.RunSync(client.GetLightsAsync).ToList();
 
+        var i = 0;
         foreach (Group entertainmentGroup in entertainmentGroups.OrderBy(g => int.Parse(g.Id)))
         {
             StreamingHueClient streamingClient = new(bridgeIP, bridgeAppKey, clientKey);
@@ -151,12 +152,13 @@ public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
             AsyncHelper.RunSync(async () => await streamingClient.Connect(entertainmentGroup.Id));
 
             updateTrigger.ClientGroups.Add(streamingClient, streamingGroup);
+
             foreach (string lightId in entertainmentGroup.Lights.OrderBy(int.Parse))
             {
                 HueDeviceInfo deviceInfo = new(entertainmentGroup, lightId, lights);
-                HueDevice device = new(deviceInfo, new HueUpdateQueue(updateTrigger, lightId, streamingGroup));
-
+                HueDevice device = new(deviceInfo, new HueUpdateQueue(updateTrigger, lightId, streamingGroup), i);
                 yield return device;
+                i++;
             }
         }
     }

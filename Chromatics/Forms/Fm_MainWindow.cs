@@ -242,12 +242,14 @@ namespace Chromatics.Forms
 
         private static void Form_FormClosed(object sender, FormClosedEventArgs e)
         {
-            var thread = new Thread(() =>
-            {
-                Thread.Sleep(1000); // wait for background tasks to finish
-                Environment.Exit(0);
-            });
-            thread.Start();
+            #if !DEBUG
+                var thread = new Thread(() =>
+                {
+                    Thread.Sleep(1000); // wait for background tasks to finish
+                    Environment.Exit(0);
+                });
+                thread.Start();
+            #endif
         }
     }
 }
