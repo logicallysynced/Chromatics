@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
-      "version": "3.0.0.3",
+      "version": "3.0.0.5",
       "restore": {
         "projectUniqueName": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -71,11 +71,15 @@
               "target": "Package",
               "version": "[13.0.2, )"
             },
-            "RGB.NET.Core": {
+            "Q42.HueApi": {
               "target": "Package",
-              "version": "[1.0.0, )"
+              "version": "[3.21.0, )"
             },
-            "RGB.NET.Devices.Asus": {
+            "Q42.HueApi.Entertainment": {
+              "target": "Package",
+              "version": "[3.20.1, )"
+            },
+            "RGB.NET.Core": {
               "target": "Package",
               "version": "[1.0.0, )"
             },

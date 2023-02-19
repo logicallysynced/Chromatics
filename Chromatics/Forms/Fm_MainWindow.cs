@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Windows;
 using Chromatics.Models;
 using System.IO;
+using System.Timers;
 
 namespace Chromatics.Forms
 {
@@ -54,6 +55,7 @@ namespace Chromatics.Forms
             AppSettings.Startup();
             appSettings = AppSettings.GetSettings();
             
+            AppSettings.SaveSettings(appSettings);
 
             //Initiate Tabs
             var uC_Console = new Uc_Console
@@ -95,6 +97,7 @@ namespace Chromatics.Forms
 
             this.ResizeBegin += (s, e) => { this.SuspendLayout(); };
             this.ResizeEnd += (s, e) => { this.ResumeLayout(true); };
+            this.FormClosed += Form_FormClosed;
 
             contextMenuStrip_main.Items.Add(new ToolStripMenuItem(@"Show Window", null, new EventHandler(OnNotifyIconDoubleClick)));
             contextMenuStrip_main.Items.Add(new ToolStripMenuItem(@"Close", null, new EventHandler(OnNotifyClickClose)));
@@ -201,27 +204,52 @@ namespace Chromatics.Forms
                 }
             }
 
-            BeginInvoke(new MethodInvoker(Close));
+            ExitApplication();
         }
 
         private void OnNotifyIconDoubleClick(object sender, EventArgs e)
         {
-            if (!mainForm.Visible)
-            {
-                mainForm.Show();
-                this.WindowState = FormWindowState.Normal;
-            }
+            mainForm.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
         }
 
         private void OnNotifyClickClose(object sender, EventArgs e)
         {
-            System.Windows.Forms.Application.Exit();
+            ExitApplication();
         }
 
         private void btn_help_Click(object sender, EventArgs e)
         {
             var url = @"https://docs.chromaticsffxiv.com/chromatics-3";
             Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+
+        private void ExitApplication()
+        {
+            RGBController.Unload();
+
+            if (System.Windows.Forms.Application.MessageLoop)
+            {
+                System.Windows.Forms.Application.Exit();
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
+                
+        }
+
+        private static void Form_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            #if !DEBUG
+                var thread = new Thread(() =>
+                {
+                    Thread.Sleep(1000); // wait for background tasks to finish
+                    Environment.Exit(0);
+                });
+                thread.Start();
+            #endif
         }
     }
 }
