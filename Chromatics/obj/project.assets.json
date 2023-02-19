@@ -248,6 +248,54 @@
           }
         }
       },
+      "Portable.BouncyCastle/1.9.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Q42.HueApi/3.21.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.2"
+        },
+        "compile": {
+          "lib/net6.0/Q42.HueApi.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Q42.HueApi.dll": {}
+        }
+      },
+      "Q42.HueApi.ColorConverters/3.20.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Q42.HueApi.ColorConverters.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Q42.HueApi.ColorConverters.dll": {}
+        }
+      },
+      "Q42.HueApi.Entertainment/3.20.1": {
+        "type": "package",
+        "dependencies": {
+          "Portable.BouncyCastle": "1.9.0",
+          "Q42.HueApi": "3.20.1",
+          "Q42.HueApi.ColorConverters": "3.20.1"
+        },
+        "compile": {
+          "lib/net6.0/Q42.HueApi.Streaming.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Q42.HueApi.Streaming.dll": {}
+        }
+      },
       "RGB.NET.Core/1.0.0": {
         "type": "package",
         "compile": {
@@ -257,25 +305,6 @@
         },
         "runtime": {
           "lib/net6.0/RGB.NET.Core.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "RGB.NET.Devices.Asus/1.0.0": {
-        "type": "package",
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0",
-          "System.Management": "5.0.0"
-        },
-        "compile": {
-          "lib/net6.0/Interop.AuraServiceLib.dll": {},
-          "lib/net6.0/RGB.NET.Devices.Asus.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/Interop.AuraServiceLib.dll": {},
-          "lib/net6.0/RGB.NET.Devices.Asus.dll": {
             "related": ".xml"
           }
         }
@@ -519,19 +548,6 @@
           }
         }
       },
-      "System.CodeDom/5.0.0": {
-        "type": "package",
-        "compile": {
-          "ref/netstandard2.0/System.CodeDom.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.CodeDom.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "System.IO.Ports/5.0.1": {
         "type": "package",
         "dependencies": {
@@ -558,30 +574,6 @@
             "rid": "osx"
           },
           "runtimes/win/lib/netstandard2.0/System.IO.Ports.dll": {
-            "assetType": "runtime",
-            "rid": "win"
-          }
-        }
-      },
-      "System.Management/5.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.Win32.Registry": "5.0.0",
-          "System.CodeDom": "5.0.0"
-        },
-        "compile": {
-          "ref/netstandard2.0/System.Management.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Management.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/netcoreapp2.0/System.Management.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -1021,6 +1013,66 @@
         "nlog.nuspec"
       ]
     },
+    "Portable.BouncyCastle/1.9.0": {
+      "sha512": "eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
+      "type": "package",
+      "path": "portable.bouncycastle/1.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/BouncyCastle.Crypto.dll",
+        "lib/net40/BouncyCastle.Crypto.xml",
+        "lib/netstandard2.0/BouncyCastle.Crypto.dll",
+        "lib/netstandard2.0/BouncyCastle.Crypto.xml",
+        "portable.bouncycastle.1.9.0.nupkg.sha512",
+        "portable.bouncycastle.nuspec"
+      ]
+    },
+    "Q42.HueApi/3.21.0": {
+      "sha512": "i0Tq9hLRVd0kcwbxOgnzKjehHJ+0MHBEvsz2WbMjX6QBSMgA3yr8r598u1y5ClicYg0EK4+YFq2ZGhgF9WHTNw==",
+      "type": "package",
+      "path": "q42.hueapi/3.21.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Q42.HueApi.dll",
+        "lib/net6.0/Q42.HueApi.dll",
+        "lib/net7.0/Q42.HueApi.dll",
+        "lib/netstandard2.1/Q42.HueApi.dll",
+        "q42.hueapi.3.21.0.nupkg.sha512",
+        "q42.hueapi.nuspec"
+      ]
+    },
+    "Q42.HueApi.ColorConverters/3.20.1": {
+      "sha512": "gOmXotE5dCpabOiCbACEOxEGs+jWf2NviVp9x6GzcmwOyHVhaiVq0ajmJ/Fk8pE5u5sYlQ/681GUrAZ5+npLzQ==",
+      "type": "package",
+      "path": "q42.hueapi.colorconverters/3.20.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Q42.HueApi.ColorConverters.dll",
+        "lib/net6.0/Q42.HueApi.ColorConverters.dll",
+        "lib/net7.0/Q42.HueApi.ColorConverters.dll",
+        "lib/netstandard2.1/Q42.HueApi.ColorConverters.dll",
+        "q42.hueapi.colorconverters.3.20.1.nupkg.sha512",
+        "q42.hueapi.colorconverters.nuspec"
+      ]
+    },
+    "Q42.HueApi.Entertainment/3.20.1": {
+      "sha512": "F9t0PS+9aF4miib5vWlhSUjtJxNX/7hPy863ptqD0V84OBt6KCbQFNalsq/yjbBMPDPZKBVUE/mchXUfwRFdgQ==",
+      "type": "package",
+      "path": "q42.hueapi.entertainment/3.20.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net471/Q42.HueApi.Streaming.dll",
+        "lib/net6.0/Q42.HueApi.Streaming.dll",
+        "lib/net7.0/Q42.HueApi.Streaming.dll",
+        "lib/netstandard2.1/Q42.HueApi.Streaming.dll",
+        "q42.hueapi.entertainment.3.20.1.nupkg.sha512",
+        "q42.hueapi.entertainment.nuspec"
+      ]
+    },
     "RGB.NET.Core/1.0.0": {
       "sha512": "wQd1tSyldamEhKAAU/E+zraiz5FRttcDYnQ3uQiat9Uf1tx8obV4MkFOKh2wY0JLZbOD832cCg3RQttHkbEbdw==",
       "type": "package",
@@ -1038,27 +1090,6 @@
         "lib/net7.0/RGB.NET.Core.xml",
         "rgb.net.core.1.0.0.nupkg.sha512",
         "rgb.net.core.nuspec"
-      ]
-    },
-    "RGB.NET.Devices.Asus/1.0.0": {
-      "sha512": "lMWKfPBwhbB9rkCQ+HgJc1KWo2OdgwJGv5oiJw2hBdcjQDdWBvH/Dhw0IlgABAWN+cqvuOIcHee8eLq5ytZZ2w==",
-      "type": "package",
-      "path": "rgb.net.devices.asus/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "README.md",
-        "icon.png",
-        "lib/net5.0/Interop.AuraServiceLib.dll",
-        "lib/net5.0/RGB.NET.Devices.Asus.dll",
-        "lib/net5.0/RGB.NET.Devices.Asus.xml",
-        "lib/net6.0/Interop.AuraServiceLib.dll",
-        "lib/net6.0/RGB.NET.Devices.Asus.dll",
-        "lib/net6.0/RGB.NET.Devices.Asus.xml",
-        "lib/net7.0/RGB.NET.Devices.Asus.dll",
-        "lib/net7.0/RGB.NET.Devices.Asus.xml",
-        "rgb.net.devices.asus.1.0.0.nupkg.sha512",
-        "rgb.net.devices.asus.nuspec"
       ]
     },
     "RGB.NET.Devices.CoolerMaster/1.0.0": {
@@ -1369,30 +1400,6 @@
         "sanford.multimedia.midi.standard.nuspec"
       ]
     },
-    "System.CodeDom/5.0.0": {
-      "sha512": "JPJArwA1kdj8qDAkY2XGjSWoYnqiM7q/3yRNkt6n28Mnn95MuEGkZXUbPBf7qc3IjwrGY5ttQon7yqHZyQJmOQ==",
-      "type": "package",
-      "path": "system.codedom/5.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.CodeDom.dll",
-        "lib/net461/System.CodeDom.xml",
-        "lib/netstandard2.0/System.CodeDom.dll",
-        "lib/netstandard2.0/System.CodeDom.xml",
-        "ref/net461/System.CodeDom.dll",
-        "ref/net461/System.CodeDom.xml",
-        "ref/netstandard2.0/System.CodeDom.dll",
-        "ref/netstandard2.0/System.CodeDom.xml",
-        "system.codedom.5.0.0.nupkg.sha512",
-        "system.codedom.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
     "System.IO.Ports/5.0.1": {
       "sha512": "cOfs0q0+lmq8oXgIeYDzzT2IxQ0gIij2/awNDXn3OjykDii26EgzzY09BhabUlxt3rwGNpAOxYkdac5udWWJgQ==",
       "type": "package",
@@ -1424,31 +1431,6 @@
         "runtimes/win/lib/uap10.0.16299/_._",
         "system.io.ports.5.0.1.nupkg.sha512",
         "system.io.ports.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Management/5.0.0": {
-      "sha512": "MF1CHaRcC+MLFdnDthv4/bKWBZnlnSpkGqa87pKukQefgEdwtb9zFW6zs0GjPp73qtpYYg4q6PEKbzJbxCpKfw==",
-      "type": "package",
-      "path": "system.management/5.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net45/_._",
-        "lib/netstandard2.0/System.Management.dll",
-        "lib/netstandard2.0/System.Management.xml",
-        "ref/net45/_._",
-        "ref/netstandard2.0/System.Management.dll",
-        "ref/netstandard2.0/System.Management.xml",
-        "runtimes/win/lib/net45/_._",
-        "runtimes/win/lib/netcoreapp2.0/System.Management.dll",
-        "runtimes/win/lib/netcoreapp2.0/System.Management.xml",
-        "system.management.5.0.0.nupkg.sha512",
-        "system.management.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
@@ -1565,8 +1547,9 @@
       "MouseKeyHook.NetCore >= 5.6.1.1",
       "NLog >= 5.1.1",
       "Newtonsoft.Json >= 13.0.2",
+      "Q42.HueApi >= 3.21.0",
+      "Q42.HueApi.Entertainment >= 3.20.1",
       "RGB.NET.Core >= 1.0.0",
-      "RGB.NET.Devices.Asus >= 1.0.0",
       "RGB.NET.Devices.CoolerMaster >= 1.0.0",
       "RGB.NET.Devices.Corsair >= 1.0.0",
       "RGB.NET.Devices.Logitech >= 1.0.0",
@@ -1584,7 +1567,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.0.0.3",
+    "version": "3.0.0.5",
     "restore": {
       "projectUniqueName": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
       "projectName": "Chromatics",
@@ -1650,11 +1633,15 @@
             "target": "Package",
             "version": "[13.0.2, )"
           },
-          "RGB.NET.Core": {
+          "Q42.HueApi": {
             "target": "Package",
-            "version": "[1.0.0, )"
+            "version": "[3.21.0, )"
           },
-          "RGB.NET.Devices.Asus": {
+          "Q42.HueApi.Entertainment": {
+            "target": "Package",
+            "version": "[3.20.1, )"
+          },
+          "RGB.NET.Core": {
             "target": "Package",
             "version": "[1.0.0, )"
           },

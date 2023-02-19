@@ -1,5 +1,6 @@
 ﻿using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -63,10 +64,10 @@ namespace Chromatics.Core
 
             var appSettings = AppSettings.GetSettings();
 
-            surface.Exception += args_ => throw args_.Exception;//Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Device Error: {args_.Exception.Message}");
+            surface.Exception += args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}");
 
             //Load devices
-
+            
             if (appSettings.deviceLogitechEnabled)
                 surface.Load(LogitechDeviceProvider.Instance, RGBDeviceType.All);
 
@@ -93,6 +94,10 @@ namespace Chromatics.Core
             
             if (appSettings.deviceWootingEnabled)
                 surface.Load(WootingDeviceProvider.Instance, RGBDeviceType.All);
+
+            if (appSettings.deviceHueEnabled)
+                surface.Load(HueRGBDeviceProvider.Instance, RGBDeviceType.All);
+                
 
 
             var deviceCount = 0;
