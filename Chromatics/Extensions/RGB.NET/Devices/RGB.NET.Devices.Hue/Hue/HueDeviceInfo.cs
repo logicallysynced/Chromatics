@@ -17,7 +17,7 @@ public class HueDeviceInfo : IRGBDeviceInfo
         if (light == null)
             return;
 
-        DeviceType = RGBDeviceType.Unknown;
+        DeviceType = RGBDeviceType.LedController;
         DeviceName = light.Name;
         Manufacturer = light.ManufacturerName;
         Model = light.ModelId;
