@@ -8,8 +8,10 @@
 [![Discord](https://img.shields.io/discord/334196655131721741.svg)](https://discord.gg/sK47yFE)
 
 [Join Support Discord](https://discord.gg/sK47yFE)
-
-
+<br>
+[Documentation](https://docs.chromaticsffxiv.com/chromatics-3)
+<br>
+<br>
 ***Important:** This is a new branch for Chromatics 3.x series. It is a complete rebuild of Chromatics from the ground up in .NET 6. It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did.*
 <br><br>
 Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting effects on your RGB devices. There are many different scenes and effects available including:
@@ -25,6 +27,9 @@ Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting 
 * Damage Flash - flash your device when you take damage
 * Gold Saucer Vegas Mode
 * Title screen & cutscene animations
+<br>
+<img src="https://chromaticsffxiv.com/img/Chromatics3_PaletteScreen.png" alt="Chromatics Palettes">
+<br>
 <br>
 Chromatics is compatible with a wide range of RGB devices, supported by the library RGB.NET. Any devices supported by RGB.NET should be supported by Chromatics.
 
