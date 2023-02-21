@@ -62,3 +62,8 @@ If you wish to build Chromatics yourself, you can download the active branch and
 * [Aurora](https://github.com/antonpup/Aurora) - borrowed some code base, not actually a dependency
 * [Artemis](https://github.com/Artemis-RGB/Artemis) - borrowed some code base and RGB.NET profiles, not actually a dependency
 * [FFXIVWeather](https://github.com/karashiiro/FFXIVWeather) - For calculating current weather.
+<br><br><br>
+### Disclaimer ###
+Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners.
+
+© 2010-2023 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.
