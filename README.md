@@ -8,8 +8,10 @@
 [![Discord](https://img.shields.io/discord/334196655131721741.svg)](https://discord.gg/sK47yFE)
 
 [Join Support Discord](https://discord.gg/sK47yFE)
-
-
+<br>
+[Documentation](https://docs.chromaticsffxiv.com/chromatics-3)
+<br>
+<br>
 ***Important:** This is a new branch for Chromatics 3.x series. It is a complete rebuild of Chromatics from the ground up in .NET 6. It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did.*
 <br><br>
 Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting effects on your RGB devices. There are many different scenes and effects available including:
@@ -25,6 +27,9 @@ Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting 
 * Damage Flash - flash your device when you take damage
 * Gold Saucer Vegas Mode
 * Title screen & cutscene animations
+<br>
+<img src="https://chromaticsffxiv.com/img/Chromatics3_PaletteScreen.png" alt="Chromatics Palettes">
+<br>
 <br>
 Chromatics is compatible with a wide range of RGB devices, supported by the library RGB.NET. Any devices supported by RGB.NET should be supported by Chromatics.
 
@@ -57,3 +62,8 @@ If you wish to build Chromatics yourself, you can download the active branch and
 * [Aurora](https://github.com/antonpup/Aurora) - borrowed some code base, not actually a dependency
 * [Artemis](https://github.com/Artemis-RGB/Artemis) - borrowed some code base and RGB.NET profiles, not actually a dependency
 * [FFXIVWeather](https://github.com/karashiiro/FFXIVWeather) - For calculating current weather.
+<br><br><br>
+### Disclaimer ###
+Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners.
+
+© 2010-2023 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.
