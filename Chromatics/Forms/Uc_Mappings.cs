@@ -287,6 +287,7 @@ namespace Chromatics.Forms
             pgb.btn_copy.Click += new EventHandler(OnCopyButtonPressed);
 
             //Remove Keybinds from non-keyboard device types
+            /*
             if (selectedDevice != RGBDeviceType.Keyboard)
             {
                 for (int i = pgb.cb_selector.Items.Count - 1; i >= 0; i--)
@@ -299,6 +300,7 @@ namespace Chromatics.Forms
                     }
                 }
             }
+            */
                        
 
             if (initialize)
