@@ -14,6 +14,7 @@ using RGB.NET.Devices.Novation;
 using RGB.NET.Devices.Razer;
 using RGB.NET.Devices.SteelSeries;
 using RGB.NET.Devices.Wooting;
+using RGB.NET.Layout;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Groups;
 using RGB.NET.Presets.Textures;
@@ -24,9 +25,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Chromatics.Core
 {
@@ -98,11 +102,42 @@ namespace Chromatics.Core
             if (appSettings.deviceHueEnabled)
                 surface.Load(HueRGBDeviceProvider.Instance, RGBDeviceType.All);
                 
-
-
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var deviceCount = 0;
+
             foreach (var surfaceDevice in surface.Devices)
             {
+                //Handle cases where a device is loaded with 0 LEDs
+
+                if (surfaceDevice.Count() <= 0 && surfaceDevice.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                {
+                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis XL keyboard-ISO.xml";
+
+                    if (File.Exists(path))
+                    {
+                        var layout = DeviceLayout.Load(path);
+                        LayoutExtension.ApplyTo(layout, surfaceDevice, true);
+
+                        #if DEBUG
+                            Debug.WriteLine($"Loaded layout for {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}. New Leds: {surfaceDevice.Count()}");
+                        #endif
+                    }
+                }
+                else if (surfaceDevice.Count() <= 0 && surfaceDevice.DeviceInfo.DeviceType == RGBDeviceType.Headset)
+                {
+                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis 4 LEDs headset.xml";
+
+                    if (File.Exists(path))
+                    {
+                        var layout = DeviceLayout.Load(path);
+                        LayoutExtension.ApplyTo(layout, surfaceDevice, true);
+
+                        #if DEBUG
+                            Debug.WriteLine($"Loaded layout for {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}. New Leds: {surfaceDevice.Count()}");
+                        #endif
+                    }
+                }
+
                 Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}: {surfaceDevice.DeviceInfo.DeviceName}.");
                 _devices.Add(surfaceDevice);
                 deviceCount++;
@@ -125,8 +160,7 @@ namespace Chromatics.Core
             Logger.WriteConsole(Enums.LoggerTypes.Devices, $"{deviceCount} devices loaded.");
             _loaded = true;
         }
-                
-
+        
         public static void Unload()
         {
             if (!_loaded) return;
