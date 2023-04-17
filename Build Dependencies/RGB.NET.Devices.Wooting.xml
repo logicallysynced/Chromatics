@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGB.NET.Devices.Wooting</name>
+    </assembly>
+    <members>
+        <member name="T:RGB.NET.Devices.Wooting.Enum.WootingDeviceType">
+            <summary>
+            Represents the type of a wooting device
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Wooting.Enum.WootingDeviceType.KeyboardTKL">
+            <summary>
+            10 Keyless Keyboard. E.g. Wooting One
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Wooting.Enum.WootingDeviceType.Keyboard">
+            <summary>
+            Full Size keyboard. E.g. Wooting Two
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Wooting.Enum.WootingDeviceType.KeyboardSixtyPercent">
+            <summary>
+            Full Size keyboard. E.g. Wooting Two
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Enum.WootingLayoutType">
+            <summary>
+            Contains list of available physical layouts for Wooting keyboards.
+            </summary>
+            <remarks>
+            Shop states ANSI (US) and ISO (UK/German/Nodics) - https://wooting.store/collections/wooting-keyboards/products/wooting-two
+            </remarks>
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Generic.IWootingRGBDevice">
+            <summary>
+            Represents a Wooting RGB-device.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Generic.WootingRGBDevice`1">
+            <inheritdoc cref="T:RGB.NET.Core.AbstractRGBDevice`1" />
+            <inheritdoc cref="T:RGB.NET.Devices.Wooting.Generic.IWootingRGBDevice" />
+            <summary>
+            Represents a Wooting-device
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Generic.WootingRGBDevice`1.#ctor(`0,RGB.NET.Core.IUpdateQueue)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Wooting.Generic.WootingRGBDevice`1"/> class.
+            </summary>
+            <param name="info">The generic information provided by Wooting for the device.</param>
+            <param name="updateQueue">The update queue used to update this device.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents a generic information for a Wooting-<see cref="T:RGB.NET.Core.IRGBDevice" />.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo.DeviceType">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo.DeviceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo.Manufacturer">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo.Model">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo.LayoutMetadata">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo.WootingDeviceType">
+            <summary>
+            Gets the <see cref="T:RGB.NET.Devices.Wooting.Enum.WootingDeviceType"/> of the <see cref="T:RGB.NET.Devices.Wooting.Generic.WootingRGBDevice`1"/>.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo.WootingLayoutType">
+            <summary>
+            Gets the <see cref="T:RGB.NET.Devices.Wooting.Enum.WootingLayoutType"/> of the <see cref="T:RGB.NET.Devices.Wooting.Generic.WootingRGBDevice`1"/>.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo.#ctor(RGB.NET.Core.RGBDeviceType,RGB.NET.Devices.Wooting.Native._WootingDeviceInfo,System.Byte)">
+            <summary>
+            Internal constructor of managed <see cref="T:RGB.NET.Devices.Wooting.Generic.WootingRGBDeviceInfo"/>.
+            </summary>
+            <param name="deviceType">The type of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.</param>
+            <param name="deviceInfo">The <see cref="T:RGB.NET.Devices.Wooting.Native._WootingDeviceInfo"/> of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Generic.WootingUpdateQueue">
+            <inheritdoc />
+            <summary>
+            Represents the update-queue performing updates for cooler master devices.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Generic.WootingUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Wooting.Generic.WootingUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Generic.WootingUpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Helper.EnumExtension">
+            <summary>
+            Offers some extensions and helper-methods for enum related things.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Helper.EnumExtension.GetDescription(System.Enum)">
+            <summary>
+            Gets the value of the <see cref="T:System.ComponentModel.DescriptionAttribute"/>.
+            </summary>
+            <param name="source">The enum value to get the description from.</param>
+            <returns>The value of the <see cref="T:System.ComponentModel.DescriptionAttribute"/> or the <see cref="M:System.Enum.ToString" /> result of the source.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Helper.EnumExtension.GetAttribute``1(System.Enum)">
+            <summary>
+            Gets the attribute of type T.
+            </summary>
+            <param name="source">The enum value to get the attribute from</param>
+            <typeparam name="T">The generic attribute type</typeparam>
+            <returns>The <see cref="T:System.Attribute"/>.</returns>
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardLedMappings">
+            <summary>
+            Contains all the hardware-id mappings for Wooting devices.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardLedMappings.Mapping">
+            <summary>
+            Contains all the hardware-id mappings for Wooting devices.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Devices.Wooting.Generic.WootingRGBDevice`1" />
+            <summary>
+            Represents a Wooting keyboard.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDevice.#ctor(RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDeviceInfo,RGB.NET.Core.IUpdateQueue)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDevice" /> class.
+            </summary>
+            <param name="info">The specific information provided by Wooting for the keyboard</param>
+            <param name="updateTrigger">The update trigger used to update this device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDevice.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDeviceInfo">
+            <summary>
+            Represents a generic information for a <see cref="T:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDevice" />.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDeviceInfo.Layout">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Keyboard.WootingKeyboardRGBDeviceInfo.#ctor(RGB.NET.Devices.Wooting.Native._WootingDeviceInfo,System.Byte)">
+            <inheritdoc />
+            <summary>
+            Internal constructor of managed <see cref="T:RGB.NET.Devices.Wooting.WootingKeyboardRGBDeviceInfo" />.
+            </summary>
+            <param name="deviceInfo">The native <see cref="T:RGB.NET.Devices.Wooting.Native._WootingDeviceInfo" />.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.Native._WootingSDK.Reload">
+            <summary>
+            Reloads the SDK.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Wooting.WootingDeviceProvider">
+            <inheritdoc />
+            <summary>
+            Represents a device provider responsible for Wooting devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.WootingDeviceProvider.Instance">
+            <summary>
+            Gets the singleton <see cref="T:RGB.NET.Devices.Wooting.WootingDeviceProvider"/> instance.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.WootingDeviceProvider.PossibleX86NativePathsWindows">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x86 windows applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.WootingDeviceProvider.PossibleX64NativePathsWindows">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x64 windows applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.WootingDeviceProvider.PossibleNativePathsLinux">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x64 linux applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Wooting.WootingDeviceProvider.PossibleNativePathsMacOS">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x64 MacOS applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.WootingDeviceProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Wooting.WootingDeviceProvider"/> class.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if this constructor is called even if there is already an instance of this class.</exception>
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.WootingDeviceProvider.InitializeSDK">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.WootingDeviceProvider.LoadDevices">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Wooting.WootingDeviceProvider.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

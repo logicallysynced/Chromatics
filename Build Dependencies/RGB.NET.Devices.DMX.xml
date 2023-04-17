@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGB.NET.Devices.DMX</name>
+    </assembly>
+    <members>
+        <member name="T:RGB.NET.Devices.DMX.DMXDeviceProvider">
+            <inheritdoc />
+            <summary>
+            Represents a device provider responsible for DMX devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.DMXDeviceProvider.Instance">
+            <summary>
+            Gets the singleton <see cref="T:RGB.NET.Devices.DMX.DMXDeviceProvider"/> instance.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.DMXDeviceProvider.DeviceDefinitions">
+            <summary>
+            Gets a list of all defined device-definitions.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.DMXDeviceProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.DMX.DMXDeviceProvider"/> class.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if this constructor is called even if there is already an instance of this class.</exception>
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.DMXDeviceProvider.AddDeviceDefinition(RGB.NET.Devices.DMX.IDMXDeviceDefinition)">
+            <summary>
+            Adds the specified <see cref="T:RGB.NET.Devices.DMX.IDMXDeviceDefinition" /> to this device-provider.
+            </summary>
+            <param name="deviceDefinition">The <see cref="T:RGB.NET.Devices.DMX.IDMXDeviceDefinition"/> to add.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.DMXDeviceProvider.InitializeSDK">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.DMXDeviceProvider.LoadDevices">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.DMX.E131.E131Device">
+            <summary>
+            Represents a E1.31-DXM-device.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.E131.E131Device.#ctor(RGB.NET.Devices.DMX.E131.E131DeviceInfo,System.Collections.Generic.Dictionary{RGB.NET.Core.LedId,System.Collections.Generic.List{System.ValueTuple{System.Int32,System.Func{RGB.NET.Core.Color,System.Byte}}}},RGB.NET.Core.IDeviceUpdateTrigger)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.E131.E131Device.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.DMX.E131.E131DeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents device information for a <see cref="T:RGB.NET.Devices.DMX.E131.E131Device"/> />.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.DMX.E131.E131DeviceInfo.CID_LENGTH">
+            <summary>
+            The length of the CID;
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.DeviceType">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.DeviceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.Manufacturer">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.Model">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.LayoutMetadata">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.Hostname">
+            <summary>
+            The hostname of the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.Port">
+            <summary>
+            The port of the device. 
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.CID">
+            <summary>
+            The CID used to identify against the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DeviceInfo.Universe">
+            <summary>
+            The Universe this device belongs to.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition">
+            <summary>
+            Represents the data used to create a E1.31 DMX-device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.Hostname">
+            <summary>
+            Gets or sets the hostname of the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.Port">
+            <summary>
+            Gets or sets the port to device is listening to.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.DeviceType">
+            <summary>
+            Gets or sets the <see cref="T:RGB.NET.Core.RGBDeviceType" /> of the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.Manufacturer">
+            <summary>
+            Gets or sets the manufacturer of the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.Model">
+            <summary>
+            Gets or sets the model name of the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.CID">
+            <summary>
+            Gets or sets the CID of the device (null will generate a random CID)
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.Universe">
+            <summary>
+            Gets or sets the universe the device belongs to.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.Leds">
+            <summary>
+            Gets or sets the led-mappings used to create the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.HeartbeatTimer">
+            <summary>
+            The time in ms after which the device is updated even if no changes are made in the meantime to prevent the target from timing out or similar problems.
+            To disable heartbeats leave it at 0.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition" /> class.
+            </summary>
+            <param name="hostname">The hostname of the device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.E131.E131DMXDeviceDefinition.AddLed(RGB.NET.Core.LedId,System.ValueTuple{System.Int32,System.Func{RGB.NET.Core.Color,System.Byte}}[])">
+            <summary>
+            Adds a led-mapping to the device.
+            </summary>
+            <param name="id">The <see cref="T:RGB.NET.Core.LedId" /> used to identify the led.</param>
+            <param name="channels">The channels the led is using and a function mapping parts of the color to them.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.DMX.E131.E131UpdateQueue">
+            <inheritdoc />
+            <summary>
+            Represents the update-queue performing updates for E131-DMX devices.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.DMX.E131.E131UpdateQueue._socket">
+            <summary>
+            The UDP-Connection used to send data.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.DMX.E131.E131UpdateQueue.DataPacket">
+            <summary>
+            Gets the byte-representation of a E1.31 packet as described in http://tsp.esta.org/tsp/documents/docs/E1-31-2016.pdf.
+            CID, SequenceNumber, Universe and PropertyValues needs to be updated before use!
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.DMX.E131.E131UpdateQueue._sequenceNumber">
+            <summary>
+            The sequence-number used to detect the order in which packages where sent.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.E131.E131UpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,System.String,System.Int32)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.DMX.E131.E131UpdateQueue" /> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+            <param name="hostname">The hostname of the device this queue is performing updates for.</param>
+            <param name="port">The port to connect to the device this queue is performing updates for.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.E131.E131UpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.DMX.E131.E131UpdateQueue.GetNextSequenceNumber">
+            <summary>
+            Increments the sequence number and wraps it if neded.
+            </summary>
+            <returns>The next usable sequence number.</returns>
+        </member>
+        <member name="T:RGB.NET.Devices.DMX.IDMXDeviceDefinition">
+            <summary>
+            Marker interface for DMX device definitions.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -244,9 +244,6 @@
             <param name="info">The generic information provided by razer for the device.</param>
             <param name="updateQueue">The queue used to update this device.</param>
         </member>
-        <member name="M:RGB.NET.Devices.Razer.RazerRGBDevice.UpdateLeds(System.Collections.Generic.IEnumerable{RGB.NET.Core.Led})">
-            <inheritdoc />
-        </member>
         <member name="M:RGB.NET.Devices.Razer.RazerRGBDevice.Dispose">
             <inheritdoc />
         </member>
