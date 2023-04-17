@@ -1,0 +1,310 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGB.NET.Devices.CoolerMaster</name>
+    </assembly>
+    <members>
+        <member name="T:RGB.NET.Devices.CoolerMaster.DeviceTypeAttribute">
+            <inheritdoc />
+            <summary>
+            Specifies the <see cref="T:RGB.NET.Core.RGBDeviceType" /> of a field.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.DeviceTypeAttribute.DeviceType">
+            <summary>
+            Gets the <see cref="T:RGB.NET.Core.RGBDeviceType"/>.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.DeviceTypeAttribute.#ctor(RGB.NET.Core.RGBDeviceType)">
+            <inheritdoc />
+            <summary>
+            Internal constructor of the <see cref="T:RGB.NET.Devices.CoolerMaster.DeviceTypeAttribute" /> class.
+            </summary>
+            <param name="deviceType">The <see cref="T:RGB.NET.Core.RGBDeviceType" />.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider">
+            <inheritdoc />
+            <summary>
+            Represents a device provider responsible for Cooler Master devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider.Instance">
+            <summary>
+            Gets the singleton <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider"/> instance.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider.PossibleX86NativePaths">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x86 applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider.PossibleX64NativePaths">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x64 applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider"/> class.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if this constructor is called even if there is already an instance of this class.</exception>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider.InitializeSDK">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider.LoadDevices">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterDeviceProvider.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes">
+            <summary>
+            Contains a list of available device-indexes.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterEffects">
+            <summary>
+            Contains a list of available effects.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterPhysicalKeyboardLayout">
+            <summary>
+            Contains list of available physical layouts for cooler master keyboards.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDevice`1">
+            <inheritdoc cref="T:RGB.NET.Core.AbstractRGBDevice`1" />
+            <summary>
+            Represents a generic CoolerMaster-device. (keyboard, mouse, headset, mousepad).
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDevice`1.#ctor(`0,RGB.NET.Core.IDeviceUpdateTrigger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDevice`1"/> class.
+            </summary>
+            <param name="info">The generic information provided by CoolerMaster for the device.</param>
+            <param name="updateTrigger">The update trigger used to update this device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDevice`1.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose" />
+            <inheritdoc cref="M:RGB.NET.Core.AbstractRGBDevice`1.Dispose" />
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents a generic information for a Corsair-<see cref="T:RGB.NET.Core.IRGBDevice" />.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo.DeviceType">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo.DeviceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo.Manufacturer">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo.Model">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo.LayoutMetadata">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo.DeviceIndex">
+            <summary>
+            Gets the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes"/> of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDevice`1"/>.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo.#ctor(RGB.NET.Core.RGBDeviceType,RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            Internal constructor of managed <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDeviceInfo"/>.
+            </summary>
+            <param name="deviceType">The type of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.</param>
+            <param name="deviceIndex">The <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes"/> of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterUpdateQueue">
+            <inheritdoc />
+            <summary>
+            Represents the update-queue performing updates for cooler master devices.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+            <param name="deviceIndex">The <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes"/> of the device this queue performs updates for.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterUpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.ICoolerMasterRGBDevice">
+            <summary>
+            Represents a CoolerMaster RGB-device.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.Helper.EnumExtension">
+            <summary>
+            Offers some extensions and helper-methods for enum related things.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Helper.EnumExtension.GetDescription(System.Enum)">
+            <summary>
+            Gets the value of the <see cref="T:System.ComponentModel.DescriptionAttribute"/>.
+            </summary>
+            <param name="source">The enum value to get the description from.</param>
+            <returns>The value of the <see cref="T:System.ComponentModel.DescriptionAttribute"/> or the <see cref="M:System.Enum.ToString" /> result of the source.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Helper.EnumExtension.GetDeviceType(System.Enum)">
+            <summary>
+            Gets the value of the <see cref="T:RGB.NET.Devices.CoolerMaster.DeviceTypeAttribute"/>.
+            </summary>
+            <param name="source">The enum value to get the description from.</param>
+            <returns>The value of the <see cref="T:RGB.NET.Devices.CoolerMaster.DeviceTypeAttribute"/> or the <see cref="M:System.Enum.ToString" /> result of the source.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Helper.EnumExtension.GetAttribute``1(System.Enum)">
+            <summary>
+            Gets the attribute of type T.
+            </summary>
+            <param name="source">The enum value to get the attribute from</param>
+            <typeparam name="T">The generic attribute type</typeparam>
+            <returns>The <see cref="T:System.Attribute"/>.</returns>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardLedMappings">
+            <summary>
+            Contains all the hardware-id mappings for CoolerMaster devices.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardLedMappings.Mapping">
+            <summary>
+            Contains all the hardware-id mappings for CoolerMaster devices.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDevice`1" />
+            <summary>
+            Represents a CoolerMaster keyboard.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDevice.#ctor(RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDeviceInfo,RGB.NET.Core.IDeviceUpdateTrigger)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDevice" /> class.
+            </summary>
+            <param name="info">The specific information provided by CoolerMaster for the keyboard</param>
+            <param name="updateTrigger">The update trigger used to update this device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDevice.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDeviceInfo">
+            <summary>
+            Represents a generic information for a <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDevice" />.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDeviceInfo.Layout">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDeviceInfo.PhysicalLayout">
+            <summary>
+            Gets the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterPhysicalKeyboardLayout"/> of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDevice"/>.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDeviceInfo.#ctor(RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes,RGB.NET.Devices.CoolerMaster.CoolerMasterPhysicalKeyboardLayout)">
+            <inheritdoc />
+            <summary>
+            Internal constructor of managed <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDeviceInfo" />.
+            </summary>
+            <param name="deviceIndex">The index of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDevice" />.</param>
+            <param name="physicalKeyboardLayout">The <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterPhysicalKeyboardLayout" /> of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterKeyboardRGBDevice" />.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseLedMappings">
+            <summary>
+            Contains all the hardware-id mappings for CoolerMaster devices.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseLedMappings.Mapping">
+            <summary>
+            Contains all the hardware-id mappings for CoolerMaster devices.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterRGBDevice`1" />
+            <summary>
+            Represents a CoolerMaster mouse.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDevice.#ctor(RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDeviceInfo,RGB.NET.Core.IDeviceUpdateTrigger)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDevice" /> class.
+            </summary>
+            <param name="info">The specific information provided by CoolerMaster for the mouse</param>
+            <param name="updateTrigger">The update trigger used to update this device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDevice.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents a generic information for a <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDevice" />.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDeviceInfo.#ctor(RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <inheritdoc />
+            <summary>
+            Internal constructor of managed <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDeviceInfo" />.
+            </summary>
+            <param name="deviceIndex">The index of the <see cref="T:RGB.NET.Devices.CoolerMaster.CoolerMasterMouseRGBDevice" />.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.Reload">
+            <summary>
+            Reloads the SDK.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.GetSDKVersion">
+            <summary>
+            CM-SDK: Get SDK Dll's Version.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.SetControlDevice(RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            CM-SDK: set operating device
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.IsDevicePlugged(RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            CM-SDK: verify if the deviced is plugged in
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.GetDeviceLayout(RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            CM-SDK: Obtain current device layout
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.EnableLedControl(System.Boolean,RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            CM-SDK: set control over device’s LED
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.RefreshLed(System.Boolean,RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            CM-SDK: Print out the lights setting from Buffer to LED
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.SetLedColor(System.Int32,System.Int32,System.Byte,System.Byte,System.Byte,RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            CM-SDK: Set single Key LED color
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.CoolerMaster.Native._CoolerMasterSDK.SetAllLedColor(RGB.NET.Devices.CoolerMaster.Native._CoolerMasterColorMatrix,RGB.NET.Devices.CoolerMaster.CoolerMasterDevicesIndexes)">
+            <summary>
+            CM-SDK: Set Keyboard "every LED" color
+            </summary>
+        </member>
+    </members>
+</doc>

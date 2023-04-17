@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGB.NET.Devices.PicoPi</name>
+    </assembly>
+    <members>
+        <member name="T:RGB.NET.Devices.PicoPi.Enum.UpdateMode">
+            <summary>
+            Contains a list of possible ways of communication with the device.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider">
+            <inheritdoc />
+            <summary>
+            Represents a device provider responsible for PicoPi-devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider.Instance">
+            <summary>
+            Gets the singleton <see cref="T:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider"/> instance.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider.DeviceDefinitions">
+            <summary>
+            Gets the HID-definitions for PicoPi-devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider.UpdateMode">
+            <summary>
+            Gets or sets the endpoint used to update devices. (default <see cref="F:RGB.NET.Devices.PicoPi.Enum.UpdateMode.Auto"/>).
+            If auto is set it automatically is using bulk-updates for devies with more than 40 LEDs if supported. Else HID is used.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider"/> class.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if this constructor is called even if there is already an instance of this class.</exception>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider.InitializeSDK">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider.GetLoadedDevices(RGB.NET.Core.RGBDeviceType)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider.LoadDevices">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiDeviceProvider.Reset">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.PicoPi.LedMappings">
+            <summary>
+            Contains mappings for <see cref="T:RGB.NET.Core.LedId"/> to the buffer-offset.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.PicoPi.LedMappings.StripeMapping">
+            <summary>
+            Gets the defautlt offset-mapping.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.PicoPi.PicoPiBulkUpdateQueue">
+            <inheritdoc />
+            <summary>
+            Represents the update-queue performing updates for Pico-Pi bulk-devices.
+             </summary>
+            <remarks>
+            Using this requires the libusb driver to be installed!
+            </remarks>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiBulkUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,RGB.NET.Devices.PicoPi.PicoPiSDK,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.PicoPi.PicoPiBulkUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+            <param name="sdk">The sdk used to access the device.</param>
+            <param name="channel">The channel to update.</param>
+            <param name="ledCount">The maximum amount of leds to update.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiBulkUpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.PicoPi.PicoPiHIDUpdateQueue">
+            <inheritdoc />
+            <summary>
+            Represents the update-queue performing updates for Pico-Pi HID-devices.
+             </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiHIDUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,RGB.NET.Devices.PicoPi.PicoPiSDK,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.PicoPi.PicoPiHIDUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+            <param name="sdk">The sdk used to access the device.</param>
+            <param name="channel">The channel to update.</param>
+            <param name="ledCount">The maximum amount of leds to update.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiHIDUpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.PicoPi.PicoPiRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Core.AbstractRGBDevice`1" />
+            <summary>
+            Represents a device based on an Raspberry Pi Pico.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiRGBDevice.#ctor(RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo,RGB.NET.Core.IUpdateQueue,RGB.NET.Core.LedMapping{System.Int32})">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.PicoPi.PicoPiRGBDevice" /> class.
+            </summary>
+            <param name="deviceInfo">The device info of this device.</param>
+            <param name="updateQueue">The queue used to update this device.</param>
+            <param name="ledMapping">A mapping of leds this device is initialized with.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiRGBDevice.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo">
+            <summary>
+            Represents a generic information for a <see cref="T:RGB.NET.Devices.PicoPi.PicoPiRGBDevice" />.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.DeviceType">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.DeviceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.Manufacturer">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.Model">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.LayoutMetadata">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.Id">
+            <summary>
+            Gets the Id of the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.Version">
+            <summary>
+            Gets the version of the device firmware.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.Channel">
+            <summary>
+            Gets the channel this device is using.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiRGBDeviceInfo.LedCount">
+            <summary>
+            Gets the amount of LEDs on this device.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.PicoPi.PicoPiSDK">
+            <summary>
+            Represents a SDK to access devices based on a Raspberry Pi Pico.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.PicoPi.PicoPiSDK.VENDOR_ID">
+            <summary>
+            The vendor id used by the pico-pi firmware.
+            Registered at https://pid.codes/1209/2812/
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.PicoPi.PicoPiSDK.HID_BULK_CONTROLLER_PID">
+            <summary>
+            The product id used by the pico-pi firmware.
+            Registered at https://pid.codes/1209/2812/
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiSDK.IsBulkSupported">
+            <summary>
+            Gets if updates via the Bulk-Enbpoint are possible.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiSDK.Id">
+            <summary>
+            Gets the Id of the device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiSDK.Version">
+            <summary>
+            Gets the version of the device firmware.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PicoPi.PicoPiSDK.Channels">
+            <summary>
+            Gets a collection of channels, led counts and pins that are available on this device.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.#ctor(HidSharp.HidDevice)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.PicoPi.PicoPiSDK" /> class.
+            </summary>
+            <param name="device">The underlying hid device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.SetLedCounts(System.ValueTuple{System.Int32,System.Int32}[])">
+            <summary>
+            Configures the amount of leds to update on the specified channels.
+            </summary>
+            <remarks>This is a configuration function. The value is persistent on the device.</remarks>
+            <param name="ledCounts">The values to set on the device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.SetPins(System.ValueTuple{System.Int32,System.Int32}[])">
+            <summary>
+            Configures the pins used by the specified channels.
+            </summary>
+            <remarks>This is a configuration function. The value is persistent on the device.</remarks>
+            <param name="pins">T values to set on the device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.SendHidUpdate(System.Span{System.Byte}@,System.Int32)">
+            <summary>
+            Sends a update to the device using the HID-endpoint and fragments the data if needed.
+            </summary>
+            <param name="data">The data to send.</param>
+            <param name="channel">The channel to update.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.SendHidUpdate(System.Span{System.Byte}@,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Sends a update to the device using the HID-endpoint.
+            </summary>
+            <param name="data">The data packet to send.</param>
+            <param name="channel">The channel to update.</param>
+            <param name="chunk">The chunk id of the packet. (Required if packets are fragmented.)</param>
+            <param name="update">A value indicating if the device should update directly after receiving this packet. (If packets are fragmented this should only be true for the last chunk.)</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.SendBulkUpdate(System.Span{System.Byte}@,System.Int32)">
+            <summary>
+            Sends a update to the device using the bulk-endpoint.
+            </summary>
+            <remarks>
+            Silently fails if not bulk-updates are supported. (Check <see cref="P:RGB.NET.Devices.PicoPi.PicoPiSDK.IsBulkSupported"/>)
+            </remarks>
+            <param name="data">The data packet to send.</param>
+            <param name="channel">The channel to update.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.FlushBulk">
+            <summary>
+            Flushing the bulk endpoint, causing the device to update.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.Reset">
+            <summary>
+            Resets all leds to black.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PicoPi.PicoPiSDK.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
