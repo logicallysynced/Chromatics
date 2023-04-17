@@ -1,0 +1,322 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGB.NET.Devices.Novation</name>
+    </assembly>
+    <members>
+        <member name="T:RGB.NET.Devices.Novation.Attributes.ColorCapabilityAttribute">
+            <inheritdoc />
+            <summary>
+            Specifies the color-capability of a field.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.Attributes.ColorCapabilityAttribute.Capability">
+            <summary>
+            Gets the Id.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.Attributes.ColorCapabilityAttribute.#ctor(RGB.NET.Devices.Novation.NovationColorCapabilities)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.Attributes.ColorCapabilityAttribute" /> class.
+            </summary>
+            <param name="capability">The capability.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.Attributes.DeviceIdAttribute">
+            <inheritdoc />
+            <summary>
+            Specifies the device-id of a field.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.Attributes.DeviceIdAttribute.Id">
+            <summary>
+            Gets the Id.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.Attributes.DeviceIdAttribute.#ctor(System.String)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.Attributes.DeviceIdAttribute" /> class.
+            </summary>
+            <param name="id">The id.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.Attributes.LedIdMappingAttribute">
+            <inheritdoc />
+            <summary>
+            Specifies the led id mapping of a field.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.Attributes.LedIdMappingAttribute.LedIdMapping">
+            <summary>
+            Gets the led id mapping.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.Attributes.LedIdMappingAttribute.#ctor(RGB.NET.Devices.Novation.LedIdMappings)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.Attributes.LedIdMappingAttribute" /> class.
+            </summary>
+            <param name="ledIdMapping">The led id mapping.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.NovationColorCapabilities">
+            <summary>
+            Represents the color-capabilities of a novation device.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.NovationDevices">
+            <summary>
+            Represents a specific novation device.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.INovationRGBDevice">
+            <summary>
+            Represents a novation RGB-device.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.LimitedColorUpdateQueue">
+            <summary>
+            Represents the update-queue performing updates for a limited-color novation device.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.LimitedColorUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.LimitedColorUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+            <param name="deviceId">The device-id of the device this queue is performing updates for.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.LimitedColorUpdateQueue.CreateMessage(System.Object,RGB.NET.Core.Color@)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.LimitedColorUpdateQueue.ConvertColor(RGB.NET.Core.Color@)">
+            <summary>
+            Convert a <see cref="T:RGB.NET.Core.Color"/> to its novation-representation depending on the <see cref="T:RGB.NET.Devices.Novation.NovationColorCapabilities"/> of the <see cref="T:RGB.NET.Devices.Novation.NovationRGBDevice`1"/>.
+            The conversion uses only a limited amount of colors (3 red, 3 yellow, 3 green).
+            </summary>
+            <param name="color">The <see cref="T:RGB.NET.Core.Color"/> to convert.</param>
+            <returns>The novation-representation of the <see cref="T:RGB.NET.Core.Color"/>.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.LimitedColorUpdateQueue.Reset">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.MidiUpdateQueue">
+            <inheritdoc cref="T:RGB.NET.Core.UpdateQueue" />
+            <summary>
+            Represents the update-queue performing updates for midi devices.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.MidiUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,System.Int32)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.MidiUpdateQueue" /> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+            <param name="deviceId">The id of the device this queue is performing updates for.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.MidiUpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.MidiUpdateQueue.SendMessage(Sanford.Multimedia.Midi.ShortMessage)">
+            <summary>
+            Sends the specified message to the device this queue is performing updates for.
+            </summary>
+            <param name="message">The message to send.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.MidiUpdateQueue.CreateMessage(System.Object,RGB.NET.Core.Color@)">
+            <summary>
+            Creates a update-message out of a specified data set.
+            </summary>
+            <param name="key">The key used to identify the LED to update.</param>
+            <param name="color">The color to send.</param>
+            <returns>The message created out of the data set.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.MidiUpdateQueue.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.NovationRGBDevice`1">
+            <inheritdoc cref="T:RGB.NET.Core.AbstractRGBDevice`1" />
+            <summary>
+            Represents a generic Novation-device. (launchpad).
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationRGBDevice`1.#ctor(`0,RGB.NET.Core.IDeviceUpdateTrigger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.NovationRGBDevice`1"/> class.
+            </summary>
+            <param name="info">The generic information provided by Novation for the device.</param>
+            <param name="updateTrigger">The update trigger used to update this device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationRGBDevice`1.Reset">
+            <summary>
+            Resets the <see cref="T:RGB.NET.Devices.Novation.NovationRGBDevice`1"/> back to default.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationRGBDevice`1.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose" />
+            <inheritdoc cref="M:RGB.NET.Core.AbstractRGBDevice`1.Dispose" />
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.NovationRGBDeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents a generic information for a Corsair-<see cref="T:RGB.NET.Core.IRGBDevice" />.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.NovationRGBDeviceInfo.DeviceType">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.NovationRGBDeviceInfo.DeviceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.NovationRGBDeviceInfo.Manufacturer">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.NovationRGBDeviceInfo.Model">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.NovationRGBDeviceInfo.LayoutMetadata">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.NovationRGBDeviceInfo.ColorCapabilities">
+            <summary>
+            Gets the <see cref="T:RGB.NET.Devices.Novation.NovationColorCapabilities"/> of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.NovationRGBDeviceInfo.DeviceId">
+            <summary>
+            Gets the (midi)-id of the <see cref="T:RGB.NET.Core.IRGBDevice"/>..
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationRGBDeviceInfo.#ctor(RGB.NET.Core.RGBDeviceType,System.String,System.Int32,RGB.NET.Devices.Novation.NovationColorCapabilities)">
+            <summary>
+            Internal constructor of managed <see cref="T:RGB.NET.Devices.Novation.NovationRGBDeviceInfo"/>.
+            </summary>
+            <param name="deviceType">The type of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.</param>
+            <param name="model">The represented device model.</param>
+            <param name="deviceId">The (midi)-id of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.</param>
+            <param name="colorCapabilities">The <see cref="T:RGB.NET.Devices.Novation.NovationColorCapabilities"/> of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.RGBColorUpdateQueue">
+            <summary>
+            Represents the update-queue performing updates for a RGB-color novation device.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.RGBColorUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.RGBColorUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+            <param name="deviceId">The device-id of the device this queue is performing updates for.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.RGBColorUpdateQueue.CreateMessage(System.Object,RGB.NET.Core.Color@)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.RGBColorUpdateQueue.ConvertColor(RGB.NET.Core.Color@)">
+            <summary>
+            Convert a <see cref="T:RGB.NET.Core.Color"/> to its novation-representation depending on the <see cref="T:RGB.NET.Devices.Novation.NovationColorCapabilities"/> of the <see cref="T:RGB.NET.Devices.Novation.NovationRGBDevice`1"/>.
+            Source: http://www.launchpadfun.com/downloads_de/velocity-colors/
+            </summary>
+            <param name="color">The <see cref="T:RGB.NET.Core.Color"/> to convert.</param>
+            <returns>The novation-representation of the <see cref="T:RGB.NET.Core.Color"/>.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.RGBColorUpdateQueue.Reset">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.EnumExtension">
+            <summary>
+            Offers some extensions and helper-methods for enum related things.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.EnumExtension.GetDeviceId(System.Enum)">
+            <summary>
+            Gets the value of the <see cref="T:RGB.NET.Devices.Novation.Attributes.DeviceIdAttribute"/>.
+            </summary>
+            <param name="source">The enum value to get the description from.</param>
+            <returns>The value of the <see cref="T:RGB.NET.Devices.Novation.Attributes.DeviceIdAttribute"/> of the source.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.EnumExtension.GetColorCapability(System.Enum)">
+            <summary>
+            Gets the value of the <see cref="T:RGB.NET.Devices.Novation.Attributes.ColorCapabilityAttribute"/>.
+            </summary>
+            <param name="source">The enum value to get the description from.</param>
+            <returns>The value of the <see cref="T:RGB.NET.Devices.Novation.Attributes.ColorCapabilityAttribute"/> of the source.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.EnumExtension.GetLedIdMapping(System.Enum)">
+            <summary>
+            Gets the value of the <see cref="T:RGB.NET.Devices.Novation.Attributes.LedIdMappingAttribute"/>.
+            </summary>
+            <param name="source">The enum value to get the description from.</param>
+            <returns>The value of the <see cref="T:RGB.NET.Devices.Novation.Attributes.LedIdMappingAttribute"/> of the source.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.EnumExtension.GetAttribute``1(System.Enum)">
+            <summary>
+            Gets the attribute of type T.
+            </summary>
+            <param name="source">The enum value to get the attribute from</param>
+            <typeparam name="T">The generic attribute type</typeparam>
+            <returns>The <see cref="T:System.Attribute"/>.</returns>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.NovationLaunchpadRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Devices.Novation.NovationRGBDevice`1" />
+            <summary>
+            Represents a Novation launchpad.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationLaunchpadRGBDevice.#ctor(RGB.NET.Devices.Novation.NovationLaunchpadRGBDeviceInfo,RGB.NET.Core.IDeviceUpdateTrigger)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.NovationLaunchpadRGBDevice" /> class.
+            </summary>
+            <param name="info">The specific information provided by Novation for the launchpad</param>
+            <param name="updateTrigger">The update trigger used to update this device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationLaunchpadRGBDevice.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationLaunchpadRGBDevice.GetDeviceMapping">
+            <summary>
+            Gets the mapping used to access the LEDs of the device based on <see cref="P:RGB.NET.Devices.Novation.NovationLaunchpadRGBDeviceInfo.LedMapping"/>.
+            </summary>
+            <returns>The mapping of the device.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value of <see cref="P:RGB.NET.Devices.Novation.NovationLaunchpadRGBDeviceInfo.LedMapping"/> is not known.</exception>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.NovationLaunchpadRGBDeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents a generic information for a <see cref="T:RGB.NET.Devices.Novation.NovationLaunchpadRGBDevice" />.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationLaunchpadRGBDeviceInfo.#ctor(System.String,System.Int32,RGB.NET.Devices.Novation.NovationColorCapabilities,RGB.NET.Devices.Novation.LedIdMappings)">
+            <inheritdoc />
+            <summary>
+            Internal constructor of managed <see cref="T:RGB.NET.Devices.Novation.NovationLaunchpadRGBDeviceInfo" />.
+            </summary>
+            <param name="model">The represented device model.</param>
+            <param name="deviceId">The id of the device.</param>
+            <param name="colorCapabilities">The <see cref="T:RGB.NET.Devices.Novation.NovationColorCapabilities" /> of the <see cref="T:RGB.NET.Core.IRGBDevice" />.</param>
+            <param name="ledMapping">A mapping of leds this device is initialized with.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Novation.NovationDeviceProvider">
+            <inheritdoc />
+            <summary>
+            Represents a device provider responsible for Novation  devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Novation.NovationDeviceProvider.Instance">
+            <summary>
+            Gets the singleton <see cref="T:RGB.NET.Devices.Novation.NovationDeviceProvider"/> instance.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationDeviceProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Novation.NovationDeviceProvider"/> class.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if this constructor is called even if there is already an instance of this class.</exception>
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationDeviceProvider.InitializeSDK">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Novation.NovationDeviceProvider.LoadDevices">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

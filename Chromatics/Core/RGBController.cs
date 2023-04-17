@@ -63,102 +63,111 @@ namespace Chromatics.Core
 
         public static void Setup()
         {
-            //Bind to console
-            Logger.WriteConsole(Enums.LoggerTypes.Devices, @"Looking for RGB Devices..");
-
-            var appSettings = AppSettings.GetSettings();
-
-            surface.Exception += args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}");
-
-            //Load devices
-            
-            if (appSettings.deviceLogitechEnabled)
-                surface.Load(LogitechDeviceProvider.Instance, RGBDeviceType.All);
-
-            if (appSettings.deviceCorsairEnabled)
-                surface.Load(CorsairDeviceProvider.Instance, RGBDeviceType.All);
-            
-            if (appSettings.deviceCoolermasterEnabled)
-                surface.Load(CoolerMasterDeviceProvider.Instance, RGBDeviceType.All);
-            
-            if (appSettings.deviceNovationEnabled)
-                surface.Load(NovationDeviceProvider.Instance, RGBDeviceType.All);
-            
-            if (appSettings.deviceRazerEnabled)
-                surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All);
-            
-            if (appSettings.deviceAsusEnabled)
-                surface.Load(AsusDeviceProvider.Instance, RGBDeviceType.All);
-            
-            if (appSettings.deviceMsiEnabled)
-                surface.Load(MsiDeviceProvider.Instance, RGBDeviceType.All);
-            
-            if (appSettings.deviceSteelseriesEnabled)
-                surface.Load(SteelSeriesDeviceProvider.Instance, RGBDeviceType.All);
-            
-            if (appSettings.deviceWootingEnabled)
-                surface.Load(WootingDeviceProvider.Instance, RGBDeviceType.All);
-
-            if (appSettings.deviceHueEnabled)
-                surface.Load(HueRGBDeviceProvider.Instance, RGBDeviceType.All);
-                
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-            var deviceCount = 0;
-
-            foreach (var surfaceDevice in surface.Devices)
+            try
             {
-                //Handle cases where a device is loaded with 0 LEDs
+                //Bind to console
+                Logger.WriteConsole(Enums.LoggerTypes.Devices, @"Looking for RGB Devices..");
 
-                if (surfaceDevice.Count() <= 0 && surfaceDevice.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
-                {
-                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis XL keyboard-ISO.xml";
+                var appSettings = AppSettings.GetSettings();
 
-                    if (File.Exists(path))
-                    {
-                        var layout = DeviceLayout.Load(path);
-                        LayoutExtension.ApplyTo(layout, surfaceDevice, true);
+                surface.Exception += args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}");
 
-                        #if DEBUG
-                            Debug.WriteLine($"Loaded layout for {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}. New Leds: {surfaceDevice.Count()}");
-                        #endif
-                    }
-                }
-                else if (surfaceDevice.Count() <= 0 && surfaceDevice.DeviceInfo.DeviceType == RGBDeviceType.Headset)
-                {
-                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis 4 LEDs headset.xml";
-
-                    if (File.Exists(path))
-                    {
-                        var layout = DeviceLayout.Load(path);
-                        LayoutExtension.ApplyTo(layout, surfaceDevice, true);
-
-                        #if DEBUG
-                            Debug.WriteLine($"Loaded layout for {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}. New Leds: {surfaceDevice.Count()}");
-                        #endif
-                    }
-                }
-
-                Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}: {surfaceDevice.DeviceInfo.DeviceName}.");
-                _devices.Add(surfaceDevice);
-                deviceCount++;
-
-            }
+                //Load devices
             
-            if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
+                if (appSettings.deviceLogitechEnabled)
+                    surface.Load(LogitechDeviceProvider.Instance, RGBDeviceType.All);
 
-            var TimerTrigger = new TimerUpdateTrigger();
-            TimerTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
-            surface.RegisterUpdateTrigger(TimerTrigger);
+                if (appSettings.deviceCorsairEnabled)
+                    surface.Load(CorsairDeviceProvider.Instance, RGBDeviceType.All);
+            
+                if (appSettings.deviceCoolermasterEnabled)
+                    surface.Load(CoolerMasterDeviceProvider.Instance, RGBDeviceType.All);
+            
+                if (appSettings.deviceNovationEnabled)
+                    surface.Load(NovationDeviceProvider.Instance, RGBDeviceType.All);
+            
+                if (appSettings.deviceRazerEnabled)
+                    surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All);
+            
+                if (appSettings.deviceAsusEnabled)
+                    surface.Load(AsusDeviceProvider.Instance, RGBDeviceType.All);
+            
+                if (appSettings.deviceMsiEnabled)
+                    surface.Load(MsiDeviceProvider.Instance, RGBDeviceType.All);
+            
+                if (appSettings.deviceSteelseriesEnabled)
+                    surface.Load(SteelSeriesDeviceProvider.Instance, RGBDeviceType.All);
+            
+                if (appSettings.deviceWootingEnabled)
+                    surface.Load(WootingDeviceProvider.Instance, RGBDeviceType.All);
 
-            surface.AlignDevices();
-            surface.Updating += Surface_Updating;
+                if (appSettings.deviceHueEnabled)
+                    surface.Load(HueRGBDeviceProvider.Instance, RGBDeviceType.All);
+                
+                var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
 
-            //Startup Effects
-            //RunStartupEffects();
+                if (surface.Devices.Count > 0)
+                {
+                    foreach (var surfaceDevice in surface.Devices)
+                    {
+                        //Handle cases where a device is loaded with 0 LEDs
+
+                        if (surfaceDevice.Count() <= 0 && surfaceDevice.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                        {
+                            var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis XL keyboard-ISO.xml";
+
+                            if (File.Exists(path))
+                            {
+                                var layout = DeviceLayout.Load(path);
+                                LayoutExtension.ApplyTo(layout, surfaceDevice, true);
+
+                                #if DEBUG
+                                    Debug.WriteLine($"Loaded layout for {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}. New Leds: {surfaceDevice.Count()}");
+                                #endif
+                            }
+                        }
+                        else if (surfaceDevice.Count() <= 0 && surfaceDevice.DeviceInfo.DeviceType == RGBDeviceType.Headset)
+                        {
+                            var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis 4 LEDs headset.xml";
+
+                            if (File.Exists(path))
+                            {
+                                var layout = DeviceLayout.Load(path);
+                                LayoutExtension.ApplyTo(layout, surfaceDevice, true);
+
+                                #if DEBUG
+                                    Debug.WriteLine($"Loaded layout for {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}. New Leds: {surfaceDevice.Count()}");
+                                #endif
+                            }
+                        }
+
+                        Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}: {surfaceDevice.DeviceInfo.DeviceName}.");
+                        _devices.Add(surfaceDevice);
+
+                    }
+                }
+            
+            
+                if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
+
+                var TimerTrigger = new TimerUpdateTrigger();
+                TimerTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
+                surface.RegisterUpdateTrigger(TimerTrigger);
+
+                surface.AlignDevices();
+                surface.Updating += Surface_Updating;
+
+                //Startup Effects
+                //RunStartupEffects();
 
                         
-            Logger.WriteConsole(Enums.LoggerTypes.Devices, $"{deviceCount} devices loaded.");
-            _loaded = true;
+                Logger.WriteConsole(Enums.LoggerTypes.Devices, $"{surface.Devices.Count} devices loaded.");
+                _loaded = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"RGBController Setup Error: {ex.Message}");
+            }
         }
         
         public static void Unload()

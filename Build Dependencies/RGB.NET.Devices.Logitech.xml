@@ -1,0 +1,367 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGB.NET.Devices.Logitech</name>
+    </assembly>
+    <members>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechDeviceType">
+            <summary>
+            Contains list of available logitech device types.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechLedId">
+            <summary>
+            Contains a list of Logitech LED IDs
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechLogicalKeyboardLayout">
+            <summary>
+            Contains list of available logical layouts for logitech keyboards.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechPhysicalKeyboardLayout">
+            <summary>
+            Contains list of available physical layouts for logitech keyboards.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Logitech.LogitechPhysicalKeyboardLayout.US">
+            <summary>
+            US-Keyboard
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Logitech.LogitechPhysicalKeyboardLayout.UK">
+            <summary>
+            UK-Keyboard
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Logitech.LogitechPhysicalKeyboardLayout.BR">
+            <summary>
+            BR-Keyboard
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Logitech.LogitechPhysicalKeyboardLayout.JP">
+            <summary>
+            JP-Keyboard
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.Logitech.LogitechPhysicalKeyboardLayout.KR">
+            <summary>
+            KR-Keyboard
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.ILogitechRGBDevice">
+            <summary>
+            Represents a logitech RGB-device.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LedMappings">
+            <summary>
+            Contains mappings for <see cref="T:RGB.NET.Core.LedId"/> to <see cref="T:RGB.NET.Devices.Logitech.LogitechDeviceCaps"/>.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LedMappings.PerKey">
+            <summary>
+            Gets the mapping for per key devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LedMappings.Device">
+            <summary>
+            Gets the mapping for per device devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LedMappings.ZoneKeyboard">
+            <summary>
+            Gets the mapping for per zone keyboards.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LedMappings.ZoneMouse">
+            <summary>
+            Gets the mapping for per zone mice.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LedMappings.ZoneHeadset">
+            <summary>
+            Gets the mapping for per zone headsets.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LedMappings.ZoneMousepad">
+            <summary>
+            Gets the mapping for per zone mousepads.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LedMappings.ZoneSpeaker">
+            <summary>
+            Gets the mapping for per zone speakers.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechRGBDevice`1">
+            <inheritdoc cref="T:RGB.NET.Core.AbstractRGBDevice`1" />
+            <summary>
+            Represents a generic Logitech-device. (keyboard, mouse, headset, mousepad).
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechRGBDevice`1.#ctor(`0,RGB.NET.Core.IUpdateQueue)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Logitech.LogitechRGBDevice`1"/> class.
+            </summary>
+            <param name="info">The generic information provided by Logitech for the device.</param>
+            <param name="updateQueue">The queue used to update this device.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents a generic information for a Logitech-<see cref="T:RGB.NET.Core.IRGBDevice" />.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.DeviceType">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.DeviceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.Manufacturer">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.Model">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.LayoutMetadata">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.DeviceCaps">
+            <summary>
+            Gets a flag that describes device capabilities. (<see cref="T:RGB.NET.Devices.Logitech.LogitechDeviceCaps" />)
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.Zones">
+            <summary>
+            Gets the amount of zones the <see cref="T:RGB.NET.Devices.Logitech.LogitechRGBDevice`1"/> is able to control (0 for single-color and per-key devices)
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.ZoneOffset">
+            <summary>
+            Gets the zone at which LEDs start being mapped
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo.#ctor(RGB.NET.Core.RGBDeviceType,System.String,RGB.NET.Devices.Logitech.LogitechDeviceCaps,System.Int32,System.Int32)">
+            <summary>
+            Internal constructor of managed <see cref="T:RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo"/>.
+            </summary>
+            <param name="deviceType">The type of the <see cref="T:RGB.NET.Core.IRGBDevice"/>.</param>
+            <param name="model">The represented device model.</param>
+            <param name="deviceCaps">The lighting-capabilities of the device.</param>
+            <param name="zones">The amount of zones the device is able to control.</param>
+            <param name="zoneOffset">The zone at which to start mapping LEDs.</param>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2">
+            <summary>
+            Represents a loaded for logitech HID-devices.
+            </summary>
+            <typeparam name="TLed">The type of the identifier leds are mapped to.</typeparam>
+            <typeparam name="TData">The type of the custom data added to the HID-device.</typeparam>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2.VendorId">
+            <summary>
+            Gets the vendor id used for this loader.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2.LoadFilter">
+            <summary>
+            Gets or sets the filter used to determine which devices should be loaded.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2.Add(System.Int32,RGB.NET.Core.RGBDeviceType,System.String,RGB.NET.Core.LedMapping{`0},`1)">
+            <summary>
+            Adds a new <see cref="T:RGB.NET.HID.HIDDeviceDefinition`2"/> to this loader.
+            </summary>
+            <param name="virtualPid">The virtual product id of the HID-device.</param>
+            <param name="deviceType">The type of the device.</param>
+            <param name="name">The name of the device.</param>
+            <param name="ledMapping">The mapping of the leds of the device.</param>
+            <param name="customData">Some custom data to attach to the device.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2.GetConnectedDevices">
+            <summary>
+            Gets a enumerable containing all devices from the definition-list that are connected and match the <see cref="P:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2.LoadFilter"/>.
+            </summary>
+            <returns>The enumerable containing the connected devices.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2.GetConnectedDevices``1(System.Func{RGB.NET.HID.HIDDeviceDefinition{`0,`1},``0})">
+            <summary>
+            Gets a enumerable containing all the first device of each group of devices from the definition-list that are connected and match the <see cref="P:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2.LoadFilter"/>.
+            The grouping is done by the specified function.
+            </summary>
+            <typeparam name="TKey">The type of the key used to group the devices.</typeparam>
+            <param name="groupBy">The function grouping the devices.</param>
+            <returns>The enumerable containing the selected devices.</returns>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.HID.LightspeedHIDLoader`2.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechDeviceProvider">
+            <inheritdoc />
+            <summary>
+            Represents a device provider responsible for logitech devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.Instance">
+            <summary>
+            Gets the singleton <see cref="T:RGB.NET.Devices.Logitech.LogitechDeviceProvider"/> instance.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.PossibleX86NativePaths">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x86 applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.PossibleX64NativePaths">
+            <summary>
+            Gets a modifiable list of paths used to find the native SDK-dlls for x64 applications.
+            The first match will be used.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.PerKeyDeviceDefinitions">
+            <summary>
+            Gets the HID-definitions for wired per-key-devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.PerKeyWirelessDeviceDefinitions">
+            <summary>
+            Gets the HID-definitions for wireless per-key-devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.PerZoneDeviceDefinitions">
+            <summary>
+            Gets the HID-definitions for wired per-zone-devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.PerZoneWirelessDeviceDefinitions">
+            <summary>
+            Gets the HID-definitions for wireless per-zone-devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.PerDeviceDeviceDefinitions">
+            <summary>
+            Gets the HID-definitions for wired per-device-devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Logitech.LogitechDeviceProvider.PerDeviceWirelessDeviceDefinitions">
+            <summary>
+            Gets the HID-definitions for wireless per-device-devices.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechDeviceProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Logitech.LogitechDeviceProvider"/> class.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if this constructor is called even if there is already an instance of this class.</exception>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechDeviceProvider.InitializeSDK">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechDeviceProvider.GetLoadedDevices(RGB.NET.Core.RGBDeviceType)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechDeviceProvider.LoadDevices">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechDeviceProvider.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.Native._LogitechGSDK.Reload">
+            <summary>
+            Reloads the SDK.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechPerDeviceRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Devices.Logitech.LogitechRGBDevice`1" />
+            <summary>
+            Represents a logitech per-device-lightable device.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechPerDeviceRGBDevice.#ctor(RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo,RGB.NET.Core.IUpdateQueue,RGB.NET.Core.LedMapping{System.Int32})">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Logitech.LogitechPerDeviceRGBDevice" /> class.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechPerDeviceRGBDevice.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechPerDeviceUpdateQueue">
+            <inheritdoc />
+            <summary>
+            Represents the update-queue performing updates for logitech per-device devices.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechPerDeviceUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Logitech.LogitechPerDeviceUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechPerDeviceUpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechPerKeyRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Devices.Logitech.LogitechRGBDevice`1" />
+            <summary>
+            Represents a logitech per-key-lightable device.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechPerKeyRGBDevice.#ctor(RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo,RGB.NET.Core.IUpdateQueue,RGB.NET.Core.LedMapping{RGB.NET.Devices.Logitech.LogitechLedId})">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Logitech.LogitechPerKeyRGBDevice" /> class.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechPerKeyRGBDevice.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechPerKeyUpdateQueue">
+            <summary>
+            Represents the update-queue performing updates for logitech per-key devices.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechPerKeyUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Logitech.LogitechPerKeyUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechPerKeyUpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechZoneRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Devices.Logitech.LogitechRGBDevice`1" />
+            <summary>
+            Represents a logitech zone-lightable device.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechZoneRGBDevice.#ctor(RGB.NET.Devices.Logitech.LogitechRGBDeviceInfo,RGB.NET.Core.IUpdateQueue,RGB.NET.Core.LedMapping{System.Int32})">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Logitech.LogitechZoneRGBDevice" /> class.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechZoneRGBDevice.GetLedCustomData(RGB.NET.Core.LedId)">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Logitech.LogitechZoneUpdateQueue">
+            <summary>
+            Represents the update-queue performing updates for logitech zone devices.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechZoneUpdateQueue.#ctor(RGB.NET.Core.IDeviceUpdateTrigger,RGB.NET.Devices.Logitech.LogitechDeviceType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Logitech.LogitechZoneUpdateQueue"/> class.
+            </summary>
+            <param name="updateTrigger">The update trigger used by this queue.</param>
+            <param name="deviceType">The tpye of the device this queue is updating.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Logitech.LogitechZoneUpdateQueue.Update(System.ReadOnlySpan{System.ValueTuple{System.Object,RGB.NET.Core.Color}}@)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

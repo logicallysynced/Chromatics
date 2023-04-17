@@ -26,13 +26,15 @@ public class HueUpdateQueue : UpdateQueue
 
     #region Methods
 
-    protected override void Update(in ReadOnlySpan<(object key, Color color)> dataSet)
+    protected override bool Update(in ReadOnlySpan<(object key, Color color)> dataSet)
     {
         Color color = dataSet[0].color;
 
         _light.State.SetBrightness(1);
         _light.State.SetRGBColor(new RGBColor(color.R, color.G, color.B));
-    }
 
+        return true;
+    }
+    
     #endregion
 }

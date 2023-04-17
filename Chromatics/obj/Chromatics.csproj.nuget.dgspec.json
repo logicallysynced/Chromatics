@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
-      "version": "3.0.0.7",
+      "version": "3.0.0.8",
       "restore": {
         "projectUniqueName": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -45,7 +45,7 @@
           "dependencies": {
             "Autoupdater.NET.Official": {
               "target": "Package",
-              "version": "[1.7.6, )"
+              "version": "[1.7.7, )"
             },
             "CsvHelper": {
               "target": "Package",
@@ -59,17 +59,21 @@
               "target": "Package",
               "version": "[1.0.16, )"
             },
+            "HidSharp": {
+              "target": "Package",
+              "version": "[2.1.0, )"
+            },
             "MouseKeyHook.NetCore": {
               "target": "Package",
               "version": "[5.6.1.1, )"
             },
             "NLog": {
               "target": "Package",
-              "version": "[5.1.1, )"
+              "version": "[5.1.3, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[13.0.2, )"
+              "version": "[13.0.3, )"
             },
             "Q42.HueApi": {
               "target": "Package",
@@ -79,49 +83,9 @@
               "target": "Package",
               "version": "[3.20.1, )"
             },
-            "RGB.NET.Core": {
+            "Sanford.Multimedia.Midi": {
               "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.CoolerMaster": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.Corsair": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.Logitech": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.Msi": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.Novation": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.SteelSeries": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.WS281X": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Devices.Wooting": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Layout": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "RGB.NET.Presets": {
-              "target": "Package",
-              "version": "[1.0.0, )"
+              "version": "[6.6.2, )"
             }
           },
           "imports": [

@@ -1,0 +1,159 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "RGB.NET.Devices.PicoPi/0.0.1": {
+        "dependencies": {
+          "LibUsbDotNet": "3.0.87-alpha",
+          "RGB.NET.Core": "0.0.1",
+          "RGB.NET.HID": "0.0.1"
+        },
+        "runtime": {
+          "RGB.NET.Devices.PicoPi.dll": {}
+        }
+      },
+      "HidSharp/2.1.0": {
+        "runtime": {
+          "lib/netstandard2.0/HidSharp.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
+          }
+        }
+      },
+      "LibUsbDotNet/3.0.87-alpha": {
+        "runtimeTargets": {
+          "runtimes/linux-arm/lib/netcoreapp2.1/LibUsbDotNet.dll": {
+            "rid": "linux-arm",
+            "assetType": "runtime",
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.87.24253"
+          },
+          "runtimes/linux-arm64/lib/netcoreapp2.1/LibUsbDotNet.dll": {
+            "rid": "linux-arm64",
+            "assetType": "runtime",
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.87.24253"
+          },
+          "runtimes/linux-x64/lib/netcoreapp2.1/LibUsbDotNet.dll": {
+            "rid": "linux-x64",
+            "assetType": "runtime",
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.87.24253"
+          },
+          "runtimes/osx-x64/lib/netcoreapp2.1/LibUsbDotNet.dll": {
+            "rid": "osx-x64",
+            "assetType": "runtime",
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.87.24253"
+          },
+          "runtimes/win-x64/lib/netcoreapp2.1/LibUsbDotNet.dll": {
+            "rid": "win-x64",
+            "assetType": "runtime",
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.87.24253"
+          },
+          "runtimes/win-x86/lib/netcoreapp2.1/LibUsbDotNet.dll": {
+            "rid": "win-x86",
+            "assetType": "runtime",
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.87.24253"
+          },
+          "runtimes/osx-x64/native/libusb-1.0.0.dylib": {
+            "rid": "osx-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/libusb-1.0.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "1.0.23.11397"
+          },
+          "runtimes/win-x64/native/libusb-1.0.pdb": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/libusbK.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "3.0.7.0"
+          },
+          "runtimes/win-x64/native/libusbK.pdb": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/libusb-1.0.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "1.0.23.11397"
+          },
+          "runtimes/win-x86/native/libusb-1.0.pdb": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/libusbK.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "3.0.7.0"
+          },
+          "runtimes/win-x86/native/libusbK.pdb": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "RGB.NET.Core/0.0.1": {
+        "runtime": {
+          "RGB.NET.Core.dll": {}
+        }
+      },
+      "RGB.NET.HID/0.0.1": {
+        "dependencies": {
+          "HidSharp": "2.1.0",
+          "RGB.NET.Core": "0.0.1"
+        },
+        "runtime": {
+          "RGB.NET.HID.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "RGB.NET.Devices.PicoPi/0.0.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HidSharp/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UTdxWvbgp2xzT1Ajaa2va+Qi3oNHJPasYmVhbKI2VVdu1VYP6yUG+RikhsHvpD7iM0S8e8UYb5Qm/LTWxx9QAA==",
+      "path": "hidsharp/2.1.0",
+      "hashPath": "hidsharp.2.1.0.nupkg.sha512"
+    },
+    "LibUsbDotNet/3.0.87-alpha": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UZwhPGqLVXHqdPBIcDi3jj4QGp9SfcGUu0mABYgpFM1OI7Zl4/cLY5StTYIphvBNbmtLprW3Ljo/dIqfifiYYg==",
+      "path": "libusbdotnet/3.0.87-alpha",
+      "hashPath": "libusbdotnet.3.0.87-alpha.nupkg.sha512"
+    },
+    "RGB.NET.Core/0.0.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "RGB.NET.HID/0.0.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
