@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGB.NET.Devices.Debug</name>
+    </assembly>
+    <members>
+        <member name="T:RGB.NET.Devices.Debug.DebugDeviceProvider">
+            <inheritdoc />
+            <summary>
+            Represents a device provider responsible for debug devices.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Debug.DebugDeviceProvider.Instance">
+            <summary>
+            Gets the singleton <see cref="T:RGB.NET.Devices.Debug.DebugDeviceProvider"/> instance.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugDeviceProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:RGB.NET.Devices.Debug.DebugDeviceProvider"/> class.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if this constructor is called even if there is already an instance of this class.</exception>
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugDeviceProvider.AddFakeDeviceDefinition(RGB.NET.Layout.IDeviceLayout,System.Action{System.Collections.Generic.IEnumerable{RGB.NET.Core.Led}})">
+            <summary>
+            Adds a new fake device definition.
+            </summary>
+            <param name="layout">The path of the layout file to be used.</param>
+            <param name="updateLedsAction">A action emulating led-updates.</param>
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugDeviceProvider.ClearFakeDeviceDefinitions">
+            <summary>
+            Removes all previously added fake device definitions.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugDeviceProvider.InitializeSDK">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugDeviceProvider.LoadDevices">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugDeviceProvider.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Debug.DebugRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Core.AbstractRGBDevice`1" />
+            <summary>
+            Represents a debug device.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Debug.DebugRGBDevice.Layout">
+            <summary>
+            Gets the layour used to describe this debug device.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugRGBDevice.#ctor(RGB.NET.Layout.IDeviceLayout,System.Action{System.Collections.Generic.IEnumerable{RGB.NET.Core.Led}})">
+            <summary>
+            Internal constructor of <see cref="T:RGB.NET.Devices.Debug.DebugRGBDeviceInfo"/>.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugRGBDevice.UpdateLeds(System.Collections.Generic.IEnumerable{RGB.NET.Core.Led})">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.Debug.DebugRGBDeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents device information for a <see cref="T:RGB.NET.Devices.Debug.DebugRGBDevice"/> />.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.Debug.DebugRGBDeviceInfo.DeviceType">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Debug.DebugRGBDeviceInfo.DeviceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Debug.DebugRGBDeviceInfo.Manufacturer">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Debug.DebugRGBDeviceInfo.Model">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.Debug.DebugRGBDeviceInfo.LayoutMetadata">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.Debug.DebugRGBDeviceInfo.#ctor(RGB.NET.Core.RGBDeviceType,System.String,System.String,System.Object)">
+            <summary>
+            Internal constructor of <see cref="T:RGB.NET.Devices.Debug.DebugRGBDeviceInfo"/>.
+            </summary>
+            <param name="deviceType">The <see cref="T:RGB.NET.Core.RGBDeviceType"/> of the device.</param>
+            <param name="manufacturer">The manufacturer of the device.</param>
+            <param name="model">The model of the device.</param>
+            <param name="customData">Some custom data for this device provided by the layout.</param>
+        </member>
+    </members>
+</doc>
