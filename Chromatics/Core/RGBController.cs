@@ -91,7 +91,7 @@ namespace Chromatics.Core
             
                 if (appSettings.deviceAsusEnabled)
                     surface.Load(AsusDeviceProvider.Instance, RGBDeviceType.All);
-            
+                
                 if (appSettings.deviceMsiEnabled)
                     surface.Load(MsiDeviceProvider.Instance, RGBDeviceType.All);
             
