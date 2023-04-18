@@ -227,7 +227,7 @@ namespace Chromatics.Forms
 
         private void ExitApplication()
         {
-            RGBController.Unload();
+            //RGBController.Unload();
 
             if (System.Windows.Forms.Application.MessageLoop)
             {
