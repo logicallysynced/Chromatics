@@ -13,6 +13,7 @@ namespace Chromatics.Models
         public bool winstart { get; set; } = false;
         public bool minimizetray { get; set; } = false;
         public bool trayonstartup { get; set; } = false;
+        public bool checkupdates { get; set; } = true;
         public KeyboardLocalization keyboardLayout { get; set; } = KeyboardLocalization.qwerty;
         public double rgbRefreshRate { get; set; } = 0.05;
         public int globalbrightness { get; set; } = 100;
