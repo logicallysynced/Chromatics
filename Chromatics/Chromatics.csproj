@@ -63,12 +63,6 @@
     <Reference Include="RGB.NET.Devices.Corsair">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Corsair.dll</HintPath>
     </Reference>
-    <Reference Include="RGB.NET.Devices.Debug">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Debug.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.DMX">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.DMX.dll</HintPath>
-    </Reference>
     <Reference Include="RGB.NET.Devices.Logitech">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Logitech.dll</HintPath>
     </Reference>
