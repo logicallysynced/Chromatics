@@ -21,6 +21,7 @@ using System.Windows;
 using Chromatics.Models;
 using System.IO;
 using System.Timers;
+using Chromatics.Properties;
 
 namespace Chromatics.Forms
 {
@@ -133,16 +134,19 @@ namespace Chromatics.Forms
             
             //Setup Chromatics
             SetupChromatics();
-
-            
+                        
         }
 
         private void SetupChromatics()
         {
             //Check for updates
-            Logger.WriteConsole(LoggerTypes.System, @"Checking for updates..");
-            AutoUpdater.Start("https://chromaticsffxiv.com/chromatics3/update/update.xml");
-            AutoUpdater.ShowSkipButton = false;
+            
+            if (appSettings.checkupdates)
+            {
+                Logger.WriteConsole(LoggerTypes.System, @"Checking for updates..");
+                AutoUpdater.Start("https://chromaticsffxiv.com/chromatics3/update/update.xml");
+                AutoUpdater.ShowSkipButton = false;
+            }
 
             var assembly = typeof(Program).Assembly;
 

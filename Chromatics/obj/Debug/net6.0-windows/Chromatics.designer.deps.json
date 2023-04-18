@@ -6,14 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "Autoupdater.NET.Official/1.7.6": {
+      "Autoupdater.NET.Official/1.7.7": {
         "dependencies": {
-          "Microsoft.Web.WebView2": "1.0.1418.22"
+          "Microsoft.Web.WebView2": "1.0.1587.40"
         },
         "runtime": {
           "lib/net6.0-windows7.0/AutoUpdater.NET.dll": {
-            "assemblyVersion": "1.7.6.0",
-            "fileVersion": "1.7.6.0"
+            "assemblyVersion": "1.7.7.0",
+            "fileVersion": "1.7.7.0"
           }
         },
         "resources": {
@@ -100,7 +100,7 @@
       },
       "FFXIVWeather/1.0.16": {
         "dependencies": {
-          "Newtonsoft.Json": "13.0.2"
+          "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
           "lib/netstandard2.0/FFXIVWeather.dll": {
@@ -117,57 +117,36 @@
           }
         }
       },
-      "Microsoft.NETCore.Platforms/5.0.0": {},
-      "Microsoft.Web.WebView2/1.0.1418.22": {
+      "Microsoft.Web.WebView2/1.0.1587.40": {
         "runtime": {
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
-            "assemblyVersion": "1.0.1418.22",
-            "fileVersion": "1.0.1418.22"
+            "assemblyVersion": "1.0.1587.40",
+            "fileVersion": "1.0.1587.40"
           },
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll": {
-            "assemblyVersion": "1.0.1418.22",
-            "fileVersion": "1.0.1418.22"
+            "assemblyVersion": "1.0.1587.40",
+            "fileVersion": "1.0.1587.40"
           },
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll": {
-            "assemblyVersion": "1.0.1418.22",
-            "fileVersion": "1.0.1418.22"
+            "assemblyVersion": "1.0.1587.40",
+            "fileVersion": "1.0.1587.40"
           }
         },
         "runtimeTargets": {
           "runtimes/win-arm64/native/WebView2Loader.dll": {
             "rid": "win-arm64",
             "assetType": "native",
-            "fileVersion": "1.0.1418.22"
+            "fileVersion": "1.0.1587.40"
           },
           "runtimes/win-x64/native/WebView2Loader.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "1.0.1418.22"
+            "fileVersion": "1.0.1587.40"
           },
           "runtimes/win-x86/native/WebView2Loader.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "1.0.1418.22"
-          }
-        }
-      },
-      "Microsoft.Win32.Registry/5.0.0": {
-        "dependencies": {
-          "System.Security.AccessControl": "5.0.0",
-          "System.Security.Principal.Windows": "5.0.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
+            "fileVersion": "1.0.1587.40"
           }
         }
       },
@@ -179,336 +158,79 @@
           }
         }
       },
-      "Newtonsoft.Json/13.0.2": {
+      "Newtonsoft.Json/13.0.3": {
         "runtime": {
           "lib/net6.0/Newtonsoft.Json.dll": {
             "assemblyVersion": "13.0.0.0",
-            "fileVersion": "13.0.2.27524"
+            "fileVersion": "13.0.3.27908"
           }
         }
       },
-      "NLog/5.1.1": {
+      "NLog/5.1.3": {
         "runtime": {
           "lib/netstandard2.0/NLog.dll": {
             "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.1.1.1522"
+            "fileVersion": "5.1.3.1645"
           }
         }
       },
-      "RGB.NET.Core/1.0.0": {
+      "Portable.BouncyCastle/1.9.0": {
         "runtime": {
-          "lib/net6.0/RGB.NET.Core.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.1"
           }
         }
       },
-      "RGB.NET.Devices.Asus/1.0.0": {
+      "Q42.HueApi/3.21.0": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0",
-          "System.Management": "5.0.0"
+          "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
-          "lib/net6.0/Interop.AuraServiceLib.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          },
-          "lib/net6.0/RGB.NET.Devices.Asus.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
+          "lib/net6.0/Q42.HueApi.dll": {
+            "assemblyVersion": "3.21.0.0",
+            "fileVersion": "3.21.0.0"
           }
         }
       },
-      "RGB.NET.Devices.CoolerMaster/1.0.0": {
+      "Q42.HueApi.ColorConverters/3.20.1": {
+        "runtime": {
+          "lib/net6.0/Q42.HueApi.ColorConverters.dll": {
+            "assemblyVersion": "3.20.1.0",
+            "fileVersion": "3.20.1.0"
+          }
+        }
+      },
+      "Q42.HueApi.Entertainment/3.20.1": {
         "dependencies": {
-          "RGB.NET.Core": "1.0.0"
+          "Portable.BouncyCastle": "1.9.0",
+          "Q42.HueApi": "3.21.0",
+          "Q42.HueApi.ColorConverters": "3.20.1"
         },
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.CoolerMaster.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
+          "lib/net6.0/Q42.HueApi.Streaming.dll": {
+            "assemblyVersion": "3.20.1.0",
+            "fileVersion": "3.20.1.0"
           }
         }
       },
-      "RGB.NET.Devices.Corsair/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0"
-        },
+      "Sanford.Multimedia.Midi/6.6.2": {
         "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Corsair.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Devices.Logitech/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0",
-          "RGB.NET.HID": "1.0.0"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Logitech.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Devices.Msi/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Msi.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Devices.Novation/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0",
-          "Sanford.Multimedia.Midi.Standard": "6.6.0"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Novation.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Devices.SteelSeries/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0",
-          "RGB.NET.HID": "1.0.0"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Devices.SteelSeries.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Devices.Wooting/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Devices.Wooting.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Devices.WS281X/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0",
-          "System.IO.Ports": "5.0.1"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Devices.WS281X.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.HID/1.0.0": {
-        "dependencies": {
-          "HidSharp": "2.1.0",
-          "RGB.NET.Core": "1.0.0"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.HID.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Layout/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Layout.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "RGB.NET.Presets/1.0.0": {
-        "dependencies": {
-          "RGB.NET.Core": "1.0.0"
-        },
-        "runtime": {
-          "lib/net6.0/RGB.NET.Presets.dll": {
-            "assemblyVersion": "0.0.1.0",
-            "fileVersion": "0.0.1.0"
-          }
-        }
-      },
-      "runtime.linux-arm.runtime.native.System.IO.Ports/5.0.0": {
-        "runtimeTargets": {
-          "runtimes/linux-arm/native/libSystem.IO.Ports.Native.so": {
-            "rid": "linux-arm",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "runtime.linux-arm64.runtime.native.System.IO.Ports/5.0.0": {
-        "runtimeTargets": {
-          "runtimes/linux-arm64/native/libSystem.IO.Ports.Native.so": {
-            "rid": "linux-arm64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "runtime.linux-x64.runtime.native.System.IO.Ports/5.0.0": {
-        "runtimeTargets": {
-          "runtimes/linux-x64/native/libSystem.IO.Ports.Native.so": {
-            "rid": "linux-x64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "runtime.native.System.IO.Ports/5.0.1": {
-        "dependencies": {
-          "runtime.linux-arm.runtime.native.System.IO.Ports": "5.0.0",
-          "runtime.linux-arm64.runtime.native.System.IO.Ports": "5.0.0",
-          "runtime.linux-x64.runtime.native.System.IO.Ports": "5.0.0",
-          "runtime.osx-x64.runtime.native.System.IO.Ports": "5.0.0"
-        }
-      },
-      "runtime.osx-x64.runtime.native.System.IO.Ports/5.0.0": {
-        "runtimeTargets": {
-          "runtimes/osx-x64/native/libSystem.IO.Ports.Native.dylib": {
-            "rid": "osx-x64",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "Sanford.Multimedia.Midi.Standard/6.6.0": {
-        "runtime": {
-          "lib/netstandard2.0/Sanford.Multimedia.Midi.dll": {
-            "assemblyVersion": "6.6.0.0",
-            "fileVersion": "6.6.0.0"
-          }
-        }
-      },
-      "System.CodeDom/5.0.0": {
-        "runtime": {
-          "lib/netstandard2.0/System.CodeDom.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        }
-      },
-      "System.IO.Ports/5.0.1": {
-        "dependencies": {
-          "Microsoft.Win32.Registry": "5.0.0",
-          "runtime.native.System.IO.Ports": "5.0.1"
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.IO.Ports.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.421.11614"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/linux/lib/netstandard2.0/System.IO.Ports.dll": {
-            "rid": "linux",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.421.11614"
-          },
-          "runtimes/osx/lib/netstandard2.0/System.IO.Ports.dll": {
-            "rid": "osx",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.421.11614"
-          },
-          "runtimes/win/lib/netstandard2.0/System.IO.Ports.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.421.11614"
-          }
-        }
-      },
-      "System.Management/5.0.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "Microsoft.Win32.Registry": "5.0.0",
-          "System.CodeDom": "5.0.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Management.dll": {
-            "assemblyVersion": "4.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/netcoreapp2.0/System.Management.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "4.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        }
-      },
-      "System.Security.AccessControl/5.0.0": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Security.Principal.Windows": "5.0.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Security.AccessControl.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        }
-      },
-      "System.Security.Principal.Windows/5.0.0": {
-        "runtime": {
-          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/unix/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
-            "rid": "unix",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
-          },
-          "runtimes/win/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.0.20.51904"
+          "lib/net20/Sanford.Multimedia.Midi.dll": {
+            "assemblyVersion": "6.6.2.0",
+            "fileVersion": "6.6.2.0"
           }
         }
       }
     }
   },
   "libraries": {
-    "Autoupdater.NET.Official/1.7.6": {
+    "Autoupdater.NET.Official/1.7.7": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hnMGsoCPx/SVd5eM/vWv5lJ8rPwMaegKPE3DhnAxHed0WNtc/L1JnVs6ZJoCXhKrZf587aD3OuMDGfXwu1QOqQ==",
-      "path": "autoupdater.net.official/1.7.6",
-      "hashPath": "autoupdater.net.official.1.7.6.nupkg.sha512"
+      "sha512": "sha512-ustMDzpo8MU0zqi6VfcxIfAbQu3tsdIs9ZEIkv6lqVQl5OzK3m1aulNfFvloAvpz6iqAadgD3psSr24WpZjBqg==",
+      "path": "autoupdater.net.official/1.7.7",
+      "hashPath": "autoupdater.net.official.1.7.7.nupkg.sha512"
     },
     "CsvHelper/30.0.1": {
       "type": "package",
@@ -538,26 +260,12 @@
       "path": "hidsharp/2.1.0",
       "hashPath": "hidsharp.2.1.0.nupkg.sha512"
     },
-    "Microsoft.NETCore.Platforms/5.0.0": {
+    "Microsoft.Web.WebView2/1.0.1587.40": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-VyPlqzH2wavqquTcYpkIIAQ6WdenuKoFN0BdYBbCWsclXacSOHNQn66Gt4z5NBqEYW0FAPm5rlvki9ZiCij5xQ==",
-      "path": "microsoft.netcore.platforms/5.0.0",
-      "hashPath": "microsoft.netcore.platforms.5.0.0.nupkg.sha512"
-    },
-    "Microsoft.Web.WebView2/1.0.1418.22": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-74/HbvDxO8ebRclPE4r57Vdvs3REMIcn/G9t3PVp2bfFPhzMmzemLzJj5gX5xA3NURhbqIcYYgKK+l0NYFjvMg==",
-      "path": "microsoft.web.webview2/1.0.1418.22",
-      "hashPath": "microsoft.web.webview2.1.0.1418.22.nupkg.sha512"
-    },
-    "Microsoft.Win32.Registry/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-dDoKi0PnDz31yAyETfRntsLArTlVAVzUzCIvvEDsDsucrl33Dl8pIJG06ePTJTI3tGpeyHS9Cq7Foc/s4EeKcg==",
-      "path": "microsoft.win32.registry/5.0.0",
-      "hashPath": "microsoft.win32.registry.5.0.0.nupkg.sha512"
+      "sha512": "sha512-YKwX6ZdA/7P4XlE3EfGnW0evgOpOLEQ+QHbtFIG53c4CRLF5f6JwR9D4zQ06t7X8HuVSG0pVOrfA+GcjTPkAtg==",
+      "path": "microsoft.web.webview2/1.0.1587.40",
+      "hashPath": "microsoft.web.webview2.1.0.1587.40.nupkg.sha512"
     },
     "MouseKeyHook.NetCore/5.6.1.1": {
       "type": "package",
@@ -566,187 +274,54 @@
       "path": "mousekeyhook.netcore/5.6.1.1",
       "hashPath": "mousekeyhook.netcore.5.6.1.1.nupkg.sha512"
     },
-    "Newtonsoft.Json/13.0.2": {
+    "Newtonsoft.Json/13.0.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg==",
-      "path": "newtonsoft.json/13.0.2",
-      "hashPath": "newtonsoft.json.13.0.2.nupkg.sha512"
+      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "path": "newtonsoft.json/13.0.3",
+      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
-    "NLog/5.1.1": {
+    "NLog/5.1.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YBfUDzipCaucs+8ieCDp8XECumiWsQbZwSUVLlt9i7FGV03nOPqoVzLtmlhbTxq4TN92BBsLacqPAE/ZyDDJ1g==",
-      "path": "nlog/5.1.1",
-      "hashPath": "nlog.5.1.1.nupkg.sha512"
+      "sha512": "sha512-rB8hwjBf1EZCfG5iPfsv3gPksLoJLr1cOrt7PBbJu6VpJgwYJchDzTUT1dhNDdPv0QakXJQJOhE59ErupcznQQ==",
+      "path": "nlog/5.1.3",
+      "hashPath": "nlog.5.1.3.nupkg.sha512"
     },
-    "RGB.NET.Core/1.0.0": {
+    "Portable.BouncyCastle/1.9.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wQd1tSyldamEhKAAU/E+zraiz5FRttcDYnQ3uQiat9Uf1tx8obV4MkFOKh2wY0JLZbOD832cCg3RQttHkbEbdw==",
-      "path": "rgb.net.core/1.0.0",
-      "hashPath": "rgb.net.core.1.0.0.nupkg.sha512"
+      "sha512": "sha512-eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
+      "path": "portable.bouncycastle/1.9.0",
+      "hashPath": "portable.bouncycastle.1.9.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.Asus/1.0.0": {
+    "Q42.HueApi/3.21.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-lMWKfPBwhbB9rkCQ+HgJc1KWo2OdgwJGv5oiJw2hBdcjQDdWBvH/Dhw0IlgABAWN+cqvuOIcHee8eLq5ytZZ2w==",
-      "path": "rgb.net.devices.asus/1.0.0",
-      "hashPath": "rgb.net.devices.asus.1.0.0.nupkg.sha512"
+      "sha512": "sha512-i0Tq9hLRVd0kcwbxOgnzKjehHJ+0MHBEvsz2WbMjX6QBSMgA3yr8r598u1y5ClicYg0EK4+YFq2ZGhgF9WHTNw==",
+      "path": "q42.hueapi/3.21.0",
+      "hashPath": "q42.hueapi.3.21.0.nupkg.sha512"
     },
-    "RGB.NET.Devices.CoolerMaster/1.0.0": {
+    "Q42.HueApi.ColorConverters/3.20.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-cIl80zdpG7vw+vV2MfDYjaIamvt3U0QNszlauSba3Xm7xTbGwwYyWMwnIDHYoWoFQopG6z40pAy+z0pPeBZvkg==",
-      "path": "rgb.net.devices.coolermaster/1.0.0",
-      "hashPath": "rgb.net.devices.coolermaster.1.0.0.nupkg.sha512"
+      "sha512": "sha512-gOmXotE5dCpabOiCbACEOxEGs+jWf2NviVp9x6GzcmwOyHVhaiVq0ajmJ/Fk8pE5u5sYlQ/681GUrAZ5+npLzQ==",
+      "path": "q42.hueapi.colorconverters/3.20.1",
+      "hashPath": "q42.hueapi.colorconverters.3.20.1.nupkg.sha512"
     },
-    "RGB.NET.Devices.Corsair/1.0.0": {
+    "Q42.HueApi.Entertainment/3.20.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-KMyPyPL/qwDS8qoTViJBWHJlJY9ANb4dH7pe5wKybFXkPeaJETN+CARBUIjJfD/9sHK2zw14/h1pMOM4rHNhlA==",
-      "path": "rgb.net.devices.corsair/1.0.0",
-      "hashPath": "rgb.net.devices.corsair.1.0.0.nupkg.sha512"
+      "sha512": "sha512-F9t0PS+9aF4miib5vWlhSUjtJxNX/7hPy863ptqD0V84OBt6KCbQFNalsq/yjbBMPDPZKBVUE/mchXUfwRFdgQ==",
+      "path": "q42.hueapi.entertainment/3.20.1",
+      "hashPath": "q42.hueapi.entertainment.3.20.1.nupkg.sha512"
     },
-    "RGB.NET.Devices.Logitech/1.0.0": {
+    "Sanford.Multimedia.Midi/6.6.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Ga63eUXZRCpGyQKgmS+khfKq8CNRRElDacymoOewbTJk74nwWeX6Gel/kYXivLJurmhN51aG/vaeLX8jcHyXbA==",
-      "path": "rgb.net.devices.logitech/1.0.0",
-      "hashPath": "rgb.net.devices.logitech.1.0.0.nupkg.sha512"
-    },
-    "RGB.NET.Devices.Msi/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-fRHELMe4eX4sA7MzNyyP5SWSDlfxEVguzlRVl2YRPajMLmXJ22UOlyw4x62gKYITTOFsfrEmFz5QQr3AFQhwVg==",
-      "path": "rgb.net.devices.msi/1.0.0",
-      "hashPath": "rgb.net.devices.msi.1.0.0.nupkg.sha512"
-    },
-    "RGB.NET.Devices.Novation/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-A36qcB42VP6zykYEFMJnVHSP3ANs9J8/G+lzgE9ZPya0+r658Jifuwp6jeoGoP4Ng8YuXRtUF9NJsffoVKn+OQ==",
-      "path": "rgb.net.devices.novation/1.0.0",
-      "hashPath": "rgb.net.devices.novation.1.0.0.nupkg.sha512"
-    },
-    "RGB.NET.Devices.SteelSeries/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-WVKNZsDZzV9cqBHmF0K/gUIQUxAH3NZOuC0T1LGA8njLD9yCe1ZlDCJkrd8RrWXbMOv1JjaavVFmXZu/nVr8tg==",
-      "path": "rgb.net.devices.steelseries/1.0.0",
-      "hashPath": "rgb.net.devices.steelseries.1.0.0.nupkg.sha512"
-    },
-    "RGB.NET.Devices.Wooting/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-ZIeHncm2+/QNrFOpf7sRfbVE5txgmOrHJUIJfFN5GixZDGajawfEt7B5gCo72YMQDEfjTYN6RrNz4iBDsYxS3w==",
-      "path": "rgb.net.devices.wooting/1.0.0",
-      "hashPath": "rgb.net.devices.wooting.1.0.0.nupkg.sha512"
-    },
-    "RGB.NET.Devices.WS281X/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-s6qsG1p/FOFsVlmUtZVlTtEWd+PkQL7pTemjha626r1WXe0JajmRhWPZnsTX9e2pE9bDGPcR4cKr+wQwXCiv7w==",
-      "path": "rgb.net.devices.ws281x/1.0.0",
-      "hashPath": "rgb.net.devices.ws281x.1.0.0.nupkg.sha512"
-    },
-    "RGB.NET.HID/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-I13nZuYOvgFQkMl5IeCRKsombSS2MMUFY9AgGoG2LW6tiH9cCx88Vdw5otBYGCpQpHUd0nveRWQdF0xj88/7Hw==",
-      "path": "rgb.net.hid/1.0.0",
-      "hashPath": "rgb.net.hid.1.0.0.nupkg.sha512"
-    },
-    "RGB.NET.Layout/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-ItXByGVBcZ6Th2S1U0Rms6KE7oqHBstrDsG1PZ45qaAlOMUR+KFtq+FGs0/L/MZRxbKSAr5OWtl24eJK+mtzAg==",
-      "path": "rgb.net.layout/1.0.0",
-      "hashPath": "rgb.net.layout.1.0.0.nupkg.sha512"
-    },
-    "RGB.NET.Presets/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-DB1EvGWrtkeVrNentBioKaLX9sh+hyExEMm9AU2cWb7S9dfE7I0ygPW9lhZ8iVLRNj+Fxg+L+CA7csDc1W6EgQ==",
-      "path": "rgb.net.presets/1.0.0",
-      "hashPath": "rgb.net.presets.1.0.0.nupkg.sha512"
-    },
-    "runtime.linux-arm.runtime.native.System.IO.Ports/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-mHgdZplUo48ThUaZB3S3M0alxAcHU7R3GLxNbsBzwShKTBn6vHO31YP4PQT+nbOkc/ErieFP2cSkBA/pbH3Hsw==",
-      "path": "runtime.linux-arm.runtime.native.system.io.ports/5.0.0",
-      "hashPath": "runtime.linux-arm.runtime.native.system.io.ports.5.0.0.nupkg.sha512"
-    },
-    "runtime.linux-arm64.runtime.native.System.IO.Ports/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-2vSH+NumQa1hwccFfn+ISDQnkPcGviVd6is+TuM7HwcPkbE2WY64q1E6nAulm7E+62Loxx3b9bS2sSazjM6bfw==",
-      "path": "runtime.linux-arm64.runtime.native.system.io.ports/5.0.0",
-      "hashPath": "runtime.linux-arm64.runtime.native.system.io.ports.5.0.0.nupkg.sha512"
-    },
-    "runtime.linux-x64.runtime.native.System.IO.Ports/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-aagetZzzxDXxiGKrdyB1gxIHPRzeunUYTbV9aqprVe+iKVgi474I8fTVaxiZjwxDMeB3bWnOmpa4hgsiFXQ9GA==",
-      "path": "runtime.linux-x64.runtime.native.system.io.ports/5.0.0",
-      "hashPath": "runtime.linux-x64.runtime.native.system.io.ports.5.0.0.nupkg.sha512"
-    },
-    "runtime.native.System.IO.Ports/5.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-ihV5cOJiQ1+IyxFtCZuQfW8C7KhUUTaGRCYt9y7g14Xt+LcqsMJ8Pb/ANr7OmTPCa7SKcvwKQVYcN8xKQB55pA==",
-      "path": "runtime.native.system.io.ports/5.0.1",
-      "hashPath": "runtime.native.system.io.ports.5.0.1.nupkg.sha512"
-    },
-    "runtime.osx-x64.runtime.native.System.IO.Ports/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-KOWNOPDzXNZkKHwfCs9gBzJS1JeOli7fBmI93l92FcTb/42Fc0ojKYL9gUZANYtM7x5nRPPzUJtW29klkt+2Zw==",
-      "path": "runtime.osx-x64.runtime.native.system.io.ports/5.0.0",
-      "hashPath": "runtime.osx-x64.runtime.native.system.io.ports.5.0.0.nupkg.sha512"
-    },
-    "Sanford.Multimedia.Midi.Standard/6.6.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-j3pdu0UoSgYfAN/XDUmnBZ7kcvkyGODB1Vylk+KAcVFfhziVJIn1WXn9/b2UkF2yQpsJyKp8d+J55HcByvLcgQ==",
-      "path": "sanford.multimedia.midi.standard/6.6.0",
-      "hashPath": "sanford.multimedia.midi.standard.6.6.0.nupkg.sha512"
-    },
-    "System.CodeDom/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-JPJArwA1kdj8qDAkY2XGjSWoYnqiM7q/3yRNkt6n28Mnn95MuEGkZXUbPBf7qc3IjwrGY5ttQon7yqHZyQJmOQ==",
-      "path": "system.codedom/5.0.0",
-      "hashPath": "system.codedom.5.0.0.nupkg.sha512"
-    },
-    "System.IO.Ports/5.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-cOfs0q0+lmq8oXgIeYDzzT2IxQ0gIij2/awNDXn3OjykDii26EgzzY09BhabUlxt3rwGNpAOxYkdac5udWWJgQ==",
-      "path": "system.io.ports/5.0.1",
-      "hashPath": "system.io.ports.5.0.1.nupkg.sha512"
-    },
-    "System.Management/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-MF1CHaRcC+MLFdnDthv4/bKWBZnlnSpkGqa87pKukQefgEdwtb9zFW6zs0GjPp73qtpYYg4q6PEKbzJbxCpKfw==",
-      "path": "system.management/5.0.0",
-      "hashPath": "system.management.5.0.0.nupkg.sha512"
-    },
-    "System.Security.AccessControl/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-dagJ1mHZO3Ani8GH0PHpPEe/oYO+rVdbQjvjJkBRNQkX4t0r1iaeGn8+/ybkSLEan3/slM0t59SVdHzuHf2jmw==",
-      "path": "system.security.accesscontrol/5.0.0",
-      "hashPath": "system.security.accesscontrol.5.0.0.nupkg.sha512"
-    },
-    "System.Security.Principal.Windows/5.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-t0MGLukB5WAVU9bO3MGzvlGnyJPgUlcwerXn1kzBRjwLKixT96XV0Uza41W49gVd8zEMFu9vQEFlv0IOrytICA==",
-      "path": "system.security.principal.windows/5.0.0",
-      "hashPath": "system.security.principal.windows.5.0.0.nupkg.sha512"
+      "sha512": "sha512-SZ2SFJbig5i7SB8Li7z9ZAwceVym9U7Gj1aQy1sRXuwmyL4XqwfJ68dCpix2XFhmsyfZPhtEG1xZYnlad8D9lA==",
+      "path": "sanford.multimedia.midi/6.6.2",
+      "hashPath": "sanford.multimedia.midi.6.6.2.nupkg.sha512"
     }
   }
 }

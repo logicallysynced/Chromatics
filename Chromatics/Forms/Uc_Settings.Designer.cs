@@ -42,6 +42,7 @@
             this.chk_minimizetray = new System.Windows.Forms.CheckBox();
             this.chk_winstart = new System.Windows.Forms.CheckBox();
             this.chk_localcache = new System.Windows.Forms.CheckBox();
+            this.chk_updatecheck = new System.Windows.Forms.CheckBox();
             this.tlp_main.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.gb_devicesettings.SuspendLayout();
@@ -146,6 +147,7 @@
             this.gb_general.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gb_general.Controls.Add(this.chk_updatecheck);
             this.gb_general.Controls.Add(this.btn_clearcache);
             this.gb_general.Controls.Add(this.btn_resetchromatics);
             this.gb_general.Controls.Add(this.chk_trayonstartup);
@@ -223,6 +225,17 @@
             this.chk_localcache.UseVisualStyleBackColor = true;
             this.chk_localcache.CheckedChanged += new System.EventHandler(this.chk_localcache_CheckedChanged);
             // 
+            // chk_updatecheck
+            // 
+            this.chk_updatecheck.AutoSize = true;
+            this.chk_updatecheck.Location = new System.Drawing.Point(24, 164);
+            this.chk_updatecheck.Name = "chk_updatecheck";
+            this.chk_updatecheck.Size = new System.Drawing.Size(152, 24);
+            this.chk_updatecheck.TabIndex = 8;
+            this.chk_updatecheck.Text = "Check for Updates";
+            this.chk_updatecheck.UseVisualStyleBackColor = true;
+            this.chk_updatecheck.CheckedChanged += new System.EventHandler(this.chk_updatecheck_CheckedChanged);
+            // 
             // Uc_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -257,5 +270,6 @@
         private MetroFramework.Controls.MetroLabel lbl_devicebrightpercent;
         private MetroFramework.Controls.MetroLabel lbl_devicebright;
         private MetroFramework.Controls.MetroTrackBar trackbar_lighting;
+        private System.Windows.Forms.CheckBox chk_updatecheck;
     }
 }
