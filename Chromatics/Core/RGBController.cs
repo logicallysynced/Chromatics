@@ -176,7 +176,7 @@ namespace Chromatics.Core
 
             try
             {
-                surface.Updating -= Surface_Updating;
+                //surface.Updating -= Surface_Updating;
                 surface?.Dispose(); 
             } catch { }
         }

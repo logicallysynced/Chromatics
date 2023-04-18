@@ -1,4 +1,5 @@
-﻿using Chromatics.Core;
+﻿using AutoUpdaterDotNET;
+using Chromatics.Core;
 using MetroFramework.Components;
 using MetroFramework.Controls;
 using Microsoft.VisualBasic.FileIO;
@@ -39,6 +40,7 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.btn_resetchromatics, @"Restore Chromatics to its default state. Requires application restart.");
             tt_mappings.SetToolTip(this.btn_clearcache, @"Clear local FFXIV cache. Requires application restart.");
             tt_mappings.SetToolTip(this.trackbar_lighting, @"Adjust global brightness for all devices.");
+            tt_mappings.SetToolTip(this.chk_updatecheck, @"Enable checking for updates on Chromatics start. Default: Enabled");
 
             //Startup
             var settings = AppSettings.GetSettings();
@@ -49,6 +51,7 @@ namespace Chromatics.Forms
             chk_trayonstartup.Checked = settings.trayonstartup;
             trackbar_lighting.Value = settings.globalbrightness;
             lbl_devicebrightpercent.Text = $"{settings.globalbrightness}%";
+            chk_updatecheck.Checked = settings.checkupdates;
         }
 
         private void chk_localcache_CheckedChanged(object sender, EventArgs e)
@@ -210,6 +213,15 @@ namespace Chromatics.Forms
 
             settings.globalbrightness = trackbar.Value;
             lbl_devicebrightpercent.Text = $"{trackbar_lighting.Value}%";
+
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void chk_updatecheck_CheckedChanged(object sender, EventArgs e)
+        {
+            var checkbox = (CheckBox)sender;
+            var settings = AppSettings.GetSettings();
+            settings.checkupdates = checkbox.Checked;
 
             AppSettings.SaveSettings(settings);
         }
