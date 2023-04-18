@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>3.0.0.8</Version>
+    <Version>3.0.0.9</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>Danielle Thompson 2023</Copyright>
@@ -62,12 +62,6 @@
     </Reference>
     <Reference Include="RGB.NET.Devices.Corsair">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Corsair.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Debug">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Debug.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.DMX">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.DMX.dll</HintPath>
     </Reference>
     <Reference Include="RGB.NET.Devices.Logitech">
       <HintPath>..\Build Dependencies\RGB.NET.Devices.Logitech.dll</HintPath>
