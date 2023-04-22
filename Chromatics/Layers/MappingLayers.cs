@@ -1,4 +1,5 @@
-﻿using Chromatics.Enums;
+﻿using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
@@ -30,7 +31,7 @@ namespace Chromatics.Layers
 
             var id = _layerAutoID;
 
-            var layer = new Layer(id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
+            var layer = new Layer(AppSettings.currentMappingLayerVersion, id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
             _layers.GetOrAdd(id, layer);
             _version++;
 
@@ -99,6 +100,21 @@ namespace Chromatics.Layers
                     return false;
                 }
 
+                var flag = false;
+                foreach (var mapping in _layers)
+                {
+                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null)
+                    {
+                        flag = true;
+                        mapping.Value.layerVersion = AppSettings.currentMappingLayerVersion; //remove later
+                    }
+                }
+
+                if (flag)
+                {
+                    SaveMappings();
+                }
+
                 _layerAutoID = _layers.LastOrDefault().Key;
                 _version++;
 
@@ -125,6 +141,21 @@ namespace Chromatics.Layers
                 _layers = layers;
                 _layerAutoID = _layers.LastOrDefault().Key;
                 _version++;
+
+                var flag = false;
+                foreach (var mapping in _layers)
+                {
+                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null)
+                    {
+                        flag = true;
+                        mapping.Value.layerVersion = AppSettings.currentMappingLayerVersion; //remove later
+                    }
+                }
+
+                if (flag)
+                {
+                    SaveMappings();
+                }
 
                 return true;
             }
@@ -172,6 +203,7 @@ namespace Chromatics.Layers
 
     public class Layer : IMappingLayer
     {
+        public string layerVersion { get; set; }
         public int layerID { get; set; }
         public int layerIndex { get; set; }
         public LayerType rootLayerType { get; set; }
@@ -184,8 +216,9 @@ namespace Chromatics.Layers
         public LayerModes layerModes { get; set; }
         public bool requestUpdate { get; set; }
 
-        public Layer(int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds, bool _allowBleed, LayerModes _mode)
+        public Layer(string _layerVersion, int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds, bool _allowBleed, LayerModes _mode)
         {
+            layerVersion = _layerVersion;
             layerID = _id;
             layerIndex = _index;
             rootLayerType = _rootLayerType;
