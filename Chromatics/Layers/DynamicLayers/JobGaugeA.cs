@@ -126,11 +126,11 @@ namespace Chromatics.Layers
                         var currentVal_Interpolate = LinearInterpolation.Interpolate<double>(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, 0, countKeys + jobGauge.offset);
 
                         //Process Lighting
-                        var ledGroups = new List<PublicListLedGroup>();
+                        var ledGroups = new List<ListLedGroup>();
 
                         for (int i = 0; i < countKeys; i++)
                         {
-                            var ledGroup = new PublicListLedGroup(surface, ledArray[i])
+                            var ledGroup = new ListLedGroup(surface, ledArray[i])
                             {
                                 ZIndex = layer.zindex,
                             };
@@ -165,32 +165,30 @@ namespace Chromatics.Layers
 
                         var currentVal_Fader = ColorHelper.GetInterpolatedColor(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, model.empty_brush.Color, model.highlight_brush.Color);
 
-                        var ledGroup = new PublicListLedGroup(surface, ledArray)
+                        var ledGroup = new ListLedGroup(surface, ledArray)
                         {
                             ZIndex = layer.zindex,
                             Brush = new SolidColorBrush(currentVal_Fader)
                         };
 
                         ledGroup.Detach();
-                        model._localgroups.Add(ledGroup);
+
+                        if (!model._localgroups.Contains(ledGroup))
+                            model._localgroups.Add(ledGroup);
                     }
                 }
 
 
                 //Send layers to _layergroups Dictionary to be tracked outside this method
-                foreach (var group in model._localgroups)
+                var lg = model._localgroups.ToArray();
+
+                if (_layergroups.ContainsKey(layer.layerID))
                 {
-                    var lg = model._localgroups.ToArray();
-
-                    if (_layergroups.ContainsKey(layer.layerID))
-                    {
-                        _layergroups[layer.layerID] = lg;
-                    }
-                    else
-                    {
-                        _layergroups.Add(layer.layerID, lg);
-                    }
-
+                    _layergroups[layer.layerID] = lg;
+                }
+                else
+                {
+                    _layergroups.Add(layer.layerID, lg);
                 }
             }
 
@@ -697,7 +695,7 @@ namespace Chromatics.Layers
 
         private class JobGaugeADynamicModel
         {
-            public List<PublicListLedGroup> _localgroups { get; set; } = new List<PublicListLedGroup>();
+            public List<ListLedGroup> _localgroups { get; set; } = new List<ListLedGroup>();
             public SolidColorBrush empty_brush { get; set; }
             public SolidColorBrush highlight_brush { get; set; }
             public LayerModes _currentMode { get; set; }

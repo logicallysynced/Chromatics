@@ -17,7 +17,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 {
     public class StarfieldDecorator : AbstractUpdateAwareDecorator, ILedGroupDecorator
     {
-        private readonly PublicListLedGroup ledGroup;
+        private readonly ListLedGroup ledGroup;
         private readonly Random random = new Random();
         private readonly int numberOfLeds;
         private readonly double interval;
@@ -33,7 +33,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private double startDelay;
         private double updateCounter = 0;
 
-        public StarfieldDecorator(PublicListLedGroup _ledGroup, int numberOfLeds, double interval, double fadeSpeed, Color[] colors, RGBSurface surface, bool updateIfDisabled = false, Color baseColor = default(Color)) : base(surface, updateIfDisabled)
+        public StarfieldDecorator(ListLedGroup _ledGroup, int numberOfLeds, double interval, double fadeSpeed, Color[] colors, RGBSurface surface, bool updateIfDisabled = false, Color baseColor = default(Color)) : base(surface, updateIfDisabled)
         {
             this.ledGroup = _ledGroup;
             this.numberOfLeds = numberOfLeds;
@@ -92,7 +92,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 if (Timing >= startDelay)
                 {
 
-                    var availableLeds = ledGroup.PublicGroupLeds.Except(fadingInLeds.Keys).Except(fadingOutLeds.Keys);
+                    //var availableLeds = ledGroup.PublicGroupLeds.Except(fadingInLeds.Keys).Except(fadingOutLeds.Keys);
+                    var availableLeds = ledGroup.Where(led => !fadingInLeds.ContainsKey(led) && !fadingOutLeds.ContainsKey(led));
+
                     var selectedLeds = availableLeds.OrderBy(x => Guid.NewGuid()).Take(numberOfLeds);
 
                     foreach (var led in selectedLeds)
@@ -189,7 +191,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 }
 
 
-                foreach (var led in ledGroup.PublicGroupLeds)
+                foreach (var led in ledGroup)
                 {
                     if (fadingInLeds != null && fadingInLeds.ContainsKey(led))
                     {

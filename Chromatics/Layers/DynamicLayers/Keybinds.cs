@@ -22,7 +22,7 @@ namespace Chromatics.Layers
 {
     public class KeybindsProcessor : LayerProcessor
     {
-        private Dictionary<Led, PublicListLedGroup> _localgroups = new Dictionary<Led, PublicListLedGroup>();
+        private Dictionary<Led, ListLedGroup> _localgroups = new Dictionary<Led, ListLedGroup>();
         private SolidColorBrush keybind_cd_brush;
         private SolidColorBrush keybind_na_brush;
         private SolidColorBrush keybind_outranged_brush;
@@ -134,7 +134,7 @@ namespace Chromatics.Layers
                 {
                     if (!_localgroups.ContainsKey(led))
                     {
-                        var ledGroup = new PublicListLedGroup(surface, led)
+                        var ledGroup = new ListLedGroup(surface, led)
                         {
                             ZIndex = layer.zindex,
                             Brush = empty_brush
@@ -324,19 +324,16 @@ namespace Chromatics.Layers
 
 
                 //Send layers to _layergroups Dictionary to be tracked outside this method
-                foreach (var group in _localgroups)
-                {
-                    var lg = _localgroups.Values.ToArray();
 
-                    if (_layergroups.ContainsKey(layer.layerID))
-                    {
-                        _layergroups[layer.layerID] = lg;
-                    }
-                    else
-                    {
-                        _layergroups.Add(layer.layerID, lg);
-                    }
-                            
+                var lg = _localgroups.Values.ToArray();
+
+                if (_layergroups.ContainsKey(layer.layerID))
+                {
+                    _layergroups[layer.layerID] = lg;
+                }
+                else
+                {
+                    _layergroups.Add(layer.layerID, lg);
                 }
             }
 

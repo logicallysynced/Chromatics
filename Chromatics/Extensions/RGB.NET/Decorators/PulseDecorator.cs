@@ -14,7 +14,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 {
     public class PulseDecorator : AbstractUpdateAwareDecorator, ILedGroupDecorator
     {
-        private readonly PublicListLedGroup ledGroup;
+        private readonly ListLedGroup ledGroup;
         private readonly RGBDeviceType deviceType;
         private readonly int interval;
         private readonly int stepspeed;
@@ -32,7 +32,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private double updateCounter = 0;
         private int globalStep;
 
-        public PulseDecorator(PublicListLedGroup _ledGroup, int interval, int stepspeed, double fadeSpeed, Color highlightColor, RGBSurface surface, RGBDeviceType deviceType, bool updateIfDisabled = false, Color baseColor = default(Color), bool oneshot = false) : base(surface, updateIfDisabled)
+        public PulseDecorator(ListLedGroup _ledGroup, int interval, int stepspeed, double fadeSpeed, Color highlightColor, RGBSurface surface, RGBDeviceType deviceType, bool updateIfDisabled = false, Color baseColor = default(Color), bool oneshot = false) : base(surface, updateIfDisabled)
         {
             this.ledGroup = _ledGroup;
             this.deviceType = deviceType;
@@ -116,7 +116,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     }
                     else
                     {
-                        var availableLeds = ledGroup.PublicGroupLeds.Except(fadingInLeds.Keys).Except(fadingOutLeds.Keys);
+                        //var availableLeds = ledGroup.ToList().Except(fadingInLeds.Keys).Except(fadingOutLeds.Keys);
+                        var availableLeds = ledGroup.Where(led => !fadingInLeds.ContainsKey(led) && !fadingOutLeds.ContainsKey(led));
                         foreach (var led in availableLeds)
                         {
                             fadingInLeds.TryAdd(led, savedColors[led]);
@@ -356,7 +357,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         }
                         else
                         {
-                            foreach (var led in ledGroup.PublicGroupLeds)
+                            foreach (var led in ledGroup)
                             {
                                 led.Color = savedColors[led];
                             } 

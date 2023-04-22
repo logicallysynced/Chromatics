@@ -53,7 +53,7 @@ namespace Chromatics.Layers.DynamicLayers
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
-            PublicListLedGroup layergroup;
+            ListLedGroup layergroup;
             var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
             if (_layergroups.ContainsKey(layer.layerID))
@@ -63,12 +63,12 @@ namespace Chromatics.Layers.DynamicLayers
             }
             else
             {
-                layergroup = new PublicListLedGroup(surface, ledArray)
+                layergroup = new ListLedGroup(surface, ledArray)
                 {
                     ZIndex = layer.zindex,
                 };
 
-                var lg = new PublicListLedGroup[] { layergroup };
+                var lg = new ListLedGroup[] { layergroup };
                 _layergroups.Add(layer.layerID, lg);
 
                 layergroup.Brush = weather_brush;
@@ -133,7 +133,7 @@ namespace Chromatics.Layers.DynamicLayers
 
         }
 
-        private static void SetReactiveWeather(PublicListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette)
+        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette)
         {
             var color = GetWeatherColor(weather, _colorPalette);
             var reactiveWeatherEffects = RGBController.GetEffectsSettings();

@@ -117,11 +117,11 @@ namespace Chromatics.Layers
                     //Process Lighting
                     if (currentVal_Interpolate != model._interpolateValue || layer.requestUpdate)
                     {
-                        var ledGroups = new List<PublicListLedGroup>();
+                        var ledGroups = new List<ListLedGroup>();
                                         
                         for (int i = 0; i < countKeys; i++)
                         {
-                            var ledGroup = new PublicListLedGroup(surface, ledArray[i])
+                            var ledGroup = new ListLedGroup(surface, ledArray[i])
                             {
                                 ZIndex = layer.zindex,
                             };
@@ -160,32 +160,31 @@ namespace Chromatics.Layers
                     var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, model.empty_brush.Color, model.full_brush.Color);
                     if (currentVal_Fader != model._faderValue || layer.requestUpdate)
                     {
-                        var ledGroup = new PublicListLedGroup(surface, ledArray)
+                        var ledGroup = new ListLedGroup(surface, ledArray)
                         {
                             ZIndex = layer.zindex,
                             Brush = new SolidColorBrush(currentVal_Fader)
                         };
 
                         ledGroup.Detach();
-                        model._localgroups.Add(ledGroup);
+
+                        if (!model._localgroups.Contains(ledGroup))
+                            model._localgroups.Add(ledGroup);
+
                         model._faderValue = currentVal_Fader;
                     }
                 }
 
                 //Send layers to _layergroups Dictionary to be tracked outside this method
-                foreach (var group in model._localgroups)
-                {
-                    var lg = model._localgroups.ToArray();
+                var lg = model._localgroups.ToArray();
 
-                    if (_layergroups.ContainsKey(layer.layerID))
-                    {
-                        _layergroups[layer.layerID] = lg;
-                    }
-                    else
-                    {
-                        _layergroups.Add(layer.layerID, lg);
-                    }
-                            
+                if (_layergroups.ContainsKey(layer.layerID))
+                {
+                    _layergroups[layer.layerID] = lg;
+                }
+                else
+                {
+                    _layergroups.Add(layer.layerID, lg);
                 }
             }
 
@@ -201,7 +200,7 @@ namespace Chromatics.Layers
 
         private class CastbarDynamicModel
         {
-            public List<PublicListLedGroup> _localgroups { get; set; } = new List<PublicListLedGroup>();
+            public List<ListLedGroup> _localgroups { get; set; } = new List<ListLedGroup>();
             public SolidColorBrush empty_brush { get; set; }
             public SolidColorBrush full_brush { get; set; }
             public LayerModes _currentMode  { get; set; }
