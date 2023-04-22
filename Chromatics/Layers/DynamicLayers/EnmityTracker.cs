@@ -116,16 +116,19 @@ namespace Chromatics.Layers
                 //No target found
                 if (targetId == 0 || !model.init)
                 {
-                    var ledGroup = new ListLedGroup(surface, ledArray)
+                    if (model._targetReset || !model.init)
                     {
-                        ZIndex = layer.zindex,
-                        Brush = model.empty_brush
-                    };
+                        var ledGroup = new ListLedGroup(surface, ledArray)
+                        {
+                            ZIndex = layer.zindex,
+                            Brush = model.empty_brush
+                        };
 
-                    ledGroup.Detach();
+                        ledGroup.Detach();
 
-                    if (!model._localgroups.Contains(ledGroup))
-                        model._localgroups.Add(ledGroup);
+                        if (!model._localgroups.Contains(ledGroup))
+                            model._localgroups.Add(ledGroup);
+                    }
 
                 }
                 else

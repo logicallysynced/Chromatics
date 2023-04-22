@@ -165,16 +165,21 @@ namespace Chromatics.Layers
                     
                         var currentVal_Fader = ColorHelper.GetInterpolatedColor(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, model.empty_brush.Color, model.highlight_brush.Color);
                     
-                        var ledGroup = new ListLedGroup(surface, ledArray)
+                        if (currentVal_Fader != model._faderValue)
                         {
-                            ZIndex = layer.zindex,
-                            Brush = new SolidColorBrush(currentVal_Fader)
-                        };
+                            var ledGroup = new ListLedGroup(surface, ledArray)
+                            {
+                                ZIndex = layer.zindex,
+                                Brush = new SolidColorBrush(currentVal_Fader)
+                            };
 
-                        ledGroup.Detach();
+                            ledGroup.Detach();
 
-                        if (!model._localgroups.Contains(ledGroup))
-                            model._localgroups.Add(ledGroup);
+                            if (!model._localgroups.Contains(ledGroup))
+                                model._localgroups.Add(ledGroup);
+
+                            model._faderValue = currentVal_Fader;
+                        }
                     }
                 }
 

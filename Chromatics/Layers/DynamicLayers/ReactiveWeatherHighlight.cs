@@ -1,4 +1,5 @@
 ﻿using Chromatics.Core;
+using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
@@ -9,14 +10,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using static Chromatics.Extensions.FFXIVWeatherExtensions;
 
 namespace Chromatics.Layers.DynamicLayers
 {
     public class ReactiveWeatherHighlightProcessor : LayerProcessor
     {
         private static Dictionary<int, ReactiveWeatherHighlightDynamicLayer> layerProcessorModel = new Dictionary<int, ReactiveWeatherHighlightDynamicLayer>();
-        private FFXIVWeatherServiceManual weatherService;
         
 
         public override void Process(IMappingLayer layer)
@@ -44,10 +43,8 @@ namespace Chromatics.Layers.DynamicLayers
             var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
 
 
-            if (FileOperationsHelper.CheckWeatherDataLoaded() && weatherService == null)
-            {
-                weatherService = new FFXIVWeatherServiceManual();
-            }
+            var weatherService = FFXIVWeatherExtensions.GetWeatherService();
+            if (weatherService == null) return;
 
             //loop through all LED's and assign to device layer  (Order of LEDs is not important for a highlight layer)
             var surface = RGBController.GetLiveSurfaces();

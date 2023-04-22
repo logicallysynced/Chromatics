@@ -1,19 +1,13 @@
 ﻿using Chromatics.Core;
 using Chromatics.Enums;
-using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
 using Sharlayan.Core.Enums;
 using Sharlayan.Models.ReadResults;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using static Chromatics.Helpers.MathHelper;
 
 namespace Chromatics.Layers
