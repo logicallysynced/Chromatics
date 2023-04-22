@@ -192,6 +192,7 @@ namespace Chromatics.Layers
             
             model.init = true;
             layer.requestUpdate = false;
+
         }
 
         private class TargetCastbarDynamicModel

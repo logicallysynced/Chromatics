@@ -1,4 +1,5 @@
 ﻿using Chromatics.Core;
+using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
 using Chromatics.Helpers;
@@ -20,7 +21,6 @@ using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using static Chromatics.Extensions.FFXIVWeatherExtensions;
 using static MetroFramework.Drawing.MetroPaint;
 
 namespace Chromatics.Layers
@@ -28,9 +28,7 @@ namespace Chromatics.Layers
     public class ReactiveWeatherProcessor : LayerProcessor
     {
         private static Dictionary<int, ReactiveWeatherBaseModel> layerProcessorModel = new Dictionary<int, ReactiveWeatherBaseModel>();
-
-        private FFXIVWeatherServiceManual weatherService;
-        
+                
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if currently in Preview mode
@@ -60,10 +58,8 @@ namespace Chromatics.Layers
             var _layergroups = RGBController.GetLiveLayerGroups();
             var effectApplied = false;
 
-            if (FileOperationsHelper.CheckWeatherDataLoaded() && weatherService == null)
-            {
-                weatherService = new FFXIVWeatherServiceManual();
-            }
+            var weatherService = FFXIVWeatherExtensions.GetWeatherService();
+            if (weatherService == null) return;
 
             //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
             var surface = RGBController.GetLiveSurfaces();

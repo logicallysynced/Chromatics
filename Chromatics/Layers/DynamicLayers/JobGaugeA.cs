@@ -165,16 +165,21 @@ namespace Chromatics.Layers
 
                         var currentVal_Fader = ColorHelper.GetInterpolatedColor(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, model.empty_brush.Color, model.highlight_brush.Color);
 
-                        var ledGroup = new ListLedGroup(surface, ledArray)
+                        if (currentVal_Fader != model._faderValue)
                         {
-                            ZIndex = layer.zindex,
-                            Brush = new SolidColorBrush(currentVal_Fader)
-                        };
+                            var ledGroup = new ListLedGroup(surface, ledArray)
+                            {
+                                ZIndex = layer.zindex,
+                                Brush = new SolidColorBrush(currentVal_Fader)
+                            };
 
-                        ledGroup.Detach();
+                            ledGroup.Detach();
 
-                        if (!model._localgroups.Contains(ledGroup))
-                            model._localgroups.Add(ledGroup);
+                            if (!model._localgroups.Contains(ledGroup))
+                                model._localgroups.Add(ledGroup);
+
+                            model._faderValue = currentVal_Fader;
+                        }
                     }
                 }
 
@@ -200,6 +205,7 @@ namespace Chromatics.Layers
 
             model.init = true;
             layer.requestUpdate = false;
+
         }
 
         private static JobGaugeResponse ReturnJobGauge(CurrentPlayerResult currentPlayer, JobResourceResult jobResources, PaletteColorModel _colorPalette)
@@ -699,6 +705,8 @@ namespace Chromatics.Layers
             public SolidColorBrush empty_brush { get; set; }
             public SolidColorBrush highlight_brush { get; set; }
             public LayerModes _currentMode { get; set; }
+            public int _interpolateValue { get; set; } = -1;
+            public Color _faderValue { get; set; }
             public Actor.Job _currentJob { get; set; }
             public bool init { get; set; }
         }
