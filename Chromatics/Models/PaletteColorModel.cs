@@ -12,6 +12,8 @@ namespace Chromatics.Models
 {
     public class PaletteColorModel
     {
+        public string version { get; set; } = "1";
+
         //Chromatics
         public ColorMapping BaseColor = new("Base Color", PaletteTypes.Chromatics, Color.DodgerBlue);
         public ColorMapping HighlightColor = new("Highlight Color", PaletteTypes.Chromatics, Color.Magenta);
