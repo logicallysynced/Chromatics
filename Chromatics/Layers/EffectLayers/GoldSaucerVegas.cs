@@ -30,7 +30,7 @@ namespace Chromatics.Layers
             var devices = surface.GetDevices(layer.deviceType);
 
             GoldSaucerVegasEffectModel model;
-            PublicListLedGroup layergroup;
+            ListLedGroup layergroup;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
             {
@@ -96,12 +96,12 @@ namespace Chromatics.Layers
                 }
                 else
                 {
-                    layergroup = new PublicListLedGroup(surface, ledArray)
+                    layergroup = new ListLedGroup(surface, ledArray)
                     {
                         ZIndex = baseLayer.zindex,
                     };
 
-                    var lg = new PublicListLedGroup[] { layergroup };
+                    var lg = new ListLedGroup[] { layergroup };
                     _layergroups.Add(baseLayer.layerID, lg);
 
                     if (model.gradientEffects != null)

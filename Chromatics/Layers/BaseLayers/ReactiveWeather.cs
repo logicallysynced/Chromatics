@@ -69,7 +69,7 @@ namespace Chromatics.Layers
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
-            PublicListLedGroup layergroup;
+            ListLedGroup layergroup;
             var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
 
@@ -79,12 +79,12 @@ namespace Chromatics.Layers
             }
             else
             {
-                layergroup = new PublicListLedGroup(surface, ledArray)
+                layergroup = new ListLedGroup(surface, ledArray)
                 {
                     ZIndex = layer.zindex,
                 };
 
-                var lg = new PublicListLedGroup[] { layergroup };
+                var lg = new ListLedGroup[] { layergroup };
                 _layergroups.Add(layer.layerID, lg);
 
                 layergroup.Brush = weather_brush;
@@ -168,7 +168,7 @@ namespace Chromatics.Layers
             public bool _reactiveWeatherEffects { get; set; }
         }
 
-        private static void SetEffect(ILedGroupDecorator effect, PublicListLedGroup layer, List<PublicListLedGroup> runningEffects)
+        private static void SetEffect(ILedGroupDecorator effect, ListLedGroup layer, List<ListLedGroup> runningEffects)
         {
             if (runningEffects.Contains(layer))
                 runningEffects.Remove(layer);
@@ -179,7 +179,7 @@ namespace Chromatics.Layers
             runningEffects.Add(layer);
         }
 
-        private static void SetLinearGradientEffect(LinearGradient gradient, IGradientDecorator effect, PublicListLedGroup layer, Size boundry, List<PublicListLedGroup> runningEffects, HashSet<LinearGradient> _gradientEffects)
+        private static void SetLinearGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, List<ListLedGroup> runningEffects, HashSet<LinearGradient> _gradientEffects)
         {
             if (runningEffects.Contains(layer))
                 runningEffects.Remove(layer);
@@ -193,7 +193,7 @@ namespace Chromatics.Layers
             runningEffects.Add(layer);
             _gradientEffects.Add(gradient);
         }
-        private static void SetRadialGradientEffect(LinearGradient gradient, IGradientDecorator effect, PublicListLedGroup layer, Size boundry, List<PublicListLedGroup> runningEffects, HashSet<LinearGradient> _gradientEffects)
+        private static void SetRadialGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, List<ListLedGroup> runningEffects, HashSet<LinearGradient> _gradientEffects)
         {
             if (runningEffects.Contains(layer))
                 runningEffects.Remove(layer);
@@ -208,7 +208,7 @@ namespace Chromatics.Layers
             _gradientEffects.Add(gradient);
         }
 
-        private static void StopEffects(PublicListLedGroup layer, HashSet<LinearGradient> _gradientEffects)
+        private static void StopEffects(ListLedGroup layer, HashSet<LinearGradient> _gradientEffects)
         {
             var runningEffects = RGBController.GetRunningEffects();
 
@@ -223,7 +223,7 @@ namespace Chromatics.Layers
             layer.RemoveAllDecorators();
         }
 
-        private static bool SetReactiveWeather(PublicListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects)
+        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects)
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
@@ -240,7 +240,7 @@ namespace Chromatics.Layers
                         {
                             var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationBase.Color);
                             var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color) };
-                            var starfield = new StarfieldDecorator(layer, (layer.PublicGroupLeds.Count / 4), 20, 900, animationCol, surface, false, baseCol);
+                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 900, animationCol, surface, false, baseCol);
                             
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(starfield, layer, runningEffects);
@@ -258,7 +258,7 @@ namespace Chromatics.Layers
                         {
                             var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationBase.Color);
                             var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindAnimationHighlight.Color) };
-                            var starfield = new StarfieldDecorator(layer, (layer.PublicGroupLeds.Count / 4), 20, 800, animationCol, surface, false, baseCol);
+                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 800, animationCol, surface, false, baseCol);
                             
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(starfield, layer, runningEffects);
@@ -279,7 +279,7 @@ namespace Chromatics.Layers
                             var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationBase.Color);
                             var starfieldCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight4.Color) };
                             
-                            var starfield = new StarfieldDecorator(layer, (layer.PublicGroupLeds.Count / 4), 20, 500, starfieldCol, surface, false, baseCol);
+                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 500, starfieldCol, surface, false, baseCol);
                             layer.Brush = new SolidColorBrush(baseCol);
 
                             SetEffect(starfield, layer, runningEffects);
@@ -340,7 +340,7 @@ namespace Chromatics.Layers
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherRainBase.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherRainAnimation.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.PublicGroupLeds.Count / 4), 20, 200, animationCol, surface, false, baseCol);
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 200, animationCol, surface, false, baseCol);
                             
                         layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(starfield, layer, runningEffects);
@@ -357,7 +357,7 @@ namespace Chromatics.Layers
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherShowersBase.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherShowersHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.PublicGroupLeds.Count / 4), 20, 100, animationCol, surface, false, baseCol);
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 100, animationCol, surface, false, baseCol);
                             
                         layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(starfield, layer, runningEffects);
@@ -476,7 +476,7 @@ namespace Chromatics.Layers
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSnowBase.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherSnowAnimationHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.PublicGroupLeds.Count / 4), 40, 1500, animationCol, surface, false, baseCol);
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 40, 1500, animationCol, surface, false, baseCol);
                             
                         layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(starfield, layer, runningEffects);
@@ -493,7 +493,7 @@ namespace Chromatics.Layers
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBlizzardsBase.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherBilzzardsAnimationHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.PublicGroupLeds.Count / 4), 20, 200, animationCol, surface, false, baseCol);
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 200, animationCol, surface, false, baseCol);
                             
                         layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(starfield, layer, runningEffects);

@@ -11,7 +11,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 {
     public class StrobeDecorator : AbstractUpdateAwareDecorator, ILedGroupDecorator
     {
-        private readonly PublicListLedGroup ledGroup;
+        private readonly ListLedGroup ledGroup;
         private readonly Random random = new Random();
         private readonly int interval;
         private readonly bool randomise;
@@ -28,7 +28,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private double startDelay;
         private double updateCounter = 0;
 
-        public StrobeDecorator(PublicListLedGroup _ledGroup, int interval, double fadeSpeed, bool randomise, Color[] colors, RGBSurface surface, bool updateIfDisabled = false, Color baseColor = default(Color), bool oneshot = false) : base(surface, updateIfDisabled)
+        public StrobeDecorator(ListLedGroup _ledGroup, int interval, double fadeSpeed, bool randomise, Color[] colors, RGBSurface surface, bool updateIfDisabled = false, Color baseColor = default(Color), bool oneshot = false) : base(surface, updateIfDisabled)
         {
             this.ledGroup = _ledGroup;
             this.interval = interval;
@@ -83,7 +83,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
             if (Timing >= startDelay)
             {
-                var availableLeds = ledGroup.PublicGroupLeds.Except(fadingInLeds.Keys).Except(fadingOutLeds.Keys);
+                var availableLeds = ledGroup.Where(led => !fadingInLeds.ContainsKey(led) && !fadingOutLeds.ContainsKey(led));
 
                 foreach (var led in availableLeds)
                 {
@@ -193,7 +193,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             }
 
 
-            foreach (var led in ledGroup.PublicGroupLeds)
+            foreach (var led in ledGroup)
             {
                 if (fadingInLeds.ContainsKey(led))
                 {

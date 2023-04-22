@@ -364,9 +364,9 @@ namespace Chromatics.Core
 
                                 foreach (var device in devices)
                                 {
-                                    var ledgroup = new PublicListLedGroup(surface, device);
+                                    var ledgroup = new ListLedGroup(surface, device);
                         
-                                    var starfield = new StarfieldDecorator(ledgroup, (ledgroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
+                                    var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
                                     ledgroup.ZIndex = 1000;
                             
                                     foreach (var led in device)
