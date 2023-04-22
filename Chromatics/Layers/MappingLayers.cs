@@ -93,6 +93,12 @@ namespace Chromatics.Layers
             {
                 _layers.Clear();
                 _layers = FileOperationsHelper.LoadLayerMappings();
+
+                if (_layers == null)
+                {
+                    return false;
+                }
+
                 _layerAutoID = _layers.LastOrDefault().Key;
                 _version++;
 
