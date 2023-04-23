@@ -30,8 +30,8 @@ namespace Chromatics.Layers
             var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
                        
 
-            // Add new PublicListLedGroup to _layergroups with updated leds and create a new instance of it
-            PublicListLedGroup updatedLayerGroup;
+            // Add new ListLedGroup to _layergroups with updated leds and create a new instance of it
+            ListLedGroup updatedLayerGroup;
 
             if (_layergroups.ContainsKey(layer.layerID))
             {
@@ -45,12 +45,12 @@ namespace Chromatics.Layers
 
                 }
             } else {
-                updatedLayerGroup = new PublicListLedGroup(surface, ledArray)
+                updatedLayerGroup = new ListLedGroup(surface, ledArray)
                 {
                     ZIndex = layer.zindex,
                 };
 
-                var lg = new PublicListLedGroup[] { updatedLayerGroup };
+                var lg = new ListLedGroup[] { updatedLayerGroup };
                 _layergroups.Add(layer.layerID, lg);
                 updatedLayerGroup.Detach();
 

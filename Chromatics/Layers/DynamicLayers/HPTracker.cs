@@ -53,6 +53,7 @@ namespace Chromatics.Layers
                 {
                     if (layergroup != null)
                         layergroup.Detach();
+
                 }
 
                 model._localgroups.Clear();
@@ -61,6 +62,8 @@ namespace Chromatics.Layers
                     return;
             }
             
+            
+
             //Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
 
@@ -132,11 +135,11 @@ namespace Chromatics.Layers
                     if (currentVal_Interpolate != model._interpolateValue || layer.requestUpdate)
                     {
                         //Process Lighting
-                        var ledGroups = new List<PublicListLedGroup>();
+                        var ledGroups = new List<ListLedGroup>();
                                         
                         for (int i = 0; i < countKeys; i++)
                         {
-                            var ledGroup = new PublicListLedGroup(surface, ledArray[i])
+                            var ledGroup = new ListLedGroup(surface, ledArray[i])
                             {
                                 ZIndex = layer.zindex,
                             };
@@ -184,33 +187,35 @@ namespace Chromatics.Layers
                             model.empty_brush.Color = empty_col;
                         }
 
-                        var ledGroup = new PublicListLedGroup(surface, ledArray)
+                        var ledGroup = new ListLedGroup(surface, ledArray)
                         {
                             ZIndex = layer.zindex,
                             Brush = new SolidColorBrush(currentVal_Fader)
                         };
 
                         ledGroup.Detach();
-                        model._localgroups.Add(ledGroup);
+
+                        if (!model._localgroups.Contains(ledGroup))
+                            model._localgroups.Add(ledGroup);
+
                         model._faderValue = currentVal_Fader;
                     }
                 }
 
                 //Send layers to _layergroups Dictionary to be tracked outside this method
-                foreach (var group in model._localgroups)
-                {
-                    var lg = model._localgroups.ToArray();
+                
+                var lg = model._localgroups.ToArray();
 
-                    if (_layergroups.ContainsKey(layer.layerID))
-                    {
-                        _layergroups[layer.layerID] = lg;
-                    }
-                    else
-                    {
-                        _layergroups.Add(layer.layerID, lg);
-                    }
-                            
+                if (_layergroups.ContainsKey(layer.layerID))
+                {
+                    _layergroups[layer.layerID] = lg;
                 }
+                else
+                {
+                    _layergroups.Add(layer.layerID, lg);
+                }
+                
+                
             }
 
             //Apply lighting
@@ -221,11 +226,12 @@ namespace Chromatics.Layers
             
             model.init = true;
             layer.requestUpdate = false;
+
         }
 
         private class HPTrackerDynamicModel
         {
-            public List<PublicListLedGroup> _localgroups { get; set; } = new List<PublicListLedGroup>();
+            public List<ListLedGroup> _localgroups { get; set; } = new List<ListLedGroup>();
             public SolidColorBrush critical_brush { get; set; }
             public SolidColorBrush empty_brush { get; set; }
             public SolidColorBrush full_brush { get; set; }

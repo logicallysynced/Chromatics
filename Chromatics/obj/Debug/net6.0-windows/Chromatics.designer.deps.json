@@ -6,14 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "Autoupdater.NET.Official/1.7.7": {
+      "Autoupdater.NET.Official/1.8.0": {
         "dependencies": {
-          "Microsoft.Web.WebView2": "1.0.1587.40"
+          "Microsoft.Web.WebView2": "1.0.1722.45"
         },
         "runtime": {
           "lib/net6.0-windows7.0/AutoUpdater.NET.dll": {
-            "assemblyVersion": "1.7.7.0",
-            "fileVersion": "1.7.7.0"
+            "assemblyVersion": "1.8.0.0",
+            "fileVersion": "1.8.0.0"
           }
         },
         "resources": {
@@ -117,36 +117,36 @@
           }
         }
       },
-      "Microsoft.Web.WebView2/1.0.1587.40": {
+      "Microsoft.Web.WebView2/1.0.1722.45": {
         "runtime": {
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
-            "assemblyVersion": "1.0.1587.40",
-            "fileVersion": "1.0.1587.40"
+            "assemblyVersion": "1.0.1722.45",
+            "fileVersion": "1.0.1722.45"
           },
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll": {
-            "assemblyVersion": "1.0.1587.40",
-            "fileVersion": "1.0.1587.40"
+            "assemblyVersion": "1.0.1722.45",
+            "fileVersion": "1.0.1722.45"
           },
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll": {
-            "assemblyVersion": "1.0.1587.40",
-            "fileVersion": "1.0.1587.40"
+            "assemblyVersion": "1.0.1722.45",
+            "fileVersion": "1.0.1722.45"
           }
         },
         "runtimeTargets": {
           "runtimes/win-arm64/native/WebView2Loader.dll": {
             "rid": "win-arm64",
             "assetType": "native",
-            "fileVersion": "1.0.1587.40"
+            "fileVersion": "1.0.1722.45"
           },
           "runtimes/win-x64/native/WebView2Loader.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "1.0.1587.40"
+            "fileVersion": "1.0.1722.45"
           },
           "runtimes/win-x86/native/WebView2Loader.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "1.0.1587.40"
+            "fileVersion": "1.0.1722.45"
           }
         }
       },
@@ -171,6 +171,14 @@
           "lib/netstandard2.0/NLog.dll": {
             "assemblyVersion": "5.0.0.0",
             "fileVersion": "5.1.3.1645"
+          }
+        }
+      },
+      "OpenRGB.NET/2.1.0": {
+        "runtime": {
+          "lib/net6.0/OpenRGB.NET.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
           }
         }
       },
@@ -214,6 +222,164 @@
           }
         }
       },
+      "RGB.NET.Core/2.0.0-prerelease.45": {
+        "runtime": {
+          "lib/net6.0/RGB.NET.Core.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Asus/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45",
+          "System.Management": "7.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Asus.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.CoolerMaster/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.CoolerMaster.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Corsair/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Corsair.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Logitech/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45",
+          "RGB.NET.HID": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Logitech.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Msi/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Msi.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Novation/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45",
+          "Sanford.Multimedia.Midi.Standard": "6.6.0"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Novation.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.OpenRGB/2.0.0-prerelease.45": {
+        "dependencies": {
+          "OpenRGB.NET": "2.1.0",
+          "RGB.NET.Core": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.OpenRGB.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Razer/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45",
+          "RGB.NET.HID": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Razer.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.SteelSeries/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45",
+          "RGB.NET.HID": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.SteelSeries.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Devices.Wooting/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Devices.Wooting.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.HID/2.0.0-prerelease.45": {
+        "dependencies": {
+          "HidSharp": "2.1.0",
+          "RGB.NET.Core": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.HID.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Layout/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Layout.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
+      "RGB.NET.Presets/2.0.0-prerelease.45": {
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.45"
+        },
+        "runtime": {
+          "lib/net6.0/RGB.NET.Presets.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      },
       "Sanford.Multimedia.Midi/6.6.2": {
         "runtime": {
           "lib/net20/Sanford.Multimedia.Midi.dll": {
@@ -221,16 +387,51 @@
             "fileVersion": "6.6.2.0"
           }
         }
+      },
+      "Sanford.Multimedia.Midi.Standard/6.6.0": {
+        "runtime": {
+          "lib/netstandard2.0/Sanford.Multimedia.Midi.dll": {
+            "assemblyVersion": "6.6.0.0",
+            "fileVersion": "6.6.0.0"
+          }
+        }
+      },
+      "System.CodeDom/7.0.0": {
+        "runtime": {
+          "lib/net6.0/System.CodeDom.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.51805"
+          }
+        }
+      },
+      "System.Management/7.0.0": {
+        "dependencies": {
+          "System.CodeDom": "7.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/System.Management.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "7.0.22.51805"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net6.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "7.0.22.51805"
+          }
+        }
       }
     }
   },
   "libraries": {
-    "Autoupdater.NET.Official/1.7.7": {
+    "Autoupdater.NET.Official/1.8.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ustMDzpo8MU0zqi6VfcxIfAbQu3tsdIs9ZEIkv6lqVQl5OzK3m1aulNfFvloAvpz6iqAadgD3psSr24WpZjBqg==",
-      "path": "autoupdater.net.official/1.7.7",
-      "hashPath": "autoupdater.net.official.1.7.7.nupkg.sha512"
+      "sha512": "sha512-R1ZgFFDkcSl0uZ8EDwjizfp64OgkWUSnoBMbKdM8RsM5DwjKUt55LP86KCHBv0A66Rx0YEyVZjtg0SnWwHVddA==",
+      "path": "autoupdater.net.official/1.8.0",
+      "hashPath": "autoupdater.net.official.1.8.0.nupkg.sha512"
     },
     "CsvHelper/30.0.1": {
       "type": "package",
@@ -260,12 +461,12 @@
       "path": "hidsharp/2.1.0",
       "hashPath": "hidsharp.2.1.0.nupkg.sha512"
     },
-    "Microsoft.Web.WebView2/1.0.1587.40": {
+    "Microsoft.Web.WebView2/1.0.1722.45": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YKwX6ZdA/7P4XlE3EfGnW0evgOpOLEQ+QHbtFIG53c4CRLF5f6JwR9D4zQ06t7X8HuVSG0pVOrfA+GcjTPkAtg==",
-      "path": "microsoft.web.webview2/1.0.1587.40",
-      "hashPath": "microsoft.web.webview2.1.0.1587.40.nupkg.sha512"
+      "sha512": "sha512-KrR0p5HJW9CjhJEe/U3DgJ5FYQJ86adMwMF6wGkTlVh8G+8x9lk0NX6/wGdlBMYJ2rOy3V9PoJWuQ32n3t/Zvw==",
+      "path": "microsoft.web.webview2/1.0.1722.45",
+      "hashPath": "microsoft.web.webview2.1.0.1722.45.nupkg.sha512"
     },
     "MouseKeyHook.NetCore/5.6.1.1": {
       "type": "package",
@@ -287,6 +488,13 @@
       "sha512": "sha512-rB8hwjBf1EZCfG5iPfsv3gPksLoJLr1cOrt7PBbJu6VpJgwYJchDzTUT1dhNDdPv0QakXJQJOhE59ErupcznQQ==",
       "path": "nlog/5.1.3",
       "hashPath": "nlog.5.1.3.nupkg.sha512"
+    },
+    "OpenRGB.NET/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uv19vH92kJAWYdcpQVB1Agzfo+jl3aKE9z2N3smrc+UP3LJov2+37LfYMSkAm57hO/FKLqDqU4z6FuamW0PAXQ==",
+      "path": "openrgb.net/2.1.0",
+      "hashPath": "openrgb.net.2.1.0.nupkg.sha512"
     },
     "Portable.BouncyCastle/1.9.0": {
       "type": "package",
@@ -316,12 +524,131 @@
       "path": "q42.hueapi.entertainment/3.20.1",
       "hashPath": "q42.hueapi.entertainment.3.20.1.nupkg.sha512"
     },
+    "RGB.NET.Core/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AQNTI1IsLGEJlQrFnXmw5eu1KA9i6AnPTFp2jIARgp9XcJIp2ViOocG3qQ78if8Jsyg5zYEsbRV01ylIWKOuJQ==",
+      "path": "rgb.net.core/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.core.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Asus/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-u8XEuWMikFiuqcCYEZ6CjGWxJ2RuPhjc+yRf25IYcRn1pBMfpxw5GMbh5MADWA9Nlj40GbFMMAx/0uDYudJ6kA==",
+      "path": "rgb.net.devices.asus/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.asus.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.CoolerMaster/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fX0OnKYor/adqpHtI9u82iuWfeP1a4tGUlcMWEDptrB/Ab9SvGTX5ECyZKNBLc7VuaRe15CT2yfxV3bNunyo9w==",
+      "path": "rgb.net.devices.coolermaster/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.coolermaster.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Corsair/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-76td5SqZB6z2Btgk/WI5yejo4BBcVr7XOGwa5Ndq3ze0O6jdj7f7IgY+oZL8uSAOy/Qlg7GmFfLVtCt1G9tKkw==",
+      "path": "rgb.net.devices.corsair/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.corsair.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Logitech/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-l1gmQpYim/BP5c5jMeUHtn/LsfVlndFjrceh2zem7I+m9j5VugAn24ZpQlj0kWoPOgc29rwZmS1ybCXbRXSjlw==",
+      "path": "rgb.net.devices.logitech/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.logitech.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Msi/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Z5YNCg/u94u5iGipQ44Nbw1tzeBDsCMZTM3Z6zqX/0YdZnHKddsp1PsocvoZ95hq0exuzXGEfXjRQ2UdubS3og==",
+      "path": "rgb.net.devices.msi/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.msi.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Novation/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gk7zTIJ/hTlTQkw7yjF61ObdOPOZ4IJG+AdhfdVZu20PjgVcQ1IQGziuG9uLH2OQZs/a9wBCQWmz1DECXNzIVg==",
+      "path": "rgb.net.devices.novation/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.novation.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.OpenRGB/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-F9zze7jl2Z04bhKXTaw0ye8DmaL+tPKXCjBdXdAKr+5lDHemkaLfm1gXvKaWaw8TaDbFcr4KBGgfE8EFdJP3YQ==",
+      "path": "rgb.net.devices.openrgb/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.openrgb.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Razer/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NZ9YpoVdqjUZzKKWMg5aRRF8v9fRI0cGuxd2vB8/ODbJMcgG1Wazmuww/cVW1Z8atalTIrmmy3YXhFeJyTQ1dg==",
+      "path": "rgb.net.devices.razer/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.razer.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.SteelSeries/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TpTRaGjeXGWO0XMteJ3X8DlDCP9r4hJD7KL4sjRxzh71ZpSiILw7ZdCmApsxU86LqxlTEq1GeWOsHdVwaCy94g==",
+      "path": "rgb.net.devices.steelseries/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.steelseries.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Devices.Wooting/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MM/LG1+gzRXvCv8zJUI/Ky5Wh7QfAWxFGsmb5AzFe4L2ztukObVnjcoUYZt5oSXqrKDyyIvdQ0yuwJOn7r3iJw==",
+      "path": "rgb.net.devices.wooting/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.devices.wooting.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.HID/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XU6L74vxnf4ehYxYRIXrn9lvaj4wNYnZX2q937SWOJiKkCKyc6Ghj4XkarR85nL83zD3Xfbg331H4qwWJ+12Xg==",
+      "path": "rgb.net.hid/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.hid.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Layout/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NR7MnYYvpyQRDZg7JQz274guvulcO+WXgV0YdbR4tm25fFkX0XuMH0lKMzmJqs9g4lwwBTZnM6fqrxAS+IN9Hw==",
+      "path": "rgb.net.layout/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.layout.2.0.0-prerelease.45.nupkg.sha512"
+    },
+    "RGB.NET.Presets/2.0.0-prerelease.45": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0452X2Na4qg7kcR8HZ7Vk7QQKagTQtxNDh+I/4SDmfHoQ0jg/8Oe6BdaY4eiK/Lzgu+szLHZzZmYqwgEO2bPNQ==",
+      "path": "rgb.net.presets/2.0.0-prerelease.45",
+      "hashPath": "rgb.net.presets.2.0.0-prerelease.45.nupkg.sha512"
+    },
     "Sanford.Multimedia.Midi/6.6.2": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-SZ2SFJbig5i7SB8Li7z9ZAwceVym9U7Gj1aQy1sRXuwmyL4XqwfJ68dCpix2XFhmsyfZPhtEG1xZYnlad8D9lA==",
       "path": "sanford.multimedia.midi/6.6.2",
       "hashPath": "sanford.multimedia.midi.6.6.2.nupkg.sha512"
+    },
+    "Sanford.Multimedia.Midi.Standard/6.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j3pdu0UoSgYfAN/XDUmnBZ7kcvkyGODB1Vylk+KAcVFfhziVJIn1WXn9/b2UkF2yQpsJyKp8d+J55HcByvLcgQ==",
+      "path": "sanford.multimedia.midi.standard/6.6.0",
+      "hashPath": "sanford.multimedia.midi.standard.6.6.0.nupkg.sha512"
+    },
+    "System.CodeDom/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GLltyqEsE5/3IE+zYRP5sNa1l44qKl9v+bfdMcwg+M9qnQf47wK3H0SUR/T+3N4JEQXF3vV4CSuuo0rsg+nq2A==",
+      "path": "system.codedom/7.0.0",
+      "hashPath": "system.codedom.7.0.0.nupkg.sha512"
+    },
+    "System.Management/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-A4jed4QUviDOm7fJNKAJObEAEkEUXmkGL/w0iyCYTzrl1rezTj8LGFHfsVst4Vb9JwFcTpboiDrvdST48avBpw==",
+      "path": "system.management/7.0.0",
+      "hashPath": "system.management.7.0.0.nupkg.sha512"
     }
   }
 }

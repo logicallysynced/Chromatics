@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autoupdater.NET.Official" Version="1.7.7" />
+    <PackageReference Include="Autoupdater.NET.Official" Version="1.8.0" />
     <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
     <PackageReference Include="FFXIVWeather" Version="1.0.16" />
@@ -35,6 +35,20 @@
     <PackageReference Include="NLog" Version="5.1.3" />
     <PackageReference Include="Q42.HueApi" Version="3.21.0" />
     <PackageReference Include="Q42.HueApi.Entertainment" Version="3.20.1" />
+    <PackageReference Include="RGB.NET.Core" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.Corsair" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.Msi" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.Novation" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.OpenRGB" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.Razer" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.HID" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Layout" Version="2.0.0-prerelease.45" />
+    <PackageReference Include="RGB.NET.Presets" Version="2.0.0-prerelease.45" />
     <PackageReference Include="Sanford.Multimedia.Midi" Version="6.6.2" />
   </ItemGroup>
 
@@ -50,54 +64,6 @@
     </Reference>
     <Reference Include="MetroFramework.Fonts">
       <HintPath>..\Build Dependencies\MetroFramework.Fonts.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Core">
-      <HintPath>..\Build Dependencies\RGB.NET.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Asus">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Asus.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.CoolerMaster">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.CoolerMaster.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Corsair">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Corsair.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Logitech">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Logitech.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Msi">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Msi.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Novation">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Novation.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.OpenRGB">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.OpenRGB.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.PicoPi">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.PicoPi.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Razer">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Razer.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.SteelSeries">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.SteelSeries.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Wooting">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.Wooting.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.WS281X">
-      <HintPath>..\Build Dependencies\RGB.NET.Devices.WS281X.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.HID">
-      <HintPath>..\Build Dependencies\RGB.NET.HID.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Layout">
-      <HintPath>..\Build Dependencies\RGB.NET.Layout.dll</HintPath>
-    </Reference>
-    <Reference Include="RGB.NET.Presets">
-      <HintPath>..\Build Dependencies\RGB.NET.Presets.dll</HintPath>
     </Reference>
     <Reference Include="Sharlayan">
       <HintPath>..\Build Dependencies\Sharlayan.dll</HintPath>

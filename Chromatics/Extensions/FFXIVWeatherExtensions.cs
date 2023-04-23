@@ -1,8 +1,10 @@
-﻿using FFXIVWeather;
+﻿using Chromatics.Helpers;
+using FFXIVWeather;
 using FFXIVWeather.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +15,18 @@ namespace Chromatics.Extensions
 {
     public class FFXIVWeatherExtensions
     {
+        private static FFXIVWeatherServiceManual weatherService;
+
+        public static FFXIVWeatherServiceManual GetWeatherService()
+        {
+            if (weatherService == null && FileOperationsHelper.CheckWeatherDataLoaded())
+            {
+                weatherService = new FFXIVWeatherServiceManual();
+            }
+
+            return weatherService;
+        }
+
         public class FFXIVWeatherServiceManual : FFXIVWeatherService
         {
 
@@ -36,6 +50,7 @@ namespace Chromatics.Extensions
                 this.weatherKinds = LoadFile<Weather[]>("weatherKinds.json");
                 this.weatherRateIndices = LoadFile<WeatherRateIndex[]>("weatherRateIndices.json");
                 this.terriTypes = LoadFile<TerriType[]>("terriTypes.json");
+
             }
 
             public new IList<(Weather, DateTime)> GetForecast(string placeName, uint count = 1, double secondIncrement = WeatherPeriod, double initialOffset = 0 * Minutes, LangKind lang = LangKind.En)
