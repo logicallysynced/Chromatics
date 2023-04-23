@@ -150,7 +150,7 @@ namespace Chromatics.Forms
 
             var assembly = typeof(Program).Assembly;
 
-            if (assembly.GetName().Version.Revision != 0)
+            if (assembly.GetName().Version.Revision != 0 || assembly.GetName().Version.Revision != 1)
             {
                 Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA) has loaded");
                 //this.Text = $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA)";
