@@ -9,6 +9,7 @@ namespace Chromatics.Models
 {
     public class SettingsModel
     {
+        public string version { get; set; } = "1";
         public bool localcache { get; set; } = false;
         public bool winstart { get; set; } = false;
         public bool minimizetray { get; set; } = false;

@@ -112,14 +112,19 @@ namespace Chromatics.Layers
                 //No target found
                 if (targetId == 0 || !model.init)
                 {
-                    var ledGroup = new PublicListLedGroup(surface, ledArray)
+                    if (model._targetReset || !model.init)
                     {
-                        ZIndex = layer.zindex,
-                        Brush = model.empty_brush
-                    };
+                        var ledGroup = new ListLedGroup(surface, ledArray)
+                        {
+                            ZIndex = layer.zindex,
+                            Brush = model.empty_brush
+                        };
 
-                    ledGroup.Detach();
-                    model._localgroups.Add(ledGroup);
+                        ledGroup.Detach();
+                    
+                        if (!model._localgroups.Contains(ledGroup))
+                            model._localgroups.Add(ledGroup);
+                    }
                 }
                 else
                 {
@@ -172,11 +177,11 @@ namespace Chromatics.Layers
                             {
 
                                 //Process Lighting
-                                var ledGroups = new List<PublicListLedGroup>();
+                                var ledGroups = new List<ListLedGroup>();
                                         
                                 for (int i = 0; i < countKeys; i++)
                                 {
-                                    var ledGroup = new PublicListLedGroup(surface, ledArray[i])
+                                    var ledGroup = new ListLedGroup(surface, ledArray[i])
                                     {
                                         ZIndex = layer.zindex,
                                     };
@@ -215,14 +220,17 @@ namespace Chromatics.Layers
                             if (currentVal_Fader != model._faderValue || model._targetReset)
                             {
 
-                                var ledGroup = new PublicListLedGroup(surface, ledArray)
+                                var ledGroup = new ListLedGroup(surface, ledArray)
                                 {
                                     ZIndex = layer.zindex,
                                     Brush = new SolidColorBrush(currentVal_Fader)
                                 };
 
                                 ledGroup.Detach();
-                                model._localgroups.Add(ledGroup);
+
+                                if (!model._localgroups.Contains(ledGroup))
+                                    model._localgroups.Add(ledGroup);
+                                
                                 model._faderValue = currentVal_Fader;
                             }
                         }
@@ -231,19 +239,15 @@ namespace Chromatics.Layers
 
 
                 //Send layers to _layergroups Dictionary to be tracked outside this method
-                foreach (var group in model._localgroups)
-                {
-                    var lg = model._localgroups.ToArray();
+                var lg = model._localgroups.ToArray();
 
-                    if (_layergroups.ContainsKey(layer.layerID))
-                    {
-                        _layergroups[layer.layerID] = lg;
-                    }
-                    else
-                    {
-                        _layergroups.Add(layer.layerID, lg);
-                    }
-                            
+                if (_layergroups.ContainsKey(layer.layerID))
+                {
+                    _layergroups[layer.layerID] = lg;
+                }
+                else
+                {
+                    _layergroups.Add(layer.layerID, lg);
                 }
             }
 
@@ -256,11 +260,13 @@ namespace Chromatics.Layers
             model.init = true;
             model._targetReset = false;
             layer.requestUpdate = false;
+
+            
         }
 
         private class TargetHPDynamicModel
         {
-            public List<PublicListLedGroup> _localgroups { get; set; } = new List<PublicListLedGroup>();
+            public List<ListLedGroup> _localgroups { get; set; } = new List<ListLedGroup>();
             public SolidColorBrush empty_brush { get; set; }
             public SolidColorBrush full_brush { get; set; }
             public LayerModes _currentMode { get; set; }

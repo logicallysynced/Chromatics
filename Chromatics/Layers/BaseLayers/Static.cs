@@ -32,7 +32,7 @@ namespace Chromatics.Layers
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
-            PublicListLedGroup layergroup;
+            ListLedGroup layergroup;
             var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
             if (_layergroupledcollections.ContainsKey(layer.layerID))
@@ -52,12 +52,12 @@ namespace Chromatics.Layers
             }
             else
             {
-                layergroup = new PublicListLedGroup(surface, ledArray)
+                layergroup = new ListLedGroup(surface, ledArray)
                 {
                     ZIndex = layer.zindex,
                 };
 
-                var lg = new PublicListLedGroup[] { layergroup };
+                var lg = new ListLedGroup[] { layergroup };
                 _layergroups.Add(layer.layerID, lg);
             }
 

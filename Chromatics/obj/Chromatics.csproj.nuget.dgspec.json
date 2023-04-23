@@ -45,7 +45,7 @@
           "dependencies": {
             "Autoupdater.NET.Official": {
               "target": "Package",
-              "version": "[1.7.7, )"
+              "version": "[1.8.0, )"
             },
             "CsvHelper": {
               "target": "Package",
@@ -82,6 +82,62 @@
             "Q42.HueApi.Entertainment": {
               "target": "Package",
               "version": "[3.20.1, )"
+            },
+            "RGB.NET.Core": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.Asus": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.CoolerMaster": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.Corsair": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.Logitech": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.Msi": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.Novation": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.OpenRGB": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.Razer": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.SteelSeries": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Devices.Wooting": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.HID": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Layout": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
+            },
+            "RGB.NET.Presets": {
+              "target": "Package",
+              "version": "[2.0.0-prerelease.45, )"
             },
             "Sanford.Multimedia.Midi": {
               "target": "Package",

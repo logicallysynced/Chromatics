@@ -46,7 +46,7 @@ namespace Chromatics.Core
 
         private static List<IRGBDevice> _devices = new List<IRGBDevice>();
 
-        private static Dictionary<int, PublicListLedGroup[]> _layergroups = new Dictionary<int, PublicListLedGroup[]>();
+        private static Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
 
         private static List<Led> _layergroupledcollection = new List<Led>();
 
@@ -54,7 +54,7 @@ namespace Chromatics.Core
 
         private static EffectTypesModel _effects = new EffectTypesModel();
 
-        private static List<PublicListLedGroup> _runningEffects = new List<PublicListLedGroup>();
+        private static List<ListLedGroup> _runningEffects = new List<ListLedGroup>();
 
         private static bool _baseLayerEffectRunning;
                 
@@ -274,7 +274,7 @@ namespace Chromatics.Core
             foreach (var device in devices)
             {
                 var gradient = new RainbowGradient();
-                var ledgroup = new PublicListLedGroup(surface);
+                var ledgroup = new ListLedGroup(surface);
 
                 ledgroup.ZIndex = 1000;
                 foreach (var led in device)
@@ -329,7 +329,7 @@ namespace Chromatics.Core
             _baseLayerEffectRunning = toggle;
         }
 
-        public static List<PublicListLedGroup> GetRunningEffects()
+        public static List<ListLedGroup> GetRunningEffects()
         {
             return _runningEffects;
         }
@@ -349,7 +349,7 @@ namespace Chromatics.Core
             return _layergroupledcollection;
         }
 
-        public static Dictionary<int, PublicListLedGroup[]> GetLiveLayerGroups()
+        public static Dictionary<int, ListLedGroup[]> GetLiveLayerGroups()
         {
             return _layergroups;
         }
@@ -433,10 +433,11 @@ namespace Chromatics.Core
                         //Loop through all LED's and assign to device layer
                         var devices = surface.GetDevices(mapping.deviceType);
 
-                        var layergroup = new PublicListLedGroup(surface)
+                        var layergroup = new ListLedGroup(surface)
                         {
                             ZIndex = mapping.zindex,
                         };
+
 
                         if (_layergroups.ContainsKey(mapping.layerID))
                         {
@@ -444,7 +445,7 @@ namespace Chromatics.Core
                         }
                         else
                         {
-                            var lg = new PublicListLedGroup[1];
+                            var lg = new ListLedGroup[1];
                             lg[0] = layergroup;
                             _layergroups.Add(mapping.layerID, lg);
                         }

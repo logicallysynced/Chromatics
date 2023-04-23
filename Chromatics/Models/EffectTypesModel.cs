@@ -8,6 +8,7 @@ namespace Chromatics.Models
 {
     public class EffectTypesModel
     {
+        public string version { get; set; } = "1";
         public bool effect_dfbell { get; set; } = true;
         public bool effect_damageflash { get; set; } = false;
         public bool effect_reactiveweather { get; set; } = true;

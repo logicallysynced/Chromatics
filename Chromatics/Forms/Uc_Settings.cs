@@ -1,5 +1,6 @@
 ﻿using AutoUpdaterDotNET;
 using Chromatics.Core;
+using Chromatics.Properties;
 using MetroFramework.Components;
 using MetroFramework.Controls;
 using Microsoft.VisualBasic.FileIO;
@@ -22,6 +23,8 @@ namespace Chromatics.Forms
     {
         private MetroToolTip tt_mappings;
         private readonly RegistryKey _rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        private readonly Color tilecol_enabled = Color.DeepSkyBlue;
+        private readonly Color tilecol_disabled = Color.DarkRed;
 
         public Uc_Settings()
         {
@@ -41,6 +44,16 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.btn_clearcache, @"Clear local FFXIV cache. Requires application restart.");
             tt_mappings.SetToolTip(this.trackbar_lighting, @"Adjust global brightness for all devices.");
             tt_mappings.SetToolTip(this.chk_updatecheck, @"Enable checking for updates on Chromatics start. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_razer, @"Enable/disable Razer device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_logitech, @"Enable/disable Logitech device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_corsair, @"Enable/disable Corsair device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_coolermaster, @"Enable/disable Coolermaster device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_steelseries, @"Enable/disable SteelSeries device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_asus, @"Enable/disable ASUS device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_msi, @"Enable/disable MSI device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_wooting, @"Enable/disable Wooting device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_novation, @"Enable/disable Novation device library. Requires App Restart. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_hue, @"[BETA] Enable/disable Philips HUE device library. Requires App Restart. Default: Disabled");
 
             //Startup
             var settings = AppSettings.GetSettings();
@@ -52,6 +65,17 @@ namespace Chromatics.Forms
             trackbar_lighting.Value = settings.globalbrightness;
             lbl_devicebrightpercent.Text = $"{settings.globalbrightness}%";
             chk_updatecheck.Checked = settings.checkupdates;
+
+            mt_settings_razer.BackColor = settings.deviceRazerEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_logitech.BackColor = settings.deviceLogitechEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_corsair.BackColor = settings.deviceCorsairEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_coolermaster.BackColor = settings.deviceCoolermasterEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_steelseries.BackColor = settings.deviceSteelseriesEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_asus.BackColor = settings.deviceAsusEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_msi.BackColor = settings.deviceMsiEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_wooting.BackColor = settings.deviceWootingEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_novation.BackColor = settings.deviceNovationEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_hue.BackColor = settings.deviceHueEnabled ? tilecol_enabled : tilecol_disabled;
         }
 
         private void chk_localcache_CheckedChanged(object sender, EventArgs e)
@@ -224,6 +248,269 @@ namespace Chromatics.Forms
             settings.checkupdates = checkbox.Checked;
 
             AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_razer_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceRazerEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceRazerEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_logitech_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceLogitechEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceLogitechEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_corsair_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceCorsairEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceCorsairEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_steelseries_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceSteelseriesEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceSteelseriesEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_coolermaster_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceCoolermasterEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceCoolermasterEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_asus_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceAsusEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceAsusEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_wooting_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceWootingEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceWootingEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_msi_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceMsiEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceMsiEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_novation_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceNovationEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceNovationEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_hue_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceHueEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+            }
+
+            settings.deviceHueEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void OnResize(object sender, EventArgs e)
+        {
+            foreach (var control in tlp_devices.Controls)
+            {
+                if (control.GetType() != typeof(MetroTile)) continue;
+                var tile = (MetroTile)control;
+
+                var previmg = tile.TileImage;
+                var newimg = ScaleImage(previmg, tile.Width / 2, tile.Height / 2);
+
+                tile.TileImage = newimg;
+                tile.TileImageAlign = ContentAlignment.MiddleCenter;
+                tile.Invalidate();
+            }
+        }
+
+        private static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+        {
+            var ratioX = (double)maxWidth / image.Width;
+            var ratioY = (double)maxHeight / image.Height;
+            var ratio = Math.Min(ratioX, ratioY);
+
+            var newWidth = (int)(image.Width * ratio);
+            var newHeight = (int)(image.Height * ratio);
+
+            var newImage = new Bitmap(newWidth, newHeight);
+
+            using (var graphics = Graphics.FromImage(newImage))
+                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+
+            return newImage;
         }
     }
 }

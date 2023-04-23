@@ -52,7 +52,7 @@ namespace Chromatics.Layers
             var surface = RGBController.GetLiveSurfaces();
             var devices = surface.GetDevices(layer.deviceType);
 
-            PublicListLedGroup layergroup;
+            ListLedGroup layergroup;
             var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
             if (_layergroups.ContainsKey(layer.layerID))
@@ -62,12 +62,12 @@ namespace Chromatics.Layers
             }
             else
             {
-                layergroup = new PublicListLedGroup(surface, ledArray)
+                layergroup = new ListLedGroup(surface, ledArray)
                 {
                     ZIndex = layer.zindex,
                 };
 
-                var lg = new PublicListLedGroup[] { layergroup };
+                var lg = new ListLedGroup[] { layergroup };
                 _layergroups.Add(layer.layerID, lg);
                 layergroup.Detach();
             }
@@ -106,7 +106,7 @@ namespace Chromatics.Layers
                 new GradientStop((float)1.00, baseColor));
 
             var gradientMove = new MoveGradientDecorator(surface, 80, true);
-            var animation = new StarfieldDecorator(layergroup, (layergroup.PublicGroupLeds.Count / 4), 10, 500, highlightColors, surface, false, baseColor);
+            var animation = new StarfieldDecorator(layergroup, (layergroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
 
             //Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
