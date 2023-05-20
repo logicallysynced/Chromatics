@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>3.0.1.1</Version>
+    <Version>3.0.2.0</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>Danielle Thompson 2023</Copyright>
