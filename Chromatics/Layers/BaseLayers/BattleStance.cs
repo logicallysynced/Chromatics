@@ -77,7 +77,7 @@ namespace Chromatics.Layers
                     if (getCurrentPlayer.Entity == null) return;
 
                     var inCombat = getCurrentPlayer.Entity.InCombat;
-
+                    
                     if (!inCombat)
                     {
                         engaged_color = empty_color;
