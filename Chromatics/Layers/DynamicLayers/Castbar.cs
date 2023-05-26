@@ -70,6 +70,7 @@ namespace Chromatics.Layers
                 if (getCurrentPlayer.Entity == null) return;
 
                 var currentVal = getCurrentPlayer.Entity.CastingPercentage;
+
                                     
                 var minVal = 0.0;
                 var maxVal = 1.0;

@@ -133,6 +133,8 @@ namespace Chromatics.Layers
                 }
                 else
                 {
+                    
+
                     if (getTargetInfo.TargetInfo.CurrentTarget != null && getTargetInfo.TargetInfo.EnmityItems != null && getTargetInfo.TargetInfo.EnmityItems.Count > 0)
                     {
                         var enmityList = getTargetInfo.TargetInfo.EnmityItems;
@@ -145,8 +147,7 @@ namespace Chromatics.Layers
                         var currentVal = (int)enmityPosition;
                         var minVal = 0;
                         var maxVal = 100;
-                            
-
+                        
                          if (enmityPosition != model._enmityPosition || model._targetReset)
                          {
                             if (enmityPosition == 100)
