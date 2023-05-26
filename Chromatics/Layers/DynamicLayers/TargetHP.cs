@@ -137,7 +137,7 @@ namespace Chromatics.Layers
                         var valPercentage = MathHelper.CalculatePercentage(currentVal, maxVal);
                     
                         if (maxVal <= 0) maxVal = currentVal + 1;
-                        
+
                         if (getTargetInfo.TargetInfo.CurrentTarget.InCombat && getTargetInfo.TargetInfo.CurrentTarget.IsAggressive)
                         {
                             model.full_brush.Color = full_col;
