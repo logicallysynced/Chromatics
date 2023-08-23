@@ -40,6 +40,7 @@ namespace Chromatics.Models
         public string deviceHueBridgeIP { get; set; } = "127.0.0.1";
         public string deviceHueBridgeKey { get; set; } = "";
         public string deviceHueBridgeStreamingKey { get; set; } = "";
+        public bool deviceRazerCheckSDKOverride { get; set; } = false;
 
     }
 }

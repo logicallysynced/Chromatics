@@ -87,7 +87,50 @@ namespace Chromatics.Core
                     surface.Load(NovationDeviceProvider.Instance, RGBDeviceType.All);
             
                 if (appSettings.deviceRazerEnabled)
-                    surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All);
+                {
+                    var shouldLoadRazer = false;
+
+                    //Check for Razer SDK installed
+                    if (!appSettings.deviceRazerCheckSDKOverride)
+                    {
+                        var system32Directory = Path.Combine(Environment.GetEnvironmentVariable("windir"), "System32");
+                        string[] razerSdkLocations = 
+                        {
+                            Path.Combine(system32Directory, "RzChromaSDK64.dll"),
+                            Path.Combine(system32Directory, "RzChromaSDK.dll")
+                        };
+
+                        var sdkExists = false;
+
+                        foreach (var sdkLocation in razerSdkLocations)
+                        {
+                            if (File.Exists(sdkLocation))
+                            {
+                                sdkExists = true;
+                                break;
+                            }
+                        }
+
+                        if (!sdkExists)
+                        {
+                            Logger.WriteConsole(Enums.LoggerTypes.Error, 
+                                                "Razer SDK is not detected on this computer. Please reinstall Razer Synapse and make sure Chroma Connect plugin is also installed.");
+                        }
+                        else
+                        {
+                            shouldLoadRazer = true;
+                        }
+                    }
+                    else
+                    {
+                        shouldLoadRazer = true;
+                    }
+
+                    if (shouldLoadRazer)
+                    {
+                        surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All);
+                    }
+}
             
                 if (appSettings.deviceAsusEnabled)
                     surface.Load(AsusDeviceProvider.Instance, RGBDeviceType.All);
