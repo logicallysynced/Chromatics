@@ -146,6 +146,7 @@ namespace Chromatics.Forms
                 Logger.WriteConsole(LoggerTypes.System, @"Checking for updates..");
                 AutoUpdater.Start("https://chromaticsffxiv.com/chromatics3/update/update.xml");
                 AutoUpdater.ShowSkipButton = false;
+                AutoUpdater.Icon = this.Icon.ToBitmap();
             }
 
             var assembly = typeof(Program).Assembly;
