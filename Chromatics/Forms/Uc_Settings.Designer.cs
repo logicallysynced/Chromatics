@@ -417,7 +417,6 @@
             this.mt_settings_openrgb.UseSelectable = true;
             this.mt_settings_openrgb.UseTileImage = true;
             this.mt_settings_openrgb.UseVisualStyleBackColor = false;
-            this.mt_settings_openrgb.Visible = false;
             this.mt_settings_openrgb.Click += new System.EventHandler(this.mt_settings_openRGB_Click);
             // 
             // gb_devicesettings
