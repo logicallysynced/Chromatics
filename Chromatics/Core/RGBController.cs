@@ -24,12 +24,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Chromatics.Core
@@ -44,7 +47,9 @@ namespace Chromatics.Core
 
         private static bool _wasPreviewed;
 
-        private static List<IRGBDevice> _devices = new List<IRGBDevice>();
+        private static List<IRGBDeviceProvider> loadedDeviceProviders = new List<IRGBDeviceProvider>();
+
+        private static Dictionary<Guid, IRGBDevice> _devices = new Dictionary<Guid, IRGBDevice>();
 
         private static Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
 
@@ -72,19 +77,54 @@ namespace Chromatics.Core
 
                 surface.Exception += args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}");
 
-                //Load devices
             
                 if (appSettings.deviceLogitechEnabled)
+                {
+                    LogitechDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(LogitechDeviceProvider.Instance, RGBDeviceType.All);
 
+                    if (LogitechDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(LogitechDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(LogitechDeviceProvider.Instance);
+                    }
+                }
+                    
+
                 if (appSettings.deviceCorsairEnabled)
+                {
+                    CorsairDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(CorsairDeviceProvider.Instance, RGBDeviceType.All);
+
+                    if (CorsairDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(CorsairDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(CorsairDeviceProvider.Instance);
+                    }
+                }
+                    
             
                 if (appSettings.deviceCoolermasterEnabled)
+                {
+                    CoolerMasterDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(CoolerMasterDeviceProvider.Instance, RGBDeviceType.All);
+
+                    if (CoolerMasterDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(CoolerMasterDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(CoolerMasterDeviceProvider.Instance);
+                    }
+                }
+                    
             
                 if (appSettings.deviceNovationEnabled)
+                {
+                    NovationDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(NovationDeviceProvider.Instance, RGBDeviceType.All);
+
+                    if (NovationDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(NovationDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(NovationDeviceProvider.Instance);
+                    }
+                }
+                    
             
                 if (appSettings.deviceRazerEnabled)
                 {
@@ -128,25 +168,77 @@ namespace Chromatics.Core
 
                     if (shouldLoadRazer)
                     {
+                        RazerDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                         surface.Load(RazerDeviceProvider.Instance, RGBDeviceType.All);
+                        
+                        if (RazerDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(RazerDeviceProvider.Instance))
+                        {
+                            loadedDeviceProviders.Add(RazerDeviceProvider.Instance);
+                        }
+                            
                     }
-}
+                }
             
                 if (appSettings.deviceAsusEnabled)
+                {
+                    AsusDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(AsusDeviceProvider.Instance, RGBDeviceType.All);
+
+                    if (AsusDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(AsusDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(AsusDeviceProvider.Instance);
+                    }
+                }
+                    
                 
                 if (appSettings.deviceMsiEnabled)
+                {
+                    MsiDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(MsiDeviceProvider.Instance, RGBDeviceType.All);
+
+                    if (MsiDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(MsiDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(MsiDeviceProvider.Instance);
+                    }
+                }
+                    
             
                 if (appSettings.deviceSteelseriesEnabled)
+                {
+                    SteelSeriesDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(SteelSeriesDeviceProvider.Instance, RGBDeviceType.All);
+
+                    if (SteelSeriesDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(SteelSeriesDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(SteelSeriesDeviceProvider.Instance);
+                    }
+                }
+                    
             
                 if (appSettings.deviceWootingEnabled)
+                {
+                    WootingDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(WootingDeviceProvider.Instance, RGBDeviceType.All);
 
+                    if (WootingDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(WootingDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(WootingDeviceProvider.Instance);
+                    }
+                }
+                    
+
                 if (appSettings.deviceHueEnabled)
+                {
+                    HueRGBDeviceProvider.Instance.DevicesChanged += DevicesChanged;
                     surface.Load(HueRGBDeviceProvider.Instance, RGBDeviceType.All);
+
+                    if (HueRGBDeviceProvider.Instance.IsInitialized && !loadedDeviceProviders.Contains(HueRGBDeviceProvider.Instance))
+                    {
+                        loadedDeviceProviders.Add(HueRGBDeviceProvider.Instance);
+                    }
+                }
                 
+                /*
                 var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
 
                 if (surface.Devices.Count > 0)
@@ -184,11 +276,32 @@ namespace Chromatics.Core
                             }
                         }
 
-                        Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}: {surfaceDevice.DeviceInfo.DeviceName}.");
-                        _devices.Add(surfaceDevice);
+                        //Generate GUID for Device
+
+                        int counter = 1;
+                        var guid = Helpers.DeviceHelper.GenerateDeviceGuid(surfaceDevice.DeviceInfo.DeviceName);
+
+                        while (_devices.ContainsKey(guid))
+                        {
+                            //Make GUID unique if multiple devices of same type detected
+
+                            var deviceName = surfaceDevice.DeviceInfo.DeviceName + counter;
+                            guid = Helpers.DeviceHelper.GenerateDeviceGuid(deviceName);
+                            counter++;
+                        }
+                                                
+
+                        #if DEBUG
+                            Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}: {surfaceDevice.DeviceInfo.DeviceName} (ID: {guid}).");
+                        #else
+                            Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {surfaceDevice.DeviceInfo.Manufacturer} {surfaceDevice.DeviceInfo.DeviceType}: {surfaceDevice.DeviceInfo.DeviceName}.");
+                        #endif
+
+                        _devices.Add(guid, surfaceDevice);
 
                     }
                 }
+                */
             
             
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
@@ -212,13 +325,114 @@ namespace Chromatics.Core
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"RGBController Setup Error: {ex.Message}");
             }
         }
-        
+
+        private static void DevicesChanged(object sender, DevicesChangedEventArgs e)
+        {
+            var device = e.Device;
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+
+            //Generate GUID for Device
+            int counter = 1;
+            var guid = Helpers.DeviceHelper.GenerateDeviceGuid(device.DeviceInfo.DeviceName);
+
+            while (_devices.ContainsKey(guid))
+            {
+                //Make GUID unique if multiple devices of same type detected
+
+                var deviceName = device.DeviceInfo.DeviceName + counter;
+                guid = Helpers.DeviceHelper.GenerateDeviceGuid(deviceName);
+                counter++;
+            }
+
+            if (e.Action == DevicesChangedEventArgs.DevicesChangedAction.Added)
+            {
+                //Device Added
+
+                //Handle cases where a device is loaded with 0 LEDs
+                if (device.Count() <= 0 && device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                {
+                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis XL keyboard-ISO.xml";
+
+                    if (File.Exists(path))
+                    {
+                        var layout = DeviceLayout.Load(path);
+                        LayoutExtension.ApplyTo(layout, device, true);
+
+                        #if DEBUG
+                            Debug.WriteLine($"Loaded layout for {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}. New Leds: {device.Count()}");
+                        #endif
+                    }
+                }
+                else if (device.Count() <= 0 && device.DeviceInfo.DeviceType == RGBDeviceType.Headset)
+                {
+                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis 4 LEDs headset.xml";
+
+                    if (File.Exists(path))
+                    {
+                        var layout = DeviceLayout.Load(path);
+                        LayoutExtension.ApplyTo(layout, device, true);
+
+                        #if DEBUG
+                            Debug.WriteLine($"Loaded layout for {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}. New Leds: {device.Count()}");
+                        #endif
+                    }
+                }
+
+                #if DEBUG
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {guid}).");
+                #else
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
+                #endif
+
+                if (!_devices.ContainsKey(guid))
+                {
+                    _devices.Add(guid, device);
+                }
+                
+            }
+            else if (e.Action == DevicesChangedEventArgs.DevicesChangedAction.Removed)
+            {
+                //Device Removed
+
+                #if DEBUG
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Lost {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {guid}).");
+                #else
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Lost {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
+                #endif
+
+                if (_devices.ContainsKey(guid))
+                {
+                    _devices.Remove(guid);
+                }
+            }
+
+            surface.AlignDevices();
+        }
+
         public static void Unload()
         {
             if (!_loaded) return;
 
             try
             {
+                LogitechDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                CorsairDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                CoolerMasterDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                NovationDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                RazerDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                AsusDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                MsiDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                SteelSeriesDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                WootingDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+                HueRGBDeviceProvider.Instance.DevicesChanged -= DevicesChanged;
+
+                foreach (var deviceProvider in loadedDeviceProviders)
+                {
+                    deviceProvider.Dispose();
+                }
+
+                loadedDeviceProviders.Clear();
+
                 //surface.Updating -= Surface_Updating;
                 surface?.Dispose(); 
             } catch { }
@@ -382,7 +596,7 @@ namespace Chromatics.Core
             return surface;
         }
 
-        public static List<IRGBDevice> GetLiveDevices()
+        public static Dictionary<Guid, IRGBDevice> GetLiveDevices()
         {
             return _devices;
         }
@@ -499,7 +713,7 @@ namespace Chromatics.Core
 
                         foreach (var device in devices)
                         {
-                            if (!_devices.Contains(device)) continue;
+                            if (!_devices.ContainsValue(device)) continue;
 
                             foreach (var led in device)
                             {
