@@ -259,6 +259,17 @@ namespace Chromatics.Core
             }
 
             surface.AlignDevices();
+
+            /*
+            if (_loaded)
+            {
+                StopEffects();
+                ResetLayerGroups();
+                    
+                if (!GameController.IsGameConnected())
+                    RunStartupEffects();
+            }
+            */
         }
 
         public static void Unload()
@@ -303,6 +314,16 @@ namespace Chromatics.Core
                 
                 surface.Load(provider);
                 loadedDeviceProviders.Add(provider);
+
+                if (_loaded)
+                {
+                    StopEffects();
+                    ResetLayerGroups();
+                    
+                    if (!GameController.IsGameConnected())
+                        RunStartupEffects();
+                }
+
             }
         }
 
@@ -336,6 +357,15 @@ namespace Chromatics.Core
                     loadedDeviceProviders.Remove(provider);
 
                 provider.Dispose();
+
+                if (_loaded)
+                {
+                    StopEffects();
+                    ResetLayerGroups();
+                    
+                    if (!GameController.IsGameConnected())
+                        RunStartupEffects();
+                }
             }
         }
 
