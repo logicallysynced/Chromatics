@@ -20,6 +20,7 @@ using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Groups;
 using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
+using Sharlayan.Core.JobResources;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,6 +67,9 @@ namespace Chromatics.Core
                 
         public static event WasPreviewed PreviewTriggered;
 
+        private static RGBSurface.ExceptionEventHandler surfaceExceptionEventHandler;
+
+        private static EventHandler<ExceptionEventArgs> deviceExceptionEventHandler;
 
         public static void Setup()
         {
@@ -76,7 +80,11 @@ namespace Chromatics.Core
 
                 var appSettings = AppSettings.GetSettings();
 
-                surface.Exception += args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}");
+                //Setup Exception Events
+                surfaceExceptionEventHandler = args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}");
+                deviceExceptionEventHandler = (sender, e) => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {e.Exception.Message}");
+
+                surface.Exception += surfaceExceptionEventHandler;
 
             
                 if (appSettings.deviceLogitechEnabled)
@@ -105,46 +113,15 @@ namespace Chromatics.Core
             
                 if (appSettings.deviceRazerEnabled)
                 {
-                    var shouldLoadRazer = false;
-
-                    //Check for Razer SDK installed
-                    if (!appSettings.deviceRazerCheckSDKOverride)
+                    if (CheckRazerSDK())
                     {
-                        var system32Directory = Path.Combine(Environment.GetEnvironmentVariable("windir"), "System32");
-                        string[] razerSdkLocations = 
-                        {
-                            Path.Combine(system32Directory, "RzChromaSDK64.dll"),
-                            Path.Combine(system32Directory, "RzChromaSDK.dll")
-                        };
+                        if (AppSettings.GetSettings().showEmulatorDevices)
+                            RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
 
-                        var sdkExists = false;
+                        #if DEBUG
+                            RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
+                        #endif
 
-                        foreach (var sdkLocation in razerSdkLocations)
-                        {
-                            if (File.Exists(sdkLocation))
-                            {
-                                sdkExists = true;
-                                break;
-                            }
-                        }
-
-                        if (!sdkExists)
-                        {
-                            Logger.WriteConsole(Enums.LoggerTypes.Error, 
-                                                "Razer SDK is not detected on this computer. Please reinstall Razer Synapse and make sure Chroma Connect plugin is also installed.");
-                        }
-                        else
-                        {
-                            shouldLoadRazer = true;
-                        }
-                    }
-                    else
-                    {
-                        shouldLoadRazer = true;
-                    }
-
-                    if (shouldLoadRazer)
-                    {
                         LoadDeviceProvider(RazerDeviceProvider.Instance); 
                     }
                 }
@@ -301,6 +278,7 @@ namespace Chromatics.Core
                 loadedDeviceProviders.Clear();
 
                 //surface.Updating -= Surface_Updating;
+                surface.Exception -= surfaceExceptionEventHandler;
                 surface?.Dispose(); 
             } catch { }
         }
@@ -309,12 +287,41 @@ namespace Chromatics.Core
         {
             if (!loadedDeviceProviders.Contains(provider))
             {
+                //Check device specific variables
+                if (provider.GetType() == typeof(RazerDeviceProvider))
+                {
+                    if (CheckRazerSDK())
+                    {
+                        if (AppSettings.GetSettings().showEmulatorDevices)
+                            RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
+
+                        #if DEBUG
+                            RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
+                        #endif
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                //Attach device provider
                 foreach (var device in provider.Devices)
                 {
                     surface.Attach(device);
                 }
 
+                var showErrors = AppSettings.GetSettings().showDeviceErrors;
+
+                #if DEBUG
+                    showErrors = true;
+                #endif
+
+                if (showErrors)
+                    provider.Exception += deviceExceptionEventHandler;
+
                 provider.DevicesChanged += DevicesChanged;
+                
                 surface.Load(provider);
                 loadedDeviceProviders.Add(provider);
             }
@@ -326,9 +333,24 @@ namespace Chromatics.Core
             {
                 foreach (var device in provider.Devices)
                 {
+
+                    //Check for device removal incase event handler isn't built into RGB.NET Provider
+                    var _device = _devices.FirstOrDefault(kvp => kvp.Value == device);
+                    if (_devices.ContainsKey(_device.Key))
+                    {
+                        #if DEBUG
+                            Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Removed {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {_device.Key}).");
+                        #else
+                            Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Removed {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
+                        #endif
+
+                        _devices.Remove(_device.Key);
+                    }
+
                     surface.Detach(device);
                 }
 
+                provider.Exception -= deviceExceptionEventHandler;
                 provider.DevicesChanged -= DevicesChanged;
 
                 if (removeFromList)
@@ -684,6 +706,47 @@ namespace Chromatics.Core
                     _wasPreviewed = false;
                     PreviewTriggered?.Invoke(); 
                 }
+            }
+        }
+
+        private static bool CheckRazerSDK()
+        {
+            //Check for Razer SDK installed
+            if (!AppSettings.GetSettings().deviceRazerCheckSDKOverride)
+            {
+                var system32Directory = Path.Combine(Environment.GetEnvironmentVariable("windir"), "System32");
+                string[] razerSdkLocations = 
+                {
+                    Path.Combine(system32Directory, "RzChromaSDK64.dll"),
+                    Path.Combine(system32Directory, "RzChromaSDK.dll")
+                };
+
+                var sdkExists = false;
+
+                foreach (var sdkLocation in razerSdkLocations)
+                {
+                    if (File.Exists(sdkLocation))
+                    {
+                        sdkExists = true;
+                        break;
+                    }
+                }
+
+                if (!sdkExists)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, 
+                                        "Razer SDK is not detected on this computer. Please reinstall Razer Synapse and make sure Chroma Connect plugin is also installed.");
+                }
+                else
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }

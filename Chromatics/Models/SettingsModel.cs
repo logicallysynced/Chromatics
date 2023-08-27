@@ -15,6 +15,8 @@ namespace Chromatics.Models
         public bool minimizetray { get; set; } = false;
         public bool trayonstartup { get; set; } = false;
         public bool checkupdates { get; set; } = true;
+        public bool showDeviceErrors { get; set; } = true;
+        public bool showEmulatorDevices { get; set; } = false;
         public KeyboardLocalization keyboardLayout { get; set; } = KeyboardLocalization.qwerty;
         public double rgbRefreshRate { get; set; } = 0.05;
         public int globalbrightness { get; set; } = 100;
