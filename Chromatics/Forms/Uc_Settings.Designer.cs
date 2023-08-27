@@ -32,7 +32,6 @@
             this.tlp_outer = new System.Windows.Forms.TableLayoutPanel();
             this.gb_other = new System.Windows.Forms.GroupBox();
             this.tlp_devices = new System.Windows.Forms.TableLayoutPanel();
-            this.mt_settings_hue = new MetroFramework.Controls.MetroTile();
             this.mt_settings_wooting = new MetroFramework.Controls.MetroTile();
             this.mt_settings_asus = new MetroFramework.Controls.MetroTile();
             this.mt_settings_coolermaster = new MetroFramework.Controls.MetroTile();
@@ -42,6 +41,8 @@
             this.mt_settings_logitech = new MetroFramework.Controls.MetroTile();
             this.mt_settings_msi = new MetroFramework.Controls.MetroTile();
             this.mt_settings_novation = new MetroFramework.Controls.MetroTile();
+            this.mt_settings_hue = new MetroFramework.Controls.MetroTile();
+            this.mt_settings_openrgb = new MetroFramework.Controls.MetroTile();
             this.gb_devicesettings = new System.Windows.Forms.GroupBox();
             this.lbl_devicebrightpercent = new MetroFramework.Controls.MetroLabel();
             this.lbl_devicebright = new MetroFramework.Controls.MetroLabel();
@@ -115,7 +116,6 @@
             this.tlp_devices.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tlp_devices.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tlp_devices.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlp_devices.Controls.Add(this.mt_settings_hue, 1, 2);
             this.tlp_devices.Controls.Add(this.mt_settings_wooting, 1, 1);
             this.tlp_devices.Controls.Add(this.mt_settings_asus, 0, 1);
             this.tlp_devices.Controls.Add(this.mt_settings_coolermaster, 4, 0);
@@ -125,6 +125,8 @@
             this.tlp_devices.Controls.Add(this.mt_settings_logitech, 1, 0);
             this.tlp_devices.Controls.Add(this.mt_settings_msi, 3, 1);
             this.tlp_devices.Controls.Add(this.mt_settings_novation, 0, 2);
+            this.tlp_devices.Controls.Add(this.mt_settings_hue, 2, 2);
+            this.tlp_devices.Controls.Add(this.mt_settings_openrgb, 1, 2);
             this.tlp_devices.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_devices.Location = new System.Drawing.Point(3, 23);
             this.tlp_devices.Name = "tlp_devices";
@@ -137,33 +139,6 @@
             this.tlp_devices.Size = new System.Drawing.Size(536, 476);
             this.tlp_devices.TabIndex = 1;
             this.tlp_devices.Resize += new System.EventHandler(this.OnResize);
-            // 
-            // mt_settings_hue
-            // 
-            this.mt_settings_hue.ActiveControl = null;
-            this.mt_settings_hue.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mt_settings_hue.AutoSize = true;
-            this.mt_settings_hue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_settings_hue.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.mt_settings_hue.Enabled = false;
-            this.mt_settings_hue.Location = new System.Drawing.Point(139, 195);
-            this.mt_settings_hue.Margin = new System.Windows.Forms.Padding(5);
-            this.mt_settings_hue.Name = "mt_settings_hue";
-            this.mt_settings_hue.Size = new System.Drawing.Size(124, 85);
-            this.mt_settings_hue.TabIndex = 5;
-            this.mt_settings_hue.Text = "Philips Hue";
-            this.mt_settings_hue.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.mt_settings_hue.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.mt_settings_hue.TileImage = global::Chromatics.Properties.Resources.keyboard;
-            this.mt_settings_hue.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.mt_settings_hue.UseCustomBackColor = true;
-            this.mt_settings_hue.UseSelectable = true;
-            this.mt_settings_hue.UseTileImage = true;
-            this.mt_settings_hue.UseVisualStyleBackColor = false;
-            this.mt_settings_hue.Visible = false;
-            this.mt_settings_hue.Click += new System.EventHandler(this.mt_settings_hue_Click);
             // 
             // mt_settings_wooting
             // 
@@ -391,6 +366,60 @@
             this.mt_settings_novation.UseVisualStyleBackColor = false;
             this.mt_settings_novation.Click += new System.EventHandler(this.mt_settings_novation_Click);
             // 
+            // mt_settings_hue
+            // 
+            this.mt_settings_hue.ActiveControl = null;
+            this.mt_settings_hue.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mt_settings_hue.AutoSize = true;
+            this.mt_settings_hue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.mt_settings_hue.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.mt_settings_hue.Enabled = false;
+            this.mt_settings_hue.Location = new System.Drawing.Point(273, 195);
+            this.mt_settings_hue.Margin = new System.Windows.Forms.Padding(5);
+            this.mt_settings_hue.Name = "mt_settings_hue";
+            this.mt_settings_hue.Size = new System.Drawing.Size(124, 85);
+            this.mt_settings_hue.TabIndex = 5;
+            this.mt_settings_hue.Text = "Philips Hue";
+            this.mt_settings_hue.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.mt_settings_hue.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.mt_settings_hue.TileImage = global::Chromatics.Properties.Resources.keyboard;
+            this.mt_settings_hue.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.mt_settings_hue.UseCustomBackColor = true;
+            this.mt_settings_hue.UseSelectable = true;
+            this.mt_settings_hue.UseTileImage = true;
+            this.mt_settings_hue.UseVisualStyleBackColor = false;
+            this.mt_settings_hue.Visible = false;
+            this.mt_settings_hue.Click += new System.EventHandler(this.mt_settings_hue_Click);
+            // 
+            // mt_settings_openrgb
+            // 
+            this.mt_settings_openrgb.ActiveControl = null;
+            this.mt_settings_openrgb.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mt_settings_openrgb.AutoSize = true;
+            this.mt_settings_openrgb.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.mt_settings_openrgb.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.mt_settings_openrgb.Enabled = false;
+            this.mt_settings_openrgb.Location = new System.Drawing.Point(139, 195);
+            this.mt_settings_openrgb.Margin = new System.Windows.Forms.Padding(5);
+            this.mt_settings_openrgb.Name = "mt_settings_openrgb";
+            this.mt_settings_openrgb.Size = new System.Drawing.Size(124, 85);
+            this.mt_settings_openrgb.TabIndex = 6;
+            this.mt_settings_openrgb.Text = "OpenRGB";
+            this.mt_settings_openrgb.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.mt_settings_openrgb.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.mt_settings_openrgb.TileImage = global::Chromatics.Properties.Resources.keyboard;
+            this.mt_settings_openrgb.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.mt_settings_openrgb.UseCustomBackColor = true;
+            this.mt_settings_openrgb.UseSelectable = true;
+            this.mt_settings_openrgb.UseTileImage = true;
+            this.mt_settings_openrgb.UseVisualStyleBackColor = false;
+            this.mt_settings_openrgb.Visible = false;
+            this.mt_settings_openrgb.Click += new System.EventHandler(this.mt_settings_openRGB_Click);
+            // 
             // gb_devicesettings
             // 
             this.gb_devicesettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -583,5 +612,6 @@
         private MetroFramework.Controls.MetroTile mt_settings_hue;
         private MetroFramework.Controls.MetroTile mt_settings_msi;
         private MetroFramework.Controls.MetroTile mt_settings_novation;
+        private MetroFramework.Controls.MetroTile mt_settings_openrgb;
     }
 }
