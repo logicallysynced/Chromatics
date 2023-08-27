@@ -55,9 +55,7 @@ namespace Chromatics.Forms
             //Load Settings
             AppSettings.Startup();
             appSettings = AppSettings.GetSettings();
-            
-            AppSettings.SaveSettings(appSettings);
-
+                       
 
             //Check for First Run
             if (appSettings.firstrun)
@@ -65,6 +63,8 @@ namespace Chromatics.Forms
                 var firstRunForm = new Fm_FirstRun();
                 firstRunForm.ShowDialog();
             }
+
+            AppSettings.SaveSettings(appSettings);
 
             //Initiate Tabs
             var uC_Console = new Uc_Console
