@@ -1,10 +1,20 @@
 ﻿using AutoUpdaterDotNET;
 using Chromatics.Core;
+using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Properties;
 using MetroFramework.Components;
 using MetroFramework.Controls;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
+using RGB.NET.Devices.Asus;
+using RGB.NET.Devices.CoolerMaster;
+using RGB.NET.Devices.Corsair;
+using RGB.NET.Devices.Logitech;
+using RGB.NET.Devices.Msi;
+using RGB.NET.Devices.Novation;
+using RGB.NET.Devices.Razer;
+using RGB.NET.Devices.SteelSeries;
+using RGB.NET.Devices.Wooting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -262,11 +272,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(RazerDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(RazerDeviceProvider.Instance);
             }
 
             settings.deviceRazerEnabled = device;
@@ -285,11 +299,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance);
             }
 
             settings.deviceLogitechEnabled = device;
@@ -308,11 +326,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(CorsairDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(CorsairDeviceProvider.Instance);
             }
 
             settings.deviceCorsairEnabled = device;
@@ -331,11 +353,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(SteelSeriesDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(SteelSeriesDeviceProvider.Instance);
             }
 
             settings.deviceSteelseriesEnabled = device;
@@ -354,11 +380,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(CoolerMasterDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(CoolerMasterDeviceProvider.Instance);
             }
 
             settings.deviceCoolermasterEnabled = device;
@@ -377,11 +407,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(AsusDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(AsusDeviceProvider.Instance);
             }
 
             settings.deviceAsusEnabled = device;
@@ -400,11 +434,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(WootingDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(WootingDeviceProvider.Instance);
             }
 
             settings.deviceWootingEnabled = device;
@@ -423,11 +461,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(MsiDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(MsiDeviceProvider.Instance);
             }
 
             settings.deviceMsiEnabled = device;
@@ -446,11 +488,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(NovationDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(NovationDeviceProvider.Instance);
             }
 
             settings.deviceNovationEnabled = device;
@@ -469,11 +515,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(HueRGBDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(HueRGBDeviceProvider.Instance);
             }
 
             settings.deviceHueEnabled = device;
