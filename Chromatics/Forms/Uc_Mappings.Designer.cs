@@ -370,7 +370,7 @@ namespace Chromatics.Forms
             this.cb_deviceselect.ItemHeight = 24;
             this.cb_deviceselect.Location = new System.Drawing.Point(3, 13);
             this.cb_deviceselect.Name = "cb_deviceselect";
-            this.cb_deviceselect.Size = new System.Drawing.Size(236, 30);
+            this.cb_deviceselect.Size = new System.Drawing.Size(391, 30);
             this.cb_deviceselect.TabIndex = 2;
             this.cb_deviceselect.UseSelectable = true;
             this.cb_deviceselect.SelectedIndexChanged += new System.EventHandler(this.cb_deviceselect_SelectedIndexChanged);

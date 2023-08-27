@@ -9,12 +9,15 @@ namespace Chromatics.Models
 {
     public class SettingsModel
     {
-        public string version { get; set; } = "1";
+        public string version { get; set; } = "2";
+        public bool firstrun { get; set; } = true;
         public bool localcache { get; set; } = false;
         public bool winstart { get; set; } = false;
         public bool minimizetray { get; set; } = false;
         public bool trayonstartup { get; set; } = false;
         public bool checkupdates { get; set; } = true;
+        public bool showDeviceErrors { get; set; } = true;
+        public bool showEmulatorDevices { get; set; } = false;
         public KeyboardLocalization keyboardLayout { get; set; } = KeyboardLocalization.qwerty;
         public double rgbRefreshRate { get; set; } = 0.05;
         public int globalbrightness { get; set; } = 100;
@@ -36,6 +39,7 @@ namespace Chromatics.Models
         public bool deviceSteelseriesEnabled { get; set; } = true;
         public bool deviceWootingEnabled { get; set; } = true;
         public bool deviceNovationEnabled { get; set; } = true;
+        public bool deviceOpenRGBEnabled { get; set; } = false;
         public bool deviceHueEnabled { get; set; } = false;
         public string deviceHueBridgeIP { get; set; } = "127.0.0.1";
         public string deviceHueBridgeKey { get; set; } = "";
