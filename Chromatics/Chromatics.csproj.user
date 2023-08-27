@@ -4,6 +4,9 @@
     <Compile Update="Chromatics.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\Fm_FirstRun.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\Fm_MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
