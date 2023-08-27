@@ -113,17 +113,14 @@ namespace Chromatics.Core
             
                 if (appSettings.deviceRazerEnabled)
                 {
-                    if (CheckRazerSDK())
-                    {
-                        if (AppSettings.GetSettings().showEmulatorDevices)
-                            RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
+                    if (AppSettings.GetSettings().showEmulatorDevices)
+                        RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
 
-                        #if DEBUG
-                            RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
-                        #endif
+                    #if DEBUG
+                        RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
+                    #endif
 
-                        LoadDeviceProvider(RazerDeviceProvider.Instance); 
-                    }
+                    LoadDeviceProvider(RazerDeviceProvider.Instance); 
                 }
             
                 if (appSettings.deviceAsusEnabled)
@@ -287,24 +284,6 @@ namespace Chromatics.Core
         {
             if (!loadedDeviceProviders.Contains(provider))
             {
-                //Check device specific variables
-                if (provider.GetType() == typeof(RazerDeviceProvider))
-                {
-                    if (CheckRazerSDK())
-                    {
-                        if (AppSettings.GetSettings().showEmulatorDevices)
-                            RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
-
-                        #if DEBUG
-                            RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
-                        #endif
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-
                 //Attach device provider
                 foreach (var device in provider.Devices)
                 {
@@ -706,47 +685,6 @@ namespace Chromatics.Core
                     _wasPreviewed = false;
                     PreviewTriggered?.Invoke(); 
                 }
-            }
-        }
-
-        private static bool CheckRazerSDK()
-        {
-            //Check for Razer SDK installed
-            if (!AppSettings.GetSettings().deviceRazerCheckSDKOverride)
-            {
-                var system32Directory = Path.Combine(Environment.GetEnvironmentVariable("windir"), "System32");
-                string[] razerSdkLocations = 
-                {
-                    Path.Combine(system32Directory, "RzChromaSDK64.dll"),
-                    Path.Combine(system32Directory, "RzChromaSDK.dll")
-                };
-
-                var sdkExists = false;
-
-                foreach (var sdkLocation in razerSdkLocations)
-                {
-                    if (File.Exists(sdkLocation))
-                    {
-                        sdkExists = true;
-                        break;
-                    }
-                }
-
-                if (!sdkExists)
-                {
-                    Logger.WriteConsole(Enums.LoggerTypes.Error, 
-                                        "Razer SDK is not detected on this computer. Please reinstall Razer Synapse and make sure Chroma Connect plugin is also installed.");
-                }
-                else
-                {
-                    return true;
-                }
-
-                return false;
-            }
-            else
-            {
-                return true;
             }
         }
     }
