@@ -1,6 +1,7 @@
 ﻿using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Extensions.RGB.NET;
+using Chromatics.Extensions.Sharlayan;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
@@ -76,6 +77,7 @@ namespace Chromatics.Layers
                 var minVal = 0;
                 var maxVal = getCurrentPlayer.Entity.HPMax;
                 var valPercentage = MathHelper.CalculatePercentage(currentVal, maxVal);
+                               
 
                 var full_col = ColorHelper.ColorToRGBColor(_colorPalette.HpFull.Color);
                 var critical_col = ColorHelper.ColorToRGBColor(_colorPalette.HpCritical.Color);

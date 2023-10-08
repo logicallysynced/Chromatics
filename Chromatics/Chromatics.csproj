@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>3.0.5.0</Version>
+    <Version>3.0.6.0</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>Danielle Thompson 2023</Copyright>
@@ -14,6 +14,7 @@
     <ApplicationIcon>Resources\Chromatics_icon_144x144.ico</ApplicationIcon>
     <PackageReleaseNotes>https://github.com/roxaskeyheart/chromatics/releases</PackageReleaseNotes>
     <Title>Chromatics</Title>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,20 +36,20 @@
     <PackageReference Include="NLog" Version="5.1.5" />
     <PackageReference Include="Q42.HueApi" Version="3.22.0" />
     <PackageReference Include="Q42.HueApi.Entertainment" Version="3.20.1" />
-    <PackageReference Include="RGB.NET.Core" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.Corsair" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.Msi" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.Novation" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.OpenRGB" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.Razer" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.HID" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Layout" Version="2.0.0-prerelease.108" />
-    <PackageReference Include="RGB.NET.Presets" Version="2.0.0-prerelease.108" />
+    <PackageReference Include="RGB.NET.Core" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.Corsair" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.Msi" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.Novation" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.OpenRGB" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.Razer" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.HID" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Layout" Version="2.0.0-prerelease.114" />
+    <PackageReference Include="RGB.NET.Presets" Version="2.0.0-prerelease.114" />
     <PackageReference Include="Sanford.Multimedia.Midi" Version="6.6.2" />
   </ItemGroup>
 
@@ -110,9 +111,7 @@
     <Compile Update="Forms\vDevices\Uc_VirtualLedStrip.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualMousePad.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualMousePad.cs" />
     <Compile Update="Forms\vDevices\Uc_VirtualHeadset.cs">
       <SubType>UserControl</SubType>
     </Compile>

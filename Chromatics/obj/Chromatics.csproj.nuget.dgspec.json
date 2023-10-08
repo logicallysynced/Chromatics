@@ -1,35 +1,37 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {}
+    "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
-      "version": "3.0.5",
+    "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
+      "version": "3.0.6",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
+        "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
-        "projectPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
-        "packagesPath": "C:\\Users\\Dani\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dani\\source\\repos\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\obj\\",
+        "projectPath": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
+        "packagesPath": "C:\\Users\\Hanielle\\.nuget\\packages\\",
+        "outputPath": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dani\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Hanielle\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0-windows"
+          "net7.0-windows"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0-windows7.0": {
-            "targetAlias": "net6.0-windows",
+          "net7.0-windows7.0": {
+            "targetAlias": "net7.0-windows",
             "projectReferences": {}
           }
         },
@@ -40,8 +42,8 @@
         }
       },
       "frameworks": {
-        "net6.0-windows7.0": {
-          "targetAlias": "net6.0-windows",
+        "net7.0-windows7.0": {
+          "targetAlias": "net7.0-windows",
           "dependencies": {
             "Autoupdater.NET.Official": {
               "target": "Package",
@@ -85,59 +87,59 @@
             },
             "RGB.NET.Core": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.Asus": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.CoolerMaster": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.Corsair": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.Logitech": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.Msi": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.Novation": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.OpenRGB": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.Razer": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.SteelSeries": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Devices.Wooting": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.HID": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Layout": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "RGB.NET.Presets": {
               "target": "Package",
-              "version": "[2.0.0-prerelease.108, )"
+              "version": "[2.0.0-prerelease.114, )"
             },
             "Sanford.Multimedia.Midi": {
               "target": "Package",
@@ -163,7 +165,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }
