@@ -287,6 +287,7 @@ namespace Chromatics.Layers
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBRDNegative.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBRDNegative.Color);
 
+
                     switch (jobResources.JobResourcesContainer.Bard.ActiveSong)
                     {
                         case SongFlags.WanderersMinuet:
