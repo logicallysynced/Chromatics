@@ -114,10 +114,10 @@ namespace Chromatics.Core
                 if (appSettings.deviceRazerEnabled)
                 {
                     if (AppSettings.GetSettings().showEmulatorDevices)
-                        RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
+                        RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
 
                     #if DEBUG
-                        RazerDeviceProvider.Instance.LoadEmulatorDevices = true;
+                        RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
                     #endif
 
                     LoadDeviceProvider(RazerDeviceProvider.Instance); 
