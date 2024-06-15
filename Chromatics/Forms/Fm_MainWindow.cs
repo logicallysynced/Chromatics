@@ -55,7 +55,15 @@ namespace Chromatics.Forms
             //Load Settings
             AppSettings.Startup();
             appSettings = AppSettings.GetSettings();
-            
+                       
+
+            //Check for First Run
+            if (appSettings.firstrun)
+            {
+                var firstRunForm = new Fm_FirstRun();
+                firstRunForm.ShowDialog();
+            }
+
             AppSettings.SaveSettings(appSettings);
 
             //Initiate Tabs
@@ -160,6 +168,7 @@ namespace Chromatics.Forms
             {
                 Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor} has loaded");
             }
+
 
             RunChromaticsThread();
         }

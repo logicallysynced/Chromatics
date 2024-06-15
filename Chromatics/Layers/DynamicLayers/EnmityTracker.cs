@@ -147,6 +147,8 @@ namespace Chromatics.Layers
                         var currentVal = (int)enmityPosition;
                         var minVal = 0;
                         var maxVal = 100;
+
+                        
                         
                          if (enmityPosition != model._enmityPosition || model._targetReset)
                          {

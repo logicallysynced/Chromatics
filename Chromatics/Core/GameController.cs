@@ -287,7 +287,8 @@ namespace Chromatics.Core
                     
                     //Load Other Memory Zones
                     DutyFinderBellExtension.RefreshData(_memoryHandler);
-                    
+                    GameStateExtension.RefreshData(_memoryHandler);
+
                     gameConnected = true;
                 
                 }
@@ -342,7 +343,7 @@ namespace Chromatics.Core
 
                     var runningEffects = RGBController.GetRunningEffects();
 
-                    if (getCurrentPlayer.Entity == null && chatLogCount <= 0)
+                    if (getCurrentPlayer.Entity == null && chatLogCount <= 0 && !GameStateExtension.IsLoggedIn())
                     {
                         //Game is still on Main Menu or Character Screen
                         if (!_onTitle || wasPreviewed)

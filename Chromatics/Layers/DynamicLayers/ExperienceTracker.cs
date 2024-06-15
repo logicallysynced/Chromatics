@@ -6,6 +6,7 @@ using RGB.NET.Core;
 using Sharlayan.Core.Enums;
 using Sharlayan.Models.ReadResults;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using static Chromatics.Helpers.MathHelper;
@@ -77,7 +78,7 @@ namespace Chromatics.Layers
                 var currentExp = GetJobCurrentExperience(getCurrentPlayer);
                 var minExp = 0;
                 var maxExp = 0;
-                
+
 
                 if (levelMap.ContainsKey(currentLvl))
                 {
