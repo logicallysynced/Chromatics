@@ -13,7 +13,7 @@ namespace Chromatics.Core
     {
         private static SettingsModel _settings = new SettingsModel();
 
-        public static readonly string currentSettingsVersion = "1";
+        public static readonly string currentSettingsVersion = "2";
         public static readonly string currentEffectsVersion = "1";
         public static readonly string currentPalettesVersion = "1";
         public static readonly string currentMappingLayerVersion = "1";

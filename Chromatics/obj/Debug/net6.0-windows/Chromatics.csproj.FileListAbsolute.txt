@@ -158,3 +158,38 @@ C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chr
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.pdb
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.genruntimeconfig.cache
 C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\ref\Chromatics.dll
+C:\Users\Dani\source\repos\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Fm_FirstRun.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.csproj.AssemblyReference.cache
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Chromatics.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Fm_FirstRun.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Fm_MainWindow.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Pn_LayerDisplay.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_Console.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_Effects.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_Mappings.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_Palette.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_Settings.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualCooler.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualDRAM.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualFan.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualGraphicsCard.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualHeadset.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualHeadsetStand.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualKeyboard.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualKeypad.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualLedController.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualLedMatrix.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualLedStrip.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualMainboard.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualMonitor.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualMouse.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualMousePad.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualOtherController.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Forms.Uc_VirtualSpeaker.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Models.VirtualDevice.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.Properties.Resources.resources
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.csproj.GenerateResource.cache
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.AssemblyInfoInputs.cache
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.AssemblyInfo.cs
+D:\Git Projects\roxaskeyheart\Chromatics Workbench\Chromatics-3.x\Chromatics\obj\Debug\net6.0-windows\Chromatics.csproj.CoreCompileInputs.cache

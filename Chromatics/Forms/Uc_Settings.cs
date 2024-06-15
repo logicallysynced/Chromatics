@@ -1,10 +1,21 @@
 ﻿using AutoUpdaterDotNET;
 using Chromatics.Core;
+using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Properties;
 using MetroFramework.Components;
 using MetroFramework.Controls;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
+using RGB.NET.Devices.Asus;
+using RGB.NET.Devices.CoolerMaster;
+using RGB.NET.Devices.Corsair;
+using RGB.NET.Devices.Logitech;
+using RGB.NET.Devices.Msi;
+using RGB.NET.Devices.Novation;
+using RGB.NET.Devices.OpenRGB;
+using RGB.NET.Devices.Razer;
+using RGB.NET.Devices.SteelSeries;
+using RGB.NET.Devices.Wooting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,16 +55,17 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.btn_clearcache, @"Clear local FFXIV cache. Requires application restart.");
             tt_mappings.SetToolTip(this.trackbar_lighting, @"Adjust global brightness for all devices.");
             tt_mappings.SetToolTip(this.chk_updatecheck, @"Enable checking for updates on Chromatics start. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_razer, @"Enable/disable Razer device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_logitech, @"Enable/disable Logitech device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_corsair, @"Enable/disable Corsair device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_coolermaster, @"Enable/disable Coolermaster device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_steelseries, @"Enable/disable SteelSeries device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_asus, @"Enable/disable ASUS device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_msi, @"Enable/disable MSI device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_wooting, @"Enable/disable Wooting device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_novation, @"Enable/disable Novation device library. Requires App Restart. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_hue, @"[BETA] Enable/disable Philips HUE device library. Requires App Restart. Default: Disabled");
+            tt_mappings.SetToolTip(mt_settings_razer, @"Enable/disable Razer device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_logitech, @"Enable/disable Logitech device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_corsair, @"Enable/disable Corsair device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_coolermaster, @"Enable/disable Coolermaster device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_steelseries, @"Enable/disable SteelSeries device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_asus, @"Enable/disable ASUS device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_msi, @"Enable/disable MSI device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_wooting, @"Enable/disable Wooting device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_novation, @"Enable/disable Novation device library. Default: Enabled");
+            tt_mappings.SetToolTip(mt_settings_openrgb, @"Enable/disable OpenRGB device library. Default: Disabled");
+            tt_mappings.SetToolTip(mt_settings_hue, @"[BETA] Enable/disable Philips HUE device library. Default: Disabled");
 
             //Startup
             var settings = AppSettings.GetSettings();
@@ -75,6 +87,7 @@ namespace Chromatics.Forms
             mt_settings_msi.BackColor = settings.deviceMsiEnabled ? tilecol_enabled : tilecol_disabled;
             mt_settings_wooting.BackColor = settings.deviceWootingEnabled ? tilecol_enabled : tilecol_disabled;
             mt_settings_novation.BackColor = settings.deviceNovationEnabled ? tilecol_enabled : tilecol_disabled;
+            mt_settings_openrgb.BackColor = settings.deviceOpenRGBEnabled ? tilecol_enabled : tilecol_disabled;
             mt_settings_hue.BackColor = settings.deviceHueEnabled ? tilecol_enabled : tilecol_disabled;
         }
 
@@ -262,11 +275,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(RazerDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(RazerDeviceProvider.Instance);
             }
 
             settings.deviceRazerEnabled = device;
@@ -285,11 +302,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance);
             }
 
             settings.deviceLogitechEnabled = device;
@@ -308,11 +329,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(CorsairDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(CorsairDeviceProvider.Instance);
             }
 
             settings.deviceCorsairEnabled = device;
@@ -331,11 +356,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(SteelSeriesDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(SteelSeriesDeviceProvider.Instance);
             }
 
             settings.deviceSteelseriesEnabled = device;
@@ -354,11 +383,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(CoolerMasterDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(CoolerMasterDeviceProvider.Instance);
             }
 
             settings.deviceCoolermasterEnabled = device;
@@ -377,11 +410,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(AsusDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(AsusDeviceProvider.Instance);
             }
 
             settings.deviceAsusEnabled = device;
@@ -400,11 +437,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(WootingDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(WootingDeviceProvider.Instance);
             }
 
             settings.deviceWootingEnabled = device;
@@ -423,11 +464,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(MsiDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(MsiDeviceProvider.Instance);
             }
 
             settings.deviceMsiEnabled = device;
@@ -446,11 +491,15 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(NovationDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(NovationDeviceProvider.Instance);
             }
 
             settings.deviceNovationEnabled = device;
@@ -469,14 +518,45 @@ namespace Chromatics.Forms
             {
                 device = false;
                 tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(HueRGBDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(HueRGBDeviceProvider.Instance);
             }
 
             settings.deviceHueEnabled = device;
+            AppSettings.SaveSettings(settings);
+        }
+
+        private void mt_settings_openRGB_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType() != typeof(MetroTile)) return;
+            var tile = (MetroTile)sender;
+
+            var settings = AppSettings.GetSettings();
+            var device = settings.deviceOpenRGBEnabled;
+
+            if (device)
+            {
+                device = false;
+                tile.BackColor = tilecol_disabled;
+
+                RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance);
+            }
+            else
+            {
+                device = true;
+                tile.BackColor = tilecol_enabled;
+
+                RGBController.LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
+            }
+
+            settings.deviceOpenRGBEnabled = device;
             AppSettings.SaveSettings(settings);
         }
 

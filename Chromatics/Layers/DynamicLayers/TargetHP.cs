@@ -135,6 +135,7 @@ namespace Chromatics.Layers
                         var minVal = 0;
                         var maxVal = getTargetInfo.TargetInfo.CurrentTarget.HPMax;
                         var valPercentage = MathHelper.CalculatePercentage(currentVal, maxVal);
+
                     
                         if (maxVal <= 0) maxVal = currentVal + 1;
 
