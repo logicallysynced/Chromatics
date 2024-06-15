@@ -148,7 +148,18 @@ namespace Chromatics.Core
 
                 if (appSettings.deviceOpenRGBEnabled)
                 {
+                    var openrgb = new OpenRGBServerDefinition
+                    {
+                        Port = 6742,
+                        Ip = "127.0.0.1",
+                        ClientName = "Chromatics"
+                    };
+
+                    OpenRGBDeviceProvider.Instance.AddDeviceDefinition(openrgb);
                     LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
+
+
+
                 }   
 
                 if (appSettings.deviceHueEnabled)
@@ -298,6 +309,7 @@ namespace Chromatics.Core
                 //Attach device provider
                 foreach (var device in provider.Devices)
                 {
+                    Console.WriteLine(@"Device: " + device.DeviceInfo.DeviceName);
                     surface.Attach(device);
                 }
 
@@ -349,6 +361,7 @@ namespace Chromatics.Core
 
                     surface.Detach(device);
                 }
+
 
                 provider.Exception -= deviceExceptionEventHandler;
                 provider.DevicesChanged -= DevicesChanged;
