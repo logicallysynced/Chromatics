@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,10 +27,26 @@ namespace Chromatics
                 return;
             }
 
+            Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(ThreadExceptionHandler);
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledExceptionHandler);
+
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
             Application.EnableVisualStyles();
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Fm_MainWindow());
+        }
+
+        private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex = (Exception)e.ExceptionObject;
+            MessageBox.Show("Unhandled exception caught: " + ex.Message);
+        }
+
+        private static void ThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
+        {
+            MessageBox.Show("Unhandled exception caught: " + e.Exception.Message);
         }
 
         private static bool ThereCanOnlyBeOne()

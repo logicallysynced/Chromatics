@@ -157,8 +157,15 @@ namespace Chromatics.Layers
 
                         foreach (var action in hotbar.ActionItems)
                         {
+
                             if (action.ActionKey != LedKeyHelper.LedIdToHotbarKeyConverter(ledGroup.Key.Id)) continue;
                             if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) || string.IsNullOrEmpty(action.KeyBinds) || string.IsNullOrEmpty(action.ActionKey)) continue;
+
+                            if (action.Name == "Refulgent Arrow")
+                            {
+                                Debug.WriteLine($"IsProcOrCombo {action.IsProcOrCombo}. IsAvailable: {action.IsAvailable}. InRange {action.InRange}. IsKeyBindAssigned {action.IsKeyBindAssigned}. Charges: {action.ChargeReady}. Charges Count: {action.ChargesRemaining}");
+                            }
+                            
 
                             var modsactive = action.Modifiers.Count;
                             var modKey = Modifiers.Null;

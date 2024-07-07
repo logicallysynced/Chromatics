@@ -1,6 +1,5 @@
 ﻿using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
-using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -95,6 +94,12 @@ namespace Chromatics.Core
 
                 if (appSettings.deviceCorsairEnabled)
                 {
+                    var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+                    var natives = CorsairDeviceProvider.PossibleX64NativePaths;
+                    natives.Add($"{enviroment}\\x64\\CUESDK.dll");
+
+                    Debug.WriteLine($"{enviroment}\\x64\\CUESDK.dll");
+
                     LoadDeviceProvider(CorsairDeviceProvider.Instance);
                 }
                     
@@ -164,7 +169,7 @@ namespace Chromatics.Core
 
                 if (appSettings.deviceHueEnabled)
                 {
-                    LoadDeviceProvider(HueRGBDeviceProvider.Instance);
+                    //LoadDeviceProvider(HueRGBDeviceProvider.Instance);
                 }
                             
             
