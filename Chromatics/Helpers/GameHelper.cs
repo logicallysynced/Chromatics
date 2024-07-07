@@ -248,6 +248,16 @@ namespace Chromatics.Helpers
                         return ColorHelper.ColorToRGBColor(colorPalette.JobSGEBase.Color);
                     else
                         return ColorHelper.ColorToRGBColor(colorPalette.JobSGEHighlight.Color);
+                case Actor.Job.PCT:
+                    if (!highlight)
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobPCTBase.Color);
+                    else
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobPCTHighlight.Color);
+                case Actor.Job.VPR:
+                    if (!highlight)
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobVPRBase.Color);
+                    else
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobVPRHighlight.Color);
                 default:
                     return ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
             }

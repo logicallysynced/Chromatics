@@ -1,6 +1,5 @@
 ﻿using AutoUpdaterDotNET;
 using Chromatics.Core;
-using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Properties;
 using MetroFramework.Components;
 using MetroFramework.Controls;
@@ -519,14 +518,14 @@ namespace Chromatics.Forms
                 device = false;
                 tile.BackColor = tilecol_disabled;
 
-                RGBController.UnloadDeviceProvider(HueRGBDeviceProvider.Instance);
+                //RGBController.UnloadDeviceProvider(HueRGBDeviceProvider.Instance);
             }
             else
             {
                 device = true;
                 tile.BackColor = tilecol_enabled;
 
-                RGBController.LoadDeviceProvider(HueRGBDeviceProvider.Instance);
+                //RGBController.LoadDeviceProvider(HueRGBDeviceProvider.Instance);
             }
 
             settings.deviceHueEnabled = device;

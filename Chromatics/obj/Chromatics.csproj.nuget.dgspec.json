@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
-      "version": "3.0.7",
+      "version": "3.0.8",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -39,6 +39,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -47,11 +52,11 @@
           "dependencies": {
             "Autoupdater.NET.Official": {
               "target": "Package",
-              "version": "[1.9.0, )"
+              "version": "[1.9.1, )"
             },
             "CsvHelper": {
               "target": "Package",
-              "version": "[32.0.3, )"
+              "version": "[33.0.1, )"
             },
             "Cyotek.Windows.Forms.ColorPicker": {
               "target": "Package",
@@ -71,7 +76,7 @@
             },
             "NLog": {
               "target": "Package",
-              "version": "[5.1.5, )"
+              "version": "[5.3.2, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -87,59 +92,59 @@
             },
             "RGB.NET.Core": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.Asus": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.CoolerMaster": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.Corsair": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.Logitech": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.Msi": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.Novation": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.OpenRGB": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.Razer": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.SteelSeries": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Devices.Wooting": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.HID": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Layout": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "RGB.NET.Presets": {
               "target": "Package",
-              "version": "[2.1.1-prerelease.3, )"
+              "version": "[2.2.0-prerelease.1, )"
             },
             "Sanford.Multimedia.Midi": {
               "target": "Package",
@@ -165,7 +170,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
