@@ -549,6 +549,60 @@ namespace Chromatics.Layers
                         jobGauge.currentValue = jobGauge.minValue;
                     }
                     break;
+                case Actor.Job.VPR:
+                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobVPRSerpentOffering.Color);
+                    jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobVPRNegative.Color);
+
+                    jobGauge.currentValue = (int)jobResources.JobResourcesContainer.Viper.SerpentOffering;
+                    jobGauge.maxValue = 100;
+                    jobGauge.minValue = 0;
+
+                    if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
+                    if (jobGauge.currentValue <= jobGauge.minValue)
+                    {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobVPRNegative.Color);
+                        jobGauge.currentValue = jobGauge.minValue;
+                    }
+
+
+                    break;
+                case Actor.Job.PCT:
+                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTPalette.Color);
+                    jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTNegative.Color);
+
+                    var pctCanvas = (CanvasFlags)jobResources.JobResourcesContainer.Pictomancer.CanvasFlags;
+
+                    jobGauge.currentValue = 0;
+                    jobGauge.maxValue = 100;
+                    jobGauge.minValue = 0;
+
+                    if (pctCanvas == CanvasFlags.Landscape) {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTLandscape.Color);
+                        jobGauge.maxValue = jobGauge.maxValue;
+
+                    } else if (pctCanvas == CanvasFlags.Maw) {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTMaw.Color);
+                        jobGauge.maxValue = jobGauge.maxValue;
+
+                    } else if (pctCanvas == CanvasFlags.Weapon) {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTWeapon.Color);
+                        jobGauge.maxValue = jobGauge.maxValue;
+
+                    } else if (pctCanvas == CanvasFlags.Claw) {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTClaw.Color);
+                        jobGauge.maxValue = jobGauge.maxValue;
+
+                    } else if (pctCanvas == CanvasFlags.Wing) {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTWing.Color);
+                        jobGauge.maxValue = jobGauge.maxValue;
+
+                    } else {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTNegative.Color);
+                        jobGauge.currentValue = jobGauge.minValue;
+                    }
+
+
+                    break;
                 case Actor.Job.Unknown:
                 default:
                     return null;
