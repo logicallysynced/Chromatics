@@ -318,6 +318,10 @@ namespace Chromatics.Helpers
                         return @"Shows Reaper's Soul Gauge.";
                     case Actor.Job.SGE:
                         return @"Shows Sage Addersgall Recharge Gauge.";
+                    case Actor.Job.VPR:
+                        return @"Shows Viper's Vipersight Gauge.";
+                    case Actor.Job.PCT:
+                        return @"Shows Pictomancer's Palette Gauge.";
                 }
             }
             else if (layer == "B")
@@ -373,6 +377,10 @@ namespace Chromatics.Helpers
                         return @"Shows Reaper's Shroud Gauge.";
                     case Actor.Job.SGE:
                         return @"Shows Sage's Addersting Gauge.";
+                    case Actor.Job.VPR:
+                        return @"Shows Viper's Serpent Offerings Gauge.";
+                    case Actor.Job.PCT:
+                        return @"Shows Pictomancer's Canvas.";
                 }
             }
 
