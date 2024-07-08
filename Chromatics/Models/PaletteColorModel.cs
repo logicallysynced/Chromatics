@@ -18,7 +18,7 @@ namespace Chromatics.Models
         public ColorMapping BaseColor = new("Base Color", PaletteTypes.Chromatics, Color.DodgerBlue);
         public ColorMapping HighlightColor = new("Highlight Color", PaletteTypes.Chromatics, Color.Magenta);
         public ColorMapping DeviceDisabled = new("Device Disabled Color", PaletteTypes.Chromatics, Color.Black);
-        public ColorMapping MenuBase = new("Main Menu Base Color", PaletteTypes.Chromatics, Color.MediumBlue);
+        public ColorMapping MenuBase = new("Main Menu Base Color", PaletteTypes.Chromatics, Color.FromArgb(255, 0, 206, 209));
         public ColorMapping MenuHighlight1 = new("Main Menu Animation Color 1", PaletteTypes.Chromatics, Color.Gold);
         public ColorMapping MenuHighlight2 = new("Main Menu Animation Color 2", PaletteTypes.Chromatics, Color.Yellow);
         public ColorMapping MenuHighlight3 = new("Main Menu Animation Color 3", PaletteTypes.Chromatics, Color.Gold);
