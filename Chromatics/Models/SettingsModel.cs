@@ -10,6 +10,7 @@ namespace Chromatics.Models
     public class SettingsModel
     {
         public string version { get; set; } = "2";
+        public double? ffxivExpansion { get; set; } = 6.0;
         public bool firstrun { get; set; } = true;
         public bool localcache { get; set; } = false;
         public bool winstart { get; set; } = false;

@@ -248,6 +248,16 @@ namespace Chromatics.Helpers
                         return ColorHelper.ColorToRGBColor(colorPalette.JobSGEBase.Color);
                     else
                         return ColorHelper.ColorToRGBColor(colorPalette.JobSGEHighlight.Color);
+                case Actor.Job.PCT:
+                    if (!highlight)
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobPCTBase.Color);
+                    else
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobPCTHighlight.Color);
+                case Actor.Job.VPR:
+                    if (!highlight)
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobVPRBase.Color);
+                    else
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobVPRHighlight.Color);
                 default:
                     return ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
             }
@@ -308,6 +318,10 @@ namespace Chromatics.Helpers
                         return @"Shows Reaper's Soul Gauge.";
                     case Actor.Job.SGE:
                         return @"Shows Sage Addersgall Recharge Gauge.";
+                    case Actor.Job.VPR:
+                        return @"Shows Viper's Vipersight Gauge.";
+                    case Actor.Job.PCT:
+                        return @"Shows Pictomancer's Palette Gauge.";
                 }
             }
             else if (layer == "B")
@@ -363,6 +377,10 @@ namespace Chromatics.Helpers
                         return @"Shows Reaper's Shroud Gauge.";
                     case Actor.Job.SGE:
                         return @"Shows Sage's Addersting Gauge.";
+                    case Actor.Job.VPR:
+                        return @"Shows Viper's Serpent Offerings Gauge.";
+                    case Actor.Job.PCT:
+                        return @"Shows Pictomancer's Canvas.";
                 }
             }
 

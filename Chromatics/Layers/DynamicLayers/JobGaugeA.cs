@@ -681,6 +681,40 @@ namespace Chromatics.Layers
                         jobGauge.currentValue = jobGauge.minValue;
                     }
                     break;
+                case Actor.Job.VPR:
+                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobVPRVipersight.Color);
+                    jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobVPRNegative.Color);
+
+                    jobGauge.currentValue = (int)jobResources.JobResourcesContainer.Viper.RattlingCoilStacks;
+                    jobGauge.maxValue = 3;
+                    jobGauge.minValue = 0;
+
+                    if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
+                    if (jobGauge.currentValue <= jobGauge.minValue)
+                    {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobVPRNegative.Color);
+                        jobGauge.currentValue = jobGauge.minValue;
+                    }
+
+
+                    break;
+                case Actor.Job.PCT:
+                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTPalette.Color);
+                    jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTNegative.Color);
+
+                    jobGauge.currentValue = (int)jobResources.JobResourcesContainer.Pictomancer.PalleteGauge;
+                    jobGauge.maxValue = 100;
+                    jobGauge.minValue = 0;
+
+                    if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
+                    if (jobGauge.currentValue <= jobGauge.minValue)
+                    {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPCTNegative.Color);
+                        jobGauge.currentValue = jobGauge.minValue;
+                    }
+
+
+                    break;
                 case Actor.Job.Unknown:
                 default:
                     return null;
