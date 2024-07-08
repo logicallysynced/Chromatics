@@ -22,6 +22,8 @@ using Chromatics.Models;
 using System.IO;
 using System.Timers;
 using Chromatics.Properties;
+using System.Windows.Controls.Primitives;
+using Sharlayan.Core.Enums;
 
 namespace Chromatics.Forms
 {
@@ -64,7 +66,34 @@ namespace Chromatics.Forms
                 firstRunForm.ShowDialog();
             }
 
+            //Check for new expansion settings
+            if (!appSettings.ffxivExpansion.HasValue || appSettings.ffxivExpansion < 7.0)
+            {
+                Debug.WriteLine("FFXIV Expansion not set, setting to 7.0");
+                appSettings.ffxivExpansion = 7.0;
+
+                //Update Menu Animation Colour
+
+                var active = RGBController.GetActivePalette();
+                var cm = new PaletteColorModel();
+
+                foreach (var p in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (p.Name == "MenuBase" || p.Name == "MenuHighlight1" || p.Name == "MenuHighlight2" || p.Name == "MenuHighlight3")
+                    {
+                        var mapping = (ColorMapping)p.GetValue(cm);
+                        var new_mapping = new ColorMapping(mapping.Name, mapping.Type, mapping.Color);
+                        p.SetValue(active, new_mapping);
+
+                        Debug.WriteLine($"TESTTTT {p.Name} {new_mapping.Color}");
+                    }
+                }
+
+                RGBController.SaveColorPalette();
+            }
+
             AppSettings.SaveSettings(appSettings);
+
 
             //Initiate Tabs
             var uC_Console = new Uc_Console

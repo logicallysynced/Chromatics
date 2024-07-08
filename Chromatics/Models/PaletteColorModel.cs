@@ -18,10 +18,10 @@ namespace Chromatics.Models
         public ColorMapping BaseColor = new("Base Color", PaletteTypes.Chromatics, Color.DodgerBlue);
         public ColorMapping HighlightColor = new("Highlight Color", PaletteTypes.Chromatics, Color.Magenta);
         public ColorMapping DeviceDisabled = new("Device Disabled Color", PaletteTypes.Chromatics, Color.Black);
-        public ColorMapping MenuBase = new("Main Menu Base Color", PaletteTypes.Chromatics, Color.MediumBlue);
-        public ColorMapping MenuHighlight1 = new("Main Menu Animation Color 1", PaletteTypes.Chromatics, Color.White);
-        public ColorMapping MenuHighlight2 = new("Main Menu Animation Color 2", PaletteTypes.Chromatics, Color.LemonChiffon);
-        public ColorMapping MenuHighlight3 = new("Main Menu Animation Color 3", PaletteTypes.Chromatics, Color.White);
+        public ColorMapping MenuBase = new("Main Menu Base Color", PaletteTypes.Chromatics, Color.FromArgb(255, 0, 206, 209));
+        public ColorMapping MenuHighlight1 = new("Main Menu Animation Color 1", PaletteTypes.Chromatics, Color.Gold);
+        public ColorMapping MenuHighlight2 = new("Main Menu Animation Color 2", PaletteTypes.Chromatics, Color.Yellow);
+        public ColorMapping MenuHighlight3 = new("Main Menu Animation Color 3", PaletteTypes.Chromatics, Color.Gold);
         public ColorMapping CutsceneBase = new("Cutscene Base Color", PaletteTypes.Chromatics, Color.DeepSkyBlue);
         public ColorMapping CutsceneHighlight1 = new("Cutscene Animation Color 1", PaletteTypes.Chromatics, Color.White);
         public ColorMapping CutsceneHighlight2 = new("Cutscene Animation Color 2", PaletteTypes.Chromatics, Color.White);
@@ -205,7 +205,17 @@ namespace Chromatics.Models
         public ColorMapping JobCrafterInnerquiet = new("Crafter: Inner Quiet Stacks", PaletteTypes.JobGauges, Color.BlueViolet);
         public ColorMapping JobCrafterCollectable = new("Crafter: Collectables", PaletteTypes.JobGauges, Color.Gold);
         public ColorMapping JobCrafterCrafter = new("Crafter: Crafting", PaletteTypes.JobGauges, Color.DeepSkyBlue);
-        
+        public ColorMapping JobVPRVipersight = new("VPR: Vipersight Gauge", PaletteTypes.JobGauges, Color.Red);
+        public ColorMapping JobVPRSerpentOffering = new("VPR: Serpent Offering Gauge", PaletteTypes.JobGauges, Color.DodgerBlue);
+        public ColorMapping JobVPRNegative = new("VPR: Blank Key", PaletteTypes.JobGauges, Color.Black);
+        public ColorMapping JobPCTPalette = new("PCT: Palette Gauge", PaletteTypes.JobGauges, Color.DodgerBlue);
+        public ColorMapping JobPCTLandscape = new("PCT: Canvas Landscape", PaletteTypes.JobGauges, Color.BlueViolet);
+        public ColorMapping JobPCTMaw = new("PCT: Canvas Maw", PaletteTypes.JobGauges, Color.Purple);
+        public ColorMapping JobPCTWeapon = new("PCT: Canvas Weapon", PaletteTypes.JobGauges, Color.Red);
+        public ColorMapping JobPCTClaw = new("PCT: Canvas Claw", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobPCTWing = new("PCT: Canvas Wing", PaletteTypes.JobGauges, Color.Magenta);
+        public ColorMapping JobPCTNegative = new("PCT: Blank Key", PaletteTypes.JobGauges, Color.Black);
+
         //Reactive Weather
         public ColorMapping WeatherClearSkiesBase = new("Clear Skies (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherClearSkiesHighlight = new("Clear Skies (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
@@ -515,6 +525,10 @@ namespace Chromatics.Models
         public ColorMapping JobRPRHighlight = new("RPR (Highlight)", PaletteTypes.JobClasses, Color.DeepSkyBlue);
         public ColorMapping JobSGEBase = new("SGE (Base)", PaletteTypes.JobClasses, Color.LimeGreen);
         public ColorMapping JobSGEHighlight = new("SGE (Highlight)", PaletteTypes.JobClasses, Color.DodgerBlue);
+        public ColorMapping JobVPRBase = new("VPR (Base)", PaletteTypes.JobClasses, Color.LimeGreen);
+        public ColorMapping JobVPRHighlight = new("VPR (Highlight)", PaletteTypes.JobClasses, Color.YellowGreen);
+        public ColorMapping JobPCTBase = new("PCT (Base)", PaletteTypes.JobClasses, Color.DodgerBlue);
+        public ColorMapping JobPCTHighlight = new("PCT (Highlight)", PaletteTypes.JobClasses, Color.Magenta);
         public ColorMapping JobBLUBase = new("BLU (Base)", PaletteTypes.JobClasses, Color.DeepSkyBlue);
         public ColorMapping JobBLUHighlight = new("BLU (Highlight)", PaletteTypes.JobClasses, Color.Blue);
         public ColorMapping JobCPTBase = new("CPT (Base)", PaletteTypes.JobClasses, Color.DarkOrange);
@@ -707,6 +721,9 @@ namespace Chromatics.Models
         public string ColorMappingJobRPRNegative { get; set; }
         public string ColorMappingJobRPRSouls { get; set; }
         public string ColorMappingJobRPRShrouds { get; set; }
+        public string ColorMappingJobVPRNegative { get; set; }
+        public string ColorMappingJobPCTNegative { get; set; }
+
         public string ColorMappingMenuBase { get; set; }
         public string ColorMappingJobCrafterNegative { get; set; }
         public string ColorMappingJobCrafterInnerquiet { get; set; }
@@ -872,6 +889,10 @@ namespace Chromatics.Models
         public string ColorMappingJobRPRHighlight { get; set; }
         public string ColorMappingJobSGEBase { get; set; }
         public string ColorMappingJobSGEHighlight { get; set; }
+        public string ColorMappingJobVPRBase { get; set; }
+        public string ColorMappingJobVPRHighlight { get; set; }
+        public string ColorMappingJobPCTBase { get; set; }
+        public string ColorMappingJobPCTHighlight { get; set; }
         public string ColorMappingJobBLUBase { get; set; }
         public string ColorMappingJobBLUHighlight { get; set; }
         public string ColorMappingJobCPTBase { get; set; }

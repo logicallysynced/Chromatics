@@ -1,5 +1,4 @@
 ﻿using Chromatics.Core;
-using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Properties;
 using MetroFramework.Components;
 using MetroFramework.Controls;
