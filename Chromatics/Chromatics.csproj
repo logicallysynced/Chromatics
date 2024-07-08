@@ -5,7 +5,7 @@
     <TargetFramework>net8.0-windows7.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>3.0.8.0</Version>
+    <Version>3.0.8.1</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>Danielle Thompson 2024</Copyright>
@@ -51,6 +51,7 @@
     <PackageReference Include="RGB.NET.Layout" Version="2.2.0-prerelease.1" />
     <PackageReference Include="RGB.NET.Presets" Version="2.2.0-prerelease.1" />
     <PackageReference Include="Sanford.Multimedia.Midi" Version="6.6.2" />
+    <PackageReference Include="Sharlayan" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,9 +66,6 @@
     </Reference>
     <Reference Include="MetroFramework.Fonts">
       <HintPath>..\Build Dependencies\MetroFramework.Fonts.dll</HintPath>
-    </Reference>
-    <Reference Include="Sharlayan">
-      <HintPath>..\Build Dependencies\Sharlayan.dll</HintPath>
     </Reference>
   </ItemGroup>
 
