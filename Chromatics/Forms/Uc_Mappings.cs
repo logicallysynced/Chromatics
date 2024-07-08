@@ -663,7 +663,7 @@ namespace Chromatics.Forms
 
             if (rtb_layerhelper.InvokeRequired)
             {
-                rtb_layerhelper.Invoke((MethodInvoker) delegate
+                rtb_layerhelper.Invoke((System.Windows.Forms.MethodInvoker) delegate
                 {
                     if (layer.rootLayerType == LayerType.DynamicLayer)
                     {
