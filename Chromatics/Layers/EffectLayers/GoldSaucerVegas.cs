@@ -1,5 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Extensions.RGB.NET;
+using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
@@ -80,7 +81,9 @@ namespace Chromatics.Layers
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 if (getCurrentPlayer.Entity == null) return;
 
-                var currentZone = ZoneLookup.GetZoneInfo(getCurrentPlayer.Entity.MapTerritory).Name.English;
+                //var currentZone = ZoneLookup.GetZoneInfo(getCurrentPlayer.Entity.MapTerritory).Name.English;
+                var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
+
                 var baseLayer = MappingLayers.GetLayers().Values.Where(x => x.rootLayerType == Enums.LayerType.BaseLayer && x.deviceType == layer.deviceType).FirstOrDefault();
 
                 if (baseLayer.deviceType == RGBDeviceType.Keyboard)
