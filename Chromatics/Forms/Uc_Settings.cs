@@ -577,6 +577,12 @@ namespace Chromatics.Forms
 
         private static Image ScaleImage(Image image, int maxWidth, int maxHeight)
         {
+            if (image == null)
+                throw new ArgumentNullException(nameof(image), "The image parameter cannot be null.");
+
+            if (maxWidth <= 0 || maxHeight <= 0)
+                throw new ArgumentException("maxWidth and maxHeight must be greater than zero.");
+
             var ratioX = (double)maxWidth / image.Width;
             var ratioY = (double)maxHeight / image.Height;
             var ratio = Math.Min(ratioX, ratioY);
@@ -584,12 +590,18 @@ namespace Chromatics.Forms
             var newWidth = (int)(image.Width * ratio);
             var newHeight = (int)(image.Height * ratio);
 
+            if (newWidth <= 0 || newHeight <= 0)
+                throw new ArgumentException("Calculated width and height must be greater than zero.");
+
             var newImage = new Bitmap(newWidth, newHeight);
 
             using (var graphics = Graphics.FromImage(newImage))
+            {
                 graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+            }
 
             return newImage;
         }
+
     }
 }
