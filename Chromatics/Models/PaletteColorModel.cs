@@ -219,166 +219,116 @@ namespace Chromatics.Models
         //Reactive Weather
         public ColorMapping WeatherClearSkiesBase = new("Clear Skies (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherClearSkiesHighlight = new("Clear Skies (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
-
         public ColorMapping WeatherFairSkiesBase = new("Fair Skies (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherFairSkiesHighlight = new("Fair Skies (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
-
         public ColorMapping WeatherCloudsBase = new("Clouds (Base)", PaletteTypes.ReactiveWeather, Color.LightSlateGray);
         public ColorMapping WeatherCloudsHighlight = new("Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x162CFB));
-
         public ColorMapping WeatherFogBase = new("Fog (Base)", PaletteTypes.ReactiveWeather, Color.LightSlateGray);
         public ColorMapping WeatherFogHighlight = new("Fog (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkBlue);
-
         public ColorMapping WeatherWindBase = new("Wind (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
         public ColorMapping WeatherWindHighlight = new("Wind (Highlight)", PaletteTypes.ReactiveWeather, Color.GreenYellow);
         public ColorMapping WeatherWindAnimation = new("Wind (Animation Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x559C2F));
-
         public ColorMapping WeatherGalesBase = new("Gales (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
         public ColorMapping WeatherGalesHighlight = new("Gales (Highlight)", PaletteTypes.ReactiveWeather, Color.GreenYellow);
         public ColorMapping WeatherGalesAnimation = new("Gales (Animation Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x559C2F));
-
         public ColorMapping WeatherRainBase = new("Rain (Base)", PaletteTypes.ReactiveWeather, Color.MediumBlue);
         public ColorMapping WeatherRainHighlight = new("Rain (Highlight)", PaletteTypes.ReactiveWeather, Color.SpringGreen);
         public ColorMapping WeatherRainAnimation = new("Rain (Animation Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x2529A5));
-
         public ColorMapping WeatherShowersBase = new("Showers (Base)", PaletteTypes.ReactiveWeather, Color.MediumBlue);
         public ColorMapping WeatherShowersHighlight = new("Showers (Highlight)", PaletteTypes.ReactiveWeather, Color.SpringGreen);
         public ColorMapping WeatherShowersAnimation = new("Showers (Animation Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x256FA5));
-
         public ColorMapping WeatherThunderBase = new("Thunder (Base)", PaletteTypes.ReactiveWeather, Color.BlueViolet);
         public ColorMapping WeatherThunderHighlight = new("Thunder (Highlight)", PaletteTypes.ReactiveWeather, Color.Pink);
         public ColorMapping WeatherThunderAnimation = new("Thunder (Animation Highlight)", PaletteTypes.ReactiveWeather, Color.White);
-
         public ColorMapping WeatherThunderstormsBase = new("Thunderstorms (Base)", PaletteTypes.ReactiveWeather, Color.Indigo);
         public ColorMapping WeatherThunderstormsHighlight = new("Thunderstorms (Highlight)", PaletteTypes.ReactiveWeather, Color.Plum);
-
         public ColorMapping WeatherDustStormsBase = new("Dust Storms (Base)", PaletteTypes.ReactiveWeather, Color.Sienna);
         public ColorMapping WeatherDustStormsHighlight = new("Dust Storms (Highlight)", PaletteTypes.ReactiveWeather, Color.PeachPuff);
-
         public ColorMapping WeatherSandstormsBase = new("Sandstorms (Base)", PaletteTypes.ReactiveWeather, Color.Peru);
         public ColorMapping WeatherSandstormsHighlight = new("Sandstorms (Highlight)", PaletteTypes.ReactiveWeather, Color.PapayaWhip);
         public ColorMapping WeatherSandstormsAnimationHighlight = new("Sandstorms Animation (Highlight)", PaletteTypes.ReactiveWeather, Color.Orange);
-
         public ColorMapping WeatherHotSpellsBase = new("Hot Spells (Base)", PaletteTypes.ReactiveWeather, Color.Orange);
         public ColorMapping WeatherHotSpellsHighlight = new("Hot Spells (Highlight)", PaletteTypes.ReactiveWeather, Color.OrangeRed);
-
         public ColorMapping WeatherHeatWavesBase = new("Heat Waves (Base)", PaletteTypes.ReactiveWeather, Color.OrangeRed);
         public ColorMapping WeatherHeatWavesHighlight = new("Heat Waves (Highlight)", PaletteTypes.ReactiveWeather, Color.Red);
-
         public ColorMapping WeatherSnowBase = new("Snow (Base)", PaletteTypes.ReactiveWeather, Color.SkyBlue);
         public ColorMapping WeatherSnowHighlight = new("Snow (Highlight)", PaletteTypes.ReactiveWeather, Color.Snow);
         public ColorMapping WeatherSnowAnimationHighlight = new("Snow Animation (Highlight)", PaletteTypes.ReactiveWeather, Color.Black);
-
         public ColorMapping WeatherBlizzardsBase = new("Blizzards (Base)", PaletteTypes.ReactiveWeather, Color.LightSlateGray);
         public ColorMapping WeatherBlizzardsHighlight = new("Blizzards (Highlight)", PaletteTypes.ReactiveWeather, Color.Snow);
         public ColorMapping WeatherBilzzardsAnimationHighlight = new("Blizzards Animation (Highlight)", PaletteTypes.ReactiveWeather, Color.Black);
-
         public ColorMapping WeatherGloomBase = new("Gloom (Base)", PaletteTypes.ReactiveWeather, Color.DarkSlateBlue);
         public ColorMapping WeatherGloomHighlight = new("Gloom (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumOrchid);
-
         public ColorMapping WeatherAurorasBase = new("Auroras (Base)", PaletteTypes.ReactiveWeather, Color.Turquoise);
         public ColorMapping WeatherAurorasHighlight = new("Auroras (Highlight)", PaletteTypes.ReactiveWeather, Color.Violet);
-
         public ColorMapping WeatherDarknessBase = new("Darkness (Base)", PaletteTypes.ReactiveWeather, Color.MidnightBlue);
         public ColorMapping WeatherDarknessHighlight = new("Darkness (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumVioletRed);
-
         public ColorMapping WeatherTensionBase = new("Tension (Base)", PaletteTypes.ReactiveWeather, Color.DarkSlateGray);
         public ColorMapping WeatherTensionHighlight = new("Tension (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumTurquoise);
-
         public ColorMapping WeatherStormCloudsBase = new("Storm Clouds (Base)", PaletteTypes.ReactiveWeather, Color.DarkBlue);
         public ColorMapping WeatherStormCloudsHighlight = new("Storm Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.CornflowerBlue);
-
         public ColorMapping WeatherRoughSeasBase = new("Rough Seas (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
         public ColorMapping WeatherRoughSeasHighlight = new("Rough Seas (Highlight)", PaletteTypes.ReactiveWeather, Color.Turquoise);
-
         public ColorMapping WeatherLouringBase = new("Louring (Base)", PaletteTypes.ReactiveWeather, Color.DarkSlateGray);
         public ColorMapping WeatherLouringHighlight = new("Louring (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkOrange);
-
         public ColorMapping WeatherEruptionsBase = new("Eruptions (Base)", PaletteTypes.ReactiveWeather, Color.DarkRed);
         public ColorMapping WeatherEruptionsHighlight = new("Eruptions (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkOrange);
-
         public ColorMapping WeatherIrradianceBase = new("Irradiance (Base)", PaletteTypes.ReactiveWeather, Color.Turquoise);
         public ColorMapping WeatherIrradianceHighlight = new("Irradiance (Highlight)", PaletteTypes.ReactiveWeather, Color.Violet);
-
         public ColorMapping WeatherCoreRadiationBase = new("Core Radiation (Base)", PaletteTypes.ReactiveWeather, Color.MidnightBlue);
         public ColorMapping WeatherCoreRadiationHighlight = new("Core Radiation (Highlight)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
-
         public ColorMapping WeatherShelfCloudsBase = new("Shelf Clouds (Base)", PaletteTypes.ReactiveWeather, Color.DarkOliveGreen);
         public ColorMapping WeatherShelfCloudsHighlight = new("Shelf Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.PaleGoldenrod);
-
         public ColorMapping WeatherOppressionBase = new("Oppression (Base)", PaletteTypes.ReactiveWeather, Color.LimeGreen);
         public ColorMapping WeatherOppressionHighlight = new("Oppression (Highlight)", PaletteTypes.ReactiveWeather, Color.PaleGreen);
-
         public ColorMapping WeatherUmbralWindBase = new("Umbral Wind (Base)", PaletteTypes.ReactiveWeather, Color.DarkTurquoise);
         public ColorMapping WeatherUmbralWindHighlight = new("Umbral Wind (Highlight)", PaletteTypes.ReactiveWeather, Color.Azure);
         public ColorMapping WeatherUmbralWindAnimationBase = new("Umbral Wind Animation (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x0A1DC6));
         public ColorMapping WeatherUmbralWindAnimationHighlight = new("Umbral Wind Animation (Highlight)", PaletteTypes.ReactiveWeather, Color.SpringGreen);
-
         public ColorMapping WeatherUmbralStaticBase = new("Umbral Static (Base)", PaletteTypes.ReactiveWeather, Color.DarkTurquoise);
         public ColorMapping WeatherUmbralStaticHighlight = new("Umbral Static (Highlight)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherUmbralStaticAnimationBase = new("Umbral Static Animation (Base)", PaletteTypes.ReactiveWeather, Color.MediumBlue);
         public ColorMapping WeatherUmbralStaticAnimationHighlight = new("Umbral Static Animation (Highlight)", PaletteTypes.ReactiveWeather, Color.Cyan);
-
         public ColorMapping WeatherSmokeBase = new("Smoke (Base)", PaletteTypes.ReactiveWeather, Color.DarkRed);
         public ColorMapping WeatherSmokeHighlight = new("Smoke (Highlight)", PaletteTypes.ReactiveWeather, Color.OrangeRed);
-
         public ColorMapping WeatherRoyalLevinBase = new("Royal Levin (Base)", PaletteTypes.ReactiveWeather, Color.Goldenrod);
         public ColorMapping WeatherRoyalLevinHighlight = new("Royal Levin (Highlight)", PaletteTypes.ReactiveWeather, Color.Khaki);
-
         public ColorMapping WeatherHyperelectricityBase = new("Hyperelectricity (Base)", PaletteTypes.ReactiveWeather, Color.HotPink);
         public ColorMapping WeatherHyperelectricityHighlight = new("Hyperelectricity (Highlight)", PaletteTypes.ReactiveWeather, Color.Gold);
-
         public ColorMapping WeatherMultiplicityBase = new("Multiplicity (Base)", PaletteTypes.ReactiveWeather, Color.SlateGray);
         public ColorMapping WeatherMultiplicityHighlight = new("Multiplicity (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumTurquoise);
-
         public ColorMapping WeatherDragonstormsBase = new("Dragonstorms (Base)", PaletteTypes.ReactiveWeather, Color.Sienna);
         public ColorMapping WeatherDragonstormsHighlight = new("Dragonstorms (Highlight)", PaletteTypes.ReactiveWeather, Color.OrangeRed);
-
         public ColorMapping WeatherSubterrainBase = new("Subterrain (Base)", PaletteTypes.ReactiveWeather, Color.SaddleBrown);
         public ColorMapping WeatherSubterrainHighlight = new("Subterrain (Highlight)", PaletteTypes.ReactiveWeather, Color.Peru);
-
         public ColorMapping WeatherConcordanceBase = new("Concordance (Base)", PaletteTypes.ReactiveWeather, Color.DarkRed);
         public ColorMapping WeatherConcordanceHighlight = new("Concordance (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkOrange);
-
         public ColorMapping WeatherBeyondTimeBase = new("Beyond Time (Base)", PaletteTypes.ReactiveWeather, Color.LimeGreen);
         public ColorMapping WeatherBeyondTimeHighlight = new("Beyond Time (Highlight)", PaletteTypes.ReactiveWeather, Color.Gold);
-
         public ColorMapping WeatherDemonicInfinityBase = new("Demonic Infinity (Base)", PaletteTypes.ReactiveWeather, Color.DarkRed);
         public ColorMapping WeatherDemonicInfinityHighlight = new("Demonic Infinity (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkOrange);
-
         public ColorMapping WeatherDimensionalDisruptionBase = new("Dimensional Disruption (Base)", PaletteTypes.ReactiveWeather, Color.DarkSlateBlue);
         public ColorMapping WeatherDimensionalDisruptionHighlight = new("Dimensional Disruption (Highlight)", PaletteTypes.ReactiveWeather, Color.SkyBlue);
-
         public ColorMapping WeatherRevelstormsBase = new("Revelstorms (Base)", PaletteTypes.ReactiveWeather, Color.SteelBlue);
         public ColorMapping WeatherRevelstormsHighlight = new("Revelstorms (Highlight)", PaletteTypes.ReactiveWeather, Color.SkyBlue);
-
         public ColorMapping WeatherEternalBlissBase = new("Eternal Bliss (Base)", PaletteTypes.ReactiveWeather, Color.Pink);
         public ColorMapping WeatherEternalBlissHighlight = new("Eternal Bliss (Highlight)", PaletteTypes.ReactiveWeather, Color.PeachPuff);
-
         public ColorMapping WeatherWyrmstormsBase = new("Wyrmstorms (Base)", PaletteTypes.ReactiveWeather, Color.DarkMagenta);
         public ColorMapping WeatherWyrmstormsHighlight = new("Wyrmstorms (Highlight)", PaletteTypes.ReactiveWeather, Color.PaleGoldenrod);
-
         public ColorMapping WeatherQuicklevinBase = new("Quicklevin (Base)", PaletteTypes.ReactiveWeather, Color.Navy);
         public ColorMapping WeatherQuicklevinHighlight = new("Quicklevin (Highlight)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
-
         public ColorMapping WeatherWhiteCyclonesBase = new("White Cyclones (Base)", PaletteTypes.ReactiveWeather, Color.MidnightBlue);
         public ColorMapping WeatherWhiteCyclonesHighlight = new("White Cyclones (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumTurquoise);
-
         public ColorMapping WeatherUltimaniaBase = new("Ultimania (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
         public ColorMapping WeatherUltimaniaHighlight = new("Ultimania (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkTurquoise);
-
         public ColorMapping WeatherMoonlightBase = new("Moonlight (Base)", PaletteTypes.ReactiveWeather, Color.BlueViolet);
         public ColorMapping WeatherMoonlightHighlight = new("Moonlight (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkOrange);
-
         public ColorMapping WeatherRedMoonBase = new("Red Moon (Base)", PaletteTypes.ReactiveWeather, Color.MidnightBlue);
         public ColorMapping WeatherRedMoonHighlight = new("Red Moon (Highlight)", PaletteTypes.ReactiveWeather, Color.Crimson);
-
         public ColorMapping WeatherScarletBase = new("Scarlet (Base)", PaletteTypes.ReactiveWeather, Color.MidnightBlue);
         public ColorMapping WeatherScarletHighlight = new("Scarlet (Highlight)", PaletteTypes.ReactiveWeather, Color.Crimson);
-
         public ColorMapping WeatherFlamesBase = new("Flames (Base)", PaletteTypes.ReactiveWeather, Color.MidnightBlue);
         public ColorMapping WeatherFlamesHighlight = new("Flames (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkOrange);
-
         public ColorMapping WeatherTsunamisBase = new("Tsunamis (Base)", PaletteTypes.ReactiveWeather, Color.DarkSlateGray);
         public ColorMapping WeatherTsunamisHighlight = new("Tsunamis (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkTurquoise);
 
@@ -476,10 +426,21 @@ namespace Chromatics.Models
         public ColorMapping WeatherVacuityBase = new("Vacuity (Base)", PaletteTypes.ReactiveWeather, Color.Purple);
         public ColorMapping WeatherVacuityHighlight = new("Vacuity (Highlight)", PaletteTypes.ReactiveWeather, Color.Violet);
 
+        public ColorMapping WeatherProjectionBase = new("Projection (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
+        public ColorMapping WeatherProjectionHighlight = new("Projection (Highlight)", PaletteTypes.ReactiveWeather, Color.Aqua);
+
+        public ColorMapping WeatherReminiscenceBase = new("Reminiscence (Base)", PaletteTypes.ReactiveWeather, Color.Gold);
+        public ColorMapping WeatherReminiscenceHighlight = new("Reminiscence (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
+
+        public ColorMapping WeatherOminousCloudsBase = new("Ominous Clouds (Base)", PaletteTypes.ReactiveWeather, Color.Silver);
+        public ColorMapping WeatherOminousCloudsHighlight = new("Ominous Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
+
+        public ColorMapping WeatherLiminalityBase = new("Liminality (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
+        public ColorMapping WeatherLiminalityHighlight = new("Liminality (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumSlateBlue);
+
         public ColorMapping WeatherUnknownBase = new("Unknown Weather (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherUnknownHighlight = new("Unknown Weather (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
-
-
+        
         //Notifications
         public ColorMapping DutyFinderBell = new("Duty Finder Bell", PaletteTypes.Notifications, Color.Red);
         public ColorMapping PullCountdownTick = new("Pull Countdown (Tick)", PaletteTypes.Notifications, Color.Turquoise);
