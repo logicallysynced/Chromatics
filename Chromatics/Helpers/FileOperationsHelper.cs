@@ -29,12 +29,13 @@ namespace Chromatics.Helpers
     public static class FileOperationsHelper
     {
         private static bool weatherDataLoaded;
+        private static WeatherData weatherData;
 
         public static void SaveLayerMappings(ConcurrentDictionary<int, Layer> mappings)
         {
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = $"{enviroment}/layers.chromatics3";
-            
+
             try
             {
                 using (var sw = new StreamWriter(path, false))
@@ -328,9 +329,9 @@ namespace Chromatics.Helpers
 
                     try
                     {
-                        #if DEBUG
-                            Debug.WriteLine("Legacy file detected");
-                        #endif
+#if DEBUG
+                        Debug.WriteLine("Legacy file detected");
+#endif
 
                         var result = new PaletteColorModel();
 
@@ -345,7 +346,7 @@ namespace Chromatics.Helpers
                             var _sr = new MemoryStream(bytes);
 
                             var colorMappings = (LegacyColorMappings)reader.Deserialize(_sr);
-                            
+
                             _sr.Close();
 
                             foreach (var p in colorMappings.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
@@ -358,7 +359,7 @@ namespace Chromatics.Helpers
 
                                         var mapping = (ColorMapping)f.GetValue(result);
                                         var new_mapping = new ColorMapping(mapping.Name, mapping.Type, color);
-                                        f.SetValue(result, new_mapping);            
+                                        f.SetValue(result, new_mapping);
                                     }
                                 }
                             }
@@ -378,7 +379,7 @@ namespace Chromatics.Helpers
 
                 Logger.WriteConsole(Enums.LoggerTypes.Error, @"Error importing legacy Color Palette.");
                 return null;
-                
+
             }
             else
             {
@@ -572,6 +573,13 @@ namespace Chromatics.Helpers
             return weatherDataLoaded;
         }
 
+        public static WeatherData GetWeatherDataLoaded()
+        {
+            if (!weatherDataLoaded) return null;
+
+            return weatherData;
+        }
+
         public static string GetCsvData(string url, string csvPath)
         {
             var http = new HttpClient();
@@ -579,7 +587,7 @@ namespace Chromatics.Helpers
             var path = enviroment + @"/" + csvPath;
 
             var dataStoreResult = http.GetAsync(new Uri(url)).GetAwaiter().GetResult();
-            
+
             if (File.Exists(path))
             {
                 var fileInfo = new FileInfo(path);
@@ -599,14 +607,14 @@ namespace Chromatics.Helpers
                 return path;
             }
 
-            #if DEBUG
-                Debug.WriteLine(@"An error occurred downloading the file " + csvPath + @" from URI: " + url);
-            #endif
+#if DEBUG
+            Debug.WriteLine(@"An error occurred downloading the file " + csvPath + @" from URI: " + url);
+#endif
 
             return string.Empty;
         }
 
-        public static void GetUpdatedWeatherData()
+        public static WeatherData GetUpdatedWeatherData()
         {
             var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var WeatherKindsOutputPath = directory + @"/weatherKinds.json";
@@ -614,11 +622,10 @@ namespace Chromatics.Helpers
             var TerriTypesOutputPath = directory + @"/terriTypes.json";
 
             var http = new HttpClient();
-                        
 
             // GarlandTools
             var dataStoreResult = http.GetAsync(new Uri(@"https://www.garlandtools.org/db/doc/core/en/3/data.json")).GetAwaiter().GetResult();
-            
+
             if (File.Exists(WeatherRateIndicesOutputPath))
             {
                 var fileInfo = new FileInfo(WeatherRateIndicesOutputPath);
@@ -627,13 +634,24 @@ namespace Chromatics.Helpers
                 if (fileInfo.LastWriteTimeUtc >= lastModified)
                 {
                     weatherDataLoaded = true;
-                    return;
+                    var _weatherRateIndices = JsonConvert.DeserializeObject<List<WeatherRateIndex>>(File.ReadAllText(WeatherRateIndicesOutputPath));
+                    var _terriTypes = JsonConvert.DeserializeObject<List<TerriType>>(File.ReadAllText(TerriTypesOutputPath));
+                    var _weatherKinds = JsonConvert.DeserializeObject<List<Weather>>(File.ReadAllText(WeatherKindsOutputPath));
+
+                    weatherData = new WeatherData
+                    {
+                        WeatherRateIndices = _weatherRateIndices,
+                        TerriTypes = _terriTypes,
+                        WeatherKinds = _weatherKinds
+                    };
+
+                    return weatherData;
                 }
             }
-            
+
             Logger.WriteConsole(Enums.LoggerTypes.System, @"Updated FFXIV data is available");
             Logger.WriteConsole(Enums.LoggerTypes.System, $"Requesting data from Garland Tools..");
-            
+
             var dataStoreRaw = http.GetStringAsync(new Uri("https://www.garlandtools.org/db/doc/core/en/3/data.json")).GetAwaiter().GetResult();
             var dataStore = JObject.Parse(dataStoreRaw);
 
@@ -665,11 +683,10 @@ namespace Chromatics.Helpers
             }
 
             File.WriteAllText(WeatherRateIndicesOutputPath, JsonConvert.SerializeObject(weatherRateIndices));
-                        
 
             // XIVAPI
             #if DEBUG
-                Debug.WriteLine(@"Requesting data from XIVAPI and FFCafe...");
+            Debug.WriteLine(@"Requesting data from XIVAPI and FFCafe...");
             #endif
 
             var terriTypes = new List<TerriType>();
@@ -701,7 +718,7 @@ namespace Chromatics.Helpers
                     page++;
                 }
 
-                var cafeCsvRaw = http.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/thewakingsands/ffxiv-datamining-cn/master/PlaceName.csv")).GetAwaiter().GetResult();
+                var cafeCsvRaw = http.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/PlaceName.csv")).GetAwaiter().GetResult();
                 using var cafeSr = new StreamReader(cafeCsvRaw);
                 using var cafeCsv = new CsvReader(cafeSr, CultureInfo.InvariantCulture);
                 for (var i = 0; i < 3; i++) cafeCsv.Read();
@@ -723,7 +740,7 @@ namespace Chromatics.Helpers
                     Logger.WriteConsole(Enums.LoggerTypes.Error, $"XIVAPI: Data is not continuous and/or sorted in ascending order.");
                 ttLastN = terriType.Id;
             }
-            
+
             File.WriteAllText(TerriTypesOutputPath, JsonConvert.SerializeObject(terriTypes));
 
             var weatherKinds = new List<Weather>();
@@ -741,7 +758,7 @@ namespace Chromatics.Helpers
                     foreach (var child in dataStore2["Results"].Children())
                     {
                         var id = child["ID"].ToObject<int>();
-                        
+
                         weatherKinds.Add(new Weather
                         {
                             Id = id,
@@ -755,7 +772,7 @@ namespace Chromatics.Helpers
                     page++;
                 }
 
-                var cafeCsvRaw = http.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/thewakingsands/ffxiv-datamining-cn/master/Weather.csv")).GetAwaiter().GetResult();
+                var cafeCsvRaw = http.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/Weather.csv")).GetAwaiter().GetResult();
                 using var cafeSr = new StreamReader(cafeCsvRaw);
                 using var cafeCsv = new CsvReader(cafeSr, CultureInfo.InvariantCulture);
                 for (var i = 0; i < 3; i++) cafeCsv.Read();
@@ -782,6 +799,15 @@ namespace Chromatics.Helpers
 
             Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully updated internal database from Garland Tools");
             weatherDataLoaded = true;
+
+            weatherData = new WeatherData
+            {
+                WeatherRateIndices = weatherRateIndices,
+                TerriTypes = terriTypes,
+                WeatherKinds = weatherKinds
+            };
+
+            return weatherData;
         }
     }
 }

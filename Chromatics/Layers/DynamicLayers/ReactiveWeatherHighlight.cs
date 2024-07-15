@@ -98,7 +98,8 @@ namespace Chromatics.Layers.DynamicLayers
                     var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                     if (getCurrentPlayer.Entity == null) return;
 
-                    var currentZone = ZoneLookup.GetZoneInfo(getCurrentPlayer.Entity.MapTerritory).Name.English;
+                    //var currentZone = ZoneLookup.GetZoneInfo(getCurrentPlayer.Entity.MapTerritory).Name.English;
+                    var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
                     if (currentZone != "???" && currentZone != "")
                     {
