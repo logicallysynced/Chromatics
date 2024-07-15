@@ -607,9 +607,9 @@ namespace Chromatics.Helpers
                 return path;
             }
 
-#if DEBUG
+            #if DEBUG
             Debug.WriteLine(@"An error occurred downloading the file " + csvPath + @" from URI: " + url);
-#endif
+            #endif
 
             return string.Empty;
         }
@@ -626,7 +626,7 @@ namespace Chromatics.Helpers
             // GarlandTools
             var dataStoreResult = http.GetAsync(new Uri(@"https://www.garlandtools.org/db/doc/core/en/3/data.json")).GetAwaiter().GetResult();
 
-            if (File.Exists(WeatherRateIndicesOutputPath))
+            if (File.Exists(WeatherKindsOutputPath) && File.Exists(WeatherRateIndicesOutputPath) && File.Exists(TerriTypesOutputPath))
             {
                 var fileInfo = new FileInfo(WeatherRateIndicesOutputPath);
                 var lastModified = dataStoreResult.Content.Headers.LastModified;
