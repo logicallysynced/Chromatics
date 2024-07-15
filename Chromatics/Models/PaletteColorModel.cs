@@ -426,9 +426,6 @@ namespace Chromatics.Models
         public ColorMapping WeatherVacuityBase = new("Vacuity (Base)", PaletteTypes.ReactiveWeather, Color.Purple);
         public ColorMapping WeatherVacuityHighlight = new("Vacuity (Highlight)", PaletteTypes.ReactiveWeather, Color.Violet);
 
-        public ColorMapping WeatherProjectionBase = new("Projection (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
-        public ColorMapping WeatherProjectionHighlight = new("Projection (Highlight)", PaletteTypes.ReactiveWeather, Color.Aqua);
-
         public ColorMapping WeatherReminiscenceBase = new("Reminiscence (Base)", PaletteTypes.ReactiveWeather, Color.Gold);
         public ColorMapping WeatherReminiscenceHighlight = new("Reminiscence (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
 
