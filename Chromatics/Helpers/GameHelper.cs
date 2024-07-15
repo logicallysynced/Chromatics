@@ -1,5 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Models;
+using FFXIVWeather.Models;
 using RGB.NET.Core;
 using Sharlayan.Core.Enums;
 using Sharlayan.Models.ReadResults;
@@ -385,6 +386,30 @@ namespace Chromatics.Helpers
             }
 
             return @"";
+        }
+
+        public static string GetZoneNameById(uint id, string language = "en")
+        {
+            var data = FileOperationsHelper.GetWeatherDataLoaded();
+
+            if (data == null) return null;
+
+            var terriTypes = data.TerriTypes;
+            var terriType = terriTypes.FirstOrDefault(tt => tt.Id == id);
+            if (terriType == null)
+            {
+                return null; // or throw an exception, or return a default value
+            }
+
+            return language.ToLower() switch
+            {
+                "en" => terriType.NameEn,
+                "de" => terriType.NameDe,
+                "fr" => terriType.NameFr,
+                "ja" => terriType.NameJa,
+                "zh" => terriType.NameZh,
+                _ => null // or throw an exception, or return a default value
+            };
         }
     }
 }

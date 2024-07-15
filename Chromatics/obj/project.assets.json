@@ -657,7 +657,7 @@
           }
         }
       },
-      "Sharlayan/8.0.0": {
+      "Sharlayan/8.0.1": {
         "type": "package",
         "dependencies": {
           "NLog": "5.1.0",
@@ -2273,10 +2273,10 @@
         "sanford.multimedia.midi.standard.nuspec"
       ]
     },
-    "Sharlayan/8.0.0": {
-      "sha512": "cTXn/87Jn9R0FTpjmE69KLAazOef8XWnwITFz0pfJnaQgxTVNntXmixXhMo26kpNSTRQ3dJgj7QVHqvlULGGLg==",
+    "Sharlayan/8.0.1": {
+      "sha512": "gWLOrM7tk7+sohSHvEEmZ6trDVtVxpTZxyEGUf1Wcm4NaGf52TRIAgT+I2cuTBChc8xa7W1jyYUUWuG6c6JiCw==",
       "type": "package",
-      "path": "sharlayan/8.0.0",
+      "path": "sharlayan/8.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2296,7 +2296,7 @@
         "lib/net8.0/Sharlayan.dll",
         "lib/net8.0/Sharlayan.pdb",
         "lib/net8.0/Sharlayan.xml",
-        "sharlayan.8.0.0.nupkg.sha512",
+        "sharlayan.8.0.1.nupkg.sha512",
         "sharlayan.nuspec",
         "src/Sharlayan/ClearingArrayPool.cs",
         "src/Sharlayan/Constants.cs",
@@ -4431,7 +4431,7 @@
       "RGB.NET.Layout >= 2.2.0-prerelease.1",
       "RGB.NET.Presets >= 2.2.0-prerelease.1",
       "Sanford.Multimedia.Midi >= 6.6.2",
-      "Sharlayan >= 8.0.0"
+      "Sharlayan >= 8.0.1"
     ]
   },
   "packageFolders": {
@@ -4439,7 +4439,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "3.0.8.1",
+    "version": "3.0.8.2",
     "restore": {
       "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
       "projectName": "Chromatics",
@@ -4586,7 +4586,7 @@
           },
           "Sharlayan": {
             "target": "Package",
-            "version": "[8.0.0, )"
+            "version": "[8.0.1, )"
           }
         },
         "imports": [
