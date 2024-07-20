@@ -551,5 +551,7 @@ namespace Chromatics.Layers
 
             return ColorHelper.ColorToRGBColor(colorMapping.Color);
         }
+
     }
+
 }
