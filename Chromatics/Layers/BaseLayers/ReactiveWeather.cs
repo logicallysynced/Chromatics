@@ -53,6 +53,7 @@ namespace Chromatics.Layers
             //Reactive Weather Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
+            var raidEffects = RGBController.GetEffectsSettings().effect_raideffects;
             var weather_color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUnknownBase.Color);
             var weather_brush = new SolidColorBrush(weather_color);
             var _layergroups = RGBController.GetLiveLayerGroups();
@@ -94,7 +95,14 @@ namespace Chromatics.Layers
                     StopEffects(layergroup, model._gradientEffects);
                 }
             }
-            
+
+            if (model._raidEffects != raidEffects)
+            {
+                if (!raidEffects)
+                {
+                    StopEffects(layergroup, model._gradientEffects);
+                }
+            }
 
             if (!layer.Enabled)
             {
@@ -122,7 +130,7 @@ namespace Chromatics.Layers
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
                             effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects);
@@ -146,6 +154,11 @@ namespace Chromatics.Layers
                 model._reactiveWeatherEffects = reactiveWeatherEffects;
             }
 
+            if (model._raidEffects != raidEffects)
+            {
+                model._raidEffects = raidEffects;
+            }
+
             if (!effectApplied && layergroup.Decorators.Count <= 0)
             {
                 layergroup.Attach(surface);
@@ -163,6 +176,7 @@ namespace Chromatics.Layers
             public string _currentWeather { get; set; }
             public string _currentZone { get; set; }
             public bool _reactiveWeatherEffects { get; set; }
+            public bool _raidEffects { get; set; }
         }
 
         private static void SetEffect(ILedGroupDecorator effect, ListLedGroup layer, List<ListLedGroup> runningEffects)
@@ -230,6 +244,129 @@ namespace Chromatics.Layers
             //Filter for zone specific special weather
             switch(zone)
             {
+                case "Everkeep":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight3.Color) };
+                        var starfield = new FastStarfieldDecorator(layer, layer.Count() / 4, 20, 80, animationCol, surface, 2.0, false, baseCol);
+
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+
+                        return true;
+                    }
+                    break;
+                case "Interphos":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosBase.Color);
+
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosHighlight1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosHighlight2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosHighlight3.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol),
+                            new GradientStop((float)0.20, animationCol1),
+                            new GradientStop((float)0.35, animationCol2),
+                            new GradientStop((float)0.50, animationCol3),
+                            new GradientStop((float)0.65, animationCol1),
+                            new GradientStop((float)0.80, animationCol2),
+                            new GradientStop((float)0.95, animationCol3));
+
+                        var gradientMove = new MoveGradientDecorator(surface, 180, true);
+
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        runningEffects.Add(layer);
+
+                        return true;
+                    }
+                    break;
+                case "Scratching Ring":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Base.Color);
+
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Highlight1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Highlight2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Highlight3.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol),
+                            new GradientStop((float)0.20, animationCol1),
+                            new GradientStop((float)0.35, animationCol2),
+                            new GradientStop((float)0.50, animationCol3),
+                            new GradientStop((float)0.65, animationCol1),
+                            new GradientStop((float)0.80, animationCol2),
+                            new GradientStop((float)0.95, animationCol3));
+
+                        var gradientMove = new MoveGradientDecorator(surface, 180, true);
+
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        runningEffects.Add(layer);
+
+                        return true;
+                    }
+                    break;
+                case "Lovely Lovering":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Base.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Highlight2.Color) };
+                        var arenaLightShow = new ArenaLightShowDecorator(layer, 20, 3.0, 1.0, animationCol, surface, false, baseCol);
+
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(arenaLightShow, layer, runningEffects);
+
+                        return true;
+                    }
+                    break;
+                case "Blasting Ring":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Base.Color);
+
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Highlight1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Highlight2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Highlight3.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol),
+                            new GradientStop((float)0.20, animationCol1),
+                            new GradientStop((float)0.35, animationCol2),
+                            new GradientStop((float)0.50, animationCol3),
+                            new GradientStop((float)0.65, animationCol1),
+                            new GradientStop((float)0.80, animationCol2),
+                            new GradientStop((float)0.95, animationCol3));
+
+                        var gradientMove = new MoveBPMGradientDecorator(surface, 110 / 2, true);
+
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        runningEffects.Add(layer);
+
+                        return true;
+                    }
+                    break;
+                case "Private Mansion - Mist":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Base.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight4.Color) };
+                        var bpmArenaLightShow = new BPMPWMDecorator(layer, 162, 1.0, animationCol, 0.10, 4, surface, false, baseCol);
+
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(bpmArenaLightShow, layer, runningEffects);
+
+                        return true;
+                    }
+                    break;
                 case "Mare Lamentorum":
                     if (weather == "Fair Skies" || weather == "Moon Dust")
                     {
