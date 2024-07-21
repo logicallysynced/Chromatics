@@ -1,10 +1,13 @@
 ﻿using Chromatics.Core;
 using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET;
+using Chromatics.Extensions.RGB.NET.Decorators;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
 using RGB.NET.Core;
+using RGB.NET.Presets.Decorators;
+using RGB.NET.Presets.Textures.Gradients;
 using Sharlayan.Utilities;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,6 +44,7 @@ namespace Chromatics.Layers.DynamicLayers
             var weather_brush = new SolidColorBrush(weather_color);
             var _layergroups = RGBController.GetLiveLayerGroups();
             var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
+            var raidEffects = RGBController.GetEffectsSettings().effect_raideffects;
 
 
             var weatherService = FFXIVWeatherExtensions.GetWeatherService();
@@ -105,7 +109,7 @@ namespace Chromatics.Layers.DynamicLayers
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects  || layer.requestUpdate) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
                             SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette);
@@ -125,6 +129,11 @@ namespace Chromatics.Layers.DynamicLayers
                 model._reactiveWeatherEffects = reactiveWeatherEffects;
             }
 
+            if (model._raidEffects != raidEffects)
+            {
+                model._raidEffects = raidEffects;
+            }
+
             layergroup.Attach(surface);
             _init = true;
             layer.requestUpdate = false;
@@ -135,10 +144,54 @@ namespace Chromatics.Layers.DynamicLayers
         {
             var color = GetWeatherColor(weather, _colorPalette);
             var reactiveWeatherEffects = RGBController.GetEffectsSettings();
+            var effectSettings = RGBController.GetEffectsSettings();
 
             //Filter for zone specific special weather
-            switch(zone)
+            switch (zone)
             {
+                case "Everkeep":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepKeyHighlight.Color);
+                    }
+                    break;
+                case "Interphos":
+
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosKeyHighlight.Color);
+                    }
+                    break;
+                case "Scratching Ring":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1KeyHighlight.Color);
+                    }
+                    break;
+                case "Lovely Lovering":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2KeyHighlight.Color);
+                    }
+                    break;
+                case "Blasting Ring":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3KeyHighlight.Color);
+                    }
+                    break;
+                case "The Thundering":
+                    //Raid Zone Effect
+                    if (effectSettings.effect_raideffects)
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4KeyHighlight.Color);
+                    }
+                    break;
                 case "Mare Lamentorum":
                     if (reactiveWeatherEffects.effect_reactiveweather && (reactiveWeatherEffects.weather_marelametorum_animation || reactiveWeatherEffects.weather_marelametorum_umbralwind_animation))
                         color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
@@ -187,6 +240,7 @@ namespace Chromatics.Layers.DynamicLayers
         {
             public string _currentWeather { get; set; }
             public string _currentZone { get; set; }
+            public bool _raidEffects { get; set; }
             public bool _reactiveWeatherEffects { get; set; }
         }
 

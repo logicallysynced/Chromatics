@@ -251,7 +251,7 @@
             mt_effect_raideffects.Text = "Raid Zone Effects";
             mt_effect_raideffects.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             mt_effect_raideffects.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            mt_effect_raideffects.TileImage = global::Chromatics.Properties.Resources.sword;
+            mt_effect_raideffects.TileImage = global::Chromatics.Properties.Resources.fly;
             mt_effect_raideffects.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
             mt_effect_raideffects.UseCustomBackColor = true;
             mt_effect_raideffects.UseSelectable = true;
