@@ -116,10 +116,12 @@ namespace Chromatics.Layers
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 if (getCurrentPlayer.Entity == null) return;
 
+                DutyFinderBellExtension.CheckCache();
 
-                if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model.wasDisabled || layer.requestUpdate)
+
+                if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model._inInstance != DutyFinderBellExtension.InInstance() || model.wasDisabled || layer.requestUpdate)
                 {
-                    if (getCurrentPlayer.Entity.InCutscene)
+                    if (getCurrentPlayer.Entity.InCutscene && !DutyFinderBellExtension.InInstance())
                     {
                         if (runningEffects.Contains(layergroup))
                         {
@@ -152,6 +154,7 @@ namespace Chromatics.Layers
                     }
 
                     model._inCutscene = getCurrentPlayer.Entity.InCutscene;
+                    model._inInstance = DutyFinderBellExtension.InInstance();
                 }
                 
                 model.wasDisabled = false;
@@ -165,6 +168,7 @@ namespace Chromatics.Layers
         private class CutsceneAnimationEffectModel
         {   
             public bool _inCutscene { get; set; }
+            public bool _inInstance { get; set; }
             public bool wasDisabled { get; set; }
             public SolidColorBrush activeBrush { get; set;}
             public bool init { get; set; }

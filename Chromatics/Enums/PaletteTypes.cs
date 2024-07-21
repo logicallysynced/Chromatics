@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Chromatics.Enums
 {
@@ -35,9 +36,11 @@ namespace Chromatics.Enums
             [Display(Name = "Reactive Weather")]
             ReactiveWeather = 10,
             [Display(Name = "Job Classes")]
-            JobClasses = 11
+            JobClasses = 11,
+            [Display(Name = "Raid Effects")]
+            RaidEffects = 12
         }
 
-        public static int TypeCount = 11;
+        public static int TypeCount = 12;
     }
 }
