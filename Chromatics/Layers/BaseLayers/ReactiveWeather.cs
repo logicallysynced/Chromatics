@@ -248,17 +248,19 @@ namespace Chromatics.Layers
                     //Raid Zone Effect
                     if (effectSettings.effect_raideffects)
                     {
+                        
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepBase.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight3.Color) };
-                        var starfield = new FastStarfieldDecorator(layer, layer.Count() / 4, 20, 80, animationCol, surface, 2.0, false, baseCol);
+                        //var starfield = new FastStarfieldDecorator(layer, layer.Count() / 4, 20, 80, animationCol, surface, 2.0, false, baseCol);
+                        var starfield = new BPMFastStarfieldDecorator(layer, layer.Count() / 6, 198, 80, animationCol, surface, 2.0, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(starfield, layer, runningEffects);
-
                         return true;
                     }
                     break;
                 case "Interphos":
+                
                     //Raid Zone Effect
                     if (effectSettings.effect_raideffects)
                     {
@@ -303,7 +305,8 @@ namespace Chromatics.Layers
                             new GradientStop((float)0.80, animationCol2),
                             new GradientStop((float)0.95, animationCol3));
 
-                        var gradientMove = new MoveGradientDecorator(surface, 180, true);
+                        //var gradientMove = new MoveGradientDecorator(surface, 180, true);
+                        var gradientMove = new MoveBPMGradientDecorator(surface, 125 / 4, true);
 
                         SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
 
@@ -344,7 +347,7 @@ namespace Chromatics.Layers
                             new GradientStop((float)0.80, animationCol2),
                             new GradientStop((float)0.95, animationCol3));
 
-                        var gradientMove = new MoveBPMGradientDecorator(surface, 110 / 2, true);
+                        var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, 110 / 4, DiagonalDirection.TopLeftToBottomRight);
 
                         SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
 
@@ -353,7 +356,7 @@ namespace Chromatics.Layers
                         return true;
                     }
                     break;
-                case "Private Mansion - Mist":
+                case "The Thundering":
                     //Raid Zone Effect
                     if (effectSettings.effect_raideffects)
                     {

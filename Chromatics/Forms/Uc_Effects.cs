@@ -46,7 +46,7 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(mt_effect_titlescreen, @"Animation on devices when on title and character selection screen.");
             tt_mappings.SetToolTip(mt_effect_cutscenes, @"Animation on devices when cutscenes play.");
             tt_mappings.SetToolTip(mt_effect_vegasmode, @"Color cycle devices when in the Gold Saucer.");
-            tt_mappings.SetToolTip(mt_effect_raideffects, @"Animated raid zone effects instead of reactive weather.");
+            tt_mappings.SetToolTip(mt_effect_raideffects, @"Animated raid zone effects instead of reactive weather. Uses Reactive Weather layers.");
 
             //Load Effect Settings
             if (RGBController.LoadEffectsSettings())
