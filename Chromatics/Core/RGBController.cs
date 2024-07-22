@@ -1,5 +1,6 @@
 ﻿using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Forms;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -255,8 +256,11 @@ namespace Chromatics.Core
                 if (!_devices.ContainsKey(guid))
                 {
                     _devices.Add(guid, device);
+                    
                 }
-                
+
+                Uc_Mappings.OnDeviceAdded(EventArgs.Empty);
+
             }
             else if (e.Action == DevicesChangedEventArgs.DevicesChangedAction.Removed)
             {
@@ -272,8 +276,11 @@ namespace Chromatics.Core
                 {
                     _devices.Remove(guid);
                 }
+
+                Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
             }
 
+            
             surface.AlignDevices();
 
             /*
@@ -671,7 +678,7 @@ namespace Chromatics.Core
 
                             foreach (var led in device)
                             {
-                                if (!mapping.deviceLeds.Any(v => v.Value.Equals(led.Id)))
+                                if (!mapping.deviceLeds.Any(v => v.Equals(led.Id)))
                                 {
 
                                     layergroup.RemoveLed(led);

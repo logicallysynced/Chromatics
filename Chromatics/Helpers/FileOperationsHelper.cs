@@ -83,6 +83,9 @@ namespace Chromatics.Helpers
             }
         }
 
+
+
+
         public static bool CheckLayerMappingsExist()
         {
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;

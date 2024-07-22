@@ -2,6 +2,8 @@
 using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
+using HidSharp;
+using OpenRGB.NET;
 using RGB.NET.Core;
 using System;
 using System.Collections.Concurrent;
@@ -25,22 +27,18 @@ namespace Chromatics.Layers
         
         private static ConcurrentDictionary<int, Layer> _layers = new ConcurrentDictionary<int, Layer>();
 
-        public static int AddLayer(int index, LayerType rootLayerType, RGBDeviceType devicetype, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
+
+        public static int AddLayer(int index, LayerType rootLayerType, Guid deviceGuid, RGBDeviceType deviceType, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
         {
             _layerAutoID++;
-
             var id = _layerAutoID;
-
-            var layer = new Layer(AppSettings.currentMappingLayerVersion, id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
+            var layer = new Layer(AppSettings.currentMappingLayerVersion, id, index, rootLayerType, deviceGuid, deviceType, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
             _layers.GetOrAdd(id, layer);
             _version++;
-
-            #if DEBUG
-                Debug.WriteLine(@"New Layer: " + id + @". zindex: " + zindex + @". Type: " + rootLayerType + @". Device: " + devicetype + @". LayerType: " + layerTypeIndex);
-            #endif
-
             return id;
         }
+
+
 
         public static void UpdateLayer(Layer layer)
         {
@@ -94,6 +92,8 @@ namespace Chromatics.Layers
             {
                 _layers.Clear();
                 _layers = FileOperationsHelper.LoadLayerMappings();
+
+                Debug.WriteLine(_layers);
 
                 if (_layers == null)
                 {
@@ -207,6 +207,7 @@ namespace Chromatics.Layers
         public int layerID { get; set; }
         public int layerIndex { get; set; }
         public LayerType rootLayerType { get; set; }
+        public Guid deviceGuid { get; set; }
         public RGBDeviceType deviceType { get; set; }
         public bool Enabled { get; set; }
         public int zindex { get; set; }
@@ -216,13 +217,14 @@ namespace Chromatics.Layers
         public LayerModes layerModes { get; set; }
         public bool requestUpdate { get; set; }
 
-        public Layer(string _layerVersion, int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds, bool _allowBleed, LayerModes _mode)
+        public Layer(string _layerVersion, int _id, int _index, LayerType _rootLayerType, Guid _deviceGuid, RGBDeviceType _deviceType, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds, bool _allowBleed, LayerModes _mode)
         {
             layerVersion = _layerVersion;
             layerID = _id;
             layerIndex = _index;
             rootLayerType = _rootLayerType;
-            deviceType = _devicetype;
+            deviceGuid = _deviceGuid;
+            deviceType = _deviceType;
             layerTypeindex = _layerTypeIndex;
             zindex = _zindex;
             Enabled = _enabled;
@@ -232,4 +234,5 @@ namespace Chromatics.Layers
             layerModes = _mode;
         }
     }
+
 }
