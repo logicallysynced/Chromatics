@@ -37,8 +37,6 @@ namespace Chromatics.Forms
             //Assign a keycap per cell
             var settings = AppSettings.GetSettings();
 
-            _deviceType = RGB.NET.Core.RGBDeviceType.Keyboard;
-
             var keycaps = KeyLocalization.GetLocalizedKeys(settings.keyboardLayout);
             tlp_main.Controls.Clear();
             tlp_main.RowCount = 0;
