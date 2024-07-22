@@ -5,9 +5,11 @@ using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
 using Gma.System.MouseKeyHook;
+using HidSharp;
 using MetroFramework;
 using MetroFramework.Components;
 using MetroFramework.Controls;
+using OpenRGB.NET;
 using RGB.NET.Core;
 using System;
 using System.Collections.Concurrent;
@@ -24,6 +26,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using static Chromatics.Models.VirtualDevice;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
 
@@ -31,13 +34,17 @@ namespace Chromatics.Forms
 {
     public partial class Uc_Mappings : UserControl
     {
+        public static Uc_Mappings Instance { get; private set; }
+        public static event EventHandler DeviceAdded;
+        public static event EventHandler DeviceRemoved;
+
         public MetroTabControl TabManager { get; set; }
         private IKeyboardMouseEvents keyController;
 
         private List<Pn_LayerDisplay> _layers = new List<Pn_LayerDisplay>();
         private List<KeyButton> _currentSelectedKeys = new List<KeyButton>();
-        private Dictionary<int, LedId> currentKeySelection = new Dictionary<int,LedId>();
-        private Dictionary<RGBDeviceType, VirtualDevice> _virtualDevices;
+        private Dictionary<Guid, VirtualDevice> _deviceVirtualDeviceMap;
+        private Dictionary<int, LedId> currentKeySelection = new Dictionary<int, LedId>();
         private int _layerPad = 5;
         private MetroToolTip tt_mappings;
         private LayerType selectedAddType;
@@ -47,110 +54,34 @@ namespace Chromatics.Forms
         private bool init;
         private bool IsAddingLayer;
 
+        public static void OnDeviceAdded(EventArgs e)
+        {
+            DeviceAdded?.Invoke(null, e);
+        }
+
+        public static void OnDeviceRemoved(EventArgs e)
+        {
+            DeviceRemoved?.Invoke(null, e);
+        }
+
         public Uc_Mappings()
         {
             InitializeComponent();
+                        
+            Instance = this;
             tlp_base.Size = this.Size;
+            _deviceVirtualDeviceMap = new Dictionary<Guid, VirtualDevice>();
 
             this.flp_layers.DragEnter += new DragEventHandler(flp_layers_DragEnter);
             this.flp_layers.DragDrop += new DragEventHandler(flp_layers_DragDrop);
             GameController.jobChanged += gameJobChanged;
-                        
-            _virtualDevices = new Dictionary<RGBDeviceType, VirtualDevice>()
-            {
-                { RGBDeviceType.Keyboard, new Uc_VirtualKeyboard() },
-                { RGBDeviceType.Mouse, new Uc_VirtualMouse() },
-                { RGBDeviceType.Headset, new Uc_VirtualHeadset() },
-                { RGBDeviceType.Mousepad, new Uc_VirtualMousePad() },
-                { RGBDeviceType.LedStripe, new Uc_VirtualLedStrip() },
-                { RGBDeviceType.LedMatrix, new Uc_VirtualLedMatrix() },
-                { RGBDeviceType.Mainboard, new Uc_VirtualMainboard() },
-                { RGBDeviceType.GraphicsCard, new Uc_VirtualGraphicsCard() },
-                { RGBDeviceType.DRAM, new Uc_VirtualDRAM() },
-                { RGBDeviceType.HeadsetStand, new Uc_VirtualHeadsetStand() },
-                { RGBDeviceType.Keypad, new Uc_VirtualKeypad() },
-                { RGBDeviceType.Fan, new Uc_VirtualFan() },
-                { RGBDeviceType.Speaker, new Uc_VirtualSpeaker() },
-                { RGBDeviceType.Cooler, new Uc_VirtualCooler() },
-                { RGBDeviceType.LedController, new Uc_VirtualLedController() },
-                { RGBDeviceType.Unknown, new Uc_VirtualOtherController() }
-            };
 
-            // Add each virtual device control to the form
-            foreach (var virtualDevice in _virtualDevices.Values)
-            {
-                virtualDevice.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-                virtualDevice.Dock = DockStyle.Top;
-                virtualDevice.MinimumSize = new Size(1200, 300);
-                virtualDevice.AutoSize = false;
-                tlp_frame.Controls.Add(virtualDevice, 0, 0);
+            // Register event handlers for device changes
+            DeviceAdded += HandleDeviceAdded;
+            DeviceRemoved += HandleDeviceRemoved;
 
-                virtualDevice._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
-            }
-
-            // Hide all virtual device controls initially
-            HideAllVirtualDevices();
-        }
-
-        void flp_layers_DragDrop(object sender, DragEventArgs e)
-        {
-            var data = (Pn_LayerDisplay)e.Data.GetData(typeof(Pn_LayerDisplay));
-            var _destination = (FlowLayoutPanel)sender;
-            var _source = (FlowLayoutPanel)data.Parent;
-
-            if (data.LayerType == LayerType.DynamicLayer)
-            {
-                if (_source == _destination)
-                {
-                    Point p = _destination.PointToClient(new Point(e.X, e.Y));
-                    var item = _destination.GetChildAtPoint(p);
-                    int index = _destination.Controls.GetChildIndex(item, false);
-
-                    if (index < 0)
-                    {
-                        index = _layers.Count - 2;
-                    }
-                    else if (index >= 0 && index <= 1)
-                    {
-                        index = 1;
-                    }
-                    else if (index >= _layers.Count-1)
-                    {
-                        index = _layers.Count - 2;
-                    }
-
-                    
-
-                    // Add control to panel
-                    _destination.Controls.Add(data);
-                    data.Size = new Size(_destination.Width - _layerPad, 50);
-                    data.LeftText = (flp_layers.Controls.Count - index).ToString();
-
-                    // Reorder
-
-                    _destination.Controls.SetChildIndex(data, index);
-
-                    foreach (Pn_LayerDisplay layer in flp_layers.Controls)
-                    {
-                        var _layer = MappingLayers.GetLayer(layer.ID);
-                        var i = flp_layers.Controls.Count - flp_layers.Controls.GetChildIndex(layer);
-
-                        _layer.zindex = i;
-                        MappingLayers.UpdateLayer(_layer);
-                        layer.LeftText = i.ToString();
-
-
-                        layer.Invalidate();
-                    }
-
-                    SaveLayers();                    
-                }
-            }
-        }
-
-        void flp_layers_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Move;
+            // Initialize the form
+            this.Load += new EventHandler(OnLoad);
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -168,24 +99,6 @@ namespace Chromatics.Forms
             flp_layers.HorizontalScroll.Maximum = 0;
             flp_layers.VerticalScroll.Visible = false;
             flp_layers.AutoScroll = true;
-
-            //Enumerate DeviceTypes into Device Combobox
-            foreach (Enum lt in Enum.GetValues(typeof(RGBDeviceType)))
-            {
-                if (!_virtualDevices.ContainsKey((RGBDeviceType)lt)) continue;
-
-                if ((RGBDeviceType)lt == RGBDeviceType.Unknown)
-                {
-                    var item = new ComboboxItem { Value = lt, Text = @"Other" };
-                    cb_deviceselect.Items.Add(item);
-                    continue;
-                }
-
-                cb_deviceselect.Items.Add(lt);
-            }
-
-            cb_deviceselect.SelectedIndex = 0;
-            selectedDevice = RGBDeviceType.Keyboard;
 
             //Enumerate LayerTypes into Add Layer Combobox
             foreach (Enum lt in Enum.GetValues(typeof(LayerType)))
@@ -213,24 +126,28 @@ namespace Chromatics.Forms
 
             cb_changemode.SelectedIndex = 0;
 
-
             //Check for existing mappings and load, or else create defaults
-            if (MappingLayers.LoadMappings())
+            if (!init)
             {
-                var layercount = MappingLayers.CountLayers();
-                Logger.WriteConsole(LoggerTypes.System, $"Loaded {layercount} layers from layers.chromatics3");
+                if (MappingLayers.LoadMappings())
+                {
+                    var layercount = MappingLayers.CountLayers();
+                    Logger.WriteConsole(LoggerTypes.System, $"Loaded {layercount} layers from layers.chromatics3");
 
-                ChangeDeviceType();
-                
-            }
-            else
-            {
-                Logger.WriteConsole(LoggerTypes.System, @"No layer file found. Creating default layers..");
-                SaveLayers(true);
-            }
+                    ChangeDeviceType();
 
-            CreateDefaults();
-                        
+                }
+                else
+                {
+                    Logger.WriteConsole(LoggerTypes.System, @"No layer file found. Creating default layers..");
+                    //SaveLayers(true);
+                }
+
+                InitializeAndVisualize();
+                VisualiseLayers();
+            }
+            
+
             //Add tooltips
             tt_mappings.SetToolTip(this.cb_addlayer, @"Add New Layer of selected type");
             tt_mappings.SetToolTip(this.cb_deviceselect, @"Change to another device");
@@ -244,9 +161,207 @@ namespace Chromatics.Forms
             //Handle Events
             //this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
             this.TabManager.Selected += new TabControlEventHandler(mT_TabManager_Selected);
+                       
 
             //Set init to true
             init = true;
+        }
+
+        private void HandleDeviceAdded(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new EventHandler(HandleDeviceAdded), sender, e);
+                return;
+            }
+
+            EnumerateAndAddDevices();
+        }
+
+        private void HandleDeviceRemoved(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new EventHandler(HandleDeviceRemoved), sender, e);
+                return;
+            }
+
+            EnumerateAndRemoveDevices();
+        }
+
+        private void EnumerateAndAddDevices()
+        {
+            var connectedDevices = RGBController.GetLiveDevices();
+
+            if (connectedDevices != null)
+            {
+                foreach (var device in connectedDevices)
+                {
+                    if (_deviceVirtualDeviceMap.ContainsKey(device.Key))
+                    {
+                        // Device already exists, skip adding
+                        continue;
+                    }
+
+                    var item = new ComboboxItem { Value = device.Key, Text = device.Value.DeviceInfo.DeviceName };
+                    cb_deviceselect.Items.Add(item);
+
+                    Debug.WriteLine($"Added device {device.Value.DeviceInfo.DeviceName} with GUID {device.Key}");
+
+                    VirtualDevice virtualDevice;
+
+                    if (device.Value.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                    {
+                        virtualDevice = new Uc_VirtualKeyboard();
+                    }
+                    else
+                    {
+                        virtualDevice = new Uc_VirtualOtherController();
+                    }
+
+                    virtualDevice.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+                    virtualDevice.Dock = DockStyle.Top;
+                    virtualDevice.MinimumSize = new Size(1200, 300);
+                    virtualDevice.AutoSize = false;
+                    tlp_frame.Controls.Add(virtualDevice, 0, 0);
+
+                    virtualDevice._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+
+                    _deviceVirtualDeviceMap[device.Key] = virtualDevice;
+
+                    // Manually trigger the OnLoad event
+                    virtualDevice.InitializeDevice();
+                }
+
+                // Remove devices that are no longer connected
+                var disconnectedDeviceKeys = _deviceVirtualDeviceMap.Keys.Except(connectedDevices.Keys).ToList();
+                foreach (var key in disconnectedDeviceKeys)
+                {
+                    if (_deviceVirtualDeviceMap.TryGetValue(key, out var virtualDevice))
+                    {
+                        virtualDevice._OnKeycapPressed -= OnKeyCapPressed;
+                        tlp_frame.Controls.Remove(virtualDevice);
+                        virtualDevice.Dispose();
+                        _deviceVirtualDeviceMap.Remove(key);
+                    }
+                }
+
+                // Select the first item if no item is selected
+                if (cb_deviceselect.Items.Count > 0 && cb_deviceselect.SelectedIndex == -1)
+                {
+                    cb_deviceselect.SelectedIndex = 0;
+                }
+
+                // Ensure all devices and layers are visualized after enumeration
+                VisualiseLayers();
+            }
+
+            CreateDefaults();
+        }
+
+        private void EnumerateAndRemoveDevices()
+        {
+            var connectedDevices = RGBController.GetLiveDevices();
+            var currentSelectedDevice = cb_deviceselect.SelectedItem as ComboboxItem;
+
+            if (connectedDevices != null)
+            {
+                // Remove devices that are no longer connected
+                var disconnectedDeviceKeys = _deviceVirtualDeviceMap.Keys.Except(connectedDevices.Keys).ToList();
+                foreach (var key in disconnectedDeviceKeys)
+                {
+                    if (_deviceVirtualDeviceMap.TryGetValue(key, out var virtualDevice))
+                    {
+                        virtualDevice._OnKeycapPressed -= OnKeyCapPressed;
+                        tlp_frame.Controls.Remove(virtualDevice);
+                        virtualDevice.Dispose();
+                        _deviceVirtualDeviceMap.Remove(key);
+                    }
+
+                    // Remove the device from the ComboBox
+                    var itemToRemove = cb_deviceselect.Items.OfType<ComboboxItem>().FirstOrDefault(item => item.Value.Equals(key));
+                    if (itemToRemove != null)
+                    {
+                        cb_deviceselect.Items.Remove(itemToRemove);
+                    }
+
+                    // Change selected device if the current selected device is being removed
+                    if (currentSelectedDevice != null && currentSelectedDevice.Value.Equals(key))
+                    {
+                        cb_deviceselect.SelectedIndex = cb_deviceselect.Items.Count > 0 ? 0 : -1;
+                        ChangeDeviceType();
+                    }
+                }
+            }
+        }
+
+
+
+        public void flp_layers_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        public static ComboboxItem GetActiveDevice()
+        {
+
+            return Instance.cb_deviceselect.SelectedItem as ComboboxItem;
+        }
+
+        public void flp_layers_DragDrop(object sender, DragEventArgs e)
+        {
+            var data = (Pn_LayerDisplay)e.Data.GetData(typeof(Pn_LayerDisplay));
+            var _destination = (FlowLayoutPanel)sender;
+            var _source = (FlowLayoutPanel)data.Parent;
+
+            if (data.LayerType == LayerType.DynamicLayer)
+            {
+                if (_source == _destination)
+                {
+                    Point p = _destination.PointToClient(new Point(e.X, e.Y));
+                    var item = _destination.GetChildAtPoint(p);
+                    int index = _destination.Controls.GetChildIndex(item, false);
+
+                    if (index < 0)
+                    {
+                        index = _layers.Count - 2;
+                    }
+                    else if (index >= 0 && index <= 1)
+                    {
+                        index = 1;
+                    }
+                    else if (index >= _layers.Count - 1)
+                    {
+                        index = _layers.Count - 2;
+                    }
+
+
+
+                    // Add control to panel
+                    _destination.Controls.Add(data);
+                    data.Size = new Size(_destination.Width - _layerPad, 50);
+                    data.LeftText = (flp_layers.Controls.Count - index).ToString();
+
+                    // Reorder
+
+                    _destination.Controls.SetChildIndex(data, index);
+
+                    foreach (Pn_LayerDisplay layer in flp_layers.Controls)
+                    {
+                        var _layer = MappingLayers.GetLayer(layer.ID);
+                        var i = flp_layers.Controls.Count - flp_layers.Controls.GetChildIndex(layer);
+
+                        _layer.zindex = i;
+                        MappingLayers.UpdateLayer(_layer);
+                        layer.LeftText = i.ToString();
+
+
+                        layer.Invalidate();
+                    }
+
+                    SaveLayers();
+                }
+            }
         }
 
         private void SaveLayers(bool bypass = false)
@@ -257,7 +372,7 @@ namespace Chromatics.Forms
             }
         }
 
-        private int AddLayer(LayerType layertype, RGBDeviceType devicetype, int id = 0, int index = 0, bool initialize = false, bool bypass = false, bool enabled = false, Dictionary<int, LedId> leds = null, int layerTypeindex = 0, bool allowBleed = false, LayerModes mode = LayerModes.Interpolate)
+        private int AddLayer(LayerType layertype, Guid deviceId, RGBDeviceType deviceType, int id = 0, int index = 0, bool initialize = false, bool bypass = false, bool enabled = false, Dictionary<int, LedId> leds = null, int layerTypeindex = 0, bool allowBleed = false, LayerModes mode = LayerModes.Interpolate)
         {
             IsAddingLayer = true;
             var s = new Size(flp_layers.Width - _layerPad, 50);
@@ -267,11 +382,11 @@ namespace Chromatics.Forms
                 Padding = new Padding(_layerPad, _layerPad, _layerPad, _layerPad),
                 LeftText = (_layers.Count + 1).ToString(),
                 LayerType = layertype,
+                DeviceId = deviceId, // Added DeviceId to the layer display
                 Size = s,
                 Anchor = AnchorStyles.Left | AnchorStyles.Right,
                 Dock = DockStyle.Top
             };
-                       
 
             tt_mappings.SetToolTip(pgb.chk_enabled, "Enable/Disable Layer");
             tt_mappings.SetToolTip(pgb.cb_selector, "Select the type of Layer");
@@ -285,23 +400,6 @@ namespace Chromatics.Forms
             pgb.btn_edit.Click += new EventHandler(OnEditButtonPressed);
             pgb.btn_delete.Click += new EventHandler(OnDeleteButtonPressed);
             pgb.btn_copy.Click += new EventHandler(OnCopyButtonPressed);
-
-            //Remove Keybinds from non-keyboard device types
-            /*
-            if (selectedDevice != RGBDeviceType.Keyboard)
-            {
-                for (int i = pgb.cb_selector.Items.Count - 1; i >= 0; i--)
-                {
-                    var cb = pgb.cb_selector.Items[i] as ComboboxItem;
-
-                    if (cb != null && cb.Value.Equals(DynamicLayerType.Keybinds))
-                    {
-                        pgb.cb_selector.Items.RemoveAt(i);
-                    }
-                }
-            }
-            */
-                       
 
             if (initialize)
             {
@@ -317,7 +415,9 @@ namespace Chromatics.Forms
                     leds = new Dictionary<int, LedId>();
                 }
 
-                pgb.ID = MappingLayers.AddLayer(MappingLayers.CountLayers(), layertype, devicetype, layerTypeindex, _index, enabled, leds, allowBleed, mode);
+                pgb.ID = MappingLayers.AddLayer(MappingLayers.CountLayers(), layertype, deviceId, deviceType, layerTypeindex, _index, enabled, leds, allowBleed, mode);
+                Debug.WriteLine($"Added Layer: {pgb.ID}. Index: {_index}. Enabled: {enabled}. AllowBleed: {allowBleed}. LayerTypeindex: {layerTypeindex}. Mode: {mode}. LayerType: {layertype}. Leds: {leds.Count}");
+
                 pgb.LeftText = _index.ToString();
             }
             else
@@ -342,7 +442,7 @@ namespace Chromatics.Forms
             }
 
             _layers.Add(pgb);
-                        
+
             flp_layers.Controls.Add(pgb);
 
             IsAddingLayer = false;
@@ -352,61 +452,97 @@ namespace Chromatics.Forms
 
         private void CreateDefaults()
         {
-            //Create Default Layers
+            // Create Default Layers
+
+            var connectedDevices = RGBController.GetLiveDevices();
             
-            
-            foreach (Enum lt in Enum.GetValues(typeof(RGBDeviceType)))
+
+            if (connectedDevices != null)
             {
-                if (MappingLayers.GetLayers().Values.Any(layer => layer.deviceType == (RGBDeviceType)lt)) continue;
 
-                var i = 1;
-
-                if ((RGBDeviceType)lt == RGBDeviceType.None || (RGBDeviceType)lt == RGBDeviceType.All)
-                    continue;
-
-                if ((RGBDeviceType)lt == RGBDeviceType.Unknown)
+                foreach (var devicePair in connectedDevices)
                 {
-                    Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for Other devices.");
-                }
-                else
-                {
-                    Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for {(RGBDeviceType)lt} devices.");
-                }
-                
-                AddLayer(LayerType.BaseLayer, (RGBDeviceType)lt, 0, i, true, false, true, LedKeyHelper.GetAllKeysForDevice((RGBDeviceType)lt));
-                i++;
+                    var device = devicePair.Value;
+                    var deviceGuid = devicePair.Key;
+                    var deviceType = device.DeviceInfo.DeviceType;
 
-                if ((RGBDeviceType)lt == RGBDeviceType.Keyboard)
-                {
-                    AddLayer(LayerType.DynamicLayer, (RGBDeviceType)lt, 0, i, true, false, true);
+                    // Skip if there are already layers for this device
+                    if (MappingLayers.GetLayers().Values.Any(layer => layer.deviceGuid == deviceGuid)) continue;
+
+                    var i = 1;
+
+                    // Skip certain device types
+                    if (deviceType == RGBDeviceType.None || deviceType == RGBDeviceType.All)
+                        continue;
+
+                    Debug.WriteLine($"Adding base layer for device: {deviceGuid}. Keys: {device.Count()}");
+
+                    var base_i = 0;
+                    var baseKeys = new Dictionary<int, LedId>();
+
+                    foreach (var led in device)
+                    {
+                        if (!baseKeys.ContainsKey(base_i))
+                        {
+                            baseKeys.Add(base_i, led.Id);
+                        }
+
+                        base_i++;
+                    }
+
+                    // Add base layer
+                    AddLayer(LayerType.BaseLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys);
                     i++;
+
+                    // Add dynamic layer for keyboards
+                    if (deviceType == RGBDeviceType.Keyboard)
+                    {
+                        AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, i, true, false, true);
+                        i++;
+                    }
+
+                    // Add effect layer
+                    AddLayer(LayerType.EffectLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys);
+
+                    Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for device {deviceType}. Key Count: {baseKeys.Count}");
                 }
 
-                AddLayer(LayerType.EffectLayer, (RGBDeviceType)lt, 0, i, true, false, true, LedKeyHelper.GetAllKeysForDevice((RGBDeviceType)lt));
+                // Change device type and save layers
+                
+                ChangeDeviceType();
+
             }
 
-            ChangeDeviceType();
             SaveLayers();
         }
 
-        
-
         private void ChangeDeviceType()
         {
-            if (_virtualDevices.Count <= 0 || !_virtualDevices.ContainsKey(selectedDevice))
+            var selectedDeviceItem = cb_deviceselect.SelectedItem as ComboboxItem;
+            if (selectedDeviceItem == null || !(selectedDeviceItem.Value is Guid selectedDeviceId))
+            {
                 return;
+            }
+
+            var _selectedDevice = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
+            if (_selectedDevice == null)
+            {
+                return;
+            }
+
+            var selectedDeviceType = _selectedDevice.DeviceInfo.DeviceType;
 
             // Hide all virtual device controls and show the selected one
             HideAllVirtualDevices();
-            _virtualDevices[selectedDevice].Visible = true;
+            ShowVirtualDevice(selectedDeviceId);
 
             // Suspend layout while making multiple changes
             tlp_frame.SuspendLayout();
             flp_layers.SuspendLayout();
 
-            #if DEBUG
-                Debug.WriteLine($"Changing device type to {selectedDevice}.");
-            #endif
+#if DEBUG
+            Debug.WriteLine($"Changing device type to {selectedDevice}. Key Count: {_selectedDevice.Count()}");
+#endif
 
             // Disable Editing and remove layers for existing device types
             btn_clearselection.Enabled = false;
@@ -418,7 +554,7 @@ namespace Chromatics.Forms
             currentlySelected = null;
 
             var item = new ComboboxItem { Value = LayerModes.None, Text = EnumExtensions.GetAttribute<DisplayAttribute>(LayerModes.None).Name };
-                        
+
             cb_changemode.Items.Add(item);
             cb_changemode.SelectedItem = item;
 
@@ -434,7 +570,7 @@ namespace Chromatics.Forms
                 }
 
                 flp_layers.Controls.Remove(layer);
-                                
+
                 // Cleanup
                 layer.GotFocus -= new EventHandler(OnLayerPressed);
                 layer.cb_selector.SelectedIndexChanged -= new EventHandler(OnSelectedIndexChanged);
@@ -455,48 +591,113 @@ namespace Chromatics.Forms
             _layers.Clear();
 
             // Add layers for new device types
-            var _NewLayers = MappingLayers.GetLayers().Where(r => r.Value.deviceType.Equals(selectedDevice));
+            var _NewLayers = MappingLayers.GetLayers().Where(r => r.Value.deviceGuid.Equals(selectedDeviceId));
 
             foreach (var layers in _NewLayers.OrderByDescending(r => r.Value.zindex))
             {
-                AddLayer(layers.Value.rootLayerType, selectedDevice, layers.Key, layers.Value.zindex, false);
-                                
+                AddLayer(layers.Value.rootLayerType, selectedDeviceId, selectedDeviceType, layers.Key, layers.Value.zindex, false);
             }
-           
+
             ResizeLayerHelpText(rtb_layerhelp);
             // Resume layout
             tlp_frame.ResumeLayout();
             flp_layers.ResumeLayout();
-    
+
             VisualiseLayers();
         }
 
         private void HideAllVirtualDevices()
         {
-            foreach (var virtualDevice in _virtualDevices.Values)
+            foreach (var control in tlp_frame.Controls.OfType<VirtualDevice>())
             {
-                virtualDevice.Visible = false;
+                control.Visible = false;
             }
-        }       
+        }
 
-        private void VisualiseLayers(bool requestUpdate = true)
+        private void ShowVirtualDevice(Guid deviceId)
         {
-            if (_virtualDevices.Count <= 0) return;
+            if (_deviceVirtualDeviceMap.TryGetValue(deviceId, out var existingVirtualDevice))
+            {
+                // Device already exists, just ensure it is visible
+                existingVirtualDevice.Visible = true;
+                InitializeAndVisualize();
+                return;
+            }
 
-            var layers = MappingLayers.GetLayers().Where(x => x.Value.deviceType == selectedDevice).OrderBy(x => x.Value.zindex);
-            
+            var selectedDevice = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == deviceId).Value;
+
+            if (selectedDevice != null)
+            {
+                VirtualDevice virtualDevice;
+                if (selectedDevice.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                {
+                    virtualDevice = new Uc_VirtualKeyboard();
+                }
+                else
+                {
+                    virtualDevice = new Uc_VirtualOtherController();
+                }
+
+                virtualDevice.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+                virtualDevice.Dock = DockStyle.Top;
+                virtualDevice.MinimumSize = new Size(1200, 300);
+                virtualDevice.AutoSize = false;
+                tlp_frame.Controls.Add(virtualDevice, 0, 0);
+
+                virtualDevice._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+                virtualDevice.Visible = true;
+
+                _deviceVirtualDeviceMap[deviceId] = virtualDevice;
+
+                InitializeAndVisualize();
+            }
+        }
+
+
+
+        private void InitializeAndVisualize()
+        {
+
+            // Call this method after controls are loaded
+            foreach (Control ctrl in tlp_frame.Controls)
+            {
+                if (ctrl is VirtualDevice vd)
+                {
+                    vd.Load += (s, e) =>
+                    {
+                        if (vd.init)
+                        {
+                            VisualiseLayers();
+                        }
+                    };
+                }
+            }
+        }
+
+        private void VisualiseLayers()
+        {
+            var selectedDeviceItem = cb_deviceselect.SelectedItem as ComboboxItem;
+            if (selectedDeviceItem == null || selectedDeviceItem.Value is not Guid selectedDeviceId)
+            {
+                return;
+            }
+                        
+
+            var layers = MappingLayers.GetLayers().Where(x => x.Value.deviceGuid == selectedDeviceId).OrderBy(x => x.Value.zindex);
+
             foreach (var layer in layers)
             {
-                var allKeyButtons = _virtualDevices.Values.SelectMany(x => x._keybuttons).ToList();
-
-                foreach (var virtualDevice in _virtualDevices.Values)
+                foreach (var virtualDevice in tlp_frame.Controls.OfType<VirtualDevice>())
                 {
-                    virtualDevice.VisualiseLayers(layers, allKeyButtons);
+                    if (layer.Value.deviceGuid == selectedDeviceId)
+                    {
+                        var allKeyButtons = virtualDevice._keybuttons.ToList();
+                        virtualDevice.VisualiseLayers(layers, allKeyButtons);
+                    }
                 }
-                                    
             }
-
         }
+
 
         private void RevertButtons()
         {
@@ -507,7 +708,7 @@ namespace Chromatics.Forms
                 button.RemoveCircle();
             }
 
-            VisualiseLayers(false);
+            VisualiseLayers();
 
             currentKeySelection.Clear();
             _currentSelectedKeys.Clear();
@@ -516,14 +717,13 @@ namespace Chromatics.Forms
         private void OnResize(object sender, EventArgs e)
         {
             this.SuspendLayout();
-            foreach(var layer in _layers)
+            foreach (var layer in _layers)
             {
                 layer.Size = new Size(flp_layers.Width - _layerPad, 50);
                 layer.Update();
             }
 
             this.ResumeLayout(true);
-            
         }
 
         private void mT_TabManager_Selected(object sender, TabControlEventArgs e)
@@ -533,26 +733,29 @@ namespace Chromatics.Forms
             var current = (sender as TabControl).SelectedTab.Name;
 
             keyController = KeyController.GetKeyContoller();
-            if (current == "tP_mappings")
+            if (current == "tP_mappings") // Ensure this matches the name of your mappings tab
             {
-                //Key controllers hook
+                // Key controllers hook
                 if (keyController != null)
                 {
                     keyController.KeyDown += Kh_KeyDown;
                     keyController.KeyUp += Kh_KeyUp;
                 }
+
+                //VisualiseLayers();
+
             }
             else
             {
-                //Key controllers unhook
+                // Key controllers unhook
                 if (keyController != null)
                 {
                     keyController.KeyDown -= Kh_KeyDown;
                     keyController.KeyUp -= Kh_KeyUp;
                 }
-
             }
         }
+
 
         private void OnSelectedIndexChanged(object sender, EventArgs e)
         {
@@ -567,7 +770,7 @@ namespace Chromatics.Forms
             var selectedindex = obj.SelectedIndex;
 
             var layer = MappingLayers.GetLayer(id);
-            
+
             ResetLayerText(layer);
 
             layer.layerTypeindex = selectedindex;
@@ -575,7 +778,7 @@ namespace Chromatics.Forms
 
             RGBController.RemoveLayerGroup(layer.layerID);
             MappingLayers.UpdateLayer(layer);
-            
+
             SaveLayers();
         }
 
@@ -594,7 +797,7 @@ namespace Chromatics.Forms
             layer.requestUpdate = true;
             MappingLayers.UpdateLayer(layer);
             SaveLayers();
-            VisualiseLayers(false);
+            VisualiseLayers();
         }
 
         private void OnLayerPressed(object sender, EventArgs e)
@@ -604,34 +807,50 @@ namespace Chromatics.Forms
             if (currentlyEditing != null) return;
 
             var obj = (Pn_LayerDisplay)sender;
-            
-            if (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice))
+
+            var selectedDeviceItem = cb_deviceselect.SelectedItem as ComboboxItem;
+            if (selectedDeviceItem == null || selectedDeviceItem.Value is not Guid selectedDeviceId)
+            {
+                return;
+            }
+
+            var selectedDevice = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
+
+            if (selectedDevice != null)
             {
                 if (currentlySelected != null)
                 {
                     currentlySelected.selected = false;
                     currentlySelected = null;
 
-                    foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
+                    var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                    if (virtualDevice != null)
                     {
-                        if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
+                        foreach (var key in virtualDevice._keybuttons)
                         {
-                            key.BorderCol = System.Drawing.Color.Black;
-                            key.Invalidate();
+                            if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
+                            {
+                                key.BorderCol = System.Drawing.Color.Black;
+                                key.Invalidate();
+                            }
                         }
                     }
-                }                               
+                }
 
                 var layer = MappingLayers.GetLayer(obj.ID);
 
-                foreach (var selection in layer.deviceLeds)
+                var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                if (virtualDeviceToShow != null)
                 {
-                    foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
+                    foreach (var selection in layer.deviceLeds)
                     {
-                        if (key.KeyType == selection.Value && !key.IsEditing)
+                        foreach (var key in virtualDeviceToShow._keybuttons)
                         {
-                            key.BorderCol = System.Drawing.Color.SandyBrown; //(System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(obj.LayerType).Value;
-                            key.Invalidate();
+                            if (key.KeyType == selection.Value && !key.IsEditing)
+                            {
+                                key.BorderCol = System.Drawing.Color.SandyBrown;
+                                key.Invalidate();
+                            }
                         }
                     }
                 }
@@ -639,7 +858,6 @@ namespace Chromatics.Forms
                 if (layer.allowBleed)
                 {
                     btn_togglebleed.Text = @"Bleed Enabled";
-                    
                 }
                 else
                 {
@@ -650,7 +868,7 @@ namespace Chromatics.Forms
 
                 ResetLayerText(layer);
                 ResizeLayerHelpText(rtb_layerhelp);
-                
+
                 obj.selected = true;
                 currentlySelected = obj;
                 obj.Invalidate();
@@ -663,7 +881,7 @@ namespace Chromatics.Forms
 
             if (rtb_layerhelper.InvokeRequired)
             {
-                rtb_layerhelper.Invoke((System.Windows.Forms.MethodInvoker) delegate
+                rtb_layerhelper.Invoke((System.Windows.Forms.MethodInvoker)delegate
                 {
                     if (layer.rootLayerType == LayerType.DynamicLayer)
                     {
@@ -712,9 +930,7 @@ namespace Chromatics.Forms
                     rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
                 }
             }
-            
         }
-                
 
         private void OnEditButtonPressed(object sender, EventArgs e)
         {
@@ -724,7 +940,7 @@ namespace Chromatics.Forms
             var obj = (MetroButton)sender;
             var parent = (Pn_LayerDisplay)obj.Parent;
 
-            foreach(var layers in _layers)
+            foreach (var layers in _layers)
             {
                 if (layers == parent) continue;
 
@@ -759,140 +975,154 @@ namespace Chromatics.Forms
                 ms.requestUpdate = true;
                 MappingLayers.UpdateLayer(ms);
 
-                #if DEBUG
-                    Debug.WriteLine($"Saved {ms.deviceLeds.Count} leds for layer {ms.layerID}");
-                #endif
+#if DEBUG
+                Debug.WriteLine($"Saved {ms.deviceLeds.Count} leds for layer {ms.layerID}");
+#endif
 
                 SaveLayers();
                 RevertButtons();
-                                
             }
             else
             {
                 //Load Layer for editing
                 RevertButtons();
 
-                if (currentlySelected != null && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
+                var selectedDeviceItem = cb_deviceselect.SelectedItem as ComboboxItem;
+                if (selectedDeviceItem == null || selectedDeviceItem.Value is not Guid selectedDeviceId)
                 {
-                    currentlySelected.selected = false;
-                    currentlySelected = null;
+                    return;
+                }
 
-                    foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
+                var selectedDevice = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
+
+                if (selectedDevice != null)
+                {
+                    if (currentlySelected != null)
                     {
-                        if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
+                        currentlySelected.selected = false;
+                        currentlySelected = null;
+
+                        var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                        if (virtualDevice != null)
                         {
-                            key.BorderCol = System.Drawing.Color.Black;
-                            key.Invalidate();
-                        }
-                    }
-                }
-
-                btn_clearselection.Enabled = true;
-                btn_reverseselection.Enabled = true;
-                btn_undoselection.Enabled = true;
-                btn_togglebleed.Enabled = true;
-                cb_changemode.Enabled = true;
-                parent.editing = true;
-                currentlyEditing = parent;
-
-                currentKeySelection.Clear();
-                _currentSelectedKeys.Clear();
-
-                var ml = MappingLayers.GetLayer(parent.ID);
-                var _selection = new Dictionary<int, LedId>();
-
-                if (ml.allowBleed)
-                {
-                    btn_togglebleed.Text = @"Bleed Enabled";
-                    btn_togglebleed.BackColor = System.Drawing.Color.Lime;
-                }
-                else
-                {
-                    btn_togglebleed.Text = @"Bleed Disabled";
-                    btn_togglebleed.BackColor = System.Drawing.Color.Red;
-                }
-                
-                ChangeLayerMode(ml);
-
-
-                if (ml.rootLayerType == LayerType.DynamicLayer)
-                {
-                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
-                }
-                else if (ml.rootLayerType == LayerType.BaseLayer)
-                {
-                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
-                }
-                else if (ml.rootLayerType == LayerType.EffectLayer)
-                {
-                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
-                }
-
-                foreach (var led in ml.deviceLeds)
-                {
-                    _selection.Add(led.Key, led.Value);
-                }
-
-                #if DEBUG
-                    Debug.WriteLine($"Loaded {_selection.Count} leds for layer {ml.layerID}");
-                #endif
-
-                if (_selection.Count > 0 && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
-                {
-                    var i = 1;
-
-                    if (_selection.First().Key == 1)
-                    {
-                        foreach (var selection in _selection)
-                        {
-                            foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
+                            foreach (var key in virtualDevice._keybuttons)
                             {
-                                if (key.KeyType == selection.Value)
+                                if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
                                 {
-                                    key.RemoveCircle();
-
-                                    //Add Key to holding dictionary and light button
-                                    key.BackColor = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(currentlyEditing.LayerType).Value;
-                                    key.BorderCol = System.Drawing.Color.Red;
-                                    key.AddCircle((i).ToString());
-
-                                    _currentSelectedKeys.Add(key);
+                                    key.BorderCol = System.Drawing.Color.Black;
+                                    key.Invalidate();
                                 }
                             }
-
-                            i++;
                         }
+                    }
+
+                    btn_clearselection.Enabled = true;
+                    btn_reverseselection.Enabled = true;
+                    btn_undoselection.Enabled = true;
+                    btn_togglebleed.Enabled = true;
+                    cb_changemode.Enabled = true;
+                    parent.editing = true;
+                    currentlyEditing = parent;
+
+                    currentKeySelection.Clear();
+                    _currentSelectedKeys.Clear();
+
+                    var ml = MappingLayers.GetLayer(parent.ID);
+                    var _selection = new Dictionary<int, LedId>();
+
+                    if (ml.allowBleed)
+                    {
+                        btn_togglebleed.Text = @"Bleed Enabled";
+                        btn_togglebleed.BackColor = System.Drawing.Color.Lime;
                     }
                     else
                     {
-                        i = 0;
-                        foreach (var selection in _selection)
-                        {
-
-                            foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
-                            {
-                                if (key.KeyType == selection.Value)
-                                {
-                                    key.RemoveCircle();
-
-                                    //Add Key to holding dictionary and light button
-                                    key.BackColor = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(currentlyEditing.LayerType).Value;
-                                    key.BorderCol = System.Drawing.Color.Red;
-                                    key.AddCircle((_selection.Count - i).ToString());
-
-                                    _currentSelectedKeys.Add(key);
-                                }
-                            }
-
-                            i++;
-                        }
+                        btn_togglebleed.Text = @"Bleed Disabled";
+                        btn_togglebleed.BackColor = System.Drawing.Color.Red;
                     }
 
+                    ChangeLayerMode(ml);
 
-                    currentKeySelection = _selection;
+                    if (ml.rootLayerType == LayerType.DynamicLayer)
+                    {
+                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(DynamicLayerType).GetField(Enum.GetName(typeof(DynamicLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
+                    }
+                    else if (ml.rootLayerType == LayerType.BaseLayer)
+                    {
+                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(((LayerDisplay)typeof(BaseLayerType).GetField(Enum.GetName(typeof(BaseLayerType), ml.layerTypeindex)).GetCustomAttribute(typeof(LayerDisplay))).Description);
+                    }
+                    else if (ml.rootLayerType == LayerType.EffectLayer)
+                    {
+                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
+                    }
+
+                    Debug.WriteLine($"Key Count: {ml.deviceLeds.Count}");
+
+                    foreach (var led in ml.deviceLeds)
+                    {
+                        _selection.Add(led.Key, led.Value);
+                    }
+
+#if DEBUG
+                    Debug.WriteLine($"Loaded {_selection.Count} leds for layer {ml.layerID}");
+#endif
+
+                    var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                    if (virtualDeviceToShow != null && _selection.Count > 0)
+                    {
+                        var i = 1;
+
+                        if (_selection.First().Key == 1)
+                        {
+                            foreach (var selection in _selection)
+                            {
+                                foreach (var key in virtualDeviceToShow._keybuttons)
+                                {
+                                    if (key.KeyType == selection.Value)
+                                    {
+                                        key.RemoveCircle();
+
+                                        //Add Key to holding dictionary and light button
+                                        key.BackColor = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(currentlyEditing.LayerType).Value;
+                                        key.BorderCol = System.Drawing.Color.Red;
+                                        key.AddCircle((i).ToString());
+
+                                        _currentSelectedKeys.Add(key);
+                                    }
+                                }
+
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            i = 0;
+                            foreach (var selection in _selection)
+                            {
+                                foreach (var key in virtualDeviceToShow._keybuttons)
+                                {
+                                    if (key.KeyType == selection.Value)
+                                    {
+                                        key.RemoveCircle();
+
+                                        //Add Key to holding dictionary and light button
+                                        key.BackColor = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(currentlyEditing.LayerType).Value;
+                                        key.BorderCol = System.Drawing.Color.Red;
+                                        key.AddCircle((_selection.Count - i).ToString());
+
+                                        _currentSelectedKeys.Add(key);
+                                    }
+                                }
+
+                                i++;
+                            }
+                        }
+
+                        currentKeySelection = _selection;
+                    }
                 }
             }
-            
+
             parent.Invalidate();
             var thisbtn = (MetroButton)sender;
             this.ActiveControl = thisbtn.Parent;
@@ -905,15 +1135,15 @@ namespace Chromatics.Forms
 
             var obj = (MetroButton)sender;
             var parent = (Pn_LayerDisplay)obj.Parent;
-            
+
             if (selectedAddType != parent.LayerType)
                 selectedAddType = parent.LayerType;
 
             var ms = MappingLayers.GetLayer(parent.ID);
 
-            var newid = AddLayer(selectedAddType, selectedDevice, 0, 2, true, true, false, ms.deviceLeds, ms.layerTypeindex, ms.allowBleed, ms.layerModes);
+            var newid = AddLayer(selectedAddType, ms.deviceGuid, ms.deviceType, 0, 2, true, true, false, ms.deviceLeds, ms.layerTypeindex, ms.allowBleed, ms.layerModes);
 
-            foreach(Pn_LayerDisplay layer in flp_layers.Controls)
+            foreach (Pn_LayerDisplay layer in flp_layers.Controls)
             {
                 if (layer.ID == newid) continue;
 
@@ -931,22 +1161,19 @@ namespace Chromatics.Forms
                     layer.LeftText = $"{_layer.zindex}";
                     layer.Invalidate();
                 }
-
             }
 
             SaveLayers();
-            
 
             if (currentlyEditing == null)
             {
-                this.ActiveControl = flp_layers.Controls[flp_layers.Controls.Count-2];
+                this.ActiveControl = flp_layers.Controls[flp_layers.Controls.Count - 2];
             }
             else
             {
                 var thisbtn = (MetroButton)sender;
                 this.ActiveControl = thisbtn.Parent;
             }
-            
         }
 
         private void OnDeleteButtonPressed(object sender, EventArgs e)
@@ -962,17 +1189,29 @@ namespace Chromatics.Forms
                 case DialogResult.OK:
 
                     //Cleanup
-                    if (currentlySelected != null && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
+                    var selectedDeviceItem = cb_deviceselect.SelectedItem as ComboboxItem;
+                    if (selectedDeviceItem == null || !(selectedDeviceItem.Value is Guid selectedDeviceId))
+                    {
+                        return;
+                    }
+
+                    var selectedDevice = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
+
+                    if (selectedDevice != null)
                     {
                         currentlySelected.selected = false;
                         currentlySelected = null;
 
-                        foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
+                        var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                        if (virtualDevice != null)
                         {
-                            if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
+                            foreach (var key in virtualDevice._keybuttons)
                             {
-                                key.BorderCol = System.Drawing.Color.Black;
-                                key.Invalidate();
+                                if (!key.IsEditing && key.BorderCol != System.Drawing.Color.Black)
+                                {
+                                    key.BorderCol = System.Drawing.Color.Black;
+                                    key.Invalidate();
+                                }
                             }
                         }
                     }
@@ -1002,7 +1241,7 @@ namespace Chromatics.Forms
                         var i = flp_layers.Controls.Count - flp_layers.Controls.GetChildIndex(layer);
 
                         _layer.zindex = i;
-                                                
+
                         MappingLayers.UpdateLayer(_layer);
                         layer.LeftText = i.ToString();
 
@@ -1015,7 +1254,7 @@ namespace Chromatics.Forms
                     MappingLayers.RemoveLayer(targetid);
 
                     rtb_layerhelper.Text = @"";
-                    
+
                     SaveLayers();
 
                     parent.cb_selector.SelectedIndexChanged -= new EventHandler(OnSelectedIndexChanged);
@@ -1024,7 +1263,7 @@ namespace Chromatics.Forms
                     parent.btn_delete.Click -= new EventHandler(OnDeleteButtonPressed);
                     parent.btn_copy.Click -= new EventHandler(OnCopyButtonPressed);
 
-                    VisualiseLayers(false);
+                    VisualiseLayers();
                     parent.Dispose();
                     break;
                 case DialogResult.Cancel:
@@ -1086,21 +1325,18 @@ namespace Chromatics.Forms
                             {
                                 _selection.Add(currentKeySelection.Count - i, selection.Value);
 
-                                foreach (var key in _currentSelectedKeys)
+                                var keycapToUpdate = _currentSelectedKeys.FirstOrDefault(k => k.KeyType == selection.Value);
+                                if (keycapToUpdate != null)
                                 {
-                                    if (key.KeyType == selection.Value)
-                                    {
-                                        key.RemoveCircle();
-                                        key.AddCircle((currentKeySelection.Count - i).ToString());
-                                    }
+                                    keycapToUpdate.RemoveCircle();
+                                    keycapToUpdate.AddCircle((currentKeySelection.Count - i).ToString());
                                 }
 
                                 i++;
                             }
                         }
-                                                
-                        currentKeySelection = _selection;
 
+                        currentKeySelection = _selection;
                     }
                 }
                 else
@@ -1123,9 +1359,18 @@ namespace Chromatics.Forms
             if (selectedAddType != LayerType.DynamicLayer)
                 selectedAddType = LayerType.DynamicLayer;
 
-            var newid = AddLayer(selectedAddType, selectedDevice, 0, 2, true, true);
+            var selectedDeviceGuid = GetActiveDevice()?.Value as Guid?;
+            var selectedDeviceType = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceGuid).Value?.DeviceInfo.DeviceType;
 
-            foreach(Pn_LayerDisplay layer in flp_layers.Controls)
+            if (selectedDeviceGuid == null || selectedDeviceType == null)
+            {
+                MessageBox.Show("Please select a valid device.");
+                return;
+            }
+
+            var newid = AddLayer(selectedAddType, selectedDeviceGuid.Value, selectedDeviceType.Value, 0, 2, true, true);
+
+            foreach (Pn_LayerDisplay layer in flp_layers.Controls)
             {
                 if (layer.ID == newid) continue;
 
@@ -1144,9 +1389,9 @@ namespace Chromatics.Forms
                     layer.Invalidate();
                 }
 
-                #if DEBUG
-                    Debug.WriteLine(@"NEW Layer: " + layer.ID + @". Layer ID: " + _layer.layerID + @". zindex: " + _layer.zindex + @". Type: " + _layer.rootLayerType);
-                #endif
+#if DEBUG
+                Debug.WriteLine(@"NEW Layer: " + layer.ID + @". Layer ID: " + _layer.layerID + @". zindex: " + _layer.zindex + @". Type: " + _layer.rootLayerType);
+#endif
             }
 
             SaveLayers();
@@ -1157,7 +1402,7 @@ namespace Chromatics.Forms
         private void cb_addlayer_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!init) return;
-            
+
             var cmb = (MetroComboBox)sender;
 
             if (cmb.Items.Count > 0)
@@ -1169,40 +1414,46 @@ namespace Chromatics.Forms
                     selectedAddType = (LayerType)Enum.Parse(typeof(LayerType), value.Value.ToString());
                 }
             }
-
         }
 
         private void cb_deviceselect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!init) return;
 
-            var cmb = (MetroComboBox)sender;
-
-            if (cmb.Items.Count > 0)
+            if (cb_deviceselect.SelectedItem is ComboboxItem selectedItem)
             {
-                var value = cmb.SelectedItem.ToString();
-
-                if (value != null)
+                if (selectedItem.Value is Guid selectedDeviceId)
                 {
-                    RGBDeviceType _devicetype;
+                    var _selectedDevice = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
 
-                    if (value == "Other")
+                    if (_selectedDevice != null)
                     {
-                        _devicetype = RGBDeviceType.Unknown;
+                        var selectedDeviceType = _selectedDevice.DeviceInfo.DeviceType;
+
+                        if (selectedDeviceType == selectedDevice) return;
+
+                        selectedDevice = selectedDeviceType;
+                        ChangeDeviceType();
                     }
                     else
                     {
-                        _devicetype = (RGBDeviceType)Enum.Parse(typeof(RGBDeviceType), value);
+                        // Handle case where the device is not found
+                        MessageBox.Show("Selected device not found.");
                     }
-
-                    if (_devicetype == selectedDevice) return;
-
-                    selectedDevice = _devicetype;
-                    ChangeDeviceType();
+                }
+                else
+                {
+                    // Handle case where the Value is not a Guid
+                    MessageBox.Show("Invalid device selected.");
                 }
             }
+            else
+            {
+                // Handle case where no item is selected or the item is not a ComboboxItem
+                MessageBox.Show("Please select a valid device.");
+            }
         }
-        
+
         private void btn_preview_Click(object sender, EventArgs e)
         {
             if (!init) return;
@@ -1256,9 +1507,9 @@ namespace Chromatics.Forms
             currentlyEditing = null;
             parent.Update();
 
-            #if DEBUG
-                Debug.WriteLine($"Clearing Layer {parent.ID}");
-            #endif
+#if DEBUG
+            Debug.WriteLine($"Clearing Layer {parent.ID}");
+#endif
 
             var thisbtn = (MetroButton)sender;
             this.ActiveControl = thisbtn.Parent;
@@ -1303,12 +1554,11 @@ namespace Chromatics.Forms
                 }
 
                 currentKeySelection = _selection;
-
             }
 
-            #if DEBUG
-                Debug.WriteLine($"Reversing Layer {currentlyEditing.ID}");
-            #endif
+#if DEBUG
+            Debug.WriteLine($"Reversing Layer {currentlyEditing.ID}");
+#endif
 
             var thisbtn = (MetroButton)sender;
             this.ActiveControl = thisbtn.Parent;
@@ -1318,8 +1568,7 @@ namespace Chromatics.Forms
         {
             if (!init) return;
             if (IsAddingLayer) return;
-            if (_virtualDevices.Count <= 0) return;
-            
+
             if (currentKeySelection.Count > 0 && currentlyEditing != null)
             {
                 RevertButtons();
@@ -1330,17 +1579,17 @@ namespace Chromatics.Forms
                 var ml = MappingLayers.GetLayer(currentlyEditing.ID);
                 var _selection = new Dictionary<int, LedId>();
 
-
                 foreach (var led in ml.deviceLeds)
                 {
                     _selection.Add(led.Key, led.Value);
                 }
 
-                #if DEBUG
-                    Debug.WriteLine($"Reloaded {_selection.Count} leds for layer {ml.layerID}");
-                #endif
+#if DEBUG
+                Debug.WriteLine($"Reloaded {_selection.Count} leds for layer {ml.layerID}");
+#endif
 
-                if (_selection.Count > 0 && (_virtualDevices.Count > 0 && _virtualDevices.ContainsKey(selectedDevice)))
+                var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                if (virtualDeviceToShow != null)
                 {
                     var i = 1;
 
@@ -1348,7 +1597,7 @@ namespace Chromatics.Forms
                     {
                         foreach (var selection in _selection)
                         {
-                            foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
+                            foreach (var key in virtualDeviceToShow._keybuttons)
                             {
                                 if (key.KeyType == selection.Value)
                                 {
@@ -1371,8 +1620,7 @@ namespace Chromatics.Forms
                         i = 0;
                         foreach (var selection in _selection)
                         {
-
-                            foreach (var key in _virtualDevices[selectedDevice]._keybuttons)
+                            foreach (var key in virtualDeviceToShow._keybuttons)
                             {
                                 if (key.KeyType == selection.Value)
                                 {
@@ -1390,7 +1638,6 @@ namespace Chromatics.Forms
                             i++;
                         }
                     }
-
 
                     currentKeySelection = _selection;
                 }
@@ -1412,7 +1659,6 @@ namespace Chromatics.Forms
                 MappingLayers.SaveMappings();
                 ChangeDeviceType();
             }
-            
         }
 
         private void btn_export_Click(object sender, EventArgs e)
@@ -1427,15 +1673,14 @@ namespace Chromatics.Forms
         {
             if (!init) return;
             if (IsAddingLayer) return;
-            if (_virtualDevices.Count <= 0) return;
-            
+
             if (currentKeySelection.Count > 0 && currentlyEditing != null)
             {
                 var parent = currentlyEditing;
                 var thisbtn = (MetroButton)sender;
 
                 var ms = MappingLayers.GetLayer(parent.ID);
-                
+
                 if (ms.allowBleed)
                 {
                     //Disable Bleed
@@ -1455,9 +1700,9 @@ namespace Chromatics.Forms
 
                 SaveLayers();
 
-                #if DEBUG
-                    Debug.WriteLine($"Toggle bleeding on Layer {parent.ID}: {ms.allowBleed}");
-                #endif
+#if DEBUG
+                Debug.WriteLine($"Toggle bleeding on Layer {parent.ID}: {ms.allowBleed}");
+#endif
 
                 this.ActiveControl = thisbtn.Parent;
             }
@@ -1467,8 +1712,7 @@ namespace Chromatics.Forms
         {
             if (!init) return;
             if (IsAddingLayer) return;
-            if (_virtualDevices.Count <= 0) return;
-            
+
             var cmb = (MetroComboBox)sender;
 
             if (cmb.Items.Count > 0)
@@ -1497,7 +1741,7 @@ namespace Chromatics.Forms
         {
             Type type = typeof(BaseLayerType);
 
-            switch(layer.rootLayerType)
+            switch (layer.rootLayerType)
             {
                 case LayerType.BaseLayer:
                     type = typeof(BaseLayerType);
@@ -1608,7 +1852,6 @@ namespace Chromatics.Forms
             ResizeLayerHelpText((RichTextBox)sender);
         }
 
-
         private void Kh_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
@@ -1627,7 +1870,6 @@ namespace Chromatics.Forms
 
                 _layers.ForEach(x => { x.ResumeLayout(); });
             }
-
         }
 
         private void Kh_KeyUp(object sender, KeyEventArgs e)
@@ -1656,7 +1898,17 @@ namespace Chromatics.Forms
             {
                 ResetLayerText(layer.Value);
             }
-            
+        }
+
+        public class ComboboxItem
+        {
+            public object Value { get; set; }
+            public string Text { get; set; }
+
+            public override string ToString()
+            {
+                return Text;
+            }
         }
     }
 }

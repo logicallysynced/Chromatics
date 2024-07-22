@@ -2,6 +2,7 @@
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Layers;
+using OpenRGB.NET;
 using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,15 @@ namespace Chromatics.Models
         public int _width = 35;
         public int _height = 35;
         public bool init;
+        public RGBDeviceType _deviceType;
         public List<KeyButton> _keybuttons = new List<KeyButton>();
         public event EventHandler _OnKeycapPressed;
         private Dictionary<LedId, Color> _currentColors;
+
+        public virtual void InitializeDevice()
+        {
+            // To be overridden by derived classes
+        }
 
         public void OnKeycapPressed(object sender, EventArgs e)
         {
@@ -50,14 +57,20 @@ namespace Chromatics.Models
                 var mapping = layer.Value;
                 var blank_col = Color.DarkGray;
 
+                if (layer.Value.deviceType != _deviceType) return;
+                                                                
+
                 if (mapping.rootLayerType == LayerType.BaseLayer && !mapping.Enabled)
                 {
+
                     foreach (var key in _keybuttons)
                     {
                         if (mapping.deviceLeds.ContainsValue(key.KeyType))
                         {
+
                             if (_currentColors.ContainsKey(key.KeyType))
                             {
+
                                 if (_currentColors[key.KeyType] != blank_col)
                                 {
                                     _currentColors[key.KeyType] = blank_col;
@@ -70,7 +83,10 @@ namespace Chromatics.Models
                                 key.BackColor = blank_col;
                             }
                         }
-
+                        else
+                        {
+                            Debug.WriteLine($"KeyType {key.KeyType} not found in deviceLeds");
+                        }
                     }
 
                     continue;
@@ -82,10 +98,13 @@ namespace Chromatics.Models
 
                 foreach (var key in _keybuttons)
                 {
+
                     if (mapping.deviceLeds.ContainsValue(key.KeyType))
                     {
+
                         if (!key.IsEditing)
                         {
+
                             if (_currentColors.ContainsKey(key.KeyType))
                             {
                                 if (_currentColors[key.KeyType] != highlight_col)
@@ -100,26 +119,48 @@ namespace Chromatics.Models
                                 key.BackColor = highlight_col;
                             }
                         }
-
                     }
                 }
             }
-
         }
+
 
         public class KeyButton : Button
         {
             private bool _drawCircle;
-            
             private string _drawIndex;
+            private Color _borderCol;
+            private Color _backgroundColor;
+
             public string KeyName { get; set; }
             public LedId KeyType { get; set; }
-            public System.Drawing.Color BorderCol { get; set; }
             public bool IsEditing { get; set; }
+
+            public Color BorderCol
+            {
+                get { return _borderCol; }
+                set
+                {
+                    _borderCol = value;
+                    this.Invalidate();
+                }
+            }
+
+            public new Color BackColor
+            {
+                get { return _backgroundColor; }
+                set
+                {
+                    _backgroundColor = value;
+                    this.Invalidate();
+                }
+            }
 
             public KeyButton()
             {
-                BorderCol = System.Drawing.Color.Black;
+                BorderCol = Color.Black;
+                BackColor = Color.DarkGray;
+                _backgroundColor = BackColor;
             }
 
             public void RemoveCircle()
@@ -168,6 +209,12 @@ namespace Chromatics.Models
                 var Rect = new RectangleF(0, 0, this.Width, this.Height);
                 var GraphPath = GetRoundPath(Rect, borderRadius);
 
+                // Fill the background color
+                using (var brush = new SolidBrush(_backgroundColor))
+                {
+                    e.Graphics.FillRectangle(brush, this.ClientRectangle);
+                }
+
                 this.Region = new Region(GraphPath);
                 using (var pen = new Pen(BorderCol, borderThickness))
                 {
@@ -175,18 +222,25 @@ namespace Chromatics.Models
                     e.Graphics.DrawPath(pen, GraphPath);
                 }
 
+                // Draw the text
+                var textBrush = new SolidBrush(ForeColor);
+                var sf = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center
+                };
+                e.Graphics.DrawString(Text, Font, textBrush, Rect, sf);
+
                 if (_drawCircle)
                 {
                     var fnt = new Font(this.Font.FontFamily, this.Font.Size * 2, FontStyle.Bold);
-                    var sf = e.Graphics.MeasureString(_drawIndex, fnt, this.Width);
                     var pt = new System.Drawing.Point(3, 3);
-                    //pt.X = (int)((this.Width / 2) - (sf.Width / 2));
-                    //pt.Y = (int)((this.Height / 2) - (sf.Height / 2));
-                    e.Graphics.DrawString(_drawIndex, fnt, new SolidBrush(System.Drawing.Color.White), pt);
-
+                    e.Graphics.DrawString(_drawIndex, fnt, new SolidBrush(Color.White), pt);
                 }
                 this.ResumeLayout(true);
             }
         }
+
+
     }
 }

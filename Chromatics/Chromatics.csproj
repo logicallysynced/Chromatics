@@ -70,49 +70,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Forms\vDevices\Uc_VirtualOtherController.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualLedController.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualDRAM.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualFan.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualCooler.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualGraphicsCard.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualMonitor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualSpeaker.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualKeypad.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualHeadsetStand.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualMainboard.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualLedMatrix.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualLedStrip.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualMousePad.cs" />
-    <Compile Update="Forms\vDevices\Uc_VirtualHeadset.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Forms\vDevices\Uc_VirtualOtherController.cs" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

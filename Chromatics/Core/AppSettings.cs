@@ -16,7 +16,7 @@ namespace Chromatics.Core
         public static readonly string currentSettingsVersion = "2";
         public static readonly string currentEffectsVersion = "2";
         public static readonly string currentPalettesVersion = "1";
-        public static readonly string currentMappingLayerVersion = "1";
+        public static readonly string currentMappingLayerVersion = "2";
 
         public static void Startup()
         {

@@ -1,9 +1,15 @@
-﻿using Chromatics.Enums;
+﻿using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Localization;
 using Chromatics.Models;
+using HidSharp;
+using OpenRGB.NET;
 using RGB.NET.Core;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Chromatics.Forms
@@ -17,17 +23,59 @@ namespace Chromatics.Forms
 
         private void OnLoad(object sender, EventArgs e)
         {
+            if (!init)
+            {
+                InitializeDevice();
+            }
+        }
+
+        public override void InitializeDevice()
+        {
+
             //Get Keycap image
             var keycap_img = Properties.Resources.keycap_backglow;
 
+            //Assign a keycap per cell based on selected device
+            var selectedDevice = Uc_Mappings.GetActiveDevice();
+            if (selectedDevice == null || selectedDevice.Value is not Guid selectedDeviceId)
+            {
+                return;
+            }
 
-            //Assign a keycap per cell
-            var keycaps = Helpers.LedKeyHelper.GetAllKeysForDevice(RGBDeviceType.Unknown);
+
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
+            if (device == null)
+            {
+                return;
+            }
+
+            if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+            {
+                return;
+            }
+
+            _deviceType = device.DeviceInfo.DeviceType;
+
+            //var keycaps = Helpers.LedKeyHelper.GetAllKeysForDevice(device.DeviceInfo.DeviceType);
+
+            var base_i = 0;
+            var keycaps = new Dictionary<int, LedId>();
+
+            foreach (var led in device)
+            {
+                if (!keycaps.ContainsKey(base_i))
+                {
+                    keycaps.Add(base_i, led.Id);
+                }
+
+                base_i++;
+            }
+
             tlp_main.Controls.Clear();
             tlp_main.RowCount = 0;
             tlp_main.ColumnCount = 0;
-            tlp_main.Padding = new Padding(0);
-            tlp_main.Margin = new Padding(0);
+            tlp_main.Padding = new Padding(2);
+            tlp_main.Margin = new Padding(2);
 
             var columnlimit = 20;
             var currentrow = 0;
@@ -35,10 +83,22 @@ namespace Chromatics.Forms
 
             if (keycaps != null)
             {
-                foreach (var key in keycaps)
+                foreach (var key in keycaps.Take(device.Count()))
                 {
                     var width = _width;
                     var height = _height;
+
+                    var key_text = key.Value.ToString();
+
+                    string[] unwantedStrings = new string[]
+                    {
+                        "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
+                        "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
+                        "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
+                    };
+
+                    key_text = unwantedStrings.Aggregate(key_text, (current, unwanted) => current.Replace(unwanted, ""));
+
 
                     var keycap = new KeyButton
                     {
@@ -47,9 +107,9 @@ namespace Chromatics.Forms
                         Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                         FlatStyle = FlatStyle.Flat,
                         Dock = DockStyle.Fill,
-                        Text = key.Value.ToString().Replace("Unknown", ""),
-                        Padding = new Padding(0),
-                        Margin = new Padding(0),
+                        Text = key_text,
+                        Padding = new Padding(2),
+                        Margin = new Padding(2),
                         Width = width,
                         Height = height,
                         MaximumSize = new System.Drawing.Size(width, height),
@@ -88,10 +148,10 @@ namespace Chromatics.Forms
                 }
             }
 
+
             tlp_main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             tlp_main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             init = true;
         }
-
     }
 }
