@@ -89,7 +89,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         #region Methods
 
         /// <inheritdoc />
-        public void ManipulateColor(in global::RGB.NET.Core.Rectangle rectangle, in RenderTarget renderTarget, ref Color color) => color = color.SetA(_currentValue);
+        public void ManipulateColor(global::RGB.NET.Core.Rectangle rectangle, RenderTarget renderTarget, ref Color color) => color = color.SetA(_currentValue);
 
         /// <inheritdoc />
         protected override void Update(double deltaTime)
