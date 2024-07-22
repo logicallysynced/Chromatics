@@ -23,9 +23,6 @@ namespace Chromatics.Layers.DynamicLayers
 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode
-            if (MappingLayers.IsPreview()) return;
-            
             ReactiveWeatherHighlightDynamicLayer model;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))

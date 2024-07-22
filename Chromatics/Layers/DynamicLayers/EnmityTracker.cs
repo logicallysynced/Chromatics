@@ -21,8 +21,6 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode
-            if (MappingLayers.IsPreview()) return;
 
             EnmityDynamicModel model;
 

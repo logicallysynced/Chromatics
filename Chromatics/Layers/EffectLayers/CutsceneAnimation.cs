@@ -25,11 +25,10 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode or if layer/effect is disabled
+            //Do not apply if layer/effect is disabled
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
 
-            if (MappingLayers.IsPreview()) return;
             
             CutsceneAnimationEffectModel model;
 
