@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using static Chromatics.Models.VirtualDevice;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using MethodInvoker = System.Windows.Forms.MethodInvoker;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
 
@@ -516,8 +517,14 @@ namespace Chromatics.Forms
             SaveLayers();
         }
 
-        private void ChangeDeviceType()
+        public void ChangeDeviceType()
         {
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(ChangeDeviceType));
+                return;
+            }
+
             var selectedDeviceItem = cb_deviceselect.SelectedItem as ComboboxItem;
             if (selectedDeviceItem == null || !(selectedDeviceItem.Value is Guid selectedDeviceId))
             {
