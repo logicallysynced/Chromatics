@@ -363,6 +363,8 @@ namespace Chromatics.Core
                         #endif
 
                         _devices.Remove(_device.Key);
+
+                        Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
                     }
 
                     surface.Detach(device);

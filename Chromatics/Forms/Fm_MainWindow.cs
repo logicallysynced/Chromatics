@@ -151,13 +151,13 @@ namespace Chromatics.Forms
             }
 
             //Setup Defaults
-            /*
+            
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             if (!File.Exists(enviroment + @"/layers.chromatics3"))
             {
                 File.Copy(enviroment + @"/defaults/layers.chromatics3", enviroment + @"/layers.chromatics3");
             }
-            */
+            
 
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
 
