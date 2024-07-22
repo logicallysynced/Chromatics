@@ -16,8 +16,6 @@ namespace Chromatics.Layers
     {
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode
-            if (MappingLayers.IsPreview()) return;
 
             //Job Classes Highlight Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();

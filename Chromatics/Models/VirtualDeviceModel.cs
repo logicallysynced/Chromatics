@@ -55,7 +55,7 @@ namespace Chromatics.Models
             {
                 _currentColors = new Dictionary<LedId, Color>();
             }
-
+            
             if (MappingLayers.IsPreview())
             {
                 // Debug.WriteLine("Tick");
@@ -120,7 +120,7 @@ namespace Chromatics.Models
                     _cancellationTokenSource.Cancel();
                 }
             }
-
+            
             // Code to visualize the layers on the virtual device control
             await Task.Run(() =>
             {

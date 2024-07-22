@@ -336,7 +336,8 @@ namespace Chromatics.Core
                 if (_loaded)
                 {
                     StopEffects();
-                    
+                    ResetLayerGroups();
+
                     if (!GameController.IsGameConnected())
                         RunStartupEffects();
                 }
@@ -379,7 +380,8 @@ namespace Chromatics.Core
                 if (_loaded)
                 {
                     StopEffects();
-                    
+                    ResetLayerGroups();
+
                     if (!GameController.IsGameConnected())
                         RunStartupEffects();
                 }
@@ -585,6 +587,30 @@ namespace Chromatics.Core
             }
         }
 
+        public static void ResetLayerGroups()
+        {
+            foreach (var layergroup in _layergroups)
+            {
+                foreach (var layer in layergroup.Value)
+                {
+                    layer.RemoveAllDecorators();
+                    layer.Detach();
+                }
+            }
+
+            foreach (var mapping in MappingLayers.GetLayers())
+            {
+                mapping.Value.requestUpdate = true;
+            }
+
+            _runningEffects.Clear();
+            _layergroups.Clear();
+            _layergroupledcollection.Clear();
+
+#if DEBUG
+            Debug.WriteLine(@"Reset Layer Groups");
+#endif
+        }
 
         private static void Surface_Updating(UpdatingEventArgs args)
         {

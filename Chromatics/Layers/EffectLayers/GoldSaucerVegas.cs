@@ -22,8 +22,6 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (MappingLayers.IsPreview()) return;
-
             //Gold Saucer Vegas Mode Effect Layer Implementation - NOTE: This effect operates on the base layer. Disabling base layer wont disable this effect however
             var effectSettings = RGBController.GetEffectsSettings();
             var _layergroups = RGBController.GetLiveLayerGroups();
@@ -52,6 +50,7 @@ namespace Chromatics.Layers
                     {
                         model.gradientEffects.RemoveAllDecorators();
                         RGBController.SetBaseLayerEffect(false);
+                        RGBController.ResetLayerGroups();
 
                         model.gradientEffects = null;
                     }
@@ -152,6 +151,7 @@ namespace Chromatics.Layers
                             layergroup.RemoveAllDecorators();
 
                             RGBController.SetBaseLayerEffect(false);
+                            RGBController.ResetLayerGroups();
                             model.gradientEffects = null;
                         }
 
