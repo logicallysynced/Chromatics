@@ -15,6 +15,8 @@ using System.Timers;
 using System.Windows.Forms;
 using System.Drawing;
 using Chromatics.Forms;
+using System.Runtime.Serialization;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace Chromatics.Layers
 {
@@ -103,11 +105,18 @@ namespace Chromatics.Layers
                 }
 
                 var flag = false;
+                var empty = false;
+
                 foreach (var mapping in _Templayers)
                 {
-                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null)
+                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null || mapping.Value.deviceGuid == Guid.Empty)
                     {
                         flag = true;
+
+                        if (mapping.Value.deviceGuid == Guid.Empty)
+                        {
+                            empty = true;
+                        }
                     }
                 }
 
@@ -115,8 +124,12 @@ namespace Chromatics.Layers
                 {
                     Debug.WriteLine("Flagged for upgrade");
 
-                    FileOperationsHelper.CreateLayersBackup();
-                    QueueImportMappings(_Templayers);
+                    if (!empty)
+                    {
+                        FileOperationsHelper.CreateLayersBackup();
+                    }
+
+                    QueueImportMappings(_Templayers, empty);
                 }
                 else
                 {
@@ -133,23 +146,23 @@ namespace Chromatics.Layers
             return false;
         }
 
-        private static void QueueImportMappings(ConcurrentDictionary<int, Layer> importedLayer)
+        private static void QueueImportMappings(ConcurrentDictionary<int, Layer> importedLayer, bool empty = false)
         {
             _importQueued = true;
 
             // Start a timer to check periodically if RGBController is loaded
             _timer = new System.Timers.Timer(1000); // Check every second
-            _timer.Elapsed += (sender, e) => CheckRGBControllerLoaded(importedLayer);
+            _timer.Elapsed += (sender, e) => CheckRGBControllerLoaded(importedLayer, empty);
             _timer.Start();
         }
 
-        private static void CheckRGBControllerLoaded(object state)
+        private static void CheckRGBControllerLoaded(object state, bool empty)
         {
             if (RGBController.IsLoaded())
             {
                 _timer.Dispose();
                 _importQueued = false;
-                ImportMappings(state as ConcurrentDictionary<int, Layer>);
+                ImportMappings(state as ConcurrentDictionary<int, Layer>, empty);
 
                 if (Uc_Mappings.Instance.InvokeRequired)
                 {
@@ -169,7 +182,7 @@ namespace Chromatics.Layers
             return true;
         }
 
-        public static bool ImportMappings(ConcurrentDictionary<int, Layer> importedLayer = null)
+        public static bool ImportMappings(ConcurrentDictionary<int, Layer> importedLayer = null, bool empty = false)
         {
             var layers = importedLayer ?? FileOperationsHelper.ImportLayerMappings();
 
@@ -189,7 +202,7 @@ namespace Chromatics.Layers
                 var migratedLayers = new Dictionary<int, Layer>();
                 var layersToMigrate = layers.Where(l => l.Value.layerVersion == "1").GroupBy(l => l.Value.deviceType);
 
-                if (importedLayer != null)
+                if (importedLayer != null && !empty)
                 {
                     Logger.WriteConsole(Enums.LoggerTypes.System, $"Detected version 1 layers to migrate. Count: {layersToMigrate.Count()}.");
                 }

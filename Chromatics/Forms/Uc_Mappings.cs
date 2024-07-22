@@ -163,7 +163,15 @@ namespace Chromatics.Forms
             //Handle Events
             //this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
             this.TabManager.Selected += new TabControlEventHandler(mT_TabManager_Selected);
-                       
+
+            if (cb_deviceselect.Items.Count == 0)
+            {
+                AddNoDevicesDetectedItem();
+            }
+            else
+            {
+                RemoveNoDevicesDetectedItem();
+            }
 
             //Set init to true
             init = true;
@@ -195,8 +203,11 @@ namespace Chromatics.Forms
         {
             var connectedDevices = RGBController.GetLiveDevices();
 
-            if (connectedDevices != null)
+            if (connectedDevices != null && connectedDevices.Count > 0)
             {
+                // Remove "No Devices Detected" if it exists
+                RemoveNoDevicesDetectedItem();
+
                 foreach (var device in connectedDevices)
                 {
                     if (_deviceVirtualDeviceMap.ContainsKey(device.Key))
@@ -262,6 +273,11 @@ namespace Chromatics.Forms
                 VisualiseLayers();
             }
 
+            if (cb_deviceselect.Items.Count == 0)
+            {
+                AddNoDevicesDetectedItem();
+            }
+
             CreateDefaults();
         }
 
@@ -270,37 +286,63 @@ namespace Chromatics.Forms
             var connectedDevices = RGBController.GetLiveDevices();
             var currentSelectedDevice = cb_deviceselect.SelectedItem as ComboboxItem;
 
-            if (connectedDevices != null)
+            // Remove devices that are no longer connected
+            var disconnectedDeviceKeys = _deviceVirtualDeviceMap.Keys.Except(connectedDevices?.Keys ?? Enumerable.Empty<Guid>()).ToList();
+            foreach (var key in disconnectedDeviceKeys)
             {
-                // Remove devices that are no longer connected
-                var disconnectedDeviceKeys = _deviceVirtualDeviceMap.Keys.Except(connectedDevices.Keys).ToList();
-                foreach (var key in disconnectedDeviceKeys)
+
+                Debug.WriteLine($"Removed device with GUID {key}");
+                if (_deviceVirtualDeviceMap.TryGetValue(key, out var virtualDevice))
                 {
-                    if (_deviceVirtualDeviceMap.TryGetValue(key, out var virtualDevice))
-                    {
-                        virtualDevice._OnKeycapPressed -= OnKeyCapPressed;
-                        tlp_frame.Controls.Remove(virtualDevice);
-                        virtualDevice.Dispose();
-                        _deviceVirtualDeviceMap.Remove(key);
-                    }
-
-                    // Remove the device from the ComboBox
-                    var itemToRemove = cb_deviceselect.Items.OfType<ComboboxItem>().FirstOrDefault(item => item.Value.Equals(key));
-                    if (itemToRemove != null)
-                    {
-                        cb_deviceselect.Items.Remove(itemToRemove);
-                    }
-
-                    // Change selected device if the current selected device is being removed
-                    if (currentSelectedDevice != null && currentSelectedDevice.Value.Equals(key))
-                    {
-                        cb_deviceselect.SelectedIndex = cb_deviceselect.Items.Count > 0 ? 0 : -1;
-                        ChangeDeviceType();
-                    }
+                    virtualDevice._OnKeycapPressed -= OnKeyCapPressed;
+                    tlp_frame.Controls.Remove(virtualDevice);
+                    virtualDevice.Dispose();
+                    _deviceVirtualDeviceMap.Remove(key);
                 }
+
+                // Remove the device from the ComboBox
+                var itemToRemove = cb_deviceselect.Items.OfType<ComboboxItem>().FirstOrDefault(item => item.Value.Equals(key));
+                if (itemToRemove != null)
+                {
+                    cb_deviceselect.Items.Remove(itemToRemove);
+                }
+
+                // Change selected device if the current selected device is being removed
+                if (currentSelectedDevice != null && currentSelectedDevice.Value.Equals(key))
+                {
+                    cb_deviceselect.SelectedIndex = cb_deviceselect.Items.Count > 0 ? 0 : -1;
+                    ChangeDeviceType();
+                }
+            }
+
+            if (cb_deviceselect.Items.Count == 0)
+            {
+                AddNoDevicesDetectedItem();
+            }
+            else
+            {
+                RemoveNoDevicesDetectedItem();
             }
         }
 
+
+        private void AddNoDevicesDetectedItem()
+        {
+            var noDevicesItem = new ComboboxItem { Value = Guid.Empty, Text = "No Devices Detected" };
+            cb_deviceselect.Items.Add(noDevicesItem);
+            cb_deviceselect.SelectedItem = noDevicesItem;
+            cb_deviceselect.Enabled = false;
+        }
+
+        private void RemoveNoDevicesDetectedItem()
+        {
+            var noDevicesItem = cb_deviceselect.Items.OfType<ComboboxItem>().FirstOrDefault(item => item.Text == "No Devices Detected");
+            if (noDevicesItem != null)
+            {
+                cb_deviceselect.Items.Remove(noDevicesItem);
+            }
+            cb_deviceselect.Enabled = true;
+        }
 
 
         public void flp_layers_DragEnter(object sender, DragEventArgs e)
@@ -1457,16 +1499,6 @@ namespace Chromatics.Forms
                         selectedDevice = selectedDeviceType;
                         ChangeDeviceType();
                     }
-                    else
-                    {
-                        // Handle case where the device is not found
-                        MessageBox.Show("Selected device not found.");
-                    }
-                }
-                else
-                {
-                    // Handle case where the Value is not a Guid
-                    MessageBox.Show("Invalid device selected.");
                 }
             }
             else
