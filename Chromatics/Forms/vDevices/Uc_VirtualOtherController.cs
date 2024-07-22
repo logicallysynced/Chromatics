@@ -72,16 +72,45 @@ namespace Chromatics.Forms
             tlp_main.Controls.Clear();
             tlp_main.RowCount = 0;
             tlp_main.ColumnCount = 0;
-            tlp_main.Padding = new Padding(2);
-            tlp_main.Margin = new Padding(2);
+            tlp_main.Padding = new Padding(0);
+            tlp_main.Margin = new Padding(0);
 
-            var columnlimit = 20;
+            var columnlimit = 15;
             var currentrow = 0;
             var i = 0;
 
             if (keycaps != null)
             {
-                foreach (var key in keycaps.Take(device.Count()))
+                var keycapsOrdered = keycaps.Select(key =>
+                {
+                    var keyText = key.Value.ToString();
+                    string[] unwantedStrings = new string[]
+                    {
+                        "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
+                        "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
+                        "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
+                    };
+
+                    keyText = unwantedStrings.Aggregate(keyText, (current, unwanted) => current.Replace(unwanted, ""));
+                    int keyNumber;
+                    if (int.TryParse(keyText, out keyNumber))
+                    {
+                        return new { Keycap = key, KeyNumber = keyNumber };
+                    }
+                    else
+                    {
+                        // Handle the case where the keyText is not a valid integer
+                        // For example, set it to a default value or exclude it from ordering
+                        return new { Keycap = key, KeyNumber = int.MaxValue };
+                    }
+                })
+                .OrderBy(x => x.KeyNumber)
+                .Select(x => x.Keycap)
+                .ToList();
+
+                columnlimit = keycapsOrdered.Count / 4;
+
+                foreach (var key in keycapsOrdered.Take(device.Count()))
                 {
                     var width = _width;
                     var height = _height;
@@ -106,8 +135,8 @@ namespace Chromatics.Forms
                         FlatStyle = FlatStyle.Flat,
                         Dock = DockStyle.Fill,
                         Text = key_text,
-                        Padding = new Padding(2),
-                        Margin = new Padding(2),
+                        Padding = new Padding(0),
+                        Margin = new Padding(0),
                         Width = width,
                         Height = height,
                         MaximumSize = new System.Drawing.Size(width, height),
