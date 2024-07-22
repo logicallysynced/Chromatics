@@ -11,6 +11,7 @@ using MetroFramework.Components;
 using MetroFramework.Controls;
 using OpenRGB.NET;
 using RGB.NET.Core;
+using Sanford.Multimedia;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -152,7 +153,7 @@ namespace Chromatics.Forms
             //Add tooltips
             tt_mappings.SetToolTip(this.cb_addlayer, @"Add New Layer of selected type");
             tt_mappings.SetToolTip(this.cb_deviceselect, @"Change to another device");
-            tt_mappings.SetToolTip(this.btn_preview, @"Display layers on physical devices");
+            tt_mappings.SetToolTip(this.btn_preview, @"Show virtual lighting on buttons");
             tt_mappings.SetToolTip(this.btn_clearselection, @"Clear all keys on layer");
             tt_mappings.SetToolTip(this.btn_reverseselection, @"Reverse keys on layer");
             tt_mappings.SetToolTip(this.btn_undoselection, @"Undo key selection on layer");
@@ -214,10 +215,14 @@ namespace Chromatics.Forms
                     if (device.Value.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
                     {
                         virtualDevice = new Uc_VirtualKeyboard();
+                        virtualDevice._deviceId = device.Key;
+                        virtualDevice._deviceType = device.Value.DeviceInfo.DeviceType;
                     }
                     else
                     {
                         virtualDevice = new Uc_VirtualOtherController();
+                        virtualDevice._deviceId = device.Key;
+                        virtualDevice._deviceType = device.Value.DeviceInfo.DeviceType;
                     }
 
                     virtualDevice.Anchor = AnchorStyles.Left | AnchorStyles.Right;
@@ -639,10 +644,14 @@ namespace Chromatics.Forms
                 if (selectedDevice.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
                 {
                     virtualDevice = new Uc_VirtualKeyboard();
+                    virtualDevice._deviceId = deviceId;
+                    virtualDevice._deviceType = selectedDevice.DeviceInfo.DeviceType;
                 }
                 else
                 {
                     virtualDevice = new Uc_VirtualOtherController();
+                    virtualDevice._deviceId = deviceId;
+                    virtualDevice._deviceType = selectedDevice.DeviceInfo.DeviceType;
                 }
 
                 virtualDevice.Anchor = AnchorStyles.Left | AnchorStyles.Right;
@@ -681,8 +690,14 @@ namespace Chromatics.Forms
             }
         }
 
-        private void VisualiseLayers()
+        public void VisualiseLayers()
         {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(VisualiseLayers));
+                return;
+            }
+
             var selectedDeviceItem = cb_deviceselect.SelectedItem as ComboboxItem;
             if (selectedDeviceItem == null || selectedDeviceItem.Value is not Guid selectedDeviceId)
             {
@@ -1472,11 +1487,15 @@ namespace Chromatics.Forms
             {
                 btn.BackColor = SystemColors.Control;
                 MappingLayers.SetPreview(false);
+
+                RevertButtons();
+                VisualiseLayers();
             }
             else
             {
                 btn.BackColor = System.Drawing.Color.LimeGreen;
                 MappingLayers.SetPreview(true);
+
             }
 
             var thisbtn = (MetroButton)sender;

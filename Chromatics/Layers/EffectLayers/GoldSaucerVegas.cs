@@ -52,7 +52,6 @@ namespace Chromatics.Layers
                     {
                         model.gradientEffects.RemoveAllDecorators();
                         RGBController.SetBaseLayerEffect(false);
-                        RGBController.ResetLayerGroups();
 
                         model.gradientEffects = null;
                     }
@@ -153,7 +152,6 @@ namespace Chromatics.Layers
                             layergroup.RemoveAllDecorators();
 
                             RGBController.SetBaseLayerEffect(false);
-                            RGBController.ResetLayerGroups();
                             model.gradientEffects = null;
                         }
 

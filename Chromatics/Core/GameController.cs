@@ -59,7 +59,6 @@ namespace Chromatics.Core
             }
 
             gameSetup = true;
-            RGBController.PreviewTriggered += OnPreviewTriggered;
         }
 
         public static void Exit()
@@ -300,7 +299,6 @@ namespace Chromatics.Core
 
                     _GameConnectionCancellationTokenSource.Cancel();
                     RGBController.StopEffects();
-                    RGBController.ResetLayerGroups();
                     StartGameLoop();
 
                     #if DEBUG
@@ -349,7 +347,6 @@ namespace Chromatics.Core
                         if (!_onTitle || wasPreviewed)
                         {
                             RGBController.StopEffects();
-                            RGBController.ResetLayerGroups();
 
                             if (RGBController.GetEffectsSettings().effect_titlescreen)
                             {
@@ -408,7 +405,6 @@ namespace Chromatics.Core
                             #endif
 
                             RGBController.StopEffects();
-                            RGBController.ResetLayerGroups();
                             _onTitle = false;
                         }
                     

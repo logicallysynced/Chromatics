@@ -1,4 +1,5 @@
-﻿using Chromatics.Enums;
+﻿using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Layers;
@@ -12,21 +13,25 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Color = System.Drawing.Color;
 
 namespace Chromatics.Models
 {
+
     public class VirtualDevice : UserControl
     {
         public int _width = 35;
         public int _height = 35;
         public bool init;
         public RGBDeviceType _deviceType;
+        public Guid _deviceId;
         public List<KeyButton> _keybuttons = new List<KeyButton>();
         public event EventHandler _OnKeycapPressed;
         private Dictionary<LedId, Color> _currentColors;
+        private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         public virtual void InitializeDevice()
         {
@@ -44,85 +49,153 @@ namespace Chromatics.Models
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
         }
 
-        public void VisualiseLayers(IOrderedEnumerable<KeyValuePair<int, Layer>> _layers, List<KeyButton> _keyButtons)
+        public async void VisualiseLayers(IOrderedEnumerable<KeyValuePair<int, Layer>> _layers, List<KeyButton> _keyButtons)
         {
             if (_currentColors == null)
             {
                 _currentColors = new Dictionary<LedId, Color>();
             }
 
-            // Code to visualize the layers on the virtual device control
-            foreach (var layer in _layers)
+            if (MappingLayers.IsPreview())
             {
-                var mapping = layer.Value;
-                var blank_col = Color.DarkGray;
+                // Debug.WriteLine("Tick");
+                var activeSurface = RGBController.GetLiveSurfaces();
+                var devicesOfType = activeSurface.Devices.Where(device => device.DeviceInfo.DeviceType == _deviceType);
 
-                if (layer.Value.deviceType != _deviceType) return;
-                                                                
+                _cancellationTokenSource = new CancellationTokenSource(); // Create a new token source
+                var token = _cancellationTokenSource.Token;
 
-                if (mapping.rootLayerType == LayerType.BaseLayer && !mapping.Enabled)
+                var tasks = devicesOfType.Select(device => Task.Run(() =>
                 {
+                    foreach (var led in device)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            Debug.WriteLine("Task canceled.");
+                            break;
+                        }
+
+                        var activeCol = System.Drawing.Color.FromArgb(
+                            (int)(led.Color.A * 255),
+                            (int)(led.Color.R * 255),
+                            (int)(led.Color.G * 255),
+                            (int)(led.Color.B * 255)
+                        );
+
+                        foreach (var key in _keybuttons.Where(keys => keys.KeyType == led.Id))
+                        {
+                            if (!key.IsEditing)
+                            {
+                                lock (_currentColors)
+                                {
+                                    if (_currentColors.ContainsKey(key.KeyType))
+                                    {
+                                        if (_currentColors[key.KeyType] != activeCol)
+                                        {
+                                            _currentColors[key.KeyType] = activeCol;
+                                            key.BackColor = activeCol;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        _currentColors.Add(key.KeyType, activeCol);
+                                        key.BackColor = activeCol;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }, token)).ToArray();
+
+                await Task.WhenAll(tasks);
+
+                return;
+            }
+            else
+            {
+                // Cancel the tasks if MappingLayers.IsPreview() becomes false
+                if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+                {
+                    _cancellationTokenSource.Cancel();
+                }
+            }
+
+            // Code to visualize the layers on the virtual device control
+            await Task.Run(() =>
+            {
+                foreach (var layer in _layers)
+                {
+                    var mapping = layer.Value;
+                    var blank_col = Color.DarkGray;
+
+                    if (layer.Value.deviceType != _deviceType) return;
+
+                    if (mapping.rootLayerType == LayerType.BaseLayer && !mapping.Enabled)
+                    {
+                        foreach (var key in _keybuttons)
+                        {
+                            if (mapping.deviceLeds.ContainsValue(key.KeyType))
+                            {
+                                lock (_currentColors)
+                                {
+                                    if (_currentColors.ContainsKey(key.KeyType))
+                                    {
+                                        if (_currentColors[key.KeyType] != blank_col)
+                                        {
+                                            _currentColors[key.KeyType] = blank_col;
+                                            key.BackColor = blank_col;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        _currentColors.Add(key.KeyType, blank_col);
+                                        key.BackColor = blank_col;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"KeyType {key.KeyType} not found in deviceLeds");
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    if (!mapping.Enabled || mapping.rootLayerType == LayerType.EffectLayer) continue;
+
+                    var highlight_col = (Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(mapping.rootLayerType).Value;
 
                     foreach (var key in _keybuttons)
                     {
                         if (mapping.deviceLeds.ContainsValue(key.KeyType))
                         {
-
-                            if (_currentColors.ContainsKey(key.KeyType))
+                            if (!key.IsEditing)
                             {
-
-                                if (_currentColors[key.KeyType] != blank_col)
+                                lock (_currentColors)
                                 {
-                                    _currentColors[key.KeyType] = blank_col;
-                                    key.BackColor = blank_col;
+                                    if (_currentColors.ContainsKey(key.KeyType))
+                                    {
+                                        if (_currentColors[key.KeyType] != highlight_col)
+                                        {
+                                            _currentColors[key.KeyType] = highlight_col;
+                                            key.BackColor = highlight_col;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        _currentColors.Add(key.KeyType, highlight_col);
+                                        key.BackColor = highlight_col;
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                _currentColors.Add(key.KeyType, blank_col);
-                                key.BackColor = blank_col;
-                            }
-                        }
-                        else
-                        {
-                            Debug.WriteLine($"KeyType {key.KeyType} not found in deviceLeds");
-                        }
-                    }
-
-                    continue;
-                }
-
-                if (!mapping.Enabled || mapping.rootLayerType == LayerType.EffectLayer) continue;
-
-                var highlight_col = (Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(mapping.rootLayerType).Value;
-
-                foreach (var key in _keybuttons)
-                {
-
-                    if (mapping.deviceLeds.ContainsValue(key.KeyType))
-                    {
-
-                        if (!key.IsEditing)
-                        {
-
-                            if (_currentColors.ContainsKey(key.KeyType))
-                            {
-                                if (_currentColors[key.KeyType] != highlight_col)
-                                {
-                                    _currentColors[key.KeyType] = highlight_col;
-                                    key.BackColor = highlight_col;
-                                }
-                            }
-                            else
-                            {
-                                _currentColors.Add(key.KeyType, highlight_col);
-                                key.BackColor = highlight_col;
                             }
                         }
                     }
                 }
-            }
+            });
         }
+
 
 
         public class KeyButton : Button

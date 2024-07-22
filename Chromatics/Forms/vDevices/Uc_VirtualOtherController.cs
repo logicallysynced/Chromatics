@@ -54,8 +54,6 @@ namespace Chromatics.Forms
                 return;
             }
 
-            _deviceType = device.DeviceInfo.DeviceType;
-
             //var keycaps = Helpers.LedKeyHelper.GetAllKeysForDevice(device.DeviceInfo.DeviceType);
 
             var base_i = 0;
