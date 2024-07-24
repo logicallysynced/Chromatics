@@ -22,6 +22,7 @@ namespace Chromatics.Extensions.Sharlayan
         private static bool _memoryready;
         private static bool _isPopped;
         private static bool _inInstance;
+        private static byte _instanceState;
         private static bool _initialized;
         private static List<Signature> _sList;
         private static readonly object RefreshLock = new object();
@@ -77,8 +78,10 @@ namespace Chromatics.Extensions.Sharlayan
                     {
                         var address = _memoryHandler.Scanner.Locations[memoryName];
                         var contentFinderState = _memoryHandler.GetByte(address.GetAddress(), 0x145);
+
                         _isPopped = contentFinderState == 3; //ContentFinderState of 3 means DF pop but not entered yet
                         _inInstance = contentFinderState > 3;
+                        _instanceState = contentFinderState;
 
                         _initialized = true;
                     }
@@ -116,6 +119,16 @@ namespace Chromatics.Extensions.Sharlayan
             CheckCache();
 
             return _inInstance;
+        }
+
+        public static byte instanceState()
+        {
+            if (!_initialized)
+                return 0;
+
+            CheckCache();
+
+            return _instanceState;
         }
     }
 }

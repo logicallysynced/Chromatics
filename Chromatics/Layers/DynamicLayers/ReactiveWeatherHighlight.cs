@@ -2,12 +2,14 @@
 using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Extensions.Sharlayan;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
 using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures.Gradients;
+using Sharlayan.Models.ReadResults;
 using Sharlayan.Utilities;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,7 +21,10 @@ namespace Chromatics.Layers.DynamicLayers
     public class ReactiveWeatherHighlightProcessor : LayerProcessor
     {
         private static Dictionary<int, ReactiveWeatherHighlightDynamicLayer> layerProcessorModel = new Dictionary<int, ReactiveWeatherHighlightDynamicLayer>();
-        
+
+        int _previousArrayIndex = 0;
+        int _previousOffset = 0;
+        bool dutyComplete = false;
 
         public override void Process(IMappingLayer layer)
         {
@@ -102,19 +107,57 @@ namespace Chromatics.Layers.DynamicLayers
                     //var currentZone = ZoneLookup.GetZoneInfo(getCurrentPlayer.Entity.MapTerritory).Name.English;
                     var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
+                    DutyFinderBellExtension.CheckCache();
+
+
+                    if (DutyFinderBellExtension.InInstance())
+                    {
+                        ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
+
+                        var chatLogEntries = readResult.ChatLogItems;
+
+
+                        if (readResult.PreviousArrayIndex != _previousArrayIndex)
+                        {
+                            if (chatLogEntries.Count > 0)
+                            {
+                                if (chatLogEntries.First().Code == "0840" && chatLogEntries.First().Message.Contains("completion time"))
+                                {
+                                    dutyComplete = true;
+                                }
+
+                                if (chatLogEntries.First().Code == "0839" && chatLogEntries.First().Message.Contains("has begun."))
+                                {
+                                    dutyComplete = false;
+                                }
+
+                            }
+
+                            _previousArrayIndex = readResult.PreviousArrayIndex;
+                            _previousOffset = readResult.PreviousOffset;
+                        }
+                    }
+                    else
+                    {
+                        dutyComplete = false;
+                    }
+
                     if (currentZone != "???" && currentZone != "")
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects  || layer.requestUpdate) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects  || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
-                            SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette);
+                            SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, DutyFinderBellExtension.InInstance(), dutyComplete);
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
+                            model._inInstance = DutyFinderBellExtension.InInstance();
+                            model._dutyComplete = dutyComplete;
                         }
                     }
+
                 }
                 
             }
@@ -137,58 +180,65 @@ namespace Chromatics.Layers.DynamicLayers
 
         }
 
-        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette)
+        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, bool inInstance, bool dutyComplete)
         {
             var color = GetWeatherColor(weather, _colorPalette);
             var reactiveWeatherEffects = RGBController.GetEffectsSettings();
             var effectSettings = RGBController.GetEffectsSettings();
 
             //Filter for zone specific special weather
+            if (inInstance && !dutyComplete)
+            {
+                switch (zone)
+                {
+                    case "Everkeep":
+                        //Raid Zone Effect
+                        if (effectSettings.effect_raideffects)
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepKeyHighlight.Color);
+                        }
+                        break;
+                    case "Interphos":
+
+                        //Raid Zone Effect
+                        if (effectSettings.effect_raideffects)
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosKeyHighlight.Color);
+                        }
+                        break;
+                    case "Scratching Ring":
+                        //Raid Zone Effect
+                        if (effectSettings.effect_raideffects)
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1KeyHighlight.Color);
+                        }
+                        break;
+                    case "Lovely Lovering":
+                        //Raid Zone Effect
+                        if (effectSettings.effect_raideffects)
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2KeyHighlight.Color);
+                        }
+                        break;
+                    case "Blasting Ring":
+                        //Raid Zone Effect
+                        if (effectSettings.effect_raideffects)
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3KeyHighlight.Color);
+                        }
+                        break;
+                    case "The Thundering":
+                        //Raid Zone Effect
+                        if (effectSettings.effect_raideffects)
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4KeyHighlight.Color);
+                        }
+                        break;
+                }
+            }
+
             switch (zone)
             {
-                case "Everkeep":
-                    //Raid Zone Effect
-                    if (effectSettings.effect_raideffects)
-                    {
-                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepKeyHighlight.Color);
-                    }
-                    break;
-                case "Interphos":
-
-                    //Raid Zone Effect
-                    if (effectSettings.effect_raideffects)
-                    {
-                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosKeyHighlight.Color);
-                    }
-                    break;
-                case "Scratching Ring":
-                    //Raid Zone Effect
-                    if (effectSettings.effect_raideffects)
-                    {
-                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1KeyHighlight.Color);
-                    }
-                    break;
-                case "Lovely Lovering":
-                    //Raid Zone Effect
-                    if (effectSettings.effect_raideffects)
-                    {
-                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2KeyHighlight.Color);
-                    }
-                    break;
-                case "Blasting Ring":
-                    //Raid Zone Effect
-                    if (effectSettings.effect_raideffects)
-                    {
-                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3KeyHighlight.Color);
-                    }
-                    break;
-                case "The Thundering":
-                    //Raid Zone Effect
-                    if (effectSettings.effect_raideffects)
-                    {
-                        color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4KeyHighlight.Color);
-                    }
-                    break;
                 case "Mare Lamentorum":
                     if (reactiveWeatherEffects.effect_reactiveweather && (reactiveWeatherEffects.weather_marelametorum_animation || reactiveWeatherEffects.weather_marelametorum_umbralwind_animation))
                         color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
@@ -239,6 +289,10 @@ namespace Chromatics.Layers.DynamicLayers
             public string _currentZone { get; set; }
             public bool _raidEffects { get; set; }
             public bool _reactiveWeatherEffects { get; set; }
+            public bool _inInstance { get; set; }
+            public bool _dutyComplete { get; set; }
+
+
         }
 
         public static RGB.NET.Core.Color GetWeatherColor(string weatherType, PaletteColorModel colorPalette)
