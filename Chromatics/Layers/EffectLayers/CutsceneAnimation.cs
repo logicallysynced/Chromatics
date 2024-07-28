@@ -118,6 +118,7 @@ namespace Chromatics.Layers
                 DutyFinderBellExtension.CheckCache();
 
 
+
                 if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model._inInstance != DutyFinderBellExtension.InInstance() || model.wasDisabled || layer.requestUpdate)
                 {
                     if (getCurrentPlayer.Entity.InCutscene && !DutyFinderBellExtension.InInstance())
@@ -132,6 +133,7 @@ namespace Chromatics.Layers
                         animationGradient.AddDecorator(gradientMove);
                                                 
                         layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), animationGradient)); //new SolidColorBrush(baseColor);
+                        layergroup.ZIndex = 1000;
 
                         //layergroup.AddDecorator(animation);
 
