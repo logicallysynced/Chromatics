@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Chromatics.Core;
@@ -8,112 +10,193 @@ using Chromatics.Enums;
 using MetroFramework.Components;
 using Newtonsoft.Json;
 
-namespace Chromatics.Localization
+public static class LocalizationManager
 {
-    public static class LocalizationManager
+    private static Dictionary<string, string> translations = new Dictionary<string, string>();
+    private static Language currentLanguage;
+    private static Dictionary<Control, string> originalTexts = new Dictionary<Control, string>();
+    private static Dictionary<object, Dictionary<Control, string>> originalTooltips = new Dictionary<object, Dictionary<Control, string>>();
+    private static Dictionary<DataGridView, Dictionary<(int, int), string>> originalDataGridViewTexts = new Dictionary<DataGridView, Dictionary<(int, int), string>>();
+
+    public static string GetLocalizedText(string text)
     {
-        // Dictionary to store translations for the current locale
-        private static Dictionary<string, string> translations;
+        var settings = AppSettings.GetSettings();
+        var locale = settings.systemLanguage;
 
-        // Method to get localized text
-        public static string GetLocalizedText(string text)
+        if (currentLanguage != locale)
         {
-            var settings = AppSettings.GetSettings();
-            var locale = settings.systemLanguage; // Returns Language.English, Language.Japanese, etc.
-
-            // Ensure the translations are loaded for the current locale
             LoadTranslations(locale);
-
-            // Return the translated text if available; otherwise, return the original text
-            return translations.TryGetValue(text, out var localizedText) ? localizedText : text;
         }
 
-        // Method to load translations from the JSON file based on the locale
-        private static void LoadTranslations(Language locale)
+        return translations.TryGetValue(text, out var localizedText) ? localizedText : text;
+    }
+
+    private static void LoadTranslations(Language locale)
+    {
+        translations.Clear();
+
+        var environment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+        var localeFileName = GetLocaleFileName(locale);
+        var filePath = Path.Combine(environment, "locale", localeFileName);
+
+        if (File.Exists(filePath))
         {
-            // Avoid reloading if already loaded
-            if (translations != null && translations.Count > 0)
-            {
-                return;
-            }
+            var jsonContent = File.ReadAllText(filePath);
+            translations = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonContent);
+            currentLanguage = locale;
+        }
+        else
+        {
+            Debug.WriteLine($"Translation file {localeFileName} not found. Falling back to original text.");
+        }
+    }
 
-            var environment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-            var localeFileName = GetLocaleFileName(locale);
-            var filePath = Path.Combine(environment, "locale", localeFileName);
+    private static string GetLocaleFileName(Language locale)
+    {
+        return locale switch
+        {
+            Language.English => "en.json",
+            Language.Japanese => "ja.json",
+            Language.French => "fr.json",
+            Language.German => "de.json",
+            Language.Spanish => "es.json",
+            Language.Korean => "ko.json",
+            Language.Chinese => "zh_CN.json",
+            _ => "en.json"
+        };
+    }
 
-            // Check if the file exists
-            if (File.Exists(filePath))
-            {
-                // Load the JSON file content and deserialize it into the dictionary
-                var jsonContent = File.ReadAllText(filePath);
-                translations = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonContent);
-            }
-            else
-            {
-                // If the file does not exist, fallback to English (or any default locale)
-                translations = new Dictionary<string, string>();
-            }
+    public static void LocalizeForm(Form form)
+    {
+        var settings = AppSettings.GetSettings();
+        var locale = settings.systemLanguage;
+
+        if (currentLanguage != locale)
+        {
+            LoadTranslations(locale);
         }
 
-        // Method to get the JSON file name based on the locale
-        private static string GetLocaleFileName(Language locale)
-        {
-            return locale switch
-            {
-                Language.English => "en.json",
-                Language.Japanese => "ja.json",
-                Language.French => "fr.json",
-                Language.German => "de.json",
-                Language.Spanish => "es.json",
-                Language.Korean => "ko.json",
-                Language.Chinese => "zh_CN.json",
+        Debug.WriteLine($"Translating Form to {currentLanguage}");
 
-                // Add other cases for different languages
-                _ => "en.json" // Default to English if the locale is not recognized
-            };
+        LocalizeControl(form);
+        LocalizeTooltips(form);
+
+        form.Invalidate();
+        form.Refresh();
+    }
+
+    private static void LocalizeControl(Control control)
+    {
+        if (control.Name == "cb_language" || control.Name == "rtb_console") return;
+
+        if (control is DataGridView dataGridView)
+        {
+            LocalizeDataGridView(dataGridView);
+            return;
         }
 
-        // Method to localize all controls on a form
-        public static void LocalizeForm(Form form)
+        if (!string.IsNullOrEmpty(control.Text))
         {
-            // Localize the controls
-            LocalizeControl(form);
-
-            // Localize the tooltips
-            LocalizeTooltips(form);
-        }
-
-        // Method to recursively localize controls
-        private static void LocalizeControl(Control control)
-        {
-            // Localize the Text property if available
-            if (!string.IsNullOrEmpty(control.Text))
+            if (!originalTexts.ContainsKey(control))
             {
-                control.Text = GetLocalizedText(control.Text);
+                originalTexts[control] = control.Text;
             }
 
-            // Recursively localize child controls
-            foreach (Control childControl in control.Controls)
-            {
-                LocalizeControl(childControl);
-            }
+            control.Text = GetLocalizedText(originalTexts[control]);
         }
 
-        // Method to localize tooltips associated with controls on a form
-        private static void LocalizeTooltips(Form form)
+        foreach (Control childControl in control.Controls)
         {
-            foreach (var field in form.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
+            LocalizeControl(childControl);
+        }
+    }
+
+    private static void LocalizeTooltips(Form form)
+    {
+        foreach (var field in form.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
+        {
+            if (field.FieldType == typeof(ToolTip) || field.FieldType == typeof(MetroToolTip))
             {
-                if (field.FieldType == typeof(ToolTip))
+                var toolTip = field.GetValue(form) as ToolTip;
+                if (toolTip == null) continue;
+
+                if (!originalTooltips.ContainsKey(toolTip))
                 {
-                    var toolTip = (ToolTip)field.GetValue(form);
-                    foreach (Control control in form.Controls)
+                    originalTooltips[toolTip] = new Dictionary<Control, string>();
+                }
+
+                foreach (Control control in form.Controls)
+                {
+                    if (control.Name == "cb_language" || control.Name == "rtb_console") continue;
+
+                    string originalText = toolTip.GetToolTip(control);
+                    if (!string.IsNullOrEmpty(originalText))
                     {
-                        string originalText = toolTip.GetToolTip(control);
-                        if (!string.IsNullOrEmpty(originalText))
+                        if (!originalTooltips[toolTip].ContainsKey(control))
                         {
-                            toolTip.SetToolTip(control, GetLocalizedText(originalText));
+                            originalTooltips[toolTip][control] = originalText; // Store the original tooltip text key
                         }
+
+                        toolTip.SetToolTip(control, GetLocalizedText(originalTooltips[toolTip][control]));
+                    }
+                }
+            }
+        }
+    }
+
+    private static void LocalizeDataGridView(DataGridView dataGridView)
+    {
+        Debug.WriteLine($"Translating DataGridView to {currentLanguage}");
+        if (!originalDataGridViewTexts.ContainsKey(dataGridView))
+        {
+            originalDataGridViewTexts[dataGridView] = new Dictionary<(int, int), string>();
+        }
+
+        foreach (DataGridViewColumn column in dataGridView.Columns)
+        {
+            if (column.Name == "mappings_col_type")
+            {
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                {
+                    var cell = row.Cells[column.Index];
+                    if (cell.Value is string cellValue)
+                    {
+                        var key = (row.Index, column.Index);
+                        if (!originalDataGridViewTexts[dataGridView].ContainsKey(key))
+                        {
+                            originalDataGridViewTexts[dataGridView][key] = cellValue;
+                        }
+
+                        cell.Value = GetLocalizedText(originalDataGridViewTexts[dataGridView][key]);
+                    }
+                }
+            }
+        }
+
+        dataGridView.CellMouseEnter -= DataGridView_CellMouseEnter;
+        dataGridView.CellMouseEnter += DataGridView_CellMouseEnter;
+
+        dataGridView.Refresh();
+    }
+
+    private static void DataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+    {
+        if (sender is DataGridView dataGridView)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                var cell = dataGridView[e.ColumnIndex, e.RowIndex];
+                if (cell.Value is string cellValue)
+                {
+                    var toolTip = dataGridView.FindForm()?.GetType()
+                        .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                        .Where(f => f.FieldType == typeof(ToolTip) || f.FieldType == typeof(MetroToolTip))
+                        .Select(f => f.GetValue(dataGridView.FindForm()) as ToolTip)
+                        .FirstOrDefault();
+
+                    if (toolTip != null)
+                    {
+                        toolTip.SetToolTip(dataGridView, GetLocalizedText(cellValue));
                     }
                 }
             }
