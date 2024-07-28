@@ -887,7 +887,7 @@ namespace Chromatics.Forms
                     currentlySelected.selected = false;
                     currentlySelected = null;
 
-                    var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                    var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault(vd => vd.Visible);
                     if (virtualDevice != null)
                     {
                         foreach (var key in virtualDevice._keybuttons)
@@ -903,7 +903,8 @@ namespace Chromatics.Forms
 
                 var layer = MappingLayers.GetLayer(obj.ID);
 
-                var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault(vd => vd.Visible);
+
                 if (virtualDeviceToShow != null)
                 {
                     foreach (var selection in layer.deviceLeds)
@@ -1066,7 +1067,7 @@ namespace Chromatics.Forms
                         currentlySelected.selected = false;
                         currentlySelected = null;
 
-                        var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                        var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault(vd => vd.Visible);
                         if (virtualDevice != null)
                         {
                             foreach (var key in virtualDevice._keybuttons)
@@ -1131,7 +1132,7 @@ namespace Chromatics.Forms
                     Debug.WriteLine($"Loaded {_selection.Count} leds for layer {ml.layerID}");
 #endif
 
-                    var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                    var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault(vd => vd.Visible);
                     if (virtualDeviceToShow != null && _selection.Count > 0)
                     {
                         var i = 1;
@@ -1263,10 +1264,13 @@ namespace Chromatics.Forms
 
                     if (selectedDevice != null)
                     {
-                        currentlySelected.selected = false;
-                        currentlySelected = null;
+                        if (currentlySelected != null)
+                        {
+                            currentlySelected.selected = false;
+                            currentlySelected = null;
+                        }
 
-                        var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                        var virtualDevice = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault(vd => vd.Visible);
                         if (virtualDevice != null)
                         {
                             foreach (var key in virtualDevice._keybuttons)
@@ -1279,6 +1283,7 @@ namespace Chromatics.Forms
                             }
                         }
                     }
+
 
                     if (currentlyEditing == parent)
                     {
@@ -1646,7 +1651,7 @@ namespace Chromatics.Forms
                 Debug.WriteLine($"Reloaded {_selection.Count} leds for layer {ml.layerID}");
 #endif
 
-                var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault();
+                var virtualDeviceToShow = tlp_frame.Controls.OfType<VirtualDevice>().FirstOrDefault(vd => vd.Visible);
                 if (virtualDeviceToShow != null)
                 {
                     var i = 1;

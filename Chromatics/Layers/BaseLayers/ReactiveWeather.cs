@@ -135,6 +135,8 @@ namespace Chromatics.Layers
 
                     DutyFinderBellExtension.CheckCache();
 
+                    //Debug.WriteLine(currentWeatherZone.ToString());
+
 
                     if (DutyFinderBellExtension.InInstance())
                     {
@@ -174,6 +176,8 @@ namespace Chromatics.Layers
                     if (currentZone != "???" && currentZone != "")
                     {
                         var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
+
+                        //var zoneWeather = 
 
                         if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
