@@ -16,6 +16,13 @@ namespace Chromatics.Forms
 {
     public partial class Uc_VirtualOtherController : VirtualDevice
     {
+        string[] unwantedStrings = new string[]
+        {
+            "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
+            "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
+            "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
+        };
+
         public Uc_VirtualOtherController()
         {
             InitializeComponent();
@@ -84,13 +91,7 @@ namespace Chromatics.Forms
                 var keycapsOrdered = keycaps.Select(key =>
                 {
                     var keyText = key.Value.ToString();
-                    string[] unwantedStrings = new string[]
-                    {
-                        "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
-                        "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
-                        "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
-                    };
-
+                    
                     keyText = unwantedStrings.Aggregate(keyText, (current, unwanted) => current.Replace(unwanted, ""));
                     int keyNumber;
                     if (int.TryParse(keyText, out keyNumber))
@@ -116,14 +117,6 @@ namespace Chromatics.Forms
                     var height = _height;
 
                     var key_text = key.Value.ToString();
-
-                    string[] unwantedStrings = new string[]
-                    {
-                        "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
-                        "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
-                        "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
-                    };
-
                     key_text = unwantedStrings.Aggregate(key_text, (current, unwanted) => current.Replace(unwanted, ""));
 
 
