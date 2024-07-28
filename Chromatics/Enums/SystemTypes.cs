@@ -20,6 +20,9 @@ namespace Chromatics.Enums
         English = 0,
         Japanese = 1,
         French = 2,
-        German = 3
+        German = 3,
+        Korean = 4,
+        Spanish = 5,
+        Chinese = 6
     }
 }

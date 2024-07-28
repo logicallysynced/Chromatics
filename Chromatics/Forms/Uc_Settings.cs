@@ -666,6 +666,8 @@ namespace Chromatics.Forms
             settings.systemLanguage = ((ComboBoxItem<Language>)cb_language.SelectedItem).Value;
 
             AppSettings.SaveSettings(settings);
+
+            Fm_MainWindow.TranslateForm();
         }
 
         public class ComboBoxItem<T>

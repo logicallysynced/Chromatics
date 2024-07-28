@@ -30,6 +30,7 @@ using MetroFramework;
 using System.Diagnostics.Eventing.Reader;
 using System.Printing;
 using MetroFramework.Properties;
+using Chromatics.Localization;
 
 namespace Chromatics.Forms
 {
@@ -196,6 +197,8 @@ namespace Chromatics.Forms
             
             Debug.WriteLine($"System Dark Mode is: {SystemHelpers.IsDarkModeEnabled()}");
 
+            LocalizationManager.LocalizeForm(this);
+
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
         }
 
@@ -215,6 +218,11 @@ namespace Chromatics.Forms
                 _metroStyleManager.Theme = MetroThemeStyle.Light;
                 DarkModeManager.ToggleDarkMode(_Instance, false);
             }
+        }
+
+        public static void TranslateForm()
+        {
+            LocalizationManager.LocalizeForm(_Instance);
         }
 
         private void OnLoad(object sender, EventArgs e)

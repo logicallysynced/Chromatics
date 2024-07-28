@@ -158,7 +158,14 @@ namespace Chromatics.Helpers
 
             if (control is RichTextBox richTextBox)
             {
-                richTextBox.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : originalColors[control].BackColor;
+                var restoredColor = SystemColors.Control;
+                
+                if (originalColors.ContainsKey(control))
+                {
+                    restoredColor = originalColors[control].BackColor;
+                }
+
+                richTextBox.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : restoredColor;
 
                 int originalStart = richTextBox.SelectionStart;
                 int originalLength = richTextBox.SelectionLength;
