@@ -18,6 +18,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="locale\**" />
+    <EmbeddedResource Remove="locale\**" />
+    <None Remove="locale\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="app.manifest" />
   </ItemGroup>
 
