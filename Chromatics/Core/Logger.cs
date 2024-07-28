@@ -15,14 +15,20 @@ namespace Chromatics.Core
     public delegate void OnConsoleLoggedEventHandler(object source, OnConsoleLoggedEventArgs e);
 
     public static class Logger
-    {        
+    {
         public static event OnConsoleLoggedEventHandler OnConsoleLogged = delegate { };
 
         public static void WriteConsole(LoggerTypes type, string message)
         {
             var color = (Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(type).Value;
 
-            OnConsoleLogged(null, new OnConsoleLoggedEventArgs(message, color));
+            // Get the current timestamp
+            var timestamp = DateTime.Now.ToString("MM-dd HH:mm:ss");
+
+            // Append the timestamp to the message
+            var messageWithTimestamp = $"[{timestamp}] {message}";
+
+            OnConsoleLogged(null, new OnConsoleLoggedEventArgs(messageWithTimestamp, color));
         }
     }
 }

@@ -72,6 +72,7 @@ namespace Chromatics.Layers
                 {
                     model.activeBrush.RemoveAllDecorators();
                     layergroup.Brush = new SolidColorBrush(Color.Transparent);
+                    layergroup.ZIndex = 2000;
                     model.wasPopped = false;
                     model.activeBrush = null;
                 }
