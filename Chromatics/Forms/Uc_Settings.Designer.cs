@@ -483,7 +483,7 @@
             lbl_language.AutoSize = true;
             lbl_language.Location = new System.Drawing.Point(245, 592);
             lbl_language.Name = "lbl_language";
-            lbl_language.Size = new System.Drawing.Size(89, 25);
+            lbl_language.Size = new System.Drawing.Size(66, 19);
             lbl_language.TabIndex = 12;
             lbl_language.Text = "Language";
             // 
@@ -492,26 +492,30 @@
             lbl_theme.AutoSize = true;
             lbl_theme.Location = new System.Drawing.Point(30, 592);
             lbl_theme.Name = "lbl_theme";
-            lbl_theme.Size = new System.Drawing.Size(65, 25);
+            lbl_theme.Size = new System.Drawing.Size(49, 19);
             lbl_theme.TabIndex = 11;
             lbl_theme.Text = "Theme";
             // 
             // cb_language
             // 
             cb_language.FormattingEnabled = true;
+            cb_language.ItemHeight = 23;
             cb_language.Location = new System.Drawing.Point(245, 630);
             cb_language.Name = "cb_language";
-            cb_language.Size = new System.Drawing.Size(182, 33);
+            cb_language.Size = new System.Drawing.Size(280, 29);
             cb_language.TabIndex = 10;
+            cb_language.UseSelectable = true;
             cb_language.SelectedIndexChanged += cb_language_SelectedIndexChanged;
             // 
             // cb_theme
             // 
             cb_theme.FormattingEnabled = true;
+            cb_theme.ItemHeight = 23;
             cb_theme.Location = new System.Drawing.Point(30, 630);
             cb_theme.Name = "cb_theme";
-            cb_theme.Size = new System.Drawing.Size(182, 33);
+            cb_theme.Size = new System.Drawing.Size(182, 29);
             cb_theme.TabIndex = 9;
+            cb_theme.UseSelectable = true;
             cb_theme.SelectedIndexChanged += cb_theme_SelectedIndexChanged;
             // 
             // chk_updatecheck
@@ -520,9 +524,10 @@
             chk_updatecheck.Location = new System.Drawing.Point(30, 205);
             chk_updatecheck.Margin = new System.Windows.Forms.Padding(4);
             chk_updatecheck.Name = "chk_updatecheck";
-            chk_updatecheck.Size = new System.Drawing.Size(184, 29);
+            chk_updatecheck.Size = new System.Drawing.Size(120, 15);
             chk_updatecheck.TabIndex = 8;
             chk_updatecheck.Text = "Check for Updates";
+            chk_updatecheck.UseSelectable = true;
             chk_updatecheck.UseVisualStyleBackColor = true;
             chk_updatecheck.CheckedChanged += chk_updatecheck_CheckedChanged;
             // 
@@ -554,9 +559,10 @@
             chk_trayonstartup.Location = new System.Drawing.Point(30, 168);
             chk_trayonstartup.Margin = new System.Windows.Forms.Padding(4);
             chk_trayonstartup.Name = "chk_trayonstartup";
-            chk_trayonstartup.Size = new System.Drawing.Size(255, 29);
+            chk_trayonstartup.Size = new System.Drawing.Size(168, 15);
             chk_trayonstartup.TabIndex = 4;
             chk_trayonstartup.Text = "Minimise to Tray on Startup";
+            chk_trayonstartup.UseSelectable = true;
             chk_trayonstartup.UseVisualStyleBackColor = true;
             chk_trayonstartup.CheckedChanged += chk_trayonstartup_CheckedChanged;
             // 
@@ -566,9 +572,10 @@
             chk_minimizetray.Location = new System.Drawing.Point(30, 130);
             chk_minimizetray.Margin = new System.Windows.Forms.Padding(4);
             chk_minimizetray.Name = "chk_minimizetray";
-            chk_minimizetray.Size = new System.Drawing.Size(167, 29);
+            chk_minimizetray.Size = new System.Drawing.Size(110, 15);
             chk_minimizetray.TabIndex = 3;
             chk_minimizetray.Text = "Minimise to Tray";
+            chk_minimizetray.UseSelectable = true;
             chk_minimizetray.UseVisualStyleBackColor = true;
             chk_minimizetray.CheckedChanged += chk_minimizetray_CheckedChanged;
             // 
@@ -578,9 +585,10 @@
             chk_winstart.Location = new System.Drawing.Point(30, 92);
             chk_winstart.Margin = new System.Windows.Forms.Padding(4);
             chk_winstart.Name = "chk_winstart";
-            chk_winstart.Size = new System.Drawing.Size(215, 29);
+            chk_winstart.Size = new System.Drawing.Size(140, 15);
             chk_winstart.TabIndex = 1;
             chk_winstart.Text = "Run on Windows Start";
+            chk_winstart.UseSelectable = true;
             chk_winstart.UseVisualStyleBackColor = true;
             chk_winstart.CheckedChanged += chk_winstart_CheckedChanged;
             // 
@@ -590,9 +598,10 @@
             chk_localcache.Location = new System.Drawing.Point(30, 55);
             chk_localcache.Margin = new System.Windows.Forms.Padding(4);
             chk_localcache.Name = "chk_localcache";
-            chk_localcache.Size = new System.Drawing.Size(164, 29);
+            chk_localcache.Size = new System.Drawing.Size(109, 15);
             chk_localcache.TabIndex = 0;
             chk_localcache.Text = "Use Local Cache";
+            chk_localcache.UseSelectable = true;
             chk_localcache.UseVisualStyleBackColor = true;
             chk_localcache.CheckedChanged += chk_localcache_CheckedChanged;
             // 

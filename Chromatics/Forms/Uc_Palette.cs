@@ -2,6 +2,7 @@
 using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Helpers;
+using Chromatics.Localization;
 using Chromatics.Models;
 using MetroFramework.Components;
 using System;
@@ -44,10 +45,10 @@ namespace Chromatics.Forms
                 ShowAlways = true
             };
 
-            tt_mappings.SetToolTip(btn_paletteexport, @"Export Chromatics color palette to file");
-            tt_mappings.SetToolTip(btn_paletteimport, @"Import Chromatics color palette from file");
-            tt_mappings.SetToolTip(btn_paletteundo, @"Restore selected color mapping");
-            tt_mappings.SetToolTip(cb_palette_categories, @"Filter color mappings");
+            tt_mappings.SetToolTip(btn_paletteexport, LocalizationManager.GetLocalizedText("Export Chromatics color palette to file"));
+            tt_mappings.SetToolTip(btn_paletteimport, LocalizationManager.GetLocalizedText("Import Chromatics color palette from file"));
+            tt_mappings.SetToolTip(btn_paletteundo, LocalizationManager.GetLocalizedText("Restore selected color mapping"));
+            tt_mappings.SetToolTip(cb_palette_categories, LocalizationManager.GetLocalizedText("Filter color mappings"));
 
             //Load Color Mappings
             if (RGBController.LoadColorPalette())
@@ -131,7 +132,7 @@ namespace Chromatics.Forms
                 var paletteItem = (DataGridViewRow)dG_mappings.Rows[0].Clone();
                 paletteItem.Cells[dG_mappings.Columns["mappings_col_id"].Index].Value = p.Name;
                 paletteItem.Cells[dG_mappings.Columns["mappings_col_cat"].Index].Value = mapping.Type;
-                paletteItem.Cells[dG_mappings.Columns["mappings_col_type"].Index].Value = mapping.Name;
+                paletteItem.Cells[dG_mappings.Columns["mappings_col_type"].Index].Value = LocalizationManager.GetLocalizedText(mapping.Name);
 
                 var paletteBtn = new DataGridViewTextBoxCell();
 
