@@ -1,6 +1,9 @@
 ﻿using AutoUpdaterDotNET;
 using Chromatics.Core;
+using Chromatics.Enums;
+using Chromatics.Helpers;
 using Chromatics.Properties;
+using MetroFramework;
 using MetroFramework.Components;
 using MetroFramework.Controls;
 using Microsoft.VisualBasic.FileIO;
@@ -19,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -54,6 +58,8 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.btn_clearcache, @"Clear local FFXIV cache. Requires application restart.");
             tt_mappings.SetToolTip(this.trackbar_lighting, @"Adjust global brightness for all devices.");
             tt_mappings.SetToolTip(this.chk_updatecheck, @"Enable checking for updates on Chromatics start. Default: Enabled");
+            tt_mappings.SetToolTip(this.cb_theme, @"Change the interface theme. Default: System");
+            tt_mappings.SetToolTip(this.cb_language, @"Change Chromatics' language. Default: English");
             tt_mappings.SetToolTip(mt_settings_razer, @"Enable/disable Razer device library. Default: Enabled");
             tt_mappings.SetToolTip(mt_settings_logitech, @"Enable/disable Logitech device library. Default: Enabled");
             tt_mappings.SetToolTip(mt_settings_corsair, @"Enable/disable Corsair device library. Default: Enabled");
@@ -69,6 +75,19 @@ namespace Chromatics.Forms
             //Startup
             var settings = AppSettings.GetSettings();
 
+            // Populate the ComboBox for Theme
+            cb_theme.Items.AddRange(Enum.GetValues(typeof(Theme))
+                .Cast<Theme>()
+                .Select(t => new ComboBoxItem<Theme>(t, t.ToString()))
+                .ToArray());
+
+            // Populate the ComboBox for Language
+            cb_language.Items.AddRange(Enum.GetValues(typeof(Language))
+                .Cast<Language>()
+                .Select(l => new ComboBoxItem<Language>(l, l.ToString()))
+                .ToArray());
+
+
             chk_localcache.Checked = settings.localcache;
             chk_winstart.Checked = settings.winstart;
             chk_minimizetray.Checked = settings.minimizetray;
@@ -76,6 +95,8 @@ namespace Chromatics.Forms
             trackbar_lighting.Value = settings.globalbrightness;
             lbl_devicebrightpercent.Text = $"{settings.globalbrightness}%";
             chk_updatecheck.Checked = settings.checkupdates;
+            cb_theme.SelectedIndex = (int)settings.systemTheme;
+            cb_language.SelectedIndex = (int)settings.systemLanguage;
 
             mt_settings_razer.BackColor = settings.deviceRazerEnabled ? tilecol_enabled : tilecol_disabled;
             mt_settings_logitech.BackColor = settings.deviceLogitechEnabled ? tilecol_enabled : tilecol_disabled;
@@ -603,5 +624,66 @@ namespace Chromatics.Forms
             return newImage;
         }
 
+        private void cb_theme_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var settings = AppSettings.GetSettings();
+
+            if ((Theme)cb_theme.SelectedIndex != settings.systemTheme)
+            {
+                settings.systemTheme = ((ComboBoxItem<Theme>)cb_theme.SelectedItem).Value;
+                AppSettings.SaveSettings(settings);
+
+
+                if (settings.systemTheme == Enums.Theme.System)
+                {
+                    if (SystemHelpers.IsDarkModeEnabled())
+                    {
+                        Fm_MainWindow.SetDarkMode(true);
+                    }
+                    else
+                    {
+                        Fm_MainWindow.SetDarkMode(false);
+                    }
+                }
+                else if (settings.systemTheme == Enums.Theme.Dark)
+                {
+                    Fm_MainWindow.SetDarkMode(true);
+                }
+                else if (settings.systemTheme == Enums.Theme.Light)
+                {
+                    Fm_MainWindow.SetDarkMode(false);
+                }
+
+                
+            }
+
+
+        }
+
+        private void cb_language_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var settings = AppSettings.GetSettings();
+            settings.systemLanguage = ((ComboBoxItem<Language>)cb_language.SelectedItem).Value;
+
+            AppSettings.SaveSettings(settings);
+        }
+
+        public class ComboBoxItem<T>
+        {
+            public T Value { get; set; }
+            public string Display { get; set; }
+
+            public ComboBoxItem(T value, string display)
+            {
+                Value = value;
+                Display = display;
+            }
+
+            // Override ToString to control what is displayed in the ComboBox
+            public override string ToString()
+            {
+                return Display;
+            }
+        }
     }
 }

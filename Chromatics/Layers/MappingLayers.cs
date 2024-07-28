@@ -26,8 +26,6 @@ namespace Chromatics.Layers
 
         private static int _version = 0;
 
-        private static bool _importQueued = false;
-
         private static System.Timers.Timer _timer;
 
         private static int _prev = 0;
@@ -148,8 +146,6 @@ namespace Chromatics.Layers
 
         private static void QueueImportMappings(ConcurrentDictionary<int, Layer> importedLayer, bool empty = false)
         {
-            _importQueued = true;
-
             // Start a timer to check periodically if RGBController is loaded
             _timer = new System.Timers.Timer(1000); // Check every second
             _timer.Elapsed += (sender, e) => CheckRGBControllerLoaded(importedLayer, empty);
@@ -161,7 +157,6 @@ namespace Chromatics.Layers
             if (RGBController.IsLoaded())
             {
                 _timer.Dispose();
-                _importQueued = false;
                 ImportMappings(state as ConcurrentDictionary<int, Layer>, empty);
 
                 if (Uc_Mappings.Instance.InvokeRequired)
