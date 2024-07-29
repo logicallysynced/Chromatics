@@ -158,6 +158,11 @@ namespace Chromatics.Layers
                                     dutyComplete = false;
                                 }
 
+                                if (chatLogEntries.First().Message.Contains("Allagan tomestones of"))
+                                {
+                                    dutyComplete = true;
+                                }
+
                             }
 
                             _previousArrayIndex = readResult.PreviousArrayIndex;
