@@ -1,4 +1,6 @@
 ﻿using Chromatics.Core;
+using Chromatics.Helpers;
+using Chromatics.Localization;
 using Chromatics.Properties;
 using MetroFramework.Components;
 using MetroFramework.Controls;
@@ -44,7 +46,7 @@ namespace Chromatics.Forms
 
             metroStyleManager = new MetroStyleManager(); 
             metroStyleManager.Owner = this;
-            metroStyleManager.Theme = MetroFramework.MetroThemeStyle.Default;
+            metroStyleManager.Theme = SystemHelpers.IsDarkModeEnabled() ? MetroFramework.MetroThemeStyle.Dark : MetroFramework.MetroThemeStyle.Light;
             metroStyleManager.Style = MetroFramework.MetroColorStyle.Pink;
 
             this.Theme = metroStyleManager.Theme;
@@ -62,6 +64,8 @@ namespace Chromatics.Forms
                 tile.TileImageAlign = ContentAlignment.MiddleCenter;
                 tile.Invalidate();
             }
+
+            LocalizationManager.LocalizeForm(this);
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -120,7 +124,7 @@ namespace Chromatics.Forms
                 btn_save.BackColor = tilecol_disabled;
                 //btn_save.Enabled = false;
                 btn_save.Click -= btn_save_Click;
-                tt_mappings.SetToolTip(btn_save, @"Please select at least one device provider.");
+                tt_mappings.SetToolTip(btn_save, LocalizationManager.GetLocalizedText("Please select at least one device provider."));
             }
             else if (selected > 0)
             {

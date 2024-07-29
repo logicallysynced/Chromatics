@@ -25,11 +25,10 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode or if layer/effect is disabled
+            //Do not apply if layer/effect is disabled
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
 
-            if (MappingLayers.IsPreview()) return;
             
             CutsceneAnimationEffectModel model;
 
@@ -119,6 +118,7 @@ namespace Chromatics.Layers
                 DutyFinderBellExtension.CheckCache();
 
 
+
                 if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model._inInstance != DutyFinderBellExtension.InInstance() || model.wasDisabled || layer.requestUpdate)
                 {
                     if (getCurrentPlayer.Entity.InCutscene && !DutyFinderBellExtension.InInstance())
@@ -133,6 +133,7 @@ namespace Chromatics.Layers
                         animationGradient.AddDecorator(gradientMove);
                                                 
                         layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), animationGradient)); //new SolidColorBrush(baseColor);
+                        layergroup.ZIndex = 1000;
 
                         //layergroup.AddDecorator(animation);
 

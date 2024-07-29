@@ -21,11 +21,9 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode or if layer/effect is disabled
+            //Do not apply if layer/effect is disabled
             var effectSettings = RGBController.GetEffectsSettings();
-
-            if (MappingLayers.IsPreview()) return;
-            
+                        
             DutyFinderBellEffectModel model;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
@@ -74,6 +72,7 @@ namespace Chromatics.Layers
                 {
                     model.activeBrush.RemoveAllDecorators();
                     layergroup.Brush = new SolidColorBrush(Color.Transparent);
+                    layergroup.ZIndex = 2000;
                     model.wasPopped = false;
                     model.activeBrush = null;
                 }

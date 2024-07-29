@@ -20,8 +20,6 @@ namespace Chromatics.Layers
                 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode
-            if (MappingLayers.IsPreview()) return;
 
             ExpTrackerDynamicModel model;
 
@@ -91,7 +89,7 @@ namespace Chromatics.Layers
                 }
 
                 //Determine if level cap
-                if (currentLvl >= 90)
+                if (currentLvl >= 100)
                 {
                     currentExp = 0;
                 }
@@ -103,8 +101,6 @@ namespace Chromatics.Layers
             
 
                 if (model.highlight_brush == null || model.highlight_brush.Color != highlight_col) model.highlight_brush = new SolidColorBrush(highlight_col);
-
-
 
                 if (layer.allowBleed)
                 {
@@ -307,6 +303,10 @@ namespace Chromatics.Layers
                     return currentPlayer.PlayerInfo.RPR_CurrentEXP;
                 case Actor.Job.SGE:
                     return currentPlayer.PlayerInfo.SGE_CurrentEXP;
+                case Actor.Job.PCT:
+                    return currentPlayer.PlayerInfo.PCT_CurrentEXP;
+                case Actor.Job.VPR:
+                    return currentPlayer.PlayerInfo.VPR_CurrentEXP;
                 default:
                     return 0;
             }

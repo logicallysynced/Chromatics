@@ -1,15 +1,28 @@
-﻿using Chromatics.Enums;
+﻿using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Localization;
 using Chromatics.Models;
+using HidSharp;
+using OpenRGB.NET;
 using RGB.NET.Core;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Chromatics.Forms
 {
     public partial class Uc_VirtualOtherController : VirtualDevice
     {
+        string[] unwantedStrings = new string[]
+        {
+            "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
+            "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
+            "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
+        };
+
         public Uc_VirtualOtherController()
         {
             InitializeComponent();
@@ -17,28 +30,95 @@ namespace Chromatics.Forms
 
         private void OnLoad(object sender, EventArgs e)
         {
+            if (!init)
+            {
+                InitializeDevice();
+            }
+        }
+
+        public override void InitializeDevice()
+        {
+
             //Get Keycap image
             var keycap_img = Properties.Resources.keycap_backglow;
 
+            //Assign a keycap per cell based on selected device
+            var selectedDevice = Uc_Mappings.GetActiveDevice();
+            if (selectedDevice == null || selectedDevice.Value is not Guid selectedDeviceId)
+            {
+                return;
+            }
 
-            //Assign a keycap per cell
-            var keycaps = Helpers.LedKeyHelper.GetAllKeysForDevice(RGBDeviceType.Unknown);
+
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
+            if (device == null)
+            {
+                return;
+            }
+
+            if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+            {
+                return;
+            }
+
+            //var keycaps = Helpers.LedKeyHelper.GetAllKeysForDevice(device.DeviceInfo.DeviceType);
+
+            var base_i = 0;
+            var keycaps = new Dictionary<int, LedId>();
+
+            foreach (var led in device)
+            {
+                if (!keycaps.ContainsKey(base_i))
+                {
+                    keycaps.Add(base_i, led.Id);
+                }
+
+                base_i++;
+            }
+
             tlp_main.Controls.Clear();
             tlp_main.RowCount = 0;
             tlp_main.ColumnCount = 0;
             tlp_main.Padding = new Padding(0);
             tlp_main.Margin = new Padding(0);
 
-            var columnlimit = 20;
+            var columnlimit = 15;
             var currentrow = 0;
             var i = 0;
 
             if (keycaps != null)
             {
-                foreach (var key in keycaps)
+                var keycapsOrdered = keycaps.Select(key =>
+                {
+                    var keyText = key.Value.ToString();
+                    
+                    keyText = unwantedStrings.Aggregate(keyText, (current, unwanted) => current.Replace(unwanted, ""));
+                    int keyNumber;
+                    if (int.TryParse(keyText, out keyNumber))
+                    {
+                        return new { Keycap = key, KeyNumber = keyNumber };
+                    }
+                    else
+                    {
+                        // Handle the case where the keyText is not a valid integer
+                        // For example, set it to a default value or exclude it from ordering
+                        return new { Keycap = key, KeyNumber = int.MaxValue };
+                    }
+                })
+                .OrderBy(x => x.KeyNumber)
+                .Select(x => x.Keycap)
+                .ToList();
+
+                columnlimit = keycapsOrdered.Count / 4;
+
+                foreach (var key in keycapsOrdered.Take(device.Count()))
                 {
                     var width = _width;
                     var height = _height;
+
+                    var key_text = key.Value.ToString();
+                    key_text = unwantedStrings.Aggregate(key_text, (current, unwanted) => current.Replace(unwanted, ""));
+
 
                     var keycap = new KeyButton
                     {
@@ -47,7 +127,7 @@ namespace Chromatics.Forms
                         Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                         FlatStyle = FlatStyle.Flat,
                         Dock = DockStyle.Fill,
-                        Text = key.Value.ToString().Replace("Unknown", ""),
+                        Text = key_text,
                         Padding = new Padding(0),
                         Margin = new Padding(0),
                         Width = width,
@@ -88,10 +168,10 @@ namespace Chromatics.Forms
                 }
             }
 
+
             tlp_main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             tlp_main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             init = true;
         }
-
     }
 }

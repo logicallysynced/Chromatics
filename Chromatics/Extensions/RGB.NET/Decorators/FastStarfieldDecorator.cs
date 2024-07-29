@@ -25,7 +25,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private Dictionary<Led, double> startTimes;
         private double Timing;
         private double startDelay;
-        private double updateCounter = 0;
 
         public FastStarfieldDecorator(ListLedGroup _ledGroup, int numberOfLeds, double interval, double fadeSpeed, Color[] colors, RGBSurface surface, double densityMultiplier = 1.0, bool updateIfDisabled = false, Color baseColor = default(Color)) : base(surface, updateIfDisabled)
         {

@@ -24,8 +24,6 @@ namespace Chromatics.Layers
     {
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode
-            if (MappingLayers.IsPreview()) return;
 
             //Static Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();

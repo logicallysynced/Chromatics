@@ -24,15 +24,24 @@ using System.Timers;
 using Chromatics.Properties;
 using System.Windows.Controls.Primitives;
 using Sharlayan.Core.Enums;
+using System.Runtime.InteropServices;
+using Microsoft.Win32;
+using MetroFramework;
+using System.Diagnostics.Eventing.Reader;
+using System.Printing;
+using MetroFramework.Properties;
+using Chromatics.Localization;
 
 namespace Chromatics.Forms
 {
     public partial class Fm_MainWindow : MetroForm
     {
-        private MetroStyleManager metroStyleManager;
+        public MetroStyleManager metroStyleManager;
         private Form mainForm;
         private SettingsModel appSettings;
         private MetroToolTip tt_main;
+        private static Fm_MainWindow _Instance;
+        private static MetroStyleManager _metroStyleManager;
 
         public Fm_MainWindow()
         {
@@ -42,18 +51,21 @@ namespace Chromatics.Forms
 
             //Start Form
             InitializeComponent();
+            _Instance = this;
 
             metroStyleManager = new MetroStyleManager(); 
             metroStyleManager.Owner = this;
             metroStyleManager.Theme = MetroFramework.MetroThemeStyle.Default;
             metroStyleManager.Style = MetroFramework.MetroColorStyle.Pink;
+            _metroStyleManager = metroStyleManager;
 
             this.Theme = metroStyleManager.Theme;
             this.Style = metroStyleManager.Style;
             this.Size = new System.Drawing.Size(1400, 885);
 
             mainForm = this;
-            
+            RegisterForThemeChanges(metroStyleManager);
+
             //Load Settings
             AppSettings.Startup();
             appSettings = AppSettings.GetSettings();
@@ -66,6 +78,7 @@ namespace Chromatics.Forms
                 firstRunForm.ShowDialog();
             }
 
+            
             //Check for new expansion settings
             if (!appSettings.ffxivExpansion.HasValue || appSettings.ffxivExpansion < 7.0)
             {
@@ -151,14 +164,66 @@ namespace Chromatics.Forms
             }
 
             //Setup Defaults
+            
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             if (!File.Exists(enviroment + @"/layers.chromatics3"))
             {
                 File.Copy(enviroment + @"/defaults/layers.chromatics3", enviroment + @"/layers.chromatics3");
             }
+            
+
+            //Apply Theme
+            if (appSettings.systemTheme == Enums.Theme.System)
+            {
+                if (SystemHelpers.IsDarkModeEnabled())
+                {
+                    SetDarkMode(true);
+                }
+                else
+                {
+                    SetDarkMode(false);
+                }
+            }
+            else if (appSettings.systemTheme == Enums.Theme.Dark)
+            {
+                SetDarkMode(true);
+
+            }
+            else if (appSettings.systemTheme == Enums.Theme.Light)
+            {
+                SetDarkMode(false);
+
+            }
+
+            
+            Debug.WriteLine($"System Dark Mode is: {SystemHelpers.IsDarkModeEnabled()}");
+
+            LocalizationManager.LocalizeForm(this);
 
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
+        }
 
+        public static void SetDarkMode(bool darkMode)
+        {
+            if (darkMode)
+            {
+                _Instance.Theme = MetroThemeStyle.Dark;
+                _Instance.BackImage = global::Chromatics.Properties.Resources.chromatics_white;
+                _metroStyleManager.Theme = MetroThemeStyle.Dark;
+                DarkModeManager.ToggleDarkMode(_Instance, true);
+            }
+            else
+            {
+                _Instance.Theme = MetroThemeStyle.Light;
+                _Instance.BackImage = global::Chromatics.Properties.Resources.logo;
+                _metroStyleManager.Theme = MetroThemeStyle.Light;
+                DarkModeManager.ToggleDarkMode(_Instance, false);
+            }
+        }
+
+        public static void TranslateForm()
+        {
+            LocalizationManager.LocalizeForm(_Instance);
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -293,6 +358,36 @@ namespace Chromatics.Forms
                 });
                 thread.Start();
             #endif
+        }
+
+        
+
+        public static void RegisterForThemeChanges(MetroFramework.Components.MetroStyleManager metroStyleManager)
+        {
+            SystemEvents.UserPreferenceChanged += (sender, e) =>
+            {
+                Debug.WriteLine($"UserPreferenceChanged: {e.Category}");
+
+                if (e.Category == UserPreferenceCategory.General)
+                {
+                    var appSettings = AppSettings.GetSettings();
+
+                    if (appSettings != null)
+                    {
+                        if (appSettings.systemTheme == Enums.Theme.System)
+                        {
+                            if (SystemHelpers.IsDarkModeEnabled())
+                            {
+                                SetDarkMode(true);
+                            }
+                            else
+                            {
+                                SetDarkMode(false);
+                            }
+                        }
+                    }
+                }
+            };
         }
     }
 }

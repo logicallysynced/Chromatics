@@ -427,7 +427,7 @@ namespace Chromatics.Models
         public ColorMapping WeatherVacuityHighlight = new("Vacuity (Highlight)", PaletteTypes.ReactiveWeather, Color.Violet);
 
         public ColorMapping WeatherReminiscenceBase = new("Reminiscence (Base)", PaletteTypes.ReactiveWeather, Color.Gold);
-        public ColorMapping WeatherReminiscenceHighlight = new("Reminiscence (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
+        public ColorMapping WeatherReminiscenceHighlight = new("Reminiscence (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00FF7E));
 
         public ColorMapping WeatherOminousCloudsBase = new("Ominous Clouds (Base)", PaletteTypes.ReactiveWeather, Color.Silver);
         public ColorMapping WeatherOminousCloudsHighlight = new("Ominous Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
@@ -543,7 +543,7 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectM3Highlight3 = new("Arcadion M3 (Highlight 3)", PaletteTypes.RaidEffects, Color.DarkOrange);
 
         public ColorMapping RaidEffectM4Base = new("Arcadion M4 (Base)", PaletteTypes.RaidEffects, Color.Blue);
-        public ColorMapping RaidEffectM4KeyHighlight = new("Arcadion M3 (Key Highlights)", PaletteTypes.RaidEffects, Color.Red);
+        public ColorMapping RaidEffectM4KeyHighlight = new("Arcadion M4 (Key Highlights)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM4Highlight1 = new("Arcadion M4 (Highlight 1)", PaletteTypes.RaidEffects, Color.Blue);
         public ColorMapping RaidEffectM4Highlight2 = new("Arcadion M4 (Highlight 2)", PaletteTypes.RaidEffects, Color.Magenta);
         public ColorMapping RaidEffectM4Highlight3 = new("Arcadion M4 (Highlight 3)", PaletteTypes.RaidEffects, Color.White);

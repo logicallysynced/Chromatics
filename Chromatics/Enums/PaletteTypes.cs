@@ -37,7 +37,7 @@ namespace Chromatics.Enums
             ReactiveWeather = 10,
             [Display(Name = "Job Classes")]
             JobClasses = 11,
-            [Display(Name = "Raid Effects")]
+            [Display(Name = "Raid Zone Effects")]
             RaidEffects = 12
         }
 

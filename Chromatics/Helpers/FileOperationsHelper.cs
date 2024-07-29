@@ -5,6 +5,7 @@ using CsvHelper;
 using FFXIVWeather.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RGB.NET.Core;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -82,6 +83,9 @@ namespace Chromatics.Helpers
                 return null;
             }
         }
+
+
+
 
         public static bool CheckLayerMappingsExist()
         {
@@ -176,20 +180,26 @@ namespace Chromatics.Helpers
                 ValidateNames = true
             };
 
-
             if (save.ShowDialog() == DialogResult.OK)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.System, @"Exporting Layers..");
 
                 try
                 {
+                    // Create a copy of the layers dictionary without the deviceGuid
+                    var layersCopy = new ConcurrentDictionary<int, Layer>();
+                    foreach (var key in layers.Keys)
+                    {
+                        layersCopy[key] = CloneLayerWithoutDeviceGuid(layers[key]);
+                    }
+
                     using (var sw = new StreamWriter(save.FileName, false))
                     {
                         var serializer = new JsonSerializer();
                         serializer.Converters.Add(new DictionaryConverter());
                         serializer.NullValueHandling = NullValueHandling.Ignore;
 
-                        serializer.Serialize(sw, layers);
+                        serializer.Serialize(sw, layersCopy);
                         sw.WriteLine();
                         sw.Close();
                     }
@@ -203,6 +213,45 @@ namespace Chromatics.Helpers
                 }
             }
         }
+
+        // Helper method to clone a layer without the deviceGuid
+        private static Layer CloneLayerWithoutDeviceGuid(Layer originalLayer)
+        {
+            return new Layer(
+                originalLayer.layerVersion,
+                originalLayer.layerID,
+                originalLayer.layerIndex,
+                originalLayer.rootLayerType,
+                Guid.Empty, // deviceGuid set to empty
+                originalLayer.deviceType,
+                originalLayer.layerTypeindex,
+                originalLayer.zindex,
+                originalLayer.Enabled,
+                new Dictionary<int, LedId>(originalLayer.deviceLeds), // Ensure proper conversion
+                originalLayer.allowBleed,
+                originalLayer.layerModes
+            );
+        }
+
+        public static bool CreateLayersBackup()
+        {
+            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var path = $"{enviroment}/layers.chromatics3";
+            var backupFilePath = Path.Combine(Path.GetDirectoryName(path), $"backup_layers_{DateTime.Now:yyyyMMdd_HHmmss}.chromatics3");
+
+            try
+            {
+                File.Copy(path, backupFilePath);
+                Logger.WriteConsole(Enums.LoggerTypes.System, $"Backing up layers to {backupFilePath}.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Failed to create backup: {ex.Message}");
+                return false;
+            }
+        }
+
 
         public static void SaveColorMappings(PaletteColorModel palette)
         {
@@ -267,6 +316,8 @@ namespace Chromatics.Helpers
 
             return false;
         }
+
+
 
         public static PaletteColorModel ImportColorMappings()
         {
