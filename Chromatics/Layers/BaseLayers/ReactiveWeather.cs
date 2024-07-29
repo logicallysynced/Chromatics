@@ -134,7 +134,8 @@ namespace Chromatics.Layers
                     var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
                     DutyFinderBellExtension.CheckCache();
-
+                    WeatherExtension.CheckCache();
+                    
                     //Debug.WriteLine(currentWeatherZone.ToString());
 
 
@@ -175,9 +176,17 @@ namespace Chromatics.Layers
 
                     if (currentZone != "???" && currentZone != "")
                     {
-                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
+                        var currentWeatherZone = WeatherExtension.WeatherId();
+                        var currentWeather = WeatherHelper.GetWeatherNameById(currentWeatherZone);
 
-                        //var zoneWeather = 
+
+                        if (currentWeather == null)
+                        {
+                            currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
+                        }
+
+                        //var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
+
 
                         if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
