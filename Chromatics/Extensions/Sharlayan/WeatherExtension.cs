@@ -40,10 +40,10 @@ namespace Chromatics.Extensions.Sharlayan
 
                         _sList = new List<Signature>
                         {
-                            new Signature
+                            new Signature //Not used
                             {
                                 Key = memoryName,
-                                Value = "488D0D????????440FB745",
+                                Value = "E8????????0FB6C883E907",
                                 ASMSignature = true,
                                 PointerPath = new List<long>
                                 {   
@@ -73,10 +73,13 @@ namespace Chromatics.Extensions.Sharlayan
                 {
                     if (_memoryHandler.Scanner.Locations.ContainsKey(memoryName))
                     {
-                        var address = _memoryHandler.Scanner.Locations[memoryName];
-                        var currentWeather = _memoryHandler.GetByte(address.GetAddress(), 0x09);
+                        var address = _memoryHandler.Scanner.Locations[memoryName]; //Not used
+                        var currentWeather = _memoryHandler.GetByte(address.GetAddress(), 0x28); //Not used
 
-                        _weatherId = currentWeather;
+                        nint baseAddress = _memoryHandler.Configuration.ProcessModel.Process.MainModule.BaseAddress;
+                        var digitalWeather = _memoryHandler.GetByte(baseAddress + 0x2550CA4);
+
+                        _weatherId = digitalWeather;
 
                         _initialized = true;
                     }

@@ -427,7 +427,7 @@ namespace Chromatics.Models
         public ColorMapping WeatherVacuityHighlight = new("Vacuity (Highlight)", PaletteTypes.ReactiveWeather, Color.Violet);
 
         public ColorMapping WeatherReminiscenceBase = new("Reminiscence (Base)", PaletteTypes.ReactiveWeather, Color.Gold);
-        public ColorMapping WeatherReminiscenceHighlight = new("Reminiscence (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
+        public ColorMapping WeatherReminiscenceHighlight = new("Reminiscence (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00FF7E));
 
         public ColorMapping WeatherOminousCloudsBase = new("Ominous Clouds (Base)", PaletteTypes.ReactiveWeather, Color.Silver);
         public ColorMapping WeatherOminousCloudsHighlight = new("Ominous Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
