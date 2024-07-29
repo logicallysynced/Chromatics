@@ -79,7 +79,6 @@ public static class LocalizationManager
         Debug.WriteLine($"Translating Form to {currentLanguage}");
 
         LocalizeControl(form);
-        LocalizeTooltips(form);
 
         form.Invalidate();
         form.Refresh();
@@ -93,6 +92,22 @@ public static class LocalizationManager
         {
             LocalizeDataGridView(dataGridView);
             return;
+        }
+
+        // Locate and handle ToolTip and MetroToolTip instances
+        var controlType = control.GetType();
+        var fields = controlType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (var field in fields)
+        {
+            var fieldValue = field.GetValue(control);
+            if (fieldValue is ToolTip toolTip)
+            {
+                LocalizeTooltips(toolTip, control);
+            }
+            else if (fieldValue is MetroToolTip metroToolTip)
+            {
+                LocalizeTooltips(metroToolTip, control);
+            }
         }
 
         if (!string.IsNullOrEmpty(control.Text))
@@ -111,34 +126,43 @@ public static class LocalizationManager
         }
     }
 
-    private static void LocalizeTooltips(Form form)
+    private static void LocalizeTooltips(object toolTipObj, Control control)
     {
-        foreach (var field in form.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
-        {
-            if (field.FieldType == typeof(ToolTip) || field.FieldType == typeof(MetroToolTip))
-            {
-                var toolTip = field.GetValue(form) as ToolTip;
-                if (toolTip == null) continue;
+        var toolTip = toolTipObj as ToolTip;
+        var metroToolTip = toolTipObj as MetroToolTip;
 
-                if (!originalTooltips.ContainsKey(toolTip))
+        if (toolTip == null && metroToolTip == null)
+            return;
+
+        // Use appropriate dictionary based on toolTip or metroToolTip
+        var currentToolTip = toolTip ?? (ToolTip)metroToolTip;
+        if (currentToolTip == null)
+            return;
+
+        if (!originalTooltips.ContainsKey(currentToolTip))
+        {
+            originalTooltips[currentToolTip] = new Dictionary<Control, string>();
+        }
+
+        var controls = GetControls(control);
+        foreach (var ctrl in controls)
+        {
+            var originalText = toolTip != null ? toolTip.GetToolTip(ctrl) : metroToolTip.GetToolTip(ctrl);
+            if (!string.IsNullOrEmpty(originalText))
+            {
+                if (!originalTooltips[currentToolTip].ContainsKey(ctrl))
                 {
-                    originalTooltips[toolTip] = new Dictionary<Control, string>();
+                    originalTooltips[currentToolTip][ctrl] = originalText;
                 }
 
-                foreach (Control control in form.Controls)
+                var localizedText = GetLocalizedText(originalTooltips[currentToolTip][ctrl]);
+                if (toolTip != null)
                 {
-                    if (control.Name == "cb_language" || control.Name == "rtb_console") continue;
-
-                    string originalText = toolTip.GetToolTip(control);
-                    if (!string.IsNullOrEmpty(originalText))
-                    {
-                        if (!originalTooltips[toolTip].ContainsKey(control))
-                        {
-                            originalTooltips[toolTip][control] = originalText; // Store the original tooltip text key
-                        }
-
-                        toolTip.SetToolTip(control, GetLocalizedText(originalTooltips[toolTip][control]));
-                    }
+                    toolTip.SetToolTip(ctrl, localizedText);
+                }
+                else if (metroToolTip != null)
+                {
+                    metroToolTip.SetToolTip(ctrl, localizedText);
                 }
             }
         }
@@ -146,7 +170,6 @@ public static class LocalizationManager
 
     private static void LocalizeDataGridView(DataGridView dataGridView)
     {
-        Debug.WriteLine($"Translating DataGridView to {currentLanguage}");
         if (!originalDataGridViewTexts.ContainsKey(dataGridView))
         {
             originalDataGridViewTexts[dataGridView] = new Dictionary<(int, int), string>();
@@ -201,5 +224,11 @@ public static class LocalizationManager
                 }
             }
         }
+    }
+
+    private static IEnumerable<Control> GetControls(Control control)
+    {
+        var controls = control.Controls.Cast<Control>();
+        return controls.SelectMany(ctrl => GetControls(ctrl)).Concat(controls);
     }
 }
