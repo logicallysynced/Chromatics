@@ -79,7 +79,7 @@ namespace Chromatics.Forms
             tlp_base.Controls.Add(pn_top, 0, 0);
             tlp_base.Controls.Add(pn_bottom, 0, 2);
             tlp_base.Location = new Point(0, 0);
-            tlp_base.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_base.Margin = new System.Windows.Forms.Padding(4);
             tlp_base.Name = "tlp_base";
             tlp_base.RowCount = 3;
             tlp_base.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5F));
@@ -97,7 +97,7 @@ namespace Chromatics.Forms
             tlp_mid.Controls.Add(tlp_frame, 0, 0);
             tlp_mid.Dock = System.Windows.Forms.DockStyle.Fill;
             tlp_mid.Location = new Point(4, 69);
-            tlp_mid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_mid.Margin = new System.Windows.Forms.Padding(4);
             tlp_mid.Name = "tlp_mid";
             tlp_mid.RowCount = 1;
             tlp_mid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -109,7 +109,7 @@ namespace Chromatics.Forms
             pn_right.Controls.Add(flp_layers);
             pn_right.Dock = System.Windows.Forms.DockStyle.Fill;
             pn_right.Location = new Point(1635, 4);
-            pn_right.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            pn_right.Margin = new System.Windows.Forms.Padding(4);
             pn_right.Name = "pn_right";
             pn_right.Size = new Size(691, 1154);
             pn_right.TabIndex = 1;
@@ -135,7 +135,7 @@ namespace Chromatics.Forms
             tlp_frame.Controls.Add(tlp_layercontrols, 0, 1);
             tlp_frame.Dock = System.Windows.Forms.DockStyle.Fill;
             tlp_frame.Location = new Point(4, 4);
-            tlp_frame.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_frame.Margin = new System.Windows.Forms.Padding(4);
             tlp_frame.Name = "tlp_frame";
             tlp_frame.RowCount = 3;
             tlp_frame.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
@@ -154,7 +154,7 @@ namespace Chromatics.Forms
             tlp_controls.Controls.Add(btn_undoselection, 0, 2);
             tlp_controls.Dock = System.Windows.Forms.DockStyle.Fill;
             tlp_controls.Location = new Point(1519, 4);
-            tlp_controls.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_controls.Margin = new System.Windows.Forms.Padding(4);
             tlp_controls.Name = "tlp_controls";
             tlp_controls.RowCount = 4;
             tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
@@ -171,7 +171,7 @@ namespace Chromatics.Forms
             btn_clearselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             btn_clearselection.Enabled = false;
             btn_clearselection.Location = new Point(4, 4);
-            btn_clearselection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            btn_clearselection.Margin = new System.Windows.Forms.Padding(4);
             btn_clearselection.Name = "btn_clearselection";
             btn_clearselection.Size = new Size(92, 35);
             btn_clearselection.TabIndex = 0;
@@ -186,7 +186,7 @@ namespace Chromatics.Forms
             btn_reverseselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             btn_reverseselection.Enabled = false;
             btn_reverseselection.Location = new Point(4, 117);
-            btn_reverseselection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            btn_reverseselection.Margin = new System.Windows.Forms.Padding(4);
             btn_reverseselection.Name = "btn_reverseselection";
             btn_reverseselection.Size = new Size(92, 35);
             btn_reverseselection.TabIndex = 1;
@@ -200,7 +200,7 @@ namespace Chromatics.Forms
             btn_undoselection.AutoSize = true;
             btn_undoselection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             btn_undoselection.Location = new Point(4, 230);
-            btn_undoselection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            btn_undoselection.Margin = new System.Windows.Forms.Padding(4);
             btn_undoselection.Name = "btn_undoselection";
             btn_undoselection.Size = new Size(92, 35);
             btn_undoselection.TabIndex = 2;
@@ -222,7 +222,7 @@ namespace Chromatics.Forms
             tlp_layercontrols.Controls.Add(rtb_layerhelper, 1, 0);
             tlp_layercontrols.Font = new Font("Segoe UI", 10.2F);
             tlp_layercontrols.Location = new Point(4, 465);
-            tlp_layercontrols.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_layercontrols.Margin = new System.Windows.Forms.Padding(4);
             tlp_layercontrols.Name = "tlp_layercontrols";
             tlp_layercontrols.RowCount = 1;
             tlp_layercontrols.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -235,7 +235,7 @@ namespace Chromatics.Forms
             cb_changemode.FormattingEnabled = true;
             cb_changemode.ItemHeight = 23;
             cb_changemode.Location = new Point(1133, 27);
-            cb_changemode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            cb_changemode.Margin = new System.Windows.Forms.Padding(4);
             cb_changemode.Name = "cb_changemode";
             cb_changemode.Size = new Size(370, 29);
             cb_changemode.TabIndex = 6;
@@ -263,7 +263,7 @@ namespace Chromatics.Forms
             rtb_layerhelper.BackColor = SystemColors.Control;
             rtb_layerhelper.BorderStyle = System.Windows.Forms.BorderStyle.None;
             rtb_layerhelper.Location = new Point(19, 4);
-            rtb_layerhelper.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            rtb_layerhelper.Margin = new System.Windows.Forms.Padding(4);
             rtb_layerhelper.Name = "rtb_layerhelper";
             rtb_layerhelper.ReadOnly = true;
             rtb_layerhelper.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
@@ -277,7 +277,7 @@ namespace Chromatics.Forms
             pn_top.Controls.Add(tlp_top);
             pn_top.Dock = System.Windows.Forms.DockStyle.Fill;
             pn_top.Location = new Point(4, 4);
-            pn_top.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            pn_top.Margin = new System.Windows.Forms.Padding(4);
             pn_top.Name = "pn_top";
             pn_top.Size = new Size(2330, 57);
             pn_top.TabIndex = 1;
@@ -300,7 +300,7 @@ namespace Chromatics.Forms
             tlp_top.Controls.Add(btn_preview, 3, 0);
             tlp_top.Dock = System.Windows.Forms.DockStyle.Fill;
             tlp_top.Location = new Point(0, 0);
-            tlp_top.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_top.Margin = new System.Windows.Forms.Padding(4);
             tlp_top.Name = "tlp_top";
             tlp_top.RowCount = 1;
             tlp_top.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -343,19 +343,20 @@ namespace Chromatics.Forms
             cb_addlayer.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             cb_addlayer.FormattingEnabled = true;
             cb_addlayer.ItemHeight = 23;
-            cb_addlayer.Location = new Point(1865, 23);
-            cb_addlayer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            cb_addlayer.Location = new Point(1865, 24);
+            cb_addlayer.Margin = new System.Windows.Forms.Padding(4);
             cb_addlayer.Name = "cb_addlayer";
             cb_addlayer.Size = new Size(294, 29);
             cb_addlayer.TabIndex = 0;
             cb_addlayer.UseSelectable = true;
+            cb_addlayer.Visible = false;
             cb_addlayer.SelectedIndexChanged += cb_addlayer_SelectedIndexChanged;
             // 
             // btn_addlayer
             // 
             btn_addlayer.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             btn_addlayer.Location = new Point(2168, 4);
-            btn_addlayer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            btn_addlayer.Margin = new System.Windows.Forms.Padding(4);
             btn_addlayer.Name = "btn_addlayer";
             btn_addlayer.Size = new Size(118, 49);
             btn_addlayer.TabIndex = 1;
@@ -370,8 +371,8 @@ namespace Chromatics.Forms
             cb_deviceselect.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             cb_deviceselect.FormattingEnabled = true;
             cb_deviceselect.ItemHeight = 23;
-            cb_deviceselect.Location = new Point(4, 23);
-            cb_deviceselect.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            cb_deviceselect.Location = new Point(4, 24);
+            cb_deviceselect.Margin = new System.Windows.Forms.Padding(4);
             cb_deviceselect.Name = "cb_deviceselect";
             cb_deviceselect.Size = new Size(488, 29);
             cb_deviceselect.TabIndex = 2;
@@ -398,7 +399,7 @@ namespace Chromatics.Forms
             pn_bottom.Controls.Add(tlp_footer);
             pn_bottom.Dock = System.Windows.Forms.DockStyle.Fill;
             pn_bottom.Location = new Point(4, 1239);
-            pn_bottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            pn_bottom.Margin = new System.Windows.Forms.Padding(4);
             pn_bottom.Name = "pn_bottom";
             pn_bottom.Size = new Size(2330, 57);
             pn_bottom.TabIndex = 2;
@@ -411,7 +412,7 @@ namespace Chromatics.Forms
             tlp_footer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
             tlp_footer.Controls.Add(rtb_layerhelp, 1, 0);
             tlp_footer.Location = new Point(-4, 4);
-            tlp_footer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_footer.Margin = new System.Windows.Forms.Padding(4);
             tlp_footer.Name = "tlp_footer";
             tlp_footer.RowCount = 1;
             tlp_footer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -424,7 +425,7 @@ namespace Chromatics.Forms
             rtb_layerhelp.BackColor = SystemColors.Control;
             rtb_layerhelp.BorderStyle = System.Windows.Forms.BorderStyle.None;
             rtb_layerhelp.Location = new Point(1635, 4);
-            rtb_layerhelp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            rtb_layerhelp.Margin = new System.Windows.Forms.Padding(4);
             rtb_layerhelp.Name = "rtb_layerhelp";
             rtb_layerhelp.ReadOnly = true;
             rtb_layerhelp.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
@@ -438,7 +439,7 @@ namespace Chromatics.Forms
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             Controls.Add(tlp_base);
-            Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            Margin = new System.Windows.Forms.Padding(4);
             Name = "Uc_Mappings";
             Size = new Size(2581, 1454);
             Load += OnLoad;

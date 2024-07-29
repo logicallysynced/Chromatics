@@ -151,14 +151,14 @@ namespace Chromatics.Forms
             
 
             //Add tooltips
-            tt_mappings.SetToolTip(this.cb_addlayer, @"Add New Layer of selected type");
-            tt_mappings.SetToolTip(this.cb_deviceselect, @"Change to another device");
-            tt_mappings.SetToolTip(this.btn_preview, @"Show virtual lighting on buttons");
-            tt_mappings.SetToolTip(this.btn_clearselection, @"Clear all keys on layer");
-            tt_mappings.SetToolTip(this.btn_reverseselection, @"Reverse keys on layer");
-            tt_mappings.SetToolTip(this.btn_undoselection, @"Undo key selection on layer");
-            tt_mappings.SetToolTip(this.btn_togglebleed, @"For layers which have a negative colour, allow lower layers to bleed through instead of showing the negative colour.");
-            tt_mappings.SetToolTip(this.cb_changemode, @"Change the layer mode." + Environment.NewLine + @"Interpolate: Shows the layer as a bar on your device." + Environment.NewLine + @"Fade: Fades the colour of the RGB keys.");
+            tt_mappings.SetToolTip(this.cb_addlayer, LocalizationManager.GetLocalizedText("Add New Layer of selected type"));
+            tt_mappings.SetToolTip(this.cb_deviceselect, LocalizationManager.GetLocalizedText("Change to another device"));
+            tt_mappings.SetToolTip(this.btn_preview, LocalizationManager.GetLocalizedText("Show virtual lighting on buttons"));
+            tt_mappings.SetToolTip(this.btn_clearselection, LocalizationManager.GetLocalizedText("Clear all keys on layer"));
+            tt_mappings.SetToolTip(this.btn_reverseselection, LocalizationManager.GetLocalizedText("Reverse keys on layer"));
+            tt_mappings.SetToolTip(this.btn_undoselection, LocalizationManager.GetLocalizedText("Undo key selection on layer"));
+            tt_mappings.SetToolTip(this.btn_togglebleed, LocalizationManager.GetLocalizedText("For layers which have a negative colour, allow lower layers to bleed through instead of showing the negative colour."));
+            tt_mappings.SetToolTip(this.cb_changemode, LocalizationManager.GetLocalizedText("Change the layer mode.\nInterpolate: Shows the layer as a bar on your device.\nFade: Fades the colour of the RGB keys."));
 
             //Handle Events
             //this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
@@ -328,7 +328,7 @@ namespace Chromatics.Forms
 
         private void AddNoDevicesDetectedItem()
         {
-            var noDevicesItem = new ComboboxItem { Value = Guid.Empty, Text = "No Devices Detected" };
+            var noDevicesItem = new ComboboxItem { Value = Guid.Empty, Text = LocalizationManager.GetLocalizedText("No Devices Detected") };
             cb_deviceselect.Items.Add(noDevicesItem);
             cb_deviceselect.SelectedItem = noDevicesItem;
             cb_deviceselect.Enabled = false;
@@ -336,7 +336,7 @@ namespace Chromatics.Forms
 
         private void RemoveNoDevicesDetectedItem()
         {
-            var noDevicesItem = cb_deviceselect.Items.OfType<ComboboxItem>().FirstOrDefault(item => item.Text == "No Devices Detected");
+            var noDevicesItem = cb_deviceselect.Items.OfType<ComboboxItem>().FirstOrDefault(item => item.Text == LocalizationManager.GetLocalizedText("No Devices Detected"));
             if (noDevicesItem != null)
             {
                 cb_deviceselect.Items.Remove(noDevicesItem);
@@ -436,10 +436,10 @@ namespace Chromatics.Forms
                 Dock = DockStyle.Top
             };
 
-            tt_mappings.SetToolTip(pgb.chk_enabled, "Enable/Disable Layer");
-            tt_mappings.SetToolTip(pgb.cb_selector, "Select the type of Layer");
-            tt_mappings.SetToolTip(pgb.btn_edit, "Toggle Edit mode for this Layer");
-            tt_mappings.SetToolTip(pgb.btn_delete, "Remove this Layer");
+            tt_mappings.SetToolTip(pgb.chk_enabled, LocalizationManager.GetLocalizedText("Enable/Disable Layer"));
+            tt_mappings.SetToolTip(pgb.cb_selector, LocalizationManager.GetLocalizedText("Select the type of Layer"));
+            tt_mappings.SetToolTip(pgb.btn_edit, LocalizationManager.GetLocalizedText("Toggle Edit mode for this Layer"));
+            tt_mappings.SetToolTip(pgb.btn_delete, LocalizationManager.GetLocalizedText("Remove this Layer"));
 
             pgb.cb_selector.SelectedIndex = layerTypeindex;
             pgb.GotFocus += new EventHandler(OnLayerPressed);
@@ -637,8 +637,8 @@ namespace Chromatics.Forms
             }
 
             tt_mappings.RemoveAll();
-            tt_mappings.SetToolTip(this.cb_addlayer, "Add New Layer of selected type");
-            tt_mappings.SetToolTip(this.cb_deviceselect, "Change to another device");
+            tt_mappings.SetToolTip(this.cb_addlayer, LocalizationManager.GetLocalizedText("Add New Layer of selected type"));
+            tt_mappings.SetToolTip(this.cb_deviceselect, LocalizationManager.GetLocalizedText("Change to another device"));
             rtb_layerhelper.Text = @"";
 
             flp_layers.Controls.Clear();
@@ -922,11 +922,11 @@ namespace Chromatics.Forms
 
                 if (layer.allowBleed)
                 {
-                    btn_togglebleed.Text = @"Bleed Enabled";
+                    btn_togglebleed.Text = LocalizationManager.GetLocalizedText("Bleed Enabled");
                 }
                 else
                 {
-                    btn_togglebleed.Text = @"Bleed Disabled";
+                    btn_togglebleed.Text = LocalizationManager.GetLocalizedText("Bleed Disabled");
                 }
 
                 ChangeLayerMode(layer);
@@ -967,7 +967,7 @@ namespace Chromatics.Forms
                     }
                     else if (layer.rootLayerType == LayerType.EffectLayer)
                     {
-                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
+                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(LocalizationManager.GetLocalizedText("The effect layer displays effects over other layers, depending on which effects are enabled."));
                     }
                 });
             }
@@ -992,7 +992,7 @@ namespace Chromatics.Forms
                 }
                 else if (layer.rootLayerType == LayerType.EffectLayer)
                 {
-                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
+                    rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(LocalizationManager.GetLocalizedText("The effect layer displays effects over other layers, depending on which effects are enabled."));
                 }
             }
         }
@@ -1097,7 +1097,7 @@ namespace Chromatics.Forms
 
                     if (ml.allowBleed)
                     {
-                        btn_togglebleed.Text = @"Bleed Enabled";
+                        btn_togglebleed.Text = LocalizationManager.GetLocalizedText("Bleed Enabled");
                         btn_togglebleed.BackColor = System.Drawing.Color.Lime;
                     }
                     else
@@ -1118,7 +1118,7 @@ namespace Chromatics.Forms
                     }
                     else if (ml.rootLayerType == LayerType.EffectLayer)
                     {
-                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(@"The effect layer displays effects over other layers, depending on which effects are enabled.");
+                        rtb_layerhelper.Text = TextHelper.ParseLayerHelperText(LocalizationManager.GetLocalizedText("The effect layer displays effects over other layers, depending on which effects are enabled."));
                     }
 
                     Debug.WriteLine($"Key Count: {ml.deviceLeds.Count}");
@@ -1249,7 +1249,7 @@ namespace Chromatics.Forms
             var obj = (MetroButton)sender;
             var parent = (Pn_LayerDisplay)obj.Parent;
 
-            switch (MessageBox.Show(Fm_MainWindow.ActiveForm, @"Are you sure you want to delete this layer?", @"", MessageBoxButtons.OKCancel, MessageBoxIcon.Information))
+            switch (MessageBox.Show(Fm_MainWindow.ActiveForm, LocalizationManager.GetLocalizedText("Are you sure you want to delete this layer?"), @"", MessageBoxButtons.OKCancel, MessageBoxIcon.Information))
             {
                 case DialogResult.OK:
 
@@ -1433,7 +1433,7 @@ namespace Chromatics.Forms
 
             if (selectedDeviceGuid == null || selectedDeviceType == null)
             {
-                MessageBox.Show("Please select a valid device.");
+                MessageBox.Show(LocalizationManager.GetLocalizedText("Please select a valid device."));
                 return;
             }
 
@@ -1509,7 +1509,7 @@ namespace Chromatics.Forms
             else
             {
                 // Handle case where no item is selected or the item is not a ComboboxItem
-                MessageBox.Show("Please select a valid device.");
+                MessageBox.Show(LocalizationManager.GetLocalizedText("Please select a valid device."));
             }
         }
 
@@ -1747,14 +1747,14 @@ namespace Chromatics.Forms
                 if (ms.allowBleed)
                 {
                     //Disable Bleed
-                    thisbtn.Text = @"Bleed Disabled";
+                    thisbtn.Text = LocalizationManager.GetLocalizedText("Bleed Disabled");
                     thisbtn.BackColor = System.Drawing.Color.Red;
                     ms.allowBleed = false;
                 }
                 else
                 {
                     //Allow Bleed
-                    thisbtn.Text = @"Bleed Enabled";
+                    thisbtn.Text = LocalizationManager.GetLocalizedText("Bleed Enabled");
                     thisbtn.BackColor = System.Drawing.Color.Lime;
                     ms.allowBleed = true;
                 }

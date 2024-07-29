@@ -124,7 +124,7 @@ namespace Chromatics.Forms
                 btn_save.BackColor = tilecol_disabled;
                 //btn_save.Enabled = false;
                 btn_save.Click -= btn_save_Click;
-                tt_mappings.SetToolTip(btn_save, @"Please select at least one device provider.");
+                tt_mappings.SetToolTip(btn_save, LocalizationManager.GetLocalizedText("Please select at least one device provider."));
             }
             else if (selected > 0)
             {
