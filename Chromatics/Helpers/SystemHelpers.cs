@@ -2,6 +2,7 @@
 using MetroFramework;
 using MetroFramework.Components;
 using MetroFramework.Controls;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,27 +17,39 @@ namespace Chromatics.Helpers
 {
     public class SystemHelpers
     {
-        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
-
-        [DllImport("dwmapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int DwmGetWindowAttribute(IntPtr hWnd, int dwAttribute, out int pvAttribute, int cbAttribute);
-
         public static bool IsDarkModeEnabled()
         {
-            if (Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= 17763) // Windows 10 version 1809
+            if (Environment.OSVersion.Version.Major >= 10) // Windows 10 and above
             {
-                int isDark = 0;
-                IntPtr hwnd = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
-                if (hwnd != IntPtr.Zero)
+                try
                 {
-                    DwmGetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, out isDark, Marshal.SizeOf(typeof(int)));
+                    // Registry path for the system's theme preference
+                    const string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+                    const string valueName = "AppsUseLightTheme";
+
+                    using (var key = Registry.CurrentUser.OpenSubKey(keyPath))
+                    {
+                        if (key != null)
+                        {
+                            object registryValueObject = key.GetValue(valueName);
+                            if (registryValueObject != null)
+                            {
+                                int registryValue = (int)registryValueObject;
+                                return registryValue == 0; // 0 indicates dark mode, 1 indicates light mode
+                            }
+                        }
+                    }
                 }
-                return isDark == 1;
+                catch (Exception ex)
+                {
+                    // Log exception if necessary
+                    Debug.WriteLine($"Failed to read dark mode setting: {ex.Message}");
+                }
             }
-            // Default to light mode for unsupported versions
+
+            // Default to light mode for unsupported versions or if reading the setting failed
             return false;
         }
-
     }
 
     public static class DarkModeManager
@@ -176,19 +189,22 @@ namespace Chromatics.Helpers
                 {
                     richTextBox.Select(currentCharIndex, line.Length);
                     Color selectionColor = richTextBox.SelectionColor;
-                    Debug.WriteLine($"Color {selectionColor.Name} ({line})");
 
-                    // Only change colors that are truly black or near-black
-                    if (selectionColor.ToArgb().Equals(Color.Black.ToArgb()))
+                    if (isDarkMode)
                     {
-                        richTextBox.SelectionColor = Color.White;
+                        if (selectionColor.ToArgb().Equals(Color.Black.ToArgb()))
+                        {
+                            richTextBox.SelectionColor = Color.White;
+                        }
                     }
-
-                    if (selectionColor.ToArgb().Equals(Color.White.ToArgb()))
+                    else
                     {
-                        richTextBox.SelectionColor = Color.Black;
+                        if (selectionColor.ToArgb().Equals(Color.White.ToArgb()))
+                        {
+                            richTextBox.SelectionColor = Color.Black;
+                        }
                     }
-
+                        
                     currentCharIndex += line.Length + 1; // +1 for the newline character
                 }
 

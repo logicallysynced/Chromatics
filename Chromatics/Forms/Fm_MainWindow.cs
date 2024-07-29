@@ -64,7 +64,8 @@ namespace Chromatics.Forms
             this.Size = new System.Drawing.Size(1400, 885);
 
             mainForm = this;
-            
+            RegisterForThemeChanges(metroStyleManager);
+
             //Load Settings
             AppSettings.Startup();
             appSettings = AppSettings.GetSettings();
@@ -365,6 +366,8 @@ namespace Chromatics.Forms
         {
             SystemEvents.UserPreferenceChanged += (sender, e) =>
             {
+                Debug.WriteLine($"UserPreferenceChanged: {e.Category}");
+
                 if (e.Category == UserPreferenceCategory.General)
                 {
                     var appSettings = AppSettings.GetSettings();
