@@ -135,8 +135,6 @@ namespace Chromatics.Layers
 
                     DutyFinderBellExtension.CheckCache();
                     WeatherExtension.CheckCache();
-                    
-                    //Debug.WriteLine(currentWeatherZone.ToString());
 
 
                     if (DutyFinderBellExtension.InInstance())
@@ -179,6 +177,7 @@ namespace Chromatics.Layers
                         var currentWeatherZone = WeatherExtension.WeatherId();
                         var currentWeather = WeatherHelper.GetWeatherNameById(currentWeatherZone);
 
+                        //Debug.WriteLine($"Test Weather: {currentWeatherZone} {currentWeather}");
 
                         if (currentWeather == null)
                         {
