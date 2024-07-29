@@ -39,14 +39,14 @@ namespace Chromatics.Forms
                 ShowAlways = true
             };
 
-            tt_mappings.SetToolTip(mt_effect_dfbell, @"Flash devices when Duty Finder pops.");
-            tt_mappings.SetToolTip(mt_effect_damageflash, @"Flash devices when damage is taken.");
-            tt_mappings.SetToolTip(mt_effect_startupanimation, @"Displays rainbow animation on all devices when Chromatics starts but not connected to FFXIV.");
-            tt_mappings.SetToolTip(mt_effect_reactiveweather, @"Animated base layers for Reactive Weather.");
-            tt_mappings.SetToolTip(mt_effect_titlescreen, @"Animation on devices when on title and character selection screen.");
-            tt_mappings.SetToolTip(mt_effect_cutscenes, @"Animation on devices when cutscenes play.");
-            tt_mappings.SetToolTip(mt_effect_vegasmode, @"Color cycle devices when in the Gold Saucer.");
-            tt_mappings.SetToolTip(mt_effect_raideffects, @"Animated raid zone effects instead of reactive weather. Uses Reactive Weather layers.");
+            tt_mappings.SetToolTip(mt_effect_dfbell, LocalizationManager.GetLocalizedText("Flash devices when Duty Finder pops."));
+            tt_mappings.SetToolTip(mt_effect_damageflash, LocalizationManager.GetLocalizedText("Flash devices when damage is taken."));
+            tt_mappings.SetToolTip(mt_effect_startupanimation, LocalizationManager.GetLocalizedText("Displays rainbow animation on all devices when Chromatics starts but not connected to FFXIV."));
+            tt_mappings.SetToolTip(mt_effect_reactiveweather, LocalizationManager.GetLocalizedText("Animated base layers for Reactive Weather."));
+            tt_mappings.SetToolTip(mt_effect_titlescreen, LocalizationManager.GetLocalizedText("Animation on devices when on title and character selection screen."));
+            tt_mappings.SetToolTip(mt_effect_cutscenes, LocalizationManager.GetLocalizedText("Animation on devices when cutscenes play."));
+            tt_mappings.SetToolTip(mt_effect_vegasmode, LocalizationManager.GetLocalizedText("Color cycle devices when in the Gold Saucer."));
+            tt_mappings.SetToolTip(mt_effect_raideffects, LocalizationManager.GetLocalizedText("Animated raid zone effects instead of reactive weather. Uses Reactive Weather layers."));
 
             //Load Effect Settings
             if (RGBController.LoadEffectsSettings())
