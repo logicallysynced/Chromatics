@@ -24,7 +24,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private Dictionary<Led, double> startTimes;
         private double Timing;
         private double startDelay;
-        private double updateCounter = 0;
         private double interval;
         private int bpm;
 

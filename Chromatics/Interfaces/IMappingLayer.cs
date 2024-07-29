@@ -15,7 +15,8 @@ namespace Chromatics.Interfaces
         int layerIndex { get; set; }
         int zindex { get; set; }
         LayerType rootLayerType { get; }
-        RGBDeviceType deviceType {get; set;}
+        public Guid deviceGuid { get; set; }
+        public RGBDeviceType deviceType { get; set; }
         LayerModes layerModes { get; set; }
         bool Enabled { get; set; }
         bool allowBleed { get; set; }

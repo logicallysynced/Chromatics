@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Chromatics.Models
 {
@@ -46,6 +47,8 @@ namespace Chromatics.Models
         public string deviceHueBridgeKey { get; set; } = "";
         public string deviceHueBridgeStreamingKey { get; set; } = "";
         public bool deviceRazerCheckSDKOverride { get; set; } = false;
+        public Theme systemTheme { get; set; } = Theme.System;
+        public Language systemLanguage { get; set; } = Language.English;
 
     }
 }

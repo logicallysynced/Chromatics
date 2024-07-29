@@ -22,6 +22,15 @@ namespace Chromatics.Forms
 
         private void OnLoad(object sender, EventArgs e)
         {
+            if (!init)
+            {
+                InitializeDevice();
+            }
+        }
+
+        public override void InitializeDevice()
+        {
+
             //Get Keycap image
             var keycap_img = Properties.Resources.keycap_backglow;
 
@@ -134,6 +143,7 @@ namespace Chromatics.Forms
                     _keybuttons.Add(keycap);
                 }
             }
+
 
             tlp_main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             tlp_main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));

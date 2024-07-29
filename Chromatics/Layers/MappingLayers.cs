@@ -2,6 +2,8 @@
 using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
+using HidSharp;
+using OpenRGB.NET;
 using RGB.NET.Core;
 using System;
 using System.Collections.Concurrent;
@@ -9,7 +11,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
+using System.Windows.Forms;
+using System.Drawing;
+using Chromatics.Forms;
+using System.Runtime.Serialization;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace Chromatics.Layers
 {
@@ -19,26 +26,22 @@ namespace Chromatics.Layers
 
         private static int _version = 0;
 
+        private static System.Timers.Timer _timer;
+
         private static int _prev = 0;
 
         private static bool _preview;
         
         private static ConcurrentDictionary<int, Layer> _layers = new ConcurrentDictionary<int, Layer>();
 
-        public static int AddLayer(int index, LayerType rootLayerType, RGBDeviceType devicetype, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
+
+        public static int AddLayer(int index, LayerType rootLayerType, Guid deviceGuid, RGBDeviceType deviceType, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
         {
             _layerAutoID++;
-
             var id = _layerAutoID;
-
-            var layer = new Layer(AppSettings.currentMappingLayerVersion, id, index, rootLayerType, devicetype, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
+            var layer = new Layer(AppSettings.currentMappingLayerVersion, id, index, rootLayerType, deviceGuid, deviceType, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
             _layers.GetOrAdd(id, layer);
             _version++;
-
-            #if DEBUG
-                Debug.WriteLine(@"New Layer: " + id + @". zindex: " + zindex + @". Type: " + rootLayerType + @". Device: " + devicetype + @". LayerType: " + layerTypeIndex);
-            #endif
-
             return id;
         }
 
@@ -92,27 +95,44 @@ namespace Chromatics.Layers
         {
             if (FileOperationsHelper.CheckLayerMappingsExist())
             {
-                _layers.Clear();
-                _layers = FileOperationsHelper.LoadLayerMappings();
+                var _Templayers = FileOperationsHelper.LoadLayerMappings();
 
-                if (_layers == null)
+                if (_Templayers == null)
                 {
                     return false;
                 }
 
                 var flag = false;
-                foreach (var mapping in _layers)
+                var empty = false;
+
+                foreach (var mapping in _Templayers)
                 {
-                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null)
+                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null || mapping.Value.deviceGuid == Guid.Empty)
                     {
                         flag = true;
-                        mapping.Value.layerVersion = AppSettings.currentMappingLayerVersion; //remove later
+
+                        if (mapping.Value.deviceGuid == Guid.Empty)
+                        {
+                            empty = true;
+                        }
                     }
                 }
 
                 if (flag)
                 {
-                    SaveMappings();
+                    Debug.WriteLine("Flagged for upgrade");
+
+                    if (!empty)
+                    {
+                        FileOperationsHelper.CreateLayersBackup();
+                    }
+
+                    QueueImportMappings(_Templayers, empty);
+                }
+                else
+                {
+                    _layers.Clear();
+                    _layers = _Templayers;
                 }
 
                 _layerAutoID = _layers.LastOrDefault().Key;
@@ -122,6 +142,32 @@ namespace Chromatics.Layers
             }
 
             return false;
+        }
+
+        private static void QueueImportMappings(ConcurrentDictionary<int, Layer> importedLayer, bool empty = false)
+        {
+            // Start a timer to check periodically if RGBController is loaded
+            _timer = new System.Timers.Timer(1000); // Check every second
+            _timer.Elapsed += (sender, e) => CheckRGBControllerLoaded(importedLayer, empty);
+            _timer.Start();
+        }
+
+        private static void CheckRGBControllerLoaded(object state, bool empty)
+        {
+            if (RGBController.IsLoaded())
+            {
+                _timer.Dispose();
+                ImportMappings(state as ConcurrentDictionary<int, Layer>, empty);
+
+                if (Uc_Mappings.Instance.InvokeRequired)
+                {
+                    Uc_Mappings.Instance.Invoke(new MethodInvoker(() => Uc_Mappings.Instance.ChangeDeviceType()));
+                }
+                else
+                {
+                    Uc_Mappings.Instance.ChangeDeviceType();
+                }
+            }
         }
 
         public static bool SaveMappings()
@@ -131,37 +177,121 @@ namespace Chromatics.Layers
             return true;
         }
 
-        public static bool ImportMappings()
+        public static bool ImportMappings(ConcurrentDictionary<int, Layer> importedLayer = null, bool empty = false)
         {
-            var layers = FileOperationsHelper.ImportLayerMappings();
+            var layers = importedLayer ?? FileOperationsHelper.ImportLayerMappings();
 
             if (layers != null)
             {
-                _layers.Clear();
-                _layers = layers;
-                _layerAutoID = _layers.LastOrDefault().Key;
-                _version++;
 
-                var flag = false;
-                foreach (var mapping in _layers)
+
+                // Log layers and their versions
+#if DEBUG
+                Debug.WriteLine($"Total layers loaded: {layers.Count}");
+
+                foreach (var layer in layers)
                 {
-                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null)
+                    Debug.WriteLine($"Layer ID: {layer.Key}, Version: {layer.Value.layerVersion}");
+                }
+#endif
+                var migratedLayers = new Dictionary<int, Layer>();
+                var layersToMigrate = layers.Where(l => l.Value.layerVersion == "1").GroupBy(l => l.Value.deviceType);
+
+                if (importedLayer != null && !empty)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.System, $"Detected version 1 layers to migrate. Count: {layersToMigrate.Count()}.");
+                }
+
+                var currentDevices = RGBController.GetLiveDevices();
+
+                foreach (var group in layersToMigrate)
+                {
+                    var deviceType = group.Key;
+                    var deviceLayers = group.ToList();
+
+                    Debug.WriteLine($"Device Type: {deviceType}, Layers Count: {deviceLayers.Count}");
+
+                    var availableDevices = currentDevices.Where(d => d.Value.DeviceInfo.DeviceType == deviceType).ToList();
+                    if (availableDevices.Count == 0)
                     {
-                        flag = true;
-                        mapping.Value.layerVersion = AppSettings.currentMappingLayerVersion; //remove later
+                        Logger.WriteConsole(Enums.LoggerTypes.System, $"No available devices of type {deviceType} to migrate layers.");
+                        continue;
+                    }
+
+                    var selectedDeviceGuid = availableDevices.First().Key; // Automatically select the first available device
+
+                    foreach (var layer in deviceLayers)
+                    {
+                        layer.Value.deviceGuid = selectedDeviceGuid;
+                        layer.Value.layerVersion = AppSettings.currentMappingLayerVersion;
+                        migratedLayers[layer.Key] = layer.Value;
                     }
                 }
 
-                if (flag)
+                // Process layers with blank deviceGuid
+                var layersWithBlankGuid = layers.Where(l => l.Value.deviceGuid == Guid.Empty).GroupBy(l => l.Value.deviceType);
+
+                foreach (var group in layersWithBlankGuid)
                 {
-                    SaveMappings();
+                    var deviceType = group.Key;
+                    var deviceLayers = group.ToList();
+
+                    Debug.WriteLine($"Device Type: {deviceType}, Layers Count: {deviceLayers.Count} with blank GUID");
+
+                    var availableDevices = currentDevices.Where(d => d.Value.DeviceInfo.DeviceType == deviceType).ToList();
+                    if (availableDevices.Count == 0)
+                    {
+                        //Logger.WriteConsole(Enums.LoggerTypes.System, $"No available devices of type {deviceType} to assign layers with blank GUID.");
+                        continue;
+                    }
+
+                    foreach (var device in availableDevices)
+                    {
+                        foreach (var layer in deviceLayers)
+                        {
+                            var newLayer = new Layer(
+                                layer.Value.layerVersion,
+                                _layerAutoID++,
+                                layer.Value.layerIndex,
+                                layer.Value.rootLayerType,
+                                device.Key, // Assign to current device
+                                layer.Value.deviceType,
+                                layer.Value.layerTypeindex,
+                                layer.Value.zindex,
+                                layer.Value.Enabled,
+                                new Dictionary<int, LedId>(layer.Value.deviceLeds),
+                                layer.Value.allowBleed,
+                                layer.Value.layerModes
+                            );
+                            migratedLayers[newLayer.layerID] = newLayer;
+                        }
+                    }
                 }
+
+                // Clear out version 1 layers and add non-migrated layers (layerVersion != "1")
+                _layers.Clear();
+                foreach (var layer in layers.Where(l => l.Value.layerVersion != "1" && l.Value.deviceGuid != Guid.Empty))
+                {
+                    _layers[layer.Key] = layer.Value;
+                }
+
+                // Add migrated layers
+                foreach (var layer in migratedLayers)
+                {
+                    _layers[layer.Key] = layer.Value;
+                }
+
+                _layerAutoID = _layers.LastOrDefault().Key;
+                _version++;
+
+                SaveMappings();
 
                 return true;
             }
 
             return false;
         }
+
 
         public static bool ExportMappings()
         {
@@ -207,6 +337,7 @@ namespace Chromatics.Layers
         public int layerID { get; set; }
         public int layerIndex { get; set; }
         public LayerType rootLayerType { get; set; }
+        public Guid deviceGuid { get; set; }
         public RGBDeviceType deviceType { get; set; }
         public bool Enabled { get; set; }
         public int zindex { get; set; }
@@ -216,13 +347,14 @@ namespace Chromatics.Layers
         public LayerModes layerModes { get; set; }
         public bool requestUpdate { get; set; }
 
-        public Layer(string _layerVersion, int _id, int _index, LayerType _rootLayerType, RGBDeviceType _devicetype, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds, bool _allowBleed, LayerModes _mode)
+        public Layer(string _layerVersion, int _id, int _index, LayerType _rootLayerType, Guid _deviceGuid, RGBDeviceType _deviceType, int _layerTypeIndex, int _zindex, bool _enabled, Dictionary<int, LedId> _deviceLeds, bool _allowBleed, LayerModes _mode)
         {
             layerVersion = _layerVersion;
             layerID = _id;
             layerIndex = _index;
             rootLayerType = _rootLayerType;
-            deviceType = _devicetype;
+            deviceGuid = _deviceGuid;
+            deviceType = _deviceType;
             layerTypeindex = _layerTypeIndex;
             zindex = _zindex;
             Enabled = _enabled;
@@ -232,4 +364,5 @@ namespace Chromatics.Layers
             layerModes = _mode;
         }
     }
+
 }

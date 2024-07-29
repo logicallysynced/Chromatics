@@ -31,10 +31,7 @@
     <Compile Update="Forms\vDevices\Uc_VirtualKeyboard.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualMouse.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Forms\vDevices\Uc_VirtualMousePad.cs">
+    <Compile Update="Forms\vDevices\Uc_VirtualOtherController.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Models\VirtualDeviceModel.cs">

@@ -12,17 +12,15 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.Sharlayan
 {
-    public class DutyFinderBellExtension
+    public class WeatherExtension
     {
         public static DateTime LastUpdated = DateTime.MinValue;
 
-        private static readonly string memoryName = @"DUTYFINDER";
+        private static readonly string memoryName = @"WEATHERZONE";
         private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(0.05);
         private static bool _siginit;
         private static bool _memoryready;
-        private static bool _isPopped;
-        private static bool _inInstance;
-        private static byte _instanceState;
+        private static byte _weatherId;
         private static bool _initialized;
         private static List<Signature> _sList;
         private static readonly object RefreshLock = new object();
@@ -42,15 +40,14 @@ namespace Chromatics.Extensions.Sharlayan
 
                         _sList = new List<Signature>
                         {
-                            new Signature
+                            new Signature //Not used
                             {
                                 Key = memoryName,
-                                Value = "440fb643**488d51**488d0d",
+                                Value = "E8????????0FB6C883E907",
                                 ASMSignature = true,
                                 PointerPath = new List<long>
-                                {
-                                    0,
-                                    0
+                                {   
+                                    3
                                 }
                             }
                         };
@@ -76,12 +73,13 @@ namespace Chromatics.Extensions.Sharlayan
                 {
                     if (_memoryHandler.Scanner.Locations.ContainsKey(memoryName))
                     {
-                        var address = _memoryHandler.Scanner.Locations[memoryName];
-                        var contentFinderState = _memoryHandler.GetByte(address.GetAddress(), 0x145);
+                        var address = _memoryHandler.Scanner.Locations[memoryName]; //Not used
+                        var currentWeather = _memoryHandler.GetByte(address.GetAddress(), 0x28); //Not used
 
-                        _isPopped = contentFinderState == 3; //ContentFinderState of 3 means DF pop but not entered yet
-                        _inInstance = contentFinderState > 3;
-                        _instanceState = contentFinderState;
+                        nint baseAddress = _memoryHandler.Configuration.ProcessModel.Process.MainModule.BaseAddress;
+                        var digitalWeather = _memoryHandler.GetByte(baseAddress + 0x2550CA4);
+
+                        _weatherId = digitalWeather;
 
                         _initialized = true;
                     }
@@ -101,34 +99,14 @@ namespace Chromatics.Extensions.Sharlayan
             }
         }
 
-        public static bool IsPopped()
-        {
-            if (!_initialized)
-                return false;
-
-            CheckCache();
-
-            return _isPopped;
-        }
-
-        public static bool InInstance()
-        {
-            if (!_initialized)
-                return false;
-
-            CheckCache();
-
-            return _inInstance;
-        }
-
-        public static byte instanceState()
+        public static byte WeatherId()
         {
             if (!_initialized)
                 return 0;
 
             CheckCache();
 
-            return _instanceState;
+            return _weatherId;
         }
     }
 }

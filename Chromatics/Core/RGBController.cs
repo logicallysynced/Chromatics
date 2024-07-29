@@ -1,5 +1,6 @@
 ﻿using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Forms;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -38,15 +39,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Chromatics.Core
 {
-    public delegate void WasPreviewed();
-
     public static class RGBController
     {
         private static RGBSurface surface = new RGBSurface();
 
         private static bool _loaded;
-
-        private static bool _wasPreviewed;
 
         private static List<IRGBDeviceProvider> loadedDeviceProviders = new List<IRGBDeviceProvider>();
 
@@ -63,8 +60,6 @@ namespace Chromatics.Core
         private static List<ListLedGroup> _runningEffects = new List<ListLedGroup>();
 
         private static bool _baseLayerEffectRunning;
-                
-        public static event WasPreviewed PreviewTriggered;
 
         private static RGBSurface.ExceptionEventHandler surfaceExceptionEventHandler;
 
@@ -255,8 +250,11 @@ namespace Chromatics.Core
                 if (!_devices.ContainsKey(guid))
                 {
                     _devices.Add(guid, device);
+                    
                 }
-                
+
+                Uc_Mappings.OnDeviceAdded(EventArgs.Empty);
+
             }
             else if (e.Action == DevicesChangedEventArgs.DevicesChangedAction.Removed)
             {
@@ -272,8 +270,11 @@ namespace Chromatics.Core
                 {
                     _devices.Remove(guid);
                 }
+
+                Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
             }
 
+            
             surface.AlignDevices();
 
             /*
@@ -336,7 +337,7 @@ namespace Chromatics.Core
                 {
                     StopEffects();
                     ResetLayerGroups();
-                    
+
                     if (!GameController.IsGameConnected())
                         RunStartupEffects();
                 }
@@ -362,6 +363,8 @@ namespace Chromatics.Core
                         #endif
 
                         _devices.Remove(_device.Key);
+
+                        Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
                     }
 
                     surface.Detach(device);
@@ -380,7 +383,7 @@ namespace Chromatics.Core
                 {
                     StopEffects();
                     ResetLayerGroups();
-                    
+
                     if (!GameController.IsGameConnected())
                         RunStartupEffects();
                 }
@@ -606,132 +609,24 @@ namespace Chromatics.Core
             _layergroups.Clear();
             _layergroupledcollection.Clear();
 
-            #if DEBUG
-                Debug.WriteLine(@"Reset Layer Groups");
-            #endif
-        }
-
-        public static bool WasPreviewed()
-        {
-            return _wasPreviewed;
+#if DEBUG
+            Debug.WriteLine(@"Reset Layer Groups");
+#endif
         }
 
         private static void Surface_Updating(UpdatingEventArgs args)
         {
             if (!_loaded) return;
 
-            //If Previewing layers - update RGB on each refresh cycle
             if (MappingLayers.IsPreview())
             {
-                if (!_wasPreviewed)
+                if (Uc_Mappings.Instance.InvokeRequired)
                 {
-                    //Release any running effects
-                    StopEffects();
-                    ResetLayerGroups();
-                    _wasPreviewed = true;
-                
-
-                    var layers = MappingLayers.GetLayers().OrderBy(x => x.Value.zindex);
-                                       
-
-                    //Display mappings on devices
-                    foreach (var layer in layers)
-                    {
-                        var mapping = layer.Value;
-                        
-                        if (mapping.rootLayerType == Enums.LayerType.EffectLayer) continue;
-
-                        //Loop through all LED's and assign to device layer
-                        var devices = surface.GetDevices(mapping.deviceType);
-
-                        var layergroup = new ListLedGroup(surface)
-                        {
-                            ZIndex = mapping.zindex,
-                        };
-
-
-                        if (_layergroups.ContainsKey(mapping.layerID))
-                        {
-                            layergroup = _layergroups[mapping.layerID].FirstOrDefault();
-                        }
-                        else
-                        {
-                            var lg = new ListLedGroup[1];
-                            lg[0] = layergroup;
-                            _layergroups.Add(mapping.layerID, lg);
-                        }
-
-
-                        var drawing_col = (System.Drawing.Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(mapping.rootLayerType).Value;
-                        var highlight_col = ColorHelper.ColorToRGBColor(drawing_col);
-
-                        foreach (var device in devices)
-                        {
-                            if (!_devices.ContainsValue(device)) continue;
-
-                            foreach (var led in device)
-                            {
-                                if (!mapping.deviceLeds.Any(v => v.Value.Equals(led.Id)))
-                                {
-
-                                    layergroup.RemoveLed(led);
-                                    _layergroupledcollection.Remove(led);
-                                    continue;
-                                }
-
-                                if (!mapping.Enabled && mapping.rootLayerType == Enums.LayerType.BaseLayer)
-                                {
-                                    drawing_col = System.Drawing.Color.Black;
-                                    highlight_col = ColorHelper.ColorToRGBColor(drawing_col);
-                                }
-                                else if (!mapping.Enabled)
-                                {
-                                    if (_layergroupledcollection.Contains(led))
-                                    {
-                                        layergroup.RemoveLed(led);
-                                        _layergroupledcollection.Remove(led);
-                                    }
-
-                                    continue;
-                                }
-
-                                if (led.Color != highlight_col)
-                                {
-                                    layergroup.RemoveLed(led);
-                                    led.Color = highlight_col;
-                                }
-
-                                if (!_layergroupledcollection.Contains(led))
-                                {
-                                    _layergroupledcollection.Add(led);
-                                }
-
-                                layergroup.AddLed(led);
-                                layergroup.Detach();
-
-                            }
-
-                        }
-
-                        //Apply lighting
-                        var brush = new SolidColorBrush(highlight_col);
-
-                        layergroup.Brush = brush;
-                        layergroup.Attach(surface);
-                    }
+                    Uc_Mappings.Instance.Invoke(new Action(() => Uc_Mappings.Instance.VisualiseLayers()));
                 }
-            }
-            else
-            {
-                if (_wasPreviewed)
-                {            
-                    ResetLayerGroups();
-                    
-                    if (!GameController.IsGameConnected())
-                        RunStartupEffects();
-                    
-                    _wasPreviewed = false;
-                    PreviewTriggered?.Invoke(); 
+                else
+                {
+                    Uc_Mappings.Instance.VisualiseLayers();
                 }
             }
         }

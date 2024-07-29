@@ -36,6 +36,8 @@ namespace Chromatics.Forms
         public string StatusText { get; set; }
         public bool selected { get; set; }
 
+        public Guid DeviceId { get; set; } // New Property for DeviceId
+
         public event EventHandler Cb_selector_IndexChanged;
 
         public event EventHandler Chk_enabled_CheckChanged;
@@ -220,14 +222,14 @@ namespace Chromatics.Forms
                 }
             }
         }
-                
+
 
         //Check radius for begin drag n drop
         public bool AllowDrag { get; set; }
         private bool _isDragging = false;
         private int _DDradius = 40;
-        private int _mX=0;
-        private int _mY=0;
+        private int _mX = 0;
+        private int _mY = 0;
 
         public Pn_LayerDisplay()
         {
@@ -323,7 +325,7 @@ namespace Chromatics.Forms
         protected override void OnGotFocus(EventArgs e)
         {
             this.BackColor = Color.SandyBrown;
-                        
+
             base.OnGotFocus(e);
         }
 
@@ -375,7 +377,7 @@ namespace Chromatics.Forms
         {
             _isDragging = false;
             base.OnMouseUp(e);
-        }        
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -385,7 +387,7 @@ namespace Chromatics.Forms
             this.ResumeLayout(true);
         }
 
-        
+
 
         public void RePaint()
         {
@@ -423,7 +425,7 @@ namespace Chromatics.Forms
         {
             return new Rectangle(
                 Padding.Left,
-                Padding.Top, 
+                Padding.Top,
                 LeftBarSize,
                 this.ClientRectangle.Height - Padding.Bottom - Padding.Top);
         }
@@ -478,7 +480,7 @@ namespace Chromatics.Forms
             if (Btn_delete_OnPressed != null)
                 Btn_delete_OnPressed(sender, e);
         }
-        
+
         private void OnCopyButtonPressed(object sender, EventArgs e)
         {
             if (Btn_copy_OnPressed != null)

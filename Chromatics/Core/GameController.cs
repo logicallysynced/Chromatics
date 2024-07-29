@@ -59,7 +59,6 @@ namespace Chromatics.Core
             }
 
             gameSetup = true;
-            RGBController.PreviewTriggered += OnPreviewTriggered;
         }
 
         public static void Exit()
@@ -288,6 +287,7 @@ namespace Chromatics.Core
                     //Load Other Memory Zones
                     DutyFinderBellExtension.RefreshData(_memoryHandler);
                     GameStateExtension.RefreshData(_memoryHandler);
+                    WeatherExtension.RefreshData(_memoryHandler);
 
                     gameConnected = true;
                 

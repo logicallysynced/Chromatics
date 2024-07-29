@@ -22,8 +22,6 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (MappingLayers.IsPreview()) return;
-
             //Gold Saucer Vegas Mode Effect Layer Implementation - NOTE: This effect operates on the base layer. Disabling base layer wont disable this effect however
             var effectSettings = RGBController.GetEffectsSettings();
             var _layergroups = RGBController.GetLiveLayerGroups();

@@ -1,6 +1,10 @@
 ﻿using AutoUpdaterDotNET;
 using Chromatics.Core;
+using Chromatics.Enums;
+using Chromatics.Helpers;
+using Chromatics.Localization;
 using Chromatics.Properties;
+using MetroFramework;
 using MetroFramework.Components;
 using MetroFramework.Controls;
 using Microsoft.VisualBasic.FileIO;
@@ -19,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -46,28 +51,44 @@ namespace Chromatics.Forms
             //Add tooltips
             tt_mappings = new MetroToolTip();
 
-            tt_mappings.SetToolTip(this.chk_localcache, "Use saved cache for FFXIV data instead of online source. Default: Disabled");
-            tt_mappings.SetToolTip(this.chk_winstart, "Start Chromatics when Windows starts. Default: Disabled");
-            tt_mappings.SetToolTip(this.chk_minimizetray, "Minimise to system tray. Default: Enabled");
-            tt_mappings.SetToolTip(this.chk_trayonstartup, "Minimise to system tray when Chromatics starts. Default: Disabled");
-            tt_mappings.SetToolTip(this.btn_resetchromatics, @"Restore Chromatics to its default state. Requires application restart.");
-            tt_mappings.SetToolTip(this.btn_clearcache, @"Clear local FFXIV cache. Requires application restart.");
-            tt_mappings.SetToolTip(this.trackbar_lighting, @"Adjust global brightness for all devices.");
-            tt_mappings.SetToolTip(this.chk_updatecheck, @"Enable checking for updates on Chromatics start. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_razer, @"Enable/disable Razer device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_logitech, @"Enable/disable Logitech device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_corsair, @"Enable/disable Corsair device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_coolermaster, @"Enable/disable Coolermaster device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_steelseries, @"Enable/disable SteelSeries device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_asus, @"Enable/disable ASUS device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_msi, @"Enable/disable MSI device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_wooting, @"Enable/disable Wooting device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_novation, @"Enable/disable Novation device library. Default: Enabled");
-            tt_mappings.SetToolTip(mt_settings_openrgb, @"Enable/disable OpenRGB device library. Default: Disabled");
-            tt_mappings.SetToolTip(mt_settings_hue, @"[BETA] Enable/disable Philips HUE device library. Default: Disabled");
+            tt_mappings.SetToolTip(this.chk_localcache, LocalizationManager.GetLocalizedText("Use saved cache for FFXIV data instead of online source. Default: Disabled"));
+            tt_mappings.SetToolTip(this.chk_winstart, LocalizationManager.GetLocalizedText("Start Chromatics when Windows starts. Default: Disabled"));
+            tt_mappings.SetToolTip(this.chk_minimizetray, LocalizationManager.GetLocalizedText("Minimise to system tray. Default: Enabled"));
+            tt_mappings.SetToolTip(this.chk_trayonstartup, LocalizationManager.GetLocalizedText("Minimise to system tray when Chromatics starts. Default: Disabled"));
+            tt_mappings.SetToolTip(this.btn_resetchromatics, LocalizationManager.GetLocalizedText("Restore Chromatics to its default state. Requires application restart."));
+            tt_mappings.SetToolTip(this.btn_clearcache, LocalizationManager.GetLocalizedText("Clear local FFXIV cache. Requires application restart."));
+            tt_mappings.SetToolTip(this.trackbar_lighting, LocalizationManager.GetLocalizedText("Adjust global brightness for all devices."));
+            tt_mappings.SetToolTip(this.chk_updatecheck, LocalizationManager.GetLocalizedText("Enable checking for updates on Chromatics start. Default: Enabled"));
+            tt_mappings.SetToolTip(this.cb_theme, LocalizationManager.GetLocalizedText("Change the interface theme. Default: System"));
+            tt_mappings.SetToolTip(this.cb_language, LocalizationManager.GetLocalizedText("Change Chromatics' language. Default: English"));
+            tt_mappings.SetToolTip(mt_settings_razer, LocalizationManager.GetLocalizedText("Enable/disable Razer device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_logitech, LocalizationManager.GetLocalizedText("Enable/disable Logitech device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_corsair, LocalizationManager.GetLocalizedText("Enable/disable Corsair device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_coolermaster, LocalizationManager.GetLocalizedText("Enable/disable Coolermaster device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_steelseries, LocalizationManager.GetLocalizedText("Enable/disable SteelSeries device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_asus, LocalizationManager.GetLocalizedText("Enable/disable ASUS device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_msi, LocalizationManager.GetLocalizedText("Enable/disable MSI device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_wooting, LocalizationManager.GetLocalizedText("Enable/disable Wooting device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_novation, LocalizationManager.GetLocalizedText("Enable/disable Novation device library. Default: Enabled"));
+            tt_mappings.SetToolTip(mt_settings_openrgb, LocalizationManager.GetLocalizedText("Enable/disable OpenRGB device library. Default: Disabled"));
+            tt_mappings.SetToolTip(mt_settings_hue, LocalizationManager.GetLocalizedText("[BETA] Enable/disable Philips HUE device library. Default: Disabled"));
+
 
             //Startup
             var settings = AppSettings.GetSettings();
+
+            // Populate the ComboBox for Theme
+            cb_theme.Items.AddRange(Enum.GetValues(typeof(Theme))
+                .Cast<Theme>()
+                .Select(t => new ComboBoxItem<Theme>(t, t.ToString()))
+                .ToArray());
+
+            // Populate the ComboBox for Language
+            cb_language.Items.AddRange(Enum.GetValues(typeof(Language))
+            .Cast<Language>()
+            .Select(l => new ComboBoxItem<Language>(l, l.GetDisplayName()))
+            .ToArray());
+
 
             chk_localcache.Checked = settings.localcache;
             chk_winstart.Checked = settings.winstart;
@@ -76,6 +97,8 @@ namespace Chromatics.Forms
             trackbar_lighting.Value = settings.globalbrightness;
             lbl_devicebrightpercent.Text = $"{settings.globalbrightness}%";
             chk_updatecheck.Checked = settings.checkupdates;
+            cb_theme.SelectedIndex = (int)settings.systemTheme;
+            cb_language.SelectedIndex = (int)settings.systemLanguage;
 
             mt_settings_razer.BackColor = settings.deviceRazerEnabled ? tilecol_enabled : tilecol_disabled;
             mt_settings_logitech.BackColor = settings.deviceLogitechEnabled ? tilecol_enabled : tilecol_disabled;
@@ -139,8 +162,8 @@ namespace Chromatics.Forms
         {
             var cacheReset =
                 MessageBox.Show(
-                    @"Are you sure you wish to reset Chromatics? All settings, color palettes and layers will be reset.",
-                    @"Reset Chromatics?", MessageBoxButtons.OKCancel);
+                    LocalizationManager.GetLocalizedText("Are you sure you wish to reset Chromatics? All settings, color palettes and layers will be reset."),
+                    LocalizationManager.GetLocalizedText("Reset Chromatics?"), MessageBoxButtons.OKCancel);
             if (cacheReset != DialogResult.OK) return;
 
             try
@@ -167,12 +190,12 @@ namespace Chromatics.Forms
                     FileSystem.DeleteFile(enviroment + @"/settings.chromatics3");
                 }
 
-                MessageBox.Show(@"Chromatics has been reset. Chromatics will now close.", @"Chromatics Reset", MessageBoxButtons.OK);
+                MessageBox.Show(LocalizationManager.GetLocalizedText("Chromatics has been reset. Chromatics will now close."), LocalizationManager.GetLocalizedText("Chromatics Reset"), MessageBoxButtons.OK);
                 Application.Exit();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Unable to reset Chromatics. Are you running as Administrator? Error: " + ex.StackTrace, @"Unable to reset Chromatics", MessageBoxButtons.OK);
+                MessageBox.Show(LocalizationManager.GetLocalizedText("Unable to reset Chromatics. Are you running as Administrator? Error: ") + ex.StackTrace, LocalizationManager.GetLocalizedText("Unable to reset Chromatics"), MessageBoxButtons.OK);
             }
         }
 
@@ -180,8 +203,8 @@ namespace Chromatics.Forms
         {
             var cacheReset =
                 MessageBox.Show(
-                    @"Are you sure you wish to clear Chromatics cache?",
-                    @"Clear Cache?", MessageBoxButtons.OKCancel);
+                    LocalizationManager.GetLocalizedText("Are you sure you wish to clear Chromatics cache?"),
+                    LocalizationManager.GetLocalizedText("Clear Cache?"), MessageBoxButtons.OKCancel);
             if (cacheReset != DialogResult.OK) return;
 
             try
@@ -233,12 +256,12 @@ namespace Chromatics.Forms
                     FileSystem.DeleteFile(enviroment + @"/ParamGrow.csv");
                 }
 
-                MessageBox.Show(@"Cache Cleared. Chromatics will now close.", @"Cache Cleared", MessageBoxButtons.OK);
+                MessageBox.Show(LocalizationManager.GetLocalizedText("Cache Cleared. Chromatics will now close."), LocalizationManager.GetLocalizedText("Cache Cleared"), MessageBoxButtons.OK);
                 Application.Exit();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Unable to clear cache. Are you running as Administrator? Error: " + ex.StackTrace, @"Unable to clear Cache", MessageBoxButtons.OK);
+                MessageBox.Show(LocalizationManager.GetLocalizedText("Unable to clear cache. Are you running as Administrator? Error: ") + ex.StackTrace, LocalizationManager.GetLocalizedText("Unable to clear Cache"), MessageBoxButtons.OK);
             }
         }
 
@@ -601,6 +624,70 @@ namespace Chromatics.Forms
             }
 
             return newImage;
+        }
+
+        private void cb_theme_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var settings = AppSettings.GetSettings();
+
+            if ((Theme)cb_theme.SelectedIndex != settings.systemTheme)
+            {
+                settings.systemTheme = ((ComboBoxItem<Theme>)cb_theme.SelectedItem).Value;
+                AppSettings.SaveSettings(settings);
+
+
+                if (settings.systemTheme == Enums.Theme.System)
+                {
+                    if (SystemHelpers.IsDarkModeEnabled())
+                    {
+                        Fm_MainWindow.SetDarkMode(true);
+                    }
+                    else
+                    {
+                        Fm_MainWindow.SetDarkMode(false);
+                    }
+                }
+                else if (settings.systemTheme == Enums.Theme.Dark)
+                {
+                    Fm_MainWindow.SetDarkMode(true);
+                }
+                else if (settings.systemTheme == Enums.Theme.Light)
+                {
+                    Fm_MainWindow.SetDarkMode(false);
+                }
+
+
+            }
+
+
+        }
+
+        private void cb_language_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var settings = AppSettings.GetSettings();
+            settings.systemLanguage = ((ComboBoxItem<Language>)cb_language.SelectedItem).Value;
+
+            AppSettings.SaveSettings(settings);
+
+            Fm_MainWindow.TranslateForm();
+
+        }
+
+        public class ComboBoxItem<T>
+        {
+            public T Value { get; }
+            public string DisplayName { get; }
+
+            public ComboBoxItem(T value, string displayName)
+            {
+                Value = value;
+                DisplayName = displayName;
+            }
+
+            public override string ToString()
+            {
+                return DisplayName;
+            }
         }
 
     }

@@ -17,7 +17,7 @@ namespace Chromatics.Extensions.RGB.NET.Gradients
             this.gradient = gradient;
         }
 
-        protected override Color GetColor(in Point point) {
+        protected override Color GetColor(Point point) {
             var x = point.X / (float) Size.Width;
             var y = point.Y / (float) Size.Height;
             float lerpX = x;

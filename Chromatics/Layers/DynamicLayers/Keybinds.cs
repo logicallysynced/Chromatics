@@ -45,8 +45,6 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if currently in Preview mode
-            if (MappingLayers.IsPreview()) return;
 
             //Do not apply to devices other than Keyboards
             if (layer.deviceType != RGBDeviceType.Keyboard) return;
