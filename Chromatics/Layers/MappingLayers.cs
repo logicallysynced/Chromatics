@@ -42,6 +42,8 @@ namespace Chromatics.Layers
             var layer = new Layer(AppSettings.currentMappingLayerVersion, id, index, rootLayerType, deviceGuid, deviceType, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
             _layers.GetOrAdd(id, layer);
             _version++;
+
+
             return id;
         }
 
@@ -173,6 +175,11 @@ namespace Chromatics.Layers
         public static bool SaveMappings()
         {
             FileOperationsHelper.SaveLayerMappings(_layers);
+
+            foreach (var layer in _layers)
+            {
+                Debug.WriteLine($"Saving layer: {layer.Key}, Version: {layer.Value.layerVersion}, Guid: {layer.Value.deviceGuid}");
+            }
 
             return true;
         }
