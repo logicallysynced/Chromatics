@@ -225,13 +225,13 @@ namespace Chromatics.Forms
 
                     if (device.Value.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
                     {
-                        virtualDevice = new Uc_VirtualKeyboard();
+                        virtualDevice = new Uc_VirtualKeyboard(device.Value);
                         virtualDevice._deviceId = device.Key;
                         virtualDevice._deviceType = device.Value.DeviceInfo.DeviceType;
                     }
                     else
                     {
-                        virtualDevice = new Uc_VirtualOtherController();
+                        virtualDevice = new Uc_VirtualOtherController(device.Value);
                         virtualDevice._deviceId = device.Key;
                         virtualDevice._deviceType = device.Value.DeviceInfo.DeviceType;
                     }
@@ -532,6 +532,7 @@ namespace Chromatics.Forms
                     {
                         if (!baseKeys.ContainsKey(base_i))
                         {
+                            Debug.WriteLine($"[{deviceType}][{device.DeviceInfo.DeviceName}] Adding base led: {led.Id}");
                             baseKeys.Add(base_i, led.Id);
                         }
 
@@ -552,7 +553,7 @@ namespace Chromatics.Forms
                     // Add effect layer
                     AddLayer(LayerType.EffectLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys);
 
-                    Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for device {deviceType}. Key Count: {baseKeys.Count}");
+                    Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for device {device.DeviceInfo.DeviceName} ({deviceType}). Key Count: {baseKeys.Count}");
                 }
 
                 // Change device type and save layers
@@ -685,13 +686,13 @@ namespace Chromatics.Forms
                 VirtualDevice virtualDevice;
                 if (selectedDevice.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
                 {
-                    virtualDevice = new Uc_VirtualKeyboard();
+                    virtualDevice = new Uc_VirtualKeyboard(selectedDevice);
                     virtualDevice._deviceId = deviceId;
                     virtualDevice._deviceType = selectedDevice.DeviceInfo.DeviceType;
                 }
                 else
                 {
-                    virtualDevice = new Uc_VirtualOtherController();
+                    virtualDevice = new Uc_VirtualOtherController(selectedDevice);
                     virtualDevice._deviceId = deviceId;
                     virtualDevice._deviceType = selectedDevice.DeviceInfo.DeviceType;
                 }

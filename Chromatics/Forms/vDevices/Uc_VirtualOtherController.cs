@@ -5,6 +5,7 @@ using Chromatics.Models;
 using HidSharp;
 using OpenRGB.NET;
 using RGB.NET.Core;
+using Sanford.Multimedia;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +17,8 @@ namespace Chromatics.Forms
 {
     public partial class Uc_VirtualOtherController : VirtualDevice
     {
+        IRGBDevice _device;
+
         string[] unwantedStrings = new string[]
         {
             "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
@@ -23,8 +26,10 @@ namespace Chromatics.Forms
             "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
         };
 
-        public Uc_VirtualOtherController()
+        public Uc_VirtualOtherController(IRGBDevice deviceId)
         {
+            _device = deviceId;
+
             InitializeComponent();
         }
 
@@ -43,20 +48,13 @@ namespace Chromatics.Forms
             var keycap_img = Properties.Resources.keycap_backglow;
 
             //Assign a keycap per cell based on selected device
-            var selectedDevice = Uc_Mappings.GetActiveDevice();
-            if (selectedDevice == null || selectedDevice.Value is not Guid selectedDeviceId)
+
+            if (_device == null)
             {
                 return;
             }
 
-
-            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
-            if (device == null)
-            {
-                return;
-            }
-
-            if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+            if (_device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
             {
                 return;
             }
@@ -66,7 +64,7 @@ namespace Chromatics.Forms
             var base_i = 0;
             var keycaps = new Dictionary<int, LedId>();
 
-            foreach (var led in device)
+            foreach (var led in _device)
             {
                 if (!keycaps.ContainsKey(base_i))
                 {
@@ -111,7 +109,7 @@ namespace Chromatics.Forms
 
                 columnlimit = keycapsOrdered.Count / 4;
 
-                foreach (var key in keycapsOrdered.Take(device.Count()))
+                foreach (var key in keycapsOrdered.Take(_device.Count()))
                 {
                     var width = _width;
                     var height = _height;

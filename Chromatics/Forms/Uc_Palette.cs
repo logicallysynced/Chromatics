@@ -26,6 +26,8 @@ namespace Chromatics.Forms
         private bool MappingGridStartup;
         private MetroToolTip tt_mappings;
         private delegate void ResetMappingsDelegate();
+        private bool _isLoaded;
+        private Queue<Action> _eventQueue = new Queue<Action>();
 
         public Uc_Palette()
         {
@@ -33,6 +35,8 @@ namespace Chromatics.Forms
             cb_palette_categories.DrawMode = DrawMode.OwnerDrawFixed;
             cb_palette_categories.ItemHeight = tlp_controls.Height;
             cb_palette_categories.Margin = new Padding(0, tlp_controls.Height / 4, 3, 0);
+
+            DarkModeManager.DarkModeChanged += OnDarkModeChanged;
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -63,8 +67,51 @@ namespace Chromatics.Forms
             }
 
             InitColorMappingGrid();
+                       
 
-            
+        }
+
+        private void ProcessEventQueue()
+        {
+            while (_eventQueue.Count > 0)
+            {
+                var action = _eventQueue.Dequeue();
+                action.Invoke();
+            }
+        }
+
+        private void OnDarkModeChanged(bool isDarkMode)
+        {
+            // If the form is not yet loaded, queue the action
+            if (!_isLoaded)
+            {
+                _eventQueue.Enqueue(() => ApplyDarkMode(isDarkMode));
+                return;
+            }
+
+            // Otherwise, handle the dark mode change immediately
+            ApplyDarkMode(isDarkMode);
+        }
+
+        private void ApplyDarkMode(bool isDarkMode)
+        {
+
+            var grid = this.dG_mappings;
+
+            grid.EnableHeadersVisualStyles = false;
+            grid.ColumnHeadersDefaultCellStyle.BackColor = isDarkMode ? Color.FromArgb(30, 30, 30) : SystemColors.Control;
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = isDarkMode ? Color.White : SystemColors.ControlText;
+            grid.RowHeadersDefaultCellStyle.BackColor = isDarkMode ? Color.FromArgb(30, 30, 30) : SystemColors.Control;
+            grid.RowHeadersDefaultCellStyle.ForeColor = isDarkMode ? Color.White : SystemColors.ControlText;
+
+            // Apply theme to each row and cell
+            foreach (DataGridViewRow row in grid.Rows)
+            {
+                row.DefaultCellStyle.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : SystemColors.Window;
+                row.DefaultCellStyle.ForeColor = isDarkMode ? Color.White : SystemColors.ControlText;
+            }
+
+            grid.Refresh();
         }
 
         private void ToggleMappingControls(bool toggle)
@@ -99,6 +146,9 @@ namespace Chromatics.Forms
             ToggleMappingControls(false);
 
             ResetMappingsDataGrid();
+
+            _isLoaded = true;
+            ProcessEventQueue();
         }
 
         private void ResetMappingsDataGrid()
