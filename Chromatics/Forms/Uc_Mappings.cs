@@ -20,6 +20,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -131,19 +132,7 @@ namespace Chromatics.Forms
             //Check for existing mappings and load, or else create defaults
             if (!init)
             {
-                if (MappingLayers.LoadMappings())
-                {
-                    var layercount = MappingLayers.CountLayers();
-                    Logger.WriteConsole(LoggerTypes.System, $"Loaded {layercount} layers from layers.chromatics3");
-
-                    ChangeDeviceType();
-
-                }
-                else
-                {
-                    Logger.WriteConsole(LoggerTypes.System, @"No layer file found. Creating default layers..");
-                    //SaveLayers(true);
-                }
+                LoadMappings();
 
                 InitializeAndVisualize();
                 VisualiseLayers();
@@ -175,6 +164,33 @@ namespace Chromatics.Forms
 
             //Set init to true
             init = true;
+        }
+
+        private void LoadMappings()
+        {
+            Debug.WriteLine("");
+            if (MappingLayers.LoadMappings())
+            {
+                var layercount = MappingLayers.CountLayers();
+
+                if (layercount > 0)
+                {
+                    Logger.WriteConsole(LoggerTypes.System, $"Loaded {layercount} layers from layers.chromatics3");
+                    ChangeDeviceType();
+                }
+            }
+            else
+            {
+                Logger.WriteConsole(LoggerTypes.System, @"No layer file found. Creating default layers..");
+
+                //Setup Defaults
+
+                var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+                if (!File.Exists(enviroment + @"/layers.chromatics3"))
+                {
+                    File.Copy(enviroment + @"/defaults/layers.chromatics3", enviroment + @"/layers.chromatics3");
+                }
+            }
         }
 
         private void HandleDeviceAdded(object sender, EventArgs e)
@@ -248,6 +264,12 @@ namespace Chromatics.Forms
 
                     // Manually trigger the OnLoad event
                     virtualDevice.InitializeDevice();
+
+                    if (!MappingLayers.GetLayers().Values.Any(layer => layer.deviceGuid == device.Key))
+                    {
+                        CreateDefaults(device);
+                    }
+                    
                 }
 
                 // Remove devices that are no longer connected
@@ -270,7 +292,9 @@ namespace Chromatics.Forms
                 }
 
                 // Ensure all devices and layers are visualized after enumeration
+                SaveLayers();
                 VisualiseLayers();
+                ChangeDeviceType();
             }
 
             if (cb_deviceselect.Items.Count == 0)
@@ -278,7 +302,53 @@ namespace Chromatics.Forms
                 AddNoDevicesDetectedItem();
             }
 
-            CreateDefaults();
+            
+        }
+
+        private void CreateDefaults(KeyValuePair<Guid, IRGBDevice> devicePair)
+        {
+            // Create Default Layers
+
+            var device = devicePair.Value;
+            var deviceGuid = devicePair.Key;
+            var deviceType = device.DeviceInfo.DeviceType;
+
+            var i = 1;
+
+            // Skip certain device types
+            if (deviceType == RGBDeviceType.None || deviceType == RGBDeviceType.All)
+                return;
+
+            Debug.WriteLine($"Adding base layer for device: {deviceGuid}. Keys: {device.Count()}");
+
+            var base_i = 0;
+            var baseKeys = new Dictionary<int, LedId>();
+
+            foreach (var led in device)
+            {
+                if (!baseKeys.ContainsKey(base_i))
+                {
+                    baseKeys.Add(base_i, led.Id);
+                }
+
+                base_i++;
+            }
+
+            // Add base layer
+            AddLayer(LayerType.BaseLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys);
+            i++;
+
+            // Add dynamic layer for keyboards
+            if (deviceType == RGBDeviceType.Keyboard)
+            {
+                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, i, true, false, true);
+                i++;
+            }
+
+            // Add effect layer
+            AddLayer(LayerType.EffectLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys);
+
+            Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for device {device.DeviceInfo.DeviceName} ({deviceType}). Key Count: {baseKeys.Count}");
         }
 
         private void EnumerateAndRemoveDevices()
@@ -464,7 +534,7 @@ namespace Chromatics.Forms
                 }
 
                 pgb.ID = MappingLayers.AddLayer(MappingLayers.CountLayers(), layertype, deviceId, deviceType, layerTypeindex, _index, enabled, leds, allowBleed, mode);
-                Debug.WriteLine($"Added Layer: {pgb.ID}. Index: {_index}. Enabled: {enabled}. AllowBleed: {allowBleed}. LayerTypeindex: {layerTypeindex}. Mode: {mode}. LayerType: {layertype}. Leds: {leds.Count}");
+                Debug.WriteLine($"[{deviceId}] Added Layer: {pgb.ID}. Index: {_index}. Enabled: {enabled}. AllowBleed: {allowBleed}. LayerTypeindex: {layerTypeindex}. Mode: {mode}. LayerType: {layertype}. Leds: {leds.Count}");
 
                 pgb.LeftText = _index.ToString();
             }
@@ -498,72 +568,6 @@ namespace Chromatics.Forms
             return pgb.ID;
         }
 
-        private void CreateDefaults()
-        {
-            // Create Default Layers
-
-            var connectedDevices = RGBController.GetLiveDevices();
-            
-
-            if (connectedDevices != null)
-            {
-
-                foreach (var devicePair in connectedDevices)
-                {
-                    var device = devicePair.Value;
-                    var deviceGuid = devicePair.Key;
-                    var deviceType = device.DeviceInfo.DeviceType;
-
-                    // Skip if there are already layers for this device
-                    if (MappingLayers.GetLayers().Values.Any(layer => layer.deviceGuid == deviceGuid)) continue;
-
-                    var i = 1;
-
-                    // Skip certain device types
-                    if (deviceType == RGBDeviceType.None || deviceType == RGBDeviceType.All)
-                        continue;
-
-                    Debug.WriteLine($"Adding base layer for device: {deviceGuid}. Keys: {device.Count()}");
-
-                    var base_i = 0;
-                    var baseKeys = new Dictionary<int, LedId>();
-
-                    foreach (var led in device)
-                    {
-                        if (!baseKeys.ContainsKey(base_i))
-                        {
-                            Debug.WriteLine($"[{deviceType}][{device.DeviceInfo.DeviceName}] Adding base led: {led.Id}");
-                            baseKeys.Add(base_i, led.Id);
-                        }
-
-                        base_i++;
-                    }
-
-                    // Add base layer
-                    AddLayer(LayerType.BaseLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys);
-                    i++;
-
-                    // Add dynamic layer for keyboards
-                    if (deviceType == RGBDeviceType.Keyboard)
-                    {
-                        AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, i, true, false, true);
-                        i++;
-                    }
-
-                    // Add effect layer
-                    AddLayer(LayerType.EffectLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys);
-
-                    Logger.WriteConsole(LoggerTypes.System, $"Creating default layers for device {device.DeviceInfo.DeviceName} ({deviceType}). Key Count: {baseKeys.Count}");
-                }
-
-                // Change device type and save layers
-                
-                ChangeDeviceType();
-
-            }
-
-            SaveLayers();
-        }
 
         public void ChangeDeviceType()
         {
@@ -595,8 +599,9 @@ namespace Chromatics.Forms
             tlp_frame.SuspendLayout();
             flp_layers.SuspendLayout();
 
+
 #if DEBUG
-            Debug.WriteLine($"Changing device type to {selectedDevice}. Key Count: {_selectedDevice.Count()}");
+            Debug.WriteLine($"Changing device type to {_selectedDevice.DeviceInfo.DeviceName}. Key Count: {_selectedDevice.Count()}");
 #endif
 
             // Disable Editing and remove layers for existing device types
@@ -635,6 +640,8 @@ namespace Chromatics.Forms
                 layer.btn_copy.Click -= new EventHandler(OnCopyButtonPressed);
 
                 layer.Dispose();
+                
+                Debug.WriteLine($"[{selectedDeviceId}] Removed layer: {layer.ID}");
             }
 
             tt_mappings.RemoveAll();
@@ -648,9 +655,13 @@ namespace Chromatics.Forms
             // Add layers for new device types
             var _NewLayers = MappingLayers.GetLayers().Where(r => r.Value.deviceGuid.Equals(selectedDeviceId));
 
+            Debug.WriteLine($"[{selectedDeviceId}] New layer count: {_NewLayers.Count()}");
+
             foreach (var layers in _NewLayers.OrderByDescending(r => r.Value.zindex))
             {
                 AddLayer(layers.Value.rootLayerType, selectedDeviceId, selectedDeviceType, layers.Key, layers.Value.zindex, false);
+
+                Debug.WriteLine($"[{selectedDeviceId}] Added layer: {layers.Key}");
             }
 
             ResizeLayerHelpText(rtb_layerhelp);
@@ -683,6 +694,7 @@ namespace Chromatics.Forms
 
             if (selectedDevice != null)
             {
+                
                 VirtualDevice virtualDevice;
                 if (selectedDevice.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
                 {
@@ -1503,7 +1515,11 @@ namespace Chromatics.Forms
                         if (selectedDeviceType == selectedDevice) return;
 
                         selectedDevice = selectedDeviceType;
+
                         ChangeDeviceType();
+
+
+
                     }
                 }
             }

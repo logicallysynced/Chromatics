@@ -78,7 +78,6 @@ namespace Chromatics.Helpers
             form.Invalidate(true);
             form.Refresh();
 
-            Debug.WriteLine("Ping pong");
             // Raise the DarkModeChanged event
             DarkModeChanged?.Invoke(enableDarkMode);
         }
