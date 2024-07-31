@@ -93,7 +93,7 @@ namespace Chromatics.Layers
             return _layerAutoID + 1;
         }
 
-        public static bool LoadMappings()
+        public static bool LoadMappings(bool over = false)
         {
             if (FileOperationsHelper.CheckLayerMappingsExist())
             {
@@ -120,7 +120,7 @@ namespace Chromatics.Layers
                     }
                 }
 
-                if (flag)
+                if (flag || over)
                 {
                     Debug.WriteLine("Flagged for upgrade");
 
