@@ -288,6 +288,7 @@ namespace Chromatics.Core
                     DutyFinderBellExtension.RefreshData(_memoryHandler);
                     GameStateExtension.RefreshData(_memoryHandler);
                     WeatherExtension.RefreshData(_memoryHandler);
+                    MusicExtension.RefreshData(_memoryHandler);
 
                     gameConnected = true;
                 

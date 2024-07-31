@@ -183,13 +183,6 @@ namespace Chromatics.Forms
             {
                 Logger.WriteConsole(LoggerTypes.System, @"No layer file found. Creating default layers..");
 
-                //Setup Defaults
-
-                var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-                if (!File.Exists(enviroment + @"/layers.chromatics3"))
-                {
-                    File.Copy(enviroment + @"/defaults/layers.chromatics3", enviroment + @"/layers.chromatics3");
-                }
             }
         }
 
@@ -341,8 +334,16 @@ namespace Chromatics.Forms
             // Add dynamic layer for keyboards
             if (deviceType == RGBDeviceType.Keyboard)
             {
-                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, i, true, false, true);
-                i++;
+                var x = i;
+                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, x, true, false, true, LedKeyHelper.DefaultKeys_ReactiveWeather, (int)DynamicLayerType.ReactiveWeatherHighlight, true, LayerModes.Interpolate);
+                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 1), true, false, true, LedKeyHelper.DefaultKeys_Keybinds, (int)DynamicLayerType.Keybinds, true, LayerModes.Interpolate);
+                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 2), true, false, true, LedKeyHelper.DefaultKeys_HP, (int)DynamicLayerType.HPTracker, true, LayerModes.Interpolate);
+                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 3), true, false, true, LedKeyHelper.DefaultKeys_MP, (int)DynamicLayerType.MPTracker, true, LayerModes.Interpolate);
+                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 4), true, false, true, LedKeyHelper.DefaultKeys_TargetHP, (int)DynamicLayerType.TargetHP, true, LayerModes.Interpolate);
+                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 5), true, false, true, LedKeyHelper.DefaultKeys_Castbar, (int)DynamicLayerType.Castbar, true, LayerModes.Interpolate);
+                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 6), true, false, true, LedKeyHelper.DefaultKeys_Enmity, (int)DynamicLayerType.EnmityTracker, true, LayerModes.Interpolate);
+
+                i = i + 7;
             }
 
             // Add effect layer
