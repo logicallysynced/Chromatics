@@ -362,7 +362,6 @@
             mt_settings_hue.AutoSize = true;
             mt_settings_hue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             mt_settings_hue.BackColor = System.Drawing.Color.DeepSkyBlue;
-            mt_settings_hue.Enabled = false;
             mt_settings_hue.Location = new System.Drawing.Point(340, 244);
             mt_settings_hue.Margin = new System.Windows.Forms.Padding(6);
             mt_settings_hue.Name = "mt_settings_hue";
@@ -377,7 +376,7 @@
             mt_settings_hue.UseSelectable = true;
             mt_settings_hue.UseTileImage = true;
             mt_settings_hue.UseVisualStyleBackColor = false;
-            mt_settings_hue.Visible = false;
+            mt_settings_hue.Visible = true;
             mt_settings_hue.Click += mt_settings_hue_Click;
             // 
             // mt_settings_openrgb
