@@ -4,6 +4,7 @@ using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Localization;
 using Chromatics.Models;
+using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,8 +16,12 @@ namespace Chromatics.Forms
 {
     public partial class Uc_VirtualKeyboard : VirtualDevice
     {
-        public Uc_VirtualKeyboard()
+        IRGBDevice _device;
+
+        public Uc_VirtualKeyboard(IRGBDevice deviceId)
         {
+            _device = deviceId;
+
             InitializeComponent();
         }
 

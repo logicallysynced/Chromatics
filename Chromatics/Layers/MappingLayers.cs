@@ -42,6 +42,8 @@ namespace Chromatics.Layers
             var layer = new Layer(AppSettings.currentMappingLayerVersion, id, index, rootLayerType, deviceGuid, deviceType, layerTypeIndex, zindex, enabled, deviceLeds, allowBleed, layerModes);
             _layers.GetOrAdd(id, layer);
             _version++;
+
+
             return id;
         }
 
@@ -91,7 +93,7 @@ namespace Chromatics.Layers
             return _layerAutoID + 1;
         }
 
-        public static bool LoadMappings()
+        public static bool LoadMappings(bool over = false)
         {
             if (FileOperationsHelper.CheckLayerMappingsExist())
             {
@@ -118,7 +120,7 @@ namespace Chromatics.Layers
                     }
                 }
 
-                if (flag)
+                if (flag || over)
                 {
                     Debug.WriteLine("Flagged for upgrade");
 
@@ -173,6 +175,11 @@ namespace Chromatics.Layers
         public static bool SaveMappings()
         {
             FileOperationsHelper.SaveLayerMappings(_layers);
+
+            foreach (var layer in _layers)
+            {
+                Debug.WriteLine($"Saving layer: {layer.Key}, Version: {layer.Value.layerVersion}, Guid: {layer.Value.deviceGuid}");
+            }
 
             return true;
         }

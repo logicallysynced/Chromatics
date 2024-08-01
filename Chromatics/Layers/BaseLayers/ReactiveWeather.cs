@@ -135,6 +135,9 @@ namespace Chromatics.Layers
 
                     DutyFinderBellExtension.CheckCache();
                     WeatherExtension.CheckCache();
+                    MusicExtension.CheckCache();
+
+                    Debug.WriteLine($"Current Music: {MusicExtension.musicResource()}");
 
 
                     if (DutyFinderBellExtension.InInstance())
@@ -156,6 +159,11 @@ namespace Chromatics.Layers
                                 if (chatLogEntries.First().Code == "0839" && chatLogEntries.First().Message.Contains("has begun."))
                                 {
                                     dutyComplete = false;
+                                }
+
+                                if (chatLogEntries.First().Message.Contains("Allagan tomestones of"))
+                                {
+                                    dutyComplete = true;
                                 }
 
                             }
@@ -186,13 +194,12 @@ namespace Chromatics.Layers
 
                         //var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
-
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete || model._currentMusic != MusicExtension.musicResource()) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
                                                                                                                 
 
-                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance(), dutyComplete);
+                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance(), dutyComplete, MusicExtension.musicResource());
 
                             #if DEBUG
                                 Debug.WriteLine($"{layer.deviceType} Zone Lookup: {currentZone}. Weather: {currentWeather}");
@@ -202,7 +209,7 @@ namespace Chromatics.Layers
                             model._currentZone = currentZone;
                             model._inInstance = DutyFinderBellExtension.InInstance();
                             model._dutyComplete = dutyComplete;
-                            
+                            model._currentMusic = MusicExtension.musicResource();
                         }
                     }
 
@@ -242,7 +249,7 @@ namespace Chromatics.Layers
             public bool _raidEffects { get; set; }
             public bool _inInstance { get; set; }
             public bool _dutyComplete { get; set; }
-
+            public ushort _currentMusic { get; set; }
 
         }
 
@@ -302,7 +309,7 @@ namespace Chromatics.Layers
             layer.RemoveAllDecorators();
         }
 
-        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, bool dutyComplete)
+        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, bool dutyComplete, ushort currentMusic = 0)
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();

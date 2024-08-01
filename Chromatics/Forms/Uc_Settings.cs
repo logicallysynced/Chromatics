@@ -1,12 +1,15 @@
 ﻿using AutoUpdaterDotNET;
 using Chromatics.Core;
 using Chromatics.Enums;
+using Chromatics.Extensions.RGB.NET.Devices;
+using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Helpers;
 using Chromatics.Localization;
 using Chromatics.Properties;
 using MetroFramework;
 using MetroFramework.Components;
 using MetroFramework.Controls;
+using MetroFramework.Forms;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using RGB.NET.Devices.Asus;
@@ -27,6 +30,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -541,18 +545,153 @@ namespace Chromatics.Forms
                 device = false;
                 tile.BackColor = tilecol_disabled;
 
-                //RGBController.UnloadDeviceProvider(HueRGBDeviceProvider.Instance);
+                if (HueRGBDeviceProvider.Instance != null)
+                {
+                    HueRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                    RGBController.UnloadDeviceProvider(HueRGBDeviceProvider.Instance);
+                    HueRGBDeviceProvider.Instance.Dispose();
+                }
+
+                settings.deviceHueEnabled = false;
             }
             else
             {
-                device = true;
-                tile.BackColor = tilecol_enabled;
-
-                //RGBController.LoadDeviceProvider(HueRGBDeviceProvider.Instance);
+                ShowHueSettingsForm(settings, tile);
             }
 
-            settings.deviceHueEnabled = device;
+            
             AppSettings.SaveSettings(settings);
+        }
+
+        private void ShowHueSettingsForm(Models.SettingsModel settings, MetroTile tile)
+        {
+            MetroForm hueSettingsForm = new MetroForm();
+            hueSettingsForm.Text = LocalizationManager.GetLocalizedText("Enter Hue Bridge Details");
+            hueSettingsForm.MinimizeBox = false;
+            hueSettingsForm.MaximizeBox = false;
+            hueSettingsForm.Width = 400;
+            hueSettingsForm.Height = 300;
+            hueSettingsForm.Theme = SystemHelpers.IsDarkModeEnabled() ? MetroThemeStyle.Dark : MetroThemeStyle.Light;
+            hueSettingsForm.KeyPreview = true; // To capture key events
+
+            int padding = 80;
+
+            MetroLabel labelIP = new MetroLabel { Text = LocalizationManager.GetLocalizedText("Bridge IP:"), Left = 10, Top = padding, Width = 100 };
+            MetroTextBox textBoxIP = new MetroTextBox { Left = 120, Top = padding, Width = 200, Text = settings.deviceHueBridgeIP };
+
+            MetroLabel labelKey = new MetroLabel { Text = LocalizationManager.GetLocalizedText("App Key:"), Left = 10, Top = padding + 40, Width = 100 };
+            MetroTextBox textBoxKey = new MetroTextBox { Left = 120, Top = padding + 40, Width = 200, Text = settings.deviceHueBridgeKey };
+
+            MetroLabel labelStreamingKey = new MetroLabel { Text = LocalizationManager.GetLocalizedText("Client Key:"), Left = 10, Top = padding + 80, Width = 100 };
+            MetroTextBox textBoxStreamingKey = new MetroTextBox { Left = 120, Top = padding + 80, Width = 200 , Text = settings.deviceHueBridgeStreamingKey };
+
+            MetroButton btnSubmit = new MetroButton { Text = LocalizationManager.GetLocalizedText("Submit"), Left = 120, Top = padding + 120, Width = 100 };
+
+            // Event handler for submit action
+            void SubmitForm()
+            {
+                var hueProvider = new HueRGBDeviceProvider();
+
+                try
+                {
+                    if (IsValidIPAddress(textBoxIP.Text) &&
+                    !string.IsNullOrEmpty(textBoxIP.Text) &&
+                    !string.IsNullOrEmpty(textBoxKey.Text) &&
+                    !string.IsNullOrEmpty(textBoxStreamingKey.Text))
+                    {
+                        btnSubmit.Text = LocalizationManager.GetLocalizedText("Connecting..");
+
+                        hueProvider.ClientDefinitions.Clear();
+                        HueClientDefinition hueBridge = null;
+
+                        settings.deviceHueBridgeIP = textBoxIP.Text;
+                        settings.deviceHueBridgeKey = textBoxKey.Text;
+                        settings.deviceHueBridgeStreamingKey = textBoxStreamingKey.Text;
+                        settings.deviceHueEnabled = true;
+                        tile.BackColor = tilecol_enabled;
+
+                        AppSettings.SaveSettings(settings);
+
+                        hueBridge = new HueClientDefinition(settings.deviceHueBridgeIP, settings.deviceHueBridgeKey, settings.deviceHueBridgeStreamingKey);
+                        hueProvider.ClientDefinitions.Add(hueBridge);
+
+                        if (!RGBController.LoadDeviceProvider(hueProvider))
+                        {
+                            Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Hue] LoadDeviceProvider Error.");
+                            MessageBox.Show($"Unable to connect to Hue Bridge at IP address {settings.deviceHueBridgeIP}. Please check the IP address and try again.");
+                            btnSubmit.Text = LocalizationManager.GetLocalizedText("Submit");
+
+                            tile.BackColor = tilecol_disabled;
+
+                            settings.deviceHueEnabled = false;
+
+                            AppSettings.SaveSettings(settings);
+                        }
+
+                        hueSettingsForm.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show(LocalizationManager.GetLocalizedText("Invalid or empty field. Please check the entered values."));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Hue] LoadDeviceProvider Error: {ex.Message}");
+                    MessageBox.Show($"Unable to connect to Hue Bridge at IP address {settings.deviceHueBridgeIP}. Please check the IP address and try again.");
+
+                    tile.BackColor = tilecol_disabled;
+
+                    if (HueRGBDeviceProvider.Instance != null)
+                    {
+                        HueRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        RGBController.UnloadDeviceProvider(HueRGBDeviceProvider.Instance);
+                        HueRGBDeviceProvider.Instance.Dispose();
+                    }
+
+                    if (hueProvider != null)
+                    {
+                        hueProvider.ClientDefinitions.Clear();
+                        RGBController.UnloadDeviceProvider(hueProvider);
+                        hueProvider.Dispose();
+                    }
+                    
+
+                    settings.deviceHueEnabled = false;
+
+                    AppSettings.SaveSettings(settings);
+                }
+
+            }
+
+            btnSubmit.Click += (s, e) => SubmitForm();
+
+            hueSettingsForm.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Escape)
+                {
+                    hueSettingsForm.Close();
+                }
+                else if (e.KeyCode == Keys.Return)
+                {
+                    SubmitForm();
+                }
+            };
+
+            hueSettingsForm.Controls.Add(labelIP);
+            hueSettingsForm.Controls.Add(textBoxIP);
+            hueSettingsForm.Controls.Add(labelKey);
+            hueSettingsForm.Controls.Add(textBoxKey);
+            hueSettingsForm.Controls.Add(labelStreamingKey);
+            hueSettingsForm.Controls.Add(textBoxStreamingKey);
+            hueSettingsForm.Controls.Add(btnSubmit);
+
+            hueSettingsForm.ShowDialog();
+        }
+
+        private bool IsValidIPAddress(string ipAddress)
+        {
+            return IPAddress.TryParse(ipAddress, out _);
         }
 
         private void mt_settings_openRGB_Click(object sender, EventArgs e)
