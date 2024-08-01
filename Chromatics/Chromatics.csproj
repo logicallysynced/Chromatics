@@ -103,8 +103,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\RGB.NET\Devices\" />
-  </ItemGroup>
-
 </Project>

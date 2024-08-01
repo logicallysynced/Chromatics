@@ -78,8 +78,8 @@ namespace Chromatics.Extensions.Sharlayan
                         //var musicPointer = _memoryHandler.GetInt64(address, 0xC0); //Not used
 
                         Debug.WriteLine($"Music Resource: {address:X}");
-                        var currentSong = (ushort)0;
-                        var activePriority = 0;
+                        //var currentSong = (ushort)0;
+                        //var activePriority = 0;
 
 
                         if (address != IntPtr.Zero)
