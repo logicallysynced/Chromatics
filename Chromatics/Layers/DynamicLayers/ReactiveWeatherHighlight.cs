@@ -117,7 +117,6 @@ namespace Chromatics.Layers.DynamicLayers
 
                         var chatLogEntries = readResult.ChatLogItems;
 
-
                         if (readResult.PreviousArrayIndex != _previousArrayIndex)
                         {
                             if (chatLogEntries.Count > 0)
@@ -130,6 +129,11 @@ namespace Chromatics.Layers.DynamicLayers
                                 if (chatLogEntries.First().Code == "0839" && chatLogEntries.First().Message.Contains("has begun."))
                                 {
                                     dutyComplete = false;
+                                }
+
+                                if (chatLogEntries.First().Message.Contains("Allagan tomestones of"))
+                                {
+                                    dutyComplete = true;
                                 }
 
                             }

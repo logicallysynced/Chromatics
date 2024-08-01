@@ -1,9 +1,12 @@
 ﻿using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Extensions.RGB.NET.Devices;
+using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Forms;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
+using Chromatics.Properties;
 using RGB.NET.Core;
 using RGB.NET.Devices.Asus;
 using RGB.NET.Devices.CoolerMaster;
@@ -164,7 +167,27 @@ namespace Chromatics.Core
 
                 if (appSettings.deviceHueEnabled)
                 {
-                    //LoadDeviceProvider(HueRGBDeviceProvider.Instance);
+                    try
+                    {
+                        if (string.IsNullOrEmpty(appSettings.deviceHueBridgeIP) ||
+                        string.IsNullOrEmpty(appSettings.deviceHueBridgeKey) ||
+                        string.IsNullOrEmpty(appSettings.deviceHueBridgeStreamingKey))
+                        {
+                            Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue settings are missing. Please re-enable in settings tab to add.");
+                        }
+                        else
+                        {
+                            var hueBridge = new HueClientDefinition(appSettings.deviceHueBridgeIP, appSettings.deviceHueBridgeKey, appSettings.deviceHueBridgeStreamingKey);
+
+                            HueRGBDeviceProvider.Instance.ClientDefinitions.Add(hueBridge);
+                            LoadDeviceProvider(HueRGBDeviceProvider.Instance);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[HueDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                    
                 }
                             
             
@@ -308,86 +331,108 @@ namespace Chromatics.Core
             } catch { }
         }
 
-        public static void LoadDeviceProvider(IRGBDeviceProvider provider)
+        public static bool LoadDeviceProvider(IRGBDeviceProvider provider)
         {
-            if (!loadedDeviceProviders.Contains(provider))
+            try
             {
-                //Attach device provider
-                foreach (var device in provider.Devices)
+                if (provider == null) return false;
+
+                if (!loadedDeviceProviders.Contains(provider))
                 {
-                    Console.WriteLine(@"Device: " + device.DeviceInfo.DeviceName);
-                    surface.Attach(device);
-                }
+                    //Attach device provider
+                    foreach (var device in provider.Devices)
+                    {
+                        Console.WriteLine(@"Device: " + device.DeviceInfo.DeviceName);
+                        surface.Attach(device);
+                    }
 
-                var showErrors = AppSettings.GetSettings().showDeviceErrors;
+                    var showErrors = AppSettings.GetSettings().showDeviceErrors;
 
-                #if DEBUG
+#if DEBUG
                     showErrors = true;
-                #endif
+#endif
 
-                if (showErrors)
-                    provider.Exception += deviceExceptionEventHandler;
+                    if (showErrors)
+                        provider.Exception += deviceExceptionEventHandler;
 
-                provider.DevicesChanged += DevicesChanged;
-                
-                surface.Load(provider);
-                loadedDeviceProviders.Add(provider);
+                    provider.DevicesChanged += DevicesChanged;
 
-                if (_loaded)
-                {
-                    StopEffects();
-                    ResetLayerGroups();
+                    surface.Load(provider);
+                    loadedDeviceProviders.Add(provider);
 
-                    if (!GameController.IsGameConnected())
-                        RunStartupEffects();
+                    if (_loaded)
+                    {
+                        StopEffects();
+                        ResetLayerGroups();
+
+                        if (!GameController.IsGameConnected())
+                            RunStartupEffects();
+                    }
+
+                    return true;
                 }
 
+                return false;
             }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault().DeviceInfo.DeviceName}] LoadDeviceProvider Error: {ex.Message}");
+                return false;
+            }
+            
         }
 
         public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true)
         {
-            if (loadedDeviceProviders.Contains(provider))
+            try
             {
-                foreach (var device in provider.Devices)
+                if (loadedDeviceProviders.Contains(provider))
                 {
-
-                    //Check for device removal incase event handler isn't built into RGB.NET Provider
-                    var _device = _devices.FirstOrDefault(kvp => kvp.Value == device);
-                    if (_devices.ContainsKey(_device.Key))
+                    foreach (var device in provider.Devices)
                     {
-                        #if DEBUG
+
+                        //Check for device removal incase event handler isn't built into RGB.NET Provider
+                        var _device = _devices.FirstOrDefault(kvp => kvp.Value == device);
+                        if (_devices.ContainsKey(_device.Key))
+                        {
+#if DEBUG
                             Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Removed {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {_device.Key}).");
-                        #else
+#else
                             Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Removed {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
-                        #endif
+#endif
 
-                        _devices.Remove(_device.Key);
+                            _devices.Remove(_device.Key);
 
-                        Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
+                            Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
+                        }
+
+                        surface.Detach(device);
                     }
 
-                    surface.Detach(device);
-                }
 
+                    provider.Exception -= deviceExceptionEventHandler;
+                    provider.DevicesChanged -= DevicesChanged;
 
-                provider.Exception -= deviceExceptionEventHandler;
-                provider.DevicesChanged -= DevicesChanged;
+                    if (removeFromList)
+                        loadedDeviceProviders.Remove(provider);
 
-                if (removeFromList)
-                    loadedDeviceProviders.Remove(provider);
+                    provider.Dispose();
 
-                provider.Dispose();
+                    if (_loaded)
+                    {
+                        StopEffects();
+                        ResetLayerGroups();
 
-                if (_loaded)
-                {
-                    StopEffects();
-                    ResetLayerGroups();
-
-                    if (!GameController.IsGameConnected())
-                        RunStartupEffects();
+                        if (!GameController.IsGameConnected())
+                            RunStartupEffects();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault().DeviceInfo.DeviceName}] UnloadDeviceProvider Error: {ex.Message}");
+            }
+            
         }
 
         public static bool IsLoaded()
