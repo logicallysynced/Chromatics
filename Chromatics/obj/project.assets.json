@@ -4412,7 +4412,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "3.1.2",
+    "version": "3.1.2.1",
     "restore": {
       "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
       "projectName": "Chromatics",
