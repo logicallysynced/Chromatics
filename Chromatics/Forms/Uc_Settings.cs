@@ -723,6 +723,12 @@ namespace Chromatics.Forms
 
         private void OnResize(object sender, EventArgs e)
         {
+            // Check if the form is minimized
+            if (Fm_MainWindow.GetForm().WindowState == FormWindowState.Minimized)
+            {
+                return;
+            }
+
             foreach (var control in tlp_devices.Controls)
             {
                 if (control.GetType() != typeof(MetroTile)) continue;
@@ -764,6 +770,7 @@ namespace Chromatics.Forms
 
             return newImage;
         }
+
 
         private void cb_theme_SelectedIndexChanged(object sender, EventArgs e)
         {
