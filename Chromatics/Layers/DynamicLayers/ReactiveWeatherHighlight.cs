@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Chromatics.Layers.DynamicLayers
 {
@@ -108,7 +109,6 @@ namespace Chromatics.Layers.DynamicLayers
                     var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
                     DutyFinderBellExtension.CheckCache();
-                    WeatherExtension.CheckCache();
 
 
                     if (DutyFinderBellExtension.InInstance())
@@ -123,16 +123,19 @@ namespace Chromatics.Layers.DynamicLayers
                             {
                                 if (chatLogEntries.First().Code == "0840" && chatLogEntries.First().Message.Contains("completion time"))
                                 {
+                                    
                                     dutyComplete = true;
                                 }
 
                                 if (chatLogEntries.First().Code == "0839" && chatLogEntries.First().Message.Contains("has begun."))
                                 {
+                                    
                                     dutyComplete = false;
                                 }
 
-                                if (chatLogEntries.First().Message.Contains("Allagan tomestones of"))
+                                if (chatLogEntries.First().Message.Contains("Allagan tomestones of") && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
                                 {
+                                    
                                     dutyComplete = true;
                                 }
 

@@ -197,6 +197,11 @@ namespace Chromatics.Forms
             Logger.WriteConsole(LoggerTypes.System, @"Chromatics is starting up..");
         }
 
+        public static Form GetForm()
+        {
+            return _Instance;
+        }
+
         public static void SetDarkMode(bool darkMode)
         {
             if (darkMode)
