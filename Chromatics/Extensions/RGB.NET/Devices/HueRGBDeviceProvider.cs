@@ -49,6 +49,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
         protected override IEnumerable<IRGBDevice> LoadDevices()
         {
+            return LoadDevicesAsync().GetAwaiter().GetResult();
+        }
+
+        private async Task<IEnumerable<IRGBDevice>> LoadDevicesAsync()
+        {
             HueDeviceUpdateTrigger updateTrigger = (HueDeviceUpdateTrigger)GetUpdateTrigger();
             List<IRGBDevice> devices = new List<IRGBDevice>();
 
@@ -59,77 +64,48 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                     ILocalHueClient client = new LocalHueClient(clientDefinition.Ip);
                     client.Initialize(clientDefinition.AppKey);
 
-                    if (!client.CheckConnection().GetAwaiter().GetResult())
-                    {
-                        ThrowHueError(1, true, $"[Hue] Unable to connect to Hue hub at {clientDefinition.Ip}");
-                        break;
-                    }
-
-                    var results = client.GetEntertainmentGroups();
                     IReadOnlyList<Group> entertainmentGroups = null;
-
                     try
                     {
-                        var awaiter = results.GetAwaiter();
-                        entertainmentGroups = awaiter.GetResult();
-                    }
-                    catch (HttpRequestException ex)
-                    {
-                        ThrowHueError(2, true, $"[Hue] HTTP request error: {ex.Message}");
-                        if (ex.InnerException is SocketException socketEx)
-                        {
-                            ThrowHueError(3, true, $"SocketException: {ex.Message}");
-                        }
-                    }
-                    catch (AggregateException ex)
-                    {
-                        ThrowHueError(4, true, $"[Hue] AggregateException: {ex.Message}");
-                        foreach (var innerException in ex.InnerExceptions)
-                        {
-                            ThrowHueError(5, true, $"[Hue] Inner Exception: {innerException.Message}");
-                        }
+                        entertainmentGroups = await client.GetEntertainmentGroups();
                     }
                     catch (Exception ex)
                     {
-                        ThrowHueError(6, true, $"[Hue] Exception: {ex.Message}");
+                        Console.WriteLine($"[Hue] Exception caught while getting entertainment groups for IP {clientDefinition.Ip}: {ex.Message}");
+                        ThrowHueError(10, true, $"[Hue] Error getting entertainment groups for IP {clientDefinition.Ip}: {ex.Message}");
+                        continue; // Skip to the next clientDefinition
                     }
 
-                    
-                    if (entertainmentGroups == null)
+                    if (entertainmentGroups == null || !entertainmentGroups.Any())
                     {
-                        if (!entertainmentGroups.Any())
+                        ThrowHueError(7, true, $"[Hue] No entertainment groups found for IP: {clientDefinition.Ip}");
+                        continue;
+                    }
+
+                    List<Light> lights = (await client.GetLightsAsync()).ToList();
+
+                    foreach (Group entertainmentGroup in entertainmentGroups.OrderBy(g => int.Parse(g.Id)))
+                    {
+                        try
                         {
-                            ThrowHueError(7, true, $"[Hue] No entertainment groups found for IP: {clientDefinition.Ip}");
-                            continue;
+                            StreamingHueClient streamingClient = new(clientDefinition.Ip, clientDefinition.AppKey, clientDefinition.ClientKey);
+                            StreamingGroup streamingGroup = new(entertainmentGroup.Locations);
+
+                            await streamingClient.Connect(entertainmentGroup.Id);
+
+                            updateTrigger.ClientGroups.Add(streamingClient, streamingGroup);
+                            foreach (string lightId in entertainmentGroup.Lights.OrderBy(int.Parse))
+                            {
+                                HueDeviceInfo deviceInfo = new(entertainmentGroup, lightId, lights);
+                                HueDevice device = new(deviceInfo, new HueUpdateQueue(updateTrigger, lightId, streamingGroup));
+                                devices.Add(device);
+                            }
                         }
-
-                        List<Light> lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
-
-                        foreach (Group entertainmentGroup in entertainmentGroups.OrderBy(g => int.Parse(g.Id)))
+                        catch (Exception ex)
                         {
-                            try
-                            {
-                                StreamingHueClient streamingClient = new(clientDefinition.Ip, clientDefinition.AppKey, clientDefinition.ClientKey);
-                                StreamingGroup streamingGroup = new(entertainmentGroup.Locations);
-
-                                streamingClient.Connect(entertainmentGroup.Id).GetAwaiter().GetResult();
-
-                                updateTrigger.ClientGroups.Add(streamingClient, streamingGroup);
-                                foreach (string lightId in entertainmentGroup.Lights.OrderBy(int.Parse))
-                                {
-                                    HueDeviceInfo deviceInfo = new(entertainmentGroup, lightId, lights);
-                                    HueDevice device = new(deviceInfo, new HueUpdateQueue(updateTrigger, lightId, streamingGroup));
-                                    devices.Add(device);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                ThrowHueError(8, true, $"[Hue] Error setting up streaming group for group {entertainmentGroup.Id}: {ex.Message}");
-                            }
+                            ThrowHueError(8, true, $"[Hue] Error setting up streaming group for group {entertainmentGroup.Id}: {ex.Message}");
                         }
                     }
-                    
-                    
                 }
                 catch (Exception ex)
                 {
@@ -137,10 +113,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                 }
             }
 
-            foreach (var device in devices)
-            {
-                yield return device;
-            }
+            return devices;
         }
 
         protected override IDeviceUpdateTrigger CreateUpdateTrigger(int id, double updateRateHardLimit)

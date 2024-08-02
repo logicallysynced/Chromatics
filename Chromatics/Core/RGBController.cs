@@ -169,15 +169,13 @@ namespace Chromatics.Core
                 {
                     try
                     {
-                        if (string.IsNullOrEmpty(appSettings.deviceHueBridgeIP) ||
-                        string.IsNullOrEmpty(appSettings.deviceHueBridgeKey) ||
-                        string.IsNullOrEmpty(appSettings.deviceHueBridgeStreamingKey))
+                        if (string.IsNullOrEmpty(appSettings.deviceHueBridgeIP))
                         {
                             Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue settings are missing. Please re-enable in settings tab to add.");
                         }
                         else
                         {
-                            var hueBridge = new HueClientDefinition(appSettings.deviceHueBridgeIP, appSettings.deviceHueBridgeKey, appSettings.deviceHueBridgeStreamingKey);
+                            var hueBridge = new HueClientDefinition(appSettings.deviceHueBridgeIP, "chromatics", "pvpGWu0ets21cUUZGOHqd63Eb28i2QEx");
 
                             HueRGBDeviceProvider.Instance.ClientDefinitions.Add(hueBridge);
                             LoadDeviceProvider(HueRGBDeviceProvider.Instance);
