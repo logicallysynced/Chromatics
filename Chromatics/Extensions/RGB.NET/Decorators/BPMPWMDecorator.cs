@@ -102,7 +102,16 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                         int colorIndex = (groupIndex + (int)(Timing / interval)) % colors.Length;
 
                         targetColors[led] = colors[colorIndex];
-                        transitionStartTimes[led] = Timing;
+
+                        if (transitionStartTimes.ContainsKey(led))
+                        {
+                            transitionStartTimes[led] = Timing;
+                        }
+                        else
+                        {
+                            transitionStartTimes.Add(led, Timing);
+                        }
+                        
                     }
                 }
 
@@ -110,7 +119,13 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 {
                     if (!ledPositions.ContainsKey(led)) continue;
 
-                    double timeSinceTransitionStart = Timing - transitionStartTimes[led];
+                    double timeSinceTransitionStart = 0;
+
+                    if (transitionStartTimes.ContainsKey(led))
+                    {
+                        timeSinceTransitionStart = Timing - transitionStartTimes[led];
+                    }
+                        
                     float transitionProgress = fadeTime > 0 ? (float)Math.Min(timeSinceTransitionStart / fadeTime, 1.0) : 1.0f;
 
                     var color = fadeTime == 0 ? targetColors[led] : Lerp(currentColors[led], targetColors[led], transitionProgress);
