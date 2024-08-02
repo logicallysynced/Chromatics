@@ -201,8 +201,6 @@ namespace Chromatics.Layers
                         {
                             //layergroup.Brush = weather_brush;
 
-                            Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Set Weather");
-
 
                             effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance(), dutyComplete, MusicExtension.musicResource(), raidEffectsRunning);
 
