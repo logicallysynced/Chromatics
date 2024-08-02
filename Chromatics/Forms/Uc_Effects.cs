@@ -89,6 +89,12 @@ namespace Chromatics.Forms
 
         private void OnResize(object sender, EventArgs e)
         {
+            // Check if the form is minimized
+            if (Fm_MainWindow.GetForm().WindowState == FormWindowState.Minimized)
+            {
+                return;
+            }
+
             foreach (var control in tlp_main.Controls)
             {
                 if (control.GetType() != typeof(MetroTile)) continue;
@@ -136,6 +142,16 @@ namespace Chromatics.Forms
 
         private static Image ScaleImage(Image image, int maxWidth, int maxHeight)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image), "Image cannot be null.");
+            }
+
+            if (image.Width <= 0 || image.Height <= 0)
+            {
+                throw new ArgumentException("Image dimensions must be greater than zero.");
+            }
+
             var ratioX = (double)maxWidth / image.Width;
             var ratioY = (double)maxHeight / image.Height;
             var ratio = Math.Min(ratioX, ratioY);
@@ -143,12 +159,20 @@ namespace Chromatics.Forms
             var newWidth = (int)(image.Width * ratio);
             var newHeight = (int)(image.Height * ratio);
 
+            if (newWidth <= 0 || newHeight <= 0)
+            {
+                throw new ArgumentException("Scaled image dimensions must be greater than zero.");
+            }
+
             var newImage = new Bitmap(newWidth, newHeight);
 
             using (var graphics = Graphics.FromImage(newImage))
+            {
                 graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+            }
 
             return newImage;
         }
+
     }
 }
