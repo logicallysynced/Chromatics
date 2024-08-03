@@ -28,11 +28,11 @@ namespace Chromatics.Layers
             HashSet<Led> _layergroupledcollection;
 
             //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            var surface = RGBController.GetLiveSurfaces();
-            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            
+            
 
             ListLedGroup layergroup;
-            var ledArray = device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledArray = GetLedArray(layer);
 
             if (_layergroupledcollections.ContainsKey(layer.layerID))
             {

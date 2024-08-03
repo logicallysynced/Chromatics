@@ -16,7 +16,7 @@ namespace Chromatics.Localization
             switch (locale)
             {
                 case KeyboardLocalization.qwerty:
-                    return QWERTY;
+                    return QWERTZ;
                 case KeyboardLocalization.qwertz:
                     return QWERTZ;
                 case KeyboardLocalization.azerty:
