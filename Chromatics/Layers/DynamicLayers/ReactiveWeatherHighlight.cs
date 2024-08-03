@@ -54,11 +54,11 @@ namespace Chromatics.Layers.DynamicLayers
             if (weatherService == null) return;
 
             //loop through all LED's and assign to device layer  (Order of LEDs is not important for a highlight layer)
-            var surface = RGBController.GetLiveSurfaces();
-            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            
+            
 
             ListLedGroup layergroup;
-            var ledArray = device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledArray = GetLedArray(layer);
 
             if (_layergroups.ContainsKey(layer.layerID))
             {

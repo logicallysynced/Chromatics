@@ -37,8 +37,12 @@ namespace Chromatics.Layers
             var _colorPalette = RGBController.GetActivePalette();
 
             //loop through all LED's and assign to device layer (must maintain order of LEDs)
-            var surface = RGBController.GetLiveSurfaces();
-            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var device = GetDevice(layer);
+            if (device == null)
+            {
+                return;
+            }
+
             var _layergroups = RGBController.GetLiveLayerGroups();
             var ledArray = (from led in device.Select((led, index) => new { Index = index, Led = led }) join id in layer.deviceLeds.Values.Select((id, index) => new { Index = index, Id = id }) on led.Led.Id equals id.Id orderby id.Index select led.Led).ToArray();
             
