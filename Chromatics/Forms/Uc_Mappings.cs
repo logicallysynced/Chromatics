@@ -51,7 +51,6 @@ namespace Chromatics.Forms
         private int _layerPad = 5;
         private MetroToolTip tt_mappings;
         private LayerType selectedAddType;
-        private IRGBDevice selectedDevice;
         private Pn_LayerDisplay currentlyEditing;
         private Pn_LayerDisplay currentlySelected;
         private bool init;
