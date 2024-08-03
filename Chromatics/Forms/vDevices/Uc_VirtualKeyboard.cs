@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Chromatics.Forms
@@ -17,6 +18,13 @@ namespace Chromatics.Forms
     public partial class Uc_VirtualKeyboard : VirtualDevice
     {
         IRGBDevice _device;
+
+        string[] unwantedStrings = new string[]
+        {
+            "Keyboard", "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
+            "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
+            "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
+        };
 
         public Uc_VirtualKeyboard(IRGBDevice deviceId)
         {
@@ -42,7 +50,21 @@ namespace Chromatics.Forms
             //Assign a keycap per cell
             var settings = AppSettings.GetSettings();
 
-            var keycaps = KeyLocalization.GetLocalizedKeys(settings.keyboardLayout);
+            var keycapsLocalized = KeyLocalization.GetLocalizedKeys(settings.keyboardLayout);
+
+            var base_i = 0;
+            var keycaps = new Dictionary<int, LedId>();
+
+            foreach (var led in _device)
+            {
+                if (!keycaps.ContainsKey(base_i))
+                {
+                    keycaps.Add(base_i, led.Id);
+                }
+
+                base_i++;
+            }
+
             tlp_main.Controls.Clear();
             tlp_main.RowCount = 0;
             tlp_main.ColumnCount = 0;
@@ -62,8 +84,15 @@ namespace Chromatics.Forms
 
             if (keycaps != null)
             {
-                foreach (var key in keycaps)
+                foreach (var _key in keycaps.Take(_device.Count()))
                 {
+                    var key = keycapsLocalized.Find(k => k.LedType == _key.Value);
+
+                    if (key == null)
+                    {
+                        continue;
+                    }
+
                     var width = Convert.ToInt16(key.width) + 5;
                     var height = Convert.ToInt16(key.height) + 5;
 

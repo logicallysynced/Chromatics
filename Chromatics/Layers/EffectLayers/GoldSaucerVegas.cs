@@ -26,7 +26,7 @@ namespace Chromatics.Layers
             var effectSettings = RGBController.GetEffectsSettings();
             var _layergroups = RGBController.GetLiveLayerGroups();
             var surface = RGBController.GetLiveSurfaces();
-            var devices = surface.GetDevices(layer.deviceType);
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
 
             GoldSaucerVegasEffectModel model;
             ListLedGroup layergroup;
@@ -89,7 +89,7 @@ namespace Chromatics.Layers
                     model.test = true;
                 }
                 
-                var ledArray = devices.SelectMany(d => d).Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+                var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
                 if (_layergroups.ContainsKey(baseLayer.layerID))
                 {
