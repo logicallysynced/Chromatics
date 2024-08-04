@@ -57,7 +57,6 @@ namespace Chromatics.Forms
 
             foreach (var led in keycapsLocalized)
             {
-                Debug.WriteLine(led.LedType);
                 keycaps.Add(new KeyValuePair<int, KeyboardKey>(base_i, led));
                 base_i++;
             }
