@@ -105,7 +105,7 @@ namespace Chromatics.Forms
 
                 columnlimit = keycapsOrdered.Count / 4;
 
-                foreach (var key in keycapsOrdered.Take(_device.Count()))
+                foreach (var key in keycapsOrdered.Take(_device.Count()-1))
                 {
                     var width = _width;
                     var height = _height;
