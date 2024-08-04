@@ -22,7 +22,7 @@ namespace Chromatics.Forms
         string[] unwantedStrings = new string[]
         {
             "Keyboard", "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
-            "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
+            "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe", "Stand",
             "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
         };
 
@@ -53,15 +53,12 @@ namespace Chromatics.Forms
             var keycapsLocalized = KeyLocalization.GetLocalizedKeys(settings.keyboardLayout);
 
             var base_i = 0;
-            var keycaps = new Dictionary<int, LedId>();
+            var keycaps = new List<KeyValuePair<int, KeyboardKey>>();
 
-            foreach (var led in _device)
+            foreach (var led in keycapsLocalized)
             {
-                if (!keycaps.ContainsKey(base_i))
-                {
-                    keycaps.Add(base_i, led.Id);
-                }
-
+                Debug.WriteLine(led.LedType);
+                keycaps.Add(new KeyValuePair<int, KeyboardKey>(base_i, led));
                 base_i++;
             }
 
@@ -84,11 +81,12 @@ namespace Chromatics.Forms
 
             if (keycaps != null)
             {
-                foreach (var _key in keycaps.Take(_device.Count()))
+                foreach (var keyList in keycaps)
                 {
-                    var key = keycapsLocalized.Find(k => k.LedType == _key.Value);
+                    var key = keyList.Value;
+                    var _key = _device.Where(k => k.Id == key.LedType);
 
-                    if (key == null)
+                    if (_key == null)
                     {
                         continue;
                     }
