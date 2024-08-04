@@ -27,6 +27,7 @@ namespace Chromatics.Layers.DynamicLayers
         internal static int _previousOffset = 0;
         internal static bool dutyComplete = false;
         internal static bool raidEffectsRunning = false;
+        internal static string[] bossNames = null;
 
         public override void Process(IMappingLayer layer)
         {
@@ -121,28 +122,39 @@ namespace Chromatics.Layers.DynamicLayers
                     {
                         if (chatLogEntries.Count > 0)
                         {
-                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)"))
+                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
+                                bossNames = null;
                             }
 
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\."))
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = false;
                             }
 
-                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
+                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
+                                bossNames = null;
                             }
 
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\."))
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
+                                bossNames = null;
                             }
+
+                            else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
+                            {
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
+                                bossNames = null;
+                            }
+
 
                         }
 
@@ -162,21 +174,12 @@ namespace Chromatics.Layers.DynamicLayers
                             currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
                         }
                         
-                        /*
-                        if (raidEffectsRunning)
-                        {
-                            model._currentWeather = currentWeather;
-
-                        }
-                        */
 
                         if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects  || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
 
                             SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, DutyFinderBellExtension.InInstance());
-
-
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
@@ -224,8 +227,7 @@ namespace Chromatics.Layers.DynamicLayers
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepKeyHighlight.Color);
                             raidEffectsRunning = true;
-
-                            Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Z1");
+                            bossNames = ["Zoraal Ja"];
                         }
                         break;
                     case "Interphos":
@@ -235,6 +237,7 @@ namespace Chromatics.Layers.DynamicLayers
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosKeyHighlight.Color);
                             raidEffectsRunning = true;
+                            bossNames = ["Queen Eternal"];
                         }
                         break;
                     case "Scratching Ring":
@@ -243,6 +246,7 @@ namespace Chromatics.Layers.DynamicLayers
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1KeyHighlight.Color);
                             raidEffectsRunning = true;
+                            bossNames = ["Black Cat"];
                         }
                         break;
                     case "Lovely Lovering":
@@ -251,6 +255,7 @@ namespace Chromatics.Layers.DynamicLayers
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2KeyHighlight.Color);
                             raidEffectsRunning = true;
+                            bossNames = ["Honey B. Lovely"];
                         }
                         break;
                     case "Blasting Ring":
@@ -259,6 +264,7 @@ namespace Chromatics.Layers.DynamicLayers
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3KeyHighlight.Color);
                             raidEffectsRunning = true;
+                            bossNames = ["Brute Bomber"];
                         }
                         break;
                     case "The Thundering":
@@ -268,12 +274,12 @@ namespace Chromatics.Layers.DynamicLayers
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4KeyHighlight.Color);
                             raidEffectsRunning = true;
+                            bossNames = ["Wicked Thunder"];
                         }
                         break;
                 }
             }
 
-            
 
             switch (zone)
             {

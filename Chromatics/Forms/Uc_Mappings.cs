@@ -333,8 +333,19 @@ namespace Chromatics.Forms
             // Add dynamic layer for keyboards
             if (deviceType == RGBDeviceType.Keyboard)
             {
+                var settings = AppSettings.GetSettings();
                 var x = i;
-                AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, x, true, false, true, LedKeyHelper.DefaultKeys_ReactiveWeather, (int)DynamicLayerType.ReactiveWeatherHighlight, true, LayerModes.Interpolate);
+                
+                if (settings.keyboardLayout == KeyboardLocalization.azerty)
+                {
+                    AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, x, true, false, true, LedKeyHelper.DefaultKeys_ReactiveWeather_AZERTY, (int)DynamicLayerType.ReactiveWeatherHighlight, true, LayerModes.Interpolate);
+                }
+                else
+                {
+                    AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, x, true, false, true, LedKeyHelper.DefaultKeys_ReactiveWeather_QWERTY, (int)DynamicLayerType.ReactiveWeatherHighlight, true, LayerModes.Interpolate);
+                }
+                
+
                 AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 1), true, false, true, LedKeyHelper.DefaultKeys_Keybinds, (int)DynamicLayerType.Keybinds, true, LayerModes.Interpolate);
                 AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 2), true, false, true, LedKeyHelper.DefaultKeys_HP, (int)DynamicLayerType.HPTracker, true, LayerModes.Interpolate);
                 AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 3), true, false, true, LedKeyHelper.DefaultKeys_MP, (int)DynamicLayerType.MPTracker, true, LayerModes.Interpolate);
