@@ -21,7 +21,7 @@ namespace Chromatics.Forms
 
         string[] unwantedStrings = new string[]
         {
-            "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
+            "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset", "Stand",
             "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
             "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
         };
@@ -62,15 +62,11 @@ namespace Chromatics.Forms
             //var keycaps = Helpers.LedKeyHelper.GetAllKeysForDevice(device.DeviceInfo.DeviceType);
 
             var base_i = 0;
-            var keycaps = new Dictionary<int, LedId>();
+            var keycaps = new List<KeyValuePair<int, LedId>>();
 
             foreach (var led in _device)
             {
-                if (!keycaps.ContainsKey(base_i))
-                {
-                    keycaps.Add(base_i, led.Id);
-                }
-
+                keycaps.Add(new KeyValuePair<int, LedId>(base_i, led.Id));
                 base_i++;
             }
 

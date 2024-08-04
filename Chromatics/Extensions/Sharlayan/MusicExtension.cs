@@ -21,7 +21,7 @@ namespace Chromatics.Extensions.Sharlayan
         private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(0.05);
         private static bool _siginit;
         private static bool _memoryready;
-        private static ushort _musicResource;
+        private static byte _musicResource;
         private static bool _initialized;
         private static List<Signature> _sList;
         private static readonly object RefreshLock = new object();
@@ -44,7 +44,7 @@ namespace Chromatics.Extensions.Sharlayan
                             new Signature //Not used
                             {
                                 Key = memoryName,
-                                Value = "488B05????????4885C074518378080B",
+                                Value = "E8????????C683??????????488D05????????48890333C9",
                                 ASMSignature = true,
                                 PointerPath = new List<long>
                                 {   
@@ -74,28 +74,18 @@ namespace Chromatics.Extensions.Sharlayan
                 {
                     if (_memoryHandler.Scanner.Locations.ContainsKey(memoryName))
                     {
-                        var address = _memoryHandler.Scanner.Locations[memoryName].GetAddress() + 0xC0;
-                        //var musicPointer = _memoryHandler.GetInt64(address, 0xC0); //Not used
+                        var address = _memoryHandler.Scanner.Locations[memoryName].GetAddress();
+                        var musicPointer = _memoryHandler.GetByte(address, 0xD52); //Not used
 
-                        Debug.WriteLine($"Music Resource: {address:X}");
                         //var currentSong = (ushort)0;
                         //var activePriority = 0;
 
-
-                        if (address != IntPtr.Zero)
-                        {
-                            //
-                        }
-                        else
-                        {
-                            Debug.WriteLine("Address is null or invalid.");
-                        }
 
 
                         //nint baseAddress = _memoryHandler.Configuration.ProcessModel.Process.MainModule.BaseAddress;
                         //var musicPointer = _memoryHandler.GetByte(baseAddress + 0x2550CA4);
 
-                        _musicResource = 0;
+                        _musicResource = musicPointer;
 
                         _initialized = true;
                     }
@@ -115,7 +105,7 @@ namespace Chromatics.Extensions.Sharlayan
             }
         }
 
-        public static ushort musicResource()
+        public static byte musicResource()
         {
             if (!_initialized)
                 return 0;
