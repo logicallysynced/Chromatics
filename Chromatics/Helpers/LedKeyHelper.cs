@@ -2118,7 +2118,7 @@ namespace Chromatics.Helpers
             LedId.Unknown128
         };
 
-        public static Dictionary<int, LedId> DefaultKeys_ReactiveWeather = new Dictionary<int, LedId>()
+        public static Dictionary<int, LedId> DefaultKeys_ReactiveWeather_QWERTY = new Dictionary<int, LedId>()
         {
             { 1, LedId.Keyboard_W },
             { 2, LedId.Keyboard_A },
@@ -2127,9 +2127,19 @@ namespace Chromatics.Helpers
             { 5, LedId.Keyboard_LeftShift },
             { 6, LedId.Keyboard_LeftCtrl },
             { 7, LedId.Keyboard_LeftAlt }
-            
-            
         };
+
+        public static Dictionary<int, LedId> DefaultKeys_ReactiveWeather_AZERTY = new Dictionary<int, LedId>()
+        {
+            { 1, LedId.Keyboard_Z },
+            { 2, LedId.Keyboard_Q },
+            { 3, LedId.Keyboard_S },
+            { 4, LedId.Keyboard_D },
+            { 5, LedId.Keyboard_LeftShift },
+            { 6, LedId.Keyboard_LeftCtrl },
+            { 7, LedId.Keyboard_LeftAlt }
+        };
+
         public static Dictionary<int, LedId> DefaultKeys_Keybinds = new Dictionary<int, LedId>()
         {
             { 1, LedId.Keyboard_GraveAccentAndTilde },
