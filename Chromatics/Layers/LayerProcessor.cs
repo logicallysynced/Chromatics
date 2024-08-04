@@ -15,7 +15,56 @@ namespace Chromatics.Layers
 {
     public abstract class LayerProcessor
     {
-        public bool _init;
+        internal bool _init;
+        internal RGBSurface surface = RGBController.GetLiveSurfaces();
+
+        internal Led[] GetLedArray(IMappingLayer layer)
+        {
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var ledArray = device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+
+            if (ledArray != null && ledArray.Length > 0)
+            {
+                return ledArray;
+            }
+
+            return Array.Empty<Led>();
+        }
+
+        internal Led[] GetLedSortedArray(IMappingLayer layer)
+        {
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var ledArray = (from led in device.Select((led, index) => new { Index = index, Led = led }) join id in layer.deviceLeds.Values.Select((id, index) => new { Index = index, Id = id }) on led.Led.Id equals id.Id orderby id.Index select led.Led).ToArray();
+
+
+            if (ledArray != null && ledArray.Length > 0)
+            {
+                return ledArray;
+            }
+
+            return Array.Empty<Led>();
+        }
+
+        internal Led[] GetLedBaseArray(IMappingLayer layer, Layer baseLayer)
+        {
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+
+
+            if (ledArray != null && ledArray.Length > 0)
+            {
+                return ledArray;
+            }
+
+            return Array.Empty<Led>();
+        }
+
+        internal IRGBDevice GetDevice(IMappingLayer layer)
+        {
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+
+            return device;
+        }
 
         public abstract void Process(IMappingLayer layer);
     }
@@ -33,12 +82,12 @@ namespace Chromatics.Layers
             HashSet<Led> _layergroupledcollection;
 
             //loop through all LED's and assign to device layer
-            var surface = RGBController.GetLiveSurfaces();
-            var devices = surface.GetDevices(layer.deviceType);
+            
+            
 
             ListLedGroup layergroup;
 
-            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledArray = GetLedArray(layer);
 
             if (_layergroupledcollections.ContainsKey(layer.layerID))
             {

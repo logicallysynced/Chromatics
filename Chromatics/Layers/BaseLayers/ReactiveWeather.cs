@@ -34,9 +34,10 @@ namespace Chromatics.Layers
     {
         private static Dictionary<int, ReactiveWeatherBaseModel> layerProcessorModel = new Dictionary<int, ReactiveWeatherBaseModel>();
 
-        int _previousArrayIndex = 0;
-        int _previousOffset = 0;
-        bool dutyComplete = false;
+        internal static int _previousArrayIndex = 0;
+        internal static int _previousOffset = 0;
+        internal static bool dutyComplete = false;
+        internal static bool raidEffectsRunning = false;
 
         public override void Process(IMappingLayer layer)
         {
@@ -66,17 +67,16 @@ namespace Chromatics.Layers
             var weather_brush = new SolidColorBrush(weather_color);
             var _layergroups = RGBController.GetLiveLayerGroups();
             var effectApplied = false;
-            var raidEffectsRunning = false;
 
             var weatherService = FFXIVWeatherExtensions.GetWeatherService();
             if (weatherService == null) return;
 
             //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            var surface = RGBController.GetLiveSurfaces();
-            var devices = surface.GetDevices(layer.deviceType);
+            //var surface = RGBController.GetLiveSurfaces();
+            //var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
 
             ListLedGroup layergroup;
-            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledArray = GetLedArray(layer);
 
 
             if (_layergroups.ContainsKey(layer.layerID))
@@ -138,55 +138,53 @@ namespace Chromatics.Layers
                     DutyFinderBellExtension.CheckCache();
                     WeatherExtension.CheckCache();
 
-                    if (DutyFinderBellExtension.InInstance())
+
+                    ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
+
+                    if (readResult.PreviousArrayIndex != _previousArrayIndex)
                     {
-                        ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
-
                         var chatLogEntries = readResult.ChatLogItems;
-                        
 
-                        if (readResult.PreviousArrayIndex != _previousArrayIndex)
+                        if (chatLogEntries.Count > 0)
                         {
-                            if (chatLogEntries.Count > 0)
+                            //Debug.WriteLine($"{chatLogEntries.First().Code}: {chatLogEntries.First().Message}");
+
+                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)"))
                             {
-                                if (chatLogEntries.First().Code == "0840" && chatLogEntries.First().Message.Contains("completion time"))
-                                {
-                                    //Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch 3: Completion time text");
-                                    dutyComplete = true;
-                                    raidEffectsRunning = false;
-                                }
-
-                                if (chatLogEntries.First().Code == "0839" && chatLogEntries.First().Message.Contains("has begun."))
-                                {
-                                    //Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch 2: Has begun text");
-                                    dutyComplete = false;
-                                }
-
-                                if (chatLogEntries.First().Message.Contains("Allagan tomestones of") && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
-                                {
-                                    //Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch 1: Allagan tomestones text");
-                                    dutyComplete = true;
-                                    raidEffectsRunning = false;
-                                }
-
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
                             }
 
-                            _previousArrayIndex = readResult.PreviousArrayIndex;
-                            _previousOffset = readResult.PreviousOffset;
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\."))
+                            {
+                                dutyComplete = false;
+                            }
+
+                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
+                            {
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
+                            }
+
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\."))
+                            {
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
+                            }
+
                         }
+
+                        _previousArrayIndex = readResult.PreviousArrayIndex;
+                        _previousOffset = readResult.PreviousOffset;
                     }
-                    else
-                    {
-                        dutyComplete = false;
-                    }
-                    
+
 
 
 
                     if (currentZone != "???" && currentZone != "")
                     {
                         var currentWeatherZone = WeatherExtension.WeatherId();
-                        var currentWeather = WeatherHelper.GetWeatherNameById(currentWeatherZone);
+                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString(); //WeatherHelper.GetWeatherNameById(currentWeatherZone);
 
                         //Debug.WriteLine($"Test Weather: {currentWeatherZone} {currentWeather}");
 
@@ -195,14 +193,23 @@ namespace Chromatics.Layers
                             currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
                         }
 
+                        /*
+                        if (raidEffectsRunning)
+                        {
+                            model._currentWeather = currentWeather;
+
+                        }
+                        */
+
+
                         //var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
                         if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
+
+
                             //layergroup.Brush = weather_brush;
-
-
-                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance(), dutyComplete, MusicExtension.musicResource(), raidEffectsRunning);
+                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance());
 
                             #if DEBUG
                                 Debug.WriteLine($"{layer.deviceType} Zone Lookup: {currentZone}. Weather: {currentWeather}");
@@ -212,7 +219,6 @@ namespace Chromatics.Layers
                             model._currentZone = currentZone;
                             model._inInstance = DutyFinderBellExtension.InInstance();
                             model._dutyComplete = dutyComplete;
-                            //model._currentMusic = MusicExtension.musicResource();
                         }
                     }
 
@@ -252,7 +258,6 @@ namespace Chromatics.Layers
             public bool _raidEffects { get; set; }
             public bool _inInstance { get; set; }
             public bool _dutyComplete { get; set; }
-            public ushort _currentMusic { get; set; }
 
         }
 
@@ -312,7 +317,7 @@ namespace Chromatics.Layers
             layer.RemoveAllDecorators();
         }
 
-        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, bool dutyComplete, ushort currentMusic = 0, bool raidEffectsRunning = false)
+        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance)
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();

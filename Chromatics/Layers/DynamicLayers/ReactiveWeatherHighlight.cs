@@ -23,9 +23,10 @@ namespace Chromatics.Layers.DynamicLayers
     {
         private static Dictionary<int, ReactiveWeatherHighlightDynamicLayer> layerProcessorModel = new Dictionary<int, ReactiveWeatherHighlightDynamicLayer>();
 
-        int _previousArrayIndex = 0;
-        int _previousOffset = 0;
-        bool dutyComplete = false;
+        internal static int _previousArrayIndex = 0;
+        internal static int _previousOffset = 0;
+        internal static bool dutyComplete = false;
+        internal static bool raidEffectsRunning = false;
 
         public override void Process(IMappingLayer layer)
         {
@@ -54,11 +55,11 @@ namespace Chromatics.Layers.DynamicLayers
             if (weatherService == null) return;
 
             //loop through all LED's and assign to device layer  (Order of LEDs is not important for a highlight layer)
-            var surface = RGBController.GetLiveSurfaces();
-            var devices = surface.GetDevices(layer.deviceType);
+            
+            
 
             ListLedGroup layergroup;
-            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledArray = GetLedArray(layer);
 
             if (_layergroups.ContainsKey(layer.layerID))
             {
@@ -109,61 +110,73 @@ namespace Chromatics.Layers.DynamicLayers
                     var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
                     DutyFinderBellExtension.CheckCache();
+                    WeatherExtension.CheckCache();
+
+                    ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
+
+                    var chatLogEntries = readResult.ChatLogItems;
 
 
-                    if (DutyFinderBellExtension.InInstance())
+                    if (readResult.PreviousArrayIndex != _previousArrayIndex)
                     {
-                        ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
-
-                        var chatLogEntries = readResult.ChatLogItems;
-
-                        if (readResult.PreviousArrayIndex != _previousArrayIndex)
+                        if (chatLogEntries.Count > 0)
                         {
-                            if (chatLogEntries.Count > 0)
+                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)"))
                             {
-                                if (chatLogEntries.First().Code == "0840" && chatLogEntries.First().Message.Contains("completion time"))
-                                {
-                                    
-                                    dutyComplete = true;
-                                }
-
-                                if (chatLogEntries.First().Code == "0839" && chatLogEntries.First().Message.Contains("has begun."))
-                                {
-                                    
-                                    dutyComplete = false;
-                                }
-
-                                if (chatLogEntries.First().Message.Contains("Allagan tomestones of") && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
-                                {
-                                    
-                                    dutyComplete = true;
-                                }
-
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
                             }
 
-                            _previousArrayIndex = readResult.PreviousArrayIndex;
-                            _previousOffset = readResult.PreviousOffset;
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\."))
+                            {
+                                dutyComplete = false;
+                            }
+
+                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
+                            {
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
+                            }
+
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\."))
+                            {
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
+                            }
+
                         }
+
+                        _previousArrayIndex = readResult.PreviousArrayIndex;
+                        _previousOffset = readResult.PreviousOffset;
                     }
-                    else
-                    {
-                        dutyComplete = false;
-                    }
+
 
                     if (currentZone != "???" && currentZone != "")
                     {
                         var currentWeatherZone = WeatherExtension.WeatherId();
-                        var currentWeather = WeatherHelper.GetWeatherNameById(currentWeatherZone);
+                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString(); //WeatherHelper.GetWeatherNameById(currentWeatherZone);
+
 
                         if (currentWeather == null)
                         {
                             currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
                         }
+                        
+                        /*
+                        if (raidEffectsRunning)
+                        {
+                            model._currentWeather = currentWeather;
+
+                        }
+                        */
 
                         if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects  || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
                             //layergroup.Brush = weather_brush;
-                            SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, DutyFinderBellExtension.InInstance(), dutyComplete);
+
+                            SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, DutyFinderBellExtension.InInstance());
+
+
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
@@ -194,7 +207,7 @@ namespace Chromatics.Layers.DynamicLayers
 
         }
 
-        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, bool inInstance, bool dutyComplete)
+        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, bool inInstance)
         {
             var color = GetWeatherColor(weather, _colorPalette);
             var reactiveWeatherEffects = RGBController.GetEffectsSettings();
@@ -205,11 +218,14 @@ namespace Chromatics.Layers.DynamicLayers
             {
                 switch (zone)
                 {
-                    case "Everkeep":
+                    case "Summit of Everkeep":
                         //Raid Zone Effect
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepKeyHighlight.Color);
+                            raidEffectsRunning = true;
+
+                            Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Z1");
                         }
                         break;
                     case "Interphos":
@@ -218,6 +234,7 @@ namespace Chromatics.Layers.DynamicLayers
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosKeyHighlight.Color);
+                            raidEffectsRunning = true;
                         }
                         break;
                     case "Scratching Ring":
@@ -225,6 +242,7 @@ namespace Chromatics.Layers.DynamicLayers
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1KeyHighlight.Color);
+                            raidEffectsRunning = true;
                         }
                         break;
                     case "Lovely Lovering":
@@ -232,6 +250,7 @@ namespace Chromatics.Layers.DynamicLayers
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2KeyHighlight.Color);
+                            raidEffectsRunning = true;
                         }
                         break;
                     case "Blasting Ring":
@@ -239,17 +258,22 @@ namespace Chromatics.Layers.DynamicLayers
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3KeyHighlight.Color);
+                            raidEffectsRunning = true;
                         }
                         break;
                     case "The Thundering":
+                    
                         //Raid Zone Effect
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4KeyHighlight.Color);
+                            raidEffectsRunning = true;
                         }
                         break;
                 }
             }
+
+            
 
             switch (zone)
             {

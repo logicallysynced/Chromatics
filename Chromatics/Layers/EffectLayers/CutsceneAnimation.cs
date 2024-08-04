@@ -48,11 +48,11 @@ namespace Chromatics.Layers
             var _layergroups = RGBController.GetLiveLayerGroups();
 
             //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            var surface = RGBController.GetLiveSurfaces();
-            var devices = surface.GetDevices(layer.deviceType);
+            
+            
 
             ListLedGroup layergroup;
-            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledArray = GetLedArray(layer);
 
             if (_layergroups.ContainsKey(layer.layerID))
             {

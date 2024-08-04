@@ -176,10 +176,12 @@ namespace Chromatics.Layers
         {
             FileOperationsHelper.SaveLayerMappings(_layers);
 
+            /*
             foreach (var layer in _layers)
             {
                 Debug.WriteLine($"Saving layer: {layer.Key}, Version: {layer.Value.layerVersion}, Guid: {layer.Value.deviceGuid}");
             }
+            */
 
             return true;
         }

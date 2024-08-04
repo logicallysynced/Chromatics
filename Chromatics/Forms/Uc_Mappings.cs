@@ -51,7 +51,6 @@ namespace Chromatics.Forms
         private int _layerPad = 5;
         private MetroToolTip tt_mappings;
         private LayerType selectedAddType;
-        private RGBDeviceType selectedDevice;
         private Pn_LayerDisplay currentlyEditing;
         private Pn_LayerDisplay currentlySelected;
         private bool init;
@@ -328,7 +327,7 @@ namespace Chromatics.Forms
             }
 
             // Add base layer
-            AddLayer(LayerType.BaseLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys);
+            AddLayer(LayerType.BaseLayer, deviceGuid, deviceType, 0, i, true, false, true, baseKeys, (int)BaseLayerType.ReactiveWeather);
             i++;
 
             // Add dynamic layer for keyboards
@@ -871,6 +870,9 @@ namespace Chromatics.Forms
             var id = parent.ID;
 
             var layer = MappingLayers.GetLayer(id);
+
+            Debug.WriteLine($"Layer: {layer.deviceGuid}");
+
             layer.Enabled = obj.Checked;
             layer.requestUpdate = true;
             MappingLayers.UpdateLayer(layer);
@@ -1507,21 +1509,7 @@ namespace Chromatics.Forms
             {
                 if (selectedItem.Value is Guid selectedDeviceId)
                 {
-                    var _selectedDevice = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == selectedDeviceId).Value;
-
-                    if (_selectedDevice != null)
-                    {
-                        var selectedDeviceType = _selectedDevice.DeviceInfo.DeviceType;
-
-                        if (selectedDeviceType == selectedDevice) return;
-
-                        selectedDevice = selectedDeviceType;
-
-                        ChangeDeviceType();
-
-
-
-                    }
+                    ChangeDeviceType();
                 }
             }
             else
