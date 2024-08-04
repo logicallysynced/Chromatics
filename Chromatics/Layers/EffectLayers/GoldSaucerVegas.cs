@@ -25,8 +25,8 @@ namespace Chromatics.Layers
             //Gold Saucer Vegas Mode Effect Layer Implementation - NOTE: This effect operates on the base layer. Disabling base layer wont disable this effect however
             var effectSettings = RGBController.GetEffectsSettings();
             var _layergroups = RGBController.GetLiveLayerGroups();
-            var surface = RGBController.GetLiveSurfaces();
-            var devices = surface.GetDevices(layer.deviceType);
+            
+            
 
             GoldSaucerVegasEffectModel model;
             ListLedGroup layergroup;
@@ -88,8 +88,9 @@ namespace Chromatics.Layers
                 {
                     model.test = true;
                 }
-                
-                var ledArray = devices.SelectMany(d => d).Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+
+                //var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+                var ledArray = GetLedBaseArray(layer, baseLayer);
 
                 if (_layergroups.ContainsKey(baseLayer.layerID))
                 {

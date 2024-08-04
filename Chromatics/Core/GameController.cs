@@ -50,7 +50,7 @@ namespace Chromatics.Core
             if (gameSetup) return;
 
             comparer = new CustomComparers.LayerComparer();
-            
+
             if (!gameConnected)
             {
                 RGBController.StopEffects();
@@ -126,9 +126,9 @@ namespace Chromatics.Core
 
             if (_memoryHandler != null)
             {
-                #if DEBUG
-                    Debug.WriteLine(@"Disposed Memory Handler object.");
-                #endif
+#if DEBUG
+                Debug.WriteLine(@"Disposed Memory Handler object.");
+#endif
 
                 _memoryHandler.Dispose();
             }
@@ -161,14 +161,14 @@ namespace Chromatics.Core
 
                     StopGameLoop(true);
                 }
-                                
+
                 if (cancellationToken.IsCancellationRequested)
                     break;
 
                 // Wait for the interval before continuing
                 var delay = _loopInterval;
                 memoryEfficientLoop = false;
-                
+
                 if (memoryEfficientLoop)
                 {
                     var currentCpuUsage = SystemMonitorHelper.GetCurrentCpuUsage();
@@ -179,7 +179,7 @@ namespace Chromatics.Core
                         delay += (int)(currentCpuUsage - _maxCpuUsage) * 10;
                     }
                 }
-                
+
                 try
                 {
                     await Task.Delay(delay, cancellationToken);
@@ -188,12 +188,12 @@ namespace Chromatics.Core
                 {
                     break;
                 }
-                
+
             }
         }
 
         private static async Task GameConnectionLoop(CancellationToken cancellationToken)
-        {   
+        {
             while (!cancellationToken.IsCancellationRequested)
             {
                 if (gameConnected)
@@ -207,7 +207,7 @@ namespace Chromatics.Core
                 {
                     ConnectFFXIVClient();
                 }
-                
+
                 if (cancellationToken.IsCancellationRequested)
                     break;
 
@@ -250,12 +250,12 @@ namespace Chromatics.Core
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Cannot find FFXIV process. Is the game running?");
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Attempting to attach to FFXIV..");
                 }
-            
+
                 _connectionAttempts++;
 
-                #if DEBUG
-                    Debug.WriteLine(@"Attempting to attach to FFXIV. Attempt: " + _connectionAttempts);
-                #endif
+#if DEBUG
+                Debug.WriteLine(@"Attempting to attach to FFXIV. Attempt: " + _connectionAttempts);
+#endif
 
                 var processes = Process.GetProcessesByName("ffxiv_dx11");
                 if (processes.Length > 0)
@@ -264,26 +264,28 @@ namespace Chromatics.Core
                     var gameRegion = GameRegion.Global;
                     var gameLanguage = GameLanguage.English;
 
-	                // patchVersion of game, or latest
-	                var patchVersion = "latest";
+                    // patchVersion of game, or latest
+                    var patchVersion = "latest";
                     var process = processes[0];
-                    var processModel = new ProcessModel {
+                    var processModel = new ProcessModel
+                    {
                         Process = process
                     };
-                
-                    SharlayanConfiguration configuration = new SharlayanConfiguration {
+
+                    SharlayanConfiguration configuration = new SharlayanConfiguration
+                    {
                         ProcessModel = processModel,
                         GameLanguage = gameLanguage,
                         GameRegion = gameRegion,
                         PatchVersion = patchVersion,
                         UseLocalCache = AppSettings.GetSettings().localcache
-                    };             
+                    };
 
-                    #if DEBUG
-                        Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
-                    #endif
+#if DEBUG
+                    Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
+#endif
                     _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
-                    
+
                     //Load Other Memory Zones
                     DutyFinderBellExtension.RefreshData(_memoryHandler);
                     GameStateExtension.RefreshData(_memoryHandler);
@@ -291,7 +293,7 @@ namespace Chromatics.Core
                     MusicExtension.RefreshData(_memoryHandler);
 
                     gameConnected = true;
-                
+
                 }
 
                 if (gameConnected)
@@ -304,21 +306,21 @@ namespace Chromatics.Core
                     RGBController.ResetLayerGroups();
                     StartGameLoop();
 
-                    #if DEBUG
-                        Debug.WriteLine(@"Scanning memory..");
-                        Thread.Sleep(1000);
-                        foreach (var location in _memoryHandler.Scanner.Locations)
-                        {
-                            Debug.WriteLine($"Found {location.Key}. Location: {location.Value.GetAddress().ToInt64():X}");
-                        }
-                    #endif
+#if DEBUG
+                    Debug.WriteLine(@"Scanning memory..");
+                    Thread.Sleep(1000);
+                    foreach (var location in _memoryHandler.Scanner.Locations)
+                    {
+                        Debug.WriteLine($"Found {location.Key}. Location: {location.Value.GetAddress().ToInt64():X}");
+                    }
+#endif
                 }
             }
             catch (Exception ex)
             {
-                #if DEBUG
-                    Debug.WriteLine(@"Exception: " + ex.Message);
-                #endif
+#if DEBUG
+                Debug.WriteLine(@"Exception: " + ex.Message);
+#endif
 
                 if (ex.Message == "Access is denied.")
                 {
@@ -326,7 +328,7 @@ namespace Chromatics.Core
                     Logger.WriteConsole(LoggerTypes.Error, @"Please restart Chromatics and try again.");
                 }
             }
-            
+
         }
 
         private static void GameProcessLayers()
@@ -336,7 +338,7 @@ namespace Chromatics.Core
             try
             {
                 //Check if game has logged in
-            
+
                 if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors() && _memoryHandler.Reader.CanGetChatLog())
                 {
                     var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
@@ -367,35 +369,35 @@ namespace Chromatics.Core
                                 foreach (var device in devices)
                                 {
                                     var ledgroup = new ListLedGroup(surface, device);
-                        
+
                                     var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
                                     ledgroup.ZIndex = 1000;
-                            
+
                                     foreach (var led in device)
                                     {
                                         ledgroup.AddLed(led);
                                     }
 
                                     ledgroup.Brush = new SolidColorBrush(baseColor);
-                                    ledgroup.AddDecorator(starfield);                    
+                                    ledgroup.AddDecorator(starfield);
 
                                     runningEffects.Add(ledgroup);
-                                    
+
                                 }
-                                                        
+
 
                             }
 
-                            #if DEBUG
-                                Debug.WriteLine(@"User on title or character screen");
-                            #endif
+#if DEBUG
+                            Debug.WriteLine(@"User on title or character screen");
+#endif
 
                             _onTitle = true;
                             wasPreviewed = false;
                         }
-                    
+
                         _isInGame = false;
-                    
+
                     }
                     else
                     {
@@ -404,19 +406,19 @@ namespace Chromatics.Core
 
                         if (_onTitle)
                         {
-                            #if DEBUG
-                                Debug.WriteLine(@"User logging in to FFXIV..");
-                            #endif
+#if DEBUG
+                            Debug.WriteLine(@"User logging in to FFXIV..");
+#endif
 
                             RGBController.StopEffects();
                             RGBController.ResetLayerGroups();
                             _onTitle = false;
                         }
-                    
+
                     }
-                
+
                 }
-            
+
                 if (!_isInGame) return;
 
                 //Event Delegates
@@ -437,7 +439,7 @@ namespace Chromatics.Core
                 var _layers = MappingLayers.GetLayers();
 
                 foreach (IMappingLayer layer in _layers.Values.OrderBy(x => x.zindex, comparer))
-                {                   
+                {
                     switch (layer.rootLayerType)
                     {
                         case LayerType.BaseLayer:
@@ -458,7 +460,7 @@ namespace Chromatics.Core
                                 layerProcessor.Value.Process(layer);
                             }
                             break;
-                       
+
                     }
 
 
@@ -466,18 +468,18 @@ namespace Chromatics.Core
             }
             catch (Exception ex)
             {
-                #if DEBUG
-                    Debug.WriteLine($"Exception: {ex.Message}");
-                #endif
+#if DEBUG
+                Debug.WriteLine($"Exception: {ex.Message}");
+#endif
             }
-            
-            
+
+
         }
 
         private static void OnPreviewTriggered()
         {
             if (!gameConnected) return;
-            
+
             if (!wasPreviewed)
                 wasPreviewed = true;
         }

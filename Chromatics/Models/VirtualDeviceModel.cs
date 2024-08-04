@@ -129,7 +129,7 @@ namespace Chromatics.Models
                     var mapping = layer.Value;
                     var blank_col = Color.DarkGray;
 
-                    if (layer.Value.deviceType != _deviceType) return;
+                    if (layer.Value.deviceGuid != _deviceId) return;
 
                     if (mapping.rootLayerType == LayerType.BaseLayer && !mapping.Enabled)
                     {

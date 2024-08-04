@@ -22,9 +22,9 @@ namespace Chromatics.Layers
             var _layergroups = RGBController.GetLiveLayerGroups();
 
             //loop through all LED's and assign to device layer (Order of LEDs is not important for a highlight layer)
-            var surface = RGBController.GetLiveSurfaces();
-            var devices = surface.GetDevices(layer.deviceType);
-            var ledArray = devices.SelectMany(d => d).Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            
+            
+            var ledArray = GetLedArray(layer);
                        
 
             // Add new ListLedGroup to _layergroups with updated leds and create a new instance of it
