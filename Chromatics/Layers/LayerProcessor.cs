@@ -21,6 +21,12 @@ namespace Chromatics.Layers
         internal Led[] GetLedArray(IMappingLayer layer)
         {
             var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+
+            if (device == null)
+            {
+                return Array.Empty<Led>();
+            }
+
             var ledArray = device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
             if (ledArray != null && ledArray.Length > 0)
@@ -34,6 +40,12 @@ namespace Chromatics.Layers
         internal Led[] GetLedSortedArray(IMappingLayer layer)
         {
             var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+
+            if (device == null)
+            {
+                return Array.Empty<Led>();
+            }
+
             var ledArray = (from led in device.Select((led, index) => new { Index = index, Led = led }) join id in layer.deviceLeds.Values.Select((id, index) => new { Index = index, Id = id }) on led.Led.Id equals id.Id orderby id.Index select led.Led).ToArray();
 
 
@@ -48,6 +60,12 @@ namespace Chromatics.Layers
         internal Led[] GetLedBaseArray(IMappingLayer layer, Layer baseLayer)
         {
             var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+
+            if (device == null)
+            {
+                return Array.Empty<Led>();
+            }
+
             var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
 
 
@@ -62,6 +80,11 @@ namespace Chromatics.Layers
         internal IRGBDevice GetDevice(IMappingLayer layer)
         {
             var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+
+            if (device == null)
+            {
+                return null;
+            }
 
             return device;
         }
@@ -83,8 +106,6 @@ namespace Chromatics.Layers
 
             //loop through all LED's and assign to device layer
             
-            
-
             ListLedGroup layergroup;
 
             var ledArray = GetLedArray(layer);

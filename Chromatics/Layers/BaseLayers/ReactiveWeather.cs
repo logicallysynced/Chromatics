@@ -38,6 +38,7 @@ namespace Chromatics.Layers
         internal static int _previousOffset = 0;
         internal static bool dutyComplete = false;
         internal static bool raidEffectsRunning = false;
+        internal static string[] bossNames = null;
 
         public override void Process(IMappingLayer layer)
         {
@@ -147,29 +148,38 @@ namespace Chromatics.Layers
 
                         if (chatLogEntries.Count > 0)
                         {
-                            //Debug.WriteLine($"{chatLogEntries.First().Code}: {chatLogEntries.First().Message}");
-
-                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)"))
+                            
+                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
+                                bossNames = null;
                             }
 
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\."))
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = false;
                             }
 
-                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
+                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
+                                bossNames = null;
                             }
 
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\."))
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
+                                bossNames = null;
+                            }
+
+                            else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
+                            {
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
+                                bossNames = null;
                             }
 
                         }
@@ -193,14 +203,6 @@ namespace Chromatics.Layers
                             currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
                         }
 
-                        /*
-                        if (raidEffectsRunning)
-                        {
-                            model._currentWeather = currentWeather;
-
-                        }
-                        */
-
 
                         //var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
@@ -209,10 +211,10 @@ namespace Chromatics.Layers
 
 
                             //layergroup.Brush = weather_brush;
-                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance());
+                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance(), layer.deviceGuid);
 
                             #if DEBUG
-                                Debug.WriteLine($"{layer.deviceType} Zone Lookup: {currentZone}. Weather: {currentWeather}");
+                                //Debug.WriteLine($"{layer.deviceGuid} Zone Lookup: {currentZone}. Weather: {currentWeather}");
                             #endif
 
                             model._currentWeather = currentWeather;
@@ -317,7 +319,7 @@ namespace Chromatics.Layers
             layer.RemoveAllDecorators();
         }
 
-        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance)
+        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, Guid deviceGuid)
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
@@ -344,6 +346,7 @@ namespace Chromatics.Layers
                             SetEffect(starfield, layer, runningEffects);
 
                             raidEffectsRunning = true;
+                            bossNames = ["Zoraal Ja"];
 
                             return true;
                         }
@@ -373,6 +376,7 @@ namespace Chromatics.Layers
 
                             runningEffects.Add(layer);
                             raidEffectsRunning = true;
+                            bossNames = ["Queen Eternal"];
 
                             return true;
                         }
@@ -402,6 +406,7 @@ namespace Chromatics.Layers
 
                             runningEffects.Add(layer);
                             raidEffectsRunning = true;
+                            bossNames = ["Black Cat"];
 
                             return true;
                         }
@@ -417,6 +422,7 @@ namespace Chromatics.Layers
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(arenaLightShow, layer, runningEffects);
                             raidEffectsRunning = true;
+                            bossNames = ["Honey B. Lovely"];
 
                             return true;
                         }
@@ -445,11 +451,13 @@ namespace Chromatics.Layers
 
                             runningEffects.Add(layer);
                             raidEffectsRunning = true;
+                            bossNames = ["Brute Bomber"];
 
                             return true;
                         }
                         break;
                     case "The Thundering":
+                    case "Dalamud's Shadow":
                         //Raid Zone Effect
                         if (effectSettings.effect_raideffects && !raidEffectsRunning)
                         {
@@ -460,6 +468,9 @@ namespace Chromatics.Layers
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(bpmArenaLightShow, layer, runningEffects);
                             raidEffectsRunning = true;
+                            bossNames = ["Wicked Thunder", "Rafflesia"];
+
+                            //Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch X4: Effect Run ({deviceGuid})"); 
 
                             return true;
                         }
@@ -469,6 +480,7 @@ namespace Chromatics.Layers
             }
 
             raidEffectsRunning = false;
+            bossNames = null;
 
             switch (zone)
             {
