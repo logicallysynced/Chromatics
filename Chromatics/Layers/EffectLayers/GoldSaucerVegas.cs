@@ -89,13 +89,8 @@ namespace Chromatics.Layers
                     model.test = true;
                 }
 
-                var device = GetDevice(layer);
-                if (device == null)
-                {
-                    return;
-                }
-
-                var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+                //var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+                var ledArray = GetLedBaseArray(layer, baseLayer);
 
                 if (_layergroups.ContainsKey(baseLayer.layerID))
                 {

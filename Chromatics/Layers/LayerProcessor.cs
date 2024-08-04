@@ -15,23 +15,45 @@ namespace Chromatics.Layers
 {
     public abstract class LayerProcessor
     {
-        private IRGBDevice _device = null;
         internal bool _init;
         internal RGBSurface surface = RGBController.GetLiveSurfaces();
-        internal Dictionary<Guid, IRGBDevice> liveDevices = RGBController.GetLiveDevices();
 
         internal Led[] GetLedArray(IMappingLayer layer)
         {
-            if (liveDevices.TryGetValue(layer.deviceGuid, out var device))
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var ledArray = device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+
+            if (ledArray != null && ledArray.Length > 0)
             {
-                _device = device;
+                return ledArray;
+            }
 
-                var ledArray = device?.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            return Array.Empty<Led>();
+        }
 
-                if (ledArray != null && ledArray.Length > 0)
-                {
-                    return ledArray;
-                }
+        internal Led[] GetLedSortedArray(IMappingLayer layer)
+        {
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var ledArray = (from led in device.Select((led, index) => new { Index = index, Led = led }) join id in layer.deviceLeds.Values.Select((id, index) => new { Index = index, Id = id }) on led.Led.Id equals id.Id orderby id.Index select led.Led).ToArray();
+
+
+            if (ledArray != null && ledArray.Length > 0)
+            {
+                return ledArray;
+            }
+
+            return Array.Empty<Led>();
+        }
+
+        internal Led[] GetLedBaseArray(IMappingLayer layer, Layer baseLayer)
+        {
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+
+
+            if (ledArray != null && ledArray.Length > 0)
+            {
+                return ledArray;
             }
 
             return Array.Empty<Led>();
@@ -39,7 +61,9 @@ namespace Chromatics.Layers
 
         internal IRGBDevice GetDevice(IMappingLayer layer)
         {
-            return _device;
+            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+
+            return device;
         }
 
         public abstract void Process(IMappingLayer layer);

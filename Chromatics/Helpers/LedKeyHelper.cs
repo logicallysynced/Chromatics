@@ -2120,87 +2120,94 @@ namespace Chromatics.Helpers
 
         public static Dictionary<int, LedId> DefaultKeys_ReactiveWeather = new Dictionary<int, LedId>()
         {
-            { 6, LedId.Keyboard_LeftAlt },
-            { 5, LedId.Keyboard_LeftCtrl },
-            { 4, LedId.Keyboard_LeftShift },
-            { 3, LedId.Keyboard_D },
-            { 2, LedId.Keyboard_S },
-            { 1, LedId.Keyboard_A },
-            { 0, LedId.Keyboard_W }
+            { 1, LedId.Keyboard_W },
+            { 2, LedId.Keyboard_A },
+            { 3, LedId.Keyboard_S },
+            { 4, LedId.Keyboard_D },
+            { 5, LedId.Keyboard_LeftShift },
+            { 6, LedId.Keyboard_LeftCtrl },
+            { 7, LedId.Keyboard_LeftAlt }
+            
+            
         };
         public static Dictionary<int, LedId> DefaultKeys_Keybinds = new Dictionary<int, LedId>()
         {
-            { 22, LedId.Keyboard_Num9 },
-            { 21, LedId.Keyboard_Num8 },
-            { 20, LedId.Keyboard_Num7 },
-            { 19, LedId.Keyboard_Num6 },
-            { 18, LedId.Keyboard_Num5 },
-            { 17, LedId.Keyboard_Num4 },
-            { 16, LedId.Keyboard_Num3 },
-            { 15, LedId.Keyboard_Num2 },
-            { 14, LedId.Keyboard_Num1 },
-            { 13, LedId.Keyboard_Num0 },
-            { 12, LedId.Keyboard_EqualsAndPlus },
-            { 11, LedId.Keyboard_MinusAndUnderscore },
-            { 10, LedId.Keyboard_0 },
-            { 9, LedId.Keyboard_9 },
-            { 8, LedId.Keyboard_8 },
-            { 7, LedId.Keyboard_7 },
-            { 6, LedId.Keyboard_6 },
-            { 5, LedId.Keyboard_5 },
-            { 4, LedId.Keyboard_4 },
-            { 3, LedId.Keyboard_3 },
-            { 2, LedId.Keyboard_2 },
-            { 1, LedId.Keyboard_1 },
-            { 0, LedId.Keyboard_GraveAccentAndTilde }
+            { 1, LedId.Keyboard_GraveAccentAndTilde },
+            { 2, LedId.Keyboard_1 },
+            { 3, LedId.Keyboard_2 },
+            { 4, LedId.Keyboard_3 },
+            { 5, LedId.Keyboard_4 },
+            { 6, LedId.Keyboard_5 },
+            { 7, LedId.Keyboard_6 },
+            { 8, LedId.Keyboard_7 },
+            { 9, LedId.Keyboard_8 },
+            { 10, LedId.Keyboard_9 },
+            { 11, LedId.Keyboard_0 },
+            { 12, LedId.Keyboard_MinusAndUnderscore },
+            { 13, LedId.Keyboard_EqualsAndPlus },
+            { 14, LedId.Keyboard_Num0 },
+            { 15, LedId.Keyboard_Num1 },
+            { 16, LedId.Keyboard_Num2 },
+            { 17, LedId.Keyboard_Num3 },
+            { 18, LedId.Keyboard_Num4 },
+            { 19, LedId.Keyboard_Num5 },
+            { 20, LedId.Keyboard_Num6 },
+            { 21, LedId.Keyboard_Num7 },
+            { 22, LedId.Keyboard_Num8 },
+            { 23, LedId.Keyboard_Num9 }
+            
         };
 
         public static Dictionary<int, LedId> DefaultKeys_HP = new Dictionary<int, LedId>()
         {
-            { 3, LedId.Keyboard_F4 },
-            { 2, LedId.Keyboard_F3 },
-            { 1, LedId.Keyboard_F2 },
-            { 0, LedId.Keyboard_F1 }
+            { 1, LedId.Keyboard_F1 },
+            { 2, LedId.Keyboard_F2 },
+            { 3, LedId.Keyboard_F3 },
+            { 4, LedId.Keyboard_F4 }
+            
         };
 
         public static Dictionary<int, LedId> DefaultKeys_MP = new Dictionary<int, LedId>()
         {
-            { 3, LedId.Keyboard_F12 },
-            { 2, LedId.Keyboard_F11 },
-            { 1, LedId.Keyboard_F10 },
-            { 0, LedId.Keyboard_F9 }
+            { 1, LedId.Keyboard_F9 },
+            { 2, LedId.Keyboard_F10 },
+            { 3, LedId.Keyboard_F11 },
+            { 4, LedId.Keyboard_F12 },
+            
         };
 
         public static Dictionary<int, LedId> DefaultKeys_TargetHP = new Dictionary<int, LedId>()
         {
-            { 3, LedId.Keyboard_F8 },
-            { 2, LedId.Keyboard_F7 },
-            { 1, LedId.Keyboard_F6 },
-            { 0, LedId.Keyboard_F5 }
+            { 1, LedId.Keyboard_F5 },
+            { 2, LedId.Keyboard_F6 },
+            { 3, LedId.Keyboard_F7 },
+            { 4, LedId.Keyboard_F8 }
+            
         };
 
         public static Dictionary<int, LedId> DefaultKeys_Castbar = new Dictionary<int, LedId>()
         {
-            { 11, LedId.Keyboard_F12 },
-            { 10, LedId.Keyboard_F11 },
-            { 9, LedId.Keyboard_F10 },
-            { 8, LedId.Keyboard_F9 },
-            { 7, LedId.Keyboard_F8 },
-            { 6, LedId.Keyboard_F7 },
-            { 5, LedId.Keyboard_F6 },
-            { 4, LedId.Keyboard_F5 },
-            { 3, LedId.Keyboard_F4 },
-            { 2, LedId.Keyboard_F3 },
-            { 1, LedId.Keyboard_F2 },
-            { 0, LedId.Keyboard_F1 }
+            { 1, LedId.Keyboard_F1 },
+            { 2, LedId.Keyboard_F2 },
+            { 3, LedId.Keyboard_F3 },
+            { 4, LedId.Keyboard_F4 },
+            { 5, LedId.Keyboard_F5 },
+            { 6, LedId.Keyboard_F6 },
+            { 7, LedId.Keyboard_F7 },
+            { 8, LedId.Keyboard_F8 },
+            { 9, LedId.Keyboard_F9 },
+            { 10, LedId.Keyboard_F10 },
+            { 11, LedId.Keyboard_F11 },
+            { 12, LedId.Keyboard_F12 }
         };
 
         public static Dictionary<int, LedId> DefaultKeys_Enmity = new Dictionary<int, LedId>()
         {
-            { 3, LedId.Keyboard_NumMinus },
-            { 2, LedId.Keyboard_NumAsterisk },
-            { 1, LedId.Keyboard_NumSlash },
-            { 0, LedId.Keyboard_NumLock }
+            { 1, LedId.Keyboard_NumLock },
+            { 2, LedId.Keyboard_NumSlash },
+            { 3, LedId.Keyboard_NumAsterisk },
+            { 4, LedId.Keyboard_NumMinus }
+                       
         };
     }
 }
