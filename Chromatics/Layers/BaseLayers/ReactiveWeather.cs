@@ -34,9 +34,10 @@ namespace Chromatics.Layers
     {
         private static Dictionary<int, ReactiveWeatherBaseModel> layerProcessorModel = new Dictionary<int, ReactiveWeatherBaseModel>();
 
-        int _previousArrayIndex = 0;
-        int _previousOffset = 0;
-        bool dutyComplete = false;
+        internal static int _previousArrayIndex = 0;
+        internal static int _previousOffset = 0;
+        internal static bool dutyComplete = false;
+        internal static bool raidEffectsRunning = false;
 
         public override void Process(IMappingLayer layer)
         {
@@ -66,7 +67,6 @@ namespace Chromatics.Layers
             var weather_brush = new SolidColorBrush(weather_color);
             var _layergroups = RGBController.GetLiveLayerGroups();
             var effectApplied = false;
-            var raidEffectsRunning = false;
 
             var weatherService = FFXIVWeatherExtensions.GetWeatherService();
             if (weatherService == null) return;
@@ -139,53 +139,52 @@ namespace Chromatics.Layers
                     WeatherExtension.CheckCache();
 
 
-                    if (DutyFinderBellExtension.InInstance())
+                    ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
+
+                    if (readResult.PreviousArrayIndex != _previousArrayIndex)
                     {
-                        ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
+                        var chatLogEntries = readResult.ChatLogItems;
 
-                        
-                        if (readResult.PreviousArrayIndex != _previousArrayIndex)
+                        if (chatLogEntries.Count > 0)
                         {
-                            var chatLogEntries = readResult.ChatLogItems;
+                            //Debug.WriteLine($"{chatLogEntries.First().Code}: {chatLogEntries.First().Message}");
 
-                            if (chatLogEntries.Count > 0)
+                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)"))
                             {
-                                Debug.WriteLine($"{chatLogEntries.First().Code}: {chatLogEntries.First().Message}");
-
-                                if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)"))
-                                {
-                                    Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch 3: Completion time text");
-                                    dutyComplete = true;
-                                    raidEffectsRunning = false;
-                                }
-
-                                if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\."))
-                                {
-                                    Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch 2: Has begun text");
-                                    dutyComplete = false;
-                                }
-
-                                if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
-                                {
-                                    Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch 1: Allagan tomestones text {chatLogEntries.First().Code}");
-                                    dutyComplete = true;
-                                    raidEffectsRunning = false;
-                                }
-
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
                             }
 
-                            _previousArrayIndex = readResult.PreviousArrayIndex;
-                            _previousOffset = readResult.PreviousOffset;
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\."))
+                            {
+                                dutyComplete = false;
+                            }
+
+                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\."))
+                            {
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
+                            }
+
+                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\."))
+                            {
+                                dutyComplete = true;
+                                raidEffectsRunning = false;
+                            }
+
                         }
+
+                        _previousArrayIndex = readResult.PreviousArrayIndex;
+                        _previousOffset = readResult.PreviousOffset;
                     }
-                    
+
 
 
 
                     if (currentZone != "???" && currentZone != "")
                     {
                         var currentWeatherZone = WeatherExtension.WeatherId();
-                        var currentWeather = WeatherHelper.GetWeatherNameById(currentWeatherZone);
+                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString(); //WeatherHelper.GetWeatherNameById(currentWeatherZone);
 
                         //Debug.WriteLine($"Test Weather: {currentWeatherZone} {currentWeather}");
 
@@ -194,53 +193,27 @@ namespace Chromatics.Layers
                             currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
                         }
 
+                        /*
+                        if (raidEffectsRunning)
+                        {
+                            model._currentWeather = currentWeather;
+
+                        }
+                        */
+
+
                         //var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
                         if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
-                            //layergroup.Brush = weather_brush;
-                            Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Effects Reset {currentWeather} {currentZone} {DutyFinderBellExtension.InInstance()} {dutyComplete}");
 
-                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance(), dutyComplete, raidEffectsRunning);
+
+                            //layergroup.Brush = weather_brush;
+                            effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance());
 
                             #if DEBUG
                                 Debug.WriteLine($"{layer.deviceType} Zone Lookup: {currentZone}. Weather: {currentWeather}");
                             #endif
-
-                            if (model._currentWeather != currentWeather)
-                            {
-                                Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"X1: {currentWeather}");
-                            }
-
-                            if (model._currentZone != currentZone)
-                            {
-                                Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"X2: {currentZone}");
-                            }
-
-                            if (model._reactiveWeatherEffects != reactiveWeatherEffects)
-                            {
-                                Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"X3: {reactiveWeatherEffects}");
-                            }
-
-                            if (model._raidEffects != raidEffects)
-                            {
-                                Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"X4: {raidEffects}");
-                            }
-
-                            if (layer.requestUpdate)
-                            {
-                                Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Request Update");
-                            }
-
-                            if (model._inInstance != DutyFinderBellExtension.InInstance())
-                            {
-                                Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"X5: {DutyFinderBellExtension.InInstance()}");
-                            }
-
-                            if (model._dutyComplete != dutyComplete)
-                            {
-                                Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"X6: {dutyComplete}");
-                            }
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
@@ -344,7 +317,7 @@ namespace Chromatics.Layers
             layer.RemoveAllDecorators();
         }
 
-        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, bool dutyComplete, bool raidEffectsRunning = false)
+        private static bool SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance)
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
@@ -427,8 +400,6 @@ namespace Chromatics.Layers
 
                             SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
 
-                            Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch X1: Effect Run");
-
                             runningEffects.Add(layer);
                             raidEffectsRunning = true;
 
@@ -446,8 +417,6 @@ namespace Chromatics.Layers
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(arenaLightShow, layer, runningEffects);
                             raidEffectsRunning = true;
-
-                            Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch X2: Effect Run");
 
                             return true;
                         }
@@ -477,8 +446,6 @@ namespace Chromatics.Layers
                             runningEffects.Add(layer);
                             raidEffectsRunning = true;
 
-                            Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch X3: Effect Run");
-
                             return true;
                         }
                         break;
@@ -494,8 +461,6 @@ namespace Chromatics.Layers
                             SetEffect(bpmArenaLightShow, layer, runningEffects);
                             raidEffectsRunning = true;
 
-                            Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Catch X4: Effect Run");
-
                             return true;
                         }
                         break;
@@ -503,10 +468,7 @@ namespace Chromatics.Layers
 
             }
 
-            if (raidEffectsRunning)
-            {
-                return true;
-            }
+            raidEffectsRunning = false;
 
             switch (zone)
             {
