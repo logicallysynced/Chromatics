@@ -1,12 +1,9 @@
-﻿using Chromatics.Extensions.RGB.NET;
-using Chromatics.Extensions.RGB.NET.Decorators;
-using Chromatics.Extensions.RGB.NET.Devices;
+﻿using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Forms;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
-using Chromatics.Properties;
 using RGB.NET.Core;
 using RGB.NET.Devices.Asus;
 using RGB.NET.Devices.CoolerMaster;
@@ -20,25 +17,14 @@ using RGB.NET.Devices.SteelSeries;
 using RGB.NET.Devices.Wooting;
 using RGB.NET.Layout;
 using RGB.NET.Presets.Decorators;
-using RGB.NET.Presets.Groups;
 using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
-using Sharlayan.Core.JobResources;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Chromatics.Core
 {
@@ -67,6 +53,8 @@ namespace Chromatics.Core
         private static RGBSurface.ExceptionEventHandler surfaceExceptionEventHandler;
 
         private static EventHandler<ExceptionEventArgs> deviceExceptionEventHandler;
+
+        private static TimerUpdateTrigger _timerUpdateTrigger;
 
         public static void Setup()
         {
@@ -191,9 +179,9 @@ namespace Chromatics.Core
             
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 
-                var TimerTrigger = new TimerUpdateTrigger();
-                TimerTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
-                surface.RegisterUpdateTrigger(TimerTrigger);
+                _timerUpdateTrigger = new TimerUpdateTrigger();
+                _timerUpdateTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
+                surface.RegisterUpdateTrigger(_timerUpdateTrigger);
 
                 surface.AlignDevices();
                 surface.Updating += Surface_Updating;
@@ -323,10 +311,21 @@ namespace Chromatics.Core
 
                 loadedDeviceProviders.Clear();
 
-                //surface.Updating -= Surface_Updating;
+                // Stop and dispose of the update trigger
+                _timerUpdateTrigger?.Stop();
+
+                surface.Updating -= Surface_Updating;
                 surface.Exception -= surfaceExceptionEventHandler;
-                surface?.Dispose(); 
-            } catch { }
+                surface.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"RGBController Unload Error: {ex.Message}");
+            }
+            finally
+            {
+                _loaded = false;
+            }
         }
 
         public static bool LoadDeviceProvider(IRGBDeviceProvider provider)
@@ -388,25 +387,8 @@ namespace Chromatics.Core
                 {
                     foreach (var device in provider.Devices)
                     {
-
-                        //Check for device removal incase event handler isn't built into RGB.NET Provider
-                        var _device = _devices.FirstOrDefault(kvp => kvp.Value == device);
-                        if (_devices.ContainsKey(_device.Key))
-                        {
-#if DEBUG
-                            Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Removed {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {_device.Key}).");
-#else
-                            Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Removed {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
-#endif
-
-                            _devices.Remove(_device.Key);
-
-                            Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
-                        }
-
                         surface.Detach(device);
                     }
-
 
                     provider.Exception -= deviceExceptionEventHandler;
                     provider.DevicesChanged -= DevicesChanged;
@@ -415,22 +397,13 @@ namespace Chromatics.Core
                         loadedDeviceProviders.Remove(provider);
 
                     provider.Dispose();
-
-                    if (_loaded)
-                    {
-                        StopEffects();
-                        ResetLayerGroups();
-
-                        if (!GameController.IsGameConnected())
-                            RunStartupEffects();
-                    }
                 }
             }
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault().DeviceInfo.DeviceName}] UnloadDeviceProvider Error: {ex.Message}");
             }
-            
+
         }
 
         public static bool IsLoaded()

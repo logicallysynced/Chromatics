@@ -35,7 +35,7 @@ using Size = System.Drawing.Size;
 
 namespace Chromatics.Forms
 {
-    public partial class Uc_Mappings : UserControl
+    public partial class Uc_Mappings : UserControl, IDisposable
     {
         public static Uc_Mappings Instance { get; private set; }
         public static event EventHandler DeviceAdded;
@@ -55,6 +55,40 @@ namespace Chromatics.Forms
         private Pn_LayerDisplay currentlySelected;
         private bool init;
         private bool IsAddingLayer;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from all events
+                DeviceAdded -= HandleDeviceAdded;
+                DeviceRemoved -= HandleDeviceRemoved;
+                GameController.jobChanged -= gameJobChanged;
+
+                // Unsubscribe event handlers for each Pn_LayerDisplay
+                foreach (var layer in _layers)
+                {
+                    layer.GotFocus -= OnLayerPressed;
+                    layer.cb_selector.SelectedIndexChanged -= OnSelectedIndexChanged;
+                    layer.chk_enabled.CheckedChanged -= OnCheckChanged;
+                    layer.btn_edit.Click -= OnEditButtonPressed;
+                    layer.btn_delete.Click -= OnDeleteButtonPressed;
+                    layer.btn_copy.Click -= OnCopyButtonPressed;
+                }
+
+                keyController.KeyDown -= Kh_KeyDown;
+                keyController.KeyUp -= Kh_KeyUp;
+
+                tt_mappings?.Dispose();
+            }
+
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
 
         public static void OnDeviceAdded(EventArgs e)
         {

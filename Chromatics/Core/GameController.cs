@@ -12,15 +12,8 @@ using Chromatics.Layers;
 using Chromatics.Interfaces;
 using Chromatics.Enums;
 using System.Threading;
-using Chromatics.Extensions.RGB.NET;
 using RGB.NET.Core;
-using RGB.NET.Presets.Decorators;
-using RGB.NET.Presets.Textures.Gradients;
-using RGB.NET.Presets.Textures;
 using Chromatics.Extensions.RGB.NET.Decorators;
-using static MetroFramework.Drawing.MetroPaint;
-using System.Security.Policy;
-using Sharlayan.Utilities;
 using Sharlayan.Core.Enums;
 using Chromatics.Extensions.Sharlayan;
 
@@ -55,7 +48,13 @@ namespace Chromatics.Core
             {
                 RGBController.StopEffects();
                 RGBController.RunStartupEffects();
-                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token));
+                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token)).ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop task failed: {t.Exception?.GetBaseException().Message}");
+                    }
+                });
             }
 
             gameSetup = true;
@@ -63,14 +62,26 @@ namespace Chromatics.Core
 
         public static void Exit()
         {
+            StopGameLoop();
             _GameConnectionCancellationTokenSource.Cancel();
             _GameLoopCancellationTokenSource.Cancel();
+            _GameConnectionCancellationTokenSource.Dispose();
+            _GameLoopCancellationTokenSource.Dispose();
         }
 
         public static void Stop(bool reconnect = false)
         {
             RGBController.StopEffects();
             Logger.WriteConsole(LoggerTypes.FFXIV, @"Stopping FFXIV Connection..");
+
+            if (jobChanged != null)
+            {
+                foreach (Delegate d in jobChanged.GetInvocationList())
+                {
+                    jobChanged -= (JobChanged)d;
+                }
+            }
+
             StopGameLoop(reconnect);
             _GameConnectionCancellationTokenSource.Cancel();
         }
@@ -123,15 +134,7 @@ namespace Chromatics.Core
         private static void StopGameLoop(bool reconnect = false)
         {
             _GameLoopCancellationTokenSource.Cancel();
-
-            if (_memoryHandler != null)
-            {
-#if DEBUG
-                Debug.WriteLine(@"Disposed Memory Handler object.");
-#endif
-
-                _memoryHandler.Dispose();
-            }
+            _memoryHandler?.Dispose();
 
             if (reconnect)
             {
