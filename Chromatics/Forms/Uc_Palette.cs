@@ -28,6 +28,8 @@ namespace Chromatics.Forms
         private delegate void ResetMappingsDelegate();
         private bool _isLoaded;
         private Queue<Action> _eventQueue = new Queue<Action>();
+        private static DarkModeManager _darkModeManager = new DarkModeManager();
+
 
         public Uc_Palette()
         {
@@ -36,7 +38,26 @@ namespace Chromatics.Forms
             cb_palette_categories.ItemHeight = tlp_controls.Height;
             cb_palette_categories.Margin = new Padding(0, tlp_controls.Height / 4, 3, 0);
 
-            DarkModeManager.DarkModeChanged += OnDarkModeChanged;
+            _darkModeManager.DarkModeChanged += OnDarkModeChanged;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_darkModeManager != null)
+                {
+                    _darkModeManager.DarkModeChanged -= OnDarkModeChanged;
+                }
+
+            }
+
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         private void OnLoad(object sender, EventArgs e)

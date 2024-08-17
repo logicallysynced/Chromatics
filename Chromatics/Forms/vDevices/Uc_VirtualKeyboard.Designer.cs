@@ -7,30 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                if (_keybuttons != null)
-                {
-                    foreach (var keycap in _keybuttons)
-                    {
-                        keycap.Click -= new System.EventHandler(OnKeycapPressed);
-                    }
-
-                    _keybuttons.Clear();
-                }
-
-                this.Load -= new System.EventHandler(this.OnLoad);
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Component Designer generated code
 
         /// <summary> 

@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Chromatics.Forms
@@ -18,13 +19,6 @@ namespace Chromatics.Forms
     public partial class Uc_VirtualKeyboard : VirtualDevice
     {
         IRGBDevice _device;
-
-        string[] unwantedStrings = new string[]
-        {
-            "Keyboard", "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
-            "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe", "Stand",
-            "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
-        };
 
         public Uc_VirtualKeyboard(IRGBDevice deviceId)
         {
@@ -41,7 +35,44 @@ namespace Chromatics.Forms
             }
         }
 
-        public override void InitializeDevice()
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_device is IDisposable disposableDevice)
+                {
+                    disposableDevice.Dispose();
+                }
+
+                foreach (var keycap in _keybuttons)
+                {
+                    keycap.Click -= OnKeycapPressed;
+                    keycap.Dispose(); // Dispose of keycaps explicitly
+                }
+
+                tlp_main?.Dispose();
+            }
+
+            if (disposing && (components != null))
+            {
+                if (_keybuttons != null)
+                {
+                    foreach (var keycap in _keybuttons)
+                    {
+                        keycap.Click -= new System.EventHandler(OnKeycapPressed);
+                    }
+
+                    _keybuttons.Clear();
+                }
+
+                this.Load -= new System.EventHandler(this.OnLoad);
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        internal override void InitializeDevice()
         {
 
             //Get Keycap image

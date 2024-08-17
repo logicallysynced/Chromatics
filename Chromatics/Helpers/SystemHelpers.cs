@@ -52,18 +52,18 @@ namespace Chromatics.Helpers
         }
     }
 
-    public static class DarkModeManager
+    public class DarkModeManager
     {
         // Delegate for the dark mode changed event
         public delegate void DarkModeChangedEventHandler(bool isDarkMode);
         // Event triggered when dark mode is toggled
-        public static event DarkModeChangedEventHandler DarkModeChanged;
+        public event DarkModeChangedEventHandler DarkModeChanged;
 
         // Dictionary to store original colors of controls
-        private static Dictionary<Control, (Color BackColor, Color ForeColor)> originalColors
+        private Dictionary<Control, (Color BackColor, Color ForeColor)> originalColors
             = new Dictionary<Control, (Color BackColor, Color ForeColor)>();
 
-        public static void ToggleDarkMode(Form form, bool enableDarkMode)
+        public void ToggleDarkMode(Form form, bool enableDarkMode)
         {
             if (enableDarkMode)
             {
@@ -83,7 +83,7 @@ namespace Chromatics.Helpers
             DarkModeChanged?.Invoke(enableDarkMode);
         }
 
-        private static void StoreOriginalColors(Control control)
+        private void StoreOriginalColors(Control control)
         {
             if (!originalColors.ContainsKey(control))
             {
@@ -99,7 +99,7 @@ namespace Chromatics.Helpers
             }
         }
 
-        private static void RestoreOriginalColors(Control control)
+        private void RestoreOriginalColors(Control control)
         {
             if (originalColors.ContainsKey(control))
             {
@@ -118,7 +118,7 @@ namespace Chromatics.Helpers
             }
         }
 
-        private static void ApplyTheme(Control control, bool isDarkMode)
+        private void ApplyTheme(Control control, bool isDarkMode)
         {
             if (control is MetroTile) return;
 
