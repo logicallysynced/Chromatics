@@ -6,30 +6,26 @@ using Chromatics.Models;
 using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chromatics.Layers
 {
     public class StaticProcessor : LayerProcessor
     {
+        private bool _disposed = false;
+        private Dictionary<int, HashSet<Led>> _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
+
         public override void Process(IMappingLayer layer)
         {
+            if (_disposed) return;
+
             if (RGBController.IsBaseLayerEffectRunning()) return;
-            
-            //Static Base Layer Implementation
+
+            // Static Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.BaseColor.Color);
-            var _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
             var _layergroups = RGBController.GetLiveLayerGroups();
             HashSet<Led> _layergroupledcollection;
-
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            
-            
 
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
@@ -63,10 +59,7 @@ namespace Chromatics.Layers
             if (!layer.Enabled)
             {
                 highlight_col = ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
-                //layergroup.Detach();
-                //return;
             }
-
 
             foreach (var led in layergroup)
             {
@@ -79,15 +72,35 @@ namespace Chromatics.Layers
                 {
                     led.Color = highlight_col;
                 }
-
             }
 
-            //Apply lighting
+            // Apply lighting
             var brush = new SolidColorBrush(highlight_col);
             layergroup.Brush = brush;
             _init = true;
             layer.requestUpdate = false;
+        }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    _layergroupledcollections.Clear();
+                    var _layergroups = RGBController.GetLiveLayerGroups();
+                    foreach (var layergroup in _layergroups.Values.SelectMany(lg => lg))
+                    {
+                        layergroup?.Detach();
+                    }
+                    _layergroups.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

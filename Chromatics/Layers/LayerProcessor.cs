@@ -13,133 +13,145 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Layers
 {
-    public abstract class LayerProcessor
+    public abstract class LayerProcessor : IDisposable
     {
         internal bool _init;
         internal RGBSurface surface = RGBController.GetLiveSurfaces();
+        private bool _disposed;
+
+        // Declare _layergroups dictionary to store the layer groups
+        protected Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
 
         internal Led[] GetLedArray(IMappingLayer layer)
         {
-            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var device = GetDevice(layer);
 
             if (device == null)
             {
                 return Array.Empty<Led>();
             }
 
-            var ledArray = device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
-
-            if (ledArray != null && ledArray.Length > 0)
-            {
-                return ledArray;
-            }
-
-            return Array.Empty<Led>();
+            return device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
         }
 
         internal Led[] GetLedSortedArray(IMappingLayer layer)
         {
-            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var device = GetDevice(layer);
 
             if (device == null)
             {
                 return Array.Empty<Led>();
             }
 
-            var ledArray = (from led in device.Select((led, index) => new { Index = index, Led = led }) join id in layer.deviceLeds.Values.Select((id, index) => new { Index = index, Id = id }) on led.Led.Id equals id.Id orderby id.Index select led.Led).ToArray();
-
-
-            if (ledArray != null && ledArray.Length > 0)
-            {
-                return ledArray;
-            }
-
-            return Array.Empty<Led>();
+            return (from led in device.Select((led, index) => new { Index = index, Led = led })
+                    join id in layer.deviceLeds.Values.Select((id, index) => new { Index = index, Id = id })
+                    on led.Led.Id equals id.Id
+                    orderby id.Index
+                    select led.Led).ToArray();
         }
 
         internal Led[] GetLedBaseArray(IMappingLayer layer, Layer baseLayer)
         {
-            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
+            var device = GetDevice(layer);
 
             if (device == null)
             {
                 return Array.Empty<Led>();
             }
 
-            var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
-
-
-            if (ledArray != null && ledArray.Length > 0)
-            {
-                return ledArray;
-            }
-
-            return Array.Empty<Led>();
+            return device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
         }
 
         internal IRGBDevice GetDevice(IMappingLayer layer)
         {
-            var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
-
-            if (device == null)
-            {
-                return null;
-            }
-
-            return device;
+            return RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
         }
 
         public abstract void Process(IMappingLayer layer);
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    surface = null;
+                    _layergroups.Clear();
+                }
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
+
 
     public class NoneProcessor : LayerProcessor
     {
+        private Dictionary<int, HashSet<Led>> _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
+
         public override void Process(IMappingLayer layer)
         {
-
-            //Static Base Layer Implementation
-            var _colorPalette = RGBController.GetActivePalette();
-            var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.BaseColor.Color);
-            var _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
-            var _layergroups = RGBController.GetLiveLayerGroups();
-            HashSet<Led> _layergroupledcollection;
-
-            //loop through all LED's and assign to device layer
-            
-            ListLedGroup layergroup;
+            // Avoid processing if the layer is not enabled
+            if (!layer.Enabled) return;
 
             var ledArray = GetLedArray(layer);
 
             if (_layergroupledcollections.ContainsKey(layer.layerID))
             {
-                _layergroupledcollection = _layergroupledcollections[layer.layerID];
+                // Reuse the existing LED collection
+                var _layergroupledcollection = _layergroupledcollections[layer.layerID];
             }
             else
             {
-                _layergroupledcollection = new HashSet<Led>();
+                // Create a new collection if it doesn't exist
+                var _layergroupledcollection = new HashSet<Led>(ledArray);
                 _layergroupledcollections.Add(layer.layerID, _layergroupledcollection);
             }
 
+            ListLedGroup layergroup;
             if (_layergroups.ContainsKey(layer.layerID))
             {
                 layergroup = _layergroups[layer.layerID].FirstOrDefault();
                 layergroup.ZIndex = layer.zindex;
-                
             }
             else
             {
                 layergroup = new ListLedGroup(surface, ledArray)
                 {
-                    ZIndex = layer.zindex,
+                    ZIndex = layer.zindex
                 };
 
-                var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
+                _layergroups.Add(layer.layerID, new[] { layergroup });
             }
 
             layergroup.Detach();
+
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Detach all groups and dispose of resources
+                foreach (var layergroup in _layergroups.Values.SelectMany(lg => lg))
+                {
+                    layergroup?.Detach();
+                }
+
+                _layergroups.Clear();
+                _layergroupledcollections.Clear();
+            }
+
+            base.Dispose(disposing);
         }
     }
+
 
     public static class BaseLayerProcessorFactory
     {

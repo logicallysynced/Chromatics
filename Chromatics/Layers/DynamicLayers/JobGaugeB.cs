@@ -21,9 +21,12 @@ namespace Chromatics.Layers
     public class JobGaugeBProcessor : LayerProcessor
     {
         private static Dictionary<int, JobGaugeBDynamicModel> layerProcessorModel = new Dictionary<int, JobGaugeBDynamicModel>();
-                
+        private bool _disposed = false;
+
         public override void Process(IMappingLayer layer)
         {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(JobGaugeBProcessor));
 
             JobGaugeBDynamicModel model;
 
@@ -37,32 +40,22 @@ namespace Chromatics.Layers
                 model = layerProcessorModel[layer.layerID];
             }
 
-            //HP Tracker Layer Implementation
+            // HP Tracker Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
-
-            //loop through all LED's and assign to device layer (must maintain order of LEDs)
-
             var _layergroups = RGBController.GetLiveLayerGroups();
             var ledArray = GetLedSortedArray(layer);
-            
             var countKeys = ledArray.Count();
 
-            //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
+            // Check if layer has been updated or if layer is disabled or if currently in Preview mode    
             if (model.init && (layer.requestUpdate || !layer.Enabled))
             {
-                foreach (var layergroup in model._localgroups)
-                {
-                    if (layergroup != null)
-                        layergroup.Detach();
-                }
-
-                model._localgroups.Clear();
+                DetachAndClearGroups(model._localgroups);
 
                 if (!layer.Enabled)
                     return;
             }
-            
-            //Process data from FFXIV
+
+            // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors() && _memoryHandler.Reader.CanGetJobResources())
@@ -70,61 +63,39 @@ namespace Chromatics.Layers
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 var getJobResources = _memoryHandler.Reader.GetJobResources();
                 if (getCurrentPlayer.Entity == null || getJobResources.JobResourcesContainer == null) return;
-                                                                                
 
-                //Check if layer mode has changed
+                // Check if layer mode has changed
                 if (model._currentMode != layer.layerModes)
                 {
-                    foreach (var layergroup in model._localgroups)
-                    {
-                        if (layergroup != null)
-                            layergroup.Detach();
-                    }
-
-                    model._localgroups.Clear();
+                    DetachAndClearGroups(model._localgroups);
                     model._currentMode = layer.layerModes;
                 }
 
                 var jobGauge = ReturnJobGauge(getCurrentPlayer, getJobResources, _colorPalette);
-                
+
                 if (jobGauge == null)
                 {
-                    if (layer.allowBleed)
-                    {
-                        //Allow bleeding of other layers
-                        model.empty_brush = new SolidColorBrush(Color.Transparent);
-                    }
-                    else
-                    {
-                        model.empty_brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
-                    }
-
-                    model.highlight_brush = model.empty_brush;
-                    
+                    model.highlight_brush = model.empty_brush = layer.allowBleed
+                        ? new SolidColorBrush(Color.Transparent)
+                        : new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
                 }
                 else
                 {
+                    model.highlight_brush ??= new SolidColorBrush(jobGauge.fullColor);
+                    model.highlight_brush.Color = jobGauge.fullColor;
 
-                    if (model.highlight_brush == null || model.highlight_brush.Color != jobGauge.fullColor) model.highlight_brush = new SolidColorBrush(jobGauge.fullColor);
+                    model.empty_brush = layer.allowBleed
+                        ? new SolidColorBrush(Color.Transparent)
+                        : new SolidColorBrush(jobGauge.emptyColor);
 
-                    if (layer.allowBleed)
-                    {
-                        //Allow bleeding of other layers
-                        model.empty_brush = new SolidColorBrush(Color.Transparent);
-                    }
-                    else
-                    {
-                        model.empty_brush = new SolidColorBrush(jobGauge.emptyColor);
-                    }
-            
                     if (layer.layerModes == Enums.LayerModes.Interpolate)
                     {
-                        //Interpolate implementation
+                        // Interpolate implementation
                         var currentVal_Interpolate = LinearInterpolation.Interpolate(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, 0, countKeys + jobGauge.offset);
 
-                        //Process Lighting
+                        // Process Lighting
                         var ledGroups = new List<ListLedGroup>();
-                                        
+
                         for (int i = 0; i < countKeys; i++)
                         {
                             var ledGroup = new ListLedGroup(surface, ledArray[i])
@@ -134,34 +105,18 @@ namespace Chromatics.Layers
 
                             ledGroup.Detach();
 
-                            if (i < currentVal_Interpolate)
-                            {
-                                ledGroup.Brush = model.highlight_brush;
-                                
-                            }
-                            else
-                            {
-                                ledGroup.Brush = model.empty_brush;
-                            }
-                            
+                            ledGroup.Brush = i < currentVal_Interpolate ? model.highlight_brush : model.empty_brush;
                             ledGroups.Add(ledGroup);
-                            
                         }
 
-                        foreach (var layergroup in model._localgroups)
-                        {
-                            layergroup.Detach();
-                        }
-
+                        DetachAndClearGroups(model._localgroups);
                         model._localgroups = ledGroups;
-                    
                     }
                     else if (layer.layerModes == Enums.LayerModes.Fade)
                     {
-                        //Fade implementation
-                    
+                        // Fade implementation
                         var currentVal_Fader = ColorHelper.GetInterpolatedColor(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, model.empty_brush.Color, model.highlight_brush.Color);
-                    
+
                         if (currentVal_Fader != model._faderValue)
                         {
                             var ledGroup = new ListLedGroup(surface, ledArray)
@@ -180,7 +135,7 @@ namespace Chromatics.Layers
                     }
                 }
 
-                //Send layers to _layergroups Dictionary to be tracked outside this method
+                // Send layers to _layergroups Dictionary to be tracked outside this method
                 var lg = model._localgroups.ToArray();
 
                 if (_layergroups.ContainsKey(layer.layerID))
@@ -193,12 +148,12 @@ namespace Chromatics.Layers
                 }
             }
 
-            //Apply lighting
+            // Apply lighting
             foreach (var layergroup in model._localgroups)
             {
                 layergroup.Attach(surface);
             }
-            
+
             model.init = true;
             layer.requestUpdate = false;
         }
@@ -606,6 +561,35 @@ namespace Chromatics.Layers
             }
 
             return jobGauge;
+        }
+
+        private void DetachAndClearGroups(List<ListLedGroup> groups)
+        {
+            foreach (var group in groups)
+            {
+                group?.Detach();
+            }
+            groups.Clear();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    foreach (var model in layerProcessorModel.Values)
+                    {
+                        DetachAndClearGroups(model._localgroups);
+                    }
+                    layerProcessorModel.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
         }
 
         private class JobGaugeResponse

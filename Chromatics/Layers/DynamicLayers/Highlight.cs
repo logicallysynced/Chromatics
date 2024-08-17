@@ -5,29 +5,24 @@ using Chromatics.Interfaces;
 using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chromatics.Layers
 {
     public class HighlightProcessor : LayerProcessor
     {
+        private bool _disposed = false;
+
         public override void Process(IMappingLayer layer)
         {
-            //Static Base Layer Implementation
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(HighlightProcessor));
+
             var _colorPalette = RGBController.GetActivePalette();
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.HighlightColor.Color);
             var _layergroups = RGBController.GetLiveLayerGroups();
 
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a highlight layer)
-            
-            
             var ledArray = GetLedArray(layer);
-                       
-
-            // Add new ListLedGroup to _layergroups with updated leds and create a new instance of it
             ListLedGroup updatedLayerGroup;
 
             if (_layergroups.ContainsKey(layer.layerID))
@@ -36,12 +31,12 @@ namespace Chromatics.Layers
 
                 if (layer.requestUpdate)
                 {
-                    // Replace the existing leds
                     updatedLayerGroup.RemoveLeds(updatedLayerGroup);
                     updatedLayerGroup.AddLeds(ledArray);
-
                 }
-            } else {
+            }
+            else
+            {
                 updatedLayerGroup = new ListLedGroup(surface, ledArray)
                 {
                     ZIndex = layer.zindex,
@@ -50,9 +45,8 @@ namespace Chromatics.Layers
                 var lg = new ListLedGroup[] { updatedLayerGroup };
                 _layergroups.Add(layer.layerID, lg);
                 updatedLayerGroup.Detach();
-
             }
-                        
+
             if (!layer.Enabled)
             {
                 updatedLayerGroup.Detach();
@@ -65,15 +59,39 @@ namespace Chromatics.Layers
                 {
                     led.Color = highlight_col;
                 }
-
             }
 
-            //Apply lighting
             var brush = new SolidColorBrush(highlight_col);
             updatedLayerGroup.Brush = brush;
             updatedLayerGroup.Attach(surface);
             _init = true;
             layer.requestUpdate = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    var _layergroups = RGBController.GetLiveLayerGroups();
+                    if (_layergroups != null)
+                    {
+                        foreach (var layerGroupArray in _layergroups.Values)
+                        {
+                            foreach (var layerGroup in layerGroupArray)
+                            {
+                                layerGroup?.Detach();
+                            }
+                        }
+                        _layergroups.Clear();
+                    }
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

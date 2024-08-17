@@ -4,13 +4,9 @@ using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
-using Sharlayan.Core.Enums;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Chromatics.Extensions.Sharlayan;
 
 namespace Chromatics.Layers
@@ -18,12 +14,13 @@ namespace Chromatics.Layers
     public class DutyFinderBellProcessor : LayerProcessor
     {
         private static Dictionary<int, DutyFinderBellEffectModel> layerProcessorModel = new Dictionary<int, DutyFinderBellEffectModel>();
+        private bool _disposed = false;
 
         public override void Process(IMappingLayer layer)
         {
             //Do not apply if layer/effect is disabled
             var effectSettings = RGBController.GetEffectsSettings();
-                        
+
             DutyFinderBellEffectModel model;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
@@ -36,15 +33,9 @@ namespace Chromatics.Layers
                 model = layerProcessorModel[layer.layerID];
             }
 
-                        
-            
             //Duty Finder Bell Effect Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
-
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            
-            
 
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
@@ -94,7 +85,7 @@ namespace Chromatics.Layers
                 Sustain = 0.3f,
                 Repetitions = 0
             };
-            
+
             //Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
 
@@ -107,11 +98,10 @@ namespace Chromatics.Layers
                     if (DutyFinderBellExtension.IsPopped())
                     {
                         highlight_brush.AddDecorator(flash);
-                        
+
                         layergroup.Brush = highlight_brush;
                         model.activeBrush = highlight_brush;
                         model.wasPopped = true;
-
                     }
                     else
                     {
@@ -126,9 +116,8 @@ namespace Chromatics.Layers
                 }
 
                 model.wasDisabled = false;
-                
             }
-            
+
             //Apply lighting
             if (model.activeBrush != null && model.activeBrush.Decorators.Count == 0)
             {
@@ -140,17 +129,40 @@ namespace Chromatics.Layers
             {
                 layergroup.Attach(surface);
             }
-            
-            
+
             model.init = true;
             layer.requestUpdate = false;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    foreach (var model in layerProcessorModel.Values)
+                    {
+                        if (model.activeBrush != null)
+                        {
+                            model.activeBrush.RemoveAllDecorators();
+                        }
+                    }
+                    layerProcessorModel.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            // Call base class implementation if there's one
+            base.Dispose(disposing);
+        }
+
         private class DutyFinderBellEffectModel
-        {   
+        {
             public bool wasPopped { get; set; }
             public bool wasDisabled { get; set; }
-            public SolidColorBrush activeBrush { get; set;}
+            public SolidColorBrush activeBrush { get; set; }
             public bool init { get; set; }
         }
     }
