@@ -163,6 +163,8 @@ namespace Chromatics.Core
                         }
                         else
                         {
+                            //HueRGBDeviceProvider.Instance.Exception += (sender, e) => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue Device Error: {e.Exception.Message}");
+
                             var hueBridge = new HueClientDefinition(appSettings.deviceHueBridgeIP, "chromatics", "pvpGWu0ets21cUUZGOHqd63Eb28i2QEx");
 
                             HueRGBDeviceProvider.Instance.ClientDefinitions.Add(hueBridge);
@@ -304,6 +306,8 @@ namespace Chromatics.Core
 
             try
             {
+                var appSettings = AppSettings.GetSettings();
+
                 foreach (var deviceProvider in loadedDeviceProviders)
                 {
                     UnloadDeviceProvider(deviceProvider, false);
@@ -316,6 +320,7 @@ namespace Chromatics.Core
 
                 surface.Updating -= Surface_Updating;
                 surface.Exception -= surfaceExceptionEventHandler;
+                                    
                 surface.Dispose();
             }
             catch (Exception ex)

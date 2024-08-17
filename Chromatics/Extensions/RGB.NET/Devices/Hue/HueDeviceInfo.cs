@@ -1,29 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Q42.HueApi;
-using Q42.HueApi.Models.Groups;
+using HueApi.Entertainment.Models;
+using HueApi.Models;
 using RGB.NET.Core;
 
 namespace Chromatics.Extensions.RGB.NET.Devices.Hue;
 
 public class HueDeviceInfo : IRGBDeviceInfo
 {
-    public HueDeviceInfo(Group entertainmentGroup, string lightId, IEnumerable<Light> lights)
+    public HueDeviceInfo(Light light)
     {
-        EntertainmentGroupId = entertainmentGroup.Id;
-        LightId = lightId;
+        LightId = light.IdV1;
 
-        Light light = lights.FirstOrDefault(l => l.Id == LightId);
-        if (light == null)
-            return;
+        DeviceType = RGBDeviceType.LedController;
+        DeviceName = light.Metadata.Name;
+        Manufacturer = "Philips";
+        Model = light.Type;
 
-        DeviceType = RGBDeviceType.Unknown;
-        DeviceName = light.Name;
-        Manufacturer = light.ManufacturerName;
-        Model = light.ModelId;
     }
 
-    public string EntertainmentGroupId { get; }
     public string LightId { get; }
 
     public RGBDeviceType DeviceType { get; }
