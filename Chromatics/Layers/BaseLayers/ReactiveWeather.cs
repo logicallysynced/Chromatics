@@ -40,6 +40,41 @@ namespace Chromatics.Layers
         internal static bool raidEffectsRunning = false;
         internal static string[] bossNames = null;
 
+        private SolidColorBrush weather_brush;
+        private bool _disposed = false;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    foreach (var model in layerProcessorModel.Values)
+                    {
+                        // Clear the gradient effects for each model
+                        if (model._gradientEffects != null)
+                        {
+                            foreach (var gradient in model._gradientEffects)
+                            {
+                                gradient.RemoveAllDecorators();
+                            }
+                            model._gradientEffects.Clear();
+                        }
+                    }
+
+                    weather_brush = null;
+
+                    layerProcessorModel.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            // Call base class implementation to clean up base resources
+            base.Dispose(disposing);
+        }
+
         public override void Process(IMappingLayer layer)
         {
             if (RGBController.IsBaseLayerEffectRunning())
@@ -59,26 +94,24 @@ namespace Chromatics.Layers
             {
                 model = layerProcessorModel[layer.layerID];
             }
-            
+
             //Reactive Weather Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
             var raidEffects = RGBController.GetEffectsSettings().effect_raideffects;
+
             var weather_color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUnknownBase.Color);
-            var weather_brush = new SolidColorBrush(weather_color);
+
+            weather_brush = new SolidColorBrush(weather_color);
+
             var _layergroups = RGBController.GetLiveLayerGroups();
             var effectApplied = false;
 
             var weatherService = FFXIVWeatherExtensions.GetWeatherService();
             if (weatherService == null) return;
 
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            //var surface = RGBController.GetLiveSurfaces();
-            //var device = RGBController.GetLiveDevices().FirstOrDefault(d => d.Key == layer.deviceGuid).Value;
-
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
-
 
             if (_layergroups.ContainsKey(layer.layerID))
             {
@@ -119,13 +152,10 @@ namespace Chromatics.Layers
                 StopEffects(layergroup, model._gradientEffects);
                 weather_brush.Color = ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
                 layergroup.Brush = weather_brush;
-                //layergroup.Detach();
-                //return;
             }
             else
             {
-                //Process data from FFXIV
-                
+                // Process data from FFXIV
                 var _memoryHandler = GameController.GetGameData();
 
                 if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
@@ -133,12 +163,10 @@ namespace Chromatics.Layers
                     var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                     if (getCurrentPlayer.Entity == null) return;
 
-                    //var currentZone = ZoneLookup.GetZoneInfo(getCurrentPlayer.Entity.MapTerritory).Name.English;
                     var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
                     DutyFinderBellExtension.CheckCache();
                     WeatherExtension.CheckCache();
-
 
                     ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
 
@@ -148,74 +176,53 @@ namespace Chromatics.Layers
 
                         if (chatLogEntries.Count > 0)
                         {
-                            
                             if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
                             }
-
                             else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = false;
                             }
-
                             else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
                             }
-
                             else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
                             }
-
                             else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
                             }
-
                         }
 
                         _previousArrayIndex = readResult.PreviousArrayIndex;
                         _previousOffset = readResult.PreviousOffset;
                     }
 
-
-
-
                     if (currentZone != "???" && currentZone != "")
                     {
                         var currentWeatherZone = WeatherExtension.WeatherId();
-                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString(); //WeatherHelper.GetWeatherNameById(currentWeatherZone);
-
-                        //Debug.WriteLine($"Test Weather: {currentWeatherZone} {currentWeather}");
+                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
                         if (currentWeather == null)
                         {
                             currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
                         }
 
-
-                        //var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
-
                         if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
-
-
-                            //layergroup.Brush = weather_brush;
                             effectApplied = SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance(), layer.deviceGuid);
-
-                            #if DEBUG
-                                //Debug.WriteLine($"{layer.deviceGuid} Zone Lookup: {currentZone}. Weather: {currentWeather}");
-                            #endif
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
@@ -223,13 +230,10 @@ namespace Chromatics.Layers
                             model._dutyComplete = dutyComplete;
                         }
                     }
-
                 }
-                
             }
-            
 
-            //Apply lighting
+            // Apply lighting
             if (model._reactiveWeatherEffects != reactiveWeatherEffects)
             {
                 model._reactiveWeatherEffects = reactiveWeatherEffects;
@@ -244,11 +248,9 @@ namespace Chromatics.Layers
             {
                 layergroup.Attach(surface);
             }
-                
-            
+
             _init = true;
             layer.requestUpdate = false;
-
         }
 
         private class ReactiveWeatherBaseModel

@@ -6,10 +6,7 @@ using Chromatics.Interfaces;
 using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Chromatics.Helpers.MathHelper;
 
 namespace Chromatics.Layers
@@ -17,10 +14,10 @@ namespace Chromatics.Layers
     public class TargetCastbarProcessor : LayerProcessor
     {
         private static Dictionary<int, TargetCastbarDynamicModel> layerProcessorModel = new Dictionary<int, TargetCastbarDynamicModel>();
+        private bool _disposed = false;
 
         public override void Process(IMappingLayer layer)
         {
-
             TargetCastbarDynamicModel model;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
@@ -33,32 +30,22 @@ namespace Chromatics.Layers
                 model = layerProcessorModel[layer.layerID];
             }
 
-            //Target Castbar Layer Implementation
+            // Target Castbar Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
-
-            //loop through all LED's and assign to device layer (must maintain order of LEDs);
-
             var _layergroups = RGBController.GetLiveLayerGroups();
             var ledArray = GetLedSortedArray(layer);
-            
             var countKeys = ledArray.Count();
 
-            //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
+            // Check if layer has been updated or if layer is disabled or if currently in Preview mode    
             if (model.init && (layer.requestUpdate || !layer.Enabled))
             {
-                foreach (var layergroup in model._localgroups)
-                {
-                    if (layergroup != null)
-                        layergroup.Detach();
-                }
-
-                model._localgroups.Clear();
+                DetachAndClearGroups(model._localgroups);
 
                 if (!layer.Enabled)
                     return;
             }
-            
-            //Process data from FFXIV
+
+            // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetTargetInfo())
@@ -71,47 +58,31 @@ namespace Chromatics.Layers
                 var maxVal = 1.0;
 
                 var full_col = ColorHelper.ColorToRGBColor(_colorPalette.TargetCastbar.Color);
-                var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.TargetCastbarEmpty.Color); //Bleed layer
-                                
-                
-                if (model.full_brush == null || model.full_brush.Color != full_col) model.full_brush = new SolidColorBrush(full_col);
+                var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.TargetCastbarEmpty.Color); // Bleed layer
 
-                if (layer.allowBleed)
-                {
-                    //Allow bleeding of other layers
-                    model.empty_brush = new SolidColorBrush(Color.Transparent);
-                }
-                else
-                {
-                    model.empty_brush = new SolidColorBrush(empty_col);
-                }
+                model.full_brush = model.full_brush ?? new SolidColorBrush(full_col);
+                model.empty_brush = layer.allowBleed
+                    ? new SolidColorBrush(Color.Transparent)
+                    : new SolidColorBrush(empty_col);
 
-                //Check if layer mode has changed
+                // Check if layer mode has changed
                 if (model._currentMode != layer.layerModes)
                 {
-                    foreach (var layergroup in model._localgroups)
-                    {
-                        if (layergroup != null)
-                            layergroup.Detach();
-                    }
-
-                    model._localgroups.Clear();
+                    DetachAndClearGroups(model._localgroups);
                     model._currentMode = layer.layerModes;
                 }
-            
+
                 if (layer.layerModes == Enums.LayerModes.Interpolate)
                 {
-                    //Interpolate implementation
-                    
+                    // Interpolate implementation
                     var currentVal_Interpolate = Convert.ToInt32(LinearInterpolation.Interpolate(currentVal, minVal, maxVal, 0, countKeys));
-                    if (currentVal_Interpolate < 0) currentVal_Interpolate = 0;
-                    if (currentVal_Interpolate > countKeys) currentVal_Interpolate = countKeys;
+                    currentVal_Interpolate = Math.Max(0, Math.Min(countKeys, currentVal_Interpolate));
 
-                    //Process Lighting
+                    // Process Lighting
                     if (currentVal_Interpolate != model._interpolateValue || layer.requestUpdate)
                     {
                         var ledGroups = new List<ListLedGroup>();
-                                        
+
                         for (int i = 0; i < countKeys; i++)
                         {
                             var ledGroup = new ListLedGroup(surface, ledArray[i])
@@ -121,36 +92,20 @@ namespace Chromatics.Layers
 
                             ledGroup.Detach();
 
-                            if (i < currentVal_Interpolate)
-                            {
-                                ledGroup.Brush = model.full_brush;
-                                
-                            }
-                            else
-                            {
-                                ledGroup.Brush = model.empty_brush;
-                            }
-                            
+                            ledGroup.Brush = i < currentVal_Interpolate ? model.full_brush : model.empty_brush;
                             ledGroups.Add(ledGroup);
-                            
                         }
 
-                        foreach (var layergroup in model._localgroups)
-                        {
-                            layergroup.Detach();
-                        }
-
+                        DetachAndClearGroups(model._localgroups);
                         model._localgroups = ledGroups;
                         model._interpolateValue = currentVal_Interpolate;
                     }
-
-                    
                 }
                 else if (layer.layerModes == Enums.LayerModes.Fade)
                 {
-                    //Fade implementation
-
+                    // Fade implementation
                     var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, model.empty_brush.Color, model.full_brush.Color);
+
                     if (currentVal_Fader != model._faderValue || layer.requestUpdate)
                     {
                         var ledGroup = new ListLedGroup(surface, ledArray)
@@ -160,15 +115,15 @@ namespace Chromatics.Layers
                         };
 
                         ledGroup.Detach();
-                        
+
                         if (!model._localgroups.Contains(ledGroup))
                             model._localgroups.Add(ledGroup);
-                        
+
                         model._faderValue = currentVal_Fader;
                     }
                 }
 
-                //Send layers to _layergroups Dictionary to be tracked outside this method
+                // Send layers to _layergroups Dictionary to be tracked outside this method
                 var lg = model._localgroups.ToArray();
 
                 if (_layergroups.ContainsKey(layer.layerID))
@@ -181,15 +136,42 @@ namespace Chromatics.Layers
                 }
             }
 
-            //Apply lighting
+            // Apply lighting
             foreach (var layergroup in model._localgroups)
             {
                 layergroup.Attach(surface);
             }
-            
+
             model.init = true;
             layer.requestUpdate = false;
+        }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    foreach (var model in layerProcessorModel.Values)
+                    {
+                        DetachAndClearGroups(model._localgroups);
+                    }
+                    layerProcessorModel.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+        }
+
+        private void DetachAndClearGroups(List<ListLedGroup> groups)
+        {
+            foreach (var group in groups)
+            {
+                group?.Detach();
+            }
+            groups.Clear();
         }
 
         private class TargetCastbarDynamicModel
@@ -197,11 +179,10 @@ namespace Chromatics.Layers
             public List<ListLedGroup> _localgroups { get; set; } = new List<ListLedGroup>();
             public SolidColorBrush empty_brush { get; set; }
             public SolidColorBrush full_brush { get; set; }
-            public LayerModes _currentMode  { get; set; }
-            public int _interpolateValue  { get; set; }
+            public LayerModes _currentMode { get; set; }
+            public int _interpolateValue { get; set; }
             public Color _faderValue { get; set; }
             public bool init { get; set; }
-
         }
     }
 }

@@ -28,10 +28,13 @@ namespace Chromatics.Core
         private static CustomComparers.LayerComparer comparer = new();
         private static CancellationTokenSource _GameConnectionCancellationTokenSource = new CancellationTokenSource();
         private static CancellationTokenSource _GameLoopCancellationTokenSource = new CancellationTokenSource();
+        private static CancellationTokenSource _masterCancellationToken = new CancellationTokenSource();
         private static Actor.Job _currentJob;
+        private static SharlayanConfiguration _configuration;
         private static readonly int _loopInterval = 200;
         private static readonly int _connectionInterval = 10000;
         private static int _connectionAttempts = 0;
+        private static int activeProcessId;
         private static bool gameConnected;
         private static bool gameSetup;
         private static bool memoryEfficientLoop;
@@ -54,7 +57,7 @@ namespace Chromatics.Core
                     {
                         Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop task failed: {t.Exception?.GetBaseException().Message}");
                     }
-                });
+                }, _masterCancellationToken.Token);
             }
 
             gameSetup = true;
@@ -65,8 +68,10 @@ namespace Chromatics.Core
             StopGameLoop();
             _GameConnectionCancellationTokenSource.Cancel();
             _GameLoopCancellationTokenSource.Cancel();
+            _masterCancellationToken.Cancel();
             _GameConnectionCancellationTokenSource.Dispose();
             _GameLoopCancellationTokenSource.Dispose();
+            _masterCancellationToken.Dispose();
         }
 
         public static void Stop(bool reconnect = false)
@@ -84,6 +89,7 @@ namespace Chromatics.Core
 
             StopGameLoop(reconnect);
             _GameConnectionCancellationTokenSource.Cancel();
+            
         }
 
         public static bool IsGameConnected()
@@ -128,7 +134,7 @@ namespace Chromatics.Core
         {
             _GameLoopCancellationTokenSource.Dispose();
             _GameLoopCancellationTokenSource = new CancellationTokenSource();
-            Task.Run(() => GameLoop(_GameLoopCancellationTokenSource.Token));
+            Task.Run(() => GameLoop(_GameLoopCancellationTokenSource.Token), _masterCancellationToken.Token);
         }
 
         private static void StopGameLoop(bool reconnect = false)
@@ -136,13 +142,26 @@ namespace Chromatics.Core
             _GameLoopCancellationTokenSource.Cancel();
             _memoryHandler?.Dispose();
 
+            if (activeProcessId != -1)
+            {
+                SharlayanMemoryManager.Instance.RemoveHandler(activeProcessId);
+                activeProcessId = -1;
+            }
+
+            _configuration.ProcessModel.Process?.Dispose();
+            _configuration = null;
+
+            _masterCancellationToken.Cancel();
+            _masterCancellationToken.Dispose();
+            _masterCancellationToken = new CancellationTokenSource();
+
             if (reconnect)
             {
                 _GameConnectionCancellationTokenSource.Dispose();
                 _GameConnectionCancellationTokenSource = new CancellationTokenSource();
                 RGBController.StopEffects();
                 RGBController.RunStartupEffects();
-                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token));
+                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token), _masterCancellationToken.Token);
             }
         }
 
@@ -275,7 +294,7 @@ namespace Chromatics.Core
                         Process = process
                     };
 
-                    SharlayanConfiguration configuration = new SharlayanConfiguration
+                    _configuration = new SharlayanConfiguration
                     {
                         ProcessModel = processModel,
                         GameLanguage = gameLanguage,
@@ -287,7 +306,7 @@ namespace Chromatics.Core
 #if DEBUG
                     Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
 #endif
-                    _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
+                    _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(_configuration);
 
                     //Load Other Memory Zones
                     DutyFinderBellExtension.RefreshData(_memoryHandler);
@@ -296,6 +315,7 @@ namespace Chromatics.Core
                     MusicExtension.RefreshData(_memoryHandler);
 
                     gameConnected = true;
+                    activeProcessId = _configuration.ProcessModel.ProcessID;
 
                 }
 
