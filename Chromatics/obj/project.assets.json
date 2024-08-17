@@ -149,6 +149,41 @@
           }
         }
       },
+      "HueApi/1.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/HueApi.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/HueApi.dll": {}
+        }
+      },
+      "HueApi.ColorConverters/1.5.1": {
+        "type": "package",
+        "dependencies": {
+          "HueApi": "1.6.2"
+        },
+        "compile": {
+          "lib/net8.0/HueApi.ColorConverters.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/HueApi.ColorConverters.dll": {}
+        }
+      },
+      "HueApi.Entertainment/1.5.1": {
+        "type": "package",
+        "dependencies": {
+          "HueApi": "1.6.2",
+          "HueApi.ColorConverters": "1.5.1",
+          "Portable.BouncyCastle": "1.9.0"
+        },
+        "compile": {
+          "lib/net8.0/HueApi.Entertainment.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/HueApi.Entertainment.dll": {}
+        }
+      },
       "Microsoft.NETCore.Platforms/3.1.0": {
         "type": "package",
         "compile": {
@@ -427,41 +462,6 @@
           "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "Q42.HueApi/3.23.1": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "13.0.3"
-        },
-        "compile": {
-          "lib/net8.0/Q42.HueApi.dll": {}
-        },
-        "runtime": {
-          "lib/net8.0/Q42.HueApi.dll": {}
-        }
-      },
-      "Q42.HueApi.ColorConverters/3.23.1": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/Q42.HueApi.ColorConverters.dll": {}
-        },
-        "runtime": {
-          "lib/net8.0/Q42.HueApi.ColorConverters.dll": {}
-        }
-      },
-      "Q42.HueApi.Entertainment/3.23.1": {
-        "type": "package",
-        "dependencies": {
-          "Portable.BouncyCastle": "1.9.0",
-          "Q42.HueApi": "3.23.1",
-          "Q42.HueApi.ColorConverters": "3.23.1"
-        },
-        "compile": {
-          "lib/net8.0/Q42.HueApi.Streaming.dll": {}
-        },
-        "runtime": {
-          "lib/net8.0/Q42.HueApi.Streaming.dll": {}
         }
       },
       "RGB.NET.Core/3.0.0-prerelease.1": {
@@ -1889,6 +1889,45 @@
         "lib/net8.0/HPPH.xml"
       ]
     },
+    "HueApi/1.6.3": {
+      "sha512": "U8tnpa2EKYXjyqnNRupe08jxByxdu+AqZIAtRP5xF9zX8yDNBkG1bQGEx1hq9HendDNbSu0B8kBnmZzfcnsweg==",
+      "type": "package",
+      "path": "hueapi/1.6.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "hueapi.1.6.3.nupkg.sha512",
+        "hueapi.nuspec",
+        "lib/net7.0/HueApi.dll",
+        "lib/net8.0/HueApi.dll"
+      ]
+    },
+    "HueApi.ColorConverters/1.5.1": {
+      "sha512": "HBj3mO+N8UYlbHMxO1DgSGsZF32S6pgyjyOL/dqTalUFPbpt2jG/oK0kFpLi75yGEnxAlG4Au/iszHA4J4e3qA==",
+      "type": "package",
+      "path": "hueapi.colorconverters/1.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "hueapi.colorconverters.1.5.1.nupkg.sha512",
+        "hueapi.colorconverters.nuspec",
+        "lib/net7.0/HueApi.ColorConverters.dll",
+        "lib/net8.0/HueApi.ColorConverters.dll"
+      ]
+    },
+    "HueApi.Entertainment/1.5.1": {
+      "sha512": "wUCpYUL+4U5qR6/jrk+O7B7EsOxpmEBIMMwP5lE0BfjCBSVT3aG403iTdSIHTpnRMdDXQ5naXq4NBeunwaJkrg==",
+      "type": "package",
+      "path": "hueapi.entertainment/1.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "hueapi.entertainment.1.5.1.nupkg.sha512",
+        "hueapi.entertainment.nuspec",
+        "lib/net7.0/HueApi.Entertainment.dll",
+        "lib/net8.0/HueApi.Entertainment.dll"
+      ]
+    },
     "Microsoft.NETCore.Platforms/3.1.0": {
       "sha512": "z7aeg8oHln2CuNulfhiLYxCVMPEwBl3rzicjvIX+4sUuCwvXw5oXQEtbiU2c0z4qYL5L3Kmx0mMA/+t/SbY67w==",
       "type": "package",
@@ -2282,51 +2321,6 @@
         "lib/netstandard2.0/BouncyCastle.Crypto.xml",
         "portable.bouncycastle.1.9.0.nupkg.sha512",
         "portable.bouncycastle.nuspec"
-      ]
-    },
-    "Q42.HueApi/3.23.1": {
-      "sha512": "SO6G4TX+lYutdcLYWn9coIZh9ukZlYVEpaO3FfEylkqq2H7mitUqj6+vZaO8+oJz4s0k4IOBHFwdoMr4/L463w==",
-      "type": "package",
-      "path": "q42.hueapi/3.23.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net45/Q42.HueApi.dll",
-        "lib/net7.0/Q42.HueApi.dll",
-        "lib/net8.0/Q42.HueApi.dll",
-        "lib/netstandard2.1/Q42.HueApi.dll",
-        "q42.hueapi.3.23.1.nupkg.sha512",
-        "q42.hueapi.nuspec"
-      ]
-    },
-    "Q42.HueApi.ColorConverters/3.23.1": {
-      "sha512": "2As9XewnWCbfDuc9hmjsFHnOTlBJCYVzqH1Q5JdM/k7vzJxIuoBvbH2OF1EOv+uogCEOK6upKxGT2R4fFQ27Nw==",
-      "type": "package",
-      "path": "q42.hueapi.colorconverters/3.23.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net45/Q42.HueApi.ColorConverters.dll",
-        "lib/net7.0/Q42.HueApi.ColorConverters.dll",
-        "lib/net8.0/Q42.HueApi.ColorConverters.dll",
-        "lib/netstandard2.1/Q42.HueApi.ColorConverters.dll",
-        "q42.hueapi.colorconverters.3.23.1.nupkg.sha512",
-        "q42.hueapi.colorconverters.nuspec"
-      ]
-    },
-    "Q42.HueApi.Entertainment/3.23.1": {
-      "sha512": "GqqmafDWC5T+7XSSrrOxEqUUZRljfhTrQ4i2gLLDFVNdeXK/v9jZBTigHmNLpiVts0MKOHU9ueiy7mW4jN3b8A==",
-      "type": "package",
-      "path": "q42.hueapi.entertainment/3.23.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net471/Q42.HueApi.Streaming.dll",
-        "lib/net7.0/Q42.HueApi.Streaming.dll",
-        "lib/net8.0/Q42.HueApi.Streaming.dll",
-        "lib/netstandard2.1/Q42.HueApi.Streaming.dll",
-        "q42.hueapi.entertainment.3.23.1.nupkg.sha512",
-        "q42.hueapi.entertainment.nuspec"
       ]
     },
     "RGB.NET.Core/3.0.0-prerelease.1": {
@@ -5016,12 +5010,13 @@
       "Cyotek.Windows.Forms.ColorPicker >= 2.0.0-beta.7",
       "FFXIVWeather >= 1.0.16",
       "HidSharp >= 2.1.0",
+      "HueApi >= 1.6.3",
+      "HueApi.ColorConverters >= 1.5.1",
+      "HueApi.Entertainment >= 1.5.1",
       "MouseKeyHook.NetCore >= 5.6.1.1",
       "NAudio >= 2.2.1",
       "NLog >= 5.3.3",
       "Newtonsoft.Json >= 13.0.3",
-      "Q42.HueApi >= 3.23.1",
-      "Q42.HueApi.Entertainment >= 3.23.1",
       "RGB.NET.Core >= 3.0.0-prerelease.1",
       "RGB.NET.Devices.Asus >= 3.0.0-prerelease.1",
       "RGB.NET.Devices.CoolerMaster >= 3.0.0-prerelease.1",
@@ -5110,6 +5105,18 @@
             "target": "Package",
             "version": "[2.1.0, )"
           },
+          "HueApi": {
+            "target": "Package",
+            "version": "[1.6.3, )"
+          },
+          "HueApi.ColorConverters": {
+            "target": "Package",
+            "version": "[1.5.1, )"
+          },
+          "HueApi.Entertainment": {
+            "target": "Package",
+            "version": "[1.5.1, )"
+          },
           "MouseKeyHook.NetCore": {
             "target": "Package",
             "version": "[5.6.1.1, )"
@@ -5125,14 +5132,6 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.3, )"
-          },
-          "Q42.HueApi": {
-            "target": "Package",
-            "version": "[3.23.1, )"
-          },
-          "Q42.HueApi.Entertainment": {
-            "target": "Package",
-            "version": "[3.23.1, )"
           },
           "RGB.NET.Core": {
             "target": "Package",

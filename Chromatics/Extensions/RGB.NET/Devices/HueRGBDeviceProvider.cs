@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using Chromatics.Core;
-using Chromatics.Extensions.RGB.NET.Devices.Hue;
-using Q42.HueApi;
-using Q42.HueApi.Interfaces;
-using Q42.HueApi.Models.Groups;
-using Q42.HueApi.Streaming;
-using Q42.HueApi.Streaming.Models;
+using HueApi;
 using RGB.NET.Core;
+using RGBColor = HueApi.ColorConverters.RGBColor;
+using HueApi.Models;
+using HueApi.Models.Clip;
+using System.Windows.Controls;
+using Chromatics.Core;
 
-namespace Chromatics.Extensions.RGB.NET.Devices
+namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 {
     public class HueRGBDeviceProvider : AbstractRGBDeviceProvider
     {
@@ -46,7 +43,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             // Each client definition has its own connection initialized in LoadDevices
         }
 
-
         protected override IEnumerable<IRGBDevice> LoadDevices()
         {
             return LoadDevicesAsync().GetAwaiter().GetResult();
@@ -54,56 +50,62 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
         private async Task<IEnumerable<IRGBDevice>> LoadDevicesAsync()
         {
-            HueDeviceUpdateTrigger updateTrigger = (HueDeviceUpdateTrigger)GetUpdateTrigger();
             List<IRGBDevice> devices = new List<IRGBDevice>();
+            var appSettings = AppSettings.GetSettings();
 
             foreach (HueClientDefinition clientDefinition in ClientDefinitions)
             {
                 try
                 {
-                    ILocalHueClient client = new LocalHueClient(clientDefinition.Ip);
-                    client.Initialize(clientDefinition.AppKey);
-
-                    IReadOnlyList<Group> entertainmentGroups = null;
-                    try
+                    // Initialize the Hue client with the IP and App Key
+                    
+                    if (appSettings.deviceHueBridgeClientKey == null || appSettings.deviceHueBridgeClientKey == "")
                     {
-                        entertainmentGroups = await client.GetEntertainmentGroups();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"[Hue] Exception caught while getting entertainment groups for IP {clientDefinition.Ip}: {ex.Message}");
-                        ThrowHueError(10, true, $"[Hue] Error getting entertainment groups for IP {clientDefinition.Ip}: {ex.Message}");
-                        continue; // Skip to the next clientDefinition
-                    }
+                        RegisterEntertainmentResult regResult = null;
 
-                    if (entertainmentGroups == null || !entertainmentGroups.Any())
-                    {
-                        ThrowHueError(7, true, $"[Hue] No entertainment groups found for IP: {clientDefinition.Ip}");
-                        continue;
-                    }
-
-                    List<Light> lights = (await client.GetLightsAsync()).ToList();
-
-                    foreach (Group entertainmentGroup in entertainmentGroups.OrderBy(g => int.Parse(g.Id)))
-                    {
                         try
                         {
-                            StreamingHueClient streamingClient = new(clientDefinition.Ip, clientDefinition.AppKey, clientDefinition.ClientKey);
-                            StreamingGroup streamingGroup = new(entertainmentGroup.Locations);
+                            regResult = await LocalHueApi.RegisterAsync(clientDefinition.Ip, clientDefinition.AppKey, "RGB.NET");
+                        }
+                        catch (HueApi.Models.Exceptions.LinkButtonNotPressedException ex)
+                        {
+                            ThrowHueError(99, true, $"[Hue] Button must be pressed on Hue Bridge. Please press the button and restart Chromatics.");
+                            break;
+                        }
 
-                            await streamingClient.Connect(entertainmentGroup.Id);
+                        if (regResult != null)
+                        {
+                            appSettings.deviceHueBridgeClientKey = regResult.Username;
+                            AppSettings.SaveSettings(appSettings);
+                        }
 
-                            updateTrigger.ClientGroups.Add(streamingClient, streamingGroup);
-                            foreach (string lightId in entertainmentGroup.Lights.OrderBy(int.Parse))
+                    }
+
+
+                    if (appSettings.deviceHueBridgeClientKey != null && appSettings.deviceHueBridgeClientKey != "")
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Registered with Hue Bridge: {appSettings.deviceHueBridgeClientKey}");
+
+                        var localHueApi = new LocalHueApi(clientDefinition.Ip, appSettings.deviceHueBridgeClientKey);
+
+                        // Discover lights on the bridge
+                        var lights = await localHueApi.GetLightsAsync();
+
+                        foreach (var light in lights.Data)
+                        {
+                            try
                             {
-                                HueDeviceInfo deviceInfo = new(entertainmentGroup, lightId, lights);
-                                HueDevice device = new(deviceInfo, new HueUpdateQueue(updateTrigger, lightId, streamingGroup));
+                                Debug.WriteLine($"Found Light: {light.Metadata.Name}");
+
+                                // Create the device info and device objects
+                                HueDeviceInfo deviceInfo = new HueDeviceInfo(light);
+                                HueDevice device = new HueDevice(deviceInfo, new HueUpdateQueue(GetUpdateTrigger(), light.IdV1, localHueApi));
                                 devices.Add(device);
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            ThrowHueError(8, true, $"[Hue] Error setting up streaming group for group {entertainmentGroup.Id}: {ex.Message}");
+                            catch (Exception ex)
+                            {
+                                ThrowHueError(8, true, $"[Hue] Error setting up device for light {light.Id}: {ex.Message}");
+                            }
                         }
                     }
                 }
@@ -123,4 +125,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
         #endregion
     }
+
+    
+
+    
 }

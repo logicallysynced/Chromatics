@@ -70,6 +70,18 @@
               "target": "Package",
               "version": "[2.1.0, )"
             },
+            "HueApi": {
+              "target": "Package",
+              "version": "[1.6.3, )"
+            },
+            "HueApi.ColorConverters": {
+              "target": "Package",
+              "version": "[1.5.1, )"
+            },
+            "HueApi.Entertainment": {
+              "target": "Package",
+              "version": "[1.5.1, )"
+            },
             "MouseKeyHook.NetCore": {
               "target": "Package",
               "version": "[5.6.1.1, )"
@@ -85,14 +97,6 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
-            },
-            "Q42.HueApi": {
-              "target": "Package",
-              "version": "[3.23.1, )"
-            },
-            "Q42.HueApi.Entertainment": {
-              "target": "Package",
-              "version": "[3.23.1, )"
             },
             "RGB.NET.Core": {
               "target": "Package",
