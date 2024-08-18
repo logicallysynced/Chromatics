@@ -1,4 +1,6 @@
-﻿using HueApi;
+﻿using Chromatics.Core;
+using Chromatics.Models;
+using HueApi;
 using HueApi.ColorConverters.Original.Extensions;
 using HueApi.Models;
 using HueApi.Models.Requests;
@@ -20,6 +22,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         private readonly Light _light;
         private readonly LocalHueApi _client;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private SettingsModel appSettings;
 
         #endregion
 
@@ -30,6 +33,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         {
             _client = client;
             _light = _client.GetLightsAsync().Result.Data.FirstOrDefault(l => l.IdV1 == lightId);
+            appSettings = AppSettings.GetSettings();
         }
 
         #endregion
@@ -49,7 +53,27 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
                 Color color = dataSet[0].color;
                 var rgbColorHue = new HueApi.ColorConverters.RGBColor(color.R, color.G, color.B);
-                var brightness = color.A * 100;
+                double brightness = 100;
+
+                if (appSettings.deviceHueBridgeBrightness == -1)
+                {
+                    brightness = color.A * 100;
+                }
+                else
+                {
+                    if (appSettings.deviceHueBridgeBrightness < -1)
+                    {
+                        brightness = 0;
+                    }
+                    else if (appSettings.deviceHueBridgeBrightness > 100)
+                    {
+                        brightness = 100;
+                    }
+                    else
+                    {
+                        brightness = appSettings.deviceHueBridgeBrightness;
+                    }
+                }
 
                 if (color.R == 0 && color.G == 0 && color.B == 0)
                 {
@@ -73,7 +97,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     }
                     catch (JsonException aggEx)
                     {
-                        Debug.WriteLine($"JSON Exception: {aggEx.Message}");
+                        Console.WriteLine($"JSON Exception: {aggEx.Message}");
                     }
                     catch (AggregateException aggEx)
                     {
@@ -81,12 +105,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         {
                             if (innerEx is JsonException)
                             {
-                                Debug.WriteLine($"JSON Exception: {aggEx.Message}");
+                                Console.WriteLine($"JSON Exception: {aggEx.Message}");
                             }
                             else
                             {
                                 // Handle other types of exceptions
-                                Debug.WriteLine($"Other Exception: {innerEx.Message}");
+                                Console.WriteLine($"Other Exception: {innerEx.Message}");
                                 HueRGBDeviceProvider.Instance.Throw(innerEx);
                             }
                         }

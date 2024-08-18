@@ -45,6 +45,7 @@ namespace Chromatics.Models
         public bool deviceHueEnabled { get; set; } = false;
         public string deviceHueBridgeIP { get; set; } = "127.0.0.1";
         public string deviceHueBridgeClientKey { get; set; } = "";
+        public double deviceHueBridgeBrightness { get; set; } = -1;
         public bool deviceRazerCheckSDKOverride { get; set; } = false;
         public Theme systemTheme { get; set; } = Theme.System;
         public Language systemLanguage { get; set; } = Language.English;

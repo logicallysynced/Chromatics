@@ -38,6 +38,8 @@ namespace Chromatics.Core
 
         private static Dictionary<Guid, IRGBDevice> _devices = new Dictionary<Guid, IRGBDevice>();
 
+        private static Dictionary<IRGBDevice, bool> _activeDevices = new Dictionary<IRGBDevice, bool>();
+
         private static Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
 
         private static List<Led> _layergroupledcollection = new List<Led>();
@@ -169,6 +171,7 @@ namespace Chromatics.Core
 
                             HueRGBDeviceProvider.Instance.ClientDefinitions.Add(hueBridge);
                             LoadDeviceProvider(HueRGBDeviceProvider.Instance);
+
                         }
                     }
                     catch (Exception ex)
@@ -197,6 +200,45 @@ namespace Chromatics.Core
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"RGBController Setup Error: {ex.Message}");
+            }
+        }
+
+        public static void RemoveDevice(IRGBDevice device)
+        {
+            if (surface != null && device != null && surface.Devices.Contains(device))
+            {
+                surface.Detach(device);
+                
+                
+                if (_activeDevices.ContainsKey(device))
+                {
+                    _activeDevices[device] = false;
+                }
+                else
+                {
+                    _activeDevices.Add(device, false);
+                }
+
+                Debug.WriteLine($"Detaching device {device.DeviceInfo.DeviceName}");
+            }
+        }
+
+        public static void AddDevice(IRGBDevice device)
+        {
+            if (surface != null && device != null && !surface.Devices.Contains(device))
+            {
+                surface.Attach(device);
+                
+                if (_activeDevices.ContainsKey(device))
+                {
+                    _activeDevices[device] = true;
+                }
+                else
+                {
+                    _activeDevices.Add(device, true);
+                }
+
+                Debug.WriteLine($"Attaching device {device.DeviceInfo.DeviceName}");
             }
         }
 
@@ -264,6 +306,15 @@ namespace Chromatics.Core
                     
                 }
 
+                if (_activeDevices.ContainsKey(device))
+                {
+                    _activeDevices[device] = true;
+                }
+                else
+                {
+                    _activeDevices.Add(device, true);
+                }
+
                 Uc_Mappings.OnDeviceAdded(EventArgs.Empty);
 
             }
@@ -280,6 +331,15 @@ namespace Chromatics.Core
                 if (_devices.ContainsKey(guid))
                 {
                     _devices.Remove(guid);
+                }
+
+                if (_activeDevices.ContainsKey(device))
+                {
+                    _activeDevices[device] = false;
+                }
+                else
+                {
+                    _activeDevices.Add(device, false);
                 }
 
                 Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
@@ -393,6 +453,15 @@ namespace Chromatics.Core
                     foreach (var device in provider.Devices)
                     {
                         surface.Detach(device);
+
+                        if (_activeDevices.ContainsKey(device))
+                        {
+                            _activeDevices[device] = false;
+                        }
+                        else
+                        {
+                            _activeDevices.Add(device, false);
+                        }
                     }
 
                     provider.Exception -= deviceExceptionEventHandler;
@@ -572,6 +641,11 @@ namespace Chromatics.Core
         public static Dictionary<Guid, IRGBDevice> GetLiveDevices()
         {
             return _devices;
+        }
+
+        public static Dictionary<IRGBDevice, bool> GetActiveDevices()
+        {
+            return _activeDevices;
         }
 
         public static List<IRGBDeviceProvider> GetDeviceProviders()
