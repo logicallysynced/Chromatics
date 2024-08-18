@@ -32,6 +32,7 @@ namespace Chromatics.Forms
             cb_changemode = new MetroFramework.Controls.MetroComboBox();
             btn_togglebleed = new MetroFramework.Controls.MetroButton();
             rtb_layerhelper = new System.Windows.Forms.RichTextBox();
+            btn_deviceenable = new MetroFramework.Controls.MetroButton();
             pn_top = new System.Windows.Forms.Panel();
             tlp_top = new System.Windows.Forms.TableLayoutPanel();
             btn_export = new MetroFramework.Controls.MetroButton();
@@ -199,15 +200,17 @@ namespace Chromatics.Forms
             // tlp_layercontrols
             // 
             tlp_layercontrols.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            tlp_layercontrols.ColumnCount = 5;
-            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 1F));
-            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
-            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4F));
-            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            tlp_layercontrols.Controls.Add(cb_changemode, 4, 0);
-            tlp_layercontrols.Controls.Add(btn_togglebleed, 3, 0);
+            tlp_layercontrols.ColumnCount = 6;
+            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 1.029866F));
+            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.4933052F));
+            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 2.059732F));
+            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.1390314F));
+            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.1390314F));
+            tlp_layercontrols.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.1390314F));
+            tlp_layercontrols.Controls.Add(cb_changemode, 5, 0);
+            tlp_layercontrols.Controls.Add(btn_togglebleed, 4, 0);
             tlp_layercontrols.Controls.Add(rtb_layerhelper, 1, 0);
+            tlp_layercontrols.Controls.Add(btn_deviceenable, 3, 0);
             tlp_layercontrols.Font = new Font("Segoe UI", 10.2F);
             tlp_layercontrols.Location = new Point(4, 465);
             tlp_layercontrols.Margin = new System.Windows.Forms.Padding(4);
@@ -222,10 +225,10 @@ namespace Chromatics.Forms
             cb_changemode.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             cb_changemode.FormattingEnabled = true;
             cb_changemode.ItemHeight = 23;
-            cb_changemode.Location = new Point(1133, 27);
+            cb_changemode.Location = new Point(1282, 27);
             cb_changemode.Margin = new System.Windows.Forms.Padding(4);
             cb_changemode.Name = "cb_changemode";
-            cb_changemode.Size = new Size(370, 29);
+            cb_changemode.Size = new Size(221, 29);
             cb_changemode.TabIndex = 6;
             cb_changemode.UseSelectable = true;
             cb_changemode.SelectedIndexChanged += cb_changemode_SelectedIndexChanged;
@@ -234,10 +237,10 @@ namespace Chromatics.Forms
             // 
             btn_togglebleed.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             btn_togglebleed.AutoSize = true;
-            btn_togglebleed.Location = new Point(908, 4);
+            btn_togglebleed.Location = new Point(1093, 4);
             btn_togglebleed.Margin = new System.Windows.Forms.Padding(4, 4, 25, 4);
             btn_togglebleed.Name = "btn_togglebleed";
-            btn_togglebleed.Size = new Size(196, 76);
+            btn_togglebleed.Size = new Size(160, 76);
             btn_togglebleed.TabIndex = 4;
             btn_togglebleed.Text = "Bleed Disabled";
             btn_togglebleed.UseCustomBackColor = true;
@@ -255,10 +258,25 @@ namespace Chromatics.Forms
             rtb_layerhelper.Name = "rtb_layerhelper";
             rtb_layerhelper.ReadOnly = true;
             rtb_layerhelper.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            rtb_layerhelper.Size = new Size(820, 76);
+            rtb_layerhelper.Size = new Size(768, 76);
             rtb_layerhelper.TabIndex = 7;
             rtb_layerhelper.Text = "";
             rtb_layerhelper.TextChanged += rtb_layerhelper_TextChanged;
+            // 
+            // btn_deviceenable
+            // 
+            btn_deviceenable.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            btn_deviceenable.AutoSize = true;
+            btn_deviceenable.Location = new Point(860, 4);
+            btn_deviceenable.Margin = new System.Windows.Forms.Padding(4, 4, 25, 4);
+            btn_deviceenable.Name = "btn_deviceenable";
+            btn_deviceenable.Size = new Size(165, 76);
+            btn_deviceenable.TabIndex = 8;
+            btn_deviceenable.Text = "Device Enabled";
+            btn_deviceenable.UseCustomBackColor = true;
+            btn_deviceenable.UseCustomForeColor = true;
+            btn_deviceenable.UseSelectable = true;
+            btn_deviceenable.Click += btn_deviceenable_Click;
             // 
             // pn_top
             // 
@@ -475,5 +493,6 @@ namespace Chromatics.Forms
         private System.Windows.Forms.RichTextBox rtb_layerhelper;
         private System.Windows.Forms.TableLayoutPanel tlp_footer;
         private System.Windows.Forms.RichTextBox rtb_layerhelp;
+        private MetroFramework.Controls.MetroButton btn_deviceenable;
     }
 }

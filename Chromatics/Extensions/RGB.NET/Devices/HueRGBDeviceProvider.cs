@@ -38,6 +38,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
         private void ThrowHueError(int errorCode, bool isCritical, string message = null) => Throw(new Exception(message), isCritical);
 
+
         protected override void InitializeSDK()
         {
             // Each client definition has its own connection initialized in LoadDevices
