@@ -423,6 +423,7 @@ namespace Chromatics.Core
 #endif
 
                             _layerProcessorFactory.DisposeAll();
+                            GC.Collect();
 
                             _onTitle = true;
                             wasPreviewed = false;
