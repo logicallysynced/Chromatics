@@ -13,8 +13,25 @@ namespace Chromatics.Layers
 {
     public class TargetHPProcessor : LayerProcessor
     {
+        private static TargetHPProcessor _instance;
         private static Dictionary<int, TargetHPDynamicModel> layerProcessorModel = new Dictionary<int, TargetHPDynamicModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private TargetHPProcessor() { }
+
+        // Singleton instance access
+        public static TargetHPProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new TargetHPProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -201,6 +218,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private void DetachAndClearGroups(List<ListLedGroup> groups)

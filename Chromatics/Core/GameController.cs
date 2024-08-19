@@ -23,6 +23,7 @@ namespace Chromatics.Core
 
     public static class GameController
     {
+        private static LayerProcessorFactory _layerProcessorFactory;
         private static MemoryHandler _memoryHandler;
         public static event JobChanged jobChanged;
         private static CustomComparers.LayerComparer comparer = new();
@@ -45,7 +46,9 @@ namespace Chromatics.Core
         {
             if (gameSetup) return;
 
+            _layerProcessorFactory = LayerProcessorFactory.Instance;
             comparer = new CustomComparers.LayerComparer();
+
 
             if (!gameConnected)
             {
@@ -154,6 +157,8 @@ namespace Chromatics.Core
             _masterCancellationToken.Cancel();
             _masterCancellationToken.Dispose();
             _masterCancellationToken = new CancellationTokenSource();
+
+            _layerProcessorFactory.DisposeAll();
 
             if (reconnect)
             {
@@ -337,6 +342,8 @@ namespace Chromatics.Core
                         Debug.WriteLine($"Found {location.Key}. Location: {location.Value.GetAddress().ToInt64():X}");
                     }
 #endif
+
+                    GC.Collect();
                 }
             }
             catch (Exception ex)
@@ -415,6 +422,8 @@ namespace Chromatics.Core
                             Debug.WriteLine(@"User on title or character screen");
 #endif
 
+                            _layerProcessorFactory.DisposeAll();
+
                             _onTitle = true;
                             wasPreviewed = false;
                         }
@@ -436,6 +445,7 @@ namespace Chromatics.Core
                             RGBController.StopEffects();
                             RGBController.ResetLayerGroups();
                             _onTitle = false;
+                            GC.Collect();
                         }
 
                     }
@@ -466,27 +476,23 @@ namespace Chromatics.Core
                     switch (layer.rootLayerType)
                     {
                         case LayerType.BaseLayer:
-
-                            var baseLayerProcessors = BaseLayerProcessorFactory.GetProcessors();
-                            baseLayerProcessors[(BaseLayerType)layer.layerTypeindex].Process(layer);
+                            var baseProcessor = _layerProcessorFactory.GetProcessor((BaseLayerType)layer.layerTypeindex);
+                            baseProcessor.Process(layer);
                             break;
 
                         case LayerType.DynamicLayer:
-
-                            var dynamicLayerProcessors = DynamicLayerProcessorFactory.GetProcessors();
-                            dynamicLayerProcessors[(DynamicLayerType)layer.layerTypeindex].Process(layer);
+                            var dynamicProcessor = _layerProcessorFactory.GetProcessor((DynamicLayerType)layer.layerTypeindex);
+                            dynamicProcessor.Process(layer);
                             break;
 
                         case LayerType.EffectLayer:
-                            foreach (var layerProcessor in EffectLayerProcessorFactory.GetProcessors())
+                            var effectProcessors = EffectLayerProcessorFactory.GetProcessors();
+                            foreach (var effectProcessor in effectProcessors)
                             {
-                                layerProcessor.Value.Process(layer);
+                                effectProcessor.Value.Process(layer);
                             }
                             break;
-
                     }
-
-
                 }
             }
             catch (Exception ex)

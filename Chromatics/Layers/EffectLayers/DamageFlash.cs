@@ -15,8 +15,25 @@ namespace Chromatics.Layers
 {
     public class DamageFlashProcessor : LayerProcessor
     {
+        private static DamageFlashProcessor _instance;
         private static Dictionary<int, DamageFlashEffectModel> layerProcessorModel = new Dictionary<int, DamageFlashEffectModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private DamageFlashProcessor() { }
+
+        // Singleton instance access
+        public static DamageFlashProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DamageFlashProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -163,6 +180,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private class DamageFlashEffectModel

@@ -13,8 +13,25 @@ namespace Chromatics.Layers
 {
     public class MPTrackerProcessor : LayerProcessor
     {
+        private static MPTrackerProcessor _instance;
         private static Dictionary<int, MPTrackerDynamicModel> layerProcessorModel = new Dictionary<int, MPTrackerDynamicModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private MPTrackerProcessor() { }
+
+        // Singleton instance access
+        public static MPTrackerProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new MPTrackerProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -203,6 +220,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private class MPTrackerDynamicModel

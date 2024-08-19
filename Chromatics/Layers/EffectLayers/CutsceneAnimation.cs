@@ -17,8 +17,25 @@ namespace Chromatics.Layers
 {
     public class CutsceneAnimationProcessor : LayerProcessor
     {
+        private static CutsceneAnimationProcessor _instance;
         private static Dictionary<int, CutsceneAnimationEffectModel> layerProcessorModel = new Dictionary<int, CutsceneAnimationEffectModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private CutsceneAnimationProcessor() { }
+
+        // Singleton instance access
+        public static CutsceneAnimationProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new CutsceneAnimationProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -172,6 +189,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private class CutsceneAnimationEffectModel

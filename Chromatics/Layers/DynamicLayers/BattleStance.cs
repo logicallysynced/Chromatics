@@ -11,7 +11,24 @@ namespace Chromatics.Layers
 {
     public class DynamicBattleStanceProcessor : LayerProcessor
     {
+        private static DynamicBattleStanceProcessor _instance;
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private DynamicBattleStanceProcessor() { }
+
+        // Singleton instance access
+        public static DynamicBattleStanceProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DynamicBattleStanceProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -107,6 +124,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
     }
 }

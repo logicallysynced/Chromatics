@@ -22,6 +22,7 @@ namespace Chromatics.Layers
 {
     public class KeybindsProcessor : LayerProcessor
     {
+        private static KeybindsProcessor _instance;
         private Dictionary<Led, ListLedGroup> _localgroups = new Dictionary<Led, ListLedGroup>();
         private SolidColorBrush keybind_cd_brush;
         private SolidColorBrush keybind_na_brush;
@@ -41,6 +42,22 @@ namespace Chromatics.Layers
             Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_8,
             Sharlayan.Core.Enums.Action.Container.CROSS_PETBAR
         };
+
+        // Private constructor to prevent direct instantiation
+        private KeybindsProcessor() { }
+
+        // Singleton instance access
+        public static KeybindsProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new KeybindsProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -285,6 +302,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private enum Modifiers

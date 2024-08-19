@@ -12,8 +12,25 @@ namespace Chromatics.Layers
 {
     public class StaticProcessor : LayerProcessor
     {
+        private static StaticProcessor _instance;
         private bool _disposed = false;
         private Dictionary<int, HashSet<Led>> _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
+
+        // Private constructor to prevent direct instantiation
+        private StaticProcessor() { }
+
+        // Singleton instance access
+        public static StaticProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new StaticProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -101,6 +118,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
     }
 }
