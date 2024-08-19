@@ -21,6 +21,7 @@ namespace Chromatics.Layers.DynamicLayers
 {
     public class ReactiveWeatherHighlightProcessor : LayerProcessor
     {
+        private static ReactiveWeatherHighlightProcessor _instance;
         private static Dictionary<int, ReactiveWeatherHighlightDynamicLayer> layerProcessorModel = new Dictionary<int, ReactiveWeatherHighlightDynamicLayer>();
 
         internal static int _previousArrayIndex = 0;
@@ -31,6 +32,22 @@ namespace Chromatics.Layers.DynamicLayers
 
         private bool _disposed = false;
         private SolidColorBrush weather_brush;
+
+        // Private constructor to prevent direct instantiation
+        private ReactiveWeatherHighlightProcessor() { }
+
+        // Singleton instance access
+        public static ReactiveWeatherHighlightProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ReactiveWeatherHighlightProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -338,6 +355,7 @@ namespace Chromatics.Layers.DynamicLayers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
     }
 }

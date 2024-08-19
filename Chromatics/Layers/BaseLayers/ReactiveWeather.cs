@@ -32,6 +32,7 @@ namespace Chromatics.Layers
 {
     public class ReactiveWeatherProcessor : LayerProcessor
     {
+        private static ReactiveWeatherProcessor _instance;
         private static Dictionary<int, ReactiveWeatherBaseModel> layerProcessorModel = new Dictionary<int, ReactiveWeatherBaseModel>();
 
         internal static int _previousArrayIndex = 0;
@@ -42,6 +43,22 @@ namespace Chromatics.Layers
 
         private SolidColorBrush weather_brush;
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private ReactiveWeatherProcessor() { }
+
+        // Singleton instance access
+        public static ReactiveWeatherProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ReactiveWeatherProcessor();
+                }
+                return _instance;
+            }
+        }
 
         protected override void Dispose(bool disposing)
         {
@@ -73,6 +90,7 @@ namespace Chromatics.Layers
 
             // Call base class implementation to clean up base resources
             base.Dispose(disposing);
+            _instance = null;
         }
 
         public override void Process(IMappingLayer layer)

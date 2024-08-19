@@ -93,23 +93,37 @@ namespace Chromatics.Layers
 
     public class NoneProcessor : LayerProcessor
     {
+        private static NoneProcessor _instance;
         private Dictionary<int, HashSet<Led>> _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
+
+        // Private constructor to prevent direct instantiation
+        private NoneProcessor() { }
+
+        // Singleton instance access
+        public static NoneProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new NoneProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
-            // Avoid processing if the layer is not enabled
             if (!layer.Enabled) return;
 
             var ledArray = GetLedArray(layer);
 
             if (_layergroupledcollections.ContainsKey(layer.layerID))
             {
-                // Reuse the existing LED collection
                 var _layergroupledcollection = _layergroupledcollections[layer.layerID];
             }
             else
             {
-                // Create a new collection if it doesn't exist
                 var _layergroupledcollection = new HashSet<Led>(ledArray);
                 _layergroupledcollections.Add(layer.layerID, _layergroupledcollection);
             }
@@ -131,14 +145,12 @@ namespace Chromatics.Layers
             }
 
             layergroup.Detach();
-
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                // Detach all groups and dispose of resources
                 foreach (var layergroup in _layergroups.Values.SelectMany(lg => lg))
                 {
                     layergroup?.Detach();
@@ -149,19 +161,20 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null; // Clear the instance to allow re-creation if needed
         }
     }
+
 
 
     public static class BaseLayerProcessorFactory
     {
         private static readonly Dictionary<BaseLayerType, LayerProcessor> layerProcessors = new Dictionary<BaseLayerType, LayerProcessor>
         {
-            { BaseLayerType.Static, new StaticProcessor() },
-            { BaseLayerType.ReactiveWeather, new ReactiveWeatherProcessor() },
-            { BaseLayerType.BattleStance, new BaseBattleStanceProcessor() },
-            { BaseLayerType.JobClasses, new JobClassesProcessor() },
-            //{ BaseLayerType.ScreenCapture, new ScreenCaptureProcessor() }
+            { BaseLayerType.Static, StaticProcessor.Instance },
+            { BaseLayerType.ReactiveWeather, ReactiveWeatherProcessor.Instance },
+            { BaseLayerType.BattleStance, BaseBattleStanceProcessor.Instance },
+            { BaseLayerType.JobClasses, JobClassesProcessor.Instance },
         };
 
         public static Dictionary<BaseLayerType, LayerProcessor> GetProcessors()
@@ -170,15 +183,16 @@ namespace Chromatics.Layers
         }
     }
 
+
     public static class EffectLayerProcessorFactory
     {
         private static readonly Dictionary<EffectLayerType, LayerProcessor> layerProcessors = new Dictionary<EffectLayerType, LayerProcessor>
         {
-            { EffectLayerType.None, new NoneProcessor() },
-            { EffectLayerType.DutyFinderBell, new DutyFinderBellProcessor() },
-            { EffectLayerType.DamageFlash, new DamageFlashProcessor() },
-            { EffectLayerType.GoldSaucerVegas, new GoldSaucerVegasProcessor() },
-            { EffectLayerType.CutsceneAnimation, new CutsceneAnimationProcessor() }
+            { EffectLayerType.None, NoneProcessor.Instance },
+            { EffectLayerType.DutyFinderBell, DutyFinderBellProcessor.Instance },
+            { EffectLayerType.DamageFlash, DamageFlashProcessor.Instance },
+            { EffectLayerType.GoldSaucerVegas, GoldSaucerVegasProcessor.Instance },
+            { EffectLayerType.CutsceneAnimation, CutsceneAnimationProcessor.Instance }
         };
 
         public static Dictionary<EffectLayerType, LayerProcessor> GetProcessors()
@@ -187,25 +201,26 @@ namespace Chromatics.Layers
         }
     }
 
+
     public static class DynamicLayerProcessorFactory
     {
         private static readonly Dictionary<DynamicLayerType, LayerProcessor> layerProcessors = new Dictionary<DynamicLayerType, LayerProcessor>
         {
-            { DynamicLayerType.None, new NoneProcessor() },
-            { DynamicLayerType.Highlight, new HighlightProcessor() },
-            { DynamicLayerType.Keybinds, new KeybindsProcessor() },
-            { DynamicLayerType.EnmityTracker, new EnmityTrackerProcessor() },
-            { DynamicLayerType.TargetHP, new TargetHPProcessor() },
-            { DynamicLayerType.TargetCastbar, new TargetCastbarProcessor() },
-            { DynamicLayerType.HPTracker, new HPTrackerProcessor() },
-            { DynamicLayerType.MPTracker, new MPTrackerProcessor() },
-            { DynamicLayerType.JobGaugeA, new JobGaugeAProcessor() },
-            { DynamicLayerType.JobGaugeB, new JobGaugeBProcessor() },
-            { DynamicLayerType.ExperienceTracker, new ExperienceTrackerProcessor() },
-            { DynamicLayerType.BattleStance, new DynamicBattleStanceProcessor() },
-            { DynamicLayerType.Castbar, new CastbarProcessor() },
-            { DynamicLayerType.JobClassesHighlight, new JobClassesHighlightProcessor() },
-            { DynamicLayerType.ReactiveWeatherHighlight, new ReactiveWeatherHighlightProcessor() }
+            { DynamicLayerType.None, NoneProcessor.Instance },
+            { DynamicLayerType.Highlight, HighlightProcessor.Instance },
+            { DynamicLayerType.Keybinds, KeybindsProcessor.Instance },
+            { DynamicLayerType.EnmityTracker, EnmityTrackerProcessor.Instance },
+            { DynamicLayerType.TargetHP, TargetHPProcessor.Instance },
+            { DynamicLayerType.TargetCastbar, TargetCastbarProcessor.Instance },
+            { DynamicLayerType.HPTracker, HPTrackerProcessor.Instance },
+            { DynamicLayerType.MPTracker, MPTrackerProcessor.Instance },
+            { DynamicLayerType.JobGaugeA, JobGaugeAProcessor.Instance },
+            { DynamicLayerType.JobGaugeB, JobGaugeBProcessor.Instance },
+            { DynamicLayerType.ExperienceTracker, ExperienceTrackerProcessor.Instance },
+            { DynamicLayerType.BattleStance, DynamicBattleStanceProcessor.Instance },
+            { DynamicLayerType.Castbar, CastbarProcessor.Instance },
+            { DynamicLayerType.JobClassesHighlight, JobClassesHighlightProcessor.Instance },
+            { DynamicLayerType.ReactiveWeatherHighlight, ReactiveWeatherHighlightProcessor.Instance }
         };
 
         public static Dictionary<DynamicLayerType, LayerProcessor> GetProcessors()
@@ -213,6 +228,7 @@ namespace Chromatics.Layers
             return layerProcessors;
         }
     }
+
 
 
 }

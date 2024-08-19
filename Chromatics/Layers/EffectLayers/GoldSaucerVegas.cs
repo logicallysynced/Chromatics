@@ -16,8 +16,25 @@ namespace Chromatics.Layers
 {
     public class GoldSaucerVegasProcessor : LayerProcessor
     {
+        private static GoldSaucerVegasProcessor _instance;
         private static Dictionary<int, GoldSaucerVegasEffectModel> layerProcessorModel = new Dictionary<int, GoldSaucerVegasEffectModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private GoldSaucerVegasProcessor() { }
+
+        // Singleton instance access
+        public static GoldSaucerVegasProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new GoldSaucerVegasProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -152,6 +169,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private void DisposeModel(GoldSaucerVegasEffectModel model)

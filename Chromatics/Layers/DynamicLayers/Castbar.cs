@@ -13,8 +13,25 @@ namespace Chromatics.Layers
 {
     public class CastbarProcessor : LayerProcessor
     {
+        private static CastbarProcessor _instance;
         private static Dictionary<int, CastbarDynamicModel> layerProcessorModel = new Dictionary<int, CastbarDynamicModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private CastbarProcessor() { }
+
+        // Singleton instance access
+        public static CastbarProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new CastbarProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -205,6 +222,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private class CastbarDynamicModel

@@ -12,7 +12,24 @@ namespace Chromatics.Layers
 {
     public class JobClassesHighlightProcessor : LayerProcessor
     {
+        private static JobClassesHighlightProcessor _instance;
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private JobClassesHighlightProcessor() { }
+
+        // Singleton instance access
+        public static JobClassesHighlightProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new JobClassesHighlightProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -119,6 +136,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
     }
 }

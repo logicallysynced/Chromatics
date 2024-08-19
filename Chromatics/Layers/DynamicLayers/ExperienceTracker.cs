@@ -16,9 +16,26 @@ namespace Chromatics.Layers
 {
     public class ExperienceTrackerProcessor : LayerProcessor
     {
+        private static ExperienceTrackerProcessor _instance;
         private static Dictionary<int, ExpTrackerDynamicModel> layerProcessorModel = new Dictionary<int, ExpTrackerDynamicModel>();
         private static Dictionary<int, int> levelMap = new Dictionary<int, int>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private ExperienceTrackerProcessor() { }
+
+        // Singleton instance access
+        public static ExperienceTrackerProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ExperienceTrackerProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -229,6 +246,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private int GetJobCurrentExperience(CurrentPlayerResult currentPlayer)

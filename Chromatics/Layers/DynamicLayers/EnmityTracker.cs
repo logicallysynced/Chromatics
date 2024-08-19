@@ -13,8 +13,25 @@ namespace Chromatics.Layers
 {
     public class EnmityTrackerProcessor : LayerProcessor
     {
+        private static EnmityTrackerProcessor _instance;
         private static Dictionary<int, EnmityDynamicModel> layerProcessorModel = new Dictionary<int, EnmityDynamicModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private EnmityTrackerProcessor() { }
+
+        // Singleton instance access
+        public static EnmityTrackerProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new EnmityTrackerProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -290,6 +307,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private class EnmityDynamicModel

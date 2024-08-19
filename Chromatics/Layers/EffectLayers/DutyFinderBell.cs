@@ -13,8 +13,25 @@ namespace Chromatics.Layers
 {
     public class DutyFinderBellProcessor : LayerProcessor
     {
+        private static DutyFinderBellProcessor _instance;
         private static Dictionary<int, DutyFinderBellEffectModel> layerProcessorModel = new Dictionary<int, DutyFinderBellEffectModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private DutyFinderBellProcessor() { }
+
+        // Singleton instance access
+        public static DutyFinderBellProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DutyFinderBellProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -156,6 +173,7 @@ namespace Chromatics.Layers
 
             // Call base class implementation if there's one
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private class DutyFinderBellEffectModel

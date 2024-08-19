@@ -3,6 +3,7 @@ using Chromatics.Enums;
 using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
+using Chromatics.Layers.DynamicLayers;
 using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,25 @@ namespace Chromatics.Layers
 {
     public class TargetCastbarProcessor : LayerProcessor
     {
+        private static TargetCastbarProcessor _instance;
         private static Dictionary<int, TargetCastbarDynamicModel> layerProcessorModel = new Dictionary<int, TargetCastbarDynamicModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private TargetCastbarProcessor() { }
+
+        // Singleton instance access
+        public static TargetCastbarProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new TargetCastbarProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -163,6 +181,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private void DetachAndClearGroups(List<ListLedGroup> groups)

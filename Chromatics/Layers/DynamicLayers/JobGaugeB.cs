@@ -20,8 +20,25 @@ namespace Chromatics.Layers
 {
     public class JobGaugeBProcessor : LayerProcessor
     {
+        private static JobGaugeBProcessor _instance;
         private static Dictionary<int, JobGaugeBDynamicModel> layerProcessorModel = new Dictionary<int, JobGaugeBDynamicModel>();
         private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private JobGaugeBProcessor() { }
+
+        // Singleton instance access
+        public static JobGaugeBProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new JobGaugeBProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
@@ -590,6 +607,7 @@ namespace Chromatics.Layers
             }
 
             base.Dispose(disposing);
+            _instance = null;
         }
 
         private class JobGaugeResponse
