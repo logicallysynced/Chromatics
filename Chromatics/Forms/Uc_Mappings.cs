@@ -77,8 +77,11 @@ namespace Chromatics.Forms
                     layer.btn_copy.Click -= OnCopyButtonPressed;
                 }
 
-                keyController.KeyDown -= Kh_KeyDown;
-                keyController.KeyUp -= Kh_KeyUp;
+                if (keyController != null)
+                {
+                    keyController.KeyDown -= Kh_KeyDown;
+                    keyController.KeyUp -= Kh_KeyUp;
+                }
 
                 tt_mappings?.Dispose();
             }
