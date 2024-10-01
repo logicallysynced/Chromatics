@@ -9,18 +9,6 @@ namespace Chromatics.Forms
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
 
         #region Component Designer generated code
 
@@ -30,340 +18,329 @@ namespace Chromatics.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.tlp_main = new System.Windows.Forms.TableLayoutPanel();
-            this.tlp_palette = new System.Windows.Forms.TableLayoutPanel();
-            this.tlp_palette_inner = new System.Windows.Forms.TableLayoutPanel();
-            this.palette_picker = new Cyotek.Windows.Forms.ScreenColorPicker();
-            this.palette_preview = new System.Windows.Forms.Panel();
-            this.palette_wheel = new Cyotek.Windows.Forms.ColorWheel();
-            this.palette_grid = new Cyotek.Windows.Forms.ColorGrid();
-            this.palette_editor = new Cyotek.Windows.Forms.ColorEditor();
-            this.tlp_mappings = new System.Windows.Forms.TableLayoutPanel();
-            this.dG_mappings = new System.Windows.Forms.DataGridView();
-            this.mappings_col_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mappings_col_cat = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mappings_col_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mappings_col_color = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tlp_controls = new System.Windows.Forms.TableLayoutPanel();
-            this.btn_paletteexport = new System.Windows.Forms.Button();
-            this.btn_paletteundo = new System.Windows.Forms.Button();
-            this.btn_paletteimport = new System.Windows.Forms.Button();
-            this.lbl_palettecat = new System.Windows.Forms.Label();
-            this.cb_palette_categories = new MetroFramework.Controls.MetroComboBox();
-            this.palette_colormanager = new Cyotek.Windows.Forms.ColorEditorManager();
-            this.tlp_main.SuspendLayout();
-            this.tlp_palette.SuspendLayout();
-            this.tlp_palette_inner.SuspendLayout();
-            this.tlp_mappings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dG_mappings)).BeginInit();
-            this.tlp_controls.SuspendLayout();
-            this.SuspendLayout();
+            tlp_main = new System.Windows.Forms.TableLayoutPanel();
+            tlp_palette = new System.Windows.Forms.TableLayoutPanel();
+            tlp_palette_inner = new System.Windows.Forms.TableLayoutPanel();
+            palette_picker = new Cyotek.Windows.Forms.ScreenColorPicker();
+            palette_preview = new System.Windows.Forms.Panel();
+            palette_wheel = new Cyotek.Windows.Forms.ColorWheel();
+            palette_grid = new Cyotek.Windows.Forms.ColorGrid();
+            palette_editor = new Cyotek.Windows.Forms.ColorEditor();
+            tlp_mappings = new System.Windows.Forms.TableLayoutPanel();
+            dG_mappings = new System.Windows.Forms.DataGridView();
+            mappings_col_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            mappings_col_cat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            mappings_col_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            mappings_col_color = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            tlp_controls = new System.Windows.Forms.TableLayoutPanel();
+            btn_paletteexport = new System.Windows.Forms.Button();
+            btn_paletteundo = new System.Windows.Forms.Button();
+            btn_paletteimport = new System.Windows.Forms.Button();
+            lbl_palettecat = new System.Windows.Forms.Label();
+            cb_palette_categories = new MetroComboBox();
+            palette_colormanager = new Cyotek.Windows.Forms.ColorEditorManager();
+            tlp_main.SuspendLayout();
+            tlp_palette.SuspendLayout();
+            tlp_palette_inner.SuspendLayout();
+            tlp_mappings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dG_mappings).BeginInit();
+            tlp_controls.SuspendLayout();
+            SuspendLayout();
             // 
             // tlp_main
             // 
-            this.tlp_main.ColumnCount = 2;
-            this.tlp_main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.54481F));
-            this.tlp_main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.45519F));
-            this.tlp_main.Controls.Add(this.tlp_palette, 1, 0);
-            this.tlp_main.Controls.Add(this.tlp_mappings, 0, 0);
-            this.tlp_main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlp_main.Location = new System.Drawing.Point(0, 0);
-            this.tlp_main.Name = "tlp_main";
-            this.tlp_main.RowCount = 1;
-            this.tlp_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlp_main.Size = new System.Drawing.Size(1261, 725);
-            this.tlp_main.TabIndex = 0;
+            tlp_main.ColumnCount = 2;
+            tlp_main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.54481F));
+            tlp_main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.45519F));
+            tlp_main.Controls.Add(tlp_palette, 1, 0);
+            tlp_main.Controls.Add(tlp_mappings, 0, 0);
+            tlp_main.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlp_main.Location = new System.Drawing.Point(0, 0);
+            tlp_main.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_main.Name = "tlp_main";
+            tlp_main.RowCount = 1;
+            tlp_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlp_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            tlp_main.Size = new System.Drawing.Size(1576, 906);
+            tlp_main.TabIndex = 0;
             // 
             // tlp_palette
             // 
-            this.tlp_palette.ColumnCount = 2;
-            this.tlp_palette.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.92308F));
-            this.tlp_palette.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.07692F));
-            this.tlp_palette.Controls.Add(this.tlp_palette_inner, 1, 1);
-            this.tlp_palette.Controls.Add(this.palette_wheel, 0, 0);
-            this.tlp_palette.Controls.Add(this.palette_grid, 0, 1);
-            this.tlp_palette.Controls.Add(this.palette_editor, 1, 0);
-            this.tlp_palette.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlp_palette.Location = new System.Drawing.Point(426, 3);
-            this.tlp_palette.Name = "tlp_palette";
-            this.tlp_palette.RowCount = 2;
-            this.tlp_palette.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.19611F));
-            this.tlp_palette.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.80389F));
-            this.tlp_palette.Size = new System.Drawing.Size(832, 719);
-            this.tlp_palette.TabIndex = 0;
+            tlp_palette.ColumnCount = 2;
+            tlp_palette.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.92308F));
+            tlp_palette.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.07692F));
+            tlp_palette.Controls.Add(tlp_palette_inner, 1, 1);
+            tlp_palette.Controls.Add(palette_wheel, 0, 0);
+            tlp_palette.Controls.Add(palette_grid, 0, 1);
+            tlp_palette.Controls.Add(palette_editor, 1, 0);
+            tlp_palette.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlp_palette.Location = new System.Drawing.Point(532, 4);
+            tlp_palette.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_palette.Name = "tlp_palette";
+            tlp_palette.RowCount = 2;
+            tlp_palette.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.19611F));
+            tlp_palette.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.80389F));
+            tlp_palette.Size = new System.Drawing.Size(1040, 898);
+            tlp_palette.TabIndex = 0;
             // 
             // tlp_palette_inner
             // 
-            this.tlp_palette_inner.ColumnCount = 1;
-            this.tlp_palette_inner.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_palette_inner.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlp_palette_inner.Controls.Add(this.palette_picker, 0, 0);
-            this.tlp_palette_inner.Controls.Add(this.palette_preview, 0, 1);
-            this.tlp_palette_inner.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlp_palette_inner.Location = new System.Drawing.Point(435, 443);
-            this.tlp_palette_inner.Name = "tlp_palette_inner";
-            this.tlp_palette_inner.RowCount = 2;
-            this.tlp_palette_inner.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 74.35897F));
-            this.tlp_palette_inner.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.64103F));
-            this.tlp_palette_inner.Size = new System.Drawing.Size(394, 273);
-            this.tlp_palette_inner.TabIndex = 3;
+            tlp_palette_inner.ColumnCount = 1;
+            tlp_palette_inner.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlp_palette_inner.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            tlp_palette_inner.Controls.Add(palette_picker, 0, 0);
+            tlp_palette_inner.Controls.Add(palette_preview, 0, 1);
+            tlp_palette_inner.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlp_palette_inner.Location = new System.Drawing.Point(544, 553);
+            tlp_palette_inner.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_palette_inner.Name = "tlp_palette_inner";
+            tlp_palette_inner.RowCount = 2;
+            tlp_palette_inner.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 74.35897F));
+            tlp_palette_inner.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.64103F));
+            tlp_palette_inner.Size = new System.Drawing.Size(492, 341);
+            tlp_palette_inner.TabIndex = 3;
             // 
             // palette_picker
             // 
-            this.palette_picker.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.palette_picker.Color = System.Drawing.Color.Empty;
-            this.palette_picker.Image = global::Chromatics.Properties.Resources.eyedropper;
-            this.palette_picker.Location = new System.Drawing.Point(3, 3);
-            this.palette_picker.Name = "palette_picker";
-            this.palette_picker.Size = new System.Drawing.Size(388, 196);
+            palette_picker.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            palette_picker.Color = System.Drawing.Color.Empty;
+            palette_picker.Image = global::Chromatics.Properties.Resources.eyedropper;
+            palette_picker.Location = new System.Drawing.Point(4, 4);
+            palette_picker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            palette_picker.Name = "palette_picker";
+            palette_picker.Size = new System.Drawing.Size(484, 245);
             // 
             // palette_preview
             // 
-            this.palette_preview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.palette_preview.Location = new System.Drawing.Point(3, 205);
-            this.palette_preview.Name = "palette_preview";
-            this.palette_preview.Size = new System.Drawing.Size(388, 65);
-            this.palette_preview.TabIndex = 1;
+            palette_preview.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            palette_preview.Location = new System.Drawing.Point(4, 257);
+            palette_preview.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            palette_preview.Name = "palette_preview";
+            palette_preview.Size = new System.Drawing.Size(484, 80);
+            palette_preview.TabIndex = 1;
             // 
             // palette_wheel
             // 
-            this.palette_wheel.Alpha = 1D;
-            this.palette_wheel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.palette_wheel.Location = new System.Drawing.Point(3, 3);
-            this.palette_wheel.Name = "palette_wheel";
-            this.palette_wheel.Size = new System.Drawing.Size(426, 434);
-            this.palette_wheel.TabIndex = 4;
+            palette_wheel.Alpha = 1D;
+            palette_wheel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            palette_wheel.Location = new System.Drawing.Point(4, 4);
+            palette_wheel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            palette_wheel.Name = "palette_wheel";
+            palette_wheel.Size = new System.Drawing.Size(532, 541);
+            palette_wheel.TabIndex = 4;
             // 
             // palette_grid
             // 
-            this.palette_grid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.palette_grid.Location = new System.Drawing.Point(3, 443);
-            this.palette_grid.Name = "palette_grid";
-            this.palette_grid.Size = new System.Drawing.Size(426, 273);
-            this.palette_grid.TabIndex = 5;
+            palette_grid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            palette_grid.Location = new System.Drawing.Point(4, 553);
+            palette_grid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            palette_grid.Name = "palette_grid";
+            palette_grid.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            palette_grid.Size = new System.Drawing.Size(532, 341);
+            palette_grid.TabIndex = 5;
             // 
             // palette_editor
             // 
-            this.palette_editor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.palette_editor.AutoSize = true;
-            this.palette_editor.Location = new System.Drawing.Point(436, 5);
-            this.palette_editor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.palette_editor.Name = "palette_editor";
-            this.palette_editor.Size = new System.Drawing.Size(392, 430);
-            this.palette_editor.TabIndex = 6;
+            palette_editor.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            palette_editor.AutoSize = true;
+            palette_editor.Location = new System.Drawing.Point(545, 6);
+            palette_editor.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            palette_editor.Name = "palette_editor";
+            palette_editor.Size = new System.Drawing.Size(490, 537);
+            palette_editor.TabIndex = 6;
             // 
             // tlp_mappings
             // 
-            this.tlp_mappings.ColumnCount = 1;
-            this.tlp_mappings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_mappings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlp_mappings.Controls.Add(this.dG_mappings, 0, 0);
-            this.tlp_mappings.Controls.Add(this.tlp_controls, 0, 1);
-            this.tlp_mappings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlp_mappings.Location = new System.Drawing.Point(3, 3);
-            this.tlp_mappings.Name = "tlp_mappings";
-            this.tlp_mappings.RowCount = 2;
-            this.tlp_mappings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 92.90681F));
-            this.tlp_mappings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.093185F));
-            this.tlp_mappings.Size = new System.Drawing.Size(417, 719);
-            this.tlp_mappings.TabIndex = 1;
+            tlp_mappings.ColumnCount = 1;
+            tlp_mappings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlp_mappings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            tlp_mappings.Controls.Add(dG_mappings, 0, 0);
+            tlp_mappings.Controls.Add(tlp_controls, 0, 1);
+            tlp_mappings.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlp_mappings.Location = new System.Drawing.Point(4, 4);
+            tlp_mappings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_mappings.Name = "tlp_mappings";
+            tlp_mappings.RowCount = 2;
+            tlp_mappings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 92.90681F));
+            tlp_mappings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.093185F));
+            tlp_mappings.Size = new System.Drawing.Size(520, 898);
+            tlp_mappings.TabIndex = 1;
             // 
             // dG_mappings
             // 
-            this.dG_mappings.AllowUserToDeleteRows = false;
-            this.dG_mappings.AllowUserToResizeColumns = false;
-            this.dG_mappings.AllowUserToResizeRows = false;
-            this.dG_mappings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dG_mappings.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dG_mappings.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
-            this.dG_mappings.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            this.dG_mappings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dG_mappings.ColumnHeadersVisible = false;
-            this.dG_mappings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.mappings_col_id,
-            this.mappings_col_cat,
-            this.mappings_col_type,
-            this.mappings_col_color});
-            this.dG_mappings.Location = new System.Drawing.Point(3, 2);
-            this.dG_mappings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.dG_mappings.MultiSelect = false;
-            this.dG_mappings.Name = "dG_mappings";
-            this.dG_mappings.RowHeadersVisible = false;
-            this.dG_mappings.RowHeadersWidth = 51;
-            this.dG_mappings.RowTemplate.Height = 29;
-            this.dG_mappings.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dG_mappings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dG_mappings.ShowCellErrors = false;
-            this.dG_mappings.Size = new System.Drawing.Size(411, 664);
-            this.dG_mappings.TabIndex = 1;
-            this.dG_mappings.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dG_mappings_RowPrePaint);
-            this.dG_mappings.SelectionChanged += new System.EventHandler(this.dG_mappings_SelectionChanged);
+            dG_mappings.AllowUserToDeleteRows = false;
+            dG_mappings.AllowUserToResizeColumns = false;
+            dG_mappings.AllowUserToResizeRows = false;
+            dG_mappings.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            dG_mappings.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dG_mappings.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            dG_mappings.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            dG_mappings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dG_mappings.ColumnHeadersVisible = false;
+            dG_mappings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { mappings_col_id, mappings_col_cat, mappings_col_type, mappings_col_color });
+            dG_mappings.Location = new System.Drawing.Point(4, 2);
+            dG_mappings.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            dG_mappings.MultiSelect = false;
+            dG_mappings.Name = "dG_mappings";
+            dG_mappings.RowHeadersVisible = false;
+            dG_mappings.RowHeadersWidth = 51;
+            dG_mappings.RowTemplate.Height = 29;
+            dG_mappings.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            dG_mappings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            dG_mappings.ShowCellErrors = false;
+            dG_mappings.Size = new System.Drawing.Size(512, 830);
+            dG_mappings.TabIndex = 1;
+            dG_mappings.RowPrePaint += dG_mappings_RowPrePaint;
+            dG_mappings.SelectionChanged += dG_mappings_SelectionChanged;
             // 
             // mappings_col_id
             // 
-            this.mappings_col_id.HeaderText = "ID";
-            this.mappings_col_id.MinimumWidth = 6;
-            this.mappings_col_id.Name = "mappings_col_id";
-            this.mappings_col_id.ReadOnly = true;
-            this.mappings_col_id.Visible = false;
+            mappings_col_id.HeaderText = "ID";
+            mappings_col_id.MinimumWidth = 6;
+            mappings_col_id.Name = "mappings_col_id";
+            mappings_col_id.ReadOnly = true;
+            mappings_col_id.Visible = false;
             // 
             // mappings_col_cat
             // 
-            this.mappings_col_cat.HeaderText = "Category";
-            this.mappings_col_cat.MinimumWidth = 6;
-            this.mappings_col_cat.Name = "mappings_col_cat";
-            this.mappings_col_cat.ReadOnly = true;
-            this.mappings_col_cat.Visible = false;
+            mappings_col_cat.HeaderText = "Category";
+            mappings_col_cat.MinimumWidth = 6;
+            mappings_col_cat.Name = "mappings_col_cat";
+            mappings_col_cat.ReadOnly = true;
+            mappings_col_cat.Visible = false;
             // 
             // mappings_col_type
             // 
-            this.mappings_col_type.HeaderText = "Type";
-            this.mappings_col_type.MinimumWidth = 6;
-            this.mappings_col_type.Name = "mappings_col_type";
-            this.mappings_col_type.ReadOnly = true;
+            mappings_col_type.HeaderText = "Type";
+            mappings_col_type.MinimumWidth = 6;
+            mappings_col_type.Name = "mappings_col_type";
+            mappings_col_type.ReadOnly = true;
             // 
             // mappings_col_color
             // 
-            this.mappings_col_color.HeaderText = "Color";
-            this.mappings_col_color.MinimumWidth = 6;
-            this.mappings_col_color.Name = "mappings_col_color";
-            this.mappings_col_color.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.mappings_col_color.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            mappings_col_color.HeaderText = "Color";
+            mappings_col_color.MinimumWidth = 6;
+            mappings_col_color.Name = "mappings_col_color";
+            mappings_col_color.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            mappings_col_color.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // tlp_controls
             // 
-            this.tlp_controls.ColumnCount = 5;
-            this.tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.81132F));
-            this.tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 37.73584F));
-            this.tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.15094F));
-            this.tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.15094F));
-            this.tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.15094F));
-            this.tlp_controls.Controls.Add(this.btn_paletteexport, 3, 0);
-            this.tlp_controls.Controls.Add(this.btn_paletteundo, 4, 0);
-            this.tlp_controls.Controls.Add(this.btn_paletteimport, 2, 0);
-            this.tlp_controls.Controls.Add(this.lbl_palettecat, 0, 0);
-            this.tlp_controls.Controls.Add(this.cb_palette_categories, 1, 0);
-            this.tlp_controls.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlp_controls.Location = new System.Drawing.Point(3, 671);
-            this.tlp_controls.Name = "tlp_controls";
-            this.tlp_controls.RowCount = 1;
-            this.tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_controls.Size = new System.Drawing.Size(411, 45);
-            this.tlp_controls.TabIndex = 2;
+            tlp_controls.ColumnCount = 5;
+            tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.81132F));
+            tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 37.73584F));
+            tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.15094F));
+            tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.15094F));
+            tlp_controls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.15094F));
+            tlp_controls.Controls.Add(btn_paletteexport, 3, 0);
+            tlp_controls.Controls.Add(btn_paletteundo, 4, 0);
+            tlp_controls.Controls.Add(btn_paletteimport, 2, 0);
+            tlp_controls.Controls.Add(lbl_palettecat, 0, 0);
+            tlp_controls.Controls.Add(cb_palette_categories, 1, 0);
+            tlp_controls.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlp_controls.Location = new System.Drawing.Point(4, 838);
+            tlp_controls.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            tlp_controls.Name = "tlp_controls";
+            tlp_controls.RowCount = 1;
+            tlp_controls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlp_controls.Size = new System.Drawing.Size(512, 56);
+            tlp_controls.TabIndex = 2;
             // 
             // btn_paletteexport
             // 
-            this.btn_paletteexport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_paletteexport.AutoSize = true;
-            this.btn_paletteexport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_paletteexport.Image = global::Chromatics.Properties.Resources.palette_save;
-            this.btn_paletteexport.Location = new System.Drawing.Point(297, 3);
-            this.btn_paletteexport.Name = "btn_paletteexport";
-            this.btn_paletteexport.Size = new System.Drawing.Size(52, 39);
-            this.btn_paletteexport.TabIndex = 0;
-            this.btn_paletteexport.UseVisualStyleBackColor = true;
-            this.btn_paletteexport.Click += new System.EventHandler(this.btn_paletteexport_Click);
+            btn_paletteexport.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            btn_paletteexport.AutoSize = true;
+            btn_paletteexport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btn_paletteexport.Image = global::Chromatics.Properties.Resources.palette_save;
+            btn_paletteexport.Location = new System.Drawing.Point(370, 4);
+            btn_paletteexport.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            btn_paletteexport.Name = "btn_paletteexport";
+            btn_paletteexport.Size = new System.Drawing.Size(64, 48);
+            btn_paletteexport.TabIndex = 0;
+            btn_paletteexport.UseVisualStyleBackColor = true;
+            btn_paletteexport.Click += btn_paletteexport_Click;
             // 
             // btn_paletteundo
             // 
-            this.btn_paletteundo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_paletteundo.AutoSize = true;
-            this.btn_paletteundo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_paletteundo.Image = global::Chromatics.Properties.Resources.ret_arrow;
-            this.btn_paletteundo.Location = new System.Drawing.Point(355, 3);
-            this.btn_paletteundo.Name = "btn_paletteundo";
-            this.btn_paletteundo.Size = new System.Drawing.Size(53, 39);
-            this.btn_paletteundo.TabIndex = 2;
-            this.btn_paletteundo.UseVisualStyleBackColor = true;
-            this.btn_paletteundo.Click += new System.EventHandler(this.btn_paletteundo_Click);
+            btn_paletteundo.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            btn_paletteundo.AutoSize = true;
+            btn_paletteundo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btn_paletteundo.Image = global::Chromatics.Properties.Resources.ret_arrow;
+            btn_paletteundo.Location = new System.Drawing.Point(442, 4);
+            btn_paletteundo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            btn_paletteundo.Name = "btn_paletteundo";
+            btn_paletteundo.Size = new System.Drawing.Size(66, 48);
+            btn_paletteundo.TabIndex = 2;
+            btn_paletteundo.UseVisualStyleBackColor = true;
+            btn_paletteundo.Click += btn_paletteundo_Click;
             // 
             // btn_paletteimport
             // 
-            this.btn_paletteimport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_paletteimport.AutoSize = true;
-            this.btn_paletteimport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_paletteimport.Image = global::Chromatics.Properties.Resources.palette_load;
-            this.btn_paletteimport.Location = new System.Drawing.Point(239, 3);
-            this.btn_paletteimport.Name = "btn_paletteimport";
-            this.btn_paletteimport.Size = new System.Drawing.Size(52, 39);
-            this.btn_paletteimport.TabIndex = 1;
-            this.btn_paletteimport.UseVisualStyleBackColor = true;
-            this.btn_paletteimport.Click += new System.EventHandler(this.btn_paletteimport_Click);
+            btn_paletteimport.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            btn_paletteimport.AutoSize = true;
+            btn_paletteimport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btn_paletteimport.Image = global::Chromatics.Properties.Resources.palette_load;
+            btn_paletteimport.Location = new System.Drawing.Point(298, 4);
+            btn_paletteimport.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            btn_paletteimport.Name = "btn_paletteimport";
+            btn_paletteimport.Size = new System.Drawing.Size(64, 48);
+            btn_paletteimport.TabIndex = 1;
+            btn_paletteimport.UseVisualStyleBackColor = true;
+            btn_paletteimport.Click += btn_paletteimport_Click;
             // 
             // lbl_palettecat
             // 
-            this.lbl_palettecat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbl_palettecat.AutoSize = true;
-            this.lbl_palettecat.Location = new System.Drawing.Point(3, 0);
-            this.lbl_palettecat.Name = "lbl_palettecat";
-            this.lbl_palettecat.Size = new System.Drawing.Size(75, 45);
-            this.lbl_palettecat.TabIndex = 4;
-            this.lbl_palettecat.Text = "Category:";
-            this.lbl_palettecat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lbl_palettecat.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            lbl_palettecat.AutoSize = true;
+            lbl_palettecat.Location = new System.Drawing.Point(4, 0);
+            lbl_palettecat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            lbl_palettecat.Name = "lbl_palettecat";
+            lbl_palettecat.Size = new System.Drawing.Size(93, 56);
+            lbl_palettecat.TabIndex = 4;
+            lbl_palettecat.Text = "Category:";
+            lbl_palettecat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cb_palette_categories
             // 
-            this.cb_palette_categories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cb_palette_categories.FormattingEnabled = true;
-            this.cb_palette_categories.ItemHeight = 24;
-            this.cb_palette_categories.Location = new System.Drawing.Point(84, 3);
-            this.cb_palette_categories.Name = "cb_palette_categories";
-            this.cb_palette_categories.Size = new System.Drawing.Size(149, 30);
-            this.cb_palette_categories.TabIndex = 3;
-            this.cb_palette_categories.UseSelectable = true;
-            this.cb_palette_categories.SelectedIndexChanged += new System.EventHandler(this.cb_palette_categories_SelectedIndexChanged);
+            cb_palette_categories.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cb_palette_categories.FormattingEnabled = true;
+            cb_palette_categories.ItemHeight = 23;
+            cb_palette_categories.Location = new System.Drawing.Point(105, 4);
+            cb_palette_categories.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            cb_palette_categories.Name = "cb_palette_categories";
+            cb_palette_categories.Size = new System.Drawing.Size(185, 29);
+            cb_palette_categories.TabIndex = 3;
+            cb_palette_categories.UseSelectable = true;
+            cb_palette_categories.SelectedIndexChanged += cb_palette_categories_SelectedIndexChanged;
             // 
             // palette_colormanager
             // 
-            this.palette_colormanager.Color = System.Drawing.Color.Empty;
-            this.palette_colormanager.ColorEditor = this.palette_editor;
-            this.palette_colormanager.ColorGrid = this.palette_grid;
-            this.palette_colormanager.ColorWheel = this.palette_wheel;
-            this.palette_colormanager.ScreenColorPicker = this.palette_picker;
-            this.palette_colormanager.ColorChanged += new System.EventHandler(this.palette_colormanager_colorchanged);
+            palette_colormanager.Color = System.Drawing.Color.Empty;
+            palette_colormanager.ColorEditor = palette_editor;
+            palette_colormanager.ColorGrid = palette_grid;
+            palette_colormanager.ColorWheel = palette_wheel;
+            palette_colormanager.ScreenColorPicker = palette_picker;
+            palette_colormanager.ColorChanged += palette_colormanager_colorchanged;
             // 
             // Uc_Palette
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tlp_main);
-            this.Name = "Uc_Palette";
-            this.Size = new System.Drawing.Size(1261, 725);
-            this.Load += new System.EventHandler(this.OnLoad);
-            this.Resize += new System.EventHandler(this.OnResize);
-            this.tlp_main.ResumeLayout(false);
-            this.tlp_palette.ResumeLayout(false);
-            this.tlp_palette.PerformLayout();
-            this.tlp_palette_inner.ResumeLayout(false);
-            this.tlp_mappings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dG_mappings)).EndInit();
-            this.tlp_controls.ResumeLayout(false);
-            this.tlp_controls.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(tlp_main);
+            Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            Name = "Uc_Palette";
+            Size = new System.Drawing.Size(1576, 906);
+            Load += OnLoad;
+            Resize += OnResize;
+            tlp_main.ResumeLayout(false);
+            tlp_palette.ResumeLayout(false);
+            tlp_palette.PerformLayout();
+            tlp_palette_inner.ResumeLayout(false);
+            tlp_mappings.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dG_mappings).EndInit();
+            tlp_controls.ResumeLayout(false);
+            tlp_controls.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion

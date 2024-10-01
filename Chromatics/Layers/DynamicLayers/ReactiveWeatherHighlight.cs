@@ -21,6 +21,7 @@ namespace Chromatics.Layers.DynamicLayers
 {
     public class ReactiveWeatherHighlightProcessor : LayerProcessor
     {
+        private static ReactiveWeatherHighlightProcessor _instance;
         private static Dictionary<int, ReactiveWeatherHighlightDynamicLayer> layerProcessorModel = new Dictionary<int, ReactiveWeatherHighlightDynamicLayer>();
 
         internal static int _previousArrayIndex = 0;
@@ -29,8 +30,29 @@ namespace Chromatics.Layers.DynamicLayers
         internal static bool raidEffectsRunning = false;
         internal static string[] bossNames = null;
 
+        private bool _disposed = false;
+        private SolidColorBrush weather_brush;
+
+        // Private constructor to prevent direct instantiation
+        private ReactiveWeatherHighlightProcessor() { }
+
+        // Singleton instance access
+        public static ReactiveWeatherHighlightProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ReactiveWeatherHighlightProcessor();
+                }
+                return _instance;
+            }
+        }
+
         public override void Process(IMappingLayer layer)
         {
+            if (_disposed) return;
+
             ReactiveWeatherHighlightDynamicLayer model;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
@@ -43,21 +65,18 @@ namespace Chromatics.Layers.DynamicLayers
                 model = layerProcessorModel[layer.layerID];
             }
 
-            //Reactive Weather Dynamic Layer Layer Implementation
+            // Reactive Weather Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var weather_color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUnknownHighlight.Color);
-            var weather_brush = new SolidColorBrush(weather_color);
+
+            weather_brush = new SolidColorBrush(weather_color);
+
             var _layergroups = RGBController.GetLiveLayerGroups();
             var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
             var raidEffects = RGBController.GetEffectsSettings().effect_raideffects;
 
-
             var weatherService = FFXIVWeatherExtensions.GetWeatherService();
             if (weatherService == null) return;
-
-            //loop through all LED's and assign to device layer  (Order of LEDs is not important for a highlight layer)
-            
-            
 
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
@@ -98,8 +117,7 @@ namespace Chromatics.Layers.DynamicLayers
             }
             else
             {
-                //Process data from FFXIV
-                
+                // Process data from FFXIV
                 var _memoryHandler = GameController.GetGameData();
 
                 if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
@@ -107,7 +125,6 @@ namespace Chromatics.Layers.DynamicLayers
                     var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                     if (getCurrentPlayer.Entity == null) return;
 
-                    //var currentZone = ZoneLookup.GetZoneInfo(getCurrentPlayer.Entity.MapTerritory).Name.English;
                     var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
                     DutyFinderBellExtension.CheckCache();
@@ -116,7 +133,6 @@ namespace Chromatics.Layers.DynamicLayers
                     ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
 
                     var chatLogEntries = readResult.ChatLogItems;
-
 
                     if (readResult.PreviousArrayIndex != _previousArrayIndex)
                     {
@@ -128,57 +144,46 @@ namespace Chromatics.Layers.DynamicLayers
                                 raidEffectsRunning = false;
                                 bossNames = null;
                             }
-
                             else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = false;
                             }
-
                             else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
                             }
-
                             else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
                             }
-
                             else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
                             }
-
-
                         }
 
                         _previousArrayIndex = readResult.PreviousArrayIndex;
                         _previousOffset = readResult.PreviousOffset;
                     }
 
-
                     if (currentZone != "???" && currentZone != "")
                     {
                         var currentWeatherZone = WeatherExtension.WeatherId();
-                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString(); //WeatherHelper.GetWeatherNameById(currentWeatherZone);
-
+                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
 
                         if (currentWeather == null)
                         {
                             currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
                         }
-                        
 
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects  || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
-                            //layergroup.Brush = weather_brush;
-
                             SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, DutyFinderBellExtension.InInstance());
 
                             model._currentWeather = currentWeather;
@@ -187,13 +192,10 @@ namespace Chromatics.Layers.DynamicLayers
                             model._dutyComplete = dutyComplete;
                         }
                     }
-
                 }
-                
             }
-            
 
-            //Apply lighting
+            // Apply lighting
             if (model._reactiveWeatherEffects != reactiveWeatherEffects)
             {
                 model._reactiveWeatherEffects = reactiveWeatherEffects;
@@ -207,7 +209,6 @@ namespace Chromatics.Layers.DynamicLayers
             layergroup.Attach(surface);
             _init = true;
             layer.requestUpdate = false;
-
         }
 
         private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, bool inInstance)
@@ -216,13 +217,12 @@ namespace Chromatics.Layers.DynamicLayers
             var reactiveWeatherEffects = RGBController.GetEffectsSettings();
             var effectSettings = RGBController.GetEffectsSettings();
 
-            //Filter for zone specific special weather
+            // Filter for zone specific special weather
             if (inInstance && !dutyComplete)
             {
                 switch (zone)
                 {
                     case "Summit of Everkeep":
-                        //Raid Zone Effect
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepKeyHighlight.Color);
@@ -231,8 +231,6 @@ namespace Chromatics.Layers.DynamicLayers
                         }
                         break;
                     case "Interphos":
-
-                        //Raid Zone Effect
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosKeyHighlight.Color);
@@ -241,7 +239,6 @@ namespace Chromatics.Layers.DynamicLayers
                         }
                         break;
                     case "Scratching Ring":
-                        //Raid Zone Effect
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1KeyHighlight.Color);
@@ -250,7 +247,6 @@ namespace Chromatics.Layers.DynamicLayers
                         }
                         break;
                     case "Lovely Lovering":
-                        //Raid Zone Effect
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2KeyHighlight.Color);
@@ -259,7 +255,6 @@ namespace Chromatics.Layers.DynamicLayers
                         }
                         break;
                     case "Blasting Ring":
-                        //Raid Zone Effect
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3KeyHighlight.Color);
@@ -268,8 +263,6 @@ namespace Chromatics.Layers.DynamicLayers
                         }
                         break;
                     case "The Thundering":
-                    
-                        //Raid Zone Effect
                         if (effectSettings.effect_raideffects)
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4KeyHighlight.Color);
@@ -279,7 +272,6 @@ namespace Chromatics.Layers.DynamicLayers
                         break;
                 }
             }
-
 
             switch (zone)
             {
@@ -314,17 +306,9 @@ namespace Chromatics.Layers.DynamicLayers
                     break;
             }
 
-            //Filter for special weather
-            switch(weather)
-            {
-                default:
-                    //Apply Standard Lookup Weather
-                    weather_brush.Color = color;
-                    layer.Brush = weather_brush;
-                    break;
-            }
-
-            
+            // Apply Standard Lookup Weather
+            weather_brush.Color = color;
+            layer.Brush = weather_brush;
         }
 
         private class ReactiveWeatherHighlightDynamicLayer
@@ -335,8 +319,6 @@ namespace Chromatics.Layers.DynamicLayers
             public bool _reactiveWeatherEffects { get; set; }
             public bool _inInstance { get; set; }
             public bool _dutyComplete { get; set; }
-
-
         }
 
         public static RGB.NET.Core.Color GetWeatherColor(string weatherType, PaletteColorModel colorPalette)
@@ -347,15 +329,33 @@ namespace Chromatics.Layers.DynamicLayers
 
             if (fieldInfo == null)
             {
-                #if DEBUG
-                    Debug.WriteLine($"Unknown Weather Color Model: {fieldName}");
-                #endif
+#if DEBUG
+                Debug.WriteLine($"Unknown Weather Color Model: {fieldName}");
+#endif
 
                 return ColorHelper.ColorToRGBColor(colorPalette.WeatherUnknownHighlight.Color);
             }
 
             var colorMapping = (ColorMapping)fieldInfo.GetValue(colorPalette);
             return ColorHelper.ColorToRGBColor(colorMapping.Color);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    weather_brush = null;
+                    layerProcessorModel.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+            _instance = null;
         }
     }
 }

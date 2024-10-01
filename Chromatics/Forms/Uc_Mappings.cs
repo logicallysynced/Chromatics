@@ -9,6 +9,7 @@ using HidSharp;
 using MetroFramework;
 using MetroFramework.Components;
 using MetroFramework.Controls;
+using NAudio.CoreAudioApi;
 using OpenRGB.NET;
 using RGB.NET.Core;
 using Sanford.Multimedia;
@@ -35,7 +36,7 @@ using Size = System.Drawing.Size;
 
 namespace Chromatics.Forms
 {
-    public partial class Uc_Mappings : UserControl
+    public partial class Uc_Mappings : UserControl, IDisposable
     {
         public static Uc_Mappings Instance { get; private set; }
         public static event EventHandler DeviceAdded;
@@ -43,7 +44,7 @@ namespace Chromatics.Forms
 
         public MetroTabControl TabManager { get; set; }
         private IKeyboardMouseEvents keyController;
-
+        private IRGBDevice currentlySelectedDevice;
         private List<Pn_LayerDisplay> _layers = new List<Pn_LayerDisplay>();
         private List<KeyButton> _currentSelectedKeys = new List<KeyButton>();
         private Dictionary<Guid, VirtualDevice> _deviceVirtualDeviceMap;
@@ -55,6 +56,43 @@ namespace Chromatics.Forms
         private Pn_LayerDisplay currentlySelected;
         private bool init;
         private bool IsAddingLayer;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Unsubscribe from all events
+                DeviceAdded -= HandleDeviceAdded;
+                DeviceRemoved -= HandleDeviceRemoved;
+                GameController.jobChanged -= gameJobChanged;
+
+                // Unsubscribe event handlers for each Pn_LayerDisplay
+                foreach (var layer in _layers)
+                {
+                    layer.GotFocus -= OnLayerPressed;
+                    layer.cb_selector.SelectedIndexChanged -= OnSelectedIndexChanged;
+                    layer.chk_enabled.CheckedChanged -= OnCheckChanged;
+                    layer.btn_edit.Click -= OnEditButtonPressed;
+                    layer.btn_delete.Click -= OnDeleteButtonPressed;
+                    layer.btn_copy.Click -= OnCopyButtonPressed;
+                }
+
+                if (keyController != null)
+                {
+                    keyController.KeyDown -= Kh_KeyDown;
+                    keyController.KeyUp -= Kh_KeyUp;
+                }
+
+                tt_mappings?.Dispose();
+            }
+
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
 
         public static void OnDeviceAdded(EventArgs e)
         {
@@ -69,7 +107,7 @@ namespace Chromatics.Forms
         public Uc_Mappings()
         {
             InitializeComponent();
-                        
+
             Instance = this;
             tlp_base.Size = this.Size;
             _deviceVirtualDeviceMap = new Dictionary<Guid, VirtualDevice>();
@@ -136,7 +174,7 @@ namespace Chromatics.Forms
                 InitializeAndVisualize();
                 VisualiseLayers();
             }
-            
+
 
             //Add tooltips
             tt_mappings.SetToolTip(this.cb_addlayer, LocalizationManager.GetLocalizedText("Add New Layer of selected type"));
@@ -147,6 +185,7 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.btn_undoselection, LocalizationManager.GetLocalizedText("Undo key selection on layer"));
             tt_mappings.SetToolTip(this.btn_togglebleed, LocalizationManager.GetLocalizedText("For layers which have a negative colour, allow lower layers to bleed through instead of showing the negative colour."));
             tt_mappings.SetToolTip(this.cb_changemode, LocalizationManager.GetLocalizedText("Change the layer mode.\nInterpolate: Shows the layer as a bar on your device.\nFade: Fades the colour of the RGB keys."));
+            tt_mappings.SetToolTip(this.btn_deviceenable, LocalizationManager.GetLocalizedText("Enable/Disable Chromatics control of this device. Does not persist restart."));
 
             //Handle Events
             //this.TabManager.Selecting += new TabControlCancelEventHandler(mT_TabManager_Selecting);
@@ -261,7 +300,7 @@ namespace Chromatics.Forms
                     {
                         CreateDefaults(device);
                     }
-                    
+
                 }
 
                 // Remove devices that are no longer connected
@@ -294,7 +333,7 @@ namespace Chromatics.Forms
                 AddNoDevicesDetectedItem();
             }
 
-            
+
         }
 
         private void CreateDefaults(KeyValuePair<Guid, IRGBDevice> devicePair)
@@ -335,7 +374,7 @@ namespace Chromatics.Forms
             {
                 var settings = AppSettings.GetSettings();
                 var x = i;
-                
+
                 if (settings.keyboardLayout == KeyboardLocalization.azerty)
                 {
                     AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, x, true, false, true, LedKeyHelper.DefaultKeys_ReactiveWeather_AZERTY, (int)DynamicLayerType.ReactiveWeatherHighlight, true, LayerModes.Interpolate);
@@ -344,7 +383,7 @@ namespace Chromatics.Forms
                 {
                     AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, x, true, false, true, LedKeyHelper.DefaultKeys_ReactiveWeather_QWERTY, (int)DynamicLayerType.ReactiveWeatherHighlight, true, LayerModes.Interpolate);
                 }
-                
+
 
                 AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 1), true, false, true, LedKeyHelper.DefaultKeys_Keybinds, (int)DynamicLayerType.Keybinds, true, LayerModes.Interpolate);
                 AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, (x + 2), true, false, true, LedKeyHelper.DefaultKeys_HP, (int)DynamicLayerType.HPTracker, true, LayerModes.Interpolate);
@@ -651,7 +690,7 @@ namespace Chromatics.Forms
                 layer.btn_copy.Click -= new EventHandler(OnCopyButtonPressed);
 
                 layer.Dispose();
-                
+
                 Debug.WriteLine($"[{selectedDeviceId}] Removed layer: {layer.ID}");
             }
 
@@ -674,6 +713,36 @@ namespace Chromatics.Forms
 
                 Debug.WriteLine($"[{selectedDeviceId}] Added layer: {layers.Key}");
             }
+
+            //Check if device is enabled or not
+
+            var surface = RGBController.GetLiveSurfaces();
+
+            if (surface != null && _selectedDevice != null)
+            {
+                var devicesActive = RGBController.GetActiveDevices();
+                if (devicesActive.ContainsKey(_selectedDevice))
+                {
+                    var active = devicesActive[_selectedDevice];
+
+                    if (active)
+                    {
+                        btn_deviceenable.Text = LocalizationManager.GetLocalizedText("Device Enabled");
+                        btn_deviceenable.BackColor = System.Drawing.Color.Lime;
+                    }
+                    else
+                    {
+                        btn_deviceenable.Text = LocalizationManager.GetLocalizedText("Device Disabled");
+                        btn_deviceenable.BackColor = System.Drawing.Color.Red;
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Device not found in active devices");
+                }
+            }
+
+            currentlySelectedDevice = _selectedDevice;
 
             ResizeLayerHelpText(rtb_layerhelp);
             // Resume layout
@@ -705,7 +774,7 @@ namespace Chromatics.Forms
 
             if (selectedDevice != null)
             {
-                
+
                 VirtualDevice virtualDevice;
                 if (selectedDevice.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
                 {
@@ -769,7 +838,7 @@ namespace Chromatics.Forms
             {
                 return;
             }
-                        
+
 
             var layers = MappingLayers.GetLayers().Where(x => x.Value.deviceGuid == selectedDeviceId).OrderBy(x => x.Value.zindex);
 
@@ -1788,6 +1857,52 @@ namespace Chromatics.Forms
             }
         }
 
+        private void btn_deviceenable_Click(object sender, EventArgs e)
+        {
+            if (!init) return;
+            if (IsAddingLayer) return;
+
+            var thisbtn = (MetroButton)sender;
+
+            if (currentlySelectedDevice != null)
+            {
+                var surface = RGBController.GetLiveSurfaces();
+                var device = currentlySelectedDevice;
+
+                if (surface != null && device != null)
+                {
+                    var devicesActive = RGBController.GetActiveDevices();
+                    if (devicesActive.ContainsKey(device))
+                    {
+                        var active = devicesActive[device];
+
+                        if (active)
+                        {
+                            thisbtn.Text = LocalizationManager.GetLocalizedText("Device Disabled");
+                            thisbtn.BackColor = System.Drawing.Color.Red;
+                            RGBController.RemoveDevice(device);
+
+#if DEBUG
+                            Debug.WriteLine($"Device {device.DeviceInfo.DeviceName}: Disabled");
+#endif
+                        }
+                        else
+                        {
+                            thisbtn.Text = LocalizationManager.GetLocalizedText("Device Enabled");
+                            thisbtn.BackColor = System.Drawing.Color.Lime;
+                            RGBController.AddDevice(device);
+
+#if DEBUG
+                            Debug.WriteLine($"Device {device.DeviceInfo.DeviceName}: Enabled");
+#endif
+                        }
+                    }
+                }
+            }
+
+            this.ActiveControl = thisbtn.Parent;
+        }
+
         private void cb_changemode_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!init) return;
@@ -1990,5 +2105,7 @@ namespace Chromatics.Forms
                 return Text;
             }
         }
+
+        
     }
 }

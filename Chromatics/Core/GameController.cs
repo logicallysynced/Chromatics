@@ -12,15 +12,8 @@ using Chromatics.Layers;
 using Chromatics.Interfaces;
 using Chromatics.Enums;
 using System.Threading;
-using Chromatics.Extensions.RGB.NET;
 using RGB.NET.Core;
-using RGB.NET.Presets.Decorators;
-using RGB.NET.Presets.Textures.Gradients;
-using RGB.NET.Presets.Textures;
 using Chromatics.Extensions.RGB.NET.Decorators;
-using static MetroFramework.Drawing.MetroPaint;
-using System.Security.Policy;
-using Sharlayan.Utilities;
 using Sharlayan.Core.Enums;
 using Chromatics.Extensions.Sharlayan;
 
@@ -30,15 +23,19 @@ namespace Chromatics.Core
 
     public static class GameController
     {
+        private static LayerProcessorFactory _layerProcessorFactory;
         private static MemoryHandler _memoryHandler;
         public static event JobChanged jobChanged;
         private static CustomComparers.LayerComparer comparer = new();
         private static CancellationTokenSource _GameConnectionCancellationTokenSource = new CancellationTokenSource();
         private static CancellationTokenSource _GameLoopCancellationTokenSource = new CancellationTokenSource();
+        private static CancellationTokenSource _masterCancellationToken = new CancellationTokenSource();
         private static Actor.Job _currentJob;
+        private static SharlayanConfiguration _configuration;
         private static readonly int _loopInterval = 200;
         private static readonly int _connectionInterval = 10000;
         private static int _connectionAttempts = 0;
+        private static int activeProcessId;
         private static bool gameConnected;
         private static bool gameSetup;
         private static bool memoryEfficientLoop;
@@ -49,13 +46,21 @@ namespace Chromatics.Core
         {
             if (gameSetup) return;
 
+            _layerProcessorFactory = LayerProcessorFactory.Instance;
             comparer = new CustomComparers.LayerComparer();
+
 
             if (!gameConnected)
             {
                 RGBController.StopEffects();
                 RGBController.RunStartupEffects();
-                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token));
+                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token)).ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop task failed: {t.Exception?.GetBaseException().Message}");
+                    }
+                }, _masterCancellationToken.Token);
             }
 
             gameSetup = true;
@@ -63,16 +68,31 @@ namespace Chromatics.Core
 
         public static void Exit()
         {
+            StopGameLoop();
             _GameConnectionCancellationTokenSource.Cancel();
             _GameLoopCancellationTokenSource.Cancel();
+            _masterCancellationToken.Cancel();
+            _GameConnectionCancellationTokenSource.Dispose();
+            _GameLoopCancellationTokenSource.Dispose();
+            _masterCancellationToken.Dispose();
         }
 
         public static void Stop(bool reconnect = false)
         {
             RGBController.StopEffects();
             Logger.WriteConsole(LoggerTypes.FFXIV, @"Stopping FFXIV Connection..");
+
+            if (jobChanged != null)
+            {
+                foreach (Delegate d in jobChanged.GetInvocationList())
+                {
+                    jobChanged -= (JobChanged)d;
+                }
+            }
+
             StopGameLoop(reconnect);
             _GameConnectionCancellationTokenSource.Cancel();
+            
         }
 
         public static bool IsGameConnected()
@@ -117,21 +137,28 @@ namespace Chromatics.Core
         {
             _GameLoopCancellationTokenSource.Dispose();
             _GameLoopCancellationTokenSource = new CancellationTokenSource();
-            Task.Run(() => GameLoop(_GameLoopCancellationTokenSource.Token));
+            Task.Run(() => GameLoop(_GameLoopCancellationTokenSource.Token), _masterCancellationToken.Token);
         }
 
         private static void StopGameLoop(bool reconnect = false)
         {
             _GameLoopCancellationTokenSource.Cancel();
+            _memoryHandler?.Dispose();
 
-            if (_memoryHandler != null)
+            if (activeProcessId != -1)
             {
-#if DEBUG
-                Debug.WriteLine(@"Disposed Memory Handler object.");
-#endif
-
-                _memoryHandler.Dispose();
+                SharlayanMemoryManager.Instance.RemoveHandler(activeProcessId);
+                activeProcessId = -1;
             }
+
+            _configuration.ProcessModel.Process?.Dispose();
+            _configuration = null;
+
+            _masterCancellationToken.Cancel();
+            _masterCancellationToken.Dispose();
+            _masterCancellationToken = new CancellationTokenSource();
+
+            _layerProcessorFactory.DisposeAll();
 
             if (reconnect)
             {
@@ -139,7 +166,7 @@ namespace Chromatics.Core
                 _GameConnectionCancellationTokenSource = new CancellationTokenSource();
                 RGBController.StopEffects();
                 RGBController.RunStartupEffects();
-                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token));
+                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token), _masterCancellationToken.Token);
             }
         }
 
@@ -272,7 +299,7 @@ namespace Chromatics.Core
                         Process = process
                     };
 
-                    SharlayanConfiguration configuration = new SharlayanConfiguration
+                    _configuration = new SharlayanConfiguration
                     {
                         ProcessModel = processModel,
                         GameLanguage = gameLanguage,
@@ -284,7 +311,7 @@ namespace Chromatics.Core
 #if DEBUG
                     Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
 #endif
-                    _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(configuration);
+                    _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(_configuration);
 
                     //Load Other Memory Zones
                     DutyFinderBellExtension.RefreshData(_memoryHandler);
@@ -293,6 +320,7 @@ namespace Chromatics.Core
                     MusicExtension.RefreshData(_memoryHandler);
 
                     gameConnected = true;
+                    activeProcessId = _configuration.ProcessModel.ProcessID;
 
                 }
 
@@ -314,6 +342,8 @@ namespace Chromatics.Core
                         Debug.WriteLine($"Found {location.Key}. Location: {location.Value.GetAddress().ToInt64():X}");
                     }
 #endif
+
+                    GC.Collect();
                 }
             }
             catch (Exception ex)
@@ -392,6 +422,9 @@ namespace Chromatics.Core
                             Debug.WriteLine(@"User on title or character screen");
 #endif
 
+                            _layerProcessorFactory.DisposeAll();
+                            GC.Collect();
+
                             _onTitle = true;
                             wasPreviewed = false;
                         }
@@ -413,6 +446,7 @@ namespace Chromatics.Core
                             RGBController.StopEffects();
                             RGBController.ResetLayerGroups();
                             _onTitle = false;
+                            GC.Collect();
                         }
 
                     }
@@ -443,27 +477,23 @@ namespace Chromatics.Core
                     switch (layer.rootLayerType)
                     {
                         case LayerType.BaseLayer:
-
-                            var baseLayerProcessors = BaseLayerProcessorFactory.GetProcessors();
-                            baseLayerProcessors[(BaseLayerType)layer.layerTypeindex].Process(layer);
+                            var baseProcessor = _layerProcessorFactory.GetProcessor((BaseLayerType)layer.layerTypeindex);
+                            baseProcessor.Process(layer);
                             break;
 
                         case LayerType.DynamicLayer:
-
-                            var dynamicLayerProcessors = DynamicLayerProcessorFactory.GetProcessors();
-                            dynamicLayerProcessors[(DynamicLayerType)layer.layerTypeindex].Process(layer);
+                            var dynamicProcessor = _layerProcessorFactory.GetProcessor((DynamicLayerType)layer.layerTypeindex);
+                            dynamicProcessor.Process(layer);
                             break;
 
                         case LayerType.EffectLayer:
-                            foreach (var layerProcessor in EffectLayerProcessorFactory.GetProcessors())
+                            var effectProcessors = EffectLayerProcessorFactory.GetProcessors();
+                            foreach (var effectProcessor in effectProcessors)
                             {
-                                layerProcessor.Value.Process(layer);
+                                effectProcessor.Value.Process(layer);
                             }
                             break;
-
                     }
-
-
                 }
             }
             catch (Exception ex)

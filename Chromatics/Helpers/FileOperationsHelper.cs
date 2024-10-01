@@ -31,6 +31,7 @@ namespace Chromatics.Helpers
     {
         private static bool weatherDataLoaded;
         private static WeatherData weatherData;
+        private static readonly HttpClient _httpClient = new HttpClient();
 
         public static void SaveLayerMappings(ConcurrentDictionary<int, Layer> mappings)
         {
@@ -633,11 +634,10 @@ namespace Chromatics.Helpers
 
         public static string GetCsvData(string url, string csvPath)
         {
-            var http = new HttpClient();
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-            var path = enviroment + @"/" + csvPath;
+            var path = Path.Combine(enviroment, csvPath);
 
-            var dataStoreResult = http.GetAsync(new Uri(url)).GetAwaiter().GetResult();
+            using var dataStoreResult = _httpClient.GetAsync(new Uri(url)).GetAwaiter().GetResult();
 
             if (File.Exists(path))
             {
@@ -672,10 +672,8 @@ namespace Chromatics.Helpers
             var WeatherRateIndicesOutputPath = directory + @"/weatherRateIndices.json";
             var TerriTypesOutputPath = directory + @"/terriTypes.json";
 
-            var http = new HttpClient();
-
             // GarlandTools
-            var dataStoreResult = http.GetAsync(new Uri(@"https://www.garlandtools.org/db/doc/core/en/3/data.json")).GetAwaiter().GetResult();
+            var dataStoreResult = _httpClient.GetAsync(new Uri(@"https://www.garlandtools.org/db/doc/core/en/3/data.json")).GetAwaiter().GetResult();
 
             if (File.Exists(WeatherKindsOutputPath) && File.Exists(WeatherRateIndicesOutputPath) && File.Exists(TerriTypesOutputPath))
             {
@@ -703,7 +701,7 @@ namespace Chromatics.Helpers
             Logger.WriteConsole(Enums.LoggerTypes.System, @"Updated FFXIV data is available");
             Logger.WriteConsole(Enums.LoggerTypes.System, $"Requesting data from Garland Tools..");
 
-            var dataStoreRaw = http.GetStringAsync(new Uri("https://www.garlandtools.org/db/doc/core/en/3/data.json")).GetAwaiter().GetResult();
+            var dataStoreRaw = _httpClient.GetStringAsync(new Uri("https://www.garlandtools.org/db/doc/core/en/3/data.json")).GetAwaiter().GetResult();
             var dataStore = JObject.Parse(dataStoreRaw);
 
             var weatherRateIndices = new List<WeatherRateIndex>();
@@ -746,7 +744,7 @@ namespace Chromatics.Helpers
                 var pageTotal = 1;
                 while (page <= pageTotal)
                 {
-                    var dataStore2Raw = http.GetStringAsync(new Uri($"https://xivapi.com/TerritoryType?columns=ID,WeatherRate,PlaceName&Page={page}")).GetAwaiter().GetResult();
+                    var dataStore2Raw = _httpClient.GetStringAsync(new Uri($"https://xivapi.com/TerritoryType?columns=ID,WeatherRate,PlaceName&Page={page}")).GetAwaiter().GetResult();
                     var dataStore2 = JObject.Parse(dataStore2Raw);
 
                     pageTotal = dataStore2["Pagination"]["PageTotal"].ToObject<int>();
@@ -769,7 +767,7 @@ namespace Chromatics.Helpers
                     page++;
                 }
 
-                var cafeCsvRaw = http.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/PlaceName.csv")).GetAwaiter().GetResult();
+                var cafeCsvRaw = _httpClient.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/PlaceName.csv")).GetAwaiter().GetResult();
                 using var cafeSr = new StreamReader(cafeCsvRaw);
                 using var cafeCsv = new CsvReader(cafeSr, CultureInfo.InvariantCulture);
                 for (var i = 0; i < 3; i++) cafeCsv.Read();
@@ -801,7 +799,7 @@ namespace Chromatics.Helpers
                 var pageTotal = 1;
                 while (page <= pageTotal)
                 {
-                    var dataStore2Raw = http.GetStringAsync(new Uri($"https://xivapi.com/Weather?columns=ID,Name_en,Name_de,Name_fr,Name_ja&Page={page}")).GetAwaiter().GetResult();
+                    var dataStore2Raw = _httpClient.GetStringAsync(new Uri($"https://xivapi.com/Weather?columns=ID,Name_en,Name_de,Name_fr,Name_ja&Page={page}")).GetAwaiter().GetResult();
                     var dataStore2 = JObject.Parse(dataStore2Raw);
 
                     pageTotal = dataStore2["Pagination"]["PageTotal"].ToObject<int>();
@@ -823,7 +821,7 @@ namespace Chromatics.Helpers
                     page++;
                 }
 
-                var cafeCsvRaw = http.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/Weather.csv")).GetAwaiter().GetResult();
+                var cafeCsvRaw = _httpClient.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/Weather.csv")).GetAwaiter().GetResult();
                 using var cafeSr = new StreamReader(cafeCsvRaw);
                 using var cafeCsv = new CsvReader(cafeSr, CultureInfo.InvariantCulture);
                 for (var i = 0; i < 3; i++) cafeCsv.Read();

@@ -22,6 +22,7 @@ namespace Chromatics.Layers
 {
     public class KeybindsProcessor : LayerProcessor
     {
+        private static KeybindsProcessor _instance;
         private Dictionary<Led, ListLedGroup> _localgroups = new Dictionary<Led, ListLedGroup>();
         private SolidColorBrush keybind_cd_brush;
         private SolidColorBrush keybind_na_brush;
@@ -30,7 +31,7 @@ namespace Chromatics.Layers
         private SolidColorBrush keybind_ready_brush;
         private SolidColorBrush keybind_special_brush;
         private SolidColorBrush empty_brush;
-        private HashSet<Sharlayan.Core.Enums.Action.Container> hotbarTypes = new HashSet<Sharlayan.Core.Enums.Action.Container>{
+        private readonly HashSet<Sharlayan.Core.Enums.Action.Container> hotbarTypes = new HashSet<Sharlayan.Core.Enums.Action.Container>{
             Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_1,
             Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_2,
             Sharlayan.Core.Enums.Action.Container.CROSS_HOTBAR_3,
@@ -42,40 +43,37 @@ namespace Chromatics.Layers
             Sharlayan.Core.Enums.Action.Container.CROSS_PETBAR
         };
 
+        // Private constructor to prevent direct instantiation
+        private KeybindsProcessor() { }
+
+        // Singleton instance access
+        public static KeybindsProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new KeybindsProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
-
-            //Do not apply to devices other than Keyboards
             if (layer.deviceType != RGBDeviceType.Keyboard) return;
 
-            //Keybinds Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
-
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a highlight layer)
-            
-            
             var ledArray = GetLedArray(layer);
 
-            var countKeys = ledArray.Count();
-
-            //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
             if (_init && (layer.requestUpdate || !layer.Enabled))
             {
-                foreach (var layergroup in _localgroups)
-                {
-                    if (layergroup.Value != null)
-                        layergroup.Value.Detach();
-                }
-
-                _localgroups.Clear();
-
+                DetachAndClearLocalGroups();
                 if (!layer.Enabled)
                     return;
             }
-            
-            //Process data from FFXIV
+
             var _memoryHandler = GameController.GetGameData();
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActions())
@@ -83,14 +81,11 @@ namespace Chromatics.Layers
                 var getActions = _memoryHandler.Reader.GetActions();
                 if (getActions.ActionContainers == null) return;
 
-                var keybind_cd_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarCd.Color);
-                var keybind_na_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarNotAvailable.Color);
-                var keybind_outranged_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarOutRange.Color);
-                var keybind_proc_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarProc.Color);
-                var keybind_ready_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarReady.Color); //bleed layer
-                var empty_color = ColorHelper.ColorToRGBColor(_colorPalette.KeybindDisabled.Color); //bleed layer
+                UpdateBrushColors(layer, _colorPalette);
 
-                var specialActionColors = new Dictionary<string, Color>() {
+                // Define special action colors
+                var specialActionColors = new Dictionary<string, Color>
+                {
                     {"Map", ColorHelper.ColorToRGBColor(_colorPalette.KeybindMap.Color)},
                     {"Aether Currents", ColorHelper.ColorToRGBColor(_colorPalette.KeybindAetherCurrents.Color)},
                     {"Signs", ColorHelper.ColorToRGBColor(_colorPalette.KeybindSigns.Color)},
@@ -112,224 +107,20 @@ namespace Chromatics.Layers
                     {"Inventory", ColorHelper.ColorToRGBColor(_colorPalette.KeybindInventory.Color)}
                 };
 
-                if (keybind_cd_brush == null || keybind_cd_brush.Color != keybind_cd_color) keybind_cd_brush = new SolidColorBrush(keybind_cd_color);
-                if (keybind_na_brush == null || keybind_na_brush.Color != keybind_na_color) keybind_na_brush = new SolidColorBrush(keybind_na_color);
-                if (keybind_outranged_brush == null || keybind_outranged_brush.Color != keybind_outranged_color) keybind_outranged_brush = new SolidColorBrush(keybind_outranged_color);
-                if (keybind_proc_brush == null || keybind_proc_brush.Color != keybind_proc_color) keybind_proc_brush = new SolidColorBrush(keybind_proc_color);
-                if (keybind_ready_brush == null || keybind_ready_brush.Color != keybind_ready_color) keybind_ready_brush = new SolidColorBrush(keybind_ready_color);
-                if (keybind_special_brush == null || keybind_special_brush.Color != empty_color) keybind_special_brush = new SolidColorBrush(empty_color);
-                if (empty_brush == null || empty_brush.Color != empty_color) empty_brush = new SolidColorBrush(empty_color);
-
-                if (layer.allowBleed)
-                {
-                    empty_brush.Color = Color.Transparent;
-                    keybind_ready_brush.Color = Color.Transparent;
-                }
-
-
-                //Setup ListLedGroup for each keybind
-                foreach (var led in ledArray)
-                {
-                    if (!_localgroups.ContainsKey(led))
-                    {
-                        var ledGroup = new ListLedGroup(surface, led)
-                        {
-                            ZIndex = layer.zindex,
-                            Brush = empty_brush
-                        };
-
-                        _localgroups.Add(led, ledGroup);
-                        ledGroup.Detach();
-                        
-                    }
-
-                }
+                InitializeLedGroups(ledArray, layer.zindex);
 
                 foreach (var ledGroup in _localgroups)
                 {
-
                     foreach (var hotbar in getActions.ActionContainers)
                     {
                         if (hotbarTypes.Contains(hotbar.ContainerType)) continue;
 
-
                         foreach (var action in hotbar.ActionItems)
                         {
-
-                            if (action.ActionKey != LedKeyHelper.LedIdToHotbarKeyConverter(ledGroup.Key.Id)) continue;
-                            if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) || string.IsNullOrEmpty(action.KeyBinds) || string.IsNullOrEmpty(action.ActionKey)) continue;
-
-                            /*
-                            if (action.Name == "Refulgent Arrow")
-                            {
-                                Debug.WriteLine($"IsProcOrCombo {action.IsProcOrCombo}. IsAvailable: {action.IsAvailable}. InRange {action.InRange}. IsKeyBindAssigned {action.IsKeyBindAssigned}. Charges: {action.ChargeReady}. Charges Count: {action.ChargesRemaining}");
-                            }
-                            */                           
-
-                            var modsactive = action.Modifiers.Count;
-                            var modKey = Modifiers.Null;
-                            var pushedKey = Modifiers.None;
-
-                            //PRESSED
-                            if (KeyController.IsCtrlPressed() && KeyController.IsAltPressed() && KeyController.IsShiftPressed())
-                            {
-                                pushedKey = Modifiers.CTRL_ALT_SHIFT;
-                            }
-                            else if (!KeyController.IsCtrlPressed() && KeyController.IsAltPressed() && KeyController.IsShiftPressed())
-                            {
-                                pushedKey = Modifiers.ALT_SHIFT;
-                            }
-                            else if (KeyController.IsCtrlPressed() && !KeyController.IsAltPressed() && KeyController.IsShiftPressed())
-                            {
-                                pushedKey = Modifiers.CTRL_SHIFT;
-                            }
-                            else if (KeyController.IsCtrlPressed() && KeyController.IsAltPressed() && !KeyController.IsShiftPressed())
-                            {
-                                pushedKey = Modifiers.CTRL_ALT;
-                            }
-                            else if (KeyController.IsCtrlPressed() && !KeyController.IsAltPressed() && !KeyController.IsShiftPressed())
-                            {
-                                pushedKey = Modifiers.CTRL;
-                            }
-                            else if (!KeyController.IsCtrlPressed() && KeyController.IsAltPressed() && !KeyController.IsShiftPressed())
-                            {
-                                pushedKey = Modifiers.ALT;
-                            }
-                            else if (!KeyController.IsCtrlPressed() && !KeyController.IsAltPressed() && KeyController.IsShiftPressed())
-                            {
-                                pushedKey = Modifiers.SHIFT;
-                            }
-
-                            if (modsactive > 0)
-                            {
-                                var _ctrl = false;
-                                var _alt = false;
-                                var _shift = false;
-
-                                foreach (var modifier in action.Modifiers)
-                                {
-                                    switch (modifier)
-                                    {
-                                        case "Ctrl":
-                                            _ctrl = true;
-                                            break;
-                                        case "Alt":
-                                            _alt = true;
-                                            break;
-                                        case "Shift":
-                                            _shift = true;
-                                            break;
-                                    }
-                                }
-
-                                //CTRL ALT SHIFT
-                                if (_ctrl && _alt && _shift)
-                                {
-                                    modKey = Modifiers.CTRL_ALT_SHIFT;
-                                }
-                                //ALT SHIFT
-                                else if (!_ctrl && _alt && _shift)
-                                {
-                                    modKey = Modifiers.ALT_SHIFT;
-                                }
-                                //CTRL SHIFT
-                                else if (_ctrl && !_alt && _shift)
-                                {
-                                    modKey = Modifiers.CTRL_SHIFT;
-                                }
-                                //CTRL ALT
-                                else if (_ctrl && _alt && !_shift)
-                                {
-                                    modKey = Modifiers.CTRL_ALT;
-                                }
-                                //CTRL
-                                else if (_ctrl && !_alt && !_shift)
-                                {
-                                    modKey = Modifiers.CTRL;
-                                }
-                                //ALT
-                                else if (!_ctrl && _alt && !_shift)
-                                {
-                                    modKey = Modifiers.ALT;
-                                }
-                                //SHIFT
-                                else if (!_ctrl && !_alt && _shift)
-                                {
-                                    modKey = Modifiers.SHIFT;
-                                }
-                            }
-                            else
-                            {
-                                modKey = Modifiers.None;
-                            }
-
-                            if (modKey != pushedKey && (modKey != Modifiers.None || pushedKey != Modifiers.None)) break;
-
-
-                            if (modKey == pushedKey)
-                            {
-
-                                if (action.Category == 49 || action.Category == 51)
-                                {
-                                    if (!action.IsAvailable || !action.InRange || !action.ChargeReady || action.CoolDownPercent > 0)
-                                    {
-                                        ledGroup.Value.Brush = keybind_na_brush;
-                                        continue;
-                                    }
-
-                                    if (specialActionColors.TryGetValue(action.Name, out Color actionColor))
-                                    {
-                                        keybind_special_brush.Color = actionColor;
-                                        ledGroup.Value.Brush = keybind_special_brush;
-                                    }
-
-                                    continue;
-                                }
-
-                                if (action.IsAvailable && action.ChargeReady)
-                                {
-                                    if (action.InRange)
-                                    {
-                                        if (action.IsProcOrCombo)
-                                        {
-                                            ledGroup.Value.Brush = keybind_proc_brush;
-                                        }
-                                        else
-                                        {
-                                            if (action.CoolDownPercent > 0)
-                                            {
-                                                ledGroup.Value.Brush = keybind_cd_brush;
-
-                                            }
-                                            else
-                                            {
-                                                ledGroup.Value.Brush = keybind_ready_brush;
-
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        ledGroup.Value.Brush = keybind_outranged_brush;
-
-
-                                    }
-                                }
-                                else
-                                {
-                                    ledGroup.Value.Brush = keybind_na_brush;
-
-                                }
-
-
-                            }
-
+                            ProcessActionItem(action, ledGroup, specialActionColors);
                         }
                     }
                 }
-
-
-                //Send layers to _layergroups Dictionary to be tracked outside this method
 
                 var lg = _localgroups.Values.ToArray();
 
@@ -343,14 +134,175 @@ namespace Chromatics.Layers
                 }
             }
 
-            //Apply lighting
+            AttachGroupsToSurface();
+            _init = true;
+            layer.requestUpdate = false;
+        }
+
+        private void DetachAndClearLocalGroups()
+        {
+            foreach (var layergroup in _localgroups.Values)
+            {
+                layergroup?.Detach();
+            }
+
+            _localgroups.Clear();
+        }
+
+        private void UpdateBrushColors(IMappingLayer layer, PaletteColorModel _colorPalette)
+        {
+            var keybind_cd_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarCd.Color);
+            var keybind_na_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarNotAvailable.Color);
+            var keybind_outranged_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarOutRange.Color);
+            var keybind_proc_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarProc.Color);
+            var keybind_ready_color = ColorHelper.ColorToRGBColor(_colorPalette.HotbarReady.Color);
+            var empty_color = ColorHelper.ColorToRGBColor(_colorPalette.KeybindDisabled.Color);
+
+            keybind_cd_brush = GetOrCreateBrush(keybind_cd_brush, keybind_cd_color);
+            keybind_na_brush = GetOrCreateBrush(keybind_na_brush, keybind_na_color);
+            keybind_outranged_brush = GetOrCreateBrush(keybind_outranged_brush, keybind_outranged_color);
+            keybind_proc_brush = GetOrCreateBrush(keybind_proc_brush, keybind_proc_color);
+            keybind_ready_brush = GetOrCreateBrush(keybind_ready_brush, keybind_ready_color);
+            keybind_special_brush = GetOrCreateBrush(keybind_special_brush, empty_color);
+            empty_brush = GetOrCreateBrush(empty_brush, empty_color);
+
+            if (layer.allowBleed)
+            {
+                empty_brush.Color = Color.Transparent;
+                keybind_ready_brush.Color = Color.Transparent;
+            }
+        }
+
+        private SolidColorBrush GetOrCreateBrush(SolidColorBrush brush, Color color)
+        {
+            if (brush == null || brush.Color != color)
+            {
+                brush = new SolidColorBrush(color);
+            }
+            return brush;
+        }
+
+        private void InitializeLedGroups(Led[] ledArray, int zindex)
+        {
+            foreach (var led in ledArray)
+            {
+                if (!_localgroups.ContainsKey(led))
+                {
+                    var ledGroup = new ListLedGroup(surface, led)
+                    {
+                        ZIndex = zindex,
+                        Brush = empty_brush
+                    };
+                    _localgroups.Add(led, ledGroup);
+                    ledGroup.Detach();
+                }
+            }
+        }
+
+        private void ProcessActionItem(Sharlayan.Core.ActionItem action, KeyValuePair<Led, ListLedGroup> ledGroup, Dictionary<string, Color> specialActionColors)
+        {
+            if (action.ActionKey != LedKeyHelper.LedIdToHotbarKeyConverter(ledGroup.Key.Id)) return;
+            if (!action.IsKeyBindAssigned || string.IsNullOrEmpty(action.Name) || string.IsNullOrEmpty(action.KeyBinds) || string.IsNullOrEmpty(action.ActionKey)) return;
+
+            var modKey = GetModifiersFromAction(action);
+            var pushedKey = GetPushedModifiers();
+
+            if (modKey != pushedKey && (modKey != Modifiers.None || pushedKey != Modifiers.None)) return;
+
+            UpdateLedGroupBrush(action, ledGroup.Value, specialActionColors);
+        }
+
+        private Modifiers GetModifiersFromAction(Sharlayan.Core.ActionItem action)
+        {
+            if (action.Modifiers.Count == 0) return Modifiers.None;
+
+            var _ctrl = action.Modifiers.Contains("Ctrl");
+            var _alt = action.Modifiers.Contains("Alt");
+            var _shift = action.Modifiers.Contains("Shift");
+
+            if (_ctrl && _alt && _shift) return Modifiers.CTRL_ALT_SHIFT;
+            if (_alt && _shift) return Modifiers.ALT_SHIFT;
+            if (_ctrl && _shift) return Modifiers.CTRL_SHIFT;
+            if (_ctrl && _alt) return Modifiers.CTRL_ALT;
+            if (_ctrl) return Modifiers.CTRL;
+            if (_alt) return Modifiers.ALT;
+            if (_shift) return Modifiers.SHIFT;
+
+            return Modifiers.None;
+        }
+
+        private Modifiers GetPushedModifiers()
+        {
+            if (KeyController.IsCtrlPressed() && KeyController.IsAltPressed() && KeyController.IsShiftPressed())
+                return Modifiers.CTRL_ALT_SHIFT;
+            if (!KeyController.IsCtrlPressed() && KeyController.IsAltPressed() && KeyController.IsShiftPressed())
+                return Modifiers.ALT_SHIFT;
+            if (KeyController.IsCtrlPressed() && !KeyController.IsAltPressed() && KeyController.IsShiftPressed())
+                return Modifiers.CTRL_SHIFT;
+            if (KeyController.IsCtrlPressed() && KeyController.IsAltPressed() && !KeyController.IsShiftPressed())
+                return Modifiers.CTRL_ALT;
+            if (KeyController.IsCtrlPressed() && !KeyController.IsAltPressed() && !KeyController.IsShiftPressed())
+                return Modifiers.CTRL;
+            if (!KeyController.IsCtrlPressed() && KeyController.IsAltPressed() && !KeyController.IsShiftPressed())
+                return Modifiers.ALT;
+            if (!KeyController.IsCtrlPressed() && !KeyController.IsAltPressed() && KeyController.IsShiftPressed())
+                return Modifiers.SHIFT;
+
+            return Modifiers.None;
+        }
+
+        private void UpdateLedGroupBrush(Sharlayan.Core.ActionItem action, ListLedGroup ledGroup, Dictionary<string, Color> specialActionColors)
+        {
+            if (action.Category == 49 || action.Category == 51)
+            {
+                if (!action.IsAvailable || !action.InRange || !action.ChargeReady || action.CoolDownPercent > 0)
+                {
+                    ledGroup.Brush = keybind_na_brush;
+                    return;
+                }
+
+                if (specialActionColors.TryGetValue(action.Name, out Color actionColor))
+                {
+                    keybind_special_brush.Color = actionColor;
+                    ledGroup.Brush = keybind_special_brush;
+                }
+                return;
+            }
+
+            if (action.IsAvailable && action.ChargeReady)
+            {
+                if (action.InRange)
+                {
+                    ledGroup.Brush = action.IsProcOrCombo ? keybind_proc_brush : (action.CoolDownPercent > 0 ? keybind_cd_brush : keybind_ready_brush);
+                }
+                else
+                {
+                    ledGroup.Brush = keybind_outranged_brush;
+                }
+            }
+            else
+            {
+                ledGroup.Brush = keybind_na_brush;
+            }
+        }
+
+        private void AttachGroupsToSurface()
+        {
             foreach (var layergroup in _localgroups)
             {
                 layergroup.Value.Attach(surface);
             }
-            
-            _init = true;
-            layer.requestUpdate = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                DetachAndClearLocalGroups();
+            }
+
+            base.Dispose(disposing);
+            _instance = null;
         }
 
         private enum Modifiers
@@ -365,9 +317,5 @@ namespace Chromatics.Layers
             ALT_SHIFT,
             CTRL_ALT_SHIFT
         }
-
-        
     }
-
-    
 }

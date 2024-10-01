@@ -1,31 +1,47 @@
 ﻿using Chromatics.Core;
-using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
-using RGB.NET.Presets.Decorators;
 using Sharlayan.Core.Enums;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Color = RGB.NET.Core.Color;
+using System.Linq;
 
 namespace Chromatics.Layers
 {
     public class DamageFlashProcessor : LayerProcessor
     {
+        private static DamageFlashProcessor _instance;
         private static Dictionary<int, DamageFlashEffectModel> layerProcessorModel = new Dictionary<int, DamageFlashEffectModel>();
+        private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private DamageFlashProcessor() { }
+
+        // Singleton instance access
+        public static DamageFlashProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DamageFlashProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if layer/effect is disabled
+            if (_disposed) return;
+
+            // Do not apply if layer/effect is disabled
             var effectSettings = RGBController.GetEffectsSettings();
-                        
+
             DamageFlashEffectModel model;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
@@ -38,20 +54,15 @@ namespace Chromatics.Layers
                 model = layerProcessorModel[layer.layerID];
             }
 
-
             if (!layer.Enabled || !effectSettings.effect_damageflash)
             {
                 model.wasDisabled = true;
                 return;
             }
-            
-            //Damage Flash Effect Layer Implementation
+
+            // Damage Flash Effect Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
-
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            
-            
 
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
@@ -74,9 +85,10 @@ namespace Chromatics.Layers
             }
 
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.DamageFlashAnimation.Color);
-            var highlight_brush = new SolidColorBrush(highlight_col);
-
-            highlight_brush.Opacity = 0.5f;
+            var highlight_brush = new SolidColorBrush(highlight_col)
+            {
+                Opacity = 0.5f
+            };
 
             var flash = new ShotFlashDecorator(surface)
             {
@@ -87,8 +99,8 @@ namespace Chromatics.Layers
                 Sustain = 0.1f,
                 Repetitions = 1
             };
-            
-            //Process data from FFXIV
+
+            // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
@@ -100,12 +112,12 @@ namespace Chromatics.Layers
                 {
                     if (getCurrentPlayer.Entity.HPCurrent < model.currentHp && getCurrentPlayer.Entity.Job == model.currentJob && !model.wasDisabled)
                     {
-                        //Scale flash opacity depending on how much damage taken. More damage = brighter flash
+                        // Scale flash opacity depending on how much damage taken. More damage = brighter flash
                         if (effectSettings.effect_damageflash_scaledamage)
                         {
                             var damageDelta = model.currentHp - getCurrentPlayer.Entity.HPCurrent;
                             var damageRatio = (float)damageDelta / getCurrentPlayer.Entity.HPMax;
-                        
+
                             if (damageRatio > 1) damageRatio = 1;
                             if (damageRatio < 0) damageRatio = 0;
 
@@ -113,26 +125,22 @@ namespace Chromatics.Layers
                             if (minOpacity > 1) minOpacity = 1;
                             if (minOpacity < 1) minOpacity = 0;
 
-                            var opacity = Math.Max((float)minOpacity, damageRatio);
-
+                            var opacity = Math.Max((float)minOpacity, (float)damageRatio);
                             highlight_brush.Opacity = opacity;
                         }
 
                         highlight_brush.AddDecorator(flash);
-                        
                         layergroup.Brush = highlight_brush;
                         model.activeBrush = highlight_brush;
-
                     }
 
                     model.currentHp = getCurrentPlayer.Entity.HPCurrent;
                     model.currentJob = getCurrentPlayer.Entity.Job;
                     model.wasDisabled = false;
                 }
-                
             }
-            
-            //Apply lighting
+
+            // Apply lighting
             if (model.activeBrush != null && model.activeBrush.Decorators.Count == 0)
             {
                 layergroup.Brush = new SolidColorBrush(Color.Transparent);
@@ -143,17 +151,44 @@ namespace Chromatics.Layers
             {
                 layergroup.Attach(surface);
             }
-                        
+
             model.init = true;
             layer.requestUpdate = false;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    foreach (var model in layerProcessorModel.Values)
+                    {
+                        model.activeBrush = null;
+                    }
+                    layerProcessorModel.Clear();
+                    var _layergroups = RGBController.GetLiveLayerGroups();
+                    foreach (var layergroup in _layergroups.Values.SelectMany(lg => lg))
+                    {
+                        layergroup?.Detach();
+                    }
+                    _layergroups.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+            _instance = null;
+        }
+
         private class DamageFlashEffectModel
-        {   
+        {
             public int currentHp { get; set; }
             public Actor.Job currentJob { get; set; }
             public bool wasDisabled { get; set; }
-            public SolidColorBrush activeBrush { get; set;}
+            public SolidColorBrush activeBrush { get; set; }
             public bool init { get; set; }
         }
     }

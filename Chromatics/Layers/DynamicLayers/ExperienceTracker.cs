@@ -5,6 +5,7 @@ using Chromatics.Interfaces;
 using RGB.NET.Core;
 using Sharlayan.Core.Enums;
 using Sharlayan.Models.ReadResults;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,11 +16,31 @@ namespace Chromatics.Layers
 {
     public class ExperienceTrackerProcessor : LayerProcessor
     {
+        private static ExperienceTrackerProcessor _instance;
         private static Dictionary<int, ExpTrackerDynamicModel> layerProcessorModel = new Dictionary<int, ExpTrackerDynamicModel>();
         private static Dictionary<int, int> levelMap = new Dictionary<int, int>();
-                
+        private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private ExperienceTrackerProcessor() { }
+
+        // Singleton instance access
+        public static ExperienceTrackerProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ExperienceTrackerProcessor();
+                }
+                return _instance;
+            }
+        }
+
         public override void Process(IMappingLayer layer)
         {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(ExperienceTrackerProcessor));
 
             ExpTrackerDynamicModel model;
 
@@ -33,7 +54,7 @@ namespace Chromatics.Layers
                 model = layerProcessorModel[layer.layerID];
             }
 
-            //Experience Tracker Layer Implementation
+            // Experience Tracker Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
 
             if (levelMap.Count <= 0)
@@ -41,20 +62,16 @@ namespace Chromatics.Layers
                 GetLevelAPI();
             }
 
-            //loop through all LED's and assign to device layer (must maintain order of LEDs)
-
             var _layergroups = RGBController.GetLiveLayerGroups();
             var ledArray = GetLedSortedArray(layer);
-            
             var countKeys = ledArray.Count();
 
-            //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
+            // Check if layer has been updated or if layer is disabled or if currently in Preview mode    
             if (model.init && (layer.requestUpdate || !layer.Enabled))
             {
                 foreach (var layergroup in model._localgroups)
                 {
-                    if (layergroup != null)
-                        layergroup.Detach();
+                    layergroup?.Detach();
                 }
 
                 model._localgroups.Clear();
@@ -62,8 +79,8 @@ namespace Chromatics.Layers
                 if (!layer.Enabled)
                     return;
             }
-            
-            //Process data from FFXIV
+
+            // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
@@ -76,7 +93,6 @@ namespace Chromatics.Layers
                 var minExp = 0;
                 var maxExp = 0;
 
-
                 if (levelMap.ContainsKey(currentLvl))
                 {
                     maxExp = levelMap[currentLvl];
@@ -87,7 +103,7 @@ namespace Chromatics.Layers
                     currentExp = maxExp;
                 }
 
-                //Determine if level cap
+                // Determine if level cap
                 if (currentLvl >= 100)
                 {
                     currentExp = 0;
@@ -96,48 +112,44 @@ namespace Chromatics.Layers
                 if (maxExp <= 0) return;
 
                 var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.ExpFull.Color);
-                var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.ExpEmpty.Color); //Bleed layer
-            
+                var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.ExpEmpty.Color); // Bleed layer
 
-                if (model.highlight_brush == null || model.highlight_brush.Color != highlight_col) model.highlight_brush = new SolidColorBrush(highlight_col);
+                if (model.highlight_brush == null || model.highlight_brush.Color != highlight_col)
+                    model.highlight_brush = new SolidColorBrush(highlight_col);
 
                 if (layer.allowBleed)
                 {
-                    //Allow bleeding of other layers
+                    // Allow bleeding of other layers
                     model.empty_brush = new SolidColorBrush(Color.Transparent);
                 }
                 else
                 {
                     model.empty_brush = new SolidColorBrush(empty_col);
                 }
-                                
 
-                //Check if layer mode has changed
+                // Check if layer mode has changed
                 if (model._currentMode != layer.layerModes)
                 {
                     foreach (var layergroup in model._localgroups)
                     {
-                        if (layergroup != null)
-                            layergroup.Detach();
+                        layergroup?.Detach();
                     }
 
                     model._localgroups.Clear();
                     model._currentMode = layer.layerModes;
                 }
-            
+
                 if (layer.layerModes == Enums.LayerModes.Interpolate)
                 {
-                    //Interpolate implementation
-                    
+                    // Interpolate implementation
                     var currentVal_Interpolate = LinearInterpolation.Interpolate(currentExp, minExp, maxExp, 0, countKeys);
-                    if (currentVal_Interpolate < 0) currentVal_Interpolate = 0;
-                    if (currentVal_Interpolate > countKeys) currentVal_Interpolate = countKeys;
+                    currentVal_Interpolate = MathHelper.Clamp(currentVal_Interpolate, 0, countKeys);
 
                     if (currentVal_Interpolate != model._interpolateValue || layer.requestUpdate)
                     {
-                        //Process Lighting
+                        // Process Lighting
                         var ledGroups = new List<ListLedGroup>();
-                                        
+
                         for (int i = 0; i < countKeys; i++)
                         {
                             var ledGroup = new ListLedGroup(surface, ledArray[i])
@@ -147,18 +159,11 @@ namespace Chromatics.Layers
 
                             ledGroup.Detach();
 
-                            if (i < currentVal_Interpolate)
-                            {
-                                ledGroup.Brush = model.highlight_brush;
-                                
-                            }
-                            else
-                            {
-                                ledGroup.Brush = model.empty_brush;
-                            }
-                            
+                            ledGroup.Brush = i < currentVal_Interpolate
+                                ? model.highlight_brush
+                                : model.empty_brush;
+
                             ledGroups.Add(ledGroup);
-                            
                         }
 
                         foreach (var layergroup in model._localgroups)
@@ -169,12 +174,10 @@ namespace Chromatics.Layers
                         model._localgroups = ledGroups;
                         model._interpolateValue = currentVal_Interpolate;
                     }
-                    
                 }
                 else if (layer.layerModes == Enums.LayerModes.Fade)
                 {
-                    //Fade implementation
-                    
+                    // Fade implementation
                     var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentExp, minExp, maxExp, model.empty_brush.Color, model.highlight_brush.Color);
                     if (currentVal_Fader != model._faderValue || layer.requestUpdate)
                     {
@@ -193,7 +196,7 @@ namespace Chromatics.Layers
                     }
                 }
 
-                //Send layers to _layergroups Dictionary to be tracked outside this method
+                // Send layers to _layergroups Dictionary to be tracked outside this method
                 var lg = model._localgroups.ToArray();
 
                 if (_layergroups.ContainsKey(layer.layerID))
@@ -206,14 +209,44 @@ namespace Chromatics.Layers
                 }
             }
 
-            //Apply lighting
+            // Apply lighting
             foreach (var layergroup in model._localgroups)
             {
                 layergroup.Attach(surface);
             }
-            
+
             model.init = true;
             layer.requestUpdate = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    var _layergroups = RGBController.GetLiveLayerGroups();
+                    if (_layergroups != null)
+                    {
+                        foreach (var layerGroupArray in _layergroups.Values)
+                        {
+                            foreach (var layerGroup in layerGroupArray)
+                            {
+                                layerGroup?.Detach();
+                            }
+                        }
+                        _layergroups.Clear();
+                    }
+
+                    layerProcessorModel.Clear();
+                    levelMap.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+            _instance = null;
         }
 
         private int GetJobCurrentExperience(CurrentPlayerResult currentPlayer)
