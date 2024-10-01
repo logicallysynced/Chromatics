@@ -6,21 +6,37 @@ using Chromatics.Interfaces;
 using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Chromatics.Helpers.MathHelper;
 
 namespace Chromatics.Layers
 {
     public class EnmityTrackerProcessor : LayerProcessor
     {
+        private static EnmityTrackerProcessor _instance;
         private static Dictionary<int, EnmityDynamicModel> layerProcessorModel = new Dictionary<int, EnmityDynamicModel>();
-                
+        private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private EnmityTrackerProcessor() { }
+
+        // Singleton instance access
+        public static EnmityTrackerProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new EnmityTrackerProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(EnmityTrackerProcessor));
 
             EnmityDynamicModel model;
 
@@ -34,23 +50,19 @@ namespace Chromatics.Layers
                 model = layerProcessorModel[layer.layerID];
             }
 
-            //Enmity Tracker Dynamic Layer Implementation
+            // Enmity Tracker Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
-
-            //loop through all LED's and assign to device layer (must maintain order of LEDs)
 
             var _layergroups = RGBController.GetLiveLayerGroups();
             var ledArray = GetLedSortedArray(layer);
-            
             var countKeys = ledArray.Count();
 
-            //Check if layer has been updated or if layer is disabled or if currently in Preview mode    
+            // Check if layer has been updated or if layer is disabled or if currently in Preview mode    
             if (model.init && (layer.requestUpdate || !layer.Enabled))
             {
                 foreach (var layergroup in model._localgroups)
                 {
-                    if (layergroup != null)
-                        layergroup.Detach();
+                    layergroup?.Detach();
                 }
 
                 model._localgroups.Clear();
@@ -58,8 +70,8 @@ namespace Chromatics.Layers
                 if (!layer.Enabled)
                     return;
             }
-            
-            //Process data from FFXIV
+
+            // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetTargetInfo() && _memoryHandler.Reader.CanGetActors())
@@ -68,14 +80,17 @@ namespace Chromatics.Layers
                 var enmity_high_col = ColorHelper.ColorToRGBColor(_colorPalette.EmnityOrange.Color);
                 var enmity_med_col = ColorHelper.ColorToRGBColor(_colorPalette.EmnityYellow.Color);
                 var enmity_low_col = ColorHelper.ColorToRGBColor(_colorPalette.EmnityGreen.Color);
-                var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.NoEmnity.Color); //Bleed layer
+                var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.NoEmnity.Color); // Bleed layer
 
-                if (model.enmity_brush == null || model.enmity_brush.Color != enmity_low_col) model.enmity_brush = new SolidColorBrush(enmity_low_col);
-                if (model.empty_brush == null || model.empty_brush.Color != empty_col) model.empty_brush = new SolidColorBrush(empty_col);
+                if (model.enmity_brush == null || model.enmity_brush.Color != enmity_low_col)
+                    model.enmity_brush = new SolidColorBrush(enmity_low_col);
+
+                if (model.empty_brush == null || model.empty_brush.Color != empty_col)
+                    model.empty_brush = new SolidColorBrush(empty_col);
 
                 if (layer.allowBleed)
                 {
-                    //Allow bleeding of other layers
+                    // Allow bleeding of other layers
                     model.empty_brush.Color = Color.Transparent;
                 }
                 else
@@ -93,15 +108,13 @@ namespace Chromatics.Layers
                 if (getTargetInfo.TargetInfo.CurrentTarget != null)
                 {
                     targetId = getTargetInfo.TargetInfo.CurrentTarget.ID;
-                                        
                 }
-                
+
                 if (targetId != model._targetId)
                 {
                     foreach (var layergroup in model._localgroups)
                     {
-                        if (layergroup != null)
-                            layergroup.Detach();
+                        layergroup?.Detach();
                     }
 
                     model._localgroups.Clear();
@@ -109,8 +122,7 @@ namespace Chromatics.Layers
                     model._targetId = targetId;
                 }
 
-
-                //No target found
+                // No target found
                 if (targetId == 0 || !model.init)
                 {
                     if (model._targetReset || !model.init)
@@ -126,12 +138,9 @@ namespace Chromatics.Layers
                         if (!model._localgroups.Contains(ledGroup))
                             model._localgroups.Add(ledGroup);
                     }
-
                 }
                 else
                 {
-                    
-
                     if (getTargetInfo.TargetInfo.CurrentTarget != null && getTargetInfo.TargetInfo.EnmityItems != null && getTargetInfo.TargetInfo.EnmityItems.Count > 0)
                     {
                         var enmityList = getTargetInfo.TargetInfo.EnmityItems;
@@ -140,15 +149,13 @@ namespace Chromatics.Layers
                         if (enmityProfile == null) return;
 
                         var enmityPosition = enmityProfile.Enmity;
-                        
+
                         var currentVal = (int)enmityPosition;
                         var minVal = 0;
                         var maxVal = 100;
 
-                        
-                        
-                         if (enmityPosition != model._enmityPosition || model._targetReset)
-                         {
+                        if (enmityPosition != model._enmityPosition || model._targetReset)
+                        {
                             if (enmityPosition == 100)
                             {
                                 //Full Aggro
@@ -175,16 +182,14 @@ namespace Chromatics.Layers
                                 model.enmity_brush = model.empty_brush;
                             }
 
-                            
-                         }
+                        }
 
-                        //Check if layer mode has changed
+                        // Check if layer mode has changed
                         if (model._currentMode != layer.layerModes)
                         {
                             foreach (var layergroup in model._localgroups)
                             {
-                                if (layergroup != null)
-                                    layergroup.Detach();
+                                layergroup?.Detach();
                             }
 
                             model._localgroups.Clear();
@@ -193,17 +198,15 @@ namespace Chromatics.Layers
 
                         if (layer.layerModes == Enums.LayerModes.Interpolate)
                         {
-                            //Interpolate implementation
-                    
+                            // Interpolate implementation
                             var currentVal_Interpolate = LinearInterpolation.Interpolate(currentVal, minVal, maxVal, 0, countKeys);
-                            if (currentVal_Interpolate < 0) currentVal_Interpolate = 0;
-                            if (currentVal_Interpolate > countKeys) currentVal_Interpolate = countKeys;
+                            currentVal_Interpolate = MathHelper.Clamp(currentVal_Interpolate, 0, countKeys);
 
                             if (currentVal_Interpolate != model._interpolateValue || model._targetReset)
                             {
-                                //Process Lighting
+                                // Process Lighting
                                 var ledGroups = new List<ListLedGroup>();
-                                        
+
                                 for (int i = 0; i < countKeys; i++)
                                 {
                                     var ledGroup = new ListLedGroup(surface, ledArray[i])
@@ -213,18 +216,11 @@ namespace Chromatics.Layers
 
                                     ledGroup.Detach();
 
-                                    if (i < currentVal_Interpolate)
-                                    {
-                                        ledGroup.Brush = model.enmity_brush;
-                                
-                                    }
-                                    else
-                                    {
-                                        ledGroup.Brush = model.empty_brush;
-                                    }
-                            
+                                    ledGroup.Brush = i < currentVal_Interpolate
+                                        ? model.enmity_brush
+                                        : model.empty_brush;
+
                                     ledGroups.Add(ledGroup);
-                            
                                 }
 
                                 foreach (var layergroup in model._localgroups)
@@ -235,16 +231,13 @@ namespace Chromatics.Layers
                                 model._localgroups = ledGroups;
                                 model._interpolateValue = currentVal_Interpolate;
                             }
-                    
                         }
                         else if (layer.layerModes == Enums.LayerModes.Fade)
                         {
-                            //Fade implementation
-                    
+                            // Fade implementation
                             var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, model.empty_brush.Color, model.enmity_brush.Color);
                             if (currentVal_Fader != model._faderValue || model._targetReset)
                             {
-
                                 var ledGroup = new ListLedGroup(surface, ledArray)
                                 {
                                     ZIndex = layer.zindex,
@@ -259,14 +252,12 @@ namespace Chromatics.Layers
                                 model._faderValue = currentVal_Fader;
                             }
                         }
-            
-                    
+
                         model._enmityPosition = enmityPosition;
                     }
                 }
 
-
-                //Send layers to _layergroups Dictionary to be tracked outside this method
+                // Send layers to _layergroups Dictionary to be tracked outside this method
                 var lg = model._localgroups.ToArray();
 
                 if (_layergroups.ContainsKey(layer.layerID))
@@ -279,15 +270,44 @@ namespace Chromatics.Layers
                 }
             }
 
-            //Apply lighting
+            // Apply lighting
             foreach (var layergroup in model._localgroups)
             {
                 layergroup.Attach(surface);
             }
-            
+
             model.init = true;
             model._targetReset = false;
             layer.requestUpdate = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    var _layergroups = RGBController.GetLiveLayerGroups();
+                    if (_layergroups != null)
+                    {
+                        foreach (var layerGroupArray in _layergroups.Values)
+                        {
+                            foreach (var layerGroup in layerGroupArray)
+                            {
+                                layerGroup?.Detach();
+                            }
+                        }
+                        _layergroups.Clear();
+                    }
+
+                    layerProcessorModel.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+            _instance = null;
         }
 
         private class EnmityDynamicModel
@@ -302,7 +322,6 @@ namespace Chromatics.Layers
             public uint _targetId { get; set; }
             public bool _targetReset { get; set; }
             public bool init { get; set; }
-
         }
     }
 }

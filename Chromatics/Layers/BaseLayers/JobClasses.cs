@@ -6,28 +6,42 @@ using RGB.NET.Core;
 using Sharlayan.Core.Enums;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chromatics.Layers
 {
     public class JobClassesProcessor : LayerProcessor
     {
+        private static JobClassesProcessor _instance;
+        private bool _disposed = false;
+        private Dictionary<int, HashSet<Led>> _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
+
+        // Private constructor to prevent direct instantiation
+        private JobClassesProcessor() { }
+
+        // Singleton instance access
+        public static JobClassesProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new JobClassesProcessor();
+                }
+                return _instance;
+            }
+        }
+
         public override void Process(IMappingLayer layer)
         {
+            if (_disposed) return;
+
             if (RGBController.IsBaseLayerEffectRunning()) return;
-            
-            //Job Classes Base Layer Implementation
+
+            // Job Classes Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
-            var _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
             var _layergroups = RGBController.GetLiveLayerGroups();
             HashSet<Led> _layergroupledcollection;
-
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            
-            
 
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
@@ -66,7 +80,7 @@ namespace Chromatics.Layers
             }
             else
             {
-                //Process data from FFXIV
+                // Process data from FFXIV
                 var _memoryHandler = GameController.GetGameData();
 
                 if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
@@ -75,12 +89,10 @@ namespace Chromatics.Layers
                     if (getCurrentPlayer.Entity == null) return;
 
                     var currentJob = getCurrentPlayer.Entity.Job;
-
                     highlight_col = GameHelper.GetJobClassColor(currentJob, _colorPalette, false);
-                
                 }
             }
-            
+
             foreach (var led in layergroup)
             {
                 if (!_layergroupledcollection.Contains(led))
@@ -92,15 +104,36 @@ namespace Chromatics.Layers
                 {
                     led.Color = highlight_col;
                 }
-
             }
-            
-            //Apply lighting
+
+            // Apply lighting
             var brush = new SolidColorBrush(highlight_col);
             layergroup.Brush = brush;
             _init = true;
             layer.requestUpdate = false;
+        }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    _layergroupledcollections.Clear();
+                    var _layergroups = RGBController.GetLiveLayerGroups();
+                    foreach (var layergroup in _layergroups.Values.SelectMany(lg => lg))
+                    {
+                        layergroup?.Detach();
+                    }
+                    _layergroups.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+            _instance = null;
         }
     }
 }

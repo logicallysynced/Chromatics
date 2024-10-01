@@ -1,4 +1,5 @@
 ﻿using Chromatics.Core;
+using Chromatics.Extensions.RGB.NET.Decorators;
 using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
@@ -9,24 +10,37 @@ using RGB.NET.Presets.Textures.Gradients;
 using Sharlayan.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chromatics.Layers
 {
     public class GoldSaucerVegasProcessor : LayerProcessor
     {
+        private static GoldSaucerVegasProcessor _instance;
         private static Dictionary<int, GoldSaucerVegasEffectModel> layerProcessorModel = new Dictionary<int, GoldSaucerVegasEffectModel>();
+        private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private GoldSaucerVegasProcessor() { }
+
+        // Singleton instance access
+        public static GoldSaucerVegasProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new GoldSaucerVegasProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
-            //Gold Saucer Vegas Mode Effect Layer Implementation - NOTE: This effect operates on the base layer. Disabling base layer wont disable this effect however
+            // Gold Saucer Vegas Mode Effect Layer Implementation
             var effectSettings = RGBController.GetEffectsSettings();
             var _layergroups = RGBController.GetLiveLayerGroups();
-            
-            
 
             GoldSaucerVegasEffectModel model;
             ListLedGroup layergroup;
@@ -40,21 +54,14 @@ namespace Chromatics.Layers
             {
                 model = layerProcessorModel[layer.layerID];
             }
-            
 
             if (model.isEnabled != effectSettings.effect_vegasmode && model.init)
             {
                 if (!effectSettings.effect_vegasmode)
                 {
-                    if (model.gradientEffects != null)
-                    {
-                        model.gradientEffects.RemoveAllDecorators();
-                        RGBController.SetBaseLayerEffect(false);
-                        RGBController.ResetLayerGroups();
-
-                        model.gradientEffects = null;
-                    }
-                    
+                    DisposeModel(model);
+                    RGBController.SetBaseLayerEffect(false);
+                    RGBController.ResetLayerGroups();
                 }
                 else
                 {
@@ -71,25 +78,19 @@ namespace Chromatics.Layers
 
                 return;
             }
+
             var _memoryHandler = GameController.GetGameData();
-            
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
             {
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 if (getCurrentPlayer.Entity == null) return;
 
-                //var currentZone = ZoneLookup.GetZoneInfo(getCurrentPlayer.Entity.MapTerritory).Name.English;
                 var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
+                var baseLayer = MappingLayers.GetLayers().Values
+                    .Where(x => x.rootLayerType == Enums.LayerType.BaseLayer && x.deviceType == layer.deviceType)
+                    .FirstOrDefault();
 
-                var baseLayer = MappingLayers.GetLayers().Values.Where(x => x.rootLayerType == Enums.LayerType.BaseLayer && x.deviceType == layer.deviceType).FirstOrDefault();
-
-                if (baseLayer.deviceType == RGBDeviceType.Keyboard)
-                {
-                    model.test = true;
-                }
-
-                //var ledArray = device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
                 var ledArray = GetLedBaseArray(layer, baseLayer);
 
                 if (_layergroups.ContainsKey(baseLayer.layerID))
@@ -103,19 +104,12 @@ namespace Chromatics.Layers
                         ZIndex = baseLayer.zindex,
                     };
 
-                    var lg = new ListLedGroup[] { layergroup };
-                    _layergroups.Add(baseLayer.layerID, lg);
-
-                    if (model.gradientEffects != null)
-                    {
-                        model.gradientEffects.RemoveAllDecorators();
-                        model.gradientEffects = null;
-                    }
-                    //layergroup.Detach();
+                    _layergroups.Add(baseLayer.layerID, new[] { layergroup });
+                    DisposeModel(model);
                 }
 
                 if (currentZone != model._currentZone || model.reEnabled || baseLayer.requestUpdate)
-                {   
+                {
                     var runningEffects = RGBController.GetRunningEffects();
                     var gradient = new RainbowGradient();
                     var effect = new MoveGradientDecorator(surface)
@@ -144,29 +138,47 @@ namespace Chromatics.Layers
                     }
                     else
                     {
-                        if (model.gradientEffects != null)
-                        {
-                            if (runningEffects.Contains(layergroup))
-                                runningEffects.Remove(layergroup);
-
-                            layergroup.RemoveAllDecorators();
-
-                            RGBController.SetBaseLayerEffect(false);
-                            RGBController.ResetLayerGroups();
-                            model.gradientEffects = null;
-                        }
-
+                        DisposeModel(model);
+                        RGBController.SetBaseLayerEffect(false);
+                        RGBController.ResetLayerGroups();
                     }
 
                     model.reEnabled = false;
                     model._currentZone = currentZone;
                 }
-
-                
             }
-            
+
             model.init = true;
             layer.requestUpdate = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    foreach (var model in layerProcessorModel.Values)
+                    {
+                        DisposeModel(model);
+                    }
+                    layerProcessorModel.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+            _instance = null;
+        }
+
+        private void DisposeModel(GoldSaucerVegasEffectModel model)
+        {
+            if (model.gradientEffects != null)
+            {
+                model.gradientEffects.RemoveAllDecorators();
+                model.gradientEffects = null;
+            }
         }
 
         private class GoldSaucerVegasEffectModel

@@ -42,6 +42,7 @@ namespace Chromatics.Forms
         private MetroToolTip tt_main;
         private static Fm_MainWindow _Instance;
         private static MetroStyleManager _metroStyleManager;
+        private static DarkModeManager _darkModeManager = new DarkModeManager();
 
         public Fm_MainWindow()
         {
@@ -209,14 +210,14 @@ namespace Chromatics.Forms
                 _Instance.Theme = MetroThemeStyle.Dark;
                 _Instance.BackImage = global::Chromatics.Properties.Resources.chromatics_white;
                 _metroStyleManager.Theme = MetroThemeStyle.Dark;
-                DarkModeManager.ToggleDarkMode(_Instance, true);
+                _darkModeManager.ToggleDarkMode(_Instance, true);
             }
             else
             {
                 _Instance.Theme = MetroThemeStyle.Light;
                 _Instance.BackImage = global::Chromatics.Properties.Resources.logo;
                 _metroStyleManager.Theme = MetroThemeStyle.Light;
-                DarkModeManager.ToggleDarkMode(_Instance, false);
+                _darkModeManager.ToggleDarkMode(_Instance, false);
             }
         }
 

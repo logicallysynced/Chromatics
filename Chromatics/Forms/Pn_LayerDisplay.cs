@@ -312,12 +312,23 @@ namespace Chromatics.Forms
 
         protected override void Dispose(bool disposing)
         {
-            this.GotFocus -= new EventHandler(OnLayerPressed);
-            _cb_selector.SelectedIndexChanged -= new EventHandler(OnSelectedIndexChanged);
-            _chk_enabled.CheckedChanged -= new EventHandler(OnCheckChanged);
-            _btn_edit.Click -= new EventHandler(OnEditButtonPressed);
-            _btn_delete.Click -= new EventHandler(OnDeleteButtonPressed);
-            _btn_copy.Click -= new EventHandler(OnCopyButtonPressed);
+            if (disposing)
+            {
+                // Unsubscribe event handlers
+                this.GotFocus -= new EventHandler(OnLayerPressed);
+                _cb_selector.SelectedIndexChanged -= new EventHandler(OnSelectedIndexChanged);
+                _chk_enabled.CheckedChanged -= new EventHandler(OnCheckChanged);
+                _btn_edit.Click -= new EventHandler(OnEditButtonPressed);
+                _btn_delete.Click -= new EventHandler(OnDeleteButtonPressed);
+                _btn_copy.Click -= new EventHandler(OnCopyButtonPressed);
+
+                // Dispose controls
+                _cb_selector?.Dispose();
+                _chk_enabled?.Dispose();
+                _btn_edit?.Dispose();
+                _btn_delete?.Dispose();
+                _btn_copy?.Dispose();
+            }
 
             base.Dispose(disposing);
         }

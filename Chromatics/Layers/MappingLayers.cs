@@ -49,20 +49,17 @@ namespace Chromatics.Layers
 
         public static void UpdateLayer(Layer layer)
         {
-            if (_layers.ContainsKey(layer.layerID))
+            if (_layers.TryGetValue(layer.layerID, out var existingLayer))
             {
-                var kvp = _layers.FirstOrDefault(x => x.Value.layerID == layer.layerID);
-                _layers.TryUpdate(kvp.Key, layer, kvp.Value);
+                _layers.TryUpdate(layer.layerID, layer, existingLayer);
                 _version++;
             }
         }
 
         public static void RemoveLayer(int id)
         {
-            if (_layers.ContainsKey(id))
+            if (_layers.TryRemove(id, out _))
             {
-                var kvp = _layers.GetValueOrDefault(id);
-                var result = _layers.TryRemove(new KeyValuePair<int, Layer>(id, kvp));
                 _version++;
             }
         }
@@ -74,13 +71,8 @@ namespace Chromatics.Layers
 
         public static Layer GetLayer(int index)
         {
-            if (_layers.Any(x => x.Value.layerID == index))
-            {
-                var kvp = _layers.FirstOrDefault(x => x.Value.layerID == index);
-                return kvp.Value;
-            }
-
-            return null;
+            _layers.TryGetValue(index, out var layer);
+            return layer;
         }
 
         public static int CountLayers()
@@ -151,24 +143,32 @@ namespace Chromatics.Layers
             // Start a timer to check periodically if RGBController is loaded
             _timer = new System.Timers.Timer(1000); // Check every second
             _timer.Elapsed += (sender, e) => CheckRGBControllerLoaded(importedLayer, empty);
+            _timer.AutoReset = false; // Ensure the timer does not restart automatically
             _timer.Start();
         }
 
         private static void CheckRGBControllerLoaded(object state, bool empty)
         {
-            if (RGBController.IsLoaded())
+            try
             {
-                _timer.Dispose();
-                ImportMappings(state as ConcurrentDictionary<int, Layer>, empty);
+                if (RGBController.IsLoaded())
+                {
+                    ImportMappings(state as ConcurrentDictionary<int, Layer>, empty);
 
-                if (Uc_Mappings.Instance.InvokeRequired)
-                {
-                    Uc_Mappings.Instance.Invoke(new MethodInvoker(() => Uc_Mappings.Instance.ChangeDeviceType()));
+                    if (Uc_Mappings.Instance.InvokeRequired)
+                    {
+                        Uc_Mappings.Instance.Invoke(new MethodInvoker(() => Uc_Mappings.Instance.ChangeDeviceType()));
+                    }
+                    else
+                    {
+                        Uc_Mappings.Instance.ChangeDeviceType();
+                    }
                 }
-                else
-                {
-                    Uc_Mappings.Instance.ChangeDeviceType();
-                }
+            }
+            finally
+            {
+                // Ensure the timer is disposed of regardless of the outcome
+                _timer?.Dispose();
             }
         }
 

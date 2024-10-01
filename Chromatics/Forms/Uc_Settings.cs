@@ -12,8 +12,6 @@ using MetroFramework.Controls;
 using MetroFramework.Forms;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
-using Org.BouncyCastle.Utilities.Net;
-using Q42.HueApi;
 using RGB.NET.Devices.Asus;
 using RGB.NET.Devices.CoolerMaster;
 using RGB.NET.Devices.Corsair;
@@ -585,7 +583,11 @@ namespace Chromatics.Forms
             MetroLabel labelIP = new MetroLabel { Text = LocalizationManager.GetLocalizedText("Bridge IP:"), Left = 10, Top = padding, Width = 100 };
             MetroTextBox textBoxIP = new MetroTextBox { Left = 120, Top = padding, Width = 200, Text = settings.deviceHueBridgeIP };
 
-            MetroButton btnSubmit = new MetroButton { Text = LocalizationManager.GetLocalizedText("Submit"), Left = 120, Top = padding + 120, Width = 100 };
+            MetroLabel warningLabel = new MetroLabel { Text = LocalizationManager.GetLocalizedText("Press the button on the Hue bridge BEFORE clicking save!"), Left = 10, Top = padding + 50, Width = 800 };
+
+            MetroButton btnSubmit = new MetroButton { Text = LocalizationManager.GetLocalizedText("Submit"), Left = 120, Top = padding + 170, Width = 100 };
+
+            //
 
             // Create a Timer for the timeout
             Timer timeoutTimer = new Timer { Interval = 10000 }; // 10 seconds
@@ -609,7 +611,7 @@ namespace Chromatics.Forms
 
                         AppSettings.SaveSettings(settings);
 
-                        hueBridge = new HueClientDefinition(settings.deviceHueBridgeIP, "chromatics", "pvpGWu0ets21cUUZGOHqd63Eb28i2QEx");
+                        hueBridge = new HueClientDefinition(settings.deviceHueBridgeIP, "chromatics", "");
                         hueProvider.ClientDefinitions.Add(hueBridge);
 
                         var task = Task.Run(() =>
@@ -688,6 +690,7 @@ namespace Chromatics.Forms
 
             hueSettingsForm.Controls.Add(labelIP);
             hueSettingsForm.Controls.Add(textBoxIP);
+            hueSettingsForm.Controls.Add(warningLabel);
             hueSettingsForm.Controls.Add(btnSubmit);
 
             hueSettingsForm.ShowDialog();

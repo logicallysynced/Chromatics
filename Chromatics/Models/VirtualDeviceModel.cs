@@ -20,36 +20,53 @@ using Color = System.Drawing.Color;
 
 namespace Chromatics.Models
 {
-
-    public class VirtualDevice : UserControl
+    public class VirtualDevice : UserControl, IDisposable
     {
-        public int _width = 35;
-        public int _height = 35;
-        public bool init;
-        public RGBDeviceType _deviceType;
-        public Guid _deviceId;
-        public List<KeyButton> _keybuttons = new List<KeyButton>();
-        public event EventHandler _OnKeycapPressed;
-        private Dictionary<LedId, Color> _currentColors;
-        private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        internal int _width = 35;
+        internal int _height = 35;
+        internal bool init;
+        internal RGBDeviceType _deviceType;
+        internal Guid _deviceId;
+        internal List<KeyButton> _keybuttons = new List<KeyButton>();
+        internal event EventHandler _OnKeycapPressed;
+        internal Dictionary<LedId, Color> _currentColors;
+        internal static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public virtual void InitializeDevice()
+        internal readonly string[] unwantedStrings =
+        [
+            "Keyboard", "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset",
+            "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe", "Stand",
+            "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
+        ];
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _cancellationTokenSource?.Dispose();
+                _OnKeycapPressed = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
+        internal virtual void InitializeDevice()
         {
             // To be overridden by derived classes
         }
 
-        public void OnKeycapPressed(object sender, EventArgs e)
+        internal void OnKeycapPressed(object sender, EventArgs e)
         {
             if (_OnKeycapPressed != null)
                 _OnKeycapPressed(sender, e);
         }
 
-        public VirtualDevice()
+        internal VirtualDevice()
         {
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
         }
 
-        public async void VisualiseLayers(IOrderedEnumerable<KeyValuePair<int, Layer>> _layers, List<KeyButton> _keyButtons)
+        internal async void VisualiseLayers(IOrderedEnumerable<KeyValuePair<int, Layer>> _layers, List<KeyButton> _keyButtons)
         {
             if (_currentColors == null)
             {
@@ -196,9 +213,7 @@ namespace Chromatics.Models
             });
         }
 
-
-
-        public class KeyButton : Button
+        internal class KeyButton : Button
         {
             private bool _drawCircle;
             private string _drawIndex;
@@ -280,35 +295,35 @@ namespace Chromatics.Models
                 float borderThickness = 1.75f;
 
                 var Rect = new RectangleF(0, 0, this.Width, this.Height);
-                var GraphPath = GetRoundPath(Rect, borderRadius);
-
-                // Fill the background color
+                using (var GraphPath = GetRoundPath(Rect, borderRadius))
                 using (var brush = new SolidBrush(_backgroundColor))
-                {
-                    e.Graphics.FillRectangle(brush, this.ClientRectangle);
-                }
-
-                this.Region = new Region(GraphPath);
                 using (var pen = new Pen(BorderCol, borderThickness))
                 {
+                    // Fill the background color
+                    e.Graphics.FillRectangle(brush, this.ClientRectangle);
+
+                    this.Region = new Region(GraphPath);
                     pen.Alignment = PenAlignment.Inset;
                     e.Graphics.DrawPath(pen, GraphPath);
-                }
 
-                // Draw the text
-                var textBrush = new SolidBrush(ForeColor);
-                var sf = new StringFormat
-                {
-                    Alignment = StringAlignment.Center,
-                    LineAlignment = StringAlignment.Center
-                };
-                e.Graphics.DrawString(Text, Font, textBrush, Rect, sf);
+                    using (var textBrush = new SolidBrush(ForeColor))
+                    {
+                        var sf = new StringFormat
+                        {
+                            Alignment = StringAlignment.Center,
+                            LineAlignment = StringAlignment.Center
+                        };
+                        e.Graphics.DrawString(Text, Font, textBrush, Rect, sf);
+                    }
 
-                if (_drawCircle)
-                {
-                    var fnt = new Font(this.Font.FontFamily, this.Font.Size * 2, FontStyle.Bold);
-                    var pt = new System.Drawing.Point(3, 3);
-                    e.Graphics.DrawString(_drawIndex, fnt, new SolidBrush(Color.White), pt);
+                    if (_drawCircle)
+                    {
+                        using (var fnt = new Font(this.Font.FontFamily, this.Font.Size * 2, FontStyle.Bold))
+                        {
+                            var pt = new System.Drawing.Point(3, 3);
+                            e.Graphics.DrawString(_drawIndex, fnt, new SolidBrush(Color.White), pt);
+                        }
+                    }
                 }
                 this.ResumeLayout(true);
             }

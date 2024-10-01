@@ -33,8 +33,25 @@ namespace Chromatics.Layers
 {
     public class ScreenCaptureProcessor : LayerProcessor
     {
+        private static ScreenCaptureProcessor _instance;
         private static Dictionary<int, ScreenCaptureBaseModel> layerProcessorModel = new Dictionary<int, ScreenCaptureBaseModel>();
         private static ScreenCaptureExtension screenCapture;
+
+        // Private constructor to prevent direct instantiation
+        private ScreenCaptureProcessor() { }
+
+        // Singleton instance access
+        public static ScreenCaptureProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ScreenCaptureProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {

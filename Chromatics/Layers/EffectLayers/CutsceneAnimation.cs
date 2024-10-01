@@ -4,32 +4,47 @@ using Chromatics.Extensions.RGB.NET;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
-using Sharlayan.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Chromatics.Extensions.Sharlayan;
-using System.Security.Cryptography;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures.Gradients;
 using RGB.NET.Presets.Textures;
+using System.Linq;
 
 namespace Chromatics.Layers
 {
     public class CutsceneAnimationProcessor : LayerProcessor
     {
+        private static CutsceneAnimationProcessor _instance;
         private static Dictionary<int, CutsceneAnimationEffectModel> layerProcessorModel = new Dictionary<int, CutsceneAnimationEffectModel>();
+        private bool _disposed = false;
+
+        // Private constructor to prevent direct instantiation
+        private CutsceneAnimationProcessor() { }
+
+        // Singleton instance access
+        public static CutsceneAnimationProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new CutsceneAnimationProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
-            //Do not apply if layer/effect is disabled
+            if (_disposed) return;
+
+            // Do not apply if layer/effect is disabled
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
 
-            
             CutsceneAnimationEffectModel model;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
@@ -42,14 +57,9 @@ namespace Chromatics.Layers
                 model = layerProcessorModel[layer.layerID];
             }
 
-            
-            //Cutscene Effect Layer Implementation
+            // Cutscene Effect Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
-
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            
-            
 
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
@@ -71,8 +81,6 @@ namespace Chromatics.Layers
                 layergroup.Detach();
             }
 
-
-
             if (!layer.Enabled || !effectSettings.effect_cutscenes)
             {
                 layergroup.RemoveAllDecorators();
@@ -88,7 +96,6 @@ namespace Chromatics.Layers
                 return;
             }
 
-
             var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.CutsceneBase.Color);
             var highlightColors = new Color[] {
                 ColorHelper.ColorToRGBColor(_colorPalette.CutsceneHighlight1.Color),
@@ -96,18 +103,18 @@ namespace Chromatics.Layers
                 ColorHelper.ColorToRGBColor(_colorPalette.CutsceneHighlight3.Color)
             };
 
-            var animationGradient = new LinearGradient(new GradientStop((float)0, baseColor), 
-                new GradientStop((float)0.20, highlightColors[0]), 
-                new GradientStop((float)0.35, baseColor),
-                new GradientStop((float)0.50, highlightColors[1]),
-                new GradientStop((float)0.65, baseColor),
-                new GradientStop((float)0.80, highlightColors[2]),
-                new GradientStop((float)1.00, baseColor));
+            var animationGradient = new LinearGradient(new GradientStop(0f, baseColor),
+                new GradientStop(0.20f, highlightColors[0]),
+                new GradientStop(0.35f, baseColor),
+                new GradientStop(0.50f, highlightColors[1]),
+                new GradientStop(0.65f, baseColor),
+                new GradientStop(0.80f, highlightColors[2]),
+                new GradientStop(1.00f, baseColor));
 
             var gradientMove = new MoveGradientDecorator(surface, 80, true);
             var animation = new StarfieldDecorator(layergroup, (layergroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
 
-            //Process data from FFXIV
+            // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
@@ -116,8 +123,6 @@ namespace Chromatics.Layers
                 if (getCurrentPlayer.Entity == null) return;
 
                 DutyFinderBellExtension.CheckCache();
-
-
 
                 if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model._inInstance != DutyFinderBellExtension.InInstance() || model.wasDisabled || layer.requestUpdate)
                 {
@@ -131,14 +136,11 @@ namespace Chromatics.Layers
                         layergroup.RemoveAllDecorators();
                         animationGradient.WrapGradient = true;
                         animationGradient.AddDecorator(gradientMove);
-                                                
-                        layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), animationGradient)); //new SolidColorBrush(baseColor);
+
+                        layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), animationGradient));
                         layergroup.ZIndex = 1000;
 
-                        //layergroup.AddDecorator(animation);
-
                         runningEffects.Add(layergroup);
-
                     }
                     else
                     {
@@ -146,32 +148,56 @@ namespace Chromatics.Layers
                         {
                             layergroup.RemoveAllDecorators();
                             layergroup.Brush = new SolidColorBrush(Color.Transparent);
-                            //layergroup.Detach();
 
                             if (runningEffects.Contains(layergroup))
                                 runningEffects.Remove(layergroup);
                         }
-                        
                     }
 
                     model._inCutscene = getCurrentPlayer.Entity.InCutscene;
                     model._inInstance = DutyFinderBellExtension.InInstance();
                 }
-                
+
                 model.wasDisabled = false;
-                
             }
 
             model.init = true;
             layer.requestUpdate = false;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    foreach (var model in layerProcessorModel.Values)
+                    {
+                        model.activeBrush = null;
+                    }
+                    layerProcessorModel.Clear();
+                    var _layergroups = RGBController.GetLiveLayerGroups();
+                    foreach (var layergroup in _layergroups.Values.SelectMany(lg => lg))
+                    {
+                        layergroup?.Detach();
+                    }
+                    _layergroups.Clear();
+                }
+
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
+            _instance = null;
+        }
+
         private class CutsceneAnimationEffectModel
-        {   
+        {
             public bool _inCutscene { get; set; }
             public bool _inInstance { get; set; }
             public bool wasDisabled { get; set; }
-            public SolidColorBrush activeBrush { get; set;}
+            public SolidColorBrush activeBrush { get; set; }
             public bool init { get; set; }
         }
     }

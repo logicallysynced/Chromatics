@@ -19,13 +19,6 @@ namespace Chromatics.Forms
     {
         IRGBDevice _device;
 
-        string[] unwantedStrings = new string[]
-        {
-            "Unknown", "Cooler", "DRAM", "Fan", "GraphicsCard", "Headset", "Stand",
-            "HeadsetStand", "Keypad", "Custom", "LedMatrix", "LedStripe",
-            "Mainboard", "Monitor", "Mouse", "Mousepad", "pad", "Speaker"
-        };
-
         public Uc_VirtualOtherController(IRGBDevice deviceId)
         {
             _device = deviceId;
@@ -41,7 +34,45 @@ namespace Chromatics.Forms
             }
         }
 
-        public override void InitializeDevice()
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_device is IDisposable disposableDevice)
+                {
+                    disposableDevice.Dispose();
+                }
+
+                foreach (var keycap in _keybuttons)
+                {
+                    keycap.Click -= OnKeycapPressed;
+                    keycap.Dispose(); // Dispose of keycaps explicitly
+                }
+
+                tlp_main?.Dispose();
+            }
+
+            if (disposing && (components != null))
+            {
+                if (_keybuttons != null)
+                {
+                    foreach (var keycap in _keybuttons)
+                    {
+                        keycap.Click -= new System.EventHandler(OnKeycapPressed);
+                    }
+
+                    _keybuttons.Clear();
+                }
+
+                this.Load -= new System.EventHandler(this.OnLoad);
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+
+        internal override void InitializeDevice()
         {
 
             //Get Keycap image
@@ -105,7 +136,9 @@ namespace Chromatics.Forms
 
                 columnlimit = keycapsOrdered.Count / 4;
 
-                foreach (var key in keycapsOrdered.Take(_device.Count()-1))
+                var keyCount = _device.Count() > 1 ? _device.Count() - 1 : _device.Count();
+
+                foreach (var key in keycapsOrdered.Take(keyCount))
                 {
                     var width = _width;
                     var height = _height;
