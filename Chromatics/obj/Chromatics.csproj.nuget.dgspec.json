@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
-      "version": "3.1.6",
+      "version": "3.2.0",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -72,15 +72,15 @@
             },
             "HueApi": {
               "target": "Package",
-              "version": "[1.6.3, )"
+              "version": "[1.7.0, )"
             },
             "HueApi.ColorConverters": {
               "target": "Package",
-              "version": "[1.5.1, )"
+              "version": "[1.7.1, )"
             },
             "HueApi.Entertainment": {
               "target": "Package",
-              "version": "[1.5.1, )"
+              "version": "[1.7.0, )"
             },
             "MouseKeyHook.NetCore": {
               "target": "Package",
@@ -92,7 +92,7 @@
             },
             "NLog": {
               "target": "Package",
-              "version": "[5.3.3, )"
+              "version": "[5.4.0, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -100,59 +100,59 @@
             },
             "RGB.NET.Core": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.Asus": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.CoolerMaster": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.Corsair": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.Logitech": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.Msi": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.Novation": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.OpenRGB": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.Razer": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.SteelSeries": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Devices.Wooting": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.HID": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Layout": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "RGB.NET.Presets": {
               "target": "Package",
-              "version": "[3.0.0-prerelease.3, )"
+              "version": "[3.0.0, )"
             },
             "Sanford.Multimedia.Midi": {
               "target": "Package",
