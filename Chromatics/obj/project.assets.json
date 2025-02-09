@@ -149,7 +149,7 @@
           }
         }
       },
-      "HueApi/1.6.3": {
+      "HueApi/1.7.0": {
         "type": "package",
         "compile": {
           "lib/net8.0/HueApi.dll": {}
@@ -158,10 +158,10 @@
           "lib/net8.0/HueApi.dll": {}
         }
       },
-      "HueApi.ColorConverters/1.5.1": {
+      "HueApi.ColorConverters/1.7.1": {
         "type": "package",
         "dependencies": {
-          "HueApi": "1.6.2"
+          "HueApi": "1.7.0"
         },
         "compile": {
           "lib/net8.0/HueApi.ColorConverters.dll": {}
@@ -170,11 +170,11 @@
           "lib/net8.0/HueApi.ColorConverters.dll": {}
         }
       },
-      "HueApi.Entertainment/1.5.1": {
+      "HueApi.Entertainment/1.7.0": {
         "type": "package",
         "dependencies": {
-          "HueApi": "1.6.2",
-          "HueApi.ColorConverters": "1.5.1",
+          "HueApi": "1.7.0",
+          "HueApi.ColorConverters": "1.7.0",
           "Portable.BouncyCastle": "1.9.0"
         },
         "compile": {
@@ -415,7 +415,7 @@
           }
         }
       },
-      "NLog/5.3.3": {
+      "NLog/5.4.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/NLog.dll": {
@@ -464,7 +464,7 @@
           }
         }
       },
-      "RGB.NET.Core/3.0.0-prerelease.3": {
+      "RGB.NET.Core/3.0.0": {
         "type": "package",
         "compile": {
           "lib/net8.0/RGB.NET.Core.dll": {
@@ -477,10 +477,10 @@
           }
         }
       },
-      "RGB.NET.Devices.Asus/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.Asus/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.Asus.dll": {
@@ -493,10 +493,10 @@
           }
         }
       },
-      "RGB.NET.Devices.CoolerMaster/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.CoolerMaster/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.CoolerMaster.dll": {
@@ -509,10 +509,10 @@
           }
         }
       },
-      "RGB.NET.Devices.Corsair/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.Corsair/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.Corsair.dll": {
@@ -525,11 +525,11 @@
           }
         }
       },
-      "RGB.NET.Devices.Logitech/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.Logitech/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3",
-          "RGB.NET.HID": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0",
+          "RGB.NET.HID": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.Logitech.dll": {
@@ -542,10 +542,10 @@
           }
         }
       },
-      "RGB.NET.Devices.Msi/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.Msi/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.Msi.dll": {
@@ -558,10 +558,10 @@
           }
         }
       },
-      "RGB.NET.Devices.Novation/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.Novation/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3",
+          "RGB.NET.Core": "3.0.0",
           "Sanford.Multimedia.Midi.Standard": "6.6.0"
         },
         "compile": {
@@ -575,11 +575,11 @@
           }
         }
       },
-      "RGB.NET.Devices.OpenRGB/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.OpenRGB/3.0.0": {
         "type": "package",
         "dependencies": {
           "OpenRGB.NET": "3.1.1",
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.OpenRGB.dll": {
@@ -592,11 +592,11 @@
           }
         }
       },
-      "RGB.NET.Devices.Razer/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.Razer/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3",
-          "RGB.NET.HID": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0",
+          "RGB.NET.HID": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.Razer.dll": {
@@ -609,11 +609,11 @@
           }
         }
       },
-      "RGB.NET.Devices.SteelSeries/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.SteelSeries/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3",
-          "RGB.NET.HID": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0",
+          "RGB.NET.HID": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.SteelSeries.dll": {
@@ -626,10 +626,10 @@
           }
         }
       },
-      "RGB.NET.Devices.Wooting/3.0.0-prerelease.3": {
+      "RGB.NET.Devices.Wooting/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Devices.Wooting.dll": {
@@ -642,11 +642,11 @@
           }
         }
       },
-      "RGB.NET.HID/3.0.0-prerelease.3": {
+      "RGB.NET.HID/3.0.0": {
         "type": "package",
         "dependencies": {
           "HidSharp": "2.1.0",
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.HID.dll": {
@@ -659,10 +659,10 @@
           }
         }
       },
-      "RGB.NET.Layout/3.0.0-prerelease.3": {
+      "RGB.NET.Layout/3.0.0": {
         "type": "package",
         "dependencies": {
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Layout.dll": {
@@ -675,11 +675,11 @@
           }
         }
       },
-      "RGB.NET.Presets/3.0.0-prerelease.3": {
+      "RGB.NET.Presets/3.0.0": {
         "type": "package",
         "dependencies": {
           "HPPH": "1.0.0",
-          "RGB.NET.Core": "3.0.0-prerelease.3"
+          "RGB.NET.Core": "3.0.0"
         },
         "compile": {
           "lib/net8.0/RGB.NET.Presets.dll": {
@@ -1847,43 +1847,43 @@
         "lib/net8.0/HPPH.xml"
       ]
     },
-    "HueApi/1.6.3": {
-      "sha512": "U8tnpa2EKYXjyqnNRupe08jxByxdu+AqZIAtRP5xF9zX8yDNBkG1bQGEx1hq9HendDNbSu0B8kBnmZzfcnsweg==",
+    "HueApi/1.7.0": {
+      "sha512": "gHENTXTnIGwWXT7vn9GONQNEnvzN7NsGKARNrEBtxvPB0mXK8QZFHE/D7xVYEtW3mXx5kUj/nzK0JoKttnH3Dw==",
       "type": "package",
-      "path": "hueapi/1.6.3",
+      "path": "hueapi/1.7.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "hueapi.1.6.3.nupkg.sha512",
+        "hueapi.1.7.0.nupkg.sha512",
         "hueapi.nuspec",
-        "lib/net7.0/HueApi.dll",
-        "lib/net8.0/HueApi.dll"
+        "lib/net8.0/HueApi.dll",
+        "lib/net9.0/HueApi.dll"
       ]
     },
-    "HueApi.ColorConverters/1.5.1": {
-      "sha512": "HBj3mO+N8UYlbHMxO1DgSGsZF32S6pgyjyOL/dqTalUFPbpt2jG/oK0kFpLi75yGEnxAlG4Au/iszHA4J4e3qA==",
+    "HueApi.ColorConverters/1.7.1": {
+      "sha512": "P+yj00MJxyjyEfrz0GQBmYE9EXTnCXHiv4Vh4WmDS96Q77j7bvMPtDmcr8je/9zaaXw28a2n6a3xgXUM9HgFtQ==",
       "type": "package",
-      "path": "hueapi.colorconverters/1.5.1",
+      "path": "hueapi.colorconverters/1.7.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "hueapi.colorconverters.1.5.1.nupkg.sha512",
+        "hueapi.colorconverters.1.7.1.nupkg.sha512",
         "hueapi.colorconverters.nuspec",
-        "lib/net7.0/HueApi.ColorConverters.dll",
-        "lib/net8.0/HueApi.ColorConverters.dll"
+        "lib/net8.0/HueApi.ColorConverters.dll",
+        "lib/net9.0/HueApi.ColorConverters.dll"
       ]
     },
-    "HueApi.Entertainment/1.5.1": {
-      "sha512": "wUCpYUL+4U5qR6/jrk+O7B7EsOxpmEBIMMwP5lE0BfjCBSVT3aG403iTdSIHTpnRMdDXQ5naXq4NBeunwaJkrg==",
+    "HueApi.Entertainment/1.7.0": {
+      "sha512": "RIbttCuz9VvFzGlKrdSZl7Ud9NHalMQGH7iWbTebPSRSVm6oew7Ytxf+KFbjucNQCMd7MOCPdOvoQ4npjZDoGQ==",
       "type": "package",
-      "path": "hueapi.entertainment/1.5.1",
+      "path": "hueapi.entertainment/1.7.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "hueapi.entertainment.1.5.1.nupkg.sha512",
+        "hueapi.entertainment.1.7.0.nupkg.sha512",
         "hueapi.entertainment.nuspec",
-        "lib/net7.0/HueApi.Entertainment.dll",
-        "lib/net8.0/HueApi.Entertainment.dll"
+        "lib/net8.0/HueApi.Entertainment.dll",
+        "lib/net9.0/HueApi.Entertainment.dll"
       ]
     },
     "Microsoft.NETCore.Platforms/3.1.0": {
@@ -2214,10 +2214,10 @@
         "packageIcon.png"
       ]
     },
-    "NLog/5.3.3": {
-      "sha512": "cy0+hlrUbYu+6mgUsILqCcqlJ2Csqyt2lm8y9T9kE8nhgwl8SvR+LM21QX4nmzFCPiowbrTFYxNF8+gWpy7/HQ==",
+    "NLog/5.4.0": {
+      "sha512": "LwMcGSW3soF3/SL68rlJN3Eh3ktrAPycC3zZR/07OYBPraZUu0bygEC7kIN10lUQgMXT4s84Fi1chglGdGrQEg==",
       "type": "package",
-      "path": "nlog/5.3.3",
+      "path": "nlog/5.4.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2234,7 +2234,7 @@
         "lib/netstandard1.5/NLog.xml",
         "lib/netstandard2.0/NLog.dll",
         "lib/netstandard2.0/NLog.xml",
-        "nlog.5.3.3.nupkg.sha512",
+        "nlog.5.4.0.nupkg.sha512",
         "nlog.nuspec"
       ]
     },
@@ -2279,10 +2279,10 @@
         "portable.bouncycastle.nuspec"
       ]
     },
-    "RGB.NET.Core/3.0.0-prerelease.3": {
-      "sha512": "9qEtbcL4lDL1I8NPcK86aH9DpTMD73sfZ4lQYyDbAxRsmjscwRZp8CxCAB/HA94P8D/q+fMMR2ZaaRW274QvKQ==",
+    "RGB.NET.Core/3.0.0": {
+      "sha512": "iHI1PWACXmlJRUFRtU38qPXA2gvnADHl5uH30cJqqCxyLBZp8tCtYL8c0HOyJNOCoJwTZ8VkXzlmGgh2J/u0/g==",
       "type": "package",
-      "path": "rgb.net.core/3.0.0-prerelease.3",
+      "path": "rgb.net.core/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2290,14 +2290,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Core.dll",
         "lib/net8.0/RGB.NET.Core.xml",
-        "rgb.net.core.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Core.dll",
+        "lib/net9.0/RGB.NET.Core.xml",
+        "rgb.net.core.3.0.0.nupkg.sha512",
         "rgb.net.core.nuspec"
       ]
     },
-    "RGB.NET.Devices.Asus/3.0.0-prerelease.3": {
-      "sha512": "fLuwj82yF31z1AL7I28UlNfLEUOr07XBQD5GhVDrk/vJ5vi0xsQ0eGr1x/VfeUFrbMFvP51ul5pDxTg5pNT84A==",
+    "RGB.NET.Devices.Asus/3.0.0": {
+      "sha512": "KoP8KIZFLb11SbiFrR44d0frK0ni66xU51ijZI9BNbYuQ5d2pU/EEKwN9GpgTemaArLFc3Hi/PVu3L7ZXlHXuw==",
       "type": "package",
-      "path": "rgb.net.devices.asus/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.asus/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2305,14 +2307,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.Asus.dll",
         "lib/net8.0/RGB.NET.Devices.Asus.xml",
-        "rgb.net.devices.asus.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.Asus.dll",
+        "lib/net9.0/RGB.NET.Devices.Asus.xml",
+        "rgb.net.devices.asus.3.0.0.nupkg.sha512",
         "rgb.net.devices.asus.nuspec"
       ]
     },
-    "RGB.NET.Devices.CoolerMaster/3.0.0-prerelease.3": {
-      "sha512": "k5wLoabk6XkaLEfdftdJE97RcVE8o/SR4Q9M4iH9dXuzV8kjC+Hn2vd/ce6GR6OGQGCruPJjrZjf1m/qUL44Mg==",
+    "RGB.NET.Devices.CoolerMaster/3.0.0": {
+      "sha512": "LSht7S+CZKQgNMeCaB5SWqcf/mVxdB8SNe0xaY95/YTLpQwpqsE66701O2TWiDTRogXZzf22QCZxYOym4FgGUg==",
       "type": "package",
-      "path": "rgb.net.devices.coolermaster/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.coolermaster/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2320,14 +2324,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.CoolerMaster.dll",
         "lib/net8.0/RGB.NET.Devices.CoolerMaster.xml",
-        "rgb.net.devices.coolermaster.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.CoolerMaster.dll",
+        "lib/net9.0/RGB.NET.Devices.CoolerMaster.xml",
+        "rgb.net.devices.coolermaster.3.0.0.nupkg.sha512",
         "rgb.net.devices.coolermaster.nuspec"
       ]
     },
-    "RGB.NET.Devices.Corsair/3.0.0-prerelease.3": {
-      "sha512": "pXsvnN3Fc7D3Jn6MBNB/ed6RrkLybGPYN9Kj1eh83SueH+eeGaQsOphUqMaal4N9D7DgYLZ2wy6WJxaT1Gj4Ew==",
+    "RGB.NET.Devices.Corsair/3.0.0": {
+      "sha512": "CTJFAyUwWajhZ0xwCqttSkLHkDHAQZmqoW5oC/M9BGEJEbdvXpKzVxGK/TgjzvE3FObH7N8N1uuFNGSLu2N5Mw==",
       "type": "package",
-      "path": "rgb.net.devices.corsair/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.corsair/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2335,14 +2341,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.Corsair.dll",
         "lib/net8.0/RGB.NET.Devices.Corsair.xml",
-        "rgb.net.devices.corsair.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.Corsair.dll",
+        "lib/net9.0/RGB.NET.Devices.Corsair.xml",
+        "rgb.net.devices.corsair.3.0.0.nupkg.sha512",
         "rgb.net.devices.corsair.nuspec"
       ]
     },
-    "RGB.NET.Devices.Logitech/3.0.0-prerelease.3": {
-      "sha512": "5q6M0olBNAuvvL0uk1LDyLuy0pGaZ9WZybbW2S/7Kwv4/Lp6w30yShoIZKZrmB4ttcmjmc+SQ2paZvftvatJ/A==",
+    "RGB.NET.Devices.Logitech/3.0.0": {
+      "sha512": "Bcy3vvbo/emTS1OCC0NyPwaT/XAk44dQdsp2xhmPL9zRl2PnNit5bFTd9hGs51FCfRAL1L0tDE3BhCjpKlVE7A==",
       "type": "package",
-      "path": "rgb.net.devices.logitech/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.logitech/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2350,14 +2358,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.Logitech.dll",
         "lib/net8.0/RGB.NET.Devices.Logitech.xml",
-        "rgb.net.devices.logitech.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.Logitech.dll",
+        "lib/net9.0/RGB.NET.Devices.Logitech.xml",
+        "rgb.net.devices.logitech.3.0.0.nupkg.sha512",
         "rgb.net.devices.logitech.nuspec"
       ]
     },
-    "RGB.NET.Devices.Msi/3.0.0-prerelease.3": {
-      "sha512": "T2BwuxhNYTnNvOdQ21PQQby3blm2ZGhJbvcd4WNrMdlhcKa7rXGBaue1U7yDGUi3TSlZ2O7/Fjk8ZJvkescNKA==",
+    "RGB.NET.Devices.Msi/3.0.0": {
+      "sha512": "VzpbibmNQ/65uk1uaKXQFf+sl1HYlFVw+XQ6iixuYf40T7uSAJ7/FPYoI0BpHHJenRxxULah4J9W4DPPKGH/eQ==",
       "type": "package",
-      "path": "rgb.net.devices.msi/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.msi/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2365,14 +2375,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.Msi.dll",
         "lib/net8.0/RGB.NET.Devices.Msi.xml",
-        "rgb.net.devices.msi.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.Msi.dll",
+        "lib/net9.0/RGB.NET.Devices.Msi.xml",
+        "rgb.net.devices.msi.3.0.0.nupkg.sha512",
         "rgb.net.devices.msi.nuspec"
       ]
     },
-    "RGB.NET.Devices.Novation/3.0.0-prerelease.3": {
-      "sha512": "JKj6FUekfm1ES+wP2TzdkWxUcmfmEnmz6eT+KI3QE4lSd6TZa46YYCBXbihCdwl1E/VqjAkrojt6dHMEwKIghQ==",
+    "RGB.NET.Devices.Novation/3.0.0": {
+      "sha512": "zteKzkHyrxgonAV2Q72t2HdgW0A3dMdGf1QKKeZsm3CuO7XSJIQatTWjoPquZgLnUt8elCGGojDEbRCu/qtQcA==",
       "type": "package",
-      "path": "rgb.net.devices.novation/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.novation/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2380,14 +2392,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.Novation.dll",
         "lib/net8.0/RGB.NET.Devices.Novation.xml",
-        "rgb.net.devices.novation.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.Novation.dll",
+        "lib/net9.0/RGB.NET.Devices.Novation.xml",
+        "rgb.net.devices.novation.3.0.0.nupkg.sha512",
         "rgb.net.devices.novation.nuspec"
       ]
     },
-    "RGB.NET.Devices.OpenRGB/3.0.0-prerelease.3": {
-      "sha512": "1hC07NxNEobw8ptnJooQZUUIYKvBAd6Uprg2iF71dIvPe3wY4UaCvktjGecc2tXO4gbIAdG+85mhtUyuJiuIGQ==",
+    "RGB.NET.Devices.OpenRGB/3.0.0": {
+      "sha512": "LdVbrS+uExx2+GWnB1WuXGVKkodJCBVYHAHOjXKR9YXVMvoAmZ+qXGrjlskgDTX3UMmKUhd6eEwH3cqjQJWK5w==",
       "type": "package",
-      "path": "rgb.net.devices.openrgb/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.openrgb/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2395,14 +2409,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.OpenRGB.dll",
         "lib/net8.0/RGB.NET.Devices.OpenRGB.xml",
-        "rgb.net.devices.openrgb.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.OpenRGB.dll",
+        "lib/net9.0/RGB.NET.Devices.OpenRGB.xml",
+        "rgb.net.devices.openrgb.3.0.0.nupkg.sha512",
         "rgb.net.devices.openrgb.nuspec"
       ]
     },
-    "RGB.NET.Devices.Razer/3.0.0-prerelease.3": {
-      "sha512": "G8QfeJJm1IFohW3gTRqAFC7lOyINIulvJke5maGXvm9XNay+DkmGuIFKGy/8VhfgL70e6w4EDBNDtu8r/r67Sg==",
+    "RGB.NET.Devices.Razer/3.0.0": {
+      "sha512": "C3Kby6upcaFGfafW69ovw9nENragdrSaSX3D+ruob3RHN0kf9zlW6bmRa5tp/+q1LimB+BYfjWoJBUWQGYYL6Q==",
       "type": "package",
-      "path": "rgb.net.devices.razer/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.razer/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2410,14 +2426,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.Razer.dll",
         "lib/net8.0/RGB.NET.Devices.Razer.xml",
-        "rgb.net.devices.razer.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.Razer.dll",
+        "lib/net9.0/RGB.NET.Devices.Razer.xml",
+        "rgb.net.devices.razer.3.0.0.nupkg.sha512",
         "rgb.net.devices.razer.nuspec"
       ]
     },
-    "RGB.NET.Devices.SteelSeries/3.0.0-prerelease.3": {
-      "sha512": "yf59UVIk6/bpH/jtFvPcVwAEhA9VmEoTPE3TpCDcgtcfnCw4qRM4G6rOotRNLCtVZMeY3utco63zunyL+oMomA==",
+    "RGB.NET.Devices.SteelSeries/3.0.0": {
+      "sha512": "LpyJQIXWu6zeSfzNeFQ8US+1y++57n2iMkbpW2tyflusP9fyA86ZC5uu+6eAMeuLjVjE05kvtF2Q0KF4l4G9SQ==",
       "type": "package",
-      "path": "rgb.net.devices.steelseries/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.steelseries/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2425,14 +2443,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.SteelSeries.dll",
         "lib/net8.0/RGB.NET.Devices.SteelSeries.xml",
-        "rgb.net.devices.steelseries.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.SteelSeries.dll",
+        "lib/net9.0/RGB.NET.Devices.SteelSeries.xml",
+        "rgb.net.devices.steelseries.3.0.0.nupkg.sha512",
         "rgb.net.devices.steelseries.nuspec"
       ]
     },
-    "RGB.NET.Devices.Wooting/3.0.0-prerelease.3": {
-      "sha512": "SLBgq43tWZXHlsNvNvKIldTBb/YVp7wvV91wQ/bzzLuAefR3HQJw8SLR50nvJzJ0eKmw7b9l158QujIzLJdvbw==",
+    "RGB.NET.Devices.Wooting/3.0.0": {
+      "sha512": "qcTLukgQ1kQHfd5cbtZYDnbNDyJ6AOn/XblzplmIlxUWeTK0VXPYr0saCMTUdtj2y1/iSZlqJgk1vYARVzw2og==",
       "type": "package",
-      "path": "rgb.net.devices.wooting/3.0.0-prerelease.3",
+      "path": "rgb.net.devices.wooting/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2440,14 +2460,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Devices.Wooting.dll",
         "lib/net8.0/RGB.NET.Devices.Wooting.xml",
-        "rgb.net.devices.wooting.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Devices.Wooting.dll",
+        "lib/net9.0/RGB.NET.Devices.Wooting.xml",
+        "rgb.net.devices.wooting.3.0.0.nupkg.sha512",
         "rgb.net.devices.wooting.nuspec"
       ]
     },
-    "RGB.NET.HID/3.0.0-prerelease.3": {
-      "sha512": "3GsJSXLDSL2BgIxt3jIUFHQi3/JY34tWopuS+PALD27cSKMhEHlttUPK7e8ItlQoXRdcDM6NeMgt7xaHcw0Sng==",
+    "RGB.NET.HID/3.0.0": {
+      "sha512": "5dvLimaqOoCNINhir2DDhU0a0yFaHsz0s7N2MQyNibp29vtr4R2m0FyvVp8W8TJedTL5ieTDg11mNSkCWSuBFg==",
       "type": "package",
-      "path": "rgb.net.hid/3.0.0-prerelease.3",
+      "path": "rgb.net.hid/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2455,14 +2477,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.HID.dll",
         "lib/net8.0/RGB.NET.HID.xml",
-        "rgb.net.hid.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.HID.dll",
+        "lib/net9.0/RGB.NET.HID.xml",
+        "rgb.net.hid.3.0.0.nupkg.sha512",
         "rgb.net.hid.nuspec"
       ]
     },
-    "RGB.NET.Layout/3.0.0-prerelease.3": {
-      "sha512": "f7E7wRYzRluSjrVesscdJ7eiI2VddU3AOFuhlRUq+r0uYW4N1HId/07n2ea1yS1uo4jpJPTqDcKxXUl1kUPBSw==",
+    "RGB.NET.Layout/3.0.0": {
+      "sha512": "ojXPaePXVmWT7xMz+o+ySi7XTGvY8MfA6gJh7uUuynZ2aPhnLmBnU3k45VeG9bvSD3hVXLh6fxsm4ON7At6HIQ==",
       "type": "package",
-      "path": "rgb.net.layout/3.0.0-prerelease.3",
+      "path": "rgb.net.layout/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2470,14 +2494,16 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Layout.dll",
         "lib/net8.0/RGB.NET.Layout.xml",
-        "rgb.net.layout.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Layout.dll",
+        "lib/net9.0/RGB.NET.Layout.xml",
+        "rgb.net.layout.3.0.0.nupkg.sha512",
         "rgb.net.layout.nuspec"
       ]
     },
-    "RGB.NET.Presets/3.0.0-prerelease.3": {
-      "sha512": "oRe+SIpKXVAnlvcZu56OhpRk+WPWdpEsuVGB1PZWmvc4exaqm7qv7ln9g0Mnh8vTFFregWQHhE0H/nyPmXgPpQ==",
+    "RGB.NET.Presets/3.0.0": {
+      "sha512": "aYhsATFZcJxKmXl2vxfwGcFCS5oaoSO0WOEXJJJeT3Ac1weqkvw/wj6EOmk4ngrAOu59YQerLO0FXPHYyP4WzA==",
       "type": "package",
-      "path": "rgb.net.presets/3.0.0-prerelease.3",
+      "path": "rgb.net.presets/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2485,7 +2511,9 @@
         "icon.png",
         "lib/net8.0/RGB.NET.Presets.dll",
         "lib/net8.0/RGB.NET.Presets.xml",
-        "rgb.net.presets.3.0.0-prerelease.3.nupkg.sha512",
+        "lib/net9.0/RGB.NET.Presets.dll",
+        "lib/net9.0/RGB.NET.Presets.xml",
+        "rgb.net.presets.3.0.0.nupkg.sha512",
         "rgb.net.presets.nuspec"
       ]
     },
@@ -4911,27 +4939,27 @@
       "Cyotek.Windows.Forms.ColorPicker >= 2.0.0-beta.7",
       "FFXIVWeather >= 1.0.17",
       "HidSharp >= 2.1.0",
-      "HueApi >= 1.6.3",
-      "HueApi.ColorConverters >= 1.5.1",
-      "HueApi.Entertainment >= 1.5.1",
+      "HueApi >= 1.7.0",
+      "HueApi.ColorConverters >= 1.7.1",
+      "HueApi.Entertainment >= 1.7.0",
       "MouseKeyHook.NetCore >= 5.6.1.1",
       "NAudio >= 2.2.1",
-      "NLog >= 5.3.3",
+      "NLog >= 5.4.0",
       "Newtonsoft.Json >= 13.0.3",
-      "RGB.NET.Core >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.Asus >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.CoolerMaster >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.Corsair >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.Logitech >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.Msi >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.Novation >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.OpenRGB >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.Razer >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.SteelSeries >= 3.0.0-prerelease.3",
-      "RGB.NET.Devices.Wooting >= 3.0.0-prerelease.3",
-      "RGB.NET.HID >= 3.0.0-prerelease.3",
-      "RGB.NET.Layout >= 3.0.0-prerelease.3",
-      "RGB.NET.Presets >= 3.0.0-prerelease.3",
+      "RGB.NET.Core >= 3.0.0",
+      "RGB.NET.Devices.Asus >= 3.0.0",
+      "RGB.NET.Devices.CoolerMaster >= 3.0.0",
+      "RGB.NET.Devices.Corsair >= 3.0.0",
+      "RGB.NET.Devices.Logitech >= 3.0.0",
+      "RGB.NET.Devices.Msi >= 3.0.0",
+      "RGB.NET.Devices.Novation >= 3.0.0",
+      "RGB.NET.Devices.OpenRGB >= 3.0.0",
+      "RGB.NET.Devices.Razer >= 3.0.0",
+      "RGB.NET.Devices.SteelSeries >= 3.0.0",
+      "RGB.NET.Devices.Wooting >= 3.0.0",
+      "RGB.NET.HID >= 3.0.0",
+      "RGB.NET.Layout >= 3.0.0",
+      "RGB.NET.Presets >= 3.0.0",
       "Sanford.Multimedia.Midi >= 6.6.2",
       "Sharlayan >= 8.0.1"
     ]
@@ -4941,7 +4969,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "3.1.6",
+    "version": "3.2.0",
     "restore": {
       "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
       "projectName": "Chromatics",
@@ -5008,15 +5036,15 @@
           },
           "HueApi": {
             "target": "Package",
-            "version": "[1.6.3, )"
+            "version": "[1.7.0, )"
           },
           "HueApi.ColorConverters": {
             "target": "Package",
-            "version": "[1.5.1, )"
+            "version": "[1.7.1, )"
           },
           "HueApi.Entertainment": {
             "target": "Package",
-            "version": "[1.5.1, )"
+            "version": "[1.7.0, )"
           },
           "MouseKeyHook.NetCore": {
             "target": "Package",
@@ -5028,7 +5056,7 @@
           },
           "NLog": {
             "target": "Package",
-            "version": "[5.3.3, )"
+            "version": "[5.4.0, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",
@@ -5036,59 +5064,59 @@
           },
           "RGB.NET.Core": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.Asus": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.CoolerMaster": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.Corsair": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.Logitech": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.Msi": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.Novation": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.OpenRGB": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.Razer": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.SteelSeries": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Devices.Wooting": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.HID": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Layout": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "RGB.NET.Presets": {
             "target": "Package",
-            "version": "[3.0.0-prerelease.3, )"
+            "version": "[3.0.0, )"
           },
           "Sanford.Multimedia.Midi": {
             "target": "Package",
