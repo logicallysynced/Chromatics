@@ -252,15 +252,16 @@ namespace Chromatics.Forms
             }
 
             var assembly = typeof(Program).Assembly;
+            var beta = false;
 
-            if (assembly.GetName().Version.Revision != 0 || assembly.GetName().Version.Revision != 1)
+            if (beta)
             {
                 Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA) has loaded");
                 //this.Text = $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build}.{assembly.GetName().Version.Revision} (BETA)";
             }
             else
             {
-                Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor} has loaded");
+                Logger.WriteConsole(LoggerTypes.System, $"Chromatics {assembly.GetName().Version.Major}.{assembly.GetName().Version.Minor}.{assembly.GetName().Version.Build} has loaded");
             }
 
 
