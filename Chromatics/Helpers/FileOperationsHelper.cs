@@ -821,7 +821,7 @@ namespace Chromatics.Helpers
                     page++;
                 }
 
-                var cafeCsvRaw = _httpClient.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/xivapi/ffxiv-datamining/refs/heads/master/csv/en/Weather.cs")).GetAwaiter().GetResult();
+                var cafeCsvRaw = _httpClient.GetStreamAsync(new Uri(@"https://raw.githubusercontent.com/xivapi/ffxiv-datamining/refs/heads/master/csv/en/Weather.csv")).GetAwaiter().GetResult();
                 using var cafeSr = new StreamReader(cafeCsvRaw);
                 using var cafeCsv = new CsvReader(cafeSr, CultureInfo.InvariantCulture);
                 for (var i = 0; i < 3; i++) cafeCsv.Read();
