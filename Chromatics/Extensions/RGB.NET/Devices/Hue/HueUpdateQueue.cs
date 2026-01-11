@@ -32,7 +32,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             : base(updateTrigger)
         {
             _client = client;
-            _light = _client.GetLightsAsync().Result.Data.FirstOrDefault(l => l.IdV1 == lightId);
+            _light = _client.Light.GetAllAsync().Result.Data.FirstOrDefault(l => l.IdV1 == lightId);
             appSettings = AppSettings.GetSettings();
         }
 
@@ -93,7 +93,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                 {
                     try
                     {
-                        var result = _client.UpdateLightAsync(_light.Id, req).GetAwaiter().GetResult(); // Execute the async method synchronously
+                        var result = _client.Light.UpdateAsync(_light.Id, req).GetAwaiter().GetResult(); // Execute the async method synchronously
                     }
                     catch (JsonException aggEx)
                     {
