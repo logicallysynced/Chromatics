@@ -8,7 +8,7 @@
     <Version>3.2.1.0</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Copyright>logicallysynced 2026</Copyright>
+    <Copyright>Danielle Thompson 2024</Copyright>
     <PackageProjectUrl>https://chromaticsffxiv.com</PackageProjectUrl>
     <NeutralLanguage>en-AU</NeutralLanguage>
     <ApplicationIcon>Resources\Chromatics_icon_144x144.ico</ApplicationIcon>
