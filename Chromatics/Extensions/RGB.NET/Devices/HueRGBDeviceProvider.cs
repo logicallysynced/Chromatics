@@ -90,7 +90,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         var localHueApi = new LocalHueApi(clientDefinition.Ip, appSettings.deviceHueBridgeClientKey);
 
                         // Discover lights on the bridge
-                        var lights = await localHueApi.GetLightsAsync();
+                        var lights = await localHueApi.Light.GetAllAsync();
 
                         foreach (var light in lights.Data)
                         {
