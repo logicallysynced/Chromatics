@@ -88,10 +88,10 @@ namespace Chromatics.Helpers
 
         public static HSLColor FromRGB(Byte R, Byte G, Byte B)
         {
-            R = (byte)(R * 255);
-            G = (byte)(G * 255);
-            B = (byte)(B * 255);
-
+            // Previous implementation multiplied each byte by 255 and re-cast to
+            // byte, which overflowed every non-zero channel into garbage before
+            // the HSL conversion even began. Inputs are already 0..255; normalise
+            // straight to 0..1.
             float _R = (R / 255.0f);
             float _G = (G / 255.0f);
             float _B = (B / 255.0f);

@@ -1,4 +1,5 @@
-﻿using Chromatics.Localization;
+﻿using Chromatics.Core;
+using Chromatics.Localization;
 using RGB.NET.Core;
 using NAudio.Wave;
 using NAudio.Dsp;
@@ -23,6 +24,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private const int fftLength = 1024; // NAudio FFT length
         private Complex[] fftBuffer = new Complex[fftLength];
 
+        private static Dictionary<LedId, int[]> Grid =>
+            KeyLocalization.GetActiveGrid(AppSettings.GetSettings().keyboardLayout);
+
         private class Peak
         {
             public int CurrentHeight { get; set; }
@@ -46,7 +50,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private void StartAudioCapture()
         {
             capture = new WasapiLoopbackCapture();
-            Debug.WriteLine($"Audio Format: {capture.WaveFormat}");
             capture.DataAvailable += OnDataAvailable;
             bufferedWaveProvider = new BufferedWaveProvider(capture.WaveFormat)
             {
@@ -54,27 +57,24 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             };
 
             capture.StartRecording();
-            Debug.WriteLine("Audio capture started.");
         }
 
         private void OnDataAvailable(object sender, WaveInEventArgs e)
         {
-            Debug.WriteLine($"Bytes recorded: {e.BytesRecorded}");
             bufferedWaveProvider.AddSamples(e.Buffer, 0, e.BytesRecorded);
             ProcessAudioBuffer();
         }
 
         private void InitializePeaks()
         {
-            var cols = KeyLocalization.QWERTY_Grid.Values.Select(p => p[1]).Distinct().OrderBy(c => c).ToList();
+            var cols = Grid.Values.Select(p => p[1]).Distinct().OrderBy(c => c).ToList();
             for (int i = 0; i < cols.Count; i += columnsPerPeak)
             {
                 var startColumn = cols[i];
                 var endColumn = (i + columnsPerPeak < cols.Count) ? cols[i + columnsPerPeak - 1] : cols[cols.Count - 1];
                 peaks.Add(new Peak { CurrentHeight = 0, TargetHeight = 0, StartColumn = startColumn, EndColumn = endColumn });
             }
-            maxRow = KeyLocalization.QWERTY_Grid.Values.Max(p => p[0]);
-            Debug.WriteLine($"Initialized {peaks.Count} peaks.");
+            maxRow = Grid.Values.Max(p => p[0]);
         }
 
         public override void OnAttached(IDecoratable decoratable)
@@ -101,8 +101,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             }
 
             bufferedWaveProvider = null;
-
-            Debug.WriteLine("Audio capture stopped.");
         }
 
         protected override void Update(double deltaTime)
@@ -113,7 +111,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                 foreach (var led in ledGroup)
                 {
-                    if (KeyLocalization.QWERTY_Grid.TryGetValue(led.Id, out var position))
+                    if (Grid.TryGetValue(led.Id, out var position))
                     {
                         var row = position[0];
                         var col = position[1];
@@ -143,7 +141,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         {
             var audioBytes = new byte[bufferedWaveProvider.BufferLength];
             int bytesRead = bufferedWaveProvider.Read(audioBytes, 0, audioBytes.Length);
-            Debug.WriteLine($"Bytes read from buffer: {bytesRead}");
 
             int bytesPerSample = bufferedWaveProvider.WaveFormat.BitsPerSample / 8;
             int sampleCount = bytesRead / bytesPerSample;
@@ -153,9 +150,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             {
                 audioSamples[i] = BitConverter.ToSingle(audioBytes, i * bytesPerSample);
             }
-
-            Debug.WriteLine($"Sample count: {sampleCount}");
-            Debug.WriteLine($"First 10 audio samples: {string.Join(", ", audioSamples.Take(10))}");
 
             if (audioSamples.Length < fftLength)
                 return;
@@ -176,11 +170,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 magnitudes[i] = (float)Math.Sqrt(fftBuffer[i].X * fftBuffer[i].X + fftBuffer[i].Y * fftBuffer[i].Y);
             }
 
-            Debug.WriteLine($"First 10 magnitudes: {string.Join(", ", magnitudes.Take(10))}");
-
             // Normalize and apply gain
             float maxMagnitude = magnitudes.Max();
-            Debug.WriteLine($"Max magnitude before gain: {maxMagnitude}");
 
             float gain = 5.0f; // Reduced gain factor
             if (maxMagnitude > 0)
@@ -191,28 +182,20 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 }
             }
 
-            Debug.WriteLine($"First 10 magnitudes after gain: {string.Join(", ", magnitudes.Take(10))}");
-
             // Determine peak height and clamp it
             var calculatedPeakHeight = (int)(magnitudes.Max() * maxRow / gain);
             calculatedPeakHeight = Math.Min(calculatedPeakHeight, maxRow); // Clamp the peak height to the max row value
-            Debug.WriteLine($"Calculated peak height: {calculatedPeakHeight}");
 
             foreach (var peak in peaks)
             {
                 peak.TargetHeight = calculatedPeakHeight;
-                Debug.WriteLine($"Updated peak: StartColumn={peak.StartColumn}, EndColumn={peak.EndColumn}, TargetHeight={peak.TargetHeight}");
             }
 
             // Smoothly update current heights to target heights using linear interpolation
             foreach (var peak in peaks)
             {
-                int previousHeight = peak.CurrentHeight;
                 peak.CurrentHeight = LinearInterpolate(peak.CurrentHeight, peak.TargetHeight, 0.05); // Adjusted smoothing factor
-                Debug.WriteLine($"Updated peak: StartColumn={peak.StartColumn}, EndColumn={peak.EndColumn}, CurrentHeight={peak.CurrentHeight}, PreviousHeight={previousHeight}, TargetHeight={peak.TargetHeight}");
             }
-
-            Debug.WriteLine($"Max magnitude after gain: {magnitudes.Max()}");
         }
 
         private int LinearInterpolate(int start, int end, double factor)

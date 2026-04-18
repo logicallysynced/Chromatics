@@ -637,7 +637,11 @@ namespace Chromatics.Helpers
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = Path.Combine(enviroment, csvPath);
 
-            using var dataStoreResult = _httpClient.GetAsync(new Uri(url)).GetAwaiter().GetResult();
+            // Run the async work on a thread-pool thread so callers on the UI
+            // thread don't deadlock waiting for it to resume on a captured
+            // SynchronizationContext. This still blocks the caller (the layer
+            // pipeline is synchronous), but without the deadlock risk.
+            using var dataStoreResult = Task.Run(() => _httpClient.GetAsync(new Uri(url))).GetAwaiter().GetResult();
 
             if (File.Exists(path))
             {
@@ -650,7 +654,7 @@ namespace Chromatics.Helpers
                 }
             }
 
-            var dataStore = dataStoreResult.Content.ReadAsStringAsync().Result;
+            var dataStore = Task.Run(() => dataStoreResult.Content.ReadAsStringAsync()).GetAwaiter().GetResult();
             // Was `csvPath` — the relative file name — which dropped the download
             // into the current working directory instead of next to the executable.
             // `path` (computed above from `enviroment`) is the correct absolute target.

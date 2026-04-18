@@ -100,7 +100,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
                                 // Create the device info and device objects
                                 HueDeviceInfo deviceInfo = new HueDeviceInfo(light);
-                                HueDevice device = new HueDevice(deviceInfo, new HueUpdateQueue(GetUpdateTrigger(), light.IdV1, localHueApi));
+                                HueDevice device = new HueDevice(deviceInfo, new HueUpdateQueue(GetUpdateTrigger(), light, localHueApi));
                                 devices.Add(device);
                             }
                             catch (Exception ex)

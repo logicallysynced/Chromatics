@@ -1,4 +1,5 @@
 ﻿using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Models;
 using HueApi;
 using HueApi.ColorConverters.Original.Extensions;
@@ -28,11 +29,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
         #region Constructors
 
-        public HueUpdateQueue(IDeviceUpdateTrigger updateTrigger, string lightId, LocalHueApi client)
+        public HueUpdateQueue(IDeviceUpdateTrigger updateTrigger, Light light, LocalHueApi client)
             : base(updateTrigger)
         {
             _client = client;
-            _light = _client.Light.GetAllAsync().Result.Data.FirstOrDefault(l => l.IdV1 == lightId);
+            // The provider has already enumerated lights asynchronously before
+            // constructing us, so take the Light directly. The old shape blocked
+            // on GetAllAsync().Result inside the constructor, which could deadlock
+            // if the Hue bridge was unreachable.
+            _light = light;
             appSettings = AppSettings.GetSettings();
         }
 
@@ -102,7 +107,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     }
                     catch (JsonException aggEx)
                     {
-                        Console.WriteLine($"JSON Exception: {aggEx.Message}");
+                        Logger.WriteConsole(LoggerTypes.Error, $"[Hue] JSON Exception: {aggEx.Message}");
                     }
                     catch (AggregateException aggEx)
                     {
@@ -110,12 +115,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         {
                             if (innerEx is JsonException)
                             {
-                                Console.WriteLine($"JSON Exception: {aggEx.Message}");
+                                Logger.WriteConsole(LoggerTypes.Error, $"[Hue] JSON Exception: {aggEx.Message}");
                             }
                             else
                             {
-                                // Handle other types of exceptions
-                                Console.WriteLine($"Other Exception: {innerEx.Message}");
+                                Logger.WriteConsole(LoggerTypes.Error, $"[Hue] Exception: {innerEx.Message}");
                                 HueRGBDeviceProvider.Instance.Throw(innerEx);
                             }
                         }

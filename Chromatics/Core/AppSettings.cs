@@ -18,6 +18,15 @@ namespace Chromatics.Core
         public static readonly string currentPalettesVersion = "1";
         public static readonly string currentMappingLayerVersion = "2";
 
+        // Fires after the keyboard layout setting changes so visuals (virtual
+        // keyboard in Mappings, effect grids) can rebuild on the UI thread.
+        public static event EventHandler KeyboardLayoutChanged;
+
+        public static void RaiseKeyboardLayoutChanged()
+        {
+            KeyboardLayoutChanged?.Invoke(null, EventArgs.Empty);
+        }
+
         public static void Startup()
         {
             //Load Settings

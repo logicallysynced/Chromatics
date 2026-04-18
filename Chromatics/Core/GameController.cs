@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -45,9 +45,13 @@ namespace Chromatics.Core
         private static bool _isInGame;
         private static bool _onTitle;
         private static bool wasPreviewed;
-        // Set to true by Exit() before it disposes the CTSes, so that a concurrent
-        // GameLoop iteration cannot race into StopGameLoop(true) with a disposed source.
+        // Set to true by Exit() before any teardown, so that concurrent loops on
+        // the thread pool bail out before touching disposed CancellationTokenSources.
         private static volatile bool _isShuttingDown;
+        // Serializes all CTS lifecycle operations (Cancel/Dispose/reassign) and
+        // memory-handler teardown. Without this, GameLoop (thread pool) and Exit()
+        // (UI thread) can race on StopGameLoop and hit ObjectDisposedException.
+        private static readonly object _shutdownLock = new object();
         public static void Setup()
         {
             if (gameSetup) return;
@@ -71,14 +75,34 @@ namespace Chromatics.Core
 
         public static void Exit()
         {
-            _isShuttingDown = true;
-            StopGameLoop();
-            _GameConnectionCancellationTokenSource.Cancel();
-            _GameLoopCancellationTokenSource.Cancel();
-            _masterCancellationToken.Cancel();
-            _GameConnectionCancellationTokenSource.Dispose();
-            _GameLoopCancellationTokenSource.Dispose();
-            _masterCancellationToken.Dispose();
+            lock (_shutdownLock)
+            {
+                if (_isShuttingDown) return;
+                _isShuttingDown = true;
+
+                // Cancel tokens but do NOT dispose: in-flight background tasks may
+                // still observe these CancellationTokenSources briefly after Exit()
+                // returns, and Dispose() would make that a hard crash. The CTSes
+                // hold no unmanaged resources; the process is exiting, so the GC
+                // reclaims them shortly.
+                SafeCancel(_GameConnectionCancellationTokenSource);
+                SafeCancel(_GameLoopCancellationTokenSource);
+                SafeCancel(_masterCancellationToken);
+
+                _memoryHandler?.Dispose();
+                _memoryHandler = null;
+
+                if (activeProcessId != -1)
+                {
+                    SharlayanMemoryManager.Instance.RemoveHandler(activeProcessId);
+                    activeProcessId = -1;
+                }
+
+                _configuration?.ProcessModel?.Process?.Dispose();
+                _configuration = null;
+
+                _layerProcessorFactory?.DisposeAll();
+            }
         }
 
         public static void Stop(bool reconnect = false)
@@ -95,8 +119,7 @@ namespace Chromatics.Core
             }
 
             StopGameLoop(reconnect);
-            _GameConnectionCancellationTokenSource.Cancel();
-            
+            SafeCancel(_GameConnectionCancellationTokenSource);
         }
 
         public static bool IsGameConnected()
@@ -115,7 +138,7 @@ namespace Chromatics.Core
         public static Process GetGameProcess()
         {
             if (gameSetup && gameConnected)
-                return _memoryHandler.Configuration.ProcessModel.Process;
+                return _memoryHandler?.Configuration?.ProcessModel?.Process;
 
             return null;
         }
@@ -124,9 +147,10 @@ namespace Chromatics.Core
         {
             if (gameSetup && gameConnected)
             {
-                if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
+                var handler = _memoryHandler;
+                if (handler?.Reader != null && handler.Reader.CanGetActors())
                 {
-                    var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                    var getCurrentPlayer = handler.Reader.GetCurrentPlayer();
                     if (getCurrentPlayer.Entity != null)
                     {
                         return getCurrentPlayer.Entity.Job;
@@ -139,59 +163,77 @@ namespace Chromatics.Core
 
         private static void StartGameLoop()
         {
-            _GameLoopCancellationTokenSource.Dispose();
-            _GameLoopCancellationTokenSource = new CancellationTokenSource();
-            Task.Run(() => GameLoop(_GameLoopCancellationTokenSource.Token), _masterCancellationToken.Token)
-                .ContinueWith(
-                    t => Logger.WriteConsole(LoggerTypes.Error, $"GameLoop faulted: {t.Exception?.GetBaseException()?.Message}"),
-                    TaskContinuationOptions.OnlyOnFaulted);
-        }
-
-        private static void StopGameLoop(bool reconnect = false)
-        {
-            // Guard: Exit() disposes this CTS; a concurrent GameLoop thread could
-            // reach here after disposal despite the _isShuttingDown flag (TOCTOU).
-            try { _GameLoopCancellationTokenSource.Cancel(); }
-            catch (ObjectDisposedException) { }
-            _memoryHandler?.Dispose();
-
-            if (activeProcessId != -1)
+            lock (_shutdownLock)
             {
-                SharlayanMemoryManager.Instance.RemoveHandler(activeProcessId);
-                activeProcessId = -1;
-            }
+                if (_isShuttingDown) return;
 
-            // `_configuration` is only assigned once we've successfully connected to
-            // FFXIV, so Exit()/Stop() can reach this path with it still null (game was
-            // never running, or a prior StopGameLoop nulled it out already). Null-chain
-            // instead of asserting shape so shutdown stays deterministic in every state.
-            _configuration?.ProcessModel?.Process?.Dispose();
-            _configuration = null;
-
-            _masterCancellationToken.Cancel();
-            _masterCancellationToken.Dispose();
-            _masterCancellationToken = new CancellationTokenSource();
-
-            // Same rationale as `_configuration` above — Setup() may not have run if
-            // the user exits from the first-run wizard or during early startup errors.
-            _layerProcessorFactory?.DisposeAll();
-
-            if (reconnect)
-            {
-                _GameConnectionCancellationTokenSource.Dispose();
-                _GameConnectionCancellationTokenSource = new CancellationTokenSource();
-                RGBController.StopEffects();
-                RGBController.RunStartupEffects();
-                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token), _masterCancellationToken.Token)
+                try { _GameLoopCancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
+                _GameLoopCancellationTokenSource = new CancellationTokenSource();
+                var loopToken = _GameLoopCancellationTokenSource.Token;
+                Task.Run(() => GameLoop(loopToken))
                     .ContinueWith(
-                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop (reconnect) faulted: {t.Exception?.GetBaseException()?.Message}"),
+                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameLoop faulted: {t.Exception?.GetBaseException()?.Message}"),
                         TaskContinuationOptions.OnlyOnFaulted);
             }
         }
 
+        private static void StopGameLoop(bool reconnect = false)
+        {
+            lock (_shutdownLock)
+            {
+                if (_isShuttingDown && !reconnect)
+                {
+                    // Exit() owns the final teardown; don't race it from here.
+                    return;
+                }
+
+                SafeCancel(_GameLoopCancellationTokenSource);
+
+                _memoryHandler?.Dispose();
+                _memoryHandler = null;
+
+                if (activeProcessId != -1)
+                {
+                    SharlayanMemoryManager.Instance.RemoveHandler(activeProcessId);
+                    activeProcessId = -1;
+                }
+
+                // `_configuration` is only assigned once we've successfully connected to
+                // FFXIV, so this can run with it still null (game was never running, or
+                // a prior StopGameLoop nulled it out already).
+                _configuration?.ProcessModel?.Process?.Dispose();
+                _configuration = null;
+
+                // Same rationale as `_configuration` — Setup() may not have run if the
+                // user exits from the first-run wizard or during early startup errors.
+                _layerProcessorFactory?.DisposeAll();
+
+                if (reconnect && !_isShuttingDown)
+                {
+                    try { _GameConnectionCancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
+                    _GameConnectionCancellationTokenSource = new CancellationTokenSource();
+                    var reconnectToken = _GameConnectionCancellationTokenSource.Token;
+
+                    RGBController.StopEffects();
+                    RGBController.RunStartupEffects();
+                    Task.Run(() => GameConnectionLoop(reconnectToken))
+                        .ContinueWith(
+                            t => Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop (reconnect) faulted: {t.Exception?.GetBaseException()?.Message}"),
+                            TaskContinuationOptions.OnlyOnFaulted);
+                }
+            }
+        }
+
+        private static void SafeCancel(CancellationTokenSource cts)
+        {
+            if (cts == null) return;
+            try { cts.Cancel(); }
+            catch (ObjectDisposedException) { }
+        }
+
         private static async Task GameLoop(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested && !_isShuttingDown)
             {
                 if (IsGameRunning())
                 {
@@ -207,9 +249,11 @@ namespace Chromatics.Core
 
                     if (!_isShuttingDown)
                         StopGameLoop(true);
+
+                    break;
                 }
 
-                if (cancellationToken.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested || _isShuttingDown)
                     break;
 
                 // Wait for the interval before continuing
@@ -228,20 +272,17 @@ namespace Chromatics.Core
                 }
 
                 await Task.Delay(delay, cancellationToken).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
-                if (cancellationToken.IsCancellationRequested) break;
+                if (cancellationToken.IsCancellationRequested || _isShuttingDown) break;
 
             }
         }
 
         private static async Task GameConnectionLoop(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested && !_isShuttingDown)
             {
                 if (gameConnected)
                 {
-                    //_GameConnectionCancellationTokenSource.Cancel();
-                    //RGBController.StopEffects(true);
-                    //StartGameLoop();
                     break;
                 }
                 else
@@ -249,14 +290,13 @@ namespace Chromatics.Core
                     ConnectFFXIVClient();
                 }
 
-                if (cancellationToken.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested || _isShuttingDown)
                     break;
 
-                // Wait for the interval before continuing
                 var delay = _connectionInterval;
 
                 await Task.Delay(delay, cancellationToken).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
-                if (cancellationToken.IsCancellationRequested) break;
+                if (cancellationToken.IsCancellationRequested || _isShuttingDown) break;
             }
         }
 
@@ -275,6 +315,8 @@ namespace Chromatics.Core
         {
             try
             {
+                if (_isShuttingDown) return;
+
                 if (_connectionAttempts < 1)
                 {
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Attempting to attach to FFXIV..");
@@ -333,7 +375,7 @@ namespace Chromatics.Core
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Attached to FFXIV.");
                     _connectionAttempts = 0;
 
-                    _GameConnectionCancellationTokenSource.Cancel();
+                    SafeCancel(_GameConnectionCancellationTokenSource);
                     RGBController.StopEffects();
                     RGBController.ResetLayerGroups();
                     StartGameLoop();
@@ -365,16 +407,22 @@ namespace Chromatics.Core
 
         private static void GameProcessLayers()
         {
-            if (!gameConnected) return;
+            if (!gameConnected || _isShuttingDown) return;
+
+            // Snapshot the handler reference so Dispose() on another thread can't
+            // null it between our own reads below. The broad catch at the end is
+            // still kept as a belt-and-braces safety net.
+            var handler = _memoryHandler;
+            if (handler == null) return;
 
             try
             {
                 //Check if game has logged in
 
-                if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors() && _memoryHandler.Reader.CanGetChatLog())
+                if (handler.Reader != null && handler.Reader.CanGetActors() && handler.Reader.CanGetChatLog())
                 {
-                    var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
-                    var chatLogCount = _memoryHandler.Reader.GetChatLog().ChatLogItems.Count;
+                    var getCurrentPlayer = handler.Reader.GetCurrentPlayer();
+                    var chatLogCount = handler.Reader.GetChatLog().ChatLogItems.Count;
 
                     var runningEffects = RGBController.GetRunningEffects();
 
@@ -454,9 +502,9 @@ namespace Chromatics.Core
                 if (!_isInGame) return;
 
                 //Event Delegates
-                if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
+                if (handler.Reader != null && handler.Reader.CanGetActors())
                 {
-                    var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                    var getCurrentPlayer = handler.Reader.GetCurrentPlayer();
                     if (getCurrentPlayer.Entity != null)
                     {
                         if (getCurrentPlayer.Entity.Job != _currentJob)
