@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.Sharlayan
 {
-    public class GameStateExtension
+    public static class GameStateExtension
     {
         public static DateTime LastUpdated = DateTime.MinValue;
 

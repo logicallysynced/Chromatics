@@ -1,4 +1,5 @@
 ﻿using Chromatics.Enums;
+using Chromatics.Extensions;
 using Chromatics.Helpers;
 using Chromatics.Models;
 using System;

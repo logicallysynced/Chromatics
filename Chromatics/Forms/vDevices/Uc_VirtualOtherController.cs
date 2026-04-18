@@ -1,7 +1,7 @@
 ﻿using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Localization;
-using Chromatics.Models;
+using Chromatics.Forms.vDevices;
 using HidSharp;
 using OpenRGB.NET;
 using RGB.NET.Core;

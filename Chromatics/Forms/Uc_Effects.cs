@@ -1,5 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Enums;
+using Chromatics.Localization;
 using MetroFramework.Components;
 using MetroFramework.Controls;
 using System;

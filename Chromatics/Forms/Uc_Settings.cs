@@ -1,6 +1,7 @@
 ﻿using AutoUpdaterDotNET;
 using Chromatics.Core;
 using Chromatics.Enums;
+using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Helpers;

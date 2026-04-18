@@ -26,7 +26,7 @@ namespace Chromatics.Core
         private static LayerProcessorFactory _layerProcessorFactory;
         private static MemoryHandler _memoryHandler;
         public static event JobChanged jobChanged;
-        private static CustomComparers.LayerComparer comparer = new();
+        private static LayerComparer comparer = new();
         private static CancellationTokenSource _GameConnectionCancellationTokenSource = new CancellationTokenSource();
         private static CancellationTokenSource _GameLoopCancellationTokenSource = new CancellationTokenSource();
         private static CancellationTokenSource _masterCancellationToken = new CancellationTokenSource();
@@ -57,7 +57,7 @@ namespace Chromatics.Core
             if (gameSetup) return;
 
             _layerProcessorFactory = LayerProcessorFactory.Instance;
-            comparer = new CustomComparers.LayerComparer();
+            comparer = new LayerComparer();
 
 
             if (!gameConnected)

@@ -1,5 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Enums;
+using Chromatics.Extensions;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Layers;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Color = System.Drawing.Color;
 
-namespace Chromatics.Models
+namespace Chromatics.Forms.vDevices
 {
     public class VirtualDevice : UserControl, IDisposable
     {

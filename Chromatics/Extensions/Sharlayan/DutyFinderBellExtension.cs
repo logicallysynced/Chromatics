@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.Sharlayan
 {
-    public class DutyFinderBellExtension
+    public static class DutyFinderBellExtension
     {
         public static DateTime LastUpdated = DateTime.MinValue;
 

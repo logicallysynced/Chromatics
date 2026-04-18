@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.Sharlayan
 {
-    public class MusicExtension
+    public static class MusicExtension
     {
         public static DateTime LastUpdated = DateTime.MinValue;
 
