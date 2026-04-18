@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Helpers
 {
-    public class DeviceHelper
+    public static class DeviceHelper
     {
 
         public static Guid GenerateDeviceGuid(string deviceName)

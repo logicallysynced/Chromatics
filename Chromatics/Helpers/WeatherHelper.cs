@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Helpers
 {
-    public class WeatherHelper
+    public static class WeatherHelper
     {
         private static Dictionary<int, string> _weatherCache;
         private static readonly object CacheLock = new object();

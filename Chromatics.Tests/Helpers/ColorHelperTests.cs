@@ -43,4 +43,40 @@ public class ColorHelperTests
         Assert.Equal(DrawingColor.Black.G, ColorHelper.RGBColorToColor(black).G);
         Assert.Equal(DrawingColor.Black.B, ColorHelper.RGBColorToColor(black).B);
     }
+
+    // ColorInterpolator round-trip: interpolating at lambda=0 should return the first
+    // endpoint and at lambda=1 the second, modulo rounding through HSL conversion.
+    [Fact]
+    public void ColorInterpolator_AtLambdaZero_ReturnsFirstColor()
+    {
+        var c1 = DrawingColor.FromArgb(200, 100, 50);
+        var c2 = DrawingColor.FromArgb(10, 20, 30);
+        var result = ColorInterpolator.InterpolateBetween(c1, c2, 0.0);
+        // Allow ±2 per channel for float rounding through HSL.
+        Assert.InRange(result.R, c1.R - 2, c1.R + 2);
+        Assert.InRange(result.G, c1.G - 2, c1.G + 2);
+        Assert.InRange(result.B, c1.B - 2, c1.B + 2);
+    }
+
+    [Fact]
+    public void ColorInterpolator_AtLambdaOne_ReturnsSecondColor()
+    {
+        var c1 = DrawingColor.FromArgb(200, 100, 50);
+        var c2 = DrawingColor.FromArgb(10, 20, 30);
+        var result = ColorInterpolator.InterpolateBetween(c1, c2, 1.0);
+        Assert.InRange(result.R, c2.R - 2, c2.R + 2);
+        Assert.InRange(result.G, c2.G - 2, c2.G + 2);
+        Assert.InRange(result.B, c2.B - 2, c2.B + 2);
+    }
+
+    [Fact]
+    public void ColorInterpolator_Midpoint_IsNotAnEndpoint()
+    {
+        var c1 = DrawingColor.FromArgb(0, 0, 0);
+        var c2 = DrawingColor.FromArgb(255, 255, 255);
+        var result = ColorInterpolator.InterpolateBetween(c1, c2, 0.5);
+        // Midpoint through HSL should not be pure black or pure white.
+        Assert.NotEqual(c1, result);
+        Assert.NotEqual(c2, result);
+    }
 }

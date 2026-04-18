@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace Chromatics.Helpers
 {
-    public class SystemHelpers
+    public static class SystemHelpers
     {
         public static bool IsDarkModeEnabled()
         {

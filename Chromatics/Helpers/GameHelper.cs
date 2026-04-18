@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Helpers
 {
-    public class GameHelper
+    public static class GameHelper
     {
         public static bool IsCrafter(CurrentPlayerResult player)
         {

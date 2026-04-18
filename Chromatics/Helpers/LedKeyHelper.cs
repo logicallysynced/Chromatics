@@ -1,4 +1,4 @@
-﻿using RGB.NET.Core;
+using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,545 +9,162 @@ namespace Chromatics.Helpers
 {
     public static class LedKeyHelper
     {
-        public static string LedIdToHotbarKeyConverter(LedId led)
+        // Single source-of-truth mapping from LedId to display name.
+        // Entries that share a display name (NonUsTilde/GraveAccentAndTilde, etc.)
+        // are ordered so the canonical LedId appears first — _keyToLedId picks the
+        // first occurrence when building the reverse map, preserving the original
+        // HotbarKeyToLedIdConverter behaviour.
+        private static readonly Dictionary<LedId, string> _ledIdToKey = new Dictionary<LedId, string>
         {
-            switch (led)
-            {
-                case LedId.Keyboard_Escape:
-                    return "Escape";
-                case LedId.Keyboard_F1:
-                    return "F1";
-                case LedId.Keyboard_F2:
-                    return "F2";
-                case LedId.Keyboard_F3:
-                    return "F3";
-                case LedId.Keyboard_F4:
-                    return "F4";
-                case LedId.Keyboard_F5:
-                    return "F5";
-                case LedId.Keyboard_F6:
-                    return "F6";
-                case LedId.Keyboard_F7:
-                    return "F7";
-                case LedId.Keyboard_F8:
-                    return "F8";
-                case LedId.Keyboard_F9:
-                    return "F9";
-                case LedId.Keyboard_F10:
-                    return "F10";
-                case LedId.Keyboard_F11:
-                    return "F11";
-                case LedId.Keyboard_F12:
-                    return "F12";
-                case LedId.Keyboard_GraveAccentAndTilde:
-                    return "`";
-                case LedId.Keyboard_1:
-                    return "1";
-                case LedId.Keyboard_2:
-                    return "2";
-                case LedId.Keyboard_3:
-                    return "3";
-                case LedId.Keyboard_4:
-                    return "4";
-                case LedId.Keyboard_5:
-                    return "5";
-                case LedId.Keyboard_6:
-                    return "6";
-                case LedId.Keyboard_7:
-                    return "7";
-                case LedId.Keyboard_8:
-                    return "8";
-                case LedId.Keyboard_9:
-                    return "9";
-                case LedId.Keyboard_0:
-                    return "0";
-                case LedId.Keyboard_MinusAndUnderscore:
-                    return "-";
-                case LedId.Keyboard_EqualsAndPlus:
-                    return "=";
-                case LedId.Keyboard_Backspace:
-                    return "Backspace";
-                case LedId.Keyboard_Tab:
-                    return "Tab";
-                case LedId.Keyboard_Q:
-                    return "Q";
-                case LedId.Keyboard_W:
-                    return "W";
-                case LedId.Keyboard_E:
-                    return "E";
-                case LedId.Keyboard_R:
-                    return "R";
-                case LedId.Keyboard_T:
-                    return "T";
-                case LedId.Keyboard_Y:
-                    return "Y";
-                case LedId.Keyboard_U:
-                    return "U";
-                case LedId.Keyboard_I:
-                    return "I";
-                case LedId.Keyboard_O:
-                    return "O";
-                case LedId.Keyboard_P:
-                    return "P";
-                case LedId.Keyboard_BracketLeft:
-                    return "[";
-                case LedId.Keyboard_BracketRight:
-                    return "]";
-                case LedId.Keyboard_Backslash:
-                    return @"\";
-                case LedId.Keyboard_Enter:
-                    return "Enter";
-                case LedId.Keyboard_CapsLock:
-                    return "Caps Lock";
-                case LedId.Keyboard_A:
-                    return "A";
-                case LedId.Keyboard_S:
-                    return "S";
-                case LedId.Keyboard_D:
-                    return "D";
-                case LedId.Keyboard_F:
-                    return "F";
-                case LedId.Keyboard_G:
-                    return "G";
-                case LedId.Keyboard_H:
-                    return "H";
-                case LedId.Keyboard_J:
-                    return "J";
-                case LedId.Keyboard_K:
-                    return "K";
-                case LedId.Keyboard_L:
-                    return "L";
-                case LedId.Keyboard_SemicolonAndColon:
-                    return ";";
-                case LedId.Keyboard_ApostropheAndDoubleQuote:
-                    return "'";
-                case LedId.Keyboard_NonUsTilde:
-                    return "`";
-                case LedId.Keyboard_LeftShift:
-                    return "Left Shift";
-                case LedId.Keyboard_NonUsBackslash:
-                    return @"\";
-                case LedId.Keyboard_Z:
-                    return "Z";
-                case LedId.Keyboard_X:
-                    return "X";
-                case LedId.Keyboard_C:
-                    return "C";
-                case LedId.Keyboard_V:
-                    return "V";
-                case LedId.Keyboard_B:
-                    return "B";
-                case LedId.Keyboard_N:
-                    return "N";
-                case LedId.Keyboard_M:
-                    return "M";
-                case LedId.Keyboard_CommaAndLessThan:
-                    return ",";
-                case LedId.Keyboard_PeriodAndBiggerThan:
-                    return ".";
-                case LedId.Keyboard_SlashAndQuestionMark:
-                    return "/";
-                case LedId.Keyboard_RightShift:
-                    return "Right Shift";
-                case LedId.Keyboard_LeftCtrl:
-                    return "Left Ctrl";
-                case LedId.Keyboard_LeftGui:
-                    return "Left Gui";
-                case LedId.Keyboard_LeftAlt:
-                    return "Left Alt";
-                case LedId.Keyboard_Lang2:
-                    return "Lang2";
-                case LedId.Keyboard_Space:
-                    return "Space";
-                case LedId.Keyboard_Lang1:
-                    return "Lang1";
-                case LedId.Keyboard_RightAlt:
-                    return "Right Alt";
-                case LedId.Keyboard_RightGui:
-                    return "Right Gui";
-                case LedId.Keyboard_Application:
-                    return "Application";
-                case LedId.Keyboard_RightCtrl:
-                    return "Right Ctrl";
-                case LedId.Keyboard_International1:
-                    return "International1";
-                case LedId.Keyboard_International2:
-                    return "International2";
-                case LedId.Keyboard_International3:
-                    return "International3";
-                case LedId.Keyboard_International5:
-                    return "International5";
-                case LedId.Keyboard_International4:
-                    return "International4";
-                case LedId.Keyboard_PrintScreen:
-                    return "Print Screen";
-                case LedId.Keyboard_ScrollLock:
-                    return "Scroll Lock";
-                case LedId.Keyboard_PauseBreak:
-                    return "Pause";
-                case LedId.Keyboard_Insert:
-                    return "Insert";
-                case LedId.Keyboard_Home:
-                    return "Home";
-                case LedId.Keyboard_PageUp:
-                    return "Page Up";
-                case LedId.Keyboard_Delete:
-                    return "Delete";
-                case LedId.Keyboard_End:
-                    return "End";
-                case LedId.Keyboard_PageDown:
-                    return "Page Down";
-                case LedId.Keyboard_ArrowUp:
-                    return "↑";
-                case LedId.Keyboard_ArrowLeft:
-                    return "←";
-                case LedId.Keyboard_ArrowDown:
-                    return "↓";
-                case LedId.Keyboard_ArrowRight:
-                    return "→";
-                case LedId.Keyboard_NumLock:
-                    return "Num Lock";
-                case LedId.Keyboard_NumSlash:
-                    return "NUM/";
-                case LedId.Keyboard_NumAsterisk:
-                    return "NUM*";
-                case LedId.Keyboard_NumMinus:
-                    return "NUM-";
-                case LedId.Keyboard_Num7:
-                    return "NUM7";
-                case LedId.Keyboard_Num8:
-                    return "NUM8";
-                case LedId.Keyboard_Num9:
-                    return "NUM9";
-                case LedId.Keyboard_NumComma:
-                    return "NUM,";
-                case LedId.Keyboard_NumPlus:
-                    return "NUM+";
-                case LedId.Keyboard_Num4:
-                    return "NUM4";
-                case LedId.Keyboard_Num5:
-                    return "NUM5";
-                case LedId.Keyboard_Num6:
-                    return "NUM6";
-                case LedId.Keyboard_Num1:
-                    return "NUM1";
-                case LedId.Keyboard_Num2:
-                    return "NUM2";
-                case LedId.Keyboard_Num3:
-                    return "NUM3";
-                case LedId.Keyboard_NumEnter:
-                    return "Enter";
-                case LedId.Keyboard_Num0:
-                    return "NUM0";
-                case LedId.Keyboard_Num00:
-                    return "NUM00";
-                case LedId.Keyboard_Function:
-                    return "Function";
-                case LedId.Keyboard_NumPeriodAndDelete:
-                    return "Num.";
-                case LedId.Keyboard_MediaMute:
-                    return "Media Mute";
-                case LedId.Keyboard_MediaVolumeDown:
-                    return "Media VolumeDown";
-                case LedId.Keyboard_MediaVolumeUp:
-                    return "Media VolumeUp";
-                case LedId.Keyboard_MediaStop:
-                    return "Media Stop";
-                case LedId.Keyboard_MediaPreviousTrack:
-                    return "Media Previous Track";
-                case LedId.Keyboard_MediaPlay:
-                    return "Media Play";
-                case LedId.Keyboard_MediaNextTrack:
-                    return "Media Next Track";
-                case LedId.Keyboard_WinLock:
-                    return "Win Lock";
-                case LedId.Keyboard_Macro1:
-                    return "M1";
-                case LedId.Keyboard_Macro2:
-                    return "M2";
-                case LedId.Keyboard_Macro3:
-                    return "M3";
-                case LedId.Keyboard_Macro4:
-                    return "M4";
-                case LedId.Keyboard_Macro5:
-                    return "M5";
-                case LedId.Keyboard_Programmable1:
-                    return "M1";
-                case LedId.Keyboard_Programmable2:
-                    return "M2";
-                case LedId.Keyboard_Programmable3:
-                    return "M3";
-                case LedId.Keyboard_Programmable4:
-                    return "M4";
-                case LedId.Keyboard_Programmable5:
-                    return "M5";
-                default:
-                    return "Unknown";
-            }
-        }
+            { LedId.Keyboard_Escape, "Escape" },
+            { LedId.Keyboard_F1, "F1" },
+            { LedId.Keyboard_F2, "F2" },
+            { LedId.Keyboard_F3, "F3" },
+            { LedId.Keyboard_F4, "F4" },
+            { LedId.Keyboard_F5, "F5" },
+            { LedId.Keyboard_F6, "F6" },
+            { LedId.Keyboard_F7, "F7" },
+            { LedId.Keyboard_F8, "F8" },
+            { LedId.Keyboard_F9, "F9" },
+            { LedId.Keyboard_F10, "F10" },
+            { LedId.Keyboard_F11, "F11" },
+            { LedId.Keyboard_F12, "F12" },
+            { LedId.Keyboard_GraveAccentAndTilde, "`" },   // canonical for "`"
+            { LedId.Keyboard_1, "1" },
+            { LedId.Keyboard_2, "2" },
+            { LedId.Keyboard_3, "3" },
+            { LedId.Keyboard_4, "4" },
+            { LedId.Keyboard_5, "5" },
+            { LedId.Keyboard_6, "6" },
+            { LedId.Keyboard_7, "7" },
+            { LedId.Keyboard_8, "8" },
+            { LedId.Keyboard_9, "9" },
+            { LedId.Keyboard_0, "0" },
+            { LedId.Keyboard_MinusAndUnderscore, "-" },
+            { LedId.Keyboard_EqualsAndPlus, "=" },
+            { LedId.Keyboard_Backspace, "Backspace" },
+            { LedId.Keyboard_Tab, "Tab" },
+            { LedId.Keyboard_Q, "Q" },
+            { LedId.Keyboard_W, "W" },
+            { LedId.Keyboard_E, "E" },
+            { LedId.Keyboard_R, "R" },
+            { LedId.Keyboard_T, "T" },
+            { LedId.Keyboard_Y, "Y" },
+            { LedId.Keyboard_U, "U" },
+            { LedId.Keyboard_I, "I" },
+            { LedId.Keyboard_O, "O" },
+            { LedId.Keyboard_P, "P" },
+            { LedId.Keyboard_BracketLeft, "[" },
+            { LedId.Keyboard_BracketRight, "]" },
+            { LedId.Keyboard_Backslash, @"\" },             // canonical for "\"
+            { LedId.Keyboard_Enter, "Enter" },              // canonical for "Enter"
+            { LedId.Keyboard_CapsLock, "Caps Lock" },
+            { LedId.Keyboard_A, "A" },
+            { LedId.Keyboard_S, "S" },
+            { LedId.Keyboard_D, "D" },
+            { LedId.Keyboard_F, "F" },
+            { LedId.Keyboard_G, "G" },
+            { LedId.Keyboard_H, "H" },
+            { LedId.Keyboard_J, "J" },
+            { LedId.Keyboard_K, "K" },
+            { LedId.Keyboard_L, "L" },
+            { LedId.Keyboard_SemicolonAndColon, ";" },
+            { LedId.Keyboard_ApostropheAndDoubleQuote, "'" },
+            { LedId.Keyboard_NonUsTilde, "`" },             // alias; reverse map uses GraveAccentAndTilde
+            { LedId.Keyboard_LeftShift, "Left Shift" },
+            { LedId.Keyboard_NonUsBackslash, @"\" },        // alias; reverse map uses Backslash
+            { LedId.Keyboard_Z, "Z" },
+            { LedId.Keyboard_X, "X" },
+            { LedId.Keyboard_C, "C" },
+            { LedId.Keyboard_V, "V" },
+            { LedId.Keyboard_B, "B" },
+            { LedId.Keyboard_N, "N" },
+            { LedId.Keyboard_M, "M" },
+            { LedId.Keyboard_CommaAndLessThan, "," },
+            { LedId.Keyboard_PeriodAndBiggerThan, "." },
+            { LedId.Keyboard_SlashAndQuestionMark, "/" },
+            { LedId.Keyboard_RightShift, "Right Shift" },
+            { LedId.Keyboard_LeftCtrl, "Left Ctrl" },
+            { LedId.Keyboard_LeftGui, "Left Gui" },
+            { LedId.Keyboard_LeftAlt, "Left Alt" },
+            { LedId.Keyboard_Lang2, "Lang2" },
+            { LedId.Keyboard_Space, "Space" },
+            { LedId.Keyboard_Lang1, "Lang1" },
+            { LedId.Keyboard_RightAlt, "Right Alt" },
+            { LedId.Keyboard_RightGui, "Right Gui" },
+            { LedId.Keyboard_Application, "Application" },
+            { LedId.Keyboard_RightCtrl, "Right Ctrl" },
+            { LedId.Keyboard_International1, "International1" },
+            { LedId.Keyboard_International2, "International2" },
+            { LedId.Keyboard_International3, "International3" },
+            { LedId.Keyboard_International5, "International5" },
+            { LedId.Keyboard_International4, "International4" },
+            { LedId.Keyboard_PrintScreen, "Print Screen" },
+            { LedId.Keyboard_ScrollLock, "Scroll Lock" },
+            { LedId.Keyboard_PauseBreak, "Pause" },
+            { LedId.Keyboard_Insert, "Insert" },
+            { LedId.Keyboard_Home, "Home" },
+            { LedId.Keyboard_PageUp, "Page Up" },
+            { LedId.Keyboard_Delete, "Delete" },
+            { LedId.Keyboard_End, "End" },
+            { LedId.Keyboard_PageDown, "Page Down" },
+            { LedId.Keyboard_ArrowUp, "↑" },
+            { LedId.Keyboard_ArrowLeft, "←" },
+            { LedId.Keyboard_ArrowDown, "↓" },
+            { LedId.Keyboard_ArrowRight, "→" },
+            { LedId.Keyboard_NumLock, "Num Lock" },
+            { LedId.Keyboard_NumSlash, "NUM/" },
+            { LedId.Keyboard_NumAsterisk, "NUM*" },
+            { LedId.Keyboard_NumMinus, "NUM-" },
+            { LedId.Keyboard_Num7, "NUM7" },
+            { LedId.Keyboard_Num8, "NUM8" },
+            { LedId.Keyboard_Num9, "NUM9" },
+            { LedId.Keyboard_NumComma, "NUM," },
+            { LedId.Keyboard_NumPlus, "NUM+" },
+            { LedId.Keyboard_Num4, "NUM4" },
+            { LedId.Keyboard_Num5, "NUM5" },
+            { LedId.Keyboard_Num6, "NUM6" },
+            { LedId.Keyboard_Num1, "NUM1" },
+            { LedId.Keyboard_Num2, "NUM2" },
+            { LedId.Keyboard_Num3, "NUM3" },
+            { LedId.Keyboard_NumEnter, "Enter" },           // alias; reverse map uses Keyboard_Enter
+            { LedId.Keyboard_Num0, "NUM0" },
+            { LedId.Keyboard_Num00, "NUM00" },
+            { LedId.Keyboard_Function, "Function" },
+            { LedId.Keyboard_NumPeriodAndDelete, "Num." },
+            { LedId.Keyboard_MediaMute, "Media Mute" },
+            { LedId.Keyboard_MediaVolumeDown, "Media VolumeDown" },
+            { LedId.Keyboard_MediaVolumeUp, "Media VolumeUp" },
+            { LedId.Keyboard_MediaStop, "Media Stop" },
+            { LedId.Keyboard_MediaPreviousTrack, "Media Previous Track" },
+            { LedId.Keyboard_MediaPlay, "Media Play" },
+            { LedId.Keyboard_MediaNextTrack, "Media Next Track" },
+            { LedId.Keyboard_WinLock, "Win Lock" },
+            { LedId.Keyboard_Macro1, "M1" },               // canonical for "M1"
+            { LedId.Keyboard_Macro2, "M2" },
+            { LedId.Keyboard_Macro3, "M3" },
+            { LedId.Keyboard_Macro4, "M4" },
+            { LedId.Keyboard_Macro5, "M5" },
+            { LedId.Keyboard_Programmable1, "M1" },        // aliases; reverse map uses Macro1-5
+            { LedId.Keyboard_Programmable2, "M2" },
+            { LedId.Keyboard_Programmable3, "M3" },
+            { LedId.Keyboard_Programmable4, "M4" },
+            { LedId.Keyboard_Programmable5, "M5" },
+        };
 
-        public static LedId HotbarKeyToLedIdConverter(string key)
-        {
-            switch (key)
-            {
-                case "Escape":
-                    return LedId.Keyboard_Escape;
-                case "F1":
-                    return LedId.Keyboard_F1;
-                case "F2":
-                    return LedId.Keyboard_F2;
-                case "F3":
-                    return LedId.Keyboard_F3;
-                case "F4":
-                    return LedId.Keyboard_F4;
-                case "F5":
-                    return LedId.Keyboard_F5;
-                case "F6":
-                    return LedId.Keyboard_F6;
-                case "F7":
-                    return LedId.Keyboard_F7;
-                case "F8":
-                    return LedId.Keyboard_F8;
-                case "F9":
-                    return LedId.Keyboard_F9;
-                case "F10":
-                    return LedId.Keyboard_F10;
-                case "F11":
-                    return LedId.Keyboard_F11;
-                case "F12":
-                    return LedId.Keyboard_F12;
-                case "`":
-                    return LedId.Keyboard_GraveAccentAndTilde;
-                case "1":
-                    return LedId.Keyboard_1;
-                case "2":
-                    return LedId.Keyboard_2;
-                case "3":
-                    return LedId.Keyboard_3;
-                case "4":
-                    return LedId.Keyboard_4;
-                case "5":
-                    return LedId.Keyboard_5;
-                case "6":
-                    return LedId.Keyboard_6;
-                case "7":
-                    return LedId.Keyboard_7;
-                case "8":
-                    return LedId.Keyboard_8;
-                case "9":
-                    return LedId.Keyboard_9;
-                case "0":
-                    return LedId.Keyboard_0;
-                case "-":
-                    return LedId.Keyboard_MinusAndUnderscore;
-                case "=":
-                    return LedId.Keyboard_EqualsAndPlus;
-                case "Backspace":
-                    return LedId.Keyboard_Backspace;
-                case "Tab":
-                    return LedId.Keyboard_Tab;
-                case "Q":
-                    return LedId.Keyboard_Q;
-                case "W":
-                    return LedId.Keyboard_W;
-                case "E":
-                    return LedId.Keyboard_E;
-                case "R":
-                    return LedId.Keyboard_R;
-                case "T":
-                    return LedId.Keyboard_T;
-                case "Y":
-                    return LedId.Keyboard_Y;
-                case "U":
-                    return LedId.Keyboard_U;
-                case "I":
-                    return LedId.Keyboard_I;
-                case "O":
-                    return LedId.Keyboard_O;
-                case "P":
-                    return LedId.Keyboard_P;
-                case "[":
-                    return LedId.Keyboard_BracketLeft;
-                case "]":
-                    return LedId.Keyboard_BracketRight;
-                case @"":
-                    return LedId.Keyboard_Backslash;
-                case "Enter":
-                    return LedId.Keyboard_Enter;
-                case "Caps Lock":
-                    return LedId.Keyboard_CapsLock;
-                case "A":
-                    return LedId.Keyboard_A;
-                case "S":
-                    return LedId.Keyboard_S;
-                case "D":
-                    return LedId.Keyboard_D;
-                case "F":
-                    return LedId.Keyboard_F;
-                case "G":
-                    return LedId.Keyboard_G;
-                case "H":
-                    return LedId.Keyboard_H;
-                case "J":
-                    return LedId.Keyboard_J;
-                case "K":
-                    return LedId.Keyboard_K;
-                case "L":
-                    return LedId.Keyboard_L;
-                case ";":
-                    return LedId.Keyboard_SemicolonAndColon;
-                case "'":
-                    return LedId.Keyboard_ApostropheAndDoubleQuote;
-                case "Left Shift":
-                    return LedId.Keyboard_LeftShift;
-                case @"\":
-                    return LedId.Keyboard_NonUsBackslash;
-                case "Z":
-                    return LedId.Keyboard_Z;
-                case "X":
-                    return LedId.Keyboard_X;
-                case "C":
-                    return LedId.Keyboard_C;
-                case "V":
-                    return LedId.Keyboard_V;
-                case "B":
-                    return LedId.Keyboard_B;
-                case "N":
-                    return LedId.Keyboard_N;
-                case "M":
-                    return LedId.Keyboard_M;
-                case ",":
-                    return LedId.Keyboard_CommaAndLessThan;
-                case ".":
-                    return LedId.Keyboard_PeriodAndBiggerThan;
-                case "/":
-                    return LedId.Keyboard_SlashAndQuestionMark;
-                case "Right Shift":
-                    return LedId.Keyboard_RightShift;
-                case "Left Ctrl":
-                    return LedId.Keyboard_LeftCtrl;
-                case "Left Gui":
-                    return LedId.Keyboard_LeftGui;
-                case "Left Alt":
-                    return LedId.Keyboard_LeftAlt;
-                case "Lang2":
-                    return LedId.Keyboard_Lang2;
-                case "Space":
-                    return LedId.Keyboard_Space;
-                case "Lang1":
-                    return LedId.Keyboard_Lang1;
-                case "Right Alt":
-                    return LedId.Keyboard_RightAlt;
-                case "Right Gui":
-                    return LedId.Keyboard_RightGui;
-                case "Application":
-                    return LedId.Keyboard_Application;
-                case "Right Ctrl":
-                    return LedId.Keyboard_RightCtrl;
-                case "International1":
-                    return LedId.Keyboard_International1;
-                case "International2":
-                    return LedId.Keyboard_International2;
-                case "International3":
-                    return LedId.Keyboard_International3;
-                case "International5":
-                    return LedId.Keyboard_International5;
-                case "International4":
-                    return LedId.Keyboard_International4;
-                case "Print Screen":
-                    return LedId.Keyboard_PrintScreen;
-                case "Scroll Lock":
-                    return LedId.Keyboard_ScrollLock;
-                case "Pause":
-                    return LedId.Keyboard_PauseBreak;
-                case "Insert":
-                    return LedId.Keyboard_Insert;
-                case "Home":
-                    return LedId.Keyboard_Home;
-                case "Page Up":
-                    return LedId.Keyboard_PageUp;
-                case "Delete":
-                    return LedId.Keyboard_Delete;
-                case "End":
-                    return LedId.Keyboard_End;
-                case "Page Down":
-                    return LedId.Keyboard_PageDown;
-                case "↑":
-                    return LedId.Keyboard_ArrowUp;
-                case "←":
-                    return LedId.Keyboard_ArrowLeft;
-                case "↓":
-                    return LedId.Keyboard_ArrowDown;
-                case "→":
-                    return LedId.Keyboard_ArrowRight;
-                case "Num Lock":
-                    return LedId.Keyboard_NumLock;
-                case "NUM/":
-                    return LedId.Keyboard_NumSlash;
-                case "NUM*":
-                    return LedId.Keyboard_NumAsterisk;
-                case "NUM-":
-                    return LedId.Keyboard_NumMinus;
-                case "NUM7":
-                    return LedId.Keyboard_Num7;
-                case "NUM8":
-                    return LedId.Keyboard_Num8;
-                case "NUM9":
-                    return LedId.Keyboard_Num9;
-                case "NUM,":
-                    return LedId.Keyboard_NumComma;
-                case "NUM+":
-                    return LedId.Keyboard_NumPlus;
-                case "NUM4":
-                    return LedId.Keyboard_Num4;
-                case "NUM5":
-                    return LedId.Keyboard_Num5;
-                case "NUM6":
-                    return LedId.Keyboard_Num6;
-                case "NUM1":
-                    return LedId.Keyboard_Num1;
-                case "NUM2":
-                    return LedId.Keyboard_Num2;
-                case "NUM3":
-                    return LedId.Keyboard_Num3;
-                case "NUM0":
-                    return LedId.Keyboard_Num0;
-                case "NUM00":
-                    return LedId.Keyboard_Num00;
-                case "Function":
-                    return LedId.Keyboard_Function;
-                case "Num.":
-                    return LedId.Keyboard_NumPeriodAndDelete;
-                case "Media Mute":
-                    return LedId.Keyboard_MediaMute;
-                case "Media VolumeDown":
-                    return LedId.Keyboard_MediaVolumeDown;
-                case "Media VolumeUp":
-                    return LedId.Keyboard_MediaVolumeUp;
-                case "Media Stop":
-                    return LedId.Keyboard_MediaStop;
-                case "Media Previous Track":
-                    return LedId.Keyboard_MediaPreviousTrack;
-                case "Media Play":
-                    return LedId.Keyboard_MediaPlay;
-                case "Media Next Track":
-                    return LedId.Keyboard_MediaNextTrack;
-                case "Win Lock":
-                    return LedId.Keyboard_WinLock;
-                case "M1":
-                    return LedId.Keyboard_Macro1;
-                case "M2":
-                    return LedId.Keyboard_Macro2;
-                case "M3":
-                    return LedId.Keyboard_Macro3;
-                case "M4":
-                    return LedId.Keyboard_Macro4;
-                case "M5":
-                    return LedId.Keyboard_Macro5;
-                default:
-                    return LedId.Unknown1;
-            }
-        }
+        // Reverse map derived from _ledIdToKey. For keys that share a display name
+        // (e.g. GraveAccentAndTilde and NonUsTilde both show "`") the first entry
+        // in _ledIdToKey wins, preserving the original HotbarKeyToLedIdConverter behaviour.
+        private static readonly Dictionary<string, LedId> _keyToLedId =
+            _ledIdToKey
+                .GroupBy(kv => kv.Value)
+                .ToDictionary(g => g.Key, g => g.First().Key);
+
+        public static string LedIdToHotbarKeyConverter(LedId led) =>
+            _ledIdToKey.TryGetValue(led, out var key) ? key : "Unknown";
+
+        public static LedId HotbarKeyToLedIdConverter(string key) =>
+            _keyToLedId.TryGetValue(key, out var led) ? led : LedId.Unknown1;
 
         public static Dictionary<int, LedId> GetAllKeysForDevice(RGBDeviceType device)
         {
@@ -619,7 +236,6 @@ namespace Chromatics.Helpers
 
             if (AllKeys == null)
                 return null;
-
 
             var i = 0;
             var _keys = new Dictionary<int, LedId>();
@@ -1306,7 +922,6 @@ namespace Chromatics.Helpers
             LedId.LedMatrix697,
             LedId.LedMatrix698,
             LedId.LedMatrix699,
-
         };
 
         private static List<LedId> AllMainboardKeys = new List<LedId>()
@@ -1851,7 +1466,6 @@ namespace Chromatics.Helpers
             LedId.Cooler62,
             LedId.Cooler63,
             LedId.Cooler64
-
         };
 
         private static List<LedId> AllCustomKeys = new List<LedId>()
@@ -2165,7 +1779,6 @@ namespace Chromatics.Helpers
             { 21, LedId.Keyboard_Num7 },
             { 22, LedId.Keyboard_Num8 },
             { 23, LedId.Keyboard_Num9 }
-            
         };
 
         public static Dictionary<int, LedId> DefaultKeys_HP = new Dictionary<int, LedId>()
@@ -2174,7 +1787,6 @@ namespace Chromatics.Helpers
             { 2, LedId.Keyboard_F2 },
             { 3, LedId.Keyboard_F3 },
             { 4, LedId.Keyboard_F4 }
-            
         };
 
         public static Dictionary<int, LedId> DefaultKeys_MP = new Dictionary<int, LedId>()
@@ -2182,8 +1794,7 @@ namespace Chromatics.Helpers
             { 1, LedId.Keyboard_F9 },
             { 2, LedId.Keyboard_F10 },
             { 3, LedId.Keyboard_F11 },
-            { 4, LedId.Keyboard_F12 },
-            
+            { 4, LedId.Keyboard_F12 }
         };
 
         public static Dictionary<int, LedId> DefaultKeys_TargetHP = new Dictionary<int, LedId>()
@@ -2192,7 +1803,6 @@ namespace Chromatics.Helpers
             { 2, LedId.Keyboard_F6 },
             { 3, LedId.Keyboard_F7 },
             { 4, LedId.Keyboard_F8 }
-            
         };
 
         public static Dictionary<int, LedId> DefaultKeys_Castbar = new Dictionary<int, LedId>()
@@ -2217,7 +1827,6 @@ namespace Chromatics.Helpers
             { 2, LedId.Keyboard_NumSlash },
             { 3, LedId.Keyboard_NumAsterisk },
             { 4, LedId.Keyboard_NumMinus }
-                       
         };
     }
 }

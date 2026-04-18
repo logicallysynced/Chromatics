@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Helpers
 {
-    public class TextHelper
+    public static class TextHelper
     {
         public static string ParseLayerHelperText(string input)
         {
