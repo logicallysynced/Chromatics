@@ -35,7 +35,10 @@ namespace Chromatics.Core
         private static readonly int _loopInterval = 200;
         private static readonly int _connectionInterval = 10000;
         private static int _connectionAttempts = 0;
-        private static int activeProcessId;
+        // `-1` is the sentinel meaning "no active FFXIV process". Default-int `0`
+        // would slip past the `!= -1` guard in StopGameLoop and call into Sharlayan
+        // before a connection was ever established.
+        private static int activeProcessId = -1;
         private static bool gameConnected;
         private static bool gameSetup;
         private static bool memoryEfficientLoop;
@@ -151,14 +154,20 @@ namespace Chromatics.Core
                 activeProcessId = -1;
             }
 
-            _configuration.ProcessModel.Process?.Dispose();
+            // `_configuration` is only assigned once we've successfully connected to
+            // FFXIV, so Exit()/Stop() can reach this path with it still null (game was
+            // never running, or a prior StopGameLoop nulled it out already). Null-chain
+            // instead of asserting shape so shutdown stays deterministic in every state.
+            _configuration?.ProcessModel?.Process?.Dispose();
             _configuration = null;
 
             _masterCancellationToken.Cancel();
             _masterCancellationToken.Dispose();
             _masterCancellationToken = new CancellationTokenSource();
 
-            _layerProcessorFactory.DisposeAll();
+            // Same rationale as `_configuration` above — Setup() may not have run if
+            // the user exits from the first-run wizard or during early startup errors.
+            _layerProcessorFactory?.DisposeAll();
 
             if (reconnect)
             {
@@ -498,9 +507,9 @@ namespace Chromatics.Core
             }
             catch (Exception ex)
             {
-#if DEBUG
+                // Debug.WriteLine is [Conditional("DEBUG")], so the call compiles
+                // away in Release while still referencing `ex` for the analyzer.
                 Debug.WriteLine($"Exception: {ex.Message}");
-#endif
             }
 
 

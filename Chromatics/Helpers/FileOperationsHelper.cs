@@ -651,7 +651,10 @@ namespace Chromatics.Helpers
             }
 
             var dataStore = dataStoreResult.Content.ReadAsStringAsync().Result;
-            File.WriteAllText(csvPath, dataStore);
+            // Was `csvPath` — the relative file name — which dropped the download
+            // into the current working directory instead of next to the executable.
+            // `path` (computed above from `enviroment`) is the correct absolute target.
+            File.WriteAllText(path, dataStore);
 
             if (File.Exists(path))
             {

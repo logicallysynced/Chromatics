@@ -366,8 +366,10 @@ namespace Chromatics.Layers
 
                     var parts = line.Split(delimiters);
 
-                    if (parts[0] == null && parts[0] == "") continue;
-                    if (parts[1] == null && parts[1] == "") continue;
+                    // `&&` can never be true here (a string cannot be both null and
+                    // ""). The intent is to skip blank/null cells, so `||`.
+                    if (parts[0] == null || parts[0] == "") continue;
+                    if (parts[1] == null || parts[1] == "") continue;
 
                     if (!int.TryParse(parts[0], out var id)) continue;
                     if (!int.TryParse(parts[1], out var exp)) continue;
