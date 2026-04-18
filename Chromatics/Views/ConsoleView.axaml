@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Chromatics.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Chromatics.Views.ConsoleView"
+             x:DataType="vm:ConsoleViewModel">
+    <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+            BorderThickness="1"
+            CornerRadius="4">
+        <ScrollViewer Name="ScrollHost"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Entries}" Padding="8">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="vm:ConsoleEntry">
+                        <SelectableTextBlock Text="{Binding Message}"
+                                             Foreground="{Binding Foreground}"
+                                             FontFamily="Consolas,Cascadia Code,Menlo,monospace"
+                                             FontSize="12"
+                                             TextWrapping="NoWrap" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Border>
+</UserControl>

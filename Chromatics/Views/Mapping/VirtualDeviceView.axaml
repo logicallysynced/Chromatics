@@ -1,0 +1,145 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Chromatics.ViewModels.Mapping"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="320"
+             x:Class="Chromatics.Views.Mapping.VirtualDeviceView"
+             x:DataType="vm:VirtualDeviceViewModel">
+
+    <UserControl.Styles>
+        <!-- Base keycap face. Background comes from the VM's FillBrush so the
+             preview tick can recolor live. Content template uses a clipped
+             TextBlock so labels longer than the key (e.g. "Pause", "Mouse 1")
+             get ellipsised instead of overflowing. -->
+        <Style Selector="Button.keycap">
+            <Setter Property="Background"       Value="{Binding FillBrush}" />
+            <Setter Property="Foreground"       Value="#0A1E2D" />
+            <Setter Property="BorderBrush"      Value="#33000000" />
+            <Setter Property="BorderThickness"  Value="1" />
+            <Setter Property="CornerRadius"     Value="4" />
+            <Setter Property="Padding"          Value="1" />
+            <Setter Property="FontSize"         Value="9" />
+            <Setter Property="FontWeight"       Value="SemiBold" />
+            <Setter Property="Cursor"           Value="Hand" />
+            <Setter Property="ClipToBounds"     Value="True" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+        </Style>
+        <Style Selector="Button.keycap:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderBrush" Value="{DynamicResource ChromaticsAccent}" />
+        </Style>
+        <Style Selector="Button.keycap.selected">
+            <Setter Property="BorderBrush"      Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="BorderThickness"  Value="2" />
+        </Style>
+
+        <!-- Floating padlock toggle pinned to the bottom-right of the device
+             area. Padlock glyph switches between locked (🔒) and unlocked (🔓)
+             via the checked-state style below. -->
+        <Style Selector="ToggleButton.lockToggle">
+            <Setter Property="Width"              Value="36" />
+            <Setter Property="Height"             Value="36" />
+            <Setter Property="Padding"            Value="0" />
+            <Setter Property="CornerRadius"       Value="18" />
+            <Setter Property="Background"         Value="{DynamicResource ChromaticsTileOff}" />
+            <Setter Property="BorderBrush"        Value="{DynamicResource ChromaticsTileBorderOff}" />
+            <Setter Property="BorderThickness"    Value="1" />
+            <Setter Property="FontSize"           Value="16" />
+            <Setter Property="FontFamily"         Value="Segoe UI Emoji, Segoe UI Symbol" />
+            <Setter Property="Cursor"             Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+        </Style>
+        <Style Selector="ToggleButton.lockToggle:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background"  Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="Foreground"  Value="White" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <Border Background="#1A000000"
+                CornerRadius="6"
+                Padding="6"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Disabled">
+                <ItemsControl Name="KeycapItems"
+                              ItemsSource="{Binding Keycaps}"
+                              Width="{Binding Width}"
+                              Height="{Binding Height}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Styles>
+                        <Style Selector="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding X}" />
+                            <Setter Property="Canvas.Top"  Value="{Binding Y}" />
+                        </Style>
+                    </ItemsControl.Styles>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:KeycapViewModel">
+                            <Grid Width="{Binding Width}" Height="{Binding Height}"
+                                  ClipToBounds="True">
+                                <Button Classes="keycap"
+                                        Classes.selected="{Binding IsSelected}"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch">
+                                    <TextBlock Text="{Binding Label}"
+                                               TextAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               TextWrapping="NoWrap"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Button>
+                                <Border IsVisible="{Binding IsEditing}"
+                                        Background="{DynamicResource ChromaticsAccent}"
+                                        CornerRadius="10"
+                                        Width="20" Height="20"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Margin="-4,-4,0,0"
+                                        IsHitTestVisible="False">
+                                    <TextBlock Text="{Binding EditIndex}"
+                                               Foreground="White"
+                                               FontSize="11"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Lock toggle + reset — only on devices whose keycaps can be dragged.
+             Reset (↺) uses Button not ToggleButton so it fires Click, not a
+             checked state; both share the lockToggle radius/size style. -->
+        <StackPanel Orientation="Horizontal"
+                    IsVisible="{Binding SupportsDragReposition}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,10,10"
+                    Spacing="6">
+            <Button Classes="lockToggle"
+                    Click="OnResetLayoutClick"
+                    ToolTip.Tip="Reset all keys to default positions">
+                <TextBlock Text="&#x21BA;"
+                           FontFamily="Segoe UI Emoji, Segoe UI Symbol" />
+            </Button>
+            <ToggleButton Classes="lockToggle"
+                          IsChecked="{Binding IsDraggable, Mode=TwoWay}"
+                          ToolTip.Tip="Lock / unlock keys for drag repositioning">
+                <Grid>
+                    <TextBlock Text="&#x1F512;" IsVisible="{Binding !IsDraggable}" />
+                    <TextBlock Text="&#x1F513;" IsVisible="{Binding IsDraggable}" />
+                </Grid>
+            </ToggleButton>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -30,6 +30,11 @@ namespace Chromatics.Core
 {
     public static class RGBController
     {
+        // Fires whenever a device is added or removed. Exposed for non-WinForms
+        // consumers (Avalonia Mapping view) that can't subscribe to the legacy
+        // Uc_Mappings.DeviceAdded/Removed statics.
+        public static event EventHandler DeviceConnectionChanged;
+
         private static RGBSurface surface = new RGBSurface();
 
         private static bool _loaded;
@@ -326,6 +331,7 @@ namespace Chromatics.Core
                 }
 
                 Uc_Mappings.OnDeviceAdded(EventArgs.Empty);
+                DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
 
             }
             else if (e.Action == DevicesChangedEventArgs.DevicesChangedAction.Removed)
@@ -353,6 +359,7 @@ namespace Chromatics.Core
                 }
 
                 Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
+                DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
             }
 
             
@@ -740,13 +747,20 @@ namespace Chromatics.Core
 
             if (MappingLayers.IsPreview())
             {
-                if (Uc_Mappings.Instance.InvokeRequired)
+                // Legacy WinForms hook. Under Avalonia, preview updates flow
+                // through the VirtualDeviceViewModel bindings on the UI
+                // thread; this block becomes a no-op when the old control
+                // isn't hosted anywhere.
+                if (Uc_Mappings.Instance != null)
                 {
-                    Uc_Mappings.Instance.Invoke(new Action(() => Uc_Mappings.Instance.VisualiseLayers()));
-                }
-                else
-                {
-                    Uc_Mappings.Instance.VisualiseLayers();
+                    if (Uc_Mappings.Instance.InvokeRequired)
+                    {
+                        Uc_Mappings.Instance.Invoke(new Action(() => Uc_Mappings.Instance.VisualiseLayers()));
+                    }
+                    else
+                    {
+                        Uc_Mappings.Instance.VisualiseLayers();
+                    }
                 }
             }
         }

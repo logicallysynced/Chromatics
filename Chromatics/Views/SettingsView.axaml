@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Chromatics.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="720"
+             x:Class="Chromatics.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <!-- Single scroll; Maintenance sits inline with the other sections for a
+         consistent reading order. Bottom margin gives breathing room at the
+         end of the scroll. -->
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" Padding="16">
+        <StackPanel Spacing="20" Margin="0,0,0,80">
+
+            <!-- General -->
+            <HeaderedContentControl Header="General">
+                <StackPanel Spacing="8" Margin="4,8,4,0">
+                    <CheckBox Content="Use saved cache for FFXIV data instead of online source."
+                              IsChecked="{Binding LocalCache, Mode=TwoWay}"
+                              ToolTip.Tip="Default: Disabled" />
+                    <CheckBox Content="Start Chromatics when Windows starts."
+                              IsChecked="{Binding WinStart, Mode=TwoWay}"
+                              ToolTip.Tip="Default: Disabled" />
+                    <CheckBox Content="Minimise to system tray on close."
+                              IsChecked="{Binding MinimizeTray, Mode=TwoWay}"
+                              ToolTip.Tip="Default: Disabled" />
+                    <CheckBox Content="Start Chromatics minimised to the tray."
+                              IsChecked="{Binding TrayOnStartup, Mode=TwoWay}"
+                              ToolTip.Tip="Default: Disabled" />
+                    <CheckBox Content="Check for updates on startup."
+                              IsChecked="{Binding CheckUpdates, Mode=TwoWay}"
+                              ToolTip.Tip="Default: Enabled" />
+                </StackPanel>
+            </HeaderedContentControl>
+
+            <!-- Appearance -->
+            <HeaderedContentControl Header="Appearance &amp; Language">
+                <StackPanel Spacing="10" Margin="4,8,4,0">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="Theme" Width="160" VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding ThemeOptions}"
+                                  SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                                  MinWidth="240" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="Language" Width="160" VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding LanguageOptions}"
+                                  SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
+                                  MinWidth="240" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="Keyboard Layout" Width="160" VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding KeyboardLayoutOptions}"
+                                  SelectedItem="{Binding SelectedKeyboardLayout, Mode=TwoWay}"
+                                  MinWidth="240" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="Global Brightness" Width="160" VerticalAlignment="Center" />
+                        <Slider Minimum="0" Maximum="100"
+                                Value="{Binding GlobalBrightness, Mode=TwoWay}"
+                                Width="240" />
+                        <TextBlock Text="{Binding GlobalBrightnessLabel}"
+                                   VerticalAlignment="Center" MinWidth="40" />
+                    </StackPanel>
+                </StackPanel>
+            </HeaderedContentControl>
+
+            <!-- Device Providers: WrapPanel capped at ~4 cols via MaxWidth.
+                 Tile width 160 + 2×6 margin = 172 per tile; 4 × 172 = 688.
+                 All tiles are always rendered; layout reflows if window narrows. -->
+            <HeaderedContentControl Header="Device Providers">
+                <ItemsControl ItemsSource="{Binding DeviceToggles}"
+                              MaxWidth="700"
+                              HorizontalAlignment="Left"
+                              Margin="4,8,4,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:DeviceToggleItem">
+                            <ToggleButton Classes="tile"
+                                          IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                                          Width="160" Height="90"
+                                          ToolTip.Tip="{Binding Tooltip}">
+                                <TextBlock Text="{Binding Label}"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           MaxWidth="140" />
+                            </ToggleButton>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </HeaderedContentControl>
+
+            <!-- Maintenance -->
+            <HeaderedContentControl Header="Maintenance">
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="4,8,4,4">
+                    <Button Content="Reset Chromatics"
+                            Click="OnResetClick"
+                            ToolTip.Tip="Restore Chromatics to its default state. Requires application restart." />
+                    <Button Content="Clear FFXIV Cache"
+                            Click="OnClearCacheClick"
+                            ToolTip.Tip="Clear local FFXIV cache. Requires application restart." />
+                </StackPanel>
+            </HeaderedContentControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

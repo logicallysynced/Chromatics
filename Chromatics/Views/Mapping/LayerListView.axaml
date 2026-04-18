@@ -1,0 +1,222 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Chromatics.ViewModels.Mapping"
+             mc:Ignorable="d" d:DesignWidth="360" d:DesignHeight="600"
+             x:Class="Chromatics.Views.Mapping.LayerListView"
+             x:DataType="vm:MappingViewModel">
+
+    <UserControl.Styles>
+        <!-- Layer card: rounded with a coloured stripe down the left indicating
+             the root layer type. Hover raises the background subtly. Disabled
+             cards desaturate; editing cards light up with the accent border. -->
+        <Style Selector="Border.layerCard">
+            <Setter Property="Background"      Value="{DynamicResource ChromaticsTileOff}" />
+            <Setter Property="BorderBrush"     Value="{DynamicResource ChromaticsTileBorderOff}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="6" />
+            <Setter Property="Padding"         Value="0" />
+            <Setter Property="Margin"          Value="0,0,0,6" />
+            <Setter Property="MinHeight"       Value="56" />
+        </Style>
+        <Style Selector="Border.layerCard:pointerover">
+            <Setter Property="Background"  Value="{DynamicResource ChromaticsTileOffHover}" />
+        </Style>
+        <Style Selector="Border.layerCard.disabled">
+            <Setter Property="Opacity" Value="0.45" />
+        </Style>
+        <Style Selector="Border.layerCard.editing">
+            <Setter Property="BorderBrush"     Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Background"      Value="{DynamicResource ChromaticsTileOnHover}" />
+        </Style>
+        <!-- `.dragging` fades the source while it's being hauled to a new
+             slot; `.dropAbove` / `.dropBelow` paint a bright accent edge on
+             the target so the insertion point is unambiguous. -->
+        <Style Selector="Border.layerCard.dragging">
+            <Setter Property="Opacity" Value="0.35" />
+        </Style>
+        <Style Selector="Border.dropIndicator">
+            <Setter Property="Height"     Value="3" />
+            <Setter Property="Background" Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="CornerRadius" Value="2" />
+            <Setter Property="Margin"     Value="0,1" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+
+        <!-- Drag grip: visual affordance that the card is reorderable. -->
+        <Style Selector="Border.dragHandle">
+            <Setter Property="Width"            Value="18" />
+            <Setter Property="Cursor"           Value="SizeAll" />
+            <Setter Property="Background"       Value="Transparent" />
+        </Style>
+
+        <!-- Small icon buttons for edit / copy / delete. Hover-box lives in the
+             template's Border (the button's chrome) instead of PART_ContentPresenter
+             so the rounded hover fills the whole 28x28 hit target centred on
+             the glyph rather than hugging the glyph's baseline. -->
+        <Style Selector="Button.iconBtn">
+            <Setter Property="Width"           Value="28" />
+            <Setter Property="Height"          Value="28" />
+            <Setter Property="Padding"         Value="0" />
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="BorderBrush"     Value="Transparent" />
+            <Setter Property="CornerRadius"    Value="4" />
+            <Setter Property="Cursor"          Value="Hand" />
+            <Setter Property="FontSize"        Value="13" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+        </Style>
+        <Style Selector="Button.iconBtn /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius"        Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment"   Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+        </Style>
+        <Style Selector="Button.iconBtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background"  Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="Foreground"  Value="White" />
+        </Style>
+
+        <!-- Badge host: rounded accent pill. Dynamic layers show a 28×28 chip
+             with the z-index number; structural (Base/Effect) rows widen to
+             fit a "Base Layer" / "Effect Layer" caption. All badges share the
+             same left edge because they live in the same grid column. -->
+        <Style Selector="Border.layerBadge">
+            <Setter Property="Width"           Value="28" />
+            <Setter Property="Height"          Value="28" />
+            <Setter Property="CornerRadius"    Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment"   Value="Center" />
+            <Setter Property="Padding"         Value="0" />
+        </Style>
+        <Style Selector="Border.layerBadge.wide">
+            <Setter Property="Width"           Value="NaN" />
+            <Setter Property="MinWidth"        Value="92" />
+            <Setter Property="Padding"         Value="6,0" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+            BorderThickness="1"
+            CornerRadius="6"
+            Padding="8">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl Name="LayersHost"
+                          ItemsSource="{Binding Layers}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="vm:LayerItemViewModel">
+                        <!-- Grid columns:
+                             0  accent stripe (8px)
+                             1  drag-grip slot (26px, reserved even on locked
+                                 layers so badges align left)
+                             2  badge (auto, MinWidth keeps left edge consistent)
+                             3  type combobox (*, fixed MinWidth for a
+                                 consistent edit area across layer types)
+                             4  enable checkbox
+                             5  edit icon
+                             6  copy icon
+                             7  delete icon -->
+                        <StackPanel>
+                          <!-- Insertion indicator shown ABOVE the card when
+                               the user is dragging another card here. -->
+                          <Border Classes="dropIndicator"
+                                  IsVisible="{Binding IsDropTargetAbove}" />
+
+                        <Border Classes="layerCard"
+                                Classes.disabled="{Binding !IsEnabled}"
+                                Classes.editing="{Binding IsEditing}"
+                                Classes.dragging="{Binding IsDragging}">
+                            <Grid ColumnDefinitions="8,26,Auto,*,Auto,Auto,Auto,Auto">
+
+                                <Border Grid.Column="0"
+                                        Background="{Binding AccentBrush}"
+                                        CornerRadius="6,0,0,6" />
+
+                                <!-- Drag grip (⋮⋮). Hidden on locked layers but
+                                     the column still reserves its 26px so the
+                                     badge stays aligned with dynamic rows. -->
+                                <Border Grid.Column="1"
+                                        Classes="dragHandle"
+                                        Name="DragGrip"
+                                        IsVisible="{Binding IsDraggable}">
+                                    <TextBlock Text="&#x22EE;&#x22EE;"
+                                               FontSize="14"
+                                               Opacity="0.55"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+
+                                <!-- Badge: "Base Layer" / "Effect Layer" on
+                                     structural rows, z-index number on dynamics. -->
+                                <Border Grid.Column="2"
+                                        Classes="layerBadge"
+                                        Classes.wide="{Binding IsLocked}"
+                                        Background="{Binding AccentBrush}"
+                                        Margin="0,0,8,0">
+                                    <TextBlock Text="{Binding BadgeText}"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+
+                                <!-- Type combobox. Hidden entirely on Effect
+                                     layers (no user-selectable variant); its
+                                     column still occupies width via the `*`
+                                     so other columns stay in line. -->
+                                <ComboBox Grid.Column="3"
+                                          ItemsSource="{Binding TypeOptions}"
+                                          SelectedIndex="{Binding LayerTypeIndex, Mode=TwoWay}"
+                                          IsEnabled="{Binding IsTypeEditable}"
+                                          IsVisible="{Binding IsTypeComboVisible}"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Stretch"
+                                          MinWidth="160"
+                                          Margin="0,0,8,0" />
+
+                                <CheckBox Grid.Column="4"
+                                          IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                                          ToolTip.Tip="Enable / disable this layer"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,4,0" />
+
+                                <Button Grid.Column="5"
+                                        Classes="iconBtn"
+                                        Content="&#x270E;"
+                                        Command="{Binding EditCommand}"
+                                        IsVisible="{Binding IsEditButtonVisible}"
+                                        ToolTip.Tip="Edit keys" />
+                                <Button Grid.Column="6"
+                                        Classes="iconBtn"
+                                        Content="&#x29C9;"
+                                        Command="{Binding CopyCommand}"
+                                        IsVisible="{Binding !IsLocked}"
+                                        ToolTip.Tip="Duplicate layer" />
+                                <Button Grid.Column="7"
+                                        Classes="iconBtn"
+                                        Content="&#x2715;"
+                                        Command="{Binding DeleteCommand}"
+                                        IsVisible="{Binding !IsLocked}"
+                                        ToolTip.Tip="Delete layer"
+                                        Margin="0,0,4,0" />
+                            </Grid>
+                        </Border>
+
+                          <!-- Insertion indicator shown BELOW the card when
+                               the drag is targeting the end of the list
+                               (there's no "above next card" to show for the
+                               last item). -->
+                          <Border Classes="dropIndicator"
+                                  IsVisible="{Binding IsDropTargetBelow}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Border>
+</UserControl>

@@ -16,6 +16,15 @@ namespace Chromatics.Helpers
     {
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, Tuple<Type, Type>> resolvedTypes = new System.Collections.Concurrent.ConcurrentDictionary<Type, Tuple<Type, Type>>();
 
+        // This converter only exists to rebuild enum-keyed dictionaries on
+        // read. WriteJson used to delegate back into the serializer, which
+        // would re-enter CanConvert for the same enum-keyed dict and recurse
+        // until Newtonsoft raised "Self referencing loop detected" (hit first
+        // while persisting deviceLayouts: Dictionary<Guid, Dictionary<LedId,
+        // DeviceKeyPosition>>). Letting default serialization handle writes
+        // stringifies enum keys naturally and skips the converter entirely.
+        public override bool CanWrite => false;
+
         /// <summary>If this converter is able to handle a given conversion.</summary>
         /// <param name="objectType">The type to be handled.</param>
         /// <returns>Returns if this converter is able to handle a given conversion.</returns>

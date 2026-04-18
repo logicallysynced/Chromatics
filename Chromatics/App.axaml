@@ -1,0 +1,164 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             x:Class="Chromatics.App"
+             RequestedThemeVariant="Default">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!-- Fluent scrollbar size; overrides the 6px default track. -->
+            <sys:Double x:Key="ScrollBarSize">14</sys:Double>
+            <sys:Double x:Key="ScrollBarThumbThickness">10</sys:Double>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <!-- Tile states -->
+                    <SolidColorBrush x:Key="ChromaticsTileOff"         Color="#141C26" />
+                    <SolidColorBrush x:Key="ChromaticsTileOffHover"    Color="#1C2B3E" />
+                    <SolidColorBrush x:Key="ChromaticsTileOn"          Color="#0080CC" />
+                    <SolidColorBrush x:Key="ChromaticsTileOnHover"     Color="#009AEF" />
+                    <SolidColorBrush x:Key="ChromaticsTileBorderOff"   Color="#1E2D3F" />
+                    <SolidColorBrush x:Key="ChromaticsTileBorderOn"    Color="#00A0FF" />
+                    <SolidColorBrush x:Key="ChromaticsTileForeground"  Color="#E8F4FF" />
+                    <!-- Header -->
+                    <SolidColorBrush x:Key="ChromaticsBanner"          Color="#080E18" />
+                    <!-- Accent -->
+                    <SolidColorBrush x:Key="ChromaticsAccent"          Color="#00A0FF" />
+                    <SolidColorBrush x:Key="ChromaticsAccentHover"     Color="#22B8FF" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <!-- Tile states -->
+                    <SolidColorBrush x:Key="ChromaticsTileOff"         Color="#EBF5FF" />
+                    <SolidColorBrush x:Key="ChromaticsTileOffHover"    Color="#D5ECFF" />
+                    <SolidColorBrush x:Key="ChromaticsTileOn"          Color="#00A0FF" />
+                    <SolidColorBrush x:Key="ChromaticsTileOnHover"     Color="#0090EE" />
+                    <SolidColorBrush x:Key="ChromaticsTileBorderOff"   Color="#B0D4EE" />
+                    <SolidColorBrush x:Key="ChromaticsTileBorderOn"    Color="#0070BB" />
+                    <SolidColorBrush x:Key="ChromaticsTileForeground"  Color="#0A1E2D" />
+                    <!-- Header -->
+                    <SolidColorBrush x:Key="ChromaticsBanner"          Color="#F0F6FF" />
+                    <!-- Accent -->
+                    <SolidColorBrush x:Key="ChromaticsAccent"          Color="#00A0FF" />
+                    <SolidColorBrush x:Key="ChromaticsAccentHover"     Color="#0090EE" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+
+        <!-- Tile ToggleButton -->
+        <Style Selector="ToggleButton.tile">
+            <Setter Property="Background"                Value="{DynamicResource ChromaticsTileOff}" />
+            <Setter Property="Foreground"                Value="{DynamicResource ChromaticsTileForeground}" />
+            <Setter Property="BorderBrush"               Value="{DynamicResource ChromaticsTileBorderOff}" />
+            <Setter Property="BorderThickness"           Value="1" />
+            <Setter Property="CornerRadius"              Value="10" />
+            <Setter Property="FontSize"                  Value="12" />
+            <Setter Property="FontWeight"                Value="SemiBold" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"  Value="Center" />
+            <Setter Property="Padding"                   Value="8,6" />
+            <Setter Property="Margin"                    Value="6" />
+            <Setter Property="Cursor"                    Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background"   Duration="0:0:0.12" />
+                    <BrushTransition Property="BorderBrush"  Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.tile:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background"  Value="{DynamicResource ChromaticsTileOffHover}" />
+        </Style>
+        <Style Selector="ToggleButton.tile:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background"  Value="{DynamicResource ChromaticsTileOn}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ChromaticsTileBorderOn}" />
+            <Setter Property="Foreground"  Value="#FFFFFF" />
+        </Style>
+        <Style Selector="ToggleButton.tile:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background"  Value="{DynamicResource ChromaticsTileOnHover}" />
+        </Style>
+        <Style Selector="ToggleButton.tile:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+
+        <!-- Help button: outlined circle, accent-colored, fills on hover -->
+        <Style Selector="Button.helpBtn">
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="Foreground"      Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="BorderBrush"     Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="CornerRadius"    Value="14" />
+            <Setter Property="Width"           Value="28" />
+            <Setter Property="Height"          Value="28" />
+            <Setter Property="FontSize"        Value="13" />
+            <Setter Property="FontWeight"      Value="SemiBold" />
+            <Setter Property="Padding"         Value="0" />
+            <Setter Property="Cursor"          Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.helpBtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+
+        <!-- General scrollbars: always visible at a consistent width -->
+        <Style Selector="ScrollBar:vertical">
+            <Setter Property="Width"        Value="14" />
+            <Setter Property="MinWidth"     Value="14" />
+            <Setter Property="AllowAutoHide" Value="False" />
+        </Style>
+        <Style Selector="ScrollBar:horizontal">
+            <Setter Property="Height"       Value="14" />
+            <Setter Property="MinHeight"    Value="14" />
+            <Setter Property="AllowAutoHide" Value="False" />
+        </Style>
+
+        <!-- ScrollViewer: never auto-hide; scrollbars take their own layout space -->
+        <Style Selector="ScrollViewer">
+            <Setter Property="AllowAutoHide" Value="False" />
+        </Style>
+
+        <!-- DataGrid uses raw ScrollBar template parts (no ScrollViewer). Target those. -->
+        <Style Selector="DataGrid /template/ ScrollBar#PART_VerticalScrollbar">
+            <Setter Property="Width"        Value="14" />
+            <Setter Property="MinWidth"     Value="14" />
+            <Setter Property="AllowAutoHide" Value="False" />
+        </Style>
+        <Style Selector="DataGrid /template/ ScrollBar#PART_HorizontalScrollbar">
+            <Setter Property="Height"       Value="14" />
+            <Setter Property="MinHeight"    Value="14" />
+            <Setter Property="AllowAutoHide" Value="False" />
+        </Style>
+
+        <!-- Grey-out disabled ColorView -->
+        <Style Selector="ColorView:disabled">
+            <Setter Property="Opacity" Value="0.35" />
+        </Style>
+    </Application.Styles>
+
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="avares://Chromatics/Resources/Chromatics_icon_128x128.png"
+                      ToolTipText="Chromatics"
+                      Clicked="OnTrayIconClicked">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Show Window" Click="OnTrayShowClick" />
+                        <NativeMenuItem Header="Close"       Click="OnTrayCloseClick" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
+</Application>
