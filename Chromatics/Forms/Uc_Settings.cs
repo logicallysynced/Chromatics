@@ -646,6 +646,12 @@ namespace Chromatics.Forms
                         }
                         else
                         {
+                            // Observe the timed-out task so any fault surfaces in the
+                            // log instead of vanishing as an unobserved exception.
+                            _ = task.ContinueWith(
+                                t => Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Hue] LoadDeviceProvider faulted after timeout: {t.Exception?.GetBaseException()?.Message}"),
+                                TaskContinuationOptions.OnlyOnFaulted);
+
                             MessageBox.Show("Operation timed out. The form will now close.");
                             hueSettingsForm.Close();
                         }
@@ -837,8 +843,12 @@ namespace Chromatics.Forms
         private void cb_keyboardlayout_SelectedIndexChanged(object sender, EventArgs e)
         {
             var settings = AppSettings.GetSettings();
-            settings.keyboardLayout = ((ComboBoxItem<KeyboardLocalization>)cb_keyboardlayout.SelectedItem).Value;
+            var newLayout = ((ComboBoxItem<KeyboardLocalization>)cb_keyboardlayout.SelectedItem).Value;
+            if (settings.keyboardLayout == newLayout) return;
+
+            settings.keyboardLayout = newLayout;
             AppSettings.SaveSettings(settings);
+            AppSettings.RaiseKeyboardLayoutChanged();
         }
 
         public class ComboBoxItem<T>

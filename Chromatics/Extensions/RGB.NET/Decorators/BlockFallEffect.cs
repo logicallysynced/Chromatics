@@ -1,4 +1,5 @@
-﻿using Chromatics.Localization;
+﻿using Chromatics.Core;
+using Chromatics.Localization;
 using RGB.NET.Core;
 using System;
 using System.Collections.Concurrent;
@@ -21,6 +22,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private ConcurrentDictionary<int, Block> activeBlocks;
         private double Timing;
         private Direction fallDirection;
+
+        private static Dictionary<LedId, int[]> Grid =>
+            KeyLocalization.GetActiveGrid(AppSettings.GetSettings().keyboardLayout);
 
         public enum Direction
         {
@@ -77,7 +81,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                 foreach (var led in ledGroup)
                 {
-                    if (KeyLocalization.QWERTY_Grid.TryGetValue(led.Id, out var position) && activeBlocks.Values.Any(b => b.Position.SequenceEqual(position)))
+                    if (Grid.TryGetValue(led.Id, out var position) && activeBlocks.Values.Any(b => b.Position.SequenceEqual(position)))
                     {
                         var block = activeBlocks.Values.First(b => b.Position.SequenceEqual(position));
                         led.Color = block.Color;
@@ -96,12 +100,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         private void CreateNewBlocks()
         {
-            var availableLeds = ledGroup.Where(led => KeyLocalization.QWERTY_Grid.ContainsKey(led.Id));
+            var availableLeds = ledGroup.Where(led => Grid.ContainsKey(led.Id));
             var selectedLeds = availableLeds.OrderBy(x => Guid.NewGuid()).Take(numberOfBlocks);
 
             foreach (var led in selectedLeds)
             {
-                if (!KeyLocalization.QWERTY_Grid.TryGetValue(led.Id, out var position)) continue;
+                if (!Grid.TryGetValue(led.Id, out var position)) continue;
                 var colorIndex = random.Next(colors.Length);
                 var startPosition = GetStartPosition(position);
 
@@ -122,11 +126,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 case Direction.TopToBottom:
                     return new int[] { -blockSize, position[1] };
                 case Direction.BottomToTop:
-                    return new int[] { KeyLocalization.QWERTY_Grid.Values.Max(p => p[0]) + blockSize, position[1] };
+                    return new int[] { Grid.Values.Max(p => p[0]) + blockSize, position[1] };
                 case Direction.LeftToRight:
                     return new int[] { position[0], -blockSize };
                 case Direction.RightToLeft:
-                    return new int[] { position[0], KeyLocalization.QWERTY_Grid.Values.Max(p => p[1]) + blockSize };
+                    return new int[] { position[0], Grid.Values.Max(p => p[1]) + blockSize };
                 default:
                     return position;
             }
@@ -170,8 +174,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         private bool IsOutOfBounds(int[] position)
         {
-            var maxRow = KeyLocalization.QWERTY_Grid.Values.Max(p => p[0]);
-            var maxCol = KeyLocalization.QWERTY_Grid.Values.Max(p => p[1]);
+            var maxRow = Grid.Values.Max(p => p[0]);
+            var maxCol = Grid.Values.Max(p => p[1]);
 
             return position[0] < -blockSize || position[0] > maxRow + blockSize || position[1] < -blockSize || position[1] > maxCol + blockSize;
         }

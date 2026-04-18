@@ -64,6 +64,7 @@ namespace Chromatics.Forms
                 // Unsubscribe from all events
                 DeviceAdded -= HandleDeviceAdded;
                 DeviceRemoved -= HandleDeviceRemoved;
+                AppSettings.KeyboardLayoutChanged -= OnKeyboardLayoutChanged;
                 GameController.jobChanged -= gameJobChanged;
 
                 // Unsubscribe event handlers for each Pn_LayerDisplay
@@ -119,9 +120,60 @@ namespace Chromatics.Forms
             // Register event handlers for device changes
             DeviceAdded += HandleDeviceAdded;
             DeviceRemoved += HandleDeviceRemoved;
+            AppSettings.KeyboardLayoutChanged += OnKeyboardLayoutChanged;
 
             // Initialize the form
             this.Load += new EventHandler(OnLoad);
+        }
+
+        private void OnKeyboardLayoutChanged(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke((System.Windows.Forms.MethodInvoker)(() => OnKeyboardLayoutChanged(sender, e)));
+                return;
+            }
+            RebuildKeyboardVirtualDevices();
+        }
+
+        private void RebuildKeyboardVirtualDevices()
+        {
+            // Replace every keyboard virtual device in-place so the new layout's
+            // keycap list drives the table. Non-keyboard devices are untouched.
+            var keyboardGuids = _deviceVirtualDeviceMap
+                .Where(kvp => kvp.Value._deviceType == RGBDeviceType.Keyboard)
+                .Select(kvp => kvp.Key)
+                .ToList();
+
+            if (keyboardGuids.Count == 0) return;
+
+            var connectedDevices = RGBController.GetLiveDevices();
+            if (connectedDevices == null) return;
+
+            foreach (var guid in keyboardGuids)
+            {
+                if (!connectedDevices.TryGetValue(guid, out var rgbDevice)) continue;
+                if (!_deviceVirtualDeviceMap.TryGetValue(guid, out var oldVirtual)) continue;
+
+                oldVirtual._OnKeycapPressed -= OnKeyCapPressed;
+                tlp_frame.Controls.Remove(oldVirtual);
+                oldVirtual.Dispose();
+
+                var replacement = new Uc_VirtualKeyboard(rgbDevice)
+                {
+                    _deviceId = guid,
+                    _deviceType = RGBDeviceType.Keyboard,
+                    Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                    Dock = DockStyle.Top,
+                    MinimumSize = new Size(1200, 300),
+                    AutoSize = false
+                };
+
+                tlp_frame.Controls.Add(replacement, 0, 0);
+                replacement._OnKeycapPressed += new EventHandler(OnKeyCapPressed);
+                _deviceVirtualDeviceMap[guid] = replacement;
+                replacement.InitializeDevice();
+            }
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -381,6 +433,9 @@ namespace Chromatics.Forms
                 }
                 else
                 {
+                    // QWERTY and QWERTZ share the same WASD movement positions (the
+                    // Y/Z swap is on the top row, not the home row), so QWERTZ reuses
+                    // the QWERTY defaults here.
                     AddLayer(LayerType.DynamicLayer, deviceGuid, deviceType, 0, x, true, false, true, LedKeyHelper.DefaultKeys_ReactiveWeather_QWERTY, (int)DynamicLayerType.ReactiveWeatherHighlight, true, LayerModes.Interpolate);
                 }
 
@@ -406,7 +461,11 @@ namespace Chromatics.Forms
             var connectedDevices = RGBController.GetLiveDevices();
             var currentSelectedDevice = cb_deviceselect.SelectedItem as ComboboxItem;
 
-            // Remove devices that are no longer connected
+            // Remove devices that are no longer connected. If GetLiveDevices()
+            // returned null (provider still initializing) OR an empty dictionary
+            // (every device physically unplugged), every previously-known device
+            // is treated as disconnected — both cases funnel through the same
+            // empty-set fallback intentionally.
             var disconnectedDeviceKeys = _deviceVirtualDeviceMap.Keys.Except(connectedDevices?.Keys ?? Enumerable.Empty<Guid>()).ToList();
             foreach (var key in disconnectedDeviceKeys)
             {
