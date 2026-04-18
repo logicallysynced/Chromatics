@@ -3,6 +3,7 @@ using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Localization;
+using Chromatics.Forms.vDevices;
 using Chromatics.Models;
 using RGB.NET.Core;
 using System;

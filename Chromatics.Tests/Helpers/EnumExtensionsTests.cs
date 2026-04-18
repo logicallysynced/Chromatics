@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Chromatics.Helpers;
+using Chromatics.Extensions;
 
 namespace Chromatics.Tests.Helpers;
 

@@ -11,7 +11,7 @@ public class CustomComparersTests
     [InlineData(-1, 0, -1)]
     public void LayerComparer_Compare_FollowsIntegerOrdering(int x, int y, int expected)
     {
-        var comparer = new CustomComparers.LayerComparer();
+        var comparer = new LayerComparer();
         Assert.Equal(expected, comparer.Compare(x, y));
     }
 }

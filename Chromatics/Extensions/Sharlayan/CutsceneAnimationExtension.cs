@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.Sharlayan
 {
-    public class CutsceneAnimationExtension
+    public static class CutsceneAnimationExtension
     {
         public static DateTime LastUpdated = DateTime.MinValue;
 

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.Sharlayan
 {
-    public class WeatherExtension
+    public static class WeatherExtension
     {
         public static DateTime LastUpdated = DateTime.MinValue;
 
