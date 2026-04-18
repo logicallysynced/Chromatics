@@ -57,13 +57,10 @@ namespace Chromatics.Core
             {
                 RGBController.StopEffects();
                 RGBController.RunStartupEffects();
-                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token)).ContinueWith(t =>
-                {
-                    if (t.IsFaulted)
-                    {
-                        Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop task failed: {t.Exception?.GetBaseException().Message}");
-                    }
-                }, _masterCancellationToken.Token);
+                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token))
+                    .ContinueWith(
+                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop faulted: {t.Exception?.GetBaseException()?.Message}"),
+                        TaskContinuationOptions.OnlyOnFaulted);
             }
 
             gameSetup = true;
@@ -140,7 +137,10 @@ namespace Chromatics.Core
         {
             _GameLoopCancellationTokenSource.Dispose();
             _GameLoopCancellationTokenSource = new CancellationTokenSource();
-            Task.Run(() => GameLoop(_GameLoopCancellationTokenSource.Token), _masterCancellationToken.Token);
+            Task.Run(() => GameLoop(_GameLoopCancellationTokenSource.Token), _masterCancellationToken.Token)
+                .ContinueWith(
+                    t => Logger.WriteConsole(LoggerTypes.Error, $"GameLoop faulted: {t.Exception?.GetBaseException()?.Message}"),
+                    TaskContinuationOptions.OnlyOnFaulted);
         }
 
         private static void StopGameLoop(bool reconnect = false)
@@ -175,7 +175,10 @@ namespace Chromatics.Core
                 _GameConnectionCancellationTokenSource = new CancellationTokenSource();
                 RGBController.StopEffects();
                 RGBController.RunStartupEffects();
-                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token), _masterCancellationToken.Token);
+                Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token), _masterCancellationToken.Token)
+                    .ContinueWith(
+                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop (reconnect) faulted: {t.Exception?.GetBaseException()?.Message}"),
+                        TaskContinuationOptions.OnlyOnFaulted);
             }
         }
 
@@ -216,14 +219,8 @@ namespace Chromatics.Core
                     }
                 }
 
-                try
-                {
-                    await Task.Delay(delay, cancellationToken);
-                }
-                catch (TaskCanceledException)
-                {
-                    break;
-                }
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
+                if (cancellationToken.IsCancellationRequested) break;
 
             }
         }
@@ -250,14 +247,8 @@ namespace Chromatics.Core
                 // Wait for the interval before continuing
                 var delay = _connectionInterval;
 
-                try
-                {
-                    await Task.Delay(delay, cancellationToken);
-                }
-                catch (TaskCanceledException)
-                {
-                    break;
-                }
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
+                if (cancellationToken.IsCancellationRequested) break;
             }
         }
 
@@ -289,9 +280,7 @@ namespace Chromatics.Core
 
                 _connectionAttempts++;
 
-#if DEBUG
                 Debug.WriteLine(@"Attempting to attach to FFXIV. Attempt: " + _connectionAttempts);
-#endif
 
                 var processes = Process.GetProcessesByName("ffxiv_dx11");
                 if (processes.Length > 0)
@@ -317,9 +306,7 @@ namespace Chromatics.Core
                         UseLocalCache = AppSettings.GetSettings().localcache
                     };
 
-#if DEBUG
                     Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
-#endif
                     _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(_configuration);
 
                     //Load Other Memory Zones
@@ -343,8 +330,8 @@ namespace Chromatics.Core
                     RGBController.ResetLayerGroups();
                     StartGameLoop();
 
-#if DEBUG
                     Debug.WriteLine(@"Scanning memory..");
+#if DEBUG
                     Thread.Sleep(1000);
                     foreach (var location in _memoryHandler.Scanner.Locations)
                     {
@@ -357,9 +344,7 @@ namespace Chromatics.Core
             }
             catch (Exception ex)
             {
-#if DEBUG
                 Debug.WriteLine(@"Exception: " + ex.Message);
-#endif
 
                 if (ex.Message == "Access is denied.")
                 {
@@ -427,9 +412,7 @@ namespace Chromatics.Core
 
                             }
 
-#if DEBUG
                             Debug.WriteLine(@"User on title or character screen");
-#endif
 
                             _layerProcessorFactory.DisposeAll();
                             GC.Collect();
@@ -448,9 +431,7 @@ namespace Chromatics.Core
 
                         if (_onTitle)
                         {
-#if DEBUG
                             Debug.WriteLine(@"User logging in to FFXIV..");
-#endif
 
                             RGBController.StopEffects();
                             RGBController.ResetLayerGroups();
