@@ -68,7 +68,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         {
                             regResult = await LocalHueApi.RegisterAsync(clientDefinition.Ip, clientDefinition.AppKey, "RGB.NET");
                         }
-                        catch (HueApi.Models.Exceptions.LinkButtonNotPressedException ex)
+                        catch (HueApi.Models.Exceptions.LinkButtonNotPressedException)
                         {
                             ThrowHueError(99, true, $"[Hue] Button must be pressed on Hue Bridge. Please press the button and restart Chromatics.");
                             break;

@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [master, 'chromatics-3.x', 'chromatics-3.*']
+  pull_request:
+    branches: [master, 'chromatics-3.x', 'chromatics-3.*']
+
+jobs:
+  build-and-test:
+    # WinForms + GDI + WASAPI loopback means the project targets
+    # net8.0-windows7.0 and can only build on a Windows runner.
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore Chromatics.sln
+
+      - name: Build (Release, no restore)
+        run: dotnet build Chromatics.sln --configuration Release --no-restore --nologo
+
+      - name: Test (Release, no build)
+        run: dotnet test Chromatics.Tests/Chromatics.Tests.csproj --configuration Release --no-build --nologo --verbosity normal

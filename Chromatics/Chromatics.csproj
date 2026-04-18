@@ -58,7 +58,11 @@
     <PackageReference Include="RGB.NET.HID" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Layout" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Presets" Version="3.2.0" />
-    <PackageReference Include="Sanford.Multimedia.Midi" Version="6.6.2" />
+    <!-- Sanford.Multimedia.Midi is a .NET Framework package but works at
+         runtime on net8.0-windows. Suppress the NU1701 compat warning so the
+         build stays clean; if Sanford ever publishes a modernised target we
+         should drop the suppression. -->
+    <PackageReference Include="Sanford.Multimedia.Midi" Version="6.6.2" NoWarn="NU1701" />
     <PackageReference Include="Sharlayan" Version="8.0.1" />
   </ItemGroup>
 

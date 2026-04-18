@@ -51,6 +51,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     return false;
                 }
 
+                // RGB.NET occasionally flushes an empty dataSet (device initialised
+                // with no LEDs mapped yet, or a mid-reconnect tick). Indexing into
+                // an empty span would throw IndexOutOfRange on the caller thread.
+                if (dataSet.IsEmpty) return true;
+
                 Color color = dataSet[0].color;
                 var rgbColorHue = new HueApi.ColorConverters.RGBColor(color.R, color.G, color.B);
                 double brightness = 100;

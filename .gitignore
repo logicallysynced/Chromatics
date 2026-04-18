@@ -3,6 +3,7 @@
 
 # Refactor change log — generated locally, not committed
 CHANGES.md
+DESIGN_REFACTOR.md
 
 # Claude Code / editor agent local state
 .claude/

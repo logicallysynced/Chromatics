@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj": {
-      "version": "3.2.2",
+      "version": "3.3.0",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics-3.x\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -156,7 +156,10 @@
             },
             "Sanford.Multimedia.Midi": {
               "target": "Package",
-              "version": "[6.6.2, )"
+              "version": "[6.6.2, )",
+              "noWarn": [
+                "NU1701"
+              ]
             },
             "Sharlayan": {
               "target": "Package",
