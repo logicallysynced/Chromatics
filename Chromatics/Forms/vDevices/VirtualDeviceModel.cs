@@ -128,7 +128,14 @@ namespace Chromatics.Forms.vDevices
                     }
                 }, token)).ToArray();
 
-                await Task.WhenAll(tasks);
+                try
+                {
+                    await Task.WhenAll(tasks);
+                }
+                catch (OperationCanceledException)
+                {
+                    // Expected when a newer preview tick cancels this one before tasks start.
+                }
 
                 return;
             }
@@ -149,7 +156,7 @@ namespace Chromatics.Forms.vDevices
                     var mapping = layer.Value;
                     var blank_col = Color.DarkGray;
 
-                    if (layer.Value.deviceGuid != _deviceId) return;
+                    if (layer.Value.deviceGuid != _deviceId) continue;
 
                     if (mapping.rootLayerType == LayerType.BaseLayer && !mapping.Enabled)
                     {
@@ -159,24 +166,9 @@ namespace Chromatics.Forms.vDevices
                             {
                                 lock (_currentColors)
                                 {
-                                    if (_currentColors.ContainsKey(key.KeyType))
-                                    {
-                                        if (_currentColors[key.KeyType] != blank_col)
-                                        {
-                                            _currentColors[key.KeyType] = blank_col;
-                                            key.BackColor = blank_col;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        _currentColors.Add(key.KeyType, blank_col);
-                                        key.BackColor = blank_col;
-                                    }
+                                    _currentColors[key.KeyType] = blank_col;
+                                    key.BackColor = blank_col;
                                 }
-                            }
-                            else
-                            {
-                                Debug.WriteLine($"KeyType {key.KeyType} not found in deviceLeds");
                             }
                         }
 
@@ -195,19 +187,8 @@ namespace Chromatics.Forms.vDevices
                             {
                                 lock (_currentColors)
                                 {
-                                    if (_currentColors.ContainsKey(key.KeyType))
-                                    {
-                                        if (_currentColors[key.KeyType] != highlight_col)
-                                        {
-                                            _currentColors[key.KeyType] = highlight_col;
-                                            key.BackColor = highlight_col;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        _currentColors.Add(key.KeyType, highlight_col);
-                                        key.BackColor = highlight_col;
-                                    }
+                                    _currentColors[key.KeyType] = highlight_col;
+                                    key.BackColor = highlight_col;
                                 }
                             }
                         }
