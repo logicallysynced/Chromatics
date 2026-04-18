@@ -87,8 +87,21 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         {
             base.OnDetached(decoratable);
             peaks.Clear();
-            capture.StopRecording();
-            capture.Dispose();
+
+            // Unsubscribe before disposing: NAudio raises DataAvailable from a background
+            // thread, and leaving the handler wired up while tearing down the capture
+            // risks touching `bufferedWaveProvider` after it's been released. Null-check
+            // in case StartAudioCapture failed (e.g. no default capture device).
+            if (capture != null)
+            {
+                capture.DataAvailable -= OnDataAvailable;
+                capture.StopRecording();
+                capture.Dispose();
+                capture = null;
+            }
+
+            bufferedWaveProvider = null;
+
             Debug.WriteLine("Audio capture stopped.");
         }
 

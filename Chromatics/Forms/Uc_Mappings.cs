@@ -889,7 +889,7 @@ namespace Chromatics.Forms
 
             var current = (sender as TabControl).SelectedTab.Name;
 
-            keyController = KeyController.GetKeyContoller();
+            keyController = KeyController.GetKeyController();
             if (current == "tP_mappings") // Ensure this matches the name of your mappings tab
             {
                 // Key controllers hook

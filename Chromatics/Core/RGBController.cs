@@ -375,12 +375,18 @@ namespace Chromatics.Core
 
                 loadedDeviceProviders.Clear();
 
-                // Stop and dispose of the update trigger
-                _timerUpdateTrigger?.Stop();
+                // Stop and dispose of the update trigger. Previously this only called
+                // Stop(), which left the trigger's internal timer and its handle alive.
+                if (_timerUpdateTrigger != null)
+                {
+                    _timerUpdateTrigger.Stop();
+                    _timerUpdateTrigger.Dispose();
+                    _timerUpdateTrigger = null;
+                }
 
                 surface.Updating -= Surface_Updating;
                 surface.Exception -= surfaceExceptionEventHandler;
-                                    
+
                 surface.Dispose();
             }
             catch (Exception ex)

@@ -43,12 +43,22 @@ namespace Chromatics.Forms
         private static Fm_MainWindow _Instance;
         private static MetroStyleManager _metroStyleManager;
         private static DarkModeManager _darkModeManager = new DarkModeManager();
+        // Keep a strong reference to the SystemEvents handler so it can be
+        // unsubscribed on shutdown. Subscribing to the static SystemEvents class
+        // with an anonymous lambda (as the previous code did) left the form
+        // rooted forever, preventing garbage collection.
+        private UserPreferenceChangedEventHandler _themeChangeHandler;
 
         public Fm_MainWindow()
         {
             //Correct for DPI settings
             AutoScaleMode = AutoScaleMode.None;
-            Font = new Font(Font.Name, 8.25f * 100f / CreateGraphics().DpiY, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
+            // Dispose the transient Graphics object: CreateGraphics() allocates a GDI handle
+            // that would otherwise leak until the next GC pass.
+            using (var graphics = CreateGraphics())
+            {
+                Font = new Font(Font.Name, 8.25f * 100f / graphics.DpiY, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
+            }
 
             //Start Form
             InitializeComponent();
@@ -282,16 +292,15 @@ namespace Chromatics.Forms
             GameController.Setup();
         }
 
-        protected void Dispose(bool disposing, bool isMainWindow)
-        { 
-            if( disposing ) 
-            {
-                this.notifyIcon_main.Dispose();
-                this.contextMenuStrip_main.Dispose();
-            }
-
-            base.Dispose( disposing );
-        }
+        // NOTE: the designer's Dispose(bool) in Fm_MainWindow.Designer.cs disposes
+        // `components` (which owns notifyIcon_main and contextMenuStrip_main), so no
+        // manual override is needed here. The prior `Dispose(bool, bool)` method was
+        // dead code — it was never invoked because the signature didn't match the
+        // base `Dispose(bool)` and so wasn't an override.
+        //
+        // Form-owned resources that are NOT tracked by `components` (e.g. tt_main,
+        // the static SystemEvents subscription) are released via the OnHandleDestroyed
+        // override below so we don't leak across form lifetimes.
 
         private void OnResize(object sender, EventArgs e)
         {
@@ -338,6 +347,20 @@ namespace Chromatics.Forms
 
         private void ExitApplication()
         {
+            // Tear down subsystems in the reverse order they were started so background
+            // loops stop cleanly and unmanaged resources (hooks, timers, handles) are
+            // released before the process exits.
+            if (_themeChangeHandler != null)
+            {
+                SystemEvents.UserPreferenceChanged -= _themeChangeHandler;
+                _themeChangeHandler = null;
+            }
+
+            tt_main?.Dispose();
+            tt_main = null;
+
+            GameController.Exit();
+            KeyController.Stop();
             RGBController.Unload();
 
             if (System.Windows.Forms.Application.MessageLoop)
@@ -348,7 +371,6 @@ namespace Chromatics.Forms
             {
                 Environment.Exit(0);
             }
-                
         }
 
         private static void Form_FormClosed(object sender, FormClosedEventArgs e)
@@ -365,32 +387,25 @@ namespace Chromatics.Forms
 
         
 
-        public static void RegisterForThemeChanges(MetroFramework.Components.MetroStyleManager metroStyleManager)
+        private void RegisterForThemeChanges(MetroFramework.Components.MetroStyleManager metroStyleManager)
         {
-            SystemEvents.UserPreferenceChanged += (sender, e) =>
-            {
-                Debug.WriteLine($"UserPreferenceChanged: {e.Category}");
+            // Store the delegate in an instance field so it can be unsubscribed when the
+            // form closes. Previously this registered an anonymous lambda against the static
+            // SystemEvents class, which rooted the entire form indefinitely.
+            _themeChangeHandler = OnUserPreferenceChanged;
+            SystemEvents.UserPreferenceChanged += _themeChangeHandler;
+        }
 
-                if (e.Category == UserPreferenceCategory.General)
-                {
-                    var appSettings = AppSettings.GetSettings();
+        private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            Debug.WriteLine($"UserPreferenceChanged: {e.Category}");
 
-                    if (appSettings != null)
-                    {
-                        if (appSettings.systemTheme == Enums.Theme.System)
-                        {
-                            if (SystemHelpers.IsDarkModeEnabled())
-                            {
-                                SetDarkMode(true);
-                            }
-                            else
-                            {
-                                SetDarkMode(false);
-                            }
-                        }
-                    }
-                }
-            };
+            if (e.Category != UserPreferenceCategory.General) return;
+
+            var settings = AppSettings.GetSettings();
+            if (settings?.systemTheme != Enums.Theme.System) return;
+
+            SetDarkMode(SystemHelpers.IsDarkModeEnabled());
         }
     }
 }

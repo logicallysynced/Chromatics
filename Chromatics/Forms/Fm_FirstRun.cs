@@ -39,8 +39,11 @@ namespace Chromatics.Forms
         {
             //Correct for DPI settings
             AutoScaleMode = AutoScaleMode.None;
-            Font = new Font(Font.Name, 8.25f * 100f / CreateGraphics().DpiY, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
-
+            // Dispose the transient Graphics object; CreateGraphics() allocates a GDI handle.
+            using (var graphics = CreateGraphics())
+            {
+                Font = new Font(Font.Name, 8.25f * 100f / graphics.DpiY, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
+            }
 
             InitializeComponent();
 
