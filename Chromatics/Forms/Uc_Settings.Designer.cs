@@ -52,6 +52,8 @@
             lbl_theme = new MetroFramework.Controls.MetroLabel();
             cb_language = new MetroFramework.Controls.MetroComboBox();
             cb_theme = new MetroFramework.Controls.MetroComboBox();
+            lbl_keyboardlayout = new MetroFramework.Controls.MetroLabel();
+            cb_keyboardlayout = new MetroFramework.Controls.MetroComboBox();
             chk_updatecheck = new MetroFramework.Controls.MetroCheckBox();
             btn_clearcache = new MetroFramework.Controls.MetroButton();
             btn_resetchromatics = new MetroFramework.Controls.MetroButton();
@@ -457,6 +459,8 @@
             // gb_general
             // 
             gb_general.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            gb_general.Controls.Add(lbl_keyboardlayout);
+            gb_general.Controls.Add(cb_keyboardlayout);
             gb_general.Controls.Add(lbl_language);
             gb_general.Controls.Add(lbl_theme);
             gb_general.Controls.Add(cb_language);
@@ -472,7 +476,7 @@
             gb_general.Margin = new System.Windows.Forms.Padding(4);
             gb_general.Name = "gb_general";
             gb_general.Padding = new System.Windows.Forms.Padding(4);
-            gb_general.Size = new System.Drawing.Size(576, 778);
+            gb_general.Size = new System.Drawing.Size(576, 838);
             gb_general.TabIndex = 1;
             gb_general.TabStop = false;
             gb_general.Text = "General";
@@ -505,7 +509,27 @@
             cb_language.TabIndex = 10;
             cb_language.UseSelectable = true;
             cb_language.SelectedIndexChanged += cb_language_SelectedIndexChanged;
-            // 
+            //
+            // lbl_keyboardlayout
+            //
+            lbl_keyboardlayout.AutoSize = true;
+            lbl_keyboardlayout.Location = new System.Drawing.Point(30, 680);
+            lbl_keyboardlayout.Name = "lbl_keyboardlayout";
+            lbl_keyboardlayout.Size = new System.Drawing.Size(111, 19);
+            lbl_keyboardlayout.TabIndex = 13;
+            lbl_keyboardlayout.Text = "Keyboard Layout";
+            //
+            // cb_keyboardlayout
+            //
+            cb_keyboardlayout.FormattingEnabled = true;
+            cb_keyboardlayout.ItemHeight = 23;
+            cb_keyboardlayout.Location = new System.Drawing.Point(30, 716);
+            cb_keyboardlayout.Name = "cb_keyboardlayout";
+            cb_keyboardlayout.Size = new System.Drawing.Size(450, 29);
+            cb_keyboardlayout.TabIndex = 14;
+            cb_keyboardlayout.UseSelectable = true;
+            cb_keyboardlayout.SelectedIndexChanged += cb_keyboardlayout_SelectedIndexChanged;
+            //
             // cb_theme
             // 
             cb_theme.FormattingEnabled = true;
@@ -532,7 +556,7 @@
             // 
             // btn_clearcache
             // 
-            btn_clearcache.Location = new System.Drawing.Point(245, 696);
+            btn_clearcache.Location = new System.Drawing.Point(245, 756);
             btn_clearcache.Margin = new System.Windows.Forms.Padding(4);
             btn_clearcache.Name = "btn_clearcache";
             btn_clearcache.Size = new System.Drawing.Size(189, 54);
@@ -543,7 +567,7 @@
             // 
             // btn_resetchromatics
             // 
-            btn_resetchromatics.Location = new System.Drawing.Point(30, 696);
+            btn_resetchromatics.Location = new System.Drawing.Point(30, 756);
             btn_resetchromatics.Margin = new System.Windows.Forms.Padding(4);
             btn_resetchromatics.Name = "btn_resetchromatics";
             btn_resetchromatics.Size = new System.Drawing.Size(189, 54);
@@ -658,6 +682,8 @@
         private MetroFramework.Controls.MetroLabel lbl_language;
         private MetroFramework.Controls.MetroLabel lbl_theme;
         private MetroFramework.Controls.MetroComboBox cb_language;
+        private MetroFramework.Controls.MetroLabel lbl_keyboardlayout;
+        private MetroFramework.Controls.MetroComboBox cb_keyboardlayout;
 
     }
 }

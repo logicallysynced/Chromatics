@@ -67,6 +67,7 @@ namespace Chromatics.Forms
             tt_mappings.SetToolTip(this.chk_updatecheck, LocalizationManager.GetLocalizedText("Enable checking for updates on Chromatics start. Default: Enabled"));
             tt_mappings.SetToolTip(this.cb_theme, LocalizationManager.GetLocalizedText("Change the interface theme. Default: System"));
             tt_mappings.SetToolTip(this.cb_language, LocalizationManager.GetLocalizedText("Change Chromatics' language. Default: English"));
+            tt_mappings.SetToolTip(this.cb_keyboardlayout, LocalizationManager.GetLocalizedText("Set the physical keyboard layout used for key mapping. Default: QWERTY"));
             tt_mappings.SetToolTip(mt_settings_razer, LocalizationManager.GetLocalizedText("Enable/disable Razer device library. Default: Enabled"));
             tt_mappings.SetToolTip(mt_settings_logitech, LocalizationManager.GetLocalizedText("Enable/disable Logitech device library. Default: Enabled"));
             tt_mappings.SetToolTip(mt_settings_corsair, LocalizationManager.GetLocalizedText("Enable/disable Corsair device library. Default: Enabled"));
@@ -95,6 +96,11 @@ namespace Chromatics.Forms
             .Select(l => new ComboBoxItem<Language>(l, l.GetDisplayName()))
             .ToArray());
 
+            // Populate the ComboBox for Keyboard Layout
+            cb_keyboardlayout.Items.AddRange(Enum.GetValues(typeof(KeyboardLocalization))
+            .Cast<KeyboardLocalization>()
+            .Select(l => new ComboBoxItem<KeyboardLocalization>(l, l.ToString().ToUpper()))
+            .ToArray());
 
             chk_localcache.Checked = settings.localcache;
             chk_winstart.Checked = settings.winstart;
@@ -105,6 +111,8 @@ namespace Chromatics.Forms
             chk_updatecheck.Checked = settings.checkupdates;
             cb_theme.SelectedIndex = (int)settings.systemTheme;
             cb_language.SelectedIndex = (int)settings.systemLanguage;
+            // KeyboardLocalization is 1-based (qwerty=1, qwertz=2, azerty=3); ComboBox items are 0-based.
+            cb_keyboardlayout.SelectedIndex = (int)settings.keyboardLayout - 1;
 
             mt_settings_razer.BackColor = settings.deviceRazerEnabled ? tilecol_enabled : tilecol_disabled;
             mt_settings_logitech.BackColor = settings.deviceLogitechEnabled ? tilecol_enabled : tilecol_disabled;
@@ -824,6 +832,13 @@ namespace Chromatics.Forms
 
             Fm_MainWindow.TranslateForm();
 
+        }
+
+        private void cb_keyboardlayout_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var settings = AppSettings.GetSettings();
+            settings.keyboardLayout = ((ComboBoxItem<KeyboardLocalization>)cb_keyboardlayout.SelectedItem).Value;
+            AppSettings.SaveSettings(settings);
         }
 
         public class ComboBoxItem<T>
