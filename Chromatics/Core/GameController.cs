@@ -45,6 +45,9 @@ namespace Chromatics.Core
         private static bool _isInGame;
         private static bool _onTitle;
         private static bool wasPreviewed;
+        // Set to true by Exit() before it disposes the CTSes, so that a concurrent
+        // GameLoop iteration cannot race into StopGameLoop(true) with a disposed source.
+        private static volatile bool _isShuttingDown;
         public static void Setup()
         {
             if (gameSetup) return;
@@ -68,6 +71,7 @@ namespace Chromatics.Core
 
         public static void Exit()
         {
+            _isShuttingDown = true;
             StopGameLoop();
             _GameConnectionCancellationTokenSource.Cancel();
             _GameLoopCancellationTokenSource.Cancel();
@@ -145,7 +149,10 @@ namespace Chromatics.Core
 
         private static void StopGameLoop(bool reconnect = false)
         {
-            _GameLoopCancellationTokenSource.Cancel();
+            // Guard: Exit() disposes this CTS; a concurrent GameLoop thread could
+            // reach here after disposal despite the _isShuttingDown flag (TOCTOU).
+            try { _GameLoopCancellationTokenSource.Cancel(); }
+            catch (ObjectDisposedException) { }
             _memoryHandler?.Dispose();
 
             if (activeProcessId != -1)
@@ -198,7 +205,8 @@ namespace Chromatics.Core
 
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Lost connection to FFXIV. Will attempt to reconnect.");
 
-                    StopGameLoop(true);
+                    if (!_isShuttingDown)
+                        StopGameLoop(true);
                 }
 
                 if (cancellationToken.IsCancellationRequested)
