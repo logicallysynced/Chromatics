@@ -30,7 +30,7 @@ namespace Chromatics.Models
         internal List<KeyButton> _keybuttons = new List<KeyButton>();
         internal event EventHandler _OnKeycapPressed;
         internal Dictionary<LedId, Color> _currentColors;
-        internal static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        internal CancellationTokenSource _cancellationTokenSource;
 
         internal readonly string[] unwantedStrings =
         [
@@ -43,11 +43,8 @@ namespace Chromatics.Models
         {
             if (disposing)
             {
-                // _cancellationTokenSource is static and shared across every
-                // VirtualDevice instance. Disposing it here (e.g. when rebuilding a
-                // virtual keyboard on layout change) kills preview rendering for
-                // every other device still in use. Leave it alone — new CTSes are
-                // allocated per preview tick.
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource = null;
                 _OnKeycapPressed = null;
             }
 
@@ -83,7 +80,8 @@ namespace Chromatics.Models
                 var activeSurface = RGBController.GetLiveSurfaces();
                 var devicesOfType = activeSurface.Devices.Where(device => device.DeviceInfo.DeviceType == _deviceType);
 
-                _cancellationTokenSource = new CancellationTokenSource(); // Create a new token source
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource = new CancellationTokenSource();
                 var token = _cancellationTokenSource.Token;
 
                 var tasks = devicesOfType.Select(device => Task.Run(() =>

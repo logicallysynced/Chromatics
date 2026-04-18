@@ -8,7 +8,7 @@ using RGB.NET.Core;
 
 namespace Chromatics.Helpers
 {
-    public class ColorHelper
+    public static class ColorHelper
     {
         public static System.Drawing.Color RGBColorToColor(RGB.NET.Core.Color col)
         {
@@ -39,7 +39,7 @@ namespace Chromatics.Helpers
         }
     }
 
-    public class ColorInterpolator
+    public static class ColorInterpolator
     {
         public static System.Drawing.Color InterpolateBetween(System.Drawing.Color endPoint1, System.Drawing.Color endPoint2, double lambda)
         {

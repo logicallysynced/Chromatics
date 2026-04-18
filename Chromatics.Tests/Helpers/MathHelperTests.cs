@@ -52,4 +52,20 @@ public class MathHelperTests
         var result = MathHelper.LinearInterpolation.Interpolate(100, 0, 100, 10, 20);
         Assert.Equal(20, result);
     }
+
+    [Fact]
+    public void LinearInterpolation_BelowMin_Extrapolates()
+    {
+        // current < min: formula gives a negative lambda, extrapolating below targetLow.
+        var result = MathHelper.LinearInterpolation.Interpolate(-10, 0, 100, 0, 100);
+        Assert.Equal(-10, result);
+    }
+
+    [Fact]
+    public void LinearInterpolation_AboveMax_Extrapolates()
+    {
+        // current > max: formula gives lambda > 1, extrapolating above targetHigh.
+        var result = MathHelper.LinearInterpolation.Interpolate(110, 0, 100, 0, 100);
+        Assert.Equal(110, result);
+    }
 }
