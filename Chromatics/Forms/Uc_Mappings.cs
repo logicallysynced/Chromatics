@@ -126,14 +126,27 @@ namespace Chromatics.Forms
             this.Load += new EventHandler(OnLoad);
         }
 
-        private void OnKeyboardLayoutChanged(object sender, EventArgs e)
+        private void OnKeyboardLayoutChanged(object sender, KeyboardLayoutChangedEventArgs e)
         {
             if (InvokeRequired)
             {
                 BeginInvoke((System.Windows.Forms.MethodInvoker)(() => OnKeyboardLayoutChanged(sender, e)));
                 return;
             }
+
+            // Remap stored keyboard layer LedIds so the user's picks follow the
+            // printed label across the transition (e.g. the "Y" key on QWERTY
+            // points at LedId.Keyboard_Z on QWERTZ).
+            MappingLayers.RemapLedIdsForLayoutChange(e.OldLayout, e.NewLayout);
+            SaveLayers();
+
             RebuildKeyboardVirtualDevices();
+
+            // Re-bind the currently selected device so its layer panel and the
+            // virtual keyboard paint comes back online; ChangeDeviceType runs
+            // VisualiseLayers at the end, which is also what the preview tick
+            // call path invokes, so preview keeps ticking on the new controls.
+            ChangeDeviceType();
         }
 
         private void RebuildKeyboardVirtualDevices()
@@ -155,6 +168,8 @@ namespace Chromatics.Forms
                 if (!connectedDevices.TryGetValue(guid, out var rgbDevice)) continue;
                 if (!_deviceVirtualDeviceMap.TryGetValue(guid, out var oldVirtual)) continue;
 
+                var wasVisible = oldVirtual.Visible;
+
                 oldVirtual._OnKeycapPressed -= OnKeyCapPressed;
                 tlp_frame.Controls.Remove(oldVirtual);
                 oldVirtual.Dispose();
@@ -166,7 +181,8 @@ namespace Chromatics.Forms
                     Anchor = AnchorStyles.Left | AnchorStyles.Right,
                     Dock = DockStyle.Top,
                     MinimumSize = new Size(1200, 300),
-                    AutoSize = false
+                    AutoSize = false,
+                    Visible = wasVisible
                 };
 
                 tlp_frame.Controls.Add(replacement, 0, 0);
