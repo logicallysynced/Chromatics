@@ -29,6 +29,28 @@
 
   <ItemGroup>
     <Content Include="Resources\Chromatics_icon_144x144.ico" />
+    <AvaloniaResource Include="Resources\Chromatics_icon_128x128.png" />
+    <AvaloniaResource Include="Resources\logo.png" />
+    <AvaloniaResource Include="Resources\chromatics_white.png" />
+    <AvaloniaResource Include="Resources\notification.png" />
+    <AvaloniaResource Include="Resources\sword.png" />
+    <AvaloniaResource Include="Resources\keyboard.png" />
+    <AvaloniaResource Include="Resources\cloudy.png" />
+    <AvaloniaResource Include="Resources\crystal.png" />
+    <AvaloniaResource Include="Resources\video-clip.png" />
+    <AvaloniaResource Include="Resources\coin.png" />
+    <AvaloniaResource Include="Resources\raid.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.2.0" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.0" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
   </ItemGroup>
 
   <ItemGroup>

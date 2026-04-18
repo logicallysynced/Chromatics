@@ -31,8 +31,16 @@ namespace Chromatics.Layers
         private static int _prev = 0;
 
         private static bool _preview;
-        
+
         private static ConcurrentDictionary<int, Layer> _layers = new ConcurrentDictionary<int, Layer>();
+
+        // Per-device override positions for non-keyboard virtual layouts. The
+        // VM seeds keycaps on a grid; this dict lets users drag keys into any
+        // shape and have the positions persist across restarts. Keyed first by
+        // device GUID, then by RGB.NET LedId. Persisted alongside _layers via
+        // MappingFileV3.
+        private static ConcurrentDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> _deviceLayouts
+            = new ConcurrentDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();
 
 
         public static int AddLayer(int index, LayerType rootLayerType, Guid deviceGuid, RGBDeviceType deviceType, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
@@ -156,65 +164,125 @@ namespace Chromatics.Layers
             return _layerAutoID + 1;
         }
 
+        // Per-device key-position overrides (non-keyboard devices). Returns a
+        // snapshot so callers can iterate safely while the VM updates positions
+        // during a drag. Never returns null.
+        public static IReadOnlyDictionary<LedId, DeviceKeyPosition> GetDeviceLayoutOverrides(Guid deviceId)
+        {
+            if (_deviceLayouts.TryGetValue(deviceId, out var map))
+                return new Dictionary<LedId, DeviceKeyPosition>(map);
+            return new Dictionary<LedId, DeviceKeyPosition>();
+        }
+
+        public static void SetDeviceKeyPosition(Guid deviceId, LedId ledId, double x, double y)
+        {
+            // Copy-on-write: build a fresh dict for every update and swap it in
+            // via AddOrUpdate. The save path serialises _deviceLayouts on a
+            // background task and was hitting "Collection was modified" when a
+            // drag-release mutated the inner dict mid-enumeration. Replacing the
+            // reference atomically means serializers only ever see a frozen
+            // snapshot.
+            var pos = new DeviceKeyPosition { X = x, Y = y };
+            _deviceLayouts.AddOrUpdate(deviceId,
+                _ => new Dictionary<LedId, DeviceKeyPosition> { [ledId] = pos },
+                (_, existing) =>
+                {
+                    var next = new Dictionary<LedId, DeviceKeyPosition>(existing)
+                    {
+                        [ledId] = pos
+                    };
+                    return next;
+                });
+            _version++;
+        }
+
+        public static void ClearDeviceLayoutOverrides(Guid deviceId)
+        {
+            if (_deviceLayouts.TryRemove(deviceId, out _))
+                _version++;
+        }
+
+        internal static ConcurrentDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> GetAllDeviceLayouts()
+        {
+            return _deviceLayouts;
+        }
+
+        internal static void ReplaceDeviceLayouts(IDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> fresh)
+        {
+            _deviceLayouts.Clear();
+            if (fresh == null) return;
+            foreach (var kvp in fresh)
+                _deviceLayouts[kvp.Key] = kvp.Value;
+        }
+
         public static bool LoadMappings(bool over = false)
         {
-            if (FileOperationsHelper.CheckLayerMappingsExist())
+            if (!FileOperationsHelper.CheckLayerMappingsExist()) return false;
+
+            var (tempLayers, tempDeviceLayouts) = FileOperationsHelper.LoadLayerMappings();
+            if (tempLayers == null) return false;
+
+            // Device layout overrides live in a separate top-level field in the
+            // V3 file, so they come through as-is without going near the layer
+            // migration path. Always replace wholesale — partial merges would
+            // leak stale overrides from a prior session.
+            ReplaceDeviceLayouts(tempDeviceLayouts);
+
+            var flag = false;
+            var empty = false;
+
+            foreach (var mapping in tempLayers)
             {
-                var _Templayers = FileOperationsHelper.LoadLayerMappings();
-
-                if (_Templayers == null)
+                if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null || mapping.Value.deviceGuid == Guid.Empty)
                 {
-                    return false;
+                    flag = true;
+                    if (mapping.Value.deviceGuid == Guid.Empty) empty = true;
                 }
-
-                var flag = false;
-                var empty = false;
-
-                foreach (var mapping in _Templayers)
-                {
-                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null || mapping.Value.deviceGuid == Guid.Empty)
-                    {
-                        flag = true;
-
-                        if (mapping.Value.deviceGuid == Guid.Empty)
-                        {
-                            empty = true;
-                        }
-                    }
-                }
-
-                if (flag || over)
-                {
-                    Debug.WriteLine("Flagged for upgrade");
-
-                    if (!empty)
-                    {
-                        FileOperationsHelper.CreateLayersBackup();
-                    }
-
-                    QueueImportMappings(_Templayers, empty);
-                }
-                else
-                {
-                    _layers.Clear();
-                    _layers = _Templayers;
-                }
-
-                _layerAutoID = _layers.LastOrDefault().Key;
-                _version++;
-
-                return true;
             }
 
-            return false;
+            if (flag || over)
+            {
+                Debug.WriteLine("Flagged for upgrade");
+                if (!empty)
+                {
+                    FileOperationsHelper.CreateLayersBackup();
+                }
+
+                QueueImportMappings(tempLayers, empty);
+            }
+            else
+            {
+                _layers.Clear();
+                _layers = tempLayers;
+            }
+
+            // ConcurrentDictionary isn't ordered — LastOrDefault returns an
+            // arbitrary entry, which lets the next AddLayer collide with an
+            // existing id and silently drop the new layer via GetOrAdd.
+            // Use the actual max so new ids always slot in above the loaded set.
+            _layerAutoID = _layers.Keys.DefaultIfEmpty(0).Max();
+            _version++;
+
+            return true;
         }
 
         private static void QueueImportMappings(ConcurrentDictionary<int, Layer> importedLayer, bool empty = false)
         {
-            // Start a timer to check periodically if RGBController is loaded
-            _timer = new System.Timers.Timer(1000); // Check every second
+            // When RGBController is already loaded (the normal Avalonia path,
+            // where LoadMappings is called after Setup), migrate inline. The
+            // old 1-second timer raced with any VM-side default-seeding: the
+            // VM would wrap freshly-seeded Layer objects just before the timer
+            // fired ImportMappings, which clears _layers and breaks those
+            // wrappers mid-flight. Inline migration eliminates the race.
+            if (RGBController.IsLoaded())
+            {
+                ImportMappings(importedLayer, empty);
+                return;
+            }
+
+            _timer = new System.Timers.Timer(1000);
             _timer.Elapsed += (sender, e) => CheckRGBControllerLoaded(importedLayer, empty);
-            _timer.AutoReset = false; // Ensure the timer does not restart automatically
+            _timer.AutoReset = false;
             _timer.Start();
         }
 
@@ -226,13 +294,19 @@ namespace Chromatics.Layers
                 {
                     ImportMappings(state as ConcurrentDictionary<int, Layer>, empty);
 
-                    if (Uc_Mappings.Instance.InvokeRequired)
+                    // The WinForms Uc_Mappings host is no longer constructed
+                    // under Avalonia — guard before calling into it. The
+                    // Avalonia Mapping VM refreshes via DeviceConnectionChanged.
+                    if (Uc_Mappings.Instance != null)
                     {
-                        Uc_Mappings.Instance.Invoke(new MethodInvoker(() => Uc_Mappings.Instance.ChangeDeviceType()));
-                    }
-                    else
-                    {
-                        Uc_Mappings.Instance.ChangeDeviceType();
+                        if (Uc_Mappings.Instance.InvokeRequired)
+                        {
+                            Uc_Mappings.Instance.Invoke(new MethodInvoker(() => Uc_Mappings.Instance.ChangeDeviceType()));
+                        }
+                        else
+                        {
+                            Uc_Mappings.Instance.ChangeDeviceType();
+                        }
                     }
                 }
             }
@@ -245,21 +319,25 @@ namespace Chromatics.Layers
 
         public static bool SaveMappings()
         {
-            FileOperationsHelper.SaveLayerMappings(_layers);
-
-            /*
-            foreach (var layer in _layers)
-            {
-                Debug.WriteLine($"Saving layer: {layer.Key}, Version: {layer.Value.layerVersion}, Guid: {layer.Value.deviceGuid}");
-            }
-            */
-
+            FileOperationsHelper.SaveLayerMappings(_layers, _deviceLayouts);
             return true;
         }
 
         public static bool ImportMappings(ConcurrentDictionary<int, Layer> importedLayer = null, bool empty = false)
         {
-            var layers = importedLayer ?? FileOperationsHelper.ImportLayerMappings();
+            ConcurrentDictionary<int, Layer> layers;
+            if (importedLayer != null)
+            {
+                layers = importedLayer;
+            }
+            else
+            {
+                var (imported, importedLayouts) = FileOperationsHelper.ImportLayerMappings();
+                layers = imported;
+                // User-driven import replaces the whole state, including device
+                // layout overrides — don't merge with the previous session's.
+                if (layers != null) ReplaceDeviceLayouts(importedLayouts);
+            }
 
             if (layers != null)
             {
@@ -361,7 +439,7 @@ namespace Chromatics.Layers
                     _layers[layer.Key] = layer.Value;
                 }
 
-                _layerAutoID = _layers.LastOrDefault().Key;
+                _layerAutoID = _layers.Keys.DefaultIfEmpty(0).Max();
                 _version++;
 
                 SaveMappings();
@@ -375,7 +453,24 @@ namespace Chromatics.Layers
 
         public static bool ExportMappings()
         {
-            FileOperationsHelper.ExportLayerMappings(_layers);
+            FileOperationsHelper.ExportLayerMappings(_layers, _deviceLayouts);
+            return true;
+        }
+
+        // Path-driven counterparts for UI frameworks that supply the file path
+        // themselves (Avalonia StorageProvider). Import re-runs the full migration
+        // pipeline by funnelling through ImportMappings(imported, empty: false).
+        public static bool ImportMappingsFromPath(string path)
+        {
+            var (loaded, loadedLayouts) = FileOperationsHelper.ImportLayerMappingsFromPath(path);
+            if (loaded == null) return false;
+            ReplaceDeviceLayouts(loadedLayouts);
+            return ImportMappings(loaded);
+        }
+
+        public static bool ExportMappingsToPath(string path)
+        {
+            FileOperationsHelper.ExportLayerMappingsToPath(_layers, path, _deviceLayouts);
             return true;
         }
 
@@ -409,6 +504,28 @@ namespace Chromatics.Layers
         {
             return _version;
         }
+    }
+
+    // Per-key position override for non-keyboard virtual layouts. Stored per
+    // device GUID in MappingLayers._deviceLayouts and persisted alongside the
+    // layer dict in the MappingFileV3 wrapper.
+    public class DeviceKeyPosition
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+    }
+
+    // On-disk format for layers.chromatics3 starting at schemaVersion 3.
+    // Previous versions serialized a bare ConcurrentDictionary<int, Layer>;
+    // FileOperationsHelper.LoadLayerMappings sniffs the root shape and falls
+    // back to that form when it's absent. Incremented whenever we add a new
+    // top-level field that the legacy format can't represent.
+    public class MappingFileV3
+    {
+        public int schemaVersion { get; set; } = 3;
+        public ConcurrentDictionary<int, Layer> layers { get; set; } = new ConcurrentDictionary<int, Layer>();
+        public Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> deviceLayouts { get; set; }
+            = new Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();
     }
 
     public class Layer : IMappingLayer

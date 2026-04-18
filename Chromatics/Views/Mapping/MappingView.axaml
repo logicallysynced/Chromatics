@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Chromatics.ViewModels.Mapping"
+             xmlns:views="clr-namespace:Chromatics.Views.Mapping"
+             mc:Ignorable="d" d:DesignWidth="1360" d:DesignHeight="780"
+             x:Class="Chromatics.Views.Mapping.MappingView"
+             x:DataType="vm:MappingViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="12">
+
+        <!-- Top toolbar: device + preview + import/export + add layer.
+             Device combo grows to absorb slack so the action buttons stay
+             pinned to the right edge. -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,8,Auto,8,Auto,8,Auto,16,Auto"
+              Margin="0,0,0,10">
+
+            <ComboBox Grid.Column="0"
+                      ItemsSource="{Binding Devices}"
+                      SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                      DisplayMemberBinding="{Binding Name}"
+                      HorizontalAlignment="Stretch"
+                      MinWidth="280" />
+
+            <ToggleButton Grid.Column="2"
+                          Content="Preview"
+                          IsChecked="{Binding IsPreviewing, Mode=TwoWay}"
+                          MinWidth="96"
+                          HorizontalContentAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          ToolTip.Tip="Toggle a live preview of the active layers" />
+
+            <Button Grid.Column="4"
+                    Content="Import"
+                    Click="OnImportClick"
+                    MinWidth="96"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    ToolTip.Tip="Import layers from a .chromatics3 file" />
+
+            <Button Grid.Column="6"
+                    Content="Export"
+                    Click="OnExportClick"
+                    MinWidth="96"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    ToolTip.Tip="Export current layers to a .chromatics3 file" />
+
+            <Button Grid.Column="8"
+                    Content="Add Dynamic Layer"
+                    Command="{Binding AddSelectedLayerCommand}"
+                    MinWidth="160"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Classes="accent" />
+        </Grid>
+
+        <!-- Center split: virtual devices (left) + layer list (right). 70/30
+             matches the old Uc_Mappings tlp_mid proportion. -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,12,400">
+
+            <Border Grid.Column="0"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="4">
+                <!-- Only the currently-selected device's keyboard is rendered.
+                     Device identity is already visible in the dropdown above;
+                     no second label needed. -->
+                <ContentControl Content="{Binding SelectedVirtualDevice}">
+                    <ContentControl.ContentTemplate>
+                        <DataTemplate DataType="vm:VirtualDeviceViewModel">
+                            <views:VirtualDeviceView />
+                        </DataTemplate>
+                    </ContentControl.ContentTemplate>
+                </ContentControl>
+            </Border>
+
+            <views:LayerListView Grid.Column="2" DataContext="{Binding}" />
+        </Grid>
+
+        <!-- Bottom hint strip. Matches the old footer: a soft reminder without
+             taking vertical real estate from the editor. -->
+        <Border Grid.Row="2"
+                Margin="0,10,0,0"
+                Padding="10,6"
+                Background="{DynamicResource ChromaticsTileOff}"
+                CornerRadius="4">
+            <TextBlock Text="Hold Shift while clicking Duplicate to chain-copy layers."
+                       Opacity="0.75"
+                       FontSize="12" />
+        </Border>
+    </Grid>
+</UserControl>

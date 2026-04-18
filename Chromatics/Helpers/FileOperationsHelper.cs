@@ -33,25 +33,60 @@ namespace Chromatics.Helpers
         private static WeatherData weatherData;
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public static void SaveLayerMappings(ConcurrentDictionary<int, Layer> mappings)
+        // Drag-repositioning a keycap fires SaveMappings on a thread-pool task on
+        // every pointer-release. Rapid drags (or the preview tick touching the
+        // same file path) can overlap and collide on the sibling ".tmp" handle,
+        // producing "the process cannot access the file" IOExceptions.
+        // Serialising all layer writes through this lock makes the
+        // write-then-File.Replace pair atomic from the caller's perspective.
+        private static readonly object _layerSaveLock = new object();
+
+        public static void SaveLayerMappings(ConcurrentDictionary<int, Layer> mappings,
+            IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
         {
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = $"{enviroment}/layers.chromatics3";
 
             try
             {
-                using (var sw = new StreamWriter(path, false))
+                // Deep snapshot before serialising: Newtonsoft streams the payload
+                // and enumerates every nested collection. A concurrent mutation
+                // (e.g. drag-save racing with SetDeviceKeyPosition, or a future
+                // edit-mode key pick touching Layer.deviceLeds) would throw
+                // "Collection was modified" mid-write. Cloning the inner dicts
+                // here means the serialiser only ever sees frozen data.
+                var layersSnapshot = new ConcurrentDictionary<int, Layer>();
+                foreach (var kvp in mappings)
                 {
-                    var serializer = new JsonSerializer();
-                    serializer.Converters.Add(new DictionaryConverter());
-                    serializer.NullValueHandling = NullValueHandling.Ignore;
-
-                    serializer.Serialize(sw, mappings);
-                    sw.WriteLine();
-                    sw.Close();
+                    var src = kvp.Value;
+                    var ledsCopy = src.deviceLeds != null
+                        ? new Dictionary<int, RGB.NET.Core.LedId>(src.deviceLeds)
+                        : new Dictionary<int, RGB.NET.Core.LedId>();
+                    layersSnapshot[kvp.Key] = new Layer(
+                        src.layerVersion, src.layerID, src.layerIndex, src.rootLayerType,
+                        src.deviceGuid, src.deviceType, src.layerTypeindex, src.zindex,
+                        src.Enabled, ledsCopy, src.allowBleed, src.layerModes);
                 }
 
+                var layoutsSnapshot = new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>();
+                if (deviceLayouts != null)
+                {
+                    foreach (var kvp in deviceLayouts)
+                    {
+                        layoutsSnapshot[kvp.Key] = kvp.Value != null
+                            ? new Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>(kvp.Value)
+                            : new Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>();
+                    }
+                }
 
+                var wrapper = new MappingFileV3
+                {
+                    schemaVersion = 3,
+                    layers = layersSnapshot,
+                    deviceLayouts = layoutsSnapshot
+                };
+
+                WriteJsonAtomic(path, wrapper);
             }
             catch (Exception ex)
             {
@@ -59,30 +94,87 @@ namespace Chromatics.Helpers
             }
         }
 
-        public static ConcurrentDictionary<int, Layer> LoadLayerMappings()
+        // Serialize to a sibling .tmp file and only replace the real file once
+        // the write has fully succeeded. If serialization throws mid-write (as
+        // it did historically when the DictionaryConverter recursed on
+        // Dictionary<LedId, …>), the real file stays intact and subsequent
+        // loads don't hit "Unterminated string" on a half-written JSON blob.
+        private static void WriteJsonAtomic(string path, object payload)
+        {
+            var tmp = path + ".tmp";
+            lock (_layerSaveLock)
+            {
+                using (var sw = new StreamWriter(tmp, false))
+                {
+                    var serializer = new JsonSerializer();
+                    serializer.Converters.Add(new DictionaryConverter());
+                    serializer.NullValueHandling = NullValueHandling.Ignore;
+                    serializer.Serialize(sw, payload);
+                    sw.WriteLine();
+                    sw.Flush();
+                }
+
+                if (File.Exists(path))
+                    File.Replace(tmp, path, null);
+                else
+                    File.Move(tmp, path);
+            }
+        }
+
+        // V2 of the file was a bare ConcurrentDictionary<int, Layer>; V3 wraps
+        // that dict in an object with deviceLayouts. Detect via JObject having
+        // a "schemaVersion" key. Legacy files load with an empty layouts map
+        // and upgrade to V3 on the next save.
+        public static (ConcurrentDictionary<int, Layer> layers,
+                       Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
+            LoadLayerMappings()
         {
             var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
             var path = $"{enviroment}/layers.chromatics3";
-            var result = new ConcurrentDictionary<int, Layer>();
 
             try
             {
+                string json;
                 using (var sr = new StreamReader(path))
-                {
-                    result = JsonConvert.DeserializeObject<ConcurrentDictionary<int, Layer>>(sr.ReadToEnd(), new DictionaryConverter());
-                    sr.Close();
-                }
+                    json = sr.ReadToEnd();
 
-                if (result != null)
-                    return result;
-
-                return null;
+                return ParseMappingFile(json);
             }
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Layers: {ex.Message}");
-                return null;
+                return (null, null);
             }
+        }
+
+        private static (ConcurrentDictionary<int, Layer> layers,
+                        Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
+            ParseMappingFile(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return (null, null);
+
+            var token = JToken.Parse(json);
+            if (token is JObject obj && obj["schemaVersion"] != null && obj["layers"] != null)
+            {
+                var layers = obj["layers"].ToObject<ConcurrentDictionary<int, Layer>>(
+                    JsonSerializer.Create(new JsonSerializerSettings
+                    {
+                        Converters = { new DictionaryConverter() }
+                    }));
+
+                var deviceLayouts = obj["deviceLayouts"]?
+                    .ToObject<Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>>()
+                    ?? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>();
+
+                return (layers, deviceLayouts);
+            }
+
+            var legacy = token.ToObject<ConcurrentDictionary<int, Layer>>(
+                JsonSerializer.Create(new JsonSerializerSettings
+                {
+                    Converters = { new DictionaryConverter() }
+                }));
+            return (legacy, new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>());
         }
 
 
@@ -99,7 +191,9 @@ namespace Chromatics.Helpers
             return false;
         }
 
-        public static ConcurrentDictionary<int, Layer> ImportLayerMappings()
+        public static (ConcurrentDictionary<int, Layer> layers,
+                       Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
+            ImportLayerMappings()
         {
             var open = new OpenFileDialog
             {
@@ -122,43 +216,96 @@ namespace Chromatics.Helpers
                 ValidateNames = true
             };
 
-            if (open.ShowDialog() == DialogResult.OK)
+            if (open.ShowDialog() != DialogResult.OK)
             {
-                var ext = Path.GetExtension(open.FileName);
-
-                Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Layers..");
-
-                try
-                {
-                    var result = new ConcurrentDictionary<int, Layer>();
-
-                    using (var sr = new StreamReader(open.FileName))
-                    {
-                        result = JsonConvert.DeserializeObject<ConcurrentDictionary<int, Layer>>(sr.ReadToEnd(), new DictionaryConverter());
-                        sr.Close();
-
-                        Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported layers from {open.FileName}.");
-                        open.Dispose();
-                    }
-
-                    return result;
-
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing layers. Error: {ex.Message}");
-                    open.Dispose();
-                    return null;
-                }
-
+                return (null, null);
             }
-            else
+
+            Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Layers..");
+
+            try
             {
-                return null;
+                string json;
+                using (var sr = new StreamReader(open.FileName))
+                    json = sr.ReadToEnd();
+
+                var parsed = ParseMappingFile(json);
+                Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported layers from {open.FileName}.");
+                return parsed;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing layers. Error: {ex.Message}");
+                return (null, null);
+            }
+            finally
+            {
+                open.Dispose();
             }
         }
 
-        public static void ExportLayerMappings(ConcurrentDictionary<int, Layer> layers)
+        // Dialogless import — callers (e.g. Avalonia code-behind using StorageProvider)
+        // hand us a path directly. Shares the deserialize/logging path with the
+        // dialog-based overload above.
+        public static (ConcurrentDictionary<int, Layer> layers,
+                       Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
+            ImportLayerMappingsFromPath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return (null, null);
+
+            Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Layers..");
+
+            try
+            {
+                string json;
+                using (var sr = new StreamReader(path))
+                    json = sr.ReadToEnd();
+
+                var parsed = ParseMappingFile(json);
+                Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported layers from {path}.");
+                return parsed;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing layers. Error: {ex.Message}");
+                return (null, null);
+            }
+        }
+
+        public static void ExportLayerMappingsToPath(ConcurrentDictionary<int, Layer> layers, string path,
+            IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
+        {
+            if (string.IsNullOrWhiteSpace(path) || layers == null) return;
+
+            Logger.WriteConsole(Enums.LoggerTypes.System, @"Exporting Layers..");
+
+            try
+            {
+                var layersCopy = new ConcurrentDictionary<int, Layer>();
+                foreach (var key in layers.Keys)
+                    layersCopy[key] = CloneLayerWithoutDeviceGuid(layers[key]);
+
+                var wrapper = new MappingFileV3
+                {
+                    schemaVersion = 3,
+                    layers = layersCopy,
+                    deviceLayouts = deviceLayouts != null
+                        ? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(deviceLayouts)
+                        : new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>()
+                };
+
+                WriteJsonAtomic(path, wrapper);
+
+                Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully exported layers to {path}.");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error exporting layers. Error: {ex.Message}");
+            }
+        }
+
+        public static void ExportLayerMappings(ConcurrentDictionary<int, Layer> layers,
+            IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
         {
             var save = new SaveFileDialog
             {
@@ -183,35 +330,8 @@ namespace Chromatics.Helpers
 
             if (save.ShowDialog() == DialogResult.OK)
             {
-                Logger.WriteConsole(Enums.LoggerTypes.System, @"Exporting Layers..");
-
-                try
-                {
-                    // Create a copy of the layers dictionary without the deviceGuid
-                    var layersCopy = new ConcurrentDictionary<int, Layer>();
-                    foreach (var key in layers.Keys)
-                    {
-                        layersCopy[key] = CloneLayerWithoutDeviceGuid(layers[key]);
-                    }
-
-                    using (var sw = new StreamWriter(save.FileName, false))
-                    {
-                        var serializer = new JsonSerializer();
-                        serializer.Converters.Add(new DictionaryConverter());
-                        serializer.NullValueHandling = NullValueHandling.Ignore;
-
-                        serializer.Serialize(sw, layersCopy);
-                        sw.WriteLine();
-                        sw.Close();
-                    }
-
-                    Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully exported layers to {save.FileName}.");
-                    save.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error exporting layers. Error: {ex.Message}");
-                }
+                ExportLayerMappingsToPath(layers, save.FileName, deviceLayouts);
+                save.Dispose();
             }
         }
 

@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Chromatics.ViewModels"
+        xmlns:views="clr-namespace:Chromatics.Views"
+        xmlns:mapping="clr-namespace:Chromatics.Views.Mapping"
+        mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="885"
+        x:Class="Chromatics.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="{Binding Title}"
+        Icon="avares://Chromatics/Resources/Chromatics_icon_128x128.png"
+        Width="1400" Height="885"
+        MinWidth="960" MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header banner -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource ChromaticsBanner}"
+                Padding="16,10">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                <!-- Logo: light mode -->
+                <Image Grid.Column="0"
+                       Source="avares://Chromatics/Resources/logo.png"
+                       Height="38"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding IsLightTheme}" />
+
+                <!-- Logo: dark mode -->
+                <Image Grid.Column="0"
+                       Source="avares://Chromatics/Resources/chromatics_white.png"
+                       Height="38"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding !IsLightTheme}" />
+
+                <!-- Help button -->
+                <Button Grid.Column="2"
+                        Classes="helpBtn"
+                        Content="?"
+                        ToolTip.Tip="Opens Chromatics 3 documentation in your browser"
+                        Click="OnHelpClick" />
+            </Grid>
+        </Border>
+
+        <TabControl Grid.Row="1" Margin="16,8,16,16">
+            <TabItem Header="Console">
+                <views:ConsoleView DataContext="{Binding Console}" />
+            </TabItem>
+            <TabItem Header="Mappings">
+                <mapping:MappingView DataContext="{Binding Mapping}" />
+            </TabItem>
+            <TabItem Header="Palette">
+                <views:PaletteView DataContext="{Binding Palette}" />
+            </TabItem>
+            <TabItem Header="Effects">
+                <views:EffectsView DataContext="{Binding Effects}" />
+            </TabItem>
+            <TabItem Header="Settings">
+                <views:SettingsView DataContext="{Binding Settings}" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
