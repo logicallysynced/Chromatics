@@ -58,6 +58,16 @@ namespace Chromatics.Core
 
         private static TimerUpdateTrigger _timerUpdateTrigger;
 
+        private const double IdleUpdateFrequency = 0.05; // 20 Hz
+
+        private static void SetIdleUpdateRate(bool idle)
+        {
+            if (_timerUpdateTrigger == null) return;
+            _timerUpdateTrigger.UpdateFrequency = idle
+                ? IdleUpdateFrequency
+                : AppSettings.GetSettings().rgbRefreshRate;
+        }
+
         public static void Setup()
         {
             try
@@ -566,6 +576,10 @@ namespace Chromatics.Core
 
         public static void RunStartupEffects()
         {
+            // Drop the surface to the idle tick rate whether or not the startup
+            // animation is enabled — nothing game-driven is running either way.
+            SetIdleUpdateRate(true);
+
             if (!_effects.effect_startupanimation) return;
 
             var devices = surface.GetDevices(RGBDeviceType.All);
@@ -605,13 +619,18 @@ namespace Chromatics.Core
 
         public static void StopEffects(bool gameFirstConnected = false)
         {
+            if (gameFirstConnected)
+            {
+                SetIdleUpdateRate(false);
+            }
+
             foreach (var effects in _runningEffects)
             {
                 foreach (var decorator in effects.Decorators)
                 {
                     decorator.IsEnabled = false;
                 }
-                                        
+
                 effects.RemoveAllDecorators();
                 effects.Detach();
             }

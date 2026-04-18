@@ -402,20 +402,14 @@ namespace Chromatics.Forms
 
         public void RePaint()
         {
-            LinearGradientBrush _leftAndRightBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Black, LinearGradientMode.Vertical);
-            LinearGradientBrush _statusBrush = new LinearGradientBrush(GetMainArea(), StatusColor1, StatusColor2, LinearGradientMode.Vertical);
-            LinearGradientBrush _mainBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.SlateGray, LinearGradientMode.Vertical);
-            StringFormat _stringFormat = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+            var mainColor = editing ? Color.Orange : Color.SlateGray;
 
             using (var graphics = this.CreateGraphics())
+            using (var _leftAndRightBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Black, LinearGradientMode.Vertical))
+            using (var _statusBrush = new LinearGradientBrush(GetMainArea(), StatusColor1, StatusColor2, LinearGradientMode.Vertical))
+            using (var _mainBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, mainColor, LinearGradientMode.Vertical))
+            using (var _stringFormat = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
             {
-                if (editing)
-                {
-                    _leftAndRightBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Black, LinearGradientMode.Vertical);
-                    _statusBrush = new LinearGradientBrush(GetMainArea(), StatusColor1, StatusColor2, LinearGradientMode.Vertical);
-                    _mainBrush = new LinearGradientBrush(GetMainArea(), Color.DimGray, Color.Orange, LinearGradientMode.Vertical);
-                }
-
                 if (LeftBarSize > 0)
                 {
                     graphics.FillRoundedRectangle(_leftAndRightBrush, this.GetLeftArea(), this.RoundedCornerAngle, RectangleEdgeFilter.TopLeft | RectangleEdgeFilter.BottomLeft);

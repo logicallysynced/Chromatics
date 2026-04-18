@@ -33,7 +33,12 @@ namespace Chromatics.Core
         private static Actor.Job _currentJob;
         private static SharlayanConfiguration _configuration;
         private static readonly int _loopInterval = 200;
-        private static readonly int _connectionInterval = 10000;
+        // Poll quickly for the first minute, then back off — if the user hasn't
+        // launched FFXIV yet, they're unlikely to launch in the next few seconds,
+        // and scanning the full OS process list 6 times a minute forever is waste.
+        private static readonly int _connectionInterval = 10000;       // first minute
+        private static readonly int _connectionIntervalSlow = 30000;   // after first minute
+        private static readonly int _fastAttemptThreshold = 6;         // ~60s at 10s cadence
         private static int _connectionAttempts = 0;
         // `-1` is the sentinel meaning "no active FFXIV process". Default-int `0`
         // would slip past the `!= -1` guard in StopGameLoop and call into Sharlayan
@@ -293,7 +298,9 @@ namespace Chromatics.Core
                 if (cancellationToken.IsCancellationRequested || _isShuttingDown)
                     break;
 
-                var delay = _connectionInterval;
+                var delay = _connectionAttempts >= _fastAttemptThreshold
+                    ? _connectionIntervalSlow
+                    : _connectionInterval;
 
                 await Task.Delay(delay, cancellationToken).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
                 if (cancellationToken.IsCancellationRequested || _isShuttingDown) break;
@@ -303,12 +310,14 @@ namespace Chromatics.Core
         private static bool IsGameRunning()
         {
             var processes = Process.GetProcessesByName("ffxiv_dx11");
-            if (processes.Length > 0)
+            try
             {
-                return true;
+                return processes.Length > 0;
             }
-
-            return false;
+            finally
+            {
+                foreach (var p in processes) p.Dispose();
+            }
         }
 
         private static void ConnectFFXIVClient()
@@ -335,6 +344,10 @@ namespace Chromatics.Core
                 var processes = Process.GetProcessesByName("ffxiv_dx11");
                 if (processes.Length > 0)
                 {
+                    // Dispose any extra Process handles we won't use. processes[0] is
+                    // handed off to Sharlayan below and kept alive for the session.
+                    for (int i = 1; i < processes.Length; i++) processes[i].Dispose();
+
                     // supported: Global, Chinese, Korean
                     var gameRegion = GameRegion.Global;
                     var gameLanguage = GameLanguage.English;
@@ -376,7 +389,7 @@ namespace Chromatics.Core
                     _connectionAttempts = 0;
 
                     SafeCancel(_GameConnectionCancellationTokenSource);
-                    RGBController.StopEffects();
+                    RGBController.StopEffects(gameFirstConnected: true);
                     RGBController.ResetLayerGroups();
                     StartGameLoop();
 

@@ -45,6 +45,7 @@ namespace Chromatics.Forms.vDevices
             if (disposing)
             {
                 _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = null;
                 _OnKeycapPressed = null;
             }
@@ -82,6 +83,7 @@ namespace Chromatics.Forms.vDevices
                 var devicesOfType = activeSurface.Devices.Where(device => device.DeviceInfo.DeviceType == _deviceType);
 
                 _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = new CancellationTokenSource();
                 var token = _cancellationTokenSource.Token;
 
@@ -203,6 +205,8 @@ namespace Chromatics.Forms.vDevices
             private string _drawIndex;
             private Color _borderCol;
             private Color _backgroundColor;
+            private Region _cachedRegion;
+            private System.Drawing.Size _cachedRegionSize;
 
             public string KeyName { get; set; }
             public LedId KeyType { get; set; }
@@ -233,6 +237,16 @@ namespace Chromatics.Forms.vDevices
                 BorderCol = Color.Black;
                 BackColor = Color.DarkGray;
                 _backgroundColor = BackColor;
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    _cachedRegion?.Dispose();
+                    _cachedRegion = null;
+                }
+                base.Dispose(disposing);
             }
 
             public void RemoveCircle()
@@ -283,29 +297,32 @@ namespace Chromatics.Forms.vDevices
                 using (var brush = new SolidBrush(_backgroundColor))
                 using (var pen = new Pen(BorderCol, borderThickness))
                 {
-                    // Fill the background color
                     e.Graphics.FillRectangle(brush, this.ClientRectangle);
 
-                    this.Region = new Region(GraphPath);
+                    if (_cachedRegionSize != this.Size)
+                    {
+                        _cachedRegion?.Dispose();
+                        _cachedRegion = new Region(GraphPath);
+                        _cachedRegionSize = this.Size;
+                    }
+                    this.Region = _cachedRegion;
+
                     pen.Alignment = PenAlignment.Inset;
                     e.Graphics.DrawPath(pen, GraphPath);
 
                     using (var textBrush = new SolidBrush(ForeColor))
+                    using (var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                     {
-                        var sf = new StringFormat
-                        {
-                            Alignment = StringAlignment.Center,
-                            LineAlignment = StringAlignment.Center
-                        };
                         e.Graphics.DrawString(Text, Font, textBrush, Rect, sf);
                     }
 
                     if (_drawCircle)
                     {
                         using (var fnt = new Font(this.Font.FontFamily, this.Font.Size * 2, FontStyle.Bold))
+                        using (var whiteBrush = new SolidBrush(Color.White))
                         {
                             var pt = new System.Drawing.Point(3, 3);
-                            e.Graphics.DrawString(_drawIndex, fnt, new SolidBrush(Color.White), pt);
+                            e.Graphics.DrawString(_drawIndex, fnt, whiteBrush, pt);
                         }
                     }
                 }
