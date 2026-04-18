@@ -66,4 +66,4 @@ If you wish to build Chromatics yourself, you can download the active branch and
 ### Disclaimer ###
 Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners.
 
-© 2010-2023 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.
+© 2010-2026 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.
