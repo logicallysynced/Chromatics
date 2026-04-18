@@ -16,11 +16,19 @@ namespace Chromatics.Forms
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
+                // Unsubscribe before disposing child controls. Previously these
+                // unsubscribes sat inside `if (disposing && components != null)`,
+                // but `components` is never assigned, so the static `Logger.OnConsoleLogged`
+                // handler was never removed — which kept every opened Uc_Console rooted
+                // in memory for the lifetime of the process.
                 Logger.OnConsoleLogged -= new OnConsoleLoggedEventHandler(OnConsoleLogged);
-                rtb_console.TextChanged -= rtb_console_TextChanged;
-                components.Dispose();
+                if (rtb_console != null)
+                {
+                    rtb_console.TextChanged -= rtb_console_TextChanged;
+                }
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RGB.NET.Core;
 
 namespace Chromatics.Helpers
 {
@@ -11,7 +12,11 @@ namespace Chromatics.Helpers
     {
         public static System.Drawing.Color RGBColorToColor(RGB.NET.Core.Color col)
         {
-            return System.Drawing.Color.FromArgb((int)col.A, (int)col.R, (int)col.G, (int)col.B);
+            // RGB.NET stores channels as 0..1 floats. The old implementation cast
+            // those doubles to int, truncating every value to 0 (or 1 at full
+            // brightness), which silently destroyed interpolated colours. Use
+            // RGB.NET's byte extension methods to get proper 0..255 values.
+            return System.Drawing.Color.FromArgb(col.GetA(), col.GetR(), col.GetG(), col.GetB());
         }
 
         public static RGB.NET.Core.Color ColorToRGBColor(System.Drawing.Color col)
