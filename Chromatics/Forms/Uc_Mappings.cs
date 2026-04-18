@@ -919,16 +919,10 @@ namespace Chromatics.Forms
 
             var layers = MappingLayers.GetLayers().Where(x => x.Value.deviceGuid == selectedDeviceId).OrderBy(x => x.Value.zindex);
 
-            foreach (var layer in layers)
+            foreach (var virtualDevice in tlp_frame.Controls.OfType<VirtualDevice>())
             {
-                foreach (var virtualDevice in tlp_frame.Controls.OfType<VirtualDevice>())
-                {
-                    if (layer.Value.deviceGuid == selectedDeviceId)
-                    {
-                        var allKeyButtons = virtualDevice._keybuttons.ToList();
-                        virtualDevice.VisualiseLayers(layers, allKeyButtons);
-                    }
-                }
+                var allKeyButtons = virtualDevice._keybuttons.ToList();
+                virtualDevice.VisualiseLayers(layers, allKeyButtons);
             }
         }
 
