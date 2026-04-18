@@ -846,9 +846,10 @@ namespace Chromatics.Forms
             var newLayout = ((ComboBoxItem<KeyboardLocalization>)cb_keyboardlayout.SelectedItem).Value;
             if (settings.keyboardLayout == newLayout) return;
 
+            var oldLayout = settings.keyboardLayout;
             settings.keyboardLayout = newLayout;
             AppSettings.SaveSettings(settings);
-            AppSettings.RaiseKeyboardLayoutChanged();
+            AppSettings.RaiseKeyboardLayoutChanged(oldLayout, newLayout);
         }
 
         public class ComboBoxItem<T>

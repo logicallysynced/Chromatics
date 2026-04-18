@@ -75,6 +75,77 @@ namespace Chromatics.Layers
             return layer;
         }
 
+        // Swaps from QWERTY canonical positions to each target layout. Each dict
+        // maps LedId (on QWERTY) -> LedId at the same printed letter on the
+        // target layout. The dicts are involutions (swaps), so applying the same
+        // table twice is a no-op — which is what lets us compose arbitrary
+        // transitions via QWERTY as the pivot.
+        private static readonly Dictionary<KeyboardLocalization, Dictionary<LedId, LedId>> _layoutSwapsFromQwerty =
+            new Dictionary<KeyboardLocalization, Dictionary<LedId, LedId>>
+            {
+                { KeyboardLocalization.qwerty, new Dictionary<LedId, LedId>() },
+                { KeyboardLocalization.qwertz, new Dictionary<LedId, LedId>
+                    {
+                        { LedId.Keyboard_Y, LedId.Keyboard_Z },
+                        { LedId.Keyboard_Z, LedId.Keyboard_Y },
+                    }
+                },
+                { KeyboardLocalization.azerty, new Dictionary<LedId, LedId>
+                    {
+                        { LedId.Keyboard_Q, LedId.Keyboard_A },
+                        { LedId.Keyboard_A, LedId.Keyboard_Q },
+                        { LedId.Keyboard_W, LedId.Keyboard_Z },
+                        { LedId.Keyboard_Z, LedId.Keyboard_W },
+                    }
+                },
+            };
+
+        private static LedId TranslateLedId(LedId led, KeyboardLocalization from, KeyboardLocalization to)
+        {
+            if (from == to) return led;
+
+            // Back-map to QWERTY canonical LedId, then forward to the target.
+            // Swaps are involutions so the "from" table doubles as its own inverse.
+            var fromSwap = _layoutSwapsFromQwerty[from];
+            var toSwap = _layoutSwapsFromQwerty[to];
+
+            var canonical = fromSwap.TryGetValue(led, out var c) ? c : led;
+            return toSwap.TryGetValue(canonical, out var t) ? t : canonical;
+        }
+
+        // Called when the user switches keyboard layout. Rewrites every
+        // keyboard layer's deviceLeds so that a key the user picked by its
+        // printed label (e.g. "Y") continues to refer to the same label on the
+        // new layout (e.g. QWERTZ's Y, which is physical LedId.Keyboard_Z).
+        public static void RemapLedIdsForLayoutChange(KeyboardLocalization from, KeyboardLocalization to)
+        {
+            if (from == to) return;
+            if (!_layoutSwapsFromQwerty.ContainsKey(from) || !_layoutSwapsFromQwerty.ContainsKey(to)) return;
+
+            foreach (var kvp in _layers)
+            {
+                var layer = kvp.Value;
+                if (layer.deviceType != RGBDeviceType.Keyboard) continue;
+                if (layer.deviceLeds == null || layer.deviceLeds.Count == 0) continue;
+
+                var remapped = new Dictionary<int, LedId>(layer.deviceLeds.Count);
+                var changed = false;
+                foreach (var entry in layer.deviceLeds)
+                {
+                    var translated = TranslateLedId(entry.Value, from, to);
+                    if (translated != entry.Value) changed = true;
+                    remapped[entry.Key] = translated;
+                }
+
+                if (changed)
+                {
+                    layer.deviceLeds = remapped;
+                    layer.requestUpdate = true;
+                    _version++;
+                }
+            }
+        }
+
         public static int CountLayers()
         {
             return _layers.Count;

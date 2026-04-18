@@ -39,15 +39,16 @@ namespace Chromatics.Forms
         {
             if (disposing)
             {
-                if (_device is IDisposable disposableDevice)
-                {
-                    disposableDevice.Dispose();
-                }
+                // _device is the shared IRGBDevice owned by RGBController / RGB.NET's
+                // surface. Disposing it here (e.g. during a keyboard-layout rebuild)
+                // tears down the update pipeline and freezes every running effect.
+                // Just drop the reference — RGBController owns its lifetime.
+                _device = null;
 
                 foreach (var keycap in _keybuttons)
                 {
                     keycap.Click -= OnKeycapPressed;
-                    keycap.Dispose(); // Dispose of keycaps explicitly
+                    keycap.Dispose();
                 }
 
                 tlp_main?.Dispose();

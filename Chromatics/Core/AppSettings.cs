@@ -20,11 +20,13 @@ namespace Chromatics.Core
 
         // Fires after the keyboard layout setting changes so visuals (virtual
         // keyboard in Mappings, effect grids) can rebuild on the UI thread.
-        public static event EventHandler KeyboardLayoutChanged;
+        // The event args carry the transition so subscribers can remap stored
+        // per-LedId state (e.g. layer key assignments) between layouts.
+        public static event EventHandler<KeyboardLayoutChangedEventArgs> KeyboardLayoutChanged;
 
-        public static void RaiseKeyboardLayoutChanged()
+        public static void RaiseKeyboardLayoutChanged(KeyboardLocalization oldLayout, KeyboardLocalization newLayout)
         {
-            KeyboardLayoutChanged?.Invoke(null, EventArgs.Empty);
+            KeyboardLayoutChanged?.Invoke(null, new KeyboardLayoutChangedEventArgs(oldLayout, newLayout));
         }
 
         public static void Startup()
@@ -64,6 +66,18 @@ namespace Chromatics.Core
             _settings = settings;
             FileOperationsHelper.SaveSettings(_settings);
             return true;
+        }
+    }
+
+    public sealed class KeyboardLayoutChangedEventArgs : EventArgs
+    {
+        public KeyboardLocalization OldLayout { get; }
+        public KeyboardLocalization NewLayout { get; }
+
+        public KeyboardLayoutChangedEventArgs(KeyboardLocalization oldLayout, KeyboardLocalization newLayout)
+        {
+            OldLayout = oldLayout;
+            NewLayout = newLayout;
         }
     }
 }

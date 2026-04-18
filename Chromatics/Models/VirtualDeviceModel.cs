@@ -43,7 +43,11 @@ namespace Chromatics.Models
         {
             if (disposing)
             {
-                _cancellationTokenSource?.Dispose();
+                // _cancellationTokenSource is static and shared across every
+                // VirtualDevice instance. Disposing it here (e.g. when rebuilding a
+                // virtual keyboard on layout change) kills preview rendering for
+                // every other device still in use. Leave it alone — new CTSes are
+                // allocated per preview tick.
                 _OnKeycapPressed = null;
             }
 
