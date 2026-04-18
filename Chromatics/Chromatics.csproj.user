@@ -34,7 +34,7 @@
     <Compile Update="Forms\vDevices\Uc_VirtualOtherController.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Models\VirtualDeviceModel.cs">
+    <Compile Update="Forms\vDevices\VirtualDeviceModel.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
