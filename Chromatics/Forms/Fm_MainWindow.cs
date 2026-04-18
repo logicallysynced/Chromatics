@@ -265,7 +265,7 @@ namespace Chromatics.Forms
             }
 
             var assembly = typeof(Program).Assembly;
-            var beta = false;
+            var beta = true;
 
             if (beta)
             {
