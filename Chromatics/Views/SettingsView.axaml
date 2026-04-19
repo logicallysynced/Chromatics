@@ -103,6 +103,9 @@
                     <CheckBox Content="{loc:Tr Key='Opt in to beta releases. When enabled, beta updates are offered if no stable update is available.'}"
                               IsChecked="{Binding BetaChannel, Mode=TwoWay}"
                               ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Always relaunch Chromatics as Administrator. Required for reading FFXIV process memory.'}"
+                              IsChecked="{Binding AlwaysRunAsAdmin, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='When enabled, Chromatics will automatically prompt for administrator privileges on each launch.'}" />
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <Button Content="{loc:Tr Key='Check for Updates'}"
                                 Click="OnCheckUpdatesClick"

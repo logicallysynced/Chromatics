@@ -649,5 +649,7 @@
     "Press the button on the Hue bridge BEFORE clicking Save.":  "Press the button on the Hue bridge BEFORE clicking Save.",
     "Enable":  "Enable",
     "Disable":  "Disable",
-    "To get started, select the device providers you wish to use. You can change these at any time from the Settings menu.":  "To get started, select the device providers you wish to use. You can change these at any time from the Settings menu."
+    "To get started, select the device providers you wish to use. You can change these at any time from the Settings menu.":  "To get started, select the device providers you wish to use. You can change these at any time from the Settings menu.",
+    "Always relaunch Chromatics as Administrator. Required for reading FFXIV process memory.":  "Always relaunch Chromatics as Administrator. Required for reading FFXIV process memory.",
+    "When enabled, Chromatics will automatically prompt for administrator privileges on each launch.":  "When enabled, Chromatics will automatically prompt for administrator privileges on each launch."
 }
