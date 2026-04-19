@@ -46,6 +46,7 @@ namespace Chromatics.ViewModels
             _trayOnStartup = s.trayonstartup;
             _checkUpdates = s.checkupdates;
             _betaChannel = s.betaChannel;
+            _alwaysRunAsAdmin = s.alwaysRunAsAdmin;
             _globalBrightness = s.globalbrightness;
 
             foreach (var t in Enum.GetValues(typeof(Theme)).Cast<Theme>())
@@ -292,6 +293,21 @@ namespace Chromatics.ViewModels
                 {
                     var s = AppSettings.GetSettings();
                     s.betaChannel = value;
+                    AppSettings.SaveSettings(s);
+                }
+            }
+        }
+
+        private bool _alwaysRunAsAdmin;
+        public bool AlwaysRunAsAdmin
+        {
+            get => _alwaysRunAsAdmin;
+            set
+            {
+                if (SetProperty(ref _alwaysRunAsAdmin, value))
+                {
+                    var s = AppSettings.GetSettings();
+                    s.alwaysRunAsAdmin = value;
                     AppSettings.SaveSettings(s);
                 }
             }

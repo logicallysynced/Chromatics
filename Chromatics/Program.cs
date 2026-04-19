@@ -50,6 +50,8 @@ namespace Chromatics
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
 
+            AdminElevationHelper.CheckAndElevateIfNeeded(appSettings);
+
             // First-run device-provider wizard runs after Avalonia boots — see
             // App.axaml.cs / FirstRunDialog. The expansion migration is
             // independent of the wizard and always runs on cold start.
