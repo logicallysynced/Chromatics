@@ -2,6 +2,8 @@
     "Welcome to Chromatics":  "Welcome to Chromatics",
     "To get started, select the device providers you wish to use.\\nYou can change these at any time from the Settings menu.":  "To get started, select the device providers you wish to use.\\nYou can change these at any time from the Settings menu.",
     "Continue":  "Continue",
+    "Exit Chromatics":  "Exit Chromatics",
+    "Please select at least one device provider to continue.":  "Please select at least one device provider to continue.",
     "Console":  "Console",
     "Show Window":  "Show Window",
     "Close":  "Close",
@@ -646,5 +648,6 @@
     "Install Update":  "Install Update",
     "Press the button on the Hue bridge BEFORE clicking Save.":  "Press the button on the Hue bridge BEFORE clicking Save.",
     "Enable":  "Enable",
-    "Disable":  "Disable"
+    "Disable":  "Disable",
+    "To get started, select the device providers you wish to use. You can change these at any time from the Settings menu.":  "To get started, select the device providers you wish to use. You can change these at any time from the Settings menu."
 }
