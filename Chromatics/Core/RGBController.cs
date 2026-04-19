@@ -741,26 +741,33 @@ namespace Chromatics.Core
 #endif
         }
 
+        // Avalonia MappingViewModel registers here when preview is active.
+        // Fired on every RGB surface update tick (background thread) —
+        // the callback must marshal to the UI thread itself.
+        private static Action _avaloniaPreviewCallback;
+
+        public static void SetAvaloniaPreviewCallback(Action callback)
+            => _avaloniaPreviewCallback = callback;
+
+        public static void ClearAvaloniaPreviewCallback()
+            => _avaloniaPreviewCallback = null;
+
         private static void Surface_Updating(UpdatingEventArgs args)
         {
             if (!_loaded) return;
 
             if (MappingLayers.IsPreview())
             {
-                // Legacy WinForms hook. Under Avalonia, preview updates flow
-                // through the VirtualDeviceViewModel bindings on the UI
-                // thread; this block becomes a no-op when the old control
-                // isn't hosted anywhere.
+                // Avalonia path: fire the registered preview callback.
+                _avaloniaPreviewCallback?.Invoke();
+
+                // Legacy WinForms hook — no-op when WinForms shell isn't active.
                 if (Uc_Mappings.Instance != null)
                 {
                     if (Uc_Mappings.Instance.InvokeRequired)
-                    {
                         Uc_Mappings.Instance.Invoke(new Action(() => Uc_Mappings.Instance.VisualiseLayers()));
-                    }
                     else
-                    {
                         Uc_Mappings.Instance.VisualiseLayers();
-                    }
                 }
             }
         }

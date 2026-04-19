@@ -207,7 +207,7 @@ namespace Chromatics.Layers
             return _deviceLayouts;
         }
 
-        internal static void ReplaceDeviceLayouts(IDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> fresh)
+        public static void ReplaceDeviceLayouts(IDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> fresh)
         {
             _deviceLayouts.Clear();
             if (fresh == null) return;

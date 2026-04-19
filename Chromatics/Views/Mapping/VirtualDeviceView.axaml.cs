@@ -26,6 +26,7 @@ namespace Chromatics.Views.Mapping
     public partial class VirtualDeviceView : UserControl
     {
         private KeycapViewModel _dragKeycap;
+        private KeycapViewModel _clickedKeycap;
         private Button _dragButton;
         private Point _dragStartPoint;
         private double _dragStartKeycapX;
@@ -77,12 +78,16 @@ namespace Chromatics.Views.Mapping
         {
             if (_dragKeycap != null) return;
 
-            var device = DeviceVm;
-            if (device == null || !device.SupportsDragReposition || !device.IsDraggable) return;
-
             var btn = FindKeycapButton(e.Source);
             if (btn == null) return;
             if (btn.DataContext is not KeycapViewModel keycap) return;
+
+            // Track the pressed keycap for pick-mode click delivery regardless
+            // of whether this device supports drag repositioning.
+            _clickedKeycap = keycap;
+
+            var device = DeviceVm;
+            if (device == null || !device.SupportsDragReposition || !device.IsDraggable) return;
 
             var items = this.FindControl<ItemsControl>("KeycapItems");
             if (items == null) return;
@@ -122,8 +127,10 @@ namespace Chromatics.Views.Mapping
             if (!_dragged && Math.Abs(dx) < 3 && Math.Abs(dy) < 3) return;
             _dragged = true;
 
-            _dragKeycap.X = Math.Max(0, _dragStartKeycapX + dx);
-            _dragKeycap.Y = Math.Max(0, _dragStartKeycapY + dy);
+            double maxX = Math.Max(0, (DeviceVm?.Width  ?? double.MaxValue) - _dragKeycap.Width);
+            double maxY = Math.Max(0, (DeviceVm?.Height ?? double.MaxValue) - _dragKeycap.Height);
+            _dragKeycap.X = Math.Clamp(_dragStartKeycapX + dx, 0, maxX);
+            _dragKeycap.Y = Math.Clamp(_dragStartKeycapY + dy, 0, maxY);
 
             // Prevent the Button from treating this as a hover/scroll gesture
             // once we've decided it's a drag.
@@ -132,7 +139,17 @@ namespace Chromatics.Views.Mapping
 
         private void OnAnyPointerReleased(object sender, PointerReleasedEventArgs e)
         {
-            if (_dragKeycap == null) return;
+            var clickedKeycap = _clickedKeycap;
+            _clickedKeycap = null;
+
+            if (_dragKeycap == null)
+            {
+                // No drag was in progress — this is a plain click. If a layer is
+                // in edit mode, forward the led to MappingViewModel's PickKey.
+                if (clickedKeycap != null)
+                    DeviceVm?.InvokePickKey(clickedKeycap.LedType);
+                return;
+            }
 
             var keycap = _dragKeycap;
             var device = DeviceVm;
@@ -142,7 +159,15 @@ namespace Chromatics.Views.Mapping
             _dragButton = null;
             _dragged = false;
 
-            if (!wasDragged || device == null) return;
+            if (!wasDragged)
+            {
+                // Drag tracking started but never left the deadzone — treat as click.
+                if (clickedKeycap != null)
+                    DeviceVm?.InvokePickKey(clickedKeycap.LedType);
+                return;
+            }
+
+            if (device == null) return;
 
             MappingLayers.SetDeviceKeyPosition(device.DeviceId, keycap.LedType, keycap.X, keycap.Y);
             // Save off the UI thread. The first save after a device's layout
@@ -157,6 +182,7 @@ namespace Chromatics.Views.Mapping
 
         private void CancelDrag()
         {
+            _clickedKeycap = null;
             _dragKeycap = null;
             _dragButton = null;
             _dragged = false;

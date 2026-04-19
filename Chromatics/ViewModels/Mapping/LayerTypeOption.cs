@@ -9,12 +9,14 @@ namespace Chromatics.ViewModels.Mapping
         public string Name { get; }
         public int Value { get; }
         public LayerModes[] SupportedModes { get; }
+        public string Description { get; }
 
-        public LayerTypeOption(string name, int value, LayerModes[] supportedModes)
+        public LayerTypeOption(string name, int value, LayerModes[] supportedModes, string description = null)
         {
             Name = name;
             Value = value;
             SupportedModes = supportedModes;
+            Description = description ?? string.Empty;
         }
 
         public override string ToString() => Name;

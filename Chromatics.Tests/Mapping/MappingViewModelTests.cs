@@ -191,6 +191,65 @@ public class MappingViewModelTests : IDisposable
         Assert.Equal(LedId.Keyboard_Z, after.deviceLeds[0]);
         Assert.Equal(LedId.Keyboard_A, after.deviceLeds[1]);
     }
+
+    [Fact]
+    public void RemoveLayer_BaseLayerType_IsNoOp()
+    {
+        var deviceId = Guid.NewGuid();
+        int baseId = MappingLayers.AddLayer(0, LayerType.BaseLayer, deviceId, RGBDeviceType.Keyboard,
+            0, 1, true, new System.Collections.Generic.Dictionary<int, LedId>(), false, LayerModes.None);
+
+        using var vm = new MappingViewModel();
+        vm.Devices.Add(new DeviceOptionItem(deviceId, "Test", RGBDeviceType.Keyboard));
+        vm.SelectedDevice = vm.Devices[0];
+
+        int countBefore = vm.Layers.Count;
+        vm.RemoveLayer(baseId);
+
+        Assert.Equal(countBefore, vm.Layers.Count);
+        Assert.NotNull(MappingLayers.GetLayer(baseId));
+    }
+
+    [Fact]
+    public void RemoveLayer_EffectLayerType_IsNoOp()
+    {
+        var deviceId = Guid.NewGuid();
+        int effectId = MappingLayers.AddLayer(0, LayerType.EffectLayer, deviceId, RGBDeviceType.Keyboard,
+            0, 2, true, new System.Collections.Generic.Dictionary<int, LedId>(), false, LayerModes.None);
+
+        using var vm = new MappingViewModel();
+        vm.Devices.Add(new DeviceOptionItem(deviceId, "Test", RGBDeviceType.Keyboard));
+        vm.SelectedDevice = vm.Devices[0];
+
+        int countBefore = vm.Layers.Count;
+        vm.RemoveLayer(effectId);
+
+        Assert.Equal(countBefore, vm.Layers.Count);
+        Assert.NotNull(MappingLayers.GetLayer(effectId));
+    }
+
+    [Fact]
+    public void DuplicateLayer_LayerBelongsToOtherDevice_NotInsertedIntoActiveList()
+    {
+        var deviceA = Guid.NewGuid();
+        var deviceB = Guid.NewGuid();
+
+        int layerOnA = MappingLayers.AddLayer(0, LayerType.DynamicLayer, deviceA, RGBDeviceType.Keyboard,
+            0, 1, true, new System.Collections.Generic.Dictionary<int, LedId>(), false, LayerModes.Interpolate);
+
+        using var vm = new MappingViewModel();
+        vm.Devices.Add(new DeviceOptionItem(deviceA, "Device A", RGBDeviceType.Keyboard));
+        vm.Devices.Add(new DeviceOptionItem(deviceB, "Device B", RGBDeviceType.Keyboard));
+        vm.SelectedDevice = vm.Devices[1]; // select device B — empty
+
+        int copyId = vm.DuplicateLayer(layerOnA);
+
+        // Duplicate belongs to device A; active list shows device B's layers only.
+        Assert.Empty(vm.Layers);
+        Assert.NotEqual(-1, copyId);
+        Assert.NotNull(MappingLayers.GetLayer(copyId));
+        Assert.Equal(deviceA, MappingLayers.GetLayer(copyId).deviceGuid);
+    }
 }
 
 [CollectionDefinition("MappingLayers")]

@@ -53,6 +53,11 @@ namespace Chromatics.ViewModels.Mapping
 
         public bool SupportsDragReposition => DeviceType != RGBDeviceType.Keyboard;
 
+        private Action<LedId> _pickKeyCallback;
+
+        public void SetPickKeyCallback(Action<LedId> callback) => _pickKeyCallback = callback;
+        public void InvokePickKey(LedId ledId) => _pickKeyCallback?.Invoke(ledId);
+
         // Restores every keycap to its grid-computed default position, clears
         // the persisted overrides for this device, and saves. Called from the
         // view after the user has confirmed via dialog.

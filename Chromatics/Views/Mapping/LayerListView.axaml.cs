@@ -2,10 +2,13 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Chromatics.ViewModels.Mapping;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Chromatics.Views.Mapping
@@ -85,6 +88,98 @@ namespace Chromatics.Views.Mapping
                 // abandoned (esc, mouse-up off-target, window focus loss).
                 ClearDragIndicators();
             }
+        }
+
+        // Handles taps on the layer card body to toggle selection (key highlight
+        // on the virtual device). Taps that originate inside a Button, ComboBox,
+        // or CheckBox are ignored — those controls own their own interactions.
+        private void OnLayerCardTapped(object sender, TappedEventArgs e)
+        {
+            if (IsInsideInteractiveControl(e.Source as Visual)) return;
+            if ((sender as Control)?.DataContext is not LayerItemViewModel vm) return;
+            if (DataContext is not MappingViewModel mappingVm) return;
+            mappingVm.SelectLayer(vm.LayerId);
+            e.Handled = true;
+        }
+
+        // Handles taps in the empty area of the list border (outside any card).
+        // Tapped events from layer cards are marked handled so they don't bubble
+        // here. Clears selection unless a layer is currently in edit mode.
+        private void OnOuterAreaTapped(object sender, TappedEventArgs e)
+        {
+            if (DataContext is not MappingViewModel vm) return;
+            if (vm.Layers.Any(l => l.IsEditing)) return;
+            vm.ClearLayerSelection();
+        }
+
+        // Shows a confirmation dialog then removes the layer if confirmed.
+        // Uses Click instead of Command so the dialog can own the async flow
+        // without the ViewModel needing access to a Window.
+        private async void OnDeleteButtonClick(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Control)?.DataContext is not LayerItemViewModel layerVm) return;
+            if (DataContext is not MappingViewModel mappingVm) return;
+
+            var owner = this.FindAncestorOfType<Window>();
+            if (owner == null) return;
+
+            bool confirmed = await ShowDeleteConfirmDialog(owner, layerVm);
+            if (confirmed) mappingVm.RemoveLayer(layerVm.LayerId);
+        }
+
+        private static bool IsInsideInteractiveControl(Visual source)
+        {
+            var v = source;
+            while (v != null)
+            {
+                if (v is Button || v is ComboBox || v is CheckBox) return true;
+                v = v.GetVisualParent();
+            }
+            return false;
+        }
+
+        private static async Task<bool> ShowDeleteConfirmDialog(Window owner, LayerItemViewModel layer)
+        {
+            var result = false;
+
+            var dialog = new Window
+            {
+                Title = "Delete Layer",
+                Width = 360,
+                CanResize = false,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                SizeToContent = SizeToContent.Height,
+            };
+
+            var yesBtn = new Button { Content = "Delete", MinWidth = 80, HorizontalContentAlignment = HorizontalAlignment.Center };
+            var noBtn  = new Button { Content = "Cancel", MinWidth = 80, HorizontalContentAlignment = HorizontalAlignment.Center };
+
+            yesBtn.Click += (_, _) => { result = true;  dialog.Close(); };
+            noBtn.Click  += (_, _) => { result = false; dialog.Close(); };
+
+            dialog.Content = new StackPanel
+            {
+                Margin  = new Thickness(20),
+                Spacing = 16,
+                Children =
+                {
+                    new TextBlock
+                    {
+                        Text        = $"Delete layer {layer.BadgeText}? This cannot be undone.",
+                        TextWrapping = TextWrapping.Wrap,
+                    },
+                    new StackPanel
+                    {
+                        Orientation         = Orientation.Horizontal,
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        Spacing             = 8,
+                        Children            = { noBtn, yesBtn },
+                    }
+                }
+            };
+
+            await dialog.ShowDialog(owner);
+            return result;
         }
 
         private static Control FindAncestorDragHandle(Visual source)
