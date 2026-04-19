@@ -1,0 +1,90 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        x:Class="Chromatics.Views.Dialogs.FirstRunDialog"
+        Title="{loc:Tr Key='Welcome to Chromatics'}"
+        Width="760" Height="540"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        ShowInTaskbar="True"
+        Icon="avares://Chromatics/Resources/Chromatics_icon_128x128.png">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" Margin="28">
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0"
+                   Text="{loc:Tr Key='Welcome to Chromatics'}"
+                   FontSize="22"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,8" />
+
+        <!-- Subtitle / instructions -->
+        <TextBlock Grid.Row="1"
+                   Text="{loc:Tr Key='To get started, select the device providers you wish to use. You can change these at any time from the Settings menu.'}"
+                   TextWrapping="Wrap"
+                   LineHeight="20"
+                   Opacity="0.7"
+                   Margin="0,0,0,20" />
+
+        <!-- Provider tile grid. Layout mirrors Settings → Device Providers. -->
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ToggleButton Classes="tile" Name="TileRazer"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=Razer}" />
+                <ToggleButton Classes="tile" Name="TileLogitech"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=Logitech}" />
+                <ToggleButton Classes="tile" Name="TileCorsair"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=Corsair}" />
+                <ToggleButton Classes="tile" Name="TileCoolermaster"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=Coolermaster}" />
+                <ToggleButton Classes="tile" Name="TileSteelSeries"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=SteelSeries}" />
+                <ToggleButton Classes="tile" Name="TileAsus"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=ASUS}" />
+                <ToggleButton Classes="tile" Name="TileMsi"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=MSI}" />
+                <ToggleButton Classes="tile" Name="TileWooting"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=Wooting}" />
+                <ToggleButton Classes="tile" Name="TileNovation"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=Novation}" />
+                <ToggleButton Classes="tile" Name="TileOpenRgb"
+                              Width="150" Height="80"
+                              Content="{loc:Tr Key=OpenRGB}" />
+            </WrapPanel>
+        </ScrollViewer>
+
+        <!-- Validation hint -->
+        <TextBlock Grid.Row="3"
+                   Name="HintText"
+                   Text="{loc:Tr Key='Please select at least one device provider to continue.'}"
+                   Opacity="0.6"
+                   FontStyle="Italic"
+                   IsVisible="True"
+                   Margin="0,12,0,0" />
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0"
+                    Spacing="10">
+            <Button Content="{loc:Tr Key='Exit Chromatics'}"
+                    MinWidth="130"
+                    Click="OnExit" />
+            <Button Name="BtnContinue"
+                    Content="{loc:Tr Key=Continue}"
+                    Classes="accent"
+                    MinWidth="130"
+                    IsEnabled="False"
+                    Click="OnContinue" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -7,6 +7,7 @@ using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Localization;
 using Chromatics.Views;
+using Chromatics.Views.Dialogs;
 using System;
 
 namespace Chromatics
@@ -45,18 +46,32 @@ namespace Chromatics
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainWindow = new MainWindow();
-                desktop.MainWindow = mainWindow;
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
                 var settings = AppSettings.GetSettings();
-                if (settings.trayonstartup)
+                if (settings.firstrun)
                 {
-                    mainWindow.Hide();
+                    // Defer MainWindow construction entirely until the wizard
+                    // completes. Device providers are not enabled yet at this
+                    // point, so constructing MainWindow (which boots the
+                    // GameController / RGBController) would crash.
+                    var wizard = new FirstRunDialog();
+                    wizard.Closed += (_, _) =>
+                    {
+                        var mainWindow = new MainWindow();
+                        desktop.MainWindow = mainWindow;
+                        mainWindow.Show();
+                    };
+                    wizard.Show();
                 }
                 else
                 {
-                    mainWindow.Show();
+                    var mainWindow = new MainWindow();
+                    desktop.MainWindow = mainWindow;
+                    if (settings.trayonstartup)
+                        mainWindow.Hide();
+                    else
+                        mainWindow.Show();
                 }
             }
 

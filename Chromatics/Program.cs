@@ -40,26 +40,9 @@ namespace Chromatics
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
 
-            if (appSettings.firstrun)
-            {
-                // Pass 4 retired the WinForms Fm_FirstRun wizard. Device providers
-                // now default to disabled on first run so Chromatics doesn't spin
-                // up every SDK at once; users enable the ones they own from
-                // Settings → Device Providers.
-                appSettings.deviceRazerEnabled        = false;
-                appSettings.deviceLogitechEnabled     = false;
-                appSettings.deviceCorsairEnabled      = false;
-                appSettings.deviceCoolermasterEnabled = false;
-                appSettings.deviceSteelseriesEnabled  = false;
-                appSettings.deviceAsusEnabled         = false;
-                appSettings.deviceMsiEnabled          = false;
-                appSettings.deviceWootingEnabled      = false;
-                appSettings.deviceNovationEnabled     = false;
-                appSettings.deviceOpenRGBEnabled      = false;
-                appSettings.deviceHueEnabled          = false;
-                appSettings.firstrun = false;
-            }
-
+            // First-run device-provider wizard runs after Avalonia boots — see
+            // App.axaml.cs / FirstRunDialog. The expansion migration is
+            // independent of the wizard and always runs on cold start.
             RunExpansionMigrationIfNeeded(appSettings);
             AppSettings.SaveSettings(appSettings);
 
