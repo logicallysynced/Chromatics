@@ -13,7 +13,7 @@
              preview tick can recolor live. Content template uses a clipped
              TextBlock so labels longer than the key (e.g. "Pause", "Mouse 1")
              get ellipsised instead of overflowing. -->
-        <Style Selector="Button.keycap">
+        <Style Selector="Button.keycap" x:DataType="vm:KeycapViewModel">
             <Setter Property="Background"       Value="{Binding FillBrush}" />
             <Setter Property="Foreground"       Value="#0A1E2D" />
             <Setter Property="BorderBrush"      Value="#33000000" />
@@ -76,7 +76,7 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.Styles>
-                        <Style Selector="ContentPresenter">
+                        <Style Selector="ContentPresenter" x:DataType="vm:KeycapViewModel">
                             <Setter Property="Canvas.Left" Value="{Binding X}" />
                             <Setter Property="Canvas.Top"  Value="{Binding Y}" />
                         </Style>

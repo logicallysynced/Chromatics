@@ -4,6 +4,7 @@ using System.Globalization;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
+using Avalonia.Metadata;
 
 namespace Chromatics.Localization
 {
