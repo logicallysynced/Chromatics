@@ -45,7 +45,7 @@
                 <Button Grid.Column="2"
                         Classes="helpBtn"
                         Content="?"
-                        ToolTip.Tip="{loc:Tr Key='Opens Chromatics 3 documentation in your browser'}"
+                        ToolTip.Tip="{loc:Tr Key='Opens Chromatics 4 documentation in your browser'}"
                         Click="OnHelpClick" />
             </Grid>
         </Border>

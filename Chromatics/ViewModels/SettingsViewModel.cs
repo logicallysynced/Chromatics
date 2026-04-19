@@ -253,9 +253,9 @@ namespace Chromatics.ViewModels
                     try
                     {
                         if (value)
-                            _runKey?.SetValue("Chromatics3", Environment.ProcessPath ?? Assembly.GetExecutingAssembly().Location);
+                            _runKey?.SetValue("Chromatics4", Environment.ProcessPath ?? Assembly.GetExecutingAssembly().Location);
                         else
-                            _runKey?.DeleteValue("Chromatics3", false);
+                            _runKey?.DeleteValue("Chromatics4", false);
                     }
                     catch (Exception ex)
                     {

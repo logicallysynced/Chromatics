@@ -16,8 +16,8 @@ namespace Chromatics.Helpers
     {
         // Stable builds are served from the root update directory.
         // Beta builds live in /beta/ so the two feeds never collide.
-        private const string StableFeedUrl = "https://chromaticsffxiv.com/chromatics3/update/stable/";
-        private const string BetaFeedUrl   = "https://chromaticsffxiv.com/chromatics3/update/beta/";
+        private const string StableFeedUrl = "https://chromaticsffxiv.com/chromatics4/update/stable/";
+        private const string BetaFeedUrl   = "https://chromaticsffxiv.com/chromatics4/update/beta/";
 
         // Checks for an update. Stable always takes priority over beta:
         //   1. If the stable feed has a newer version → return it.
