@@ -86,10 +86,6 @@
               "target": "Package",
               "version": "[33.1.0, )"
             },
-            "Cyotek.Windows.Forms.ColorPicker": {
-              "target": "Package",
-              "version": "[2.0.0-beta.7, )"
-            },
             "FFXIVWeather": {
               "target": "Package",
               "version": "[1.0.17, )"

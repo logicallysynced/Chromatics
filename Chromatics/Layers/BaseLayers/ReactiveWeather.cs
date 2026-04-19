@@ -6,7 +6,6 @@ using Chromatics.Extensions.Sharlayan;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
-using Cyotek.Windows.Forms;
 using FFXIVWeather;
 using NLog.Config;
 using RGB.NET.Core;
@@ -27,7 +26,6 @@ using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static MetroFramework.Drawing.MetroPaint;
 
 namespace Chromatics.Layers
 {

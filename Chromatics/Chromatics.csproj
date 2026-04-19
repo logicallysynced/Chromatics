@@ -62,7 +62,6 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="33.1.0" />
-    <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
     <PackageReference Include="FFXIVWeather" Version="1.0.17" />
     <PackageReference Include="HidSharp" Version="2.6.4" />
     <PackageReference Include="HueApi" Version="3.1.2" />
@@ -98,19 +97,9 @@
     <Reference Include="Interop.AuraServiceLib">
       <HintPath>..\Build Dependencies\Interop.AuraServiceLib.dll</HintPath>
     </Reference>
-    <Reference Include="MetroFramework">
-      <HintPath>..\Build Dependencies\MetroFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="MetroFramework.Design">
-      <HintPath>..\Build Dependencies\MetroFramework.Design.dll</HintPath>
-    </Reference>
-    <Reference Include="MetroFramework.Fonts">
-      <HintPath>..\Build Dependencies\MetroFramework.Fonts.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Forms\vDevices\Uc_VirtualOtherController.cs" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

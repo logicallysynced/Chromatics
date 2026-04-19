@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using static MetroFramework.Drawing.MetroPaint;
 using Color = RGB.NET.Core.Color;
 
 namespace Chromatics.Extensions.RGB.NET.Decorators

@@ -1,6 +1,5 @@
 ﻿using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
-using Chromatics.Forms;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -30,9 +29,8 @@ namespace Chromatics.Core
 {
     public static class RGBController
     {
-        // Fires whenever a device is added or removed. Exposed for non-WinForms
-        // consumers (Avalonia Mapping view) that can't subscribe to the legacy
-        // Uc_Mappings.DeviceAdded/Removed statics.
+        // Fires whenever a device is added or removed. The Avalonia Mapping view
+        // subscribes to keep its device list and keycap layouts in sync.
         public static event EventHandler DeviceConnectionChanged;
 
         private static RGBSurface surface = new RGBSurface();
@@ -330,7 +328,6 @@ namespace Chromatics.Core
                     _activeDevices.Add(device, true);
                 }
 
-                Uc_Mappings.OnDeviceAdded(EventArgs.Empty);
                 DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
 
             }
@@ -358,7 +355,6 @@ namespace Chromatics.Core
                     _activeDevices.Add(device, false);
                 }
 
-                Uc_Mappings.OnDeviceRemoved(EventArgs.Empty);
                 DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
             }
 
@@ -758,17 +754,7 @@ namespace Chromatics.Core
 
             if (MappingLayers.IsPreview())
             {
-                // Avalonia path: fire the registered preview callback.
                 _avaloniaPreviewCallback?.Invoke();
-
-                // Legacy WinForms hook — no-op when WinForms shell isn't active.
-                if (Uc_Mappings.Instance != null)
-                {
-                    if (Uc_Mappings.Instance.InvokeRequired)
-                        Uc_Mappings.Instance.Invoke(new Action(() => Uc_Mappings.Instance.VisualiseLayers()));
-                    else
-                        Uc_Mappings.Instance.VisualiseLayers();
-                }
             }
         }
     }
