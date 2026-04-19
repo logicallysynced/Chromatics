@@ -13,7 +13,7 @@ namespace Chromatics.Helpers
     public static class WeatherHelper
     {
         private static Dictionary<int, string> _weatherCache;
-        private static readonly object CacheLock = new object();
+        private static readonly System.Threading.Lock CacheLock = new();
         private const string fileName = "weatherKinds.json"; // Set your path here
 
         public static string GetWeatherNameById(int id)

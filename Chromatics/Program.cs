@@ -41,6 +41,12 @@ namespace Chromatics
 
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 
+            // The Velopack installer declares this prerequisite via --framework and
+            // installs it before first run, so Setup.exe users never see this warning.
+            // Users launching the ZIP-portable build directly skip that path — this
+            // probe catches the gap so devices don't fail later with a cryptic DLL error.
+            RuntimePrerequisiteCheck.WarnIfMissing();
+
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
 

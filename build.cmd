@@ -16,7 +16,7 @@ dotnet build Chromatics.sln --configuration %CONFIG% --nologo
 set EXITCODE=%ERRORLEVEL%
 
 if %EXITCODE%==0 (
-    xcopy /Y /Q "Build Dependencies\*" "Chromatics\bin\%CONFIG%\net8.0-windows7.0\"
+    xcopy /Y /Q "Build Dependencies\*" "Chromatics\bin\%CONFIG%\net10.0-windows7.0\"
 )
 
 popd

@@ -23,8 +23,8 @@ namespace Chromatics.Extensions.Sharlayan
         private static byte _weatherId;
         private static bool _initialized;
         private static List<Signature> _sList;
-        private static readonly object RefreshLock = new object();
-        private static readonly object CacheLock = new object();
+        private static readonly System.Threading.Lock RefreshLock = new();
+        private static readonly System.Threading.Lock CacheLock = new();
         private static MemoryHandler _memoryHandler;
 
         public static void RefreshData(MemoryHandler memoryHandler)

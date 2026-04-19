@@ -1,5 +1,6 @@
 using RGB.NET.Core;
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,10 @@ namespace Chromatics.Helpers
         // are ordered so the canonical LedId appears first — _keyToLedId picks the
         // first occurrence when building the reverse map, preserving the original
         // HotbarKeyToLedIdConverter behaviour.
-        private static readonly Dictionary<LedId, string> _ledIdToKey = new Dictionary<LedId, string>
+        // Ordered source-of-truth. The reverse map's GroupBy relies on insertion-order
+        // enumeration (so "M1" resolves to Macro1 rather than the aliased Programmable1),
+        // which FrozenDictionary does not guarantee — so the raw Dictionary is retained.
+        private static readonly Dictionary<LedId, string> _ledIdToKeyRaw = new Dictionary<LedId, string>
         {
             { LedId.Keyboard_Escape, "Escape" },
             { LedId.Keyboard_F1, "F1" },
@@ -152,13 +156,17 @@ namespace Chromatics.Helpers
             { LedId.Keyboard_Programmable5, "M5" },
         };
 
-        // Reverse map derived from _ledIdToKey. For keys that share a display name
+        // Frozen for faster TryGetValue on the hot path (preview ticks).
+        private static readonly FrozenDictionary<LedId, string> _ledIdToKey = _ledIdToKeyRaw.ToFrozenDictionary();
+
+        // Reverse map derived from the ordered raw source. For keys that share a display name
         // (e.g. GraveAccentAndTilde and NonUsTilde both show "`") the first entry
-        // in _ledIdToKey wins, preserving the original HotbarKeyToLedIdConverter behaviour.
-        private static readonly Dictionary<string, LedId> _keyToLedId =
-            _ledIdToKey
+        // in _ledIdToKeyRaw wins, preserving the original HotbarKeyToLedIdConverter behaviour.
+        private static readonly FrozenDictionary<string, LedId> _keyToLedId =
+            _ledIdToKeyRaw
                 .GroupBy(kv => kv.Value)
-                .ToDictionary(g => g.Key, g => g.First().Key);
+                .ToDictionary(g => g.Key, g => g.First().Key)
+                .ToFrozenDictionary();
 
         public static string LedIdToHotbarKeyConverter(LedId led) =>
             _ledIdToKey.TryGetValue(led, out var key) ? key : "Unknown";
