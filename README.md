@@ -56,10 +56,6 @@ If you wish to build Chromatics yourself, you can download the active branch and
 ### Open Source Libraries ### 
 * [RGB.NET](https://github.com/DarthAffe/RGB.NET) - used for RGB device integration
 * [Sharlayan](https://github.com/FFXIVAPP/sharlayan) - used for FFXIV memory reading
-* [MetroModernUI](https://github.com/dennismagno/metroframework-modern-ui) - used as a user interface base in winforms
-* [Cyotek ColorPicker](https://github.com/cyotek/Cyotek.Windows.Forms.ColorPicker) - user interface components for choosing colors
-* [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) - used for everything JSON
-* [Aurora](https://github.com/antonpup/Aurora) - borrowed some code base, not actually a dependency
 * [Artemis](https://github.com/Artemis-RGB/Artemis) - borrowed some code base and RGB.NET profiles, not actually a dependency
 * [FFXIVWeather](https://github.com/karashiiro/FFXIVWeather) - For calculating current weather.
 <br><br><br>
