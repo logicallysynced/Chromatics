@@ -25,4 +25,10 @@
     <ProjectReference Include="..\Chromatics\Chromatics.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Sharlayan">
+      <HintPath>D:\Git Projects\sharlayan\Sharlayan\bin\Debug\net10.0\Sharlayan.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
