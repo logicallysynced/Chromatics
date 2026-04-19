@@ -2,6 +2,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Extensions;
+using Chromatics.Localization;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Helpers;
 using Chromatics.Views;
@@ -44,6 +45,7 @@ namespace Chromatics.ViewModels
             _minimizeTray = s.minimizetray;
             _trayOnStartup = s.trayonstartup;
             _checkUpdates = s.checkupdates;
+            _betaChannel = s.betaChannel;
             _globalBrightness = s.globalbrightness;
 
             foreach (var t in Enum.GetValues(typeof(Theme)).Cast<Theme>())
@@ -280,6 +282,21 @@ namespace Chromatics.ViewModels
             }
         }
 
+        private bool _betaChannel;
+        public bool BetaChannel
+        {
+            get => _betaChannel;
+            set
+            {
+                if (SetProperty(ref _betaChannel, value))
+                {
+                    var s = AppSettings.GetSettings();
+                    s.betaChannel = value;
+                    AppSettings.SaveSettings(s);
+                }
+            }
+        }
+
         private int _globalBrightness;
         public int GlobalBrightness
         {
@@ -329,8 +346,7 @@ namespace Chromatics.ViewModels
                     var s = AppSettings.GetSettings();
                     s.systemLanguage = value.Value;
                     AppSettings.SaveSettings(s);
-                    // Live retranslation will wire up in a later stage once
-                    // localization bindings exist for Avalonia XAML.
+                    LocalizationService.Instance.SetLanguage(value.Value);
                 }
             }
         }
@@ -358,8 +374,7 @@ namespace Chromatics.ViewModels
         {
             try
             {
-                var env = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-                if (env == null) return;
+                var env = FileOperationsHelper.GetConfigDirectory();
 
                 foreach (var f in new[] { "layers.chromatics3", "palette.chromatics3", "effects.chromatics3", "settings.chromatics3" })
                 {
@@ -377,8 +392,7 @@ namespace Chromatics.ViewModels
         {
             try
             {
-                var env = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-                if (env == null) return;
+                var env = FileOperationsHelper.GetConfigDirectory();
 
                 foreach (var f in new[]
                 {

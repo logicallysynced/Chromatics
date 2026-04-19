@@ -2,10 +2,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.ViewModels;
+using Chromatics.Views.Dialogs;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -47,6 +49,22 @@ namespace Chromatics.Views
             Avalonia.Threading.Dispatcher.UIThread.Post(
                 () => (DataContext as MainWindowViewModel)?.InitializeAfterRgb(),
                 Avalonia.Threading.DispatcherPriority.Loaded);
+
+            if (AppSettings.GetSettings().checkupdates)
+                _ = CheckForUpdateAsync();
+        }
+
+        private async Task CheckForUpdateAsync()
+        {
+            var includeBeta = AppSettings.GetSettings().betaChannel;
+            var result = await UpdateService.CheckAsync(includeBeta);
+            if (result == null) return;
+
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                var dialog = new UpdateDialog(result);
+                await dialog.ShowDialog(this);
+            });
         }
 
         private void OnClosing(object sender, WindowClosingEventArgs e)

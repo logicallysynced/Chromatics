@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Chromatics.ViewModels.Mapping"
+             xmlns:loc="clr-namespace:Chromatics.Localization"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="320"
              x:Class="Chromatics.Views.Mapping.VirtualDeviceView"
              x:DataType="vm:VirtualDeviceViewModel">
@@ -128,13 +129,13 @@
                     Spacing="6">
             <Button Classes="lockToggle"
                     Click="OnResetLayoutClick"
-                    ToolTip.Tip="Reset all keys to default positions">
+                    ToolTip.Tip="{loc:Tr Key='Reset all keys to default positions'}">
                 <TextBlock Text="&#x21BA;"
                            FontFamily="Segoe UI Emoji, Segoe UI Symbol" />
             </Button>
             <ToggleButton Classes="lockToggle"
                           IsChecked="{Binding IsDraggable, Mode=TwoWay}"
-                          ToolTip.Tip="Lock / unlock keys for drag repositioning">
+                          ToolTip.Tip="{loc:Tr Key='Lock / unlock keys for drag repositioning'}">
                 <Grid>
                     <TextBlock Text="&#x1F512;" IsVisible="{Binding !IsDraggable}" />
                     <TextBlock Text="&#x1F513;" IsVisible="{Binding IsDraggable}" />

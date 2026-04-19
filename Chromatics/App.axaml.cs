@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Helpers;
+using Chromatics.Localization;
 using Chromatics.Views;
 using System;
 
@@ -18,6 +19,8 @@ namespace Chromatics
         {
             AvaloniaXamlLoader.Load(this);
             RefreshTheme();
+            var settings = AppSettings.GetSettings();
+            LocalizationService.Instance.SetLanguage(settings.systemLanguage);
         }
 
         public void RefreshTheme()

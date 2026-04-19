@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Chromatics.ViewModels.Mapping"
              xmlns:views="clr-namespace:Chromatics.Views.Mapping"
+             xmlns:loc="clr-namespace:Chromatics.Localization"
              mc:Ignorable="d" d:DesignWidth="1360" d:DesignHeight="780"
              x:Class="Chromatics.Views.Mapping.MappingView"
              x:DataType="vm:MappingViewModel">
@@ -15,10 +16,10 @@
              When the device is off (IsChecked=false), clicking will enable
              it → show "Enable". -->
         <Style Selector="ToggleButton.deviceToggle:checked">
-            <Setter Property="Content" Value="Disable" />
+            <Setter Property="Content" Value="{loc:Tr Key=Disable}" />
         </Style>
         <Style Selector="ToggleButton.deviceToggle:not(:checked)">
-            <Setter Property="Content" Value="Enable" />
+            <Setter Property="Content" Value="{loc:Tr Key=Enable}" />
         </Style>
     </UserControl.Styles>
 
@@ -39,12 +40,12 @@
                       MinWidth="280" />
 
             <ToggleButton Grid.Column="2"
-                          Content="Preview"
+                          Content="{loc:Tr Key=Preview}"
                           IsChecked="{Binding IsPreviewing, Mode=TwoWay}"
                           MinWidth="96"
                           HorizontalContentAlignment="Center"
                           VerticalContentAlignment="Center"
-                          ToolTip.Tip="Toggle a live preview of the active layers" />
+                          ToolTip.Tip="{loc:Tr Key='Toggle a live preview of the active layers'}" />
 
             <ToggleButton Grid.Column="4"
                           Classes="deviceToggle"
@@ -52,26 +53,26 @@
                           MinWidth="96"
                           HorizontalContentAlignment="Center"
                           VerticalContentAlignment="Center"
-                          ToolTip.Tip="Enable or disable RGB output for the selected device" />
+                          ToolTip.Tip="{loc:Tr Key='Enable or disable RGB output for the selected device'}" />
 
             <Button Grid.Column="6"
-                    Content="Import"
+                    Content="{loc:Tr Key=Import}"
                     Click="OnImportClick"
                     MinWidth="96"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    ToolTip.Tip="Import layers from a .chromatics3 file" />
+                    ToolTip.Tip="{loc:Tr Key='Import layers from a .chromatics3 file'}" />
 
             <Button Grid.Column="8"
-                    Content="Export"
+                    Content="{loc:Tr Key=Export}"
                     Click="OnExportClick"
                     MinWidth="96"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    ToolTip.Tip="Export current layers to a .chromatics3 file" />
+                    ToolTip.Tip="{loc:Tr Key='Export current layers to a .chromatics3 file'}" />
 
             <Button Grid.Column="10"
-                    Content="Add Dynamic Layer"
+                    Content="{loc:Tr Key='Add Dynamic Layer'}"
                     Command="{Binding AddSelectedLayerCommand}"
                     MinWidth="160"
                     HorizontalContentAlignment="Center"
@@ -110,7 +111,7 @@
                 Padding="10,6"
                 Background="{DynamicResource ChromaticsTileOff}"
                 CornerRadius="4">
-            <TextBlock Text="Hold Shift while clicking Duplicate to chain-copy layers."
+            <TextBlock Text="{loc:Tr Key='Hold Shift while clicking Duplicate to chain-copy layers.'}"
                        Opacity="0.75"
                        FontSize="12" />
         </Border>

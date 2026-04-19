@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
         x:Class="Chromatics.Views.Dialogs.InfoDialog"
         Width="460"
         SizeToContent="Height"
@@ -19,7 +20,7 @@
                    Margin="0,0,0,20" />
         <Button Grid.Row="2"
                 Name="OkButton"
-                Content="OK"
+                Content="{loc:Tr Key=OK}"
                 MinWidth="96"
                 HorizontalAlignment="Right"
                 Classes="accent"

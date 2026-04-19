@@ -50,6 +50,12 @@
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
 
+        <!-- Centre button text globally across all dialogs and views -->
+        <Style Selector="Button">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+        </Style>
+
         <!-- Tile ToggleButton -->
         <Style Selector="ToggleButton.tile">
             <Setter Property="Background"                Value="{DynamicResource ChromaticsTileOff}" />

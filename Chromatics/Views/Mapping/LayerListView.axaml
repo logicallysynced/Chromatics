@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Chromatics.ViewModels.Mapping"
+             xmlns:loc="clr-namespace:Chromatics.Localization"
              mc:Ignorable="d" d:DesignWidth="360" d:DesignHeight="600"
              x:Class="Chromatics.Views.Mapping.LayerListView"
              x:DataType="vm:MappingViewModel">
@@ -203,7 +204,7 @@
 
                                 <CheckBox Grid.Column="4"
                                           IsChecked="{Binding IsEnabled, Mode=TwoWay}"
-                                          ToolTip.Tip="Enable / disable this layer"
+                                          ToolTip.Tip="{loc:Tr Key='Enable / disable this layer'}"
                                           VerticalAlignment="Center"
                                           Margin="0,0,4,0" />
 
@@ -214,19 +215,19 @@
                                         Classes.editing="{Binding IsEditing}"
                                         Command="{Binding EditCommand}"
                                         IsVisible="{Binding IsEditButtonVisible}"
-                                        ToolTip.Tip="Edit keys / save selection" />
+                                        ToolTip.Tip="{loc:Tr Key='Edit keys / save selection'}" />
                                 <Button Grid.Column="6"
                                         Classes="iconBtn"
                                         Content="&#x29C9;"
                                         Command="{Binding CopyCommand}"
                                         IsVisible="{Binding !IsLocked}"
-                                        ToolTip.Tip="Duplicate layer" />
+                                        ToolTip.Tip="{loc:Tr Key='Duplicate layer'}" />
                                 <Button Grid.Column="7"
                                         Classes="iconBtn"
                                         Content="&#x2715;"
                                         Click="OnDeleteButtonClick"
                                         IsVisible="{Binding !IsLocked}"
-                                        ToolTip.Tip="Delete layer"
+                                        ToolTip.Tip="{loc:Tr Key='Delete layer'}"
                                         Margin="0,0,4,0" />
                             </Grid>
                         </Border>
@@ -246,7 +247,7 @@
                                   <!-- Mode + Bleed row -->
                                   <Grid ColumnDefinitions="Auto,*,Auto,Auto">
                                       <TextBlock Grid.Column="0"
-                                                 Text="Mode:"
+                                                 Text="{loc:Tr Key='Mode:'}"
                                                  VerticalAlignment="Center"
                                                  Margin="0,0,6,0" />
                                       <ComboBox Grid.Column="1"
@@ -255,25 +256,25 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Stretch" />
                                       <TextBlock Grid.Column="2"
-                                                 Text="Bleed:"
+                                                 Text="{loc:Tr Key='Bleed:'}"
                                                  VerticalAlignment="Center"
                                                  Margin="10,0,4,0" />
                                       <CheckBox Grid.Column="3"
                                                 IsChecked="{Binding AllowBleed, Mode=TwoWay}"
                                                 VerticalAlignment="Center"
-                                                ToolTip.Tip="Allow colour to bleed to adjacent LEDs" />
+                                                ToolTip.Tip="{loc:Tr Key='Allow colour to bleed to adjacent LEDs'}" />
                                   </Grid>
                                   <!-- Key-selection action buttons -->
                                   <StackPanel Orientation="Horizontal" Spacing="6">
-                                      <Button Content="Clear"
+                                      <Button Content="{loc:Tr Key=Clear}"
                                               Command="{Binding ClearKeysCommand}"
-                                              ToolTip.Tip="Remove all selected keys" />
-                                      <Button Content="Reverse"
+                                              ToolTip.Tip="{loc:Tr Key='Remove all selected keys'}" />
+                                      <Button Content="{loc:Tr Key=Reverse}"
                                               Command="{Binding ReverseKeysCommand}"
-                                              ToolTip.Tip="Reverse the order of selected keys" />
-                                      <Button Content="Undo"
+                                              ToolTip.Tip="{loc:Tr Key='Reverse the order of selected keys'}" />
+                                      <Button Content="{loc:Tr Key=Undo}"
                                               Command="{Binding UndoKeysCommand}"
-                                              ToolTip.Tip="Restore keys from last saved state" />
+                                              ToolTip.Tip="{loc:Tr Key='Restore keys from last saved state'}" />
                                   </StackPanel>
                                   <!-- Contextual help text for the selected layer type -->
                                   <TextBlock Text="{Binding HelpText}"

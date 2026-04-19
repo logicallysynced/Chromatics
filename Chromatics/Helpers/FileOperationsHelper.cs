@@ -33,6 +33,28 @@ namespace Chromatics.Helpers
         private static WeatherData weatherData;
         private static readonly HttpClient _httpClient = new HttpClient();
 
+        // Returns the directory where Chromatics user-data files (.chromatics3) live.
+        // Portable installs (ZIP, anywhere on disk) keep files next to the exe.
+        // Setup.exe installs land in %LocalAppData%\Chromatics\current\ which Velopack
+        // replaces on every update, so those installs redirect to %AppData%\Chromatics\.
+        public static string GetConfigDirectory()
+        {
+            var exeDir = AppContext.BaseDirectory;
+            var localApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var managedRoot = Path.Combine(localApp, "Chromatics");
+
+            if (exeDir.StartsWith(managedRoot, StringComparison.OrdinalIgnoreCase))
+            {
+                var appData = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "Chromatics");
+                Directory.CreateDirectory(appData);
+                return appData;
+            }
+
+            return exeDir;
+        }
+
         // Drag-repositioning a keycap fires SaveMappings on a thread-pool task on
         // every pointer-release. Rapid drags (or the preview tick touching the
         // same file path) can overlap and collide on the sibling ".tmp" handle,
@@ -44,7 +66,7 @@ namespace Chromatics.Helpers
         public static void SaveLayerMappings(ConcurrentDictionary<int, Layer> mappings,
             IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/layers.chromatics3";
 
             try
@@ -129,7 +151,7 @@ namespace Chromatics.Helpers
                        Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
             LoadLayerMappings()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/layers.chromatics3";
 
             try
@@ -262,7 +284,7 @@ namespace Chromatics.Helpers
 
         public static bool CheckLayerMappingsExist()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/layers.chromatics3";
 
             if (File.Exists(path))
@@ -436,7 +458,7 @@ namespace Chromatics.Helpers
 
         public static bool CreateLayersBackup()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/layers.chromatics3";
             var backupFilePath = Path.Combine(Path.GetDirectoryName(path), $"backup_layers_{DateTime.Now:yyyyMMdd_HHmmss}.chromatics3");
 
@@ -456,7 +478,7 @@ namespace Chromatics.Helpers
 
         public static void SaveColorMappings(PaletteColorModel palette)
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/palette.chromatics3";
 
             try
@@ -483,7 +505,7 @@ namespace Chromatics.Helpers
 
         public static PaletteColorModel LoadColorMappings()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/palette.chromatics3";
             var result = new PaletteColorModel();
 
@@ -509,7 +531,7 @@ namespace Chromatics.Helpers
 
         public static bool CheckColorMappingsExist()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/palette.chromatics3";
 
             if (File.Exists(path))
@@ -694,7 +716,7 @@ namespace Chromatics.Helpers
 
         public static void SaveEffectSettings(EffectTypesModel palette)
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/effects.chromatics3";
 
             try
@@ -721,7 +743,7 @@ namespace Chromatics.Helpers
 
         public static EffectTypesModel LoadEffectSettings()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/effects.chromatics3";
             var result = new EffectTypesModel();
 
@@ -747,7 +769,7 @@ namespace Chromatics.Helpers
 
         public static bool CheckEffectSettingsExist()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/effects.chromatics3";
 
             if (File.Exists(path))
@@ -758,7 +780,7 @@ namespace Chromatics.Helpers
 
         public static void SaveSettings(SettingsModel settings)
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/settings.chromatics3";
 
             try
@@ -785,7 +807,7 @@ namespace Chromatics.Helpers
 
         public static SettingsModel LoadSettings()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/settings.chromatics3";
             var result = new SettingsModel();
 
@@ -811,7 +833,7 @@ namespace Chromatics.Helpers
 
         public static bool CheckSettingsExist()
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = $"{enviroment}/settings.chromatics3";
 
             if (File.Exists(path))
@@ -834,7 +856,7 @@ namespace Chromatics.Helpers
 
         public static string GetCsvData(string url, string csvPath)
         {
-            var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+            var enviroment = GetConfigDirectory();
             var path = Path.Combine(enviroment, csvPath);
 
             // Run the async work on a thread-pool thread so callers on the UI

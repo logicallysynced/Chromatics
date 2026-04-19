@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using Velopack;
 using WinFormsApp = System.Windows.Forms.Application;
 
 namespace Chromatics
@@ -17,6 +18,11 @@ namespace Chromatics
         [STAThread]
         static void Main(string[] args)
         {
+            // Must be the very first call — Velopack intercepts lifecycle args
+            // (--velopack-firstrun, --velopack-updated, etc.) and exits early
+            // when acting on them. Nothing else may run before this.
+            VelopackApp.Build().Run();
+
             if (!ThereCanOnlyBeOne())
             {
                 if (Debugger.IsAttached)
@@ -27,9 +33,6 @@ namespace Chromatics
                 return;
             }
 
-            // WinForms still gets initialized: AutoUpdaterDotNET opens its prompt as
-            // a WinForms dialog, so visual styles need to be set even though Avalonia
-            // owns the main window.
             WinFormsApp.ThreadException += ThreadExceptionHandler;
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
             WinFormsApp.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);

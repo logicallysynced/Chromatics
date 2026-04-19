@@ -14,22 +14,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoUpdaterDotNET;
 using Chromatics.Forms.vDevices;
 using static Chromatics.Forms.vDevices.VirtualDevice;
 using System.Reflection;
-using System.Windows;
 using Chromatics.Models;
 using System.IO;
 using System.Timers;
 using Chromatics.Properties;
-using System.Windows.Controls.Primitives;
 using Sharlayan.Core.Enums;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using MetroFramework;
 using System.Diagnostics.Eventing.Reader;
-using System.Printing;
 using MetroFramework.Properties;
 using Chromatics.Localization;
 
@@ -252,18 +248,6 @@ namespace Chromatics.Forms
 
         private void SetupChromatics()
         {
-            //Check for updates
-            
-            if (appSettings.checkupdates)
-            {
-                Logger.WriteConsole(LoggerTypes.System, @"Checking for updates..");
-                AutoUpdater.HttpUserAgent = "Chromatics/AutoUpdater";
-                AutoUpdater.ShowSkipButton = false;
-                AutoUpdater.Icon = this.Icon.ToBitmap();
-                AutoUpdater.Start("https://chromaticsffxiv.com/chromatics3/update/update.xml");
-                
-            }
-
             var assembly = typeof(Program).Assembly;
             var beta = true;
 

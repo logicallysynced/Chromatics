@@ -24,6 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="locale\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="app.manifest" />
   </ItemGroup>
 
@@ -51,10 +57,10 @@
     <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.2.0" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.2.0" Condition="'$(Configuration)' == 'Debug'" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="Velopack" Version="0.0.1298" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autoupdater.NET.Official" Version="1.9.2" />
     <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="Cyotek.Windows.Forms.ColorPicker" Version="2.0.0-beta.7" />
     <PackageReference Include="FFXIVWeather" Version="1.0.17" />

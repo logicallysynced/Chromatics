@@ -5,6 +5,7 @@
         xmlns:vm="clr-namespace:Chromatics.ViewModels"
         xmlns:views="clr-namespace:Chromatics.Views"
         xmlns:mapping="clr-namespace:Chromatics.Views.Mapping"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
         mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="885"
         x:Class="Chromatics.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -44,25 +45,25 @@
                 <Button Grid.Column="2"
                         Classes="helpBtn"
                         Content="?"
-                        ToolTip.Tip="Opens Chromatics 3 documentation in your browser"
+                        ToolTip.Tip="{loc:Tr Key='Opens Chromatics 3 documentation in your browser'}"
                         Click="OnHelpClick" />
             </Grid>
         </Border>
 
         <TabControl Grid.Row="1" Margin="16,8,16,16">
-            <TabItem Header="Console">
+            <TabItem Header="{loc:Tr Key=Console}">
                 <views:ConsoleView DataContext="{Binding Console}" />
             </TabItem>
-            <TabItem Header="Mappings">
+            <TabItem Header="{loc:Tr Key=Mappings}">
                 <mapping:MappingView DataContext="{Binding Mapping}" />
             </TabItem>
-            <TabItem Header="Palette">
+            <TabItem Header="{loc:Tr Key=Palette}">
                 <views:PaletteView DataContext="{Binding Palette}" />
             </TabItem>
-            <TabItem Header="Effects">
+            <TabItem Header="{loc:Tr Key=Effects}">
                 <views:EffectsView DataContext="{Binding Effects}" />
             </TabItem>
-            <TabItem Header="Settings">
+            <TabItem Header="{loc:Tr Key=Settings}">
                 <views:SettingsView DataContext="{Binding Settings}" />
             </TabItem>
         </TabControl>

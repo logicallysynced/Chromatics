@@ -3,60 +3,61 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Chromatics.ViewModels"
+             xmlns:loc="clr-namespace:Chromatics.Localization"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="720"
              x:Class="Chromatics.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
 
-    <!-- Single scroll; Maintenance sits inline with the other sections for a
+    <!-- Single scroll; Advanced sits inline with the other sections for a
          consistent reading order. Bottom margin gives breathing room at the
          end of the scroll. -->
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" Padding="16">
         <StackPanel Spacing="20" Margin="0,0,0,80">
 
             <!-- General -->
-            <HeaderedContentControl Header="General">
+            <HeaderedContentControl Header="{loc:Tr Key=General}">
                 <StackPanel Spacing="8" Margin="4,8,4,0">
-                    <CheckBox Content="Use saved cache for FFXIV data instead of online source."
+                    <CheckBox Content="{loc:Tr Key='Use saved cache for FFXIV data instead of online source.'}"
                               IsChecked="{Binding LocalCache, Mode=TwoWay}"
-                              ToolTip.Tip="Default: Disabled" />
-                    <CheckBox Content="Start Chromatics when Windows starts."
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Start Chromatics when Windows starts.'}"
                               IsChecked="{Binding WinStart, Mode=TwoWay}"
-                              ToolTip.Tip="Default: Disabled" />
-                    <CheckBox Content="Minimise to system tray on close."
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Minimise to system tray on close.'}"
                               IsChecked="{Binding MinimizeTray, Mode=TwoWay}"
-                              ToolTip.Tip="Default: Disabled" />
-                    <CheckBox Content="Start Chromatics minimised to the tray."
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Start Chromatics minimised to the tray.'}"
                               IsChecked="{Binding TrayOnStartup, Mode=TwoWay}"
-                              ToolTip.Tip="Default: Disabled" />
-                    <CheckBox Content="Check for updates on startup."
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Check for updates on startup.'}"
                               IsChecked="{Binding CheckUpdates, Mode=TwoWay}"
-                              ToolTip.Tip="Default: Enabled" />
+                              ToolTip.Tip="{loc:Tr Key='Default: Enabled'}" />
                 </StackPanel>
             </HeaderedContentControl>
 
             <!-- Appearance -->
-            <HeaderedContentControl Header="Appearance &amp; Language">
+            <HeaderedContentControl Header="{loc:Tr Key='Appearance &amp; Language'}">
                 <StackPanel Spacing="10" Margin="4,8,4,0">
                     <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="Theme" Width="160" VerticalAlignment="Center" />
+                        <TextBlock Text="{loc:Tr Key=Theme}" Width="160" VerticalAlignment="Center" />
                         <ComboBox ItemsSource="{Binding ThemeOptions}"
                                   SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
                                   MinWidth="240" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="Language" Width="160" VerticalAlignment="Center" />
+                        <TextBlock Text="{loc:Tr Key=Language}" Width="160" VerticalAlignment="Center" />
                         <ComboBox ItemsSource="{Binding LanguageOptions}"
                                   SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
                                   MinWidth="240" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="Keyboard Layout" Width="160" VerticalAlignment="Center" />
+                        <TextBlock Text="{loc:Tr Key='Keyboard Layout'}" Width="160" VerticalAlignment="Center" />
                         <ComboBox ItemsSource="{Binding KeyboardLayoutOptions}"
                                   SelectedItem="{Binding SelectedKeyboardLayout, Mode=TwoWay}"
                                   MinWidth="240" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="Global Brightness" Width="160" VerticalAlignment="Center" />
+                        <TextBlock Text="{loc:Tr Key='Global Brightness'}" Width="160" VerticalAlignment="Center" />
                         <Slider Minimum="0" Maximum="100"
                                 Value="{Binding GlobalBrightness, Mode=TwoWay}"
                                 Width="240" />
@@ -69,7 +70,7 @@
             <!-- Device Providers: WrapPanel capped at ~4 cols via MaxWidth.
                  Tile width 160 + 2×6 margin = 172 per tile; 4 × 172 = 688.
                  All tiles are always rendered; layout reflows if window narrows. -->
-            <HeaderedContentControl Header="Device Providers">
+            <HeaderedContentControl Header="{loc:Tr Key='Device Providers'}">
                 <ItemsControl ItemsSource="{Binding DeviceToggles}"
                               MaxWidth="700"
                               HorizontalAlignment="Left"
@@ -96,15 +97,23 @@
                 </ItemsControl>
             </HeaderedContentControl>
 
-            <!-- Maintenance -->
-            <HeaderedContentControl Header="Maintenance">
-                <StackPanel Orientation="Horizontal" Spacing="12" Margin="4,8,4,4">
-                    <Button Content="Reset Chromatics"
-                            Click="OnResetClick"
-                            ToolTip.Tip="Restore Chromatics to its default state. Requires application restart." />
-                    <Button Content="Clear FFXIV Cache"
-                            Click="OnClearCacheClick"
-                            ToolTip.Tip="Clear local FFXIV cache. Requires application restart." />
+            <!-- Advanced -->
+            <HeaderedContentControl Header="{loc:Tr Key=Advanced}">
+                <StackPanel Spacing="12" Margin="4,8,4,4">
+                    <CheckBox Content="{loc:Tr Key='Opt in to beta releases. When enabled, beta updates are offered if no stable update is available.'}"
+                              IsChecked="{Binding BetaChannel, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Content="{loc:Tr Key='Check for Updates'}"
+                                Click="OnCheckUpdatesClick"
+                                ToolTip.Tip="{loc:Tr Key='Check for a new Chromatics update now.'}" />
+                        <Button Content="{loc:Tr Key='Reset Chromatics'}"
+                                Click="OnResetClick"
+                                ToolTip.Tip="{loc:Tr Key='Restore Chromatics to its default state. Requires application restart.'}" />
+                        <Button Content="{loc:Tr Key='Clear FFXIV Cache'}"
+                                Click="OnClearCacheClick"
+                                ToolTip.Tip="{loc:Tr Key='Clear local FFXIV cache. Requires application restart.'}" />
+                    </StackPanel>
                 </StackPanel>
             </HeaderedContentControl>
 
