@@ -53,10 +53,10 @@
 
             <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8">
                 <Button Content="{loc:Tr Key=Import}"
-                        Command="{Binding ImportCommand}"
+                        Click="OnImportClick"
                         ToolTip.Tip="{loc:Tr Key='Import Chromatics color palette from file'}" />
                 <Button Content="{loc:Tr Key=Export}"
-                        Command="{Binding ExportCommand}"
+                        Click="OnExportClick"
                         ToolTip.Tip="{loc:Tr Key='Export Chromatics color palette to file'}" />
                 <Button Content="{loc:Tr Key='Restore Default'}"
                         Command="{Binding UndoCommand}"

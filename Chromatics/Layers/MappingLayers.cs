@@ -309,19 +309,7 @@ namespace Chromatics.Layers
 
         public static bool ImportMappings(ConcurrentDictionary<int, Layer> importedLayer = null, bool empty = false)
         {
-            ConcurrentDictionary<int, Layer> layers;
-            if (importedLayer != null)
-            {
-                layers = importedLayer;
-            }
-            else
-            {
-                var (imported, importedLayouts) = FileOperationsHelper.ImportLayerMappings();
-                layers = imported;
-                // User-driven import replaces the whole state, including device
-                // layout overrides — don't merge with the previous session's.
-                if (layers != null) ReplaceDeviceLayouts(importedLayouts);
-            }
+            var layers = importedLayer;
 
             if (layers != null)
             {
@@ -435,13 +423,7 @@ namespace Chromatics.Layers
         }
 
 
-        public static bool ExportMappings()
-        {
-            FileOperationsHelper.ExportLayerMappings(_layers, _deviceLayouts);
-            return true;
-        }
-
-        // Path-driven counterparts for UI frameworks that supply the file path
+        // Path-driven methods for Avalonia StorageProvider callers
         // themselves (Avalonia StorageProvider). Import re-runs the full migration
         // pipeline by funnelling through ImportMappings(imported, empty: false).
         public static bool ImportMappingsFromPath(string path)

@@ -20,7 +20,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 using static System.Net.WebRequestMethods;
 using File = System.IO.File;
@@ -293,62 +292,7 @@ namespace Chromatics.Helpers
             return false;
         }
 
-        public static (ConcurrentDictionary<int, Layer> layers,
-                       Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
-            ImportLayerMappings()
-        {
-            var open = new OpenFileDialog
-            {
-                Filter = "Chromatics Layer Files|*.chromatics3",
-                Title = "Import Chromatics Layers",
-                AddExtension = true,
-                AutoUpgradeEnabled = true,
-                CheckFileExists = true,
-                CheckPathExists = true,
-                DefaultExt = "chromatics3",
-                DereferenceLinks = true,
-                FileName = "layers",
-                FilterIndex = 1,
-                Multiselect = false,
-                ReadOnlyChecked = false,
-                RestoreDirectory = false,
-                ShowHelp = false,
-                ShowReadOnly = false,
-                SupportMultiDottedExtensions = false,
-                ValidateNames = true
-            };
-
-            if (open.ShowDialog() != DialogResult.OK)
-            {
-                return (null, null);
-            }
-
-            Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Layers..");
-
-            try
-            {
-                string json;
-                using (var sr = new StreamReader(open.FileName))
-                    json = sr.ReadToEnd();
-
-                var parsed = ParseMappingFile(json);
-                Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported layers from {open.FileName}.");
-                return parsed;
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing layers. Error: {ex.Message}");
-                return (null, null);
-            }
-            finally
-            {
-                open.Dispose();
-            }
-        }
-
-        // Dialogless import — callers (e.g. Avalonia code-behind using StorageProvider)
-        // hand us a path directly. Shares the deserialize/logging path with the
-        // dialog-based overload above.
+        // Import — callers supply the path (picked via Avalonia StorageProvider).
         public static (ConcurrentDictionary<int, Layer> layers,
                        Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
             ImportLayerMappingsFromPath(string path)
@@ -403,37 +347,6 @@ namespace Chromatics.Helpers
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error exporting layers. Error: {ex.Message}");
-            }
-        }
-
-        public static void ExportLayerMappings(ConcurrentDictionary<int, Layer> layers,
-            IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
-        {
-            var save = new SaveFileDialog
-            {
-                AddExtension = true,
-                AutoUpgradeEnabled = true,
-                CheckFileExists = false,
-                CheckPathExists = true,
-                CreatePrompt = false,
-                DefaultExt = "chromatics3",
-                DereferenceLinks = true,
-                FileName = "layers",
-                Filter = "Chromatics Layer Files|*.chromatics3",
-                FilterIndex = 1,
-                InitialDirectory = "",
-                OverwritePrompt = true,
-                RestoreDirectory = false,
-                ShowHelp = false,
-                SupportMultiDottedExtensions = false,
-                Title = "Export Chromatics Layers",
-                ValidateNames = true
-            };
-
-            if (save.ShowDialog() == DialogResult.OK)
-            {
-                ExportLayerMappingsToPath(layers, save.FileName, deviceLayouts);
-                save.Dispose();
             }
         }
 
@@ -542,175 +455,86 @@ namespace Chromatics.Helpers
 
 
 
-        public static PaletteColorModel ImportColorMappings()
+        public static PaletteColorModel ImportColorMappingsFromPath(string path)
         {
-            var open = new OpenFileDialog
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return null;
+
+            var ext = Path.GetExtension(path);
+
+            if (ext == ".chromatics3")
             {
-                Filter = "Chromatics Palette Files|*.chromatics3|Legacy Palette Files|*.chromatics",
-                Title = "Import Color Palette",
-                AddExtension = true,
-                AutoUpgradeEnabled = true,
-                CheckFileExists = true,
-                CheckPathExists = true,
-                DefaultExt = "chromatics3",
-                DereferenceLinks = true,
-                FileName = "mypalette",
-                FilterIndex = 1,
-                Multiselect = false,
-                ReadOnlyChecked = false,
-                RestoreDirectory = false,
-                ShowHelp = false,
-                ShowReadOnly = false,
-                SupportMultiDottedExtensions = false,
-                ValidateNames = true
-            };
-
-            if (open.ShowDialog() == DialogResult.OK)
-            {
-                var ext = Path.GetExtension(open.FileName);
-
-                if (ext == ".chromatics3")
-                {
-                    Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Color Palette..");
-
-                    try
-                    {
-                        var result = new PaletteColorModel();
-
-                        using (var sr = new StreamReader(open.FileName))
-                        {
-                            result = JsonConvert.DeserializeObject<PaletteColorModel>(sr.ReadToEnd());
-                            sr.Close();
-
-                            Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported Color Palette from {open.FileName}.");
-                            open.Dispose();
-                        }
-
-                        return result;
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing Color Palette. Error: {ex.Message}");
-                        open.Dispose();
-                        return null;
-                    }
-                }
-                else if (ext == ".chromatics")
-                {
-                    //Import color mappings from Chromatics 2.x and convert
-                    Logger.WriteConsole(Enums.LoggerTypes.System, @"Converting legacy Color Palette..");
-
-                    try
-                    {
-#if DEBUG
-                        Debug.WriteLine("Legacy file detected");
-#endif
-
-                        var result = new PaletteColorModel();
-
-                        using (var sr = new StreamReader(open.FileName))
-                        {
-                            var reader = new XmlSerializer(typeof(LegacyColorMappings));
-                            var data = sr.ReadToEnd();
-                            sr.Close();
-
-                            data = data.Replace("FfxivColorMappings", "LegacyColorMappings");
-                            var bytes = Encoding.ASCII.GetBytes(data);
-                            var _sr = new MemoryStream(bytes);
-
-                            var colorMappings = (LegacyColorMappings)reader.Deserialize(_sr);
-
-                            _sr.Close();
-
-                            foreach (var p in colorMappings.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                            {
-                                foreach (var f in result.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
-                                {
-                                    if (p.Name.Contains(f.Name))
-                                    {
-                                        var color = ColorTranslator.FromHtml((string)p.GetValue(colorMappings));
-
-                                        var mapping = (ColorMapping)f.GetValue(result);
-                                        var new_mapping = new ColorMapping(mapping.Name, mapping.Type, color);
-                                        f.SetValue(result, new_mapping);
-                                    }
-                                }
-                            }
-
-                            Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully converted & imported legacy Color Palette from {open.FileName}.");
-                            open.Dispose();
-                            return result;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing legacy Color Palette. Error: {ex.Message}");
-                        open.Dispose();
-                        return null;
-                    }
-                }
-
-                Logger.WriteConsole(Enums.LoggerTypes.Error, @"Error importing legacy Color Palette.");
-                return null;
-
-            }
-            else
-            {
-                Logger.WriteConsole(Enums.LoggerTypes.Error, @"Error importing Color Palette.");
-                return null;
-            }
-        }
-
-        public static void ExportColorMappings(PaletteColorModel palette)
-        {
-            var save = new SaveFileDialog
-            {
-                AddExtension = true,
-                AutoUpgradeEnabled = true,
-                CheckFileExists = false,
-                CheckPathExists = true,
-                CreatePrompt = false,
-                DefaultExt = "chromatics3",
-                DereferenceLinks = true,
-                FileName = "mypalette",
-                Filter = "Chromatics Palette Files|*.chromatics3",
-                FilterIndex = 1,
-                InitialDirectory = "",
-                OverwritePrompt = true,
-                RestoreDirectory = false,
-                ShowHelp = false,
-                SupportMultiDottedExtensions = false,
-                Title = "Export Color Palette",
-                ValidateNames = true
-            };
-
-
-            if (save.ShowDialog() == DialogResult.OK)
-            {
-                Logger.WriteConsole(Enums.LoggerTypes.System, @"Exporting Color Palette..");
-
+                Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Color Palette..");
                 try
                 {
-                    using (var sw = new StreamWriter(save.FileName, false))
-                    {
-                        var serializer = new JsonSerializer
-                        {
-                            NullValueHandling = NullValueHandling.Ignore
-                        };
-
-                        serializer.Serialize(sw, palette);
-                        sw.WriteLine();
-                        sw.Close();
-                    }
-
-                    Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully exported color palette to {save.FileName}.");
-                    save.Dispose();
+                    using var sr = new StreamReader(path);
+                    var result = JsonConvert.DeserializeObject<PaletteColorModel>(sr.ReadToEnd());
+                    Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported Color Palette from {path}.");
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error exporting Color Palette. Error: {ex.Message}");
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing Color Palette. Error: {ex.Message}");
+                    return null;
                 }
+            }
+            else if (ext == ".chromatics")
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.System, @"Converting legacy Color Palette..");
+                try
+                {
+                    Debug.WriteLine("Legacy file detected");
+                    var result = new PaletteColorModel();
+                    using var sr = new StreamReader(path);
+                    var reader = new XmlSerializer(typeof(LegacyColorMappings));
+                    var data = sr.ReadToEnd();
+                    data = data.Replace("FfxivColorMappings", "LegacyColorMappings");
+                    var bytes = Encoding.ASCII.GetBytes(data);
+                    using var ms = new MemoryStream(bytes);
+                    var colorMappings = (LegacyColorMappings)reader.Deserialize(ms);
+
+                    foreach (var p in colorMappings.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                    {
+                        foreach (var f in result.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+                        {
+                            if (p.Name.Contains(f.Name))
+                            {
+                                var color = ColorTranslator.FromHtml((string)p.GetValue(colorMappings));
+                                var mapping = (ColorMapping)f.GetValue(result);
+                                f.SetValue(result, new ColorMapping(mapping.Name, mapping.Type, color));
+                            }
+                        }
+                    }
+
+                    Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully converted & imported legacy Color Palette from {path}.");
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing legacy Color Palette. Error: {ex.Message}");
+                    return null;
+                }
+            }
+
+            Logger.WriteConsole(Enums.LoggerTypes.Error, @"Unsupported palette file extension.");
+            return null;
+        }
+
+        public static void ExportColorMappingsToPath(PaletteColorModel palette, string path)
+        {
+            if (string.IsNullOrWhiteSpace(path) || palette == null) return;
+
+            Logger.WriteConsole(Enums.LoggerTypes.System, @"Exporting Color Palette..");
+            try
+            {
+                using var sw = new StreamWriter(path, false);
+                var serializer = new JsonSerializer { NullValueHandling = NullValueHandling.Ignore };
+                serializer.Serialize(sw, palette);
+                sw.WriteLine();
+                Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully exported color palette to {path}.");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error exporting Color Palette. Error: {ex.Message}");
             }
         }
 

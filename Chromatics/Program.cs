@@ -5,14 +5,22 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
+using System.Runtime.InteropServices;
 using Velopack;
-using WinFormsApp = System.Windows.Forms.Application;
 
 namespace Chromatics
 {
     static class Program
     {
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern int MessageBoxW(IntPtr hWnd, string text, string caption, uint type);
+
+        private const uint MB_OK           = 0x0;
+        private const uint MB_YESNO        = 0x4;
+        private const uint MB_ICONERROR    = 0x10;
+        private const uint MB_ICONQUESTION = 0x20;
+        private const int  IDYES           = 6;
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -31,11 +39,7 @@ namespace Chromatics
                 return;
             }
 
-            WinFormsApp.ThreadException += ThreadExceptionHandler;
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
-            WinFormsApp.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-            WinFormsApp.EnableVisualStyles();
-            WinFormsApp.SetCompatibleTextRenderingDefault(false);
 
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
@@ -84,13 +88,8 @@ namespace Chromatics
 
         private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception ex = (Exception)e.ExceptionObject;
-            MessageBox.Show("Unhandled exception caught: " + ex.Message);
-        }
-
-        private static void ThreadExceptionHandler(object sender, System.Threading.ThreadExceptionEventArgs e)
-        {
-            MessageBox.Show("Unhandled exception caught: " + e.Exception.Message);
+            var ex = (Exception)e.ExceptionObject;
+            MessageBoxW(IntPtr.Zero, "Unhandled exception caught: " + ex.Message, "Chromatics Error", MB_OK | MB_ICONERROR);
         }
 
         private static bool ThereCanOnlyBeOne()
@@ -98,26 +97,26 @@ namespace Chromatics
             var thisprocessname = Process.GetCurrentProcess().ProcessName;
             var otherProcesses = Process.GetProcesses()
                 .Where(p => p.ProcessName == thisprocessname)
-                .Where(p => p.Id != Process.GetCurrentProcess().Id);
+                .Where(p => p.Id != Process.GetCurrentProcess().Id)
+                .ToList();
 
-            var enumerable = otherProcesses.ToList();
-            if (enumerable.Any())
+            if (!otherProcesses.Any()) return true;
+
+            int result = MessageBoxW(IntPtr.Zero,
+                "Another instance of Chromatics is currently running, and only one can run at a time. Would you like to close the other instance and use this one?",
+                "Already running", MB_YESNO | MB_ICONQUESTION);
+
+            if (result == IDYES)
             {
-                if (MessageBox.Show(@"Another instance of Chromatics is currently running, and only one can run at a time. Would you like to close the other instance and use this one?", @"Already running", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                foreach (var process in otherProcesses)
                 {
-                    foreach (var process in enumerable)
-                    {
-                        process.Kill();
-                        process.WaitForExit(5000);
-                    }
+                    process.Kill();
+                    process.WaitForExit(5000);
                 }
-                else
-                {
-                    return false;
-                }
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }

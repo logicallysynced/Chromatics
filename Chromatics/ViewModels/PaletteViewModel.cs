@@ -21,8 +21,6 @@ namespace Chromatics.ViewModels
         public ObservableCollection<PaletteMappingItem> Items { get; } = new();
         public ObservableCollection<CategoryOption> Categories { get; } = new();
 
-        public RelayCommand ImportCommand { get; }
-        public RelayCommand ExportCommand { get; }
         public RelayCommand UndoCommand { get; }
 
         private CategoryOption _selectedCategory;
@@ -89,8 +87,6 @@ namespace Chromatics.ViewModels
                 Logger.WriteConsole(LoggerTypes.System, "Loaded palette from palette.chromatics3");
             }
 
-            ImportCommand = new RelayCommand(OnImport);
-            ExportCommand = new RelayCommand(OnExport);
             UndoCommand = new RelayCommand(OnUndo, () => SelectedItem != null);
 
             BuildCategories();
@@ -137,18 +133,17 @@ namespace Chromatics.ViewModels
             }
         }
 
-        private void OnImport()
+        public void ImportFromPath(string path)
         {
-            if (!RGBController.ImportColorPalette()) return;
-            // Rebuild items against the new palette and reapply filter.
+            if (!RGBController.ImportColorPalette(path)) return;
             BuildItems();
             ApplyFilter();
             SelectedItem = null;
         }
 
-        private void OnExport()
+        public void ExportToPath(string path)
         {
-            RGBController.ExportColorPalette();
+            RGBController.ExportColorPalette(path);
         }
 
         private void OnUndo()
