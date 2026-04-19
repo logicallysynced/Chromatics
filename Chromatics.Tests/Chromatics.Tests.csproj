@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <Reference Include="Sharlayan">
-      <HintPath>D:\Git Projects\sharlayan\Sharlayan\bin\Debug\net10.0\Sharlayan.dll</HintPath>
+      <HintPath>..\Build Dependencies\Sharlayan\Sharlayan.dll</HintPath>
     </Reference>
   </ItemGroup>
 

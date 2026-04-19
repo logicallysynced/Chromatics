@@ -90,7 +90,7 @@
          should drop the suppression. -->
     <PackageReference Include="Sanford.Multimedia.Midi" Version="6.7.3" NoWarn="NU1701" />
     <Reference Include="Sharlayan">
-      <HintPath>D:\Git Projects\sharlayan\Sharlayan\bin\Debug\net10.0\Sharlayan.dll</HintPath>
+      <HintPath>..\Build Dependencies\Sharlayan\Sharlayan.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -98,6 +98,17 @@
     <Reference Include="Interop.AuraServiceLib">
       <HintPath>..\Build Dependencies\Interop.AuraServiceLib.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Sharlayan 9 is referenced as a loose DLL (not on NuGet). The transitive
+         runtime deps (FFXIVClientStructs, Lumina, etc.) must be copied to the
+         output folder for the app to run. -->
+    <None Include="..\Build Dependencies\Sharlayan\*.dll" Exclude="..\Build Dependencies\Sharlayan\Sharlayan.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
