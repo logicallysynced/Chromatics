@@ -147,34 +147,114 @@ namespace Chromatics.Helpers
             }
         }
 
+        // Validates a raw JSON string as a Chromatics layer file.
+        // Returns (true, null) when valid; (false, reason) when not.
+        // Supports both the current schema-versioned format and the legacy
+        // integer-keyed format so import remains backwards-compatible.
+        public static (bool valid, string reason) ValidateLayerJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return (false, "The file is empty.");
+
+            JToken token;
+            try { token = JToken.Parse(json); }
+            catch (JsonException) { return (false, "The file is not valid JSON."); }
+
+            if (token is not JObject obj)
+                return (false, "The file does not contain a JSON object.");
+
+            // Current format: top-level object has schemaVersion + layers.
+            if (obj["schemaVersion"] != null && obj["layers"] != null)
+                return (true, null);
+
+            // Legacy format: every top-level key is an integer layer ID.
+            if (obj.Properties().All(p => int.TryParse(p.Name, out _)))
+                return (true, null);
+
+            return (false,
+                "The file does not appear to be a Chromatics layer file. " +
+                "It may be a palette, settings, or other Chromatics data file.");
+        }
+
+        // Convenience overload that reads from disk before validating.
+        public static (bool valid, string reason) ValidateLayerFile(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return (false, "No file path specified.");
+            if (!File.Exists(filePath))
+                return (false, "File does not exist.");
+
+            string json;
+            try
+            {
+                using var sr = new StreamReader(filePath);
+                json = sr.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Could not read file: {ex.Message}");
+            }
+
+            return ValidateLayerJson(json);
+        }
+
         private static (ConcurrentDictionary<int, Layer> layers,
                         Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
             ParseMappingFile(string json)
         {
             if (string.IsNullOrWhiteSpace(json)) return (null, null);
 
-            var token = JToken.Parse(json);
-            if (token is JObject obj && obj["schemaVersion"] != null && obj["layers"] != null)
+            JToken token;
+            try { token = JToken.Parse(json); }
+            catch (JsonException) { return (null, null); }
+
+            if (token is not JObject obj) return (null, null);
+
+            // Current schema-versioned format.
+            if (obj["schemaVersion"] != null && obj["layers"] != null)
             {
-                var layers = obj["layers"].ToObject<ConcurrentDictionary<int, Layer>>(
+                try
+                {
+                    var layers = obj["layers"].ToObject<ConcurrentDictionary<int, Layer>>(
+                        JsonSerializer.Create(new JsonSerializerSettings
+                        {
+                            Converters = { new DictionaryConverter() }
+                        }));
+
+                    var deviceLayouts = obj["deviceLayouts"]?
+                        .ToObject<Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>>()
+                        ?? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>();
+
+                    return (layers, deviceLayouts);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error,
+                        $"Failed to parse layer file (schema format): {ex.Message}");
+                    return (null, null);
+                }
+            }
+
+            // Legacy format: all top-level keys are integer layer IDs.
+            // Guard against non-layer files (e.g. palette/settings files with string keys).
+            if (!obj.Properties().All(p => int.TryParse(p.Name, out _)))
+                return (null, null);
+
+            try
+            {
+                var legacy = obj.ToObject<ConcurrentDictionary<int, Layer>>(
                     JsonSerializer.Create(new JsonSerializerSettings
                     {
                         Converters = { new DictionaryConverter() }
                     }));
-
-                var deviceLayouts = obj["deviceLayouts"]?
-                    .ToObject<Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>>()
-                    ?? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>();
-
-                return (layers, deviceLayouts);
+                return (legacy, new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>());
             }
-
-            var legacy = token.ToObject<ConcurrentDictionary<int, Layer>>(
-                JsonSerializer.Create(new JsonSerializerSettings
-                {
-                    Converters = { new DictionaryConverter() }
-                }));
-            return (legacy, new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>());
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error,
+                    $"Failed to parse layer file (legacy format): {ex.Message}");
+                return (null, null);
+            }
         }
 
 

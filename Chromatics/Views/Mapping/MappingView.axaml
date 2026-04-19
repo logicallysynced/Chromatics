@@ -8,13 +8,27 @@
              x:Class="Chromatics.Views.Mapping.MappingView"
              x:DataType="vm:MappingViewModel">
 
+    <UserControl.Styles>
+        <!-- Device enable/disable toggle: content reflects the action the
+             user will take, not the current state. When the device IS on
+             (IsChecked=true), clicking will disable it → show "Disable".
+             When the device is off (IsChecked=false), clicking will enable
+             it → show "Enable". -->
+        <Style Selector="ToggleButton.deviceToggle:checked">
+            <Setter Property="Content" Value="Disable" />
+        </Style>
+        <Style Selector="ToggleButton.deviceToggle:not(:checked)">
+            <Setter Property="Content" Value="Enable" />
+        </Style>
+    </UserControl.Styles>
+
     <Grid RowDefinitions="Auto,*,Auto" Margin="12">
 
         <!-- Top toolbar: device + preview + import/export + add layer.
              Device combo grows to absorb slack so the action buttons stay
              pinned to the right edge. -->
         <Grid Grid.Row="0"
-              ColumnDefinitions="*,8,Auto,8,Auto,8,Auto,16,Auto"
+              ColumnDefinitions="*,8,Auto,8,Auto,8,Auto,8,Auto,16,Auto"
               Margin="0,0,0,10">
 
             <ComboBox Grid.Column="0"
@@ -32,7 +46,15 @@
                           VerticalContentAlignment="Center"
                           ToolTip.Tip="Toggle a live preview of the active layers" />
 
-            <Button Grid.Column="4"
+            <ToggleButton Grid.Column="4"
+                          Classes="deviceToggle"
+                          IsChecked="{Binding IsSelectedDeviceEnabled, Mode=TwoWay}"
+                          MinWidth="96"
+                          HorizontalContentAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          ToolTip.Tip="Enable or disable RGB output for the selected device" />
+
+            <Button Grid.Column="6"
                     Content="Import"
                     Click="OnImportClick"
                     MinWidth="96"
@@ -40,7 +62,7 @@
                     VerticalContentAlignment="Center"
                     ToolTip.Tip="Import layers from a .chromatics3 file" />
 
-            <Button Grid.Column="6"
+            <Button Grid.Column="8"
                     Content="Export"
                     Click="OnExportClick"
                     MinWidth="96"
@@ -48,7 +70,7 @@
                     VerticalContentAlignment="Center"
                     ToolTip.Tip="Export current layers to a .chromatics3 file" />
 
-            <Button Grid.Column="8"
+            <Button Grid.Column="10"
                     Content="Add Dynamic Layer"
                     Command="{Binding AddSelectedLayerCommand}"
                     MinWidth="160"

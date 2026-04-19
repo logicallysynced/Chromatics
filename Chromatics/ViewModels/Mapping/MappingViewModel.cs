@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Extensions;
@@ -34,6 +35,22 @@ namespace Chromatics.ViewModels.Mapping
         // Mirrors SelectedDevice — the view binds a ContentControl to this so
         // only the selected device's virtual keyboard is rendered.
         [ObservableProperty] private VirtualDeviceViewModel _selectedVirtualDevice;
+        [ObservableProperty] private bool _isSelectedDeviceEnabled;
+
+        private IReadOnlyDictionary<Guid, IRGBDevice> _connectedDevices;
+        private readonly Dictionary<int, LedId> _pendingKeySelection = new();
+
+        // Suppresses OnIsSelectedDeviceEnabledChanged while RefreshIsDeviceEnabled
+        // is writing the actual state so we don't call Add/RemoveDevice during a read.
+        private bool _suspendDeviceEnabledSync;
+
+        // Selected (non-editing) layer whose keys are highlighted on the virtual
+        // device. -1 = no selection; all layers shown.
+        private int _selectedLayerIdForDisplay = -1;
+
+        // Throttle flag: prevents flooding the UI thread with preview dispatches
+        // when Surface_Updating fires faster than Avalonia can process them.
+        private volatile bool _previewUpdatePending;
 
         public MappingViewModel()
         {
@@ -48,11 +65,14 @@ namespace Chromatics.ViewModels.Mapping
             _selectedLayerTypeToAdd = AddLayerOptions.FirstOrDefault();
 
             AppSettings.KeyboardLayoutChanged += OnKeyboardLayoutChanged;
+            GameController.jobChanged += OnJobChanged;
         }
 
         public void Dispose()
         {
             AppSettings.KeyboardLayoutChanged -= OnKeyboardLayoutChanged;
+            GameController.jobChanged -= OnJobChanged;
+            RGBController.ClearAvaloniaPreviewCallback();
         }
 
         partial void OnSelectedDeviceChanged(DeviceOptionItem value)
@@ -60,16 +80,43 @@ namespace Chromatics.ViewModels.Mapping
             SelectedVirtualDevice = value == null
                 ? null
                 : VirtualDevices.FirstOrDefault(v => v.DeviceId == value.DeviceId);
+            _selectedLayerIdForDisplay = -1;
             RefreshLayers();
+            RefreshIsDeviceEnabled();
+            SyncKeycapEditBadges();
         }
 
-        partial void OnIsPreviewingChanged(bool value) => MappingLayers.SetPreview(value);
+        partial void OnIsPreviewingChanged(bool value)
+        {
+            MappingLayers.SetPreview(value);
+            if (value)
+            {
+                RGBController.SetAvaloniaPreviewCallback(OnPreviewTick);
+            }
+            else
+            {
+                RGBController.ClearAvaloniaPreviewCallback();
+                VisualiseLayers();
+            }
+        }
+
+        partial void OnIsSelectedDeviceEnabledChanged(bool value)
+        {
+            if (_suspendDeviceEnabledSync) return;
+            if (_connectedDevices == null || SelectedDevice == null) return;
+            if (!_connectedDevices.TryGetValue(SelectedDevice.DeviceId, out var device)) return;
+            if (value)
+                RGBController.AddDevice(device);
+            else
+                RGBController.RemoveDevice(device);
+        }
 
         // Populate device list from the live RGB surface and add defaults for
         // any new device that doesn't yet have layers in persistence.
         public void RefreshDevices(IReadOnlyDictionary<Guid, IRGBDevice> connectedDevices)
         {
             if (connectedDevices == null) return;
+            _connectedDevices = connectedDevices;
 
             var keep = new HashSet<Guid>(connectedDevices.Keys);
 
@@ -114,6 +161,7 @@ namespace Chromatics.ViewModels.Mapping
             // Device set may have changed while SelectedDevice held steady —
             // re-pull layers so newly-seeded rows appear in the list.
             RefreshLayers();
+            RefreshIsDeviceEnabled();
         }
 
         // Full default stack for a first-seen device. Mirrors the old
@@ -191,6 +239,8 @@ namespace Chromatics.ViewModels.Mapping
 
             foreach (var layer in deviceLayers)
                 Layers.Add(WrapLayer(layer));
+
+            if (!IsPreviewing) VisualiseLayers();
         }
 
         public int AddDynamicLayer()
@@ -217,6 +267,7 @@ namespace Chromatics.ViewModels.Mapping
 
             Layers.Move(fromIndex, clamped);
             RenumberZIndex();
+            if (!IsPreviewing) VisualiseLayers();
         }
 
         public void RemoveLayer(int layerId)
@@ -225,9 +276,13 @@ namespace Chromatics.ViewModels.Mapping
             if (vm == null) return;
             if (vm.RootLayerType != LayerType.DynamicLayer) return;
 
+            if (_selectedLayerIdForDisplay == layerId) _selectedLayerIdForDisplay = -1;
+
             Layers.Remove(vm);
             MappingLayers.RemoveLayer(layerId);
+            MappingLayers.SaveMappings();
             RenumberZIndex();
+            if (!IsPreviewing) VisualiseLayers();
         }
 
         // List slot 0 holds Effect (top); the final slot holds Base (bottom).
@@ -270,6 +325,7 @@ namespace Chromatics.ViewModels.Mapping
             if (created != null && created.deviceGuid == SelectedDevice?.DeviceId)
                 InsertDynamicBelowEffect(WrapLayer(created));
 
+            MappingLayers.SaveMappings();
             return newId;
         }
 
@@ -295,7 +351,34 @@ namespace Chromatics.ViewModels.Mapping
         public void ReloadAfterImport()
         {
             MappingLayers.SaveMappings();
+            RefreshVirtualDevicePositions();
             RefreshLayers();
+        }
+
+        // Applies the current MappingLayers device-layout overrides to every
+        // keycap on every virtual device. Called after import so newly-loaded
+        // positions take effect without tearing down and rebuilding the VMs.
+        // Keys with no override are returned to their grid-computed defaults.
+        private void RefreshVirtualDevicePositions()
+        {
+            foreach (var device in VirtualDevices)
+            {
+                if (device.DeviceType == RGBDeviceType.Keyboard) continue;
+                var overrides = MappingLayers.GetDeviceLayoutOverrides(device.DeviceId);
+                foreach (var keycap in device.Keycaps)
+                {
+                    if (overrides != null && overrides.TryGetValue(keycap.LedType, out var pos))
+                    {
+                        keycap.X = pos.X;
+                        keycap.Y = pos.Y;
+                    }
+                    else
+                    {
+                        keycap.X = keycap.DefaultX;
+                        keycap.Y = keycap.DefaultY;
+                    }
+                }
+            }
         }
 
         private void OnKeyboardLayoutChanged(object sender, KeyboardLayoutChangedEventArgs e)
@@ -320,6 +403,7 @@ namespace Chromatics.ViewModels.Mapping
             if (layer != null && deviceId == SelectedDevice?.DeviceId)
                 InsertDynamicBelowEffect(WrapLayer(layer));
 
+            MappingLayers.SaveMappings();
             return newId;
         }
 
@@ -369,18 +453,26 @@ namespace Chromatics.ViewModels.Mapping
             var available = new HashSet<LedId>(device.Select(l => l.Id));
             var layout = AppSettings.GetSettings().keyboardLayout;
 
+            VirtualDeviceViewModel vdvm;
             if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
-                return VirtualDeviceViewModel.BuildForKeyboard(deviceId, device.DeviceInfo.DeviceName, layout, available);
+            {
+                vdvm = VirtualDeviceViewModel.BuildForKeyboard(deviceId, device.DeviceInfo.DeviceName, layout, available);
+            }
+            else
+            {
+                // HashSet<LedId> enumerates in hash order — that's why users saw
+                // "Mouse 20, Mouse 5, Mouse 17" instead of Mouse 1..n. Sort by the
+                // LedId enum value so per-device key groups (Mouse1..MouseN,
+                // Custom1..CustomN) render in natural ascending order.
+                var keys = available
+                    .OrderBy(id => (int)id)
+                    .Select(id => new KeyboardKey(id.ToString(), id))
+                    .ToList();
+                vdvm = VirtualDeviceViewModel.BuildFromKeys(deviceId, device.DeviceInfo.DeviceName, device.DeviceInfo.DeviceType, keys, available);
+            }
 
-            // HashSet<LedId> enumerates in hash order — that's why users saw
-            // "Mouse 20, Mouse 5, Mouse 17" instead of Mouse 1..n. Sort by the
-            // LedId enum value so per-device key groups (Mouse1..MouseN,
-            // Custom1..CustomN) render in natural ascending order.
-            var keys = available
-                .OrderBy(id => (int)id)
-                .Select(id => new KeyboardKey(id.ToString(), id))
-                .ToList();
-            return VirtualDeviceViewModel.BuildFromKeys(deviceId, device.DeviceInfo.DeviceName, device.DeviceInfo.DeviceType, keys, available);
+            vdvm.SetPickKeyCallback(PickKey);
+            return vdvm;
         }
 
         private LayerItemViewModel WrapLayer(Layer layer)
@@ -389,21 +481,51 @@ namespace Chromatics.ViewModels.Mapping
                 layer,
                 onEdit: id => ToggleEditing(id),
                 onCopy: id => DuplicateLayer(id),
-                onDelete: id => RemoveLayer(id));
+                onDelete: id => RemoveLayer(id),
+                onClearKeys: ClearKeySelection,
+                onReverseKeys: ReverseKeySelection,
+                onUndoKeys: UndoKeySelection,
+                onLayerStateChanged: () => { if (!IsPreviewing) VisualiseLayers(); });
         }
 
         // Flip the edit flag on the clicked layer, clearing it on every other
-        // layer so only one card is highlighted at a time. The actual
-        // keycap-picking wiring plugs in on top of this — the flag is the
-        // visual anchor both sides share.
+        // layer so only one card is highlighted at a time. Commits any
+        // in-progress key selection from the previously-editing layer and loads
+        // the new target's saved keys into _pendingKeySelection so virtual
+        // keycap badges reflect the current mapped state immediately.
         private void ToggleEditing(int layerId)
         {
             var target = Layers.FirstOrDefault(l => l.LayerId == layerId);
             if (target == null) return;
 
             bool turningOn = !target.IsEditing;
+
+            // Commit and clear any in-progress key selection before switching.
+            var currentEditing = Layers.FirstOrDefault(l => l.IsEditing);
+            if (currentEditing != null)
+                CommitPendingKeySelection(currentEditing.LayerId);
+            _pendingKeySelection.Clear();
+
             foreach (var l in Layers) l.IsEditing = false;
-            target.IsEditing = turningOn;
+
+            if (turningOn)
+            {
+                target.IsEditing = true;
+                var layer = MappingLayers.GetLayer(layerId);
+                if (layer?.deviceLeds != null)
+                {
+                    foreach (var kvp in layer.deviceLeds)
+                        _pendingKeySelection[kvp.Key] = kvp.Value;
+                }
+            }
+            else
+            {
+                // Edit mode closed — repaint the static layer view so the
+                // committed key selection shows immediately without preview.
+                if (!IsPreviewing) VisualiseLayers();
+            }
+
+            SyncKeycapEditBadges();
         }
 
         private void RenumberZIndex()
@@ -416,6 +538,254 @@ namespace Chromatics.ViewModels.Mapping
                 int z = Layers.Count - i;
                 if (Layers[i].ZIndex != z) Layers[i].ZIndex = z;
             }
+        }
+
+        // Called by VirtualDeviceView when a keycap is clicked while any layer
+        // is in edit mode. Toggles the led into/out of _pendingKeySelection and
+        // shifts 1-based indices down when a middle entry is removed, mirroring
+        // the old Uc_Mappings OnKeyCapPressed flow.
+        public void PickKey(LedId ledId)
+        {
+            if (!Layers.Any(l => l.IsEditing)) return;
+
+            if (_pendingKeySelection.ContainsValue(ledId))
+            {
+                var entry = _pendingKeySelection.First(kvp => kvp.Value == ledId);
+                int removedKey = entry.Key;
+                _pendingKeySelection.Remove(removedKey);
+                var toShift = _pendingKeySelection
+                    .Where(kvp => kvp.Key > removedKey)
+                    .OrderBy(kvp => kvp.Key)
+                    .ToList();
+                foreach (var kvp in toShift)
+                {
+                    _pendingKeySelection.Remove(kvp.Key);
+                    _pendingKeySelection[kvp.Key - 1] = kvp.Value;
+                }
+            }
+            else
+            {
+                int nextIndex = _pendingKeySelection.Count == 0
+                    ? 1
+                    : _pendingKeySelection.Keys.Max() + 1;
+                _pendingKeySelection[nextIndex] = ledId;
+            }
+
+            SyncKeycapEditBadges();
+        }
+
+        private void ClearKeySelection()
+        {
+            _pendingKeySelection.Clear();
+            SyncKeycapEditBadges();
+        }
+
+        private void ReverseKeySelection()
+        {
+            if (_pendingKeySelection.Count == 0) return;
+            var values = _pendingKeySelection
+                .OrderBy(kvp => kvp.Key)
+                .Select(kvp => kvp.Value)
+                .ToList();
+            values.Reverse();
+            _pendingKeySelection.Clear();
+            for (int i = 0; i < values.Count; i++)
+                _pendingKeySelection[i + 1] = values[i];
+            SyncKeycapEditBadges();
+        }
+
+        private void UndoKeySelection()
+        {
+            var editingLayer = Layers.FirstOrDefault(l => l.IsEditing);
+            if (editingLayer == null) return;
+            var layer = MappingLayers.GetLayer(editingLayer.LayerId);
+            _pendingKeySelection.Clear();
+            if (layer?.deviceLeds != null)
+                foreach (var kvp in layer.deviceLeds)
+                    _pendingKeySelection[kvp.Key] = kvp.Value;
+            SyncKeycapEditBadges();
+        }
+
+        private void CommitPendingKeySelection(int layerId)
+        {
+            var layer = MappingLayers.GetLayer(layerId);
+            if (layer == null) return;
+            layer.deviceLeds = new Dictionary<int, LedId>(_pendingKeySelection);
+            layer.requestUpdate = true;
+            MappingLayers.UpdateLayer(layer);
+            System.Threading.Tasks.Task.Run(() => MappingLayers.SaveMappings());
+        }
+
+        // Writes IsEditing + EditIndex onto every keycap of the currently
+        // displayed virtual device so the canvas reflects _pendingKeySelection.
+        private void SyncKeycapEditBadges()
+        {
+            var device = SelectedVirtualDevice;
+            if (device == null) return;
+            var ledToIndex = _pendingKeySelection.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+            bool anyEditing = Layers.Any(l => l.IsEditing);
+            foreach (var keycap in device.Keycaps)
+            {
+                bool inSelection = false;
+                int idx = 0;
+                if (anyEditing) inSelection = ledToIndex.TryGetValue(keycap.LedType, out idx);
+                keycap.IsEditing = inSelection;
+                keycap.EditIndex = inSelection ? idx.ToString() : string.Empty;
+            }
+        }
+
+        private void RefreshIsDeviceEnabled()
+        {
+            _suspendDeviceEnabledSync = true;
+            try
+            {
+                if (_connectedDevices == null || SelectedDevice == null)
+                {
+                    IsSelectedDeviceEnabled = true;
+                    return;
+                }
+                if (!_connectedDevices.TryGetValue(SelectedDevice.DeviceId, out var device))
+                {
+                    IsSelectedDeviceEnabled = true;
+                    return;
+                }
+                var activeDevices = RGBController.GetActiveDevices();
+                IsSelectedDeviceEnabled = activeDevices == null
+                    || !activeDevices.TryGetValue(device, out bool active)
+                    || active;
+            }
+            finally
+            {
+                _suspendDeviceEnabledSync = false;
+            }
+        }
+
+        // Paints each keycap with its layer's accent color when not in preview.
+        // If a specific layer is selected for display, only that layer's keys
+        // are highlighted — all others reset to DarkGray, giving the user a
+        // clear picture of exactly which keys belong to that layer.
+        public void VisualiseLayers()
+        {
+            var device = SelectedVirtualDevice;
+            if (device == null) return;
+
+            var keycapByLed = device.Keycaps
+                .Where(k => !k.IsEditing)
+                .ToDictionary(k => k.LedType, k => k);
+
+            foreach (var keycap in keycapByLed.Values)
+                keycap.FillColor = System.Drawing.Color.DarkGray;
+
+            var layers = MappingLayers.GetLayers().Values
+                .Where(l => l.deviceGuid == device.DeviceId)
+                .OrderBy(l => l.zindex);
+
+            if (_selectedLayerIdForDisplay >= 0)
+            {
+                // Selection mode: highlight only the selected layer's keys.
+                var selLayer = MappingLayers.GetLayer(_selectedLayerIdForDisplay);
+                if (selLayer?.deviceLeds != null)
+                {
+                    var selColor = (System.Drawing.Color)EnumExtensions
+                        .GetAttribute<System.ComponentModel.DefaultValueAttribute>(selLayer.rootLayerType).Value;
+                    foreach (var ledId in selLayer.deviceLeds.Values)
+                    {
+                        if (keycapByLed.TryGetValue(ledId, out var keycap))
+                            keycap.FillColor = selColor;
+                    }
+                }
+                return;
+            }
+
+            // Normal mode: paint all enabled layers in zindex order (ascending
+            // so higher-z layers paint over lower-z, matching the render stack).
+            foreach (var layer in layers)
+            {
+                if (layer.rootLayerType == LayerType.BaseLayer && !layer.Enabled) continue;
+                if (!layer.Enabled || layer.rootLayerType == LayerType.EffectLayer) continue;
+                if (layer.deviceLeds == null) continue;
+
+                var highlight = (System.Drawing.Color)EnumExtensions
+                    .GetAttribute<System.ComponentModel.DefaultValueAttribute>(layer.rootLayerType).Value;
+
+                foreach (var ledId in layer.deviceLeds.Values)
+                {
+                    if (keycapByLed.TryGetValue(ledId, out var keycap))
+                        keycap.FillColor = highlight;
+                }
+            }
+        }
+
+        // Reads live LED colors from the RGB surface and applies them to the
+        // keycaps so the virtual device mirrors the hardware state.
+        private void VisualisePreview()
+        {
+            var device = SelectedVirtualDevice;
+            if (device == null) return;
+            if (_connectedDevices == null || SelectedDevice == null) return;
+            if (!_connectedDevices.TryGetValue(SelectedDevice.DeviceId, out var rgbDevice)) return;
+
+            var keycapByLed = device.Keycaps
+                .Where(k => !k.IsEditing)
+                .ToDictionary(k => k.LedType, k => k);
+
+            foreach (var led in rgbDevice)
+            {
+                if (!keycapByLed.TryGetValue(led.Id, out var keycap)) continue;
+                keycap.FillColor = System.Drawing.Color.FromArgb(
+                    (int)(led.Color.A * 255),
+                    (int)(led.Color.R * 255),
+                    (int)(led.Color.G * 255),
+                    (int)(led.Color.B * 255));
+            }
+        }
+
+        // Called from Surface_Updating (background thread). Throttled to one
+        // pending UI dispatch at a time so rapid surface ticks don't queue up.
+        private void OnPreviewTick()
+        {
+            if (_previewUpdatePending) return;
+            _previewUpdatePending = true;
+            Dispatcher.UIThread.Post(() =>
+            {
+                _previewUpdatePending = false;
+                if (IsPreviewing) VisualisePreview();
+            }, DispatcherPriority.Background);
+        }
+
+        // Toggles the selected-for-display layer. Clicking the same layer again
+        // deselects it (returning to the all-layers view).
+        public void SelectLayer(int layerId)
+        {
+            // Negative id = forced deselect; positive = toggle.
+            int newSelection = layerId < 0 ? -1
+                : _selectedLayerIdForDisplay == layerId ? -1
+                : layerId;
+
+            foreach (var lvm in Layers)
+                lvm.IsSelected = lvm.LayerId == newSelection;
+
+            _selectedLayerIdForDisplay = newSelection;
+            if (!IsPreviewing) VisualiseLayers();
+        }
+
+        // Clears the selected layer and returns to the all-layers view.
+        // Called from the view when the user clicks in the empty list area.
+        public void ClearLayerSelection()
+        {
+            if (_selectedLayerIdForDisplay < 0) return;
+            foreach (var lvm in Layers) lvm.IsSelected = false;
+            _selectedLayerIdForDisplay = -1;
+            if (!IsPreviewing) VisualiseLayers();
+        }
+
+        private void OnJobChanged()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                var editingLayer = Layers.FirstOrDefault(l => l.IsEditing);
+                editingLayer?.RefreshHelpText();
+            });
         }
     }
 }
