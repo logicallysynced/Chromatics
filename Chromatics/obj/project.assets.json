@@ -366,18 +366,6 @@
           }
         }
       },
-      "Cyotek.Windows.Forms.ColorPicker/2.0.0-beta.7": {
-        "type": "package",
-        "compile": {
-          "lib/net5.0-windows7.0/Cyotek.Windows.Forms.ColorPicker.dll": {}
-        },
-        "runtime": {
-          "lib/net5.0-windows7.0/Cyotek.Windows.Forms.ColorPicker.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
-      },
       "FFXIVWeather/1.0.17": {
         "type": "package",
         "dependencies": {
@@ -2661,27 +2649,6 @@
         "lib/netstandard2.0/CsvHelper.xml",
         "lib/netstandard2.1/CsvHelper.dll",
         "lib/netstandard2.1/CsvHelper.xml"
-      ]
-    },
-    "Cyotek.Windows.Forms.ColorPicker/2.0.0-beta.7": {
-      "sha512": "zl3Y3ybhehCbkRCTc+LMgya3HKBR02pO7gohfhEcnvh24WkZH5YFMjm3id7AHZrnxDvzFms3sXcTmU5zzETsQA==",
-      "type": "package",
-      "path": "cyotek.windows.forms.colorpicker/2.0.0-beta.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "cyotek.windows.forms.colorpicker.2.0.0-beta.7.nupkg.sha512",
-        "cyotek.windows.forms.colorpicker.nuspec",
-        "icon.png",
-        "lib/net35/Cyotek.Windows.Forms.ColorPicker.dll",
-        "lib/net40/Cyotek.Windows.Forms.ColorPicker.dll",
-        "lib/net452/Cyotek.Windows.Forms.ColorPicker.dll",
-        "lib/net462/Cyotek.Windows.Forms.ColorPicker.dll",
-        "lib/net472/Cyotek.Windows.Forms.ColorPicker.dll",
-        "lib/net48/Cyotek.Windows.Forms.ColorPicker.dll",
-        "lib/net5.0-windows7.0/Cyotek.Windows.Forms.ColorPicker.dll",
-        "lib/netcoreapp3.1/Cyotek.Windows.Forms.ColorPicker.dll",
-        "nuget-readme.md"
       ]
     },
     "FFXIVWeather/1.0.17": {
@@ -6371,7 +6338,6 @@
       "Avalonia.Themes.Fluent >= 11.2.0",
       "CommunityToolkit.Mvvm >= 8.3.2",
       "CsvHelper >= 33.1.0",
-      "Cyotek.Windows.Forms.ColorPicker >= 2.0.0-beta.7",
       "FFXIVWeather >= 1.0.17",
       "HidSharp >= 2.6.4",
       "HueApi >= 3.1.2",
@@ -6485,10 +6451,6 @@
           "CsvHelper": {
             "target": "Package",
             "version": "[33.1.0, )"
-          },
-          "Cyotek.Windows.Forms.ColorPicker": {
-            "target": "Package",
-            "version": "[2.0.0-beta.7, )"
           },
           "FFXIVWeather": {
             "target": "Package",

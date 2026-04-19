@@ -12,9 +12,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Timers;
-using System.Windows.Forms;
-using System.Drawing;
-using Chromatics.Forms;
 using System.Runtime.Serialization;
 using Org.BouncyCastle.Utilities.Collections;
 
@@ -293,21 +290,8 @@ namespace Chromatics.Layers
                 if (RGBController.IsLoaded())
                 {
                     ImportMappings(state as ConcurrentDictionary<int, Layer>, empty);
-
-                    // The WinForms Uc_Mappings host is no longer constructed
-                    // under Avalonia — guard before calling into it. The
-                    // Avalonia Mapping VM refreshes via DeviceConnectionChanged.
-                    if (Uc_Mappings.Instance != null)
-                    {
-                        if (Uc_Mappings.Instance.InvokeRequired)
-                        {
-                            Uc_Mappings.Instance.Invoke(new MethodInvoker(() => Uc_Mappings.Instance.ChangeDeviceType()));
-                        }
-                        else
-                        {
-                            Uc_Mappings.Instance.ChangeDeviceType();
-                        }
-                    }
+                    // The Avalonia Mapping VM picks up device-type changes via
+                    // RGBController.DeviceConnectionChanged, so nothing to invoke here.
                 }
             }
             finally

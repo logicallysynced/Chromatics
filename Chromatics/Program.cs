@@ -1,9 +1,7 @@
 using Avalonia;
 using Chromatics.Core;
-using Chromatics.Forms;
 using Chromatics.Models;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -39,17 +37,27 @@ namespace Chromatics
             WinFormsApp.EnableVisualStyles();
             WinFormsApp.SetCompatibleTextRenderingDefault(false);
 
-            // Load settings and run the first-run wizard / expansion migration BEFORE
-            // Avalonia starts. Fm_FirstRun is still a WinForms modal dialog — calling
-            // it from inside Avalonia's dispatcher would freeze the main window during
-            // first launch.
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
 
             if (appSettings.firstrun)
             {
-                using var firstRunForm = new Fm_FirstRun();
-                firstRunForm.ShowDialog();
+                // Pass 4 retired the WinForms Fm_FirstRun wizard. Device providers
+                // now default to disabled on first run so Chromatics doesn't spin
+                // up every SDK at once; users enable the ones they own from
+                // Settings → Device Providers.
+                appSettings.deviceRazerEnabled        = false;
+                appSettings.deviceLogitechEnabled     = false;
+                appSettings.deviceCorsairEnabled      = false;
+                appSettings.deviceCoolermasterEnabled = false;
+                appSettings.deviceSteelseriesEnabled  = false;
+                appSettings.deviceAsusEnabled         = false;
+                appSettings.deviceMsiEnabled          = false;
+                appSettings.deviceWootingEnabled      = false;
+                appSettings.deviceNovationEnabled     = false;
+                appSettings.deviceOpenRGBEnabled      = false;
+                appSettings.deviceHueEnabled          = false;
+                appSettings.firstrun = false;
             }
 
             RunExpansionMigrationIfNeeded(appSettings);
