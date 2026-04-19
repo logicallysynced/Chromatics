@@ -161,25 +161,6 @@
           }
         }
       },
-      "Avalonia.Diagnostics/11.2.0": {
-        "type": "package",
-        "dependencies": {
-          "Avalonia": "11.2.0",
-          "Avalonia.Controls.ColorPicker": "11.2.0",
-          "Avalonia.Controls.DataGrid": "11.2.0",
-          "Avalonia.Themes.Simple": "11.2.0"
-        },
-        "compile": {
-          "lib/net8.0/Avalonia.Diagnostics.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Avalonia.Diagnostics.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "Avalonia.Fonts.Inter/11.2.0": {
         "type": "package",
         "dependencies": {
@@ -282,22 +263,6 @@
         },
         "runtime": {
           "lib/net8.0/Avalonia.Themes.Fluent.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Avalonia.Themes.Simple/11.2.0": {
-        "type": "package",
-        "dependencies": {
-          "Avalonia": "11.2.0"
-        },
-        "compile": {
-          "lib/net8.0/Avalonia.Themes.Simple.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Avalonia.Themes.Simple.dll": {
             "related": ".xml"
           }
         }
@@ -665,17 +630,27 @@
           }
         }
       },
-      "MouseKeyHook.NetCore/5.6.1.1": {
+      "Microsoft.Win32.SystemEvents/8.0.0": {
         "type": "package",
         "compile": {
-          "lib/net6.0-windows7.0/Gma.System.MouseKeyHook.dll": {}
+          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0-windows7.0/Gma.System.MouseKeyHook.dll": {}
+          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "related": ".xml"
+          }
         },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
       },
       "NAudio/2.2.1": {
         "type": "package",
@@ -1493,6 +1468,25 @@
           "ref/netstandard1.5/_._": {
             "related": ".xml"
           }
+        }
+      },
+      "System.Drawing.Common/8.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "8.0.0"
+        },
+        "compile": {
+          "lib/net8.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
         }
       },
       "System.Globalization/4.3.0": {
@@ -2403,24 +2397,6 @@
         "lib/netstandard2.0/Avalonia.Desktop.xml"
       ]
     },
-    "Avalonia.Diagnostics/11.2.0": {
-      "sha512": "P0TSfq5sVdHuGC1xwuINkUAezMB92IxP+M/UBOEHWQRal13K4z2V8V75l9WH8ja0q/1B9sF6+4xcHS7JbOJhpQ==",
-      "type": "package",
-      "path": "avalonia.diagnostics/11.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "avalonia.diagnostics.11.2.0.nupkg.sha512",
-        "avalonia.diagnostics.nuspec",
-        "lib/net6.0/Avalonia.Diagnostics.dll",
-        "lib/net6.0/Avalonia.Diagnostics.xml",
-        "lib/net8.0/Avalonia.Diagnostics.dll",
-        "lib/net8.0/Avalonia.Diagnostics.xml",
-        "lib/netstandard2.0/Avalonia.Diagnostics.dll",
-        "lib/netstandard2.0/Avalonia.Diagnostics.xml"
-      ]
-    },
     "Avalonia.Fonts.Inter/11.2.0": {
       "sha512": "kLorc5wMPXer0xngTRFdXGb/Yq84xa4klI7m+7PW4mCSQ8dv3sRqBebecgSAs1/ADs9i/JTGdHgIPB0Yrec9ZA==",
       "type": "package",
@@ -2528,24 +2504,6 @@
         "lib/net8.0/Avalonia.Themes.Fluent.xml",
         "lib/netstandard2.0/Avalonia.Themes.Fluent.dll",
         "lib/netstandard2.0/Avalonia.Themes.Fluent.xml"
-      ]
-    },
-    "Avalonia.Themes.Simple/11.2.0": {
-      "sha512": "1unSXWE9wexRzsxypUUT3M+5Q8QTdvsVKh+M4cWB0Ps2drfA7wWSrO9/J1h8sWxky1OYr/VwKyar9Pl4AAcTrg==",
-      "type": "package",
-      "path": "avalonia.themes.simple/11.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "avalonia.themes.simple.11.2.0.nupkg.sha512",
-        "avalonia.themes.simple.nuspec",
-        "lib/net6.0/Avalonia.Themes.Simple.dll",
-        "lib/net6.0/Avalonia.Themes.Simple.xml",
-        "lib/net8.0/Avalonia.Themes.Simple.dll",
-        "lib/net8.0/Avalonia.Themes.Simple.xml",
-        "lib/netstandard2.0/Avalonia.Themes.Simple.dll",
-        "lib/netstandard2.0/Avalonia.Themes.Simple.xml"
       ]
     },
     "Avalonia.Win32/11.2.0": {
@@ -3168,21 +3126,39 @@
         "version.txt"
       ]
     },
-    "MouseKeyHook.NetCore/5.6.1.1": {
-      "sha512": "MgliDV/5e9kiYQ0D9lPlYRwt1aluIlGM3SQC4UZyT4BQN8KyNimdsDZQQc4t6HdY7QBngt5cbxFTKnOad/rm0w==",
+    "Microsoft.Win32.SystemEvents/8.0.0": {
+      "sha512": "9opKRyOKMCi2xJ7Bj7kxtZ1r9vbzosMvRrdEhVhDz8j8MoBGgB+WmC94yH839NPH+BclAjtQ/pyagvi/8gDLkw==",
       "type": "package",
-      "path": "mousekeyhook.netcore/5.6.1.1",
+      "path": "microsoft.win32.systemevents/8.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net462/Gma.System.MouseKeyHook.dll",
-        "lib/net472/Gma.System.MouseKeyHook.dll",
-        "lib/net5.0-windows7.0/Gma.System.MouseKeyHook.dll",
-        "lib/net6.0-windows7.0/Gma.System.MouseKeyHook.dll",
-        "lib/netcoreapp3.1/Gma.System.MouseKeyHook.dll",
-        "mouse-keyboard-hook-logo64x64.png",
-        "mousekeyhook.netcore.5.6.1.1.nupkg.sha512",
-        "mousekeyhook.netcore.nuspec"
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Win32.SystemEvents.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Win32.SystemEvents.targets",
+        "lib/net462/Microsoft.Win32.SystemEvents.dll",
+        "lib/net462/Microsoft.Win32.SystemEvents.xml",
+        "lib/net6.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net6.0/Microsoft.Win32.SystemEvents.xml",
+        "lib/net7.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net7.0/Microsoft.Win32.SystemEvents.xml",
+        "lib/net8.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net8.0/Microsoft.Win32.SystemEvents.xml",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
+        "microsoft.win32.systemevents.8.0.0.nupkg.sha512",
+        "microsoft.win32.systemevents.nuspec",
+        "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.xml",
+        "runtimes/win/lib/net7.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net7.0/Microsoft.Win32.SystemEvents.xml",
+        "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.xml",
+        "useSharedDesignerContext.txt"
       ]
     },
     "NAudio/2.2.1": {
@@ -4609,6 +4585,46 @@
         "ref/xamarinwatchos10/_._",
         "system.diagnostics.tracing.4.3.0.nupkg.sha512",
         "system.diagnostics.tracing.nuspec"
+      ]
+    },
+    "System.Drawing.Common/8.0.0": {
+      "sha512": "JkbHJjtI/dWc5dfmEdJlbe3VwgZqCkZRtfuWFh5GOv0f+gGCfBtzMpIVkmdkj2AObO9y+oiOi81UGwH3aBYuqA==",
+      "type": "package",
+      "path": "system.drawing.common/8.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Drawing.Common.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net462/System.Drawing.Common.dll",
+        "lib/net462/System.Drawing.Common.pdb",
+        "lib/net462/System.Drawing.Common.xml",
+        "lib/net6.0/System.Drawing.Common.dll",
+        "lib/net6.0/System.Drawing.Common.pdb",
+        "lib/net6.0/System.Drawing.Common.xml",
+        "lib/net7.0/System.Drawing.Common.dll",
+        "lib/net7.0/System.Drawing.Common.pdb",
+        "lib/net7.0/System.Drawing.Common.xml",
+        "lib/net8.0/System.Drawing.Common.dll",
+        "lib/net8.0/System.Drawing.Common.pdb",
+        "lib/net8.0/System.Drawing.Common.xml",
+        "lib/netstandard2.0/System.Drawing.Common.dll",
+        "lib/netstandard2.0/System.Drawing.Common.pdb",
+        "lib/netstandard2.0/System.Drawing.Common.xml",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "system.drawing.common.8.0.0.nupkg.sha512",
+        "system.drawing.common.nuspec",
+        "useSharedDesignerContext.txt"
       ]
     },
     "System.Globalization/4.3.0": {
@@ -6333,7 +6349,6 @@
       "Avalonia.Controls.ColorPicker >= 11.2.0",
       "Avalonia.Controls.DataGrid >= 11.2.0",
       "Avalonia.Desktop >= 11.2.0",
-      "Avalonia.Diagnostics >= 11.2.0",
       "Avalonia.Fonts.Inter >= 11.2.0",
       "Avalonia.Themes.Fluent >= 11.2.0",
       "CommunityToolkit.Mvvm >= 8.3.2",
@@ -6343,7 +6358,6 @@
       "HueApi >= 3.1.2",
       "HueApi.ColorConverters >= 3.1.0",
       "HueApi.Entertainment >= 3.1.0",
-      "MouseKeyHook.NetCore >= 5.6.1.1",
       "NAudio >= 2.2.1",
       "NLog >= 6.0.7",
       "Newtonsoft.Json >= 13.0.4",
@@ -6363,6 +6377,7 @@
       "RGB.NET.Presets >= 3.2.0",
       "Sanford.Multimedia.Midi >= 6.6.2",
       "Sharlayan >= 8.0.1",
+      "System.Drawing.Common >= 8.0.0",
       "Velopack >= 0.0.1298"
     ]
   },
@@ -6410,7 +6425,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -6429,10 +6445,6 @@
             "version": "[11.2.0, )"
           },
           "Avalonia.Desktop": {
-            "target": "Package",
-            "version": "[11.2.0, )"
-          },
-          "Avalonia.Diagnostics": {
             "target": "Package",
             "version": "[11.2.0, )"
           },
@@ -6471,10 +6483,6 @@
           "HueApi.Entertainment": {
             "target": "Package",
             "version": "[3.1.0, )"
-          },
-          "MouseKeyHook.NetCore": {
-            "target": "Package",
-            "version": "[5.6.1.1, )"
           },
           "NAudio": {
             "target": "Package",
@@ -6555,6 +6563,10 @@
             "target": "Package",
             "version": "[8.0.1, )"
           },
+          "System.Drawing.Common": {
+            "target": "Package",
+            "version": "[8.0.0, )"
+          },
           "Velopack": {
             "target": "Package",
             "version": "[0.0.1298, )"
@@ -6571,15 +6583,30 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.26, 8.0.26]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[8.0.26, 8.0.26]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.26, 8.0.26]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[8.0.26, 8.0.26]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
-          },
-          "Microsoft.WindowsDesktop.App.WindowsForms": {
-            "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

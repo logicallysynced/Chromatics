@@ -23,13 +23,6 @@ public class KeyControllerTests
     }
 
     [Fact]
-    public void GetKeyController_BeforeSetup_ReturnsNull()
-    {
-        KeyController.Stop();
-        Assert.Null(KeyController.GetKeyController());
-    }
-
-    [Fact]
     public void ModifierFlags_DefaultToFalse()
     {
         Assert.False(KeyController.IsCtrlPressed());

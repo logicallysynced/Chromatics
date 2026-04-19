@@ -23,7 +23,6 @@ using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Color = RGB.NET.Core.Color;
 using Size = RGB.NET.Core.Size;
 using TextureBrush = RGB.NET.Core.TextureBrush;

@@ -533,24 +533,19 @@ namespace Chromatics.Core
             return true;
         }
 
-        public static bool ImportColorPalette()
+        public static bool ImportColorPalette(string path)
         {
-            var colorPalette = FileOperationsHelper.ImportColorMappings();
+            var colorPalette = FileOperationsHelper.ImportColorMappingsFromPath(path);
+            if (colorPalette == null) return false;
 
-            if (colorPalette != null)
-            {
-                _colorPalette = colorPalette;
-
-                SaveColorPalette();
-                return true;
-            }
-
-            return false;
+            _colorPalette = colorPalette;
+            SaveColorPalette();
+            return true;
         }
 
-        public static bool ExportColorPalette()
+        public static bool ExportColorPalette(string path)
         {
-            FileOperationsHelper.ExportColorMappings(_colorPalette);
+            FileOperationsHelper.ExportColorMappingsToPath(_colorPalette, path);
             return true;
         }
 

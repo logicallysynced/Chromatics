@@ -2,8 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace Chromatics.Extensions
 {
@@ -107,17 +107,22 @@ namespace Chromatics.Extensions
             ColorGenerated?.Invoke(this, new ColorGeneratedEventArgs(result));
         }
 
+        [DllImport("user32.dll")]
+        private static extern int GetSystemMetrics(int nIndex);
+        private const int SM_CXSCREEN = 0;
+        private const int SM_CYSCREEN = 1;
+
         private static Bitmap CaptureScreenshot()
         {
-            var primary = Screen.PrimaryScreen;
-            if (primary == null) return null;
+            int width  = GetSystemMetrics(SM_CXSCREEN);
+            int height = GetSystemMetrics(SM_CYSCREEN);
+            if (width <= 0 || height <= 0) return null;
 
-            var bounds = primary.Bounds;
-            var bmp = new Bitmap(bounds.Width, bounds.Height);
+            var bmp = new Bitmap(width, height);
             try
             {
                 using var g = Graphics.FromImage(bmp);
-                g.CopyFromScreen(0, 0, 0, 0, bmp.Size);
+                g.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(width, height));
                 return bmp;
             }
             catch (Exception ex)

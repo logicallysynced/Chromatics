@@ -129,6 +129,8 @@ namespace Chromatics.ViewModels.Mapping
                 if (!keep.Contains(VirtualDevices[i].DeviceId)) VirtualDevices.RemoveAt(i);
             }
 
+            bool layersChanged = false;
+
             foreach (var kvp in connectedDevices)
             {
                 if (Devices.Any(d => d.DeviceId == kvp.Key)) continue;
@@ -142,10 +144,23 @@ namespace Chromatics.ViewModels.Mapping
                 // top up any missing Base/Effect pins.
                 bool hasAny = MappingLayers.GetLayers().Values.Any(l => l.deviceGuid == kvp.Key);
                 if (!hasAny)
+                {
                     CreateDefaultLayers(kvp.Key, kvp.Value);
+                    layersChanged = true;
+                }
                 else
+                {
+                    int before = MappingLayers.CountLayers();
                     EnsureBaseAndEffectLayers(kvp.Key, kvp.Value.DeviceInfo.DeviceType);
+                    if (MappingLayers.CountLayers() != before) layersChanged = true;
+                }
             }
+
+            // Persist default layers immediately so the file exists from first
+            // boot — without this the layers.chromatics3 file only appears once
+            // the user interacts with the Mapping tab.
+            if (layersChanged)
+                MappingLayers.SaveMappings();
 
             SelectedDevice ??= Devices.FirstOrDefault();
 
