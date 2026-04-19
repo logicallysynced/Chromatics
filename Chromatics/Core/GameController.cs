@@ -56,7 +56,7 @@ namespace Chromatics.Core
         // Serializes all CTS lifecycle operations (Cancel/Dispose/reassign) and
         // memory-handler teardown. Without this, GameLoop (thread pool) and Exit()
         // (UI thread) can race on StopGameLoop and hit ObjectDisposedException.
-        private static readonly object _shutdownLock = new object();
+        private static readonly System.Threading.Lock _shutdownLock = new();
         public static void Setup()
         {
             if (gameSetup) return;

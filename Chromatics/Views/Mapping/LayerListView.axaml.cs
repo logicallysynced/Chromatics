@@ -15,10 +15,11 @@ namespace Chromatics.Views.Mapping
 {
     public partial class LayerListView : UserControl
     {
-        private const string LayerDragFormat = "chromatics/layer-drag";
+        private static readonly DataFormat<string> LayerDragFormat =
+            DataFormat.CreateStringApplicationFormat("chromatics.layer-drag");
 
         // The item currently being dragged. Kept as a field so DragLeave/Drop
-        // handlers can clear its IsDragging flag even after DoDragDrop returns.
+        // handlers can clear its IsDragging flag even after DoDragDropAsync returns.
         private LayerItemViewModel _dragSource;
         private bool _firstAttach = true;
 
@@ -67,15 +68,15 @@ namespace Chromatics.Views.Mapping
             if (handle == null) return;
             if (handle.DataContext is not LayerItemViewModel item) return;
 
-            var data = new DataObject();
-            data.Set(LayerDragFormat, item);
+            var data = new DataTransfer();
+            data.Add(DataTransferItem.Create(LayerDragFormat, item.LayerId.ToString()));
 
             _dragSource = item;
             item.IsDragging = true;
 
             try
             {
-                await DragDrop.DoDragDrop(e, data, DragDropEffects.Move);
+                await DragDrop.DoDragDropAsync(e, data, DragDropEffects.Move);
             }
             catch (Exception)
             {
@@ -195,7 +196,7 @@ namespace Chromatics.Views.Mapping
 
         private void OnDragOver(object sender, DragEventArgs e)
         {
-            if (!e.Data.Contains(LayerDragFormat))
+            if (!e.DataTransfer.Contains(LayerDragFormat))
             {
                 e.DragEffects = DragDropEffects.None;
                 e.Handled = true;
@@ -216,9 +217,9 @@ namespace Chromatics.Views.Mapping
         private void OnDrop(object sender, DragEventArgs e)
         {
             if (DataContext is not MappingViewModel vm) return;
-            if (e.Data.Get(LayerDragFormat) is not LayerItemViewModel source) return;
+            if (!e.DataTransfer.Contains(LayerDragFormat) || _dragSource is null) return;
 
-            int from = vm.Layers.IndexOf(source);
+            int from = vm.Layers.IndexOf(_dragSource);
             if (from < 0) { ClearDragIndicators(); return; }
 
             int to = ComputeDropIndex(e.GetPosition(LayersHost), vm.Layers.Count);

@@ -60,7 +60,7 @@ namespace Chromatics.Helpers
         // producing "the process cannot access the file" IOExceptions.
         // Serialising all layer writes through this lock makes the
         // write-then-File.Replace pair atomic from the caller's perspective.
-        private static readonly object _layerSaveLock = new object();
+        private static readonly System.Threading.Lock _layerSaveLock = new();
 
         public static void SaveLayerMappings(ConcurrentDictionary<int, Layer> mappings,
             IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
