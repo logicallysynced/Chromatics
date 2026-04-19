@@ -166,9 +166,9 @@ namespace Chromatics.Layers
 
                         ledGroup.Detach();
 
-                        if (!model._localgroups.Contains(ledGroup))
-                            model._localgroups.Add(ledGroup);
-
+                        foreach (var grp in model._localgroups) grp?.Detach();
+                        model._localgroups.Clear();
+                        model._localgroups.Add(ledGroup);
                         model._faderValue = currentVal_Fader;
                     }
                 }
