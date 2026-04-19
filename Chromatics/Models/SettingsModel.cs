@@ -18,6 +18,7 @@ namespace Chromatics.Models
         public bool minimizetray { get; set; } = false;
         public bool trayonstartup { get; set; } = false;
         public bool checkupdates { get; set; } = true;
+        public bool betaChannel { get; set; } = false;
         public bool showDeviceErrors { get; set; } = true;
         public bool showEmulatorDevices { get; set; } = false;
         public KeyboardLocalization keyboardLayout { get; set; } = KeyboardLocalization.qwerty;

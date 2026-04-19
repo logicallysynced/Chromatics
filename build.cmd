@@ -4,6 +4,8 @@ REM Usage:
 REM   build.cmd           -- Release build
 REM   build.cmd Debug     -- Debug build
 REM   build.cmd Release   -- explicit Release build
+REM
+REM Packaging (dotnet publish + vpk pack) is handled by publish-new.py.
 setlocal
 
 set CONFIG=%~1

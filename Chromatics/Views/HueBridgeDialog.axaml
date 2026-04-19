@@ -1,19 +1,20 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
         x:Class="Chromatics.Views.HueBridgeDialog"
-        Title="Enter Hue Bridge Details"
+        Title="{loc:Tr Key='Enter Hue Bridge Details'}"
         Width="460" Height="260"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         ShowInTaskbar="False">
     <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" Margin="20">
         <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8">
-            <TextBlock Text="Bridge IP:" Width="80" VerticalAlignment="Center" />
+            <TextBlock Text="{loc:Tr Key='Bridge IP:'}" Width="80" VerticalAlignment="Center" />
             <TextBox Name="IpText" Width="260" />
         </StackPanel>
 
         <TextBlock Grid.Row="1"
-                   Text="Press the button on the Hue bridge BEFORE clicking Save."
+                   Text="{loc:Tr Key='Press the button on the Hue bridge BEFORE clicking Save.'}"
                    Margin="0,16,0,0"
                    TextWrapping="Wrap"
                    FontStyle="Italic"
@@ -30,11 +31,11 @@
                     HorizontalAlignment="Right"
                     Spacing="8">
             <Button Name="CancelButton"
-                    Content="Cancel"
+                    Content="{loc:Tr Key=Cancel}"
                     Width="100"
                     Click="OnCancel" />
             <Button Name="SubmitButton"
-                    Content="Submit"
+                    Content="{loc:Tr Key=Submit}"
                     Width="100"
                     Classes="accent"
                     Click="OnSubmit" />

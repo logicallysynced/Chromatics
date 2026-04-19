@@ -1,5 +1,4 @@
-﻿using AutoUpdaterDotNET;
-using Chromatics.Core;
+﻿using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET.Devices;
@@ -36,7 +35,6 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 using System.Windows.Forms;
 
 namespace Chromatics.Forms

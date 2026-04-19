@@ -1,9 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
+using Chromatics.Core;
+using Chromatics.Helpers;
 using Chromatics.ViewModels;
 using Chromatics.Views.Dialogs;
 using System;
+using System.Threading.Tasks;
 
 namespace Chromatics.Views
 {
@@ -28,6 +32,23 @@ namespace Chromatics.Views
                 await DialogService.ShowAsync("Chromatics Reset", "Chromatics has been reset. Chromatics will now close.");
                 ShutdownApp();
             }
+        }
+
+        private async void OnCheckUpdatesClick(object sender, RoutedEventArgs e)
+        {
+            var s = AppSettings.GetSettings();
+            var result = await Task.Run(() => UpdateService.CheckAsync(s.betaChannel));
+
+            if (result == null)
+            {
+                await DialogService.ShowAsync("Up to Date", "Chromatics is up to date.");
+                return;
+            }
+
+            var owner = this.FindAncestorOfType<Window>();
+            if (owner == null) return;
+            var dialog = new UpdateDialog(result);
+            await dialog.ShowDialog(owner);
         }
 
         private async void OnClearCacheClick(object sender, RoutedEventArgs e)

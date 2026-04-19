@@ -1,0 +1,91 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        x:Class="Chromatics.Views.Dialogs.UpdateDialog"
+        Title="{loc:Tr Key='Update Available'}"
+        Width="520"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" Margin="24">
+
+        <!-- Header + optional BETA badge -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
+            <TextBlock FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"
+                       Text="{loc:Tr Key='Update Available'}" />
+            <Border Name="BetaBadge"
+                    Background="#CC6600"
+                    CornerRadius="4"
+                    Padding="6,2"
+                    VerticalAlignment="Center"
+                    IsVisible="False">
+                <TextBlock Text="{loc:Tr Key=BETA}" FontSize="11" FontWeight="Bold" Foreground="White" />
+            </Border>
+        </StackPanel>
+
+        <!-- Version line -->
+        <TextBlock Grid.Row="1"
+                   Name="VersionText"
+                   Opacity="0.7"
+                   Margin="0,0,0,4" />
+
+        <!-- Beta explanation (only shown for beta updates) -->
+        <TextBlock Grid.Row="2"
+                   Name="BetaNote"
+                   Text="{loc:Tr Key='This is a pre-release build. It may contain bugs not present in stable releases.'}"
+                   Opacity="0.6"
+                   FontStyle="Italic"
+                   TextWrapping="Wrap"
+                   IsVisible="False"
+                   Margin="0,0,0,12" />
+
+        <!-- Changelog -->
+        <Border Grid.Row="3"
+                BorderThickness="1"
+                CornerRadius="4"
+                MinHeight="120"
+                MaxHeight="260"
+                Margin="0,0,0,16"
+                Padding="12"
+                Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBlock Name="ChangelogText"
+                           TextWrapping="Wrap"
+                           LineHeight="20"
+                           FontFamily="Consolas,Courier New,monospace"
+                           FontSize="12" />
+            </ScrollViewer>
+        </Border>
+
+        <!-- Progress (hidden until download starts) -->
+        <ProgressBar Grid.Row="4"
+                     Name="DownloadProgress"
+                     Minimum="0"
+                     Maximum="100"
+                     Height="6"
+                     Margin="0,0,0,16"
+                     IsVisible="False" />
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="5"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8">
+            <TextBlock Name="StatusText"
+                       VerticalAlignment="Center"
+                       Opacity="0.6"
+                       Margin="0,0,12,0"
+                       IsVisible="False" />
+            <Button Name="LaterButton"
+                    Content="{loc:Tr Key='Remind Me Later'}"
+                    MinWidth="130"
+                    Click="OnLater" />
+            <Button Name="InstallButton"
+                    Content="{loc:Tr Key='Install Update'}"
+                    MinWidth="130"
+                    Classes="accent"
+                    Click="OnInstall" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -8,7 +8,6 @@ using RGB.NET.Core;
 using RGBColor = HueApi.ColorConverters.RGBColor;
 using HueApi.Models;
 using HueApi.Models.Clip;
-using System.Windows.Controls;
 using Chromatics.Core;
 
 namespace Chromatics.Extensions.RGB.NET.Devices.Hue
