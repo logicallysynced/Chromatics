@@ -404,30 +404,6 @@ namespace Chromatics.ViewModels
             }
         }
 
-        public void ClearCache()
-        {
-            try
-            {
-                var env = FileOperationsHelper.GetConfigDirectory();
-
-                foreach (var f in new[]
-                {
-                    "signatures-global-latest.json", "structures-global-latest.json",
-                    "actions-latest.json", "statuses-latest.json", "zones-latest.json",
-                    "terriTypes.json", "weatherKinds.json", "weatherRateIndices.json",
-                    "ParamGrow.csv"
-                })
-                {
-                    var path = Path.Combine(env, f);
-                    if (File.Exists(path)) FileSystem.DeleteFile(path);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteConsole(LoggerTypes.Error, $"Unable to clear cache: {ex.Message}");
-            }
-        }
-
         public sealed class ThemeOption
         {
             public Theme Value { get; }

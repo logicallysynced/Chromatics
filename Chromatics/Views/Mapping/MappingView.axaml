@@ -81,8 +81,11 @@
         </Grid>
 
         <!-- Center split: virtual devices (left) + layer list (right). 70/30
-             matches the old Uc_Mappings tlp_mid proportion. -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,12,400">
+             matches the old Uc_Mappings tlp_mid proportion. Hidden while no
+             RGB devices have been discovered; the empty-state panel below
+             takes its place. -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,12,400"
+              IsVisible="{Binding !NoDevicesAvailable}">
 
             <Border Grid.Column="0"
                     BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
@@ -103,6 +106,30 @@
 
             <views:LayerListView Grid.Column="2" DataContext="{Binding}" />
         </Grid>
+
+        <!-- Empty-state placeholder: shown when RGBController has not yet
+             discovered any devices (either still enumerating at startup,
+             or all providers are disabled in Settings). -->
+        <Border Grid.Row="1"
+                IsVisible="{Binding NoDevicesAvailable}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="24">
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Spacing="12"
+                        MaxWidth="520">
+                <TextBlock Text="{loc:Tr Key='No devices found'}"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="{loc:Tr Key='Chromatics could not discover any RGB devices. Check that the relevant device providers are enabled in Settings → Device Providers, and that your RGB device software (Razer Synapse, Corsair iCUE, etc.) is installed and running.'}"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Opacity="0.85" />
+            </StackPanel>
+        </Border>
 
         <!-- Bottom hint strip. Matches the old footer: a soft reminder without
              taking vertical real estate from the editor. -->

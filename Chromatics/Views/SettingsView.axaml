@@ -113,9 +113,9 @@
                         <Button Content="{loc:Tr Key='Reset Chromatics'}"
                                 Click="OnResetClick"
                                 ToolTip.Tip="{loc:Tr Key='Restore Chromatics to its default state. Requires application restart.'}" />
-                        <Button Content="{loc:Tr Key='Clear FFXIV Cache'}"
-                                Click="OnClearCacheClick"
-                                ToolTip.Tip="{loc:Tr Key='Clear local FFXIV cache. Requires application restart.'}" />
+                        <Button Content="{loc:Tr Key='Collect Logs'}"
+                                Click="OnCollectLogsClick"
+                                ToolTip.Tip="{loc:Tr Key='Gather the console output, config files, and system info into a zip file for support.'}" />
                     </StackPanel>
                 </StackPanel>
             </HeaderedContentControl>

@@ -543,7 +543,6 @@
     "Minimise to system tray. Default: Enabled":  "Minimise to system tray. Default: Enabled",
     "Minimise to system tray when Chromatics starts. Default: Disabled":  "Minimise to system tray when Chromatics starts. Default: Disabled",
     "Restore Chromatics to its default state. Requires application restart.":  "Restore Chromatics to its default state. Requires application restart.",
-    "Clear local FFXIV cache. Requires application restart.":  "Clear local FFXIV cache. Requires application restart.",
     "Adjust global brightness for all devices.":  "Adjust global brightness for all devices.",
     "Enable checking for updates on Chromatics start. Default: Enabled":  "Enable checking for updates on Chromatics start. Default: Enabled",
     "Change the interface theme. Default: System":  "Change the interface theme. Default: System",
@@ -630,7 +629,6 @@
     "Advanced":  "Advanced",
     "Opt in to beta releases. When enabled, beta updates are offered if no stable update is available.":  "Opt in to beta releases. When enabled, beta updates are offered if no stable update is available.",
     "Check for a new Chromatics update now.":  "Check for a new Chromatics update now.",
-    "Clear FFXIV Cache":  "Clear FFXIV Cache",
     "Filter:":  "Filter:",
     "Name":  "Name",
     "Category":  "Category",
@@ -651,5 +649,9 @@
     "Disable":  "Disable",
     "To get started, select the device providers you wish to use. You can change these at any time from the Settings menu.":  "To get started, select the device providers you wish to use. You can change these at any time from the Settings menu.",
     "Always relaunch Chromatics as Administrator. Required for reading FFXIV process memory.":  "Always relaunch Chromatics as Administrator. Required for reading FFXIV process memory.",
-    "When enabled, Chromatics will automatically prompt for administrator privileges on each launch.":  "When enabled, Chromatics will automatically prompt for administrator privileges on each launch."
+    "When enabled, Chromatics will automatically prompt for administrator privileges on each launch.":  "When enabled, Chromatics will automatically prompt for administrator privileges on each launch.",
+    "No devices found":  "No devices found",
+    "Chromatics could not discover any RGB devices. Check that the relevant device providers are enabled in Settings → Device Providers, and that your RGB device software (Razer Synapse, Corsair iCUE, etc.) is installed and running.":  "Chromatics could not discover any RGB devices. Check that the relevant device providers are enabled in Settings → Device Providers, and that your RGB device software (Razer Synapse, Corsair iCUE, etc.) is installed and running.",
+    "Collect Logs":  "Collect Logs",
+    "Gather the console output, config files, and system info into a zip file for support.":  "Gather the console output, config files, and system info into a zip file for support."
 }

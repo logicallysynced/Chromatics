@@ -36,6 +36,9 @@ namespace Chromatics.ViewModels.Mapping
         // only the selected device's virtual keyboard is rendered.
         [ObservableProperty] private VirtualDeviceViewModel _selectedVirtualDevice;
         [ObservableProperty] private bool _isSelectedDeviceEnabled;
+        // Drives the "no devices found" placeholder in the Mapping view — starts
+        // true so the placeholder shows while RGBController is still enumerating.
+        [ObservableProperty] private bool _noDevicesAvailable = true;
 
         private IReadOnlyDictionary<Guid, IRGBDevice> _connectedDevices;
         private readonly Dictionary<int, LedId> _pendingKeySelection = new();
@@ -172,6 +175,8 @@ namespace Chromatics.ViewModels.Mapping
             {
                 SelectedVirtualDevice = VirtualDevices.FirstOrDefault(v => v.DeviceId == SelectedDevice.DeviceId);
             }
+
+            NoDevicesAvailable = Devices.Count == 0;
 
             // Device set may have changed while SelectedDevice held steady —
             // re-pull layers so newly-seeded rows appear in the list.
