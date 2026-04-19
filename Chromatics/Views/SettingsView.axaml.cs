@@ -1,12 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using Avalonia.VisualTree;
 using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.ViewModels;
 using Chromatics.Views.Dialogs;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Chromatics.Views
@@ -51,19 +56,48 @@ namespace Chromatics.Views
             await dialog.ShowDialog(owner);
         }
 
-        private async void OnClearCacheClick(object sender, RoutedEventArgs e)
+        private async void OnCollectLogsClick(object sender, RoutedEventArgs e)
         {
-            var ok = await DialogService.ConfirmAsync(
-                "Clear Cache?",
-                "Are you sure you wish to clear Chromatics cache?");
+            var topLevel = TopLevel.GetTopLevel(this);
+            if (topLevel == null) return;
 
-            if (!ok) return;
-
-            if (DataContext is SettingsViewModel vm)
+            LogCollectionHelper.CollectionResult result = null;
+            try
             {
-                vm.ClearCache();
-                await DialogService.ShowAsync("Cache Cleared", "Cache cleared. Chromatics will now close.");
-                ShutdownApp();
+                var window = this.FindAncestorOfType<Window>();
+                var consoleLines = window?.DataContext is MainWindowViewModel mwvm
+                    ? mwvm.Console.Entries.Select(x => x.Message).ToList()
+                    : new List<string>();
+
+                result = await LogCollectionHelper.CollectAsync(consoleLines);
+
+                var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                {
+                    Title = "Save Chromatics Logs",
+                    SuggestedFileName = Path.GetFileNameWithoutExtension(result.ZipPath),
+                    DefaultExtension = "zip",
+                    FileTypeChoices = new List<FilePickerFileType>
+                    {
+                        new("Zip archive") { Patterns = new[] { "*.zip" } }
+                    }
+                });
+
+                if (file == null) return;
+
+                var destination = file.TryGetLocalPath();
+                if (string.IsNullOrEmpty(destination)) return;
+
+                File.Copy(result.ZipPath, destination, overwrite: true);
+                await DialogService.ShowAsync("Logs Saved", $"Diagnostic bundle saved to:\n{destination}");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(LoggerTypes.Error, $"Collect logs failed: {ex.Message}");
+                await DialogService.ShowAsync("Collect Logs Failed", $"Could not create the diagnostic bundle:\n{ex.Message}");
+            }
+            finally
+            {
+                if (result != null) LogCollectionHelper.Cleanup(result.TempDirectory);
             }
         }
 
