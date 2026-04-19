@@ -184,10 +184,6 @@
                 "NU1701"
               ]
             },
-            "Sharlayan": {
-              "target": "Package",
-              "version": "[8.0.1, )"
-            },
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[10.0.6, )"

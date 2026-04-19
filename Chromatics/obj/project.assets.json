@@ -814,16 +814,6 @@
           }
         }
       },
-      "NLog.Schema/5.1.0": {
-        "type": "package",
-        "contentFiles": {
-          "contentFiles/any/any/_._": {
-            "buildAction": "None",
-            "codeLanguage": "any",
-            "copyToOutput": false
-          }
-        }
-      },
       "NuGet.Versioning/6.14.0": {
         "type": "package",
         "compile": {
@@ -1119,24 +1109,6 @@
         "runtime": {
           "lib/netstandard2.0/Sanford.Multimedia.Midi.dll": {
             "related": ".xml"
-          }
-        }
-      },
-      "Sharlayan/8.0.1": {
-        "type": "package",
-        "dependencies": {
-          "NLog": "5.1.0",
-          "NLog.Schema": "5.1.0",
-          "Newtonsoft.Json": "13.0.2"
-        },
-        "compile": {
-          "lib/net8.0/Sharlayan.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Sharlayan.dll": {
-            "related": ".pdb;.xml"
           }
         }
       },
@@ -2430,19 +2402,6 @@
         "nlog.nuspec"
       ]
     },
-    "NLog.Schema/5.1.0": {
-      "sha512": "rmGeI+Oo0laOUqHNdHO+aMfdbVktEKU6wwcBKn3EblNwRRU7YTkkSQqsmQFv32cBfN00VGJOPC6gwelvJjcRrA==",
-      "type": "package",
-      "path": "nlog.schema/5.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "content/NLog.xsd",
-        "contentFiles/any/any/NLog.xsd",
-        "nlog.schema.5.1.0.nupkg.sha512",
-        "nlog.schema.nuspec"
-      ]
-    },
     "NuGet.Versioning/6.14.0": {
       "sha512": "4v4blkhCv8mpKtfx+z0G/X0daVCzdIaHSC51GkUspugi5JIMn2Bo8xm5PdZYF0U68gOBfz/+aPWMnpRd85Jbow==",
       "type": "package",
@@ -2800,187 +2759,6 @@
         "sanford.multimedia.midi.standard.nuspec"
       ]
     },
-    "Sharlayan/8.0.1": {
-      "sha512": "gWLOrM7tk7+sohSHvEEmZ6trDVtVxpTZxyEGUf1Wcm4NaGf52TRIAgT+I2cuTBChc8xa7W1jyYUUWuG6c6JiCw==",
-      "type": "package",
-      "path": "sharlayan/8.0.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Logo.png",
-        "lib/net462/Sharlayan.dll",
-        "lib/net462/Sharlayan.pdb",
-        "lib/net462/Sharlayan.xml",
-        "lib/net48/Sharlayan.dll",
-        "lib/net48/Sharlayan.pdb",
-        "lib/net48/Sharlayan.xml",
-        "lib/net6.0/Sharlayan.dll",
-        "lib/net6.0/Sharlayan.pdb",
-        "lib/net6.0/Sharlayan.xml",
-        "lib/net7.0/Sharlayan.dll",
-        "lib/net7.0/Sharlayan.pdb",
-        "lib/net7.0/Sharlayan.xml",
-        "lib/net8.0/Sharlayan.dll",
-        "lib/net8.0/Sharlayan.pdb",
-        "lib/net8.0/Sharlayan.xml",
-        "sharlayan.8.0.1.nupkg.sha512",
-        "sharlayan.nuspec",
-        "src/Sharlayan/ClearingArrayPool.cs",
-        "src/Sharlayan/Constants.cs",
-        "src/Sharlayan/Core/ActionContainer.cs",
-        "src/Sharlayan/Core/ActionItem.cs",
-        "src/Sharlayan/Core/ActorItem.cs",
-        "src/Sharlayan/Core/ActorItemBase.cs",
-        "src/Sharlayan/Core/ChatLogItem.cs",
-        "src/Sharlayan/Core/Coordinate.cs",
-        "src/Sharlayan/Core/EnmityItem.cs",
-        "src/Sharlayan/Core/Enums/Action.cs",
-        "src/Sharlayan/Core/Enums/Actor.cs",
-        "src/Sharlayan/Core/Enums/Inventory.cs",
-        "src/Sharlayan/Core/Interfaces/IActionContainer.cs",
-        "src/Sharlayan/Core/Interfaces/IActionItem.cs",
-        "src/Sharlayan/Core/Interfaces/IActorItem.cs",
-        "src/Sharlayan/Core/Interfaces/IChatLogItem.cs",
-        "src/Sharlayan/Core/Interfaces/ICoordinate.cs",
-        "src/Sharlayan/Core/Interfaces/IEnmityItem.cs",
-        "src/Sharlayan/Core/Interfaces/IInventoryContainer.cs",
-        "src/Sharlayan/Core/Interfaces/IInventoryItem.cs",
-        "src/Sharlayan/Core/Interfaces/IJobResource.cs",
-        "src/Sharlayan/Core/Interfaces/IPartyMember.cs",
-        "src/Sharlayan/Core/Interfaces/IPlayerInfo.cs",
-        "src/Sharlayan/Core/Interfaces/IStatusItem.cs",
-        "src/Sharlayan/Core/Interfaces/ITargetInfo.cs",
-        "src/Sharlayan/Core/InventoryContainer.cs",
-        "src/Sharlayan/Core/InventoryItem.cs",
-        "src/Sharlayan/Core/JobResources/Astrologian.cs",
-        "src/Sharlayan/Core/JobResources/Bard.cs",
-        "src/Sharlayan/Core/JobResources/BlackMage.cs",
-        "src/Sharlayan/Core/JobResources/Dancer.cs",
-        "src/Sharlayan/Core/JobResources/DarkKnight.cs",
-        "src/Sharlayan/Core/JobResources/Dragoon.cs",
-        "src/Sharlayan/Core/JobResources/Enums/AetherFlags.cs",
-        "src/Sharlayan/Core/JobResources/Enums/AstrologianCard.cs",
-        "src/Sharlayan/Core/JobResources/Enums/AstrologianSeal.cs",
-        "src/Sharlayan/Core/JobResources/Enums/BardSong.cs",
-        "src/Sharlayan/Core/JobResources/Enums/BeastChakraType.cs",
-        "src/Sharlayan/Core/JobResources/Enums/DanceStep.cs",
-        "src/Sharlayan/Core/JobResources/Enums/DragoonMode.cs",
-        "src/Sharlayan/Core/JobResources/Enums/DreadCombo.cs",
-        "src/Sharlayan/Core/JobResources/Enums/Iaijutsu.cs",
-        "src/Sharlayan/Core/JobResources/Enums/NadiFlags.cs",
-        "src/Sharlayan/Core/JobResources/Enums/PictoFlags.cs",
-        "src/Sharlayan/Core/JobResources/GunBreaker.cs",
-        "src/Sharlayan/Core/JobResources/Machinist.cs",
-        "src/Sharlayan/Core/JobResources/Monk.cs",
-        "src/Sharlayan/Core/JobResources/Ninja.cs",
-        "src/Sharlayan/Core/JobResources/Paladin.cs",
-        "src/Sharlayan/Core/JobResources/Pictomancer.cs",
-        "src/Sharlayan/Core/JobResources/Reaper.cs",
-        "src/Sharlayan/Core/JobResources/RedMage.cs",
-        "src/Sharlayan/Core/JobResources/Sage.cs",
-        "src/Sharlayan/Core/JobResources/Samurai.cs",
-        "src/Sharlayan/Core/JobResources/Scholar.cs",
-        "src/Sharlayan/Core/JobResources/Summoner.cs",
-        "src/Sharlayan/Core/JobResources/Viper.cs",
-        "src/Sharlayan/Core/JobResources/Warrior.cs",
-        "src/Sharlayan/Core/JobResources/WhiteMage.cs",
-        "src/Sharlayan/Core/JobResourcesContainer.cs",
-        "src/Sharlayan/Core/PartyMember.cs",
-        "src/Sharlayan/Core/PlayerInfo.cs",
-        "src/Sharlayan/Core/StatusItem.cs",
-        "src/Sharlayan/Core/TargetInfo.cs",
-        "src/Sharlayan/Delegates/ChatLogWorkerDelegate.cs",
-        "src/Sharlayan/Delegates/MonsterWorkerDelegate.cs",
-        "src/Sharlayan/Delegates/NPCWorkerDelegate.cs",
-        "src/Sharlayan/Delegates/PCWorkerDelegate.cs",
-        "src/Sharlayan/Delegates/PartyWorkerDelegate.cs",
-        "src/Sharlayan/Enums/GameLanguage.cs",
-        "src/Sharlayan/Enums/GameRegion.cs",
-        "src/Sharlayan/Extensions/ProcessExtensions.cs",
-        "src/Sharlayan/Extensions/StringExtensions.cs",
-        "src/Sharlayan/MemoryHandler.cs",
-        "src/Sharlayan/MemoryLocation.cs",
-        "src/Sharlayan/Models/ChatLogPointers.cs",
-        "src/Sharlayan/Models/Localization.cs",
-        "src/Sharlayan/Models/ProcessModel.cs",
-        "src/Sharlayan/Models/ReadResults/ActionResult.cs",
-        "src/Sharlayan/Models/ReadResults/ActorResult.cs",
-        "src/Sharlayan/Models/ReadResults/ChatLogResult.cs",
-        "src/Sharlayan/Models/ReadResults/CurrentPlayerResult.cs",
-        "src/Sharlayan/Models/ReadResults/InventoryResult.cs",
-        "src/Sharlayan/Models/ReadResults/JobResourceResult.cs",
-        "src/Sharlayan/Models/ReadResults/PartyResult.cs",
-        "src/Sharlayan/Models/ReadResults/TargetResult.cs",
-        "src/Sharlayan/Models/Signature.cs",
-        "src/Sharlayan/Models/Structures/ActorItem.cs",
-        "src/Sharlayan/Models/Structures/ChatLogPointers.cs",
-        "src/Sharlayan/Models/Structures/EnmityItem.cs",
-        "src/Sharlayan/Models/Structures/HotBarItem.cs",
-        "src/Sharlayan/Models/Structures/InventoryContainer.cs",
-        "src/Sharlayan/Models/Structures/InventoryItem.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Astrologian.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Bard.cs",
-        "src/Sharlayan/Models/Structures/JobResources.BlackMage.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Dancer.cs",
-        "src/Sharlayan/Models/Structures/JobResources.DarkKnight.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Dragoon.cs",
-        "src/Sharlayan/Models/Structures/JobResources.GunBreaker.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Machinist.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Monk.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Ninja.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Paladin.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Pictomancer.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Reaper.cs",
-        "src/Sharlayan/Models/Structures/JobResources.RedMage.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Sage.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Samurai.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Scholar.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Summoner.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Viper.cs",
-        "src/Sharlayan/Models/Structures/JobResources.Warrior.cs",
-        "src/Sharlayan/Models/Structures/JobResources.WhiteMage.cs",
-        "src/Sharlayan/Models/Structures/JobResources.cs",
-        "src/Sharlayan/Models/Structures/PartyMember.cs",
-        "src/Sharlayan/Models/Structures/PlayerInfo.cs",
-        "src/Sharlayan/Models/Structures/RecastItem.cs",
-        "src/Sharlayan/Models/Structures/StatusItem.cs",
-        "src/Sharlayan/Models/Structures/StructuresContainer.cs",
-        "src/Sharlayan/Models/Structures/TargetInfo.cs",
-        "src/Sharlayan/Models/XIVDatabase/ActionItem.cs",
-        "src/Sharlayan/Models/XIVDatabase/MapItem.cs",
-        "src/Sharlayan/Models/XIVDatabase/StatusItem.cs",
-        "src/Sharlayan/Reader.Actions.cs",
-        "src/Sharlayan/Reader.Actor.cs",
-        "src/Sharlayan/Reader.ChatLog.cs",
-        "src/Sharlayan/Reader.Common.cs",
-        "src/Sharlayan/Reader.CurrentPlayer.cs",
-        "src/Sharlayan/Reader.Inventory.cs",
-        "src/Sharlayan/Reader.JobResource.cs",
-        "src/Sharlayan/Reader.PartyMembers.cs",
-        "src/Sharlayan/Reader.Target.cs",
-        "src/Sharlayan/Reader.cs",
-        "src/Sharlayan/Scanner.cs",
-        "src/Sharlayan/Sharlayan.csproj",
-        "src/Sharlayan/SharlayanConfiguration.cs",
-        "src/Sharlayan/SharlayanMemoryManager.cs",
-        "src/Sharlayan/Signatures.cs",
-        "src/Sharlayan/UnsafeNativeMethods.cs",
-        "src/Sharlayan/Utilities/APIHelper.cs",
-        "src/Sharlayan/Utilities/ActionLookup.cs",
-        "src/Sharlayan/Utilities/ActorItemResolver.cs",
-        "src/Sharlayan/Utilities/ChatCleaner.cs",
-        "src/Sharlayan/Utilities/ChatEntry.cs",
-        "src/Sharlayan/Utilities/ChatLogReader.cs",
-        "src/Sharlayan/Utilities/JobResourceResolver.cs",
-        "src/Sharlayan/Utilities/JsonUtilities.cs",
-        "src/Sharlayan/Utilities/PartyMemberResolver.cs",
-        "src/Sharlayan/Utilities/PlayerInfoResolver.cs",
-        "src/Sharlayan/Utilities/SharlayanBitConverter.cs",
-        "src/Sharlayan/Utilities/StatusEffectLookup.cs",
-        "src/Sharlayan/Utilities/XMLCleaner.cs",
-        "src/Sharlayan/Utilities/ZoneLookup.cs"
-      ]
-    },
     "SkiaSharp/2.88.9": {
       "sha512": "3MD5VHjXXieSHCleRLuaTXmL2pD0mB7CcOB1x2kA1I4bhptf4e3R27iM93264ZYuAq6mkUyX5XbcxnZvMJYc1Q==",
       "type": "package",
@@ -3285,7 +3063,6 @@
       "RGB.NET.Layout >= 3.2.0",
       "RGB.NET.Presets >= 3.2.0",
       "Sanford.Multimedia.Midi >= 6.7.3",
-      "Sharlayan >= 8.0.1",
       "System.Drawing.Common >= 10.0.6",
       "Velopack >= 0.0.1298"
     ]
@@ -3473,10 +3250,6 @@
             "noWarn": [
               "NU1701"
             ]
-          },
-          "Sharlayan": {
-            "target": "Package",
-            "version": "[8.0.1, )"
           },
           "System.Drawing.Common": {
             "target": "Package",

@@ -89,7 +89,9 @@
          build stays clean; if Sanford ever publishes a modernised target we
          should drop the suppression. -->
     <PackageReference Include="Sanford.Multimedia.Midi" Version="6.7.3" NoWarn="NU1701" />
-    <PackageReference Include="Sharlayan" Version="8.0.1" />
+    <Reference Include="Sharlayan">
+      <HintPath>D:\Git Projects\sharlayan\Sharlayan\bin\Debug\net10.0\Sharlayan.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
