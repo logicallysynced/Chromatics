@@ -99,7 +99,7 @@ namespace Chromatics.Views
 
         private void OnHelpClick(object sender, RoutedEventArgs e)
         {
-            const string url = "https://docs.chromaticsffxiv.com/chromatics-3";
+            const string url = "https://docs.chromaticsffxiv.com/chromatics-4";
             Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
         }
     }
