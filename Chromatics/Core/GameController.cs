@@ -528,6 +528,17 @@ namespace Chromatics.Core
                             var dynamicProcessor = _layerProcessorFactory.GetProcessor((DynamicLayerType)layer.layerTypeindex);
                             if (layer.requestUpdate)
                             {
+                                // Generically detach whatever groups the previous processor
+                                // registered for this layerID so they don't persist on the
+                                // surface after a type switch.
+                                var liveGroups = RGBController.GetLiveLayerGroups();
+                                if (liveGroups.TryGetValue(layer.layerID, out var prevGroups))
+                                {
+                                    foreach (var g in prevGroups)
+                                        g?.Detach();
+                                    liveGroups.Remove(layer.layerID);
+                                }
+                                // Per-processor model cleanup (overridden on JobGaugeA/B/C).
                                 foreach (var p in _layerProcessorFactory.GetActiveDynamicProcessors())
                                     if (p != dynamicProcessor)
                                         p.CleanupLayer(layer.layerID);
