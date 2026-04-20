@@ -48,7 +48,7 @@ namespace Chromatics.Enums
         TargetHP = 4,
         [LayerDisplay(Name = "Target Castbar", Description = "Shows current target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         TargetCastbar = 5,
-        [LayerDisplay(Name = "HP Tracker", Description = "Shows character's HP across selected keys. Will switch to critical colour upon falling below {criticalHpPercentage} HP.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
+        [LayerDisplay(Name = "HP Tracker", Description = "Shows character's HP across selected keys. Will switch to critical colour upon falling below 20% HP.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         HPTracker = 6,
         [LayerDisplay(Name = "MP Tracker", Description = "Shows character's MP/CP/GP across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         MPTracker = 7,
