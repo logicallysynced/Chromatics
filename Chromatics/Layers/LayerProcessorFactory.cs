@@ -97,6 +97,7 @@ namespace Chromatics.Layers
                 DynamicLayerType.MPTracker => MPTrackerProcessor.Instance,
                 DynamicLayerType.JobGaugeA => JobGaugeAProcessor.Instance,
                 DynamicLayerType.JobGaugeB => JobGaugeBProcessor.Instance,
+                DynamicLayerType.JobGaugeC => JobGaugeCProcessor.Instance,
                 DynamicLayerType.ExperienceTracker => ExperienceTrackerProcessor.Instance,
                 DynamicLayerType.BattleStance => DynamicBattleStanceProcessor.Instance,
                 DynamicLayerType.Castbar => CastbarProcessor.Instance,

@@ -192,8 +192,25 @@ namespace Chromatics.Layers
                     //Crafters
                     return null;
                 case Actor.Job.MNK:
-                    //No MNK Second Gauge
-                    return null;
+                    // Beast Chakra aggregate — sum of OpoOpo/Raptor/Coeurl stacks (each 0–2)
+                    // feeds the Masterful Blitz finishers, so a 0–6 bar is the most legible
+                    // single-value representation. Per-type colours surface on Gauge C.
+                    {
+                        var monk = jobResources.JobResourcesContainer.Monk;
+                        var stacks = Math.Min(monk.OpoOpoStacks + monk.RaptorStacks + monk.CoeurlStacks, 6);
+
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobMNKBeastChakra.Color);
+                        jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobMNKNegative.Color);
+                        jobGauge.minValue = 0;
+                        jobGauge.maxValue = 6;
+                        jobGauge.currentValue = stacks;
+
+                        if (stacks <= 0)
+                        {
+                            jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobMNKNegative.Color);
+                        }
+                    }
+                    break;
                 case Actor.Job.WAR:
                     //Warrior Defiance
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobWARNonDefiance.Color);
@@ -253,8 +270,24 @@ namespace Chromatics.Layers
 
                     break;
                 case Actor.Job.PLD:
-                    //No PLD Second Gauge
-                    return null;
+                    // Confiteor combo window — drives the Blade of Faith/Truth/Valor follow-ups.
+                    {
+                        var pld = jobResources.JobResourcesContainer.Paladin;
+                        var window = (int)pld.ConfiteorComboTimer.TotalSeconds;
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPLDConfiteorTimer.Color);
+                        jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPLDNegative.Color);
+                        jobGauge.minValue = 0;
+                        jobGauge.maxValue = 30; //Confiteor combo window (Blade chain)
+                        jobGauge.currentValue = Math.Min(window, jobGauge.maxValue);
+                        jobGauge.offset = (int)0.5;
+
+                        if (jobGauge.currentValue <= jobGauge.minValue)
+                        {
+                            jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPLDNegative.Color);
+                            jobGauge.currentValue = jobGauge.minValue;
+                        }
+                    }
+                    break;
                 case Actor.Job.WHM:
                     //White Mage Flower Count
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobWHMFlowerPetal.Color);
@@ -278,17 +311,17 @@ namespace Chromatics.Layers
                     }
                     break;
                 case Actor.Job.BLM:
-                    //Black Mage Enochian
-                    
-                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBLMEnochianCountdown.Color);
+                    // Astral Soul stacks (0–6) — Dawntrail's Flare Star resource. Replaces the
+                    // former Enochian countdown on Gauge B: the unified stance Timer is already
+                    // on Gauge A, so Gauge B is freed up for the new soul-stack display.
+
+                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBLMAstralSoul.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBLMNegative.Color);
 
-                    jobGauge.currentValue = (int)jobResources.JobResourcesContainer.BlackMage.Timer.TotalSeconds;
-                    jobGauge.maxValue = 40; //Black Mage Enochian Timer
+                    jobGauge.currentValue = Math.Min(jobResources.JobResourcesContainer.BlackMage.AstralSoulStacks, 6);
+                    jobGauge.maxValue = 6;
                     jobGauge.minValue = 0;
-                    jobGauge.offset = (int)0.5;
 
-                    if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
                     if (jobGauge.currentValue <= jobGauge.minValue)
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBLMNegative.Color);
@@ -345,16 +378,18 @@ namespace Chromatics.Layers
                     }
                     break;
                 case Actor.Job.SCH:
-                    //Scholar Aetherflow
-                    
+                    // Aetherflow stacks — was previously reading FaerieGauge (bug: the 0–100 fairy
+                    // resource can't fit into a 0–3 aetherflow pip display). Sharlayan 9 exposes
+                    // the correct property directly.
+
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobSCHAetherflow.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobSCHNegative.Color);
 
-                    jobGauge.currentValue = (int)jobResources.JobResourcesContainer.Scholar.FaerieGauge;
+                    jobGauge.currentValue = Math.Min(jobResources.JobResourcesContainer.Scholar.Aetherflow, 3);
                     jobGauge.maxValue = 3; //Scholar Aetherflow Max
                     jobGauge.minValue = 0;
 
-                    
+
                     if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
                     if (jobGauge.currentValue <= jobGauge.minValue)
                     {
@@ -419,8 +454,52 @@ namespace Chromatics.Layers
 
                     break;
                 case Actor.Job.AST:
-                    //No Astrologian Second Gauge
-                    return null;
+                    // Top of the Drawn Cards pile — Dawntrail's Seals-free redesign holds up to
+                    // three drawn cards; showing the next one up on Gauge B surfaces the player's
+                    // immediate next play while Gauge A keeps the currently-active arcana.
+                    {
+                        var ast = jobResources.JobResourcesContainer.Astrologian;
+                        var nextCard = ast.DrawnCards != null && ast.DrawnCards.Count > 0
+                            ? ast.DrawnCards[0]
+                            : AstrologianCard.None;
+
+                        jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTNegative.Color);
+                        jobGauge.minValue = 0;
+                        jobGauge.maxValue = 100;
+                        jobGauge.currentValue = nextCard == AstrologianCard.None ? 0 : 100;
+
+                        switch (nextCard)
+                        {
+                            case AstrologianCard.Balance:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTBalance.Color);
+                                break;
+                            case AstrologianCard.Bole:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTBole.Color);
+                                break;
+                            case AstrologianCard.Arrow:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTArrow.Color);
+                                break;
+                            case AstrologianCard.Spear:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTSpear.Color);
+                                break;
+                            case AstrologianCard.Ewer:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTEwer.Color);
+                                break;
+                            case AstrologianCard.Spire:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTSpire.Color);
+                                break;
+                            case AstrologianCard.Lord:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTLord.Color);
+                                break;
+                            case AstrologianCard.Lady:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTLady.Color);
+                                break;
+                            default:
+                                jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTNegative.Color);
+                                break;
+                        }
+                    }
+                    break;
                 case Actor.Job.SAM:
                     //Samurai Meditation Gauge
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobSAMMeditation.Color);

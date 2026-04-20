@@ -337,17 +337,24 @@ namespace Chromatics.Layers
                     }
                     break;
                 case Actor.Job.BLM:
-                    //Black Mage Astral Timers
+                    // Black Mage stance timer — Dawntrail removed the separate per-stance AstralTimer.
+                    // A single Timer now covers both Astral Fire and Umbral Ice durations; stance is
+                    // identified via AstralStacks / UmbralStacks. Paradox proc takes over the colour
+                    // while active so the player sees it on the primary gauge.
 
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBLMAstralFire.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBLMNegative.Color);
 
-                    jobGauge.currentValue = (int)jobResources.JobResourcesContainer.BlackMage.AstralTimer;
-                    jobGauge.maxValue = 15 * 4; //Black Mage Astral/Umbral Timer
+                    jobGauge.currentValue = (int)jobResources.JobResourcesContainer.BlackMage.Timer.TotalSeconds;
+                    jobGauge.maxValue = 15; //Black Mage AF/UI stance duration (Dawntrail)
                     jobGauge.minValue = 0;
                     jobGauge.offset = (int)0.5;
 
-                    if (jobResources.JobResourcesContainer.BlackMage.AstralStacks > 0)
+                    if (jobResources.JobResourcesContainer.BlackMage.ParadoxActive)
+                    {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBLMParadox.Color);
+                    }
+                    else if (jobResources.JobResourcesContainer.BlackMage.AstralStacks > 0)
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBLMAstralFire.Color);
                     }
@@ -418,6 +425,11 @@ namespace Chromatics.Layers
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobSCHSeraph.Color);
                     }
+                    else if (jobResources.JobResourcesContainer.Scholar.DismissedFairy)
+                    {
+                        // Fairy dismissed — gauge still accumulates but Eos/Selene is not on-field.
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobSCHDismissedFairy.Color);
+                    }
 
                     if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
                     if (jobGauge.currentValue <= jobGauge.minValue)
@@ -428,15 +440,15 @@ namespace Chromatics.Layers
 
                     break;
                 case Actor.Job.NIN:
-                    //Ninja Huton Timer
+                    // Dawntrail replaced Huton with Kazematoi (0–5 stacks spent by Phantom Kamaitachi).
+                    // The JobNINHuton palette field is reused for the new resource — see PaletteColorModel.
 
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobNINHuton.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobNINNegative.Color);
 
-                    jobGauge.currentValue = (int)jobResources.JobResourcesContainer.Ninja.Timer.TotalSeconds;
-                    jobGauge.maxValue = 60; //Ninja Huton Timer Max
+                    jobGauge.currentValue = jobResources.JobResourcesContainer.Ninja.Kazematoi;
+                    jobGauge.maxValue = 5; //Ninja Kazematoi Max
                     jobGauge.minValue = 0;
-                    jobGauge.offset = (int)0.5;
 
 
                     if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
@@ -457,7 +469,11 @@ namespace Chromatics.Layers
                     jobGauge.maxValue = 100; //Machinist Heat Gauge Max
                     jobGauge.minValue = 0;
 
-                    if (jobResources.JobResourcesContainer.Machinist.OverheatTimer.TotalSeconds > 0)
+                    // Gate overheat colour on TimerActive so the last reported OverheatTimer value
+                    // doesn't keep bleeding through once the timer has stopped (Sharlayan 9 exposes
+                    // TimerActive specifically for this).
+                    if (jobResources.JobResourcesContainer.Machinist.TimerActive
+                        && jobResources.JobResourcesContainer.Machinist.OverheatTimer.TotalSeconds > 0)
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobMCHOverheat.Color);
                     }
@@ -492,7 +508,10 @@ namespace Chromatics.Layers
                     }
                     break;
                 case Actor.Job.AST:
-                    //Astrologian Card Drawn
+                    // Astrologian — Dawntrail removed the Seals system entirely. The old `Arcana`
+                    // property is gone; `CurrentArcana` now represents the card currently being
+                    // played (held in the "active" slot), distinct from `DrawnCards` which holds
+                    // the rest of the hand (surfaced on Job Gauge B / C).
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTNegative.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTNegative.Color);
 
@@ -500,7 +519,7 @@ namespace Chromatics.Layers
                     jobGauge.maxValue = 100;
                     jobGauge.minValue = 0;
 
-                    switch (jobResources.JobResourcesContainer.Astrologian.Arcana)
+                    switch (jobResources.JobResourcesContainer.Astrologian.CurrentArcana)
                     {
                         case AstrologianCard.None:
                             jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTNegative.Color);

@@ -117,6 +117,13 @@
             <Setter Property="MinWidth"        Value="92" />
             <Setter Property="Padding"         Value="6,0" />
         </Style>
+        <!-- Per-item tooltip in the layer-type ComboBox open dropdown. Binds to
+             Description on LayerTypeOption. x:DataType scopes the compiled binding
+             to LayerTypeOption; for other ComboBoxes (string items) it silently
+             produces no tooltip, which is acceptable. -->
+        <Style Selector="ComboBoxItem" x:DataType="vm:LayerTypeOption">
+            <Setter Property="ToolTip.Tip" Value="{Binding Description}" />
+        </Style>
     </UserControl.Styles>
 
     <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
@@ -200,7 +207,8 @@
                                           VerticalAlignment="Center"
                                           HorizontalAlignment="Stretch"
                                           MinWidth="160"
-                                          Margin="0,0,8,0" />
+                                          Margin="0,0,8,0"
+                                          ToolTip.Tip="{Binding HelpText}" />
 
                                 <CheckBox Grid.Column="4"
                                           IsChecked="{Binding IsEnabled, Mode=TwoWay}"
