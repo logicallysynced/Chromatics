@@ -7,7 +7,6 @@ using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Chromatics.Extensions.Sharlayan;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures.Gradients;
 using RGB.NET.Presets.Textures;
@@ -122,11 +121,13 @@ namespace Chromatics.Layers
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 if (getCurrentPlayer.Entity == null) return;
 
-                DutyFinderBellExtension.CheckCache();
+                // InInstance = ContentsFinderQueueState >= 4 (Accepted / InContent). See Sharlayan GameStateResult.
+                var gameState = _memoryHandler.Reader.GetGameState();
+                bool inInstance = gameState.InInstance;
 
-                if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model._inInstance != DutyFinderBellExtension.InInstance() || model.wasDisabled || layer.requestUpdate)
+                if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model._inInstance != inInstance || model.wasDisabled || layer.requestUpdate)
                 {
-                    if (getCurrentPlayer.Entity.InCutscene && !DutyFinderBellExtension.InInstance())
+                    if (getCurrentPlayer.Entity.InCutscene && !inInstance)
                     {
                         if (runningEffects.Contains(layergroup))
                         {
@@ -155,7 +156,7 @@ namespace Chromatics.Layers
                     }
 
                     model._inCutscene = getCurrentPlayer.Entity.InCutscene;
-                    model._inInstance = DutyFinderBellExtension.InInstance();
+                    model._inInstance = inInstance;
                 }
 
                 model.wasDisabled = false;
