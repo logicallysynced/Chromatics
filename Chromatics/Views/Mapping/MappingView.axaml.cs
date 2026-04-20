@@ -29,7 +29,7 @@ namespace Chromatics.Views.Mapping
             {
                 Title = "Import Chromatics Layers",
                 AllowMultiple = false,
-                FileTypeFilter = new List<FilePickerFileType> { LayerFileType }
+                FileTypeFilter = new List<FilePickerFileType> { ImportableLayerFileType }
             });
 
             if (files.Count == 0) return;
@@ -72,7 +72,7 @@ namespace Chromatics.Views.Mapping
             {
                 Title = "Export Chromatics Layers",
                 SuggestedFileName = "layers",
-                DefaultExtension = "chromatics3",
+                DefaultExtension = "chromatics4",
                 FileTypeChoices = new List<FilePickerFileType> { LayerFileType }
             });
 
@@ -156,9 +156,18 @@ namespace Chromatics.Views.Mapping
             await dialog.ShowDialog(owner);
         }
 
+        // Export uses only the current Chromatics-4 extension.
         private static readonly FilePickerFileType LayerFileType = new("Chromatics Layer Files")
         {
-            Patterns = new[] { "*.chromatics3" }
+            Patterns = new[] { "*.chromatics4" }
+        };
+
+        // Import accepts all known Chromatics layer extensions — the file content
+        // is validated by ValidateLayerFile regardless of extension, so a valid
+        // Chromatics-2 or -3 payload loads cleanly on a Chromatics-4 install.
+        private static readonly FilePickerFileType ImportableLayerFileType = new("Chromatics Layer Files")
+        {
+            Patterns = new[] { "*.chromatics4", "*.chromatics3", "*.chromatics2" }
         };
     }
 }

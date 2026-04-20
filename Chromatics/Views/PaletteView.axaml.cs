@@ -22,7 +22,7 @@ namespace Chromatics.Views
             {
                 Title = "Import Chromatics Color Palette",
                 AllowMultiple = false,
-                FileTypeFilter = new List<FilePickerFileType> { PaletteFileType, LegacyPaletteFileType },
+                FileTypeFilter = new List<FilePickerFileType> { ImportablePaletteFileType, LegacyPaletteFileType },
             });
 
             if (files.Count == 0) return;
@@ -42,7 +42,7 @@ namespace Chromatics.Views
             {
                 Title = "Export Chromatics Color Palette",
                 SuggestedFileName = "mypalette",
-                DefaultExtension = "chromatics3",
+                DefaultExtension = "chromatics4",
                 FileTypeChoices = new List<FilePickerFileType> { PaletteFileType },
             });
 
@@ -54,11 +54,20 @@ namespace Chromatics.Views
                 vm.ExportToPath(path);
         }
 
+        // Export uses only the current Chromatics-4 extension.
         private static readonly FilePickerFileType PaletteFileType = new("Chromatics Palette Files")
         {
-            Patterns = new[] { "*.chromatics3" }
+            Patterns = new[] { "*.chromatics4" }
         };
 
+        // Import accepts all known Chromatics JSON palette extensions.
+        // ImportColorMappingsFromPath dispatches on extension internally.
+        private static readonly FilePickerFileType ImportablePaletteFileType = new("Chromatics Palette Files")
+        {
+            Patterns = new[] { "*.chromatics4", "*.chromatics3", "*.chromatics2" }
+        };
+
+        // Legacy XML-format palette files from the pre-3.x era.
         private static readonly FilePickerFileType LegacyPaletteFileType = new("Legacy Palette Files")
         {
             Patterns = new[] { "*.chromatics" }

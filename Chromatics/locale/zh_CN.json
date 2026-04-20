@@ -653,5 +653,7 @@
   "No devices found": "未找到设备",
   "Chromatics could not discover any RGB devices. Check that the relevant device providers are enabled in Settings → Device Providers, and that your RGB device software (Razer Synapse, Corsair iCUE, etc.) is installed and running.": "Chromatics 未能发现任何 RGB 设备。请检查“设置 → 设备提供程序”中是否已启用相关设备提供程序，并确认您的 RGB 设备软件（Razer Synapse、Corsair iCUE 等）已安装并正在运行。",
   "Collect Logs": "收集日志",
-  "Gather the console output, config files, and system info into a zip file for support.": "将控制台输出、配置文件和系统信息收集到一个 zip 文件中，以便提供支持。"
+  "Gather the console output, config files, and system info into a zip file for support.": "将控制台输出、配置文件和系统信息收集到一个 zip 文件中，以便提供支持。",
+  "Import layers from a .chromatics3 or .chromatics4 file": "从 .chromatics3 或 .chromatics4 文件导入图层",
+  "Export current layers to a .chromatics4 file": "将当前图层导出为 .chromatics4 文件"
 }

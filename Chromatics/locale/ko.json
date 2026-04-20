@@ -653,5 +653,7 @@
   "No devices found": "장치를 찾을 수 없습니다",
   "Chromatics could not discover any RGB devices. Check that the relevant device providers are enabled in Settings → Device Providers, and that your RGB device software (Razer Synapse, Corsair iCUE, etc.) is installed and running.": "Chromatics가 RGB 장치를 찾지 못했습니다. 설정 → 장치 공급자에서 관련 장치 공급자가 활성화되어 있는지, 그리고 RGB 장치 소프트웨어(Razer Synapse, Corsair iCUE 등)가 설치되어 실행 중인지 확인하세요.",
   "Collect Logs": "로그 수집",
-  "Gather the console output, config files, and system info into a zip file for support.": "지원을 위해 콘솔 출력, 구성 파일 및 시스템 정보를 zip 파일로 수집합니다."
+  "Gather the console output, config files, and system info into a zip file for support.": "지원을 위해 콘솔 출력, 구성 파일 및 시스템 정보를 zip 파일로 수집합니다.",
+  "Import layers from a .chromatics3 or .chromatics4 file": " .chromatics3 또는 .chromatics4 파일에서 레이어 가져오기",
+  "Export current layers to a .chromatics4 file": "현재 레이어를 .chromatics4 파일로 내보내기"
 }

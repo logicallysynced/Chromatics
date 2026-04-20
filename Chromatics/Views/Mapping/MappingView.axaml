@@ -65,7 +65,7 @@
                     MinWidth="96"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    ToolTip.Tip="{loc:Tr Key='Import layers from a .chromatics3 file'}" />
+                    ToolTip.Tip="{loc:Tr Key='Import layers from a .chromatics3 or .chromatics4 file'}" />
 
             <Button Grid.Column="8"
                     Content="{loc:Tr Key=Export}"
@@ -74,7 +74,7 @@
                     MinWidth="96"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    ToolTip.Tip="{loc:Tr Key='Export current layers to a .chromatics3 file'}" />
+                    ToolTip.Tip="{loc:Tr Key='Export current layers to a .chromatics4 file'}" />
 
             <Button Grid.Column="10"
                     Content="{loc:Tr Key='Add Dynamic Layer'}"
