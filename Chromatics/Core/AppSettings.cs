@@ -34,7 +34,7 @@ namespace Chromatics.Core
             //Load Settings
             if (LoadSettings())
             {
-                Logger.WriteConsole(LoggerTypes.System, $"Loaded settings from settings.chromatics3");
+                Logger.WriteConsole(LoggerTypes.System, $"Loaded settings from settings.chromatics4");
 
             }
             else

@@ -84,7 +84,7 @@ namespace Chromatics.ViewModels
             }
             else
             {
-                Logger.WriteConsole(LoggerTypes.System, "Loaded palette from palette.chromatics3");
+                Logger.WriteConsole(LoggerTypes.System, "Loaded palette from palette.chromatics4");
             }
 
             UndoCommand = new RelayCommand(OnUndo, () => SelectedItem != null);

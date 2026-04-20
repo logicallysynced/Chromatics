@@ -17,7 +17,7 @@ namespace Chromatics.ViewModels
             }
             else
             {
-                Logger.WriteConsole(LoggerTypes.System, "Loaded effects from effects.chromatics3");
+                Logger.WriteConsole(LoggerTypes.System, "Loaded effects from effects.chromatics4");
             }
 
             var e = RGBController.GetEffectsSettings();

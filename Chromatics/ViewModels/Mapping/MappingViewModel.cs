@@ -160,7 +160,7 @@ namespace Chromatics.ViewModels.Mapping
             }
 
             // Persist default layers immediately so the file exists from first
-            // boot — without this the layers.chromatics3 file only appears once
+            // boot — without this the layers.chromatics4 file only appears once
             // the user interacts with the Mapping tab.
             if (layersChanged)
                 MappingLayers.SaveMappings();

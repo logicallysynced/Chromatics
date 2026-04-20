@@ -653,5 +653,7 @@
   "No devices found": "Aucun appareil trouvé",
   "Chromatics could not discover any RGB devices. Check that the relevant device providers are enabled in Settings → Device Providers, and that your RGB device software (Razer Synapse, Corsair iCUE, etc.) is installed and running.": "Chromatics n'a pu détecter aucun appareil RGB. Vérifiez que les fournisseurs d'appareils concernés sont activés dans Paramètres → Fournisseurs d'appareils, et que votre logiciel pour appareils RGB (Razer Synapse, Corsair iCUE, etc.) est installé et en cours d'exécution.",
   "Collect Logs": "Collecter les journaux",
-  "Gather the console output, config files, and system info into a zip file for support.": "Rassemble la sortie de la console, les fichiers de configuration et les informations système dans un fichier zip pour le support."
+  "Gather the console output, config files, and system info into a zip file for support.": "Rassemble la sortie de la console, les fichiers de configuration et les informations système dans un fichier zip pour le support.",
+  "Import layers from a .chromatics3 or .chromatics4 file": "Importer des calques depuis un fichier .chromatics3 ou .chromatics4",
+  "Export current layers to a .chromatics4 file": "Exporter les calques actuels vers un fichier .chromatics4"
 }

@@ -392,7 +392,18 @@ namespace Chromatics.ViewModels
             {
                 var env = FileOperationsHelper.GetConfigDirectory();
 
-                foreach (var f in new[] { "layers.chromatics3", "palette.chromatics3", "effects.chromatics3", "settings.chromatics3" })
+                // Covers both the Chromatics-4 data files and any leftover
+                // .chromatics3 / .chromatics3.migrated files from a prior install
+                // so "Reset" truly clears everything.
+                var names = new[]
+                {
+                    "layers.chromatics4", "palette.chromatics4", "effects.chromatics4", "settings.chromatics4",
+                    "layers.chromatics3", "palette.chromatics3", "effects.chromatics3", "settings.chromatics3",
+                    "layers.chromatics3.migrated", "palette.chromatics3.migrated",
+                    "effects.chromatics3.migrated", "settings.chromatics3.migrated",
+                };
+
+                foreach (var f in names)
                 {
                     var path = Path.Combine(env, f);
                     if (File.Exists(path)) FileSystem.DeleteFile(path);

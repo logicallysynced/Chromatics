@@ -1,5 +1,6 @@
 using Avalonia;
 using Chromatics.Core;
+using Chromatics.Helpers;
 using Chromatics.Models;
 using System;
 using System.Diagnostics;
@@ -46,6 +47,11 @@ namespace Chromatics
             // Users launching the ZIP-portable build directly skip that path — this
             // probe catches the gap so devices don't fail later with a cryptic DLL error.
             RuntimePrerequisiteCheck.WarnIfMissing();
+
+            // Migrate any lingering .chromatics3 data files to their .chromatics4
+            // counterparts before the settings/layer loaders run. Idempotent —
+            // no-op on fresh installs and on launches after the first migration.
+            FileOperationsHelper.MigrateLegacyChromatics3Files();
 
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();

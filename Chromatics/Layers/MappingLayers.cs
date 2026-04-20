@@ -481,7 +481,7 @@ namespace Chromatics.Layers
         public double Y { get; set; }
     }
 
-    // On-disk format for layers.chromatics3 starting at schemaVersion 3.
+    // On-disk format for layers.chromatics4 starting at schemaVersion 3.
     // Previous versions serialized a bare ConcurrentDictionary<int, Layer>;
     // FileOperationsHelper.LoadLayerMappings sniffs the root shape and falls
     // back to that form when it's absent. Incremented whenever we add a new

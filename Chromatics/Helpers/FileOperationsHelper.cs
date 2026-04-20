@@ -32,7 +32,20 @@ namespace Chromatics.Helpers
         private static WeatherData weatherData;
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        // Returns the directory where Chromatics user-data files (.chromatics3) live.
+        // Chromatics 4 data filenames. Legacy Chromatics-3 variants are migrated
+        // on startup by MigrateLegacyChromatics3Files — see that method for the
+        // full migration algorithm and preservation policy.
+        internal const string LayersFile   = "layers.chromatics4";
+        internal const string PaletteFile  = "palette.chromatics4";
+        internal const string EffectsFile  = "effects.chromatics4";
+        internal const string SettingsFile = "settings.chromatics4";
+
+        internal const string LayersFileLegacy3   = "layers.chromatics3";
+        internal const string PaletteFileLegacy3  = "palette.chromatics3";
+        internal const string EffectsFileLegacy3  = "effects.chromatics3";
+        internal const string SettingsFileLegacy3 = "settings.chromatics3";
+
+        // Returns the directory where Chromatics user-data files (.chromatics4) live.
         // Portable installs (ZIP, anywhere on disk) keep files next to the exe.
         // Setup.exe installs land in %LocalAppData%\Chromatics\current\ which Velopack
         // replaces on every update, so those installs redirect to %AppData%\Chromatics\.
@@ -54,6 +67,64 @@ namespace Chromatics.Helpers
             return exeDir;
         }
 
+        // One-shot migration of Chromatics-3 data files to their Chromatics-4
+        // equivalents. For each pair:
+        //   - If the .chromatics3 file exists and .chromatics4 does not, copy it.
+        //   - Rename the source .chromatics3 to .chromatics3.migrated so it is
+        //     preserved but never re-examined on future launches (idempotent).
+        //   - If .chromatics3.migrated already exists (from a prior run that
+        //     somehow re-created the .chromatics3), delete the duplicate so we
+        //     don't fight ourselves next launch.
+        // Safe to call every startup — no-op when no .chromatics3 files exist.
+        // Returns the list of filenames that were freshly migrated this run.
+        public static IReadOnlyList<string> MigrateLegacyChromatics3Files()
+            => MigrateLegacyChromatics3Files(GetConfigDirectory());
+
+        public static IReadOnlyList<string> MigrateLegacyChromatics3Files(string directory)
+        {
+            var migrated = new List<string>();
+            if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
+                return migrated;
+
+            var pairs = new[]
+            {
+                (LayersFileLegacy3,   LayersFile),
+                (PaletteFileLegacy3,  PaletteFile),
+                (EffectsFileLegacy3,  EffectsFile),
+                (SettingsFileLegacy3, SettingsFile),
+            };
+
+            foreach (var (legacyName, newName) in pairs)
+            {
+                var legacyPath   = Path.Combine(directory, legacyName);
+                var newPath      = Path.Combine(directory, newName);
+                var migratedPath = legacyPath + ".migrated";
+
+                if (!File.Exists(legacyPath)) continue;
+
+                try
+                {
+                    if (!File.Exists(newPath))
+                    {
+                        File.Copy(legacyPath, newPath);
+                        migrated.Add(legacyName);
+                        Logger.WriteConsole(Enums.LoggerTypes.System, $"Migrated {legacyName} → {newName}.");
+                    }
+
+                    if (File.Exists(migratedPath))
+                        File.Delete(legacyPath);
+                    else
+                        File.Move(legacyPath, migratedPath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Failed to migrate {legacyName}: {ex.Message}");
+                }
+            }
+
+            return migrated;
+        }
+
         // Drag-repositioning a keycap fires SaveMappings on a thread-pool task on
         // every pointer-release. Rapid drags (or the preview tick touching the
         // same file path) can overlap and collide on the sibling ".tmp" handle,
@@ -66,7 +137,7 @@ namespace Chromatics.Helpers
             IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/layers.chromatics3";
+            var path = Path.Combine(enviroment, LayersFile);
 
             try
             {
@@ -151,7 +222,7 @@ namespace Chromatics.Helpers
             LoadLayerMappings()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/layers.chromatics3";
+            var path = Path.Combine(enviroment, LayersFile);
 
             try
             {
@@ -284,7 +355,7 @@ namespace Chromatics.Helpers
         public static bool CheckLayerMappingsExist()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/layers.chromatics3";
+            var path = Path.Combine(enviroment, LayersFile);
 
             if (File.Exists(path))
                 return true;
@@ -372,8 +443,8 @@ namespace Chromatics.Helpers
         public static bool CreateLayersBackup()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/layers.chromatics3";
-            var backupFilePath = Path.Combine(Path.GetDirectoryName(path), $"backup_layers_{DateTime.Now:yyyyMMdd_HHmmss}.chromatics3");
+            var path = Path.Combine(enviroment, LayersFile);
+            var backupFilePath = Path.Combine(Path.GetDirectoryName(path), $"backup_layers_{DateTime.Now:yyyyMMdd_HHmmss}.chromatics4");
 
             try
             {
@@ -392,7 +463,7 @@ namespace Chromatics.Helpers
         public static void SaveColorMappings(PaletteColorModel palette)
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/palette.chromatics3";
+            var path = Path.Combine(enviroment, PaletteFile);
 
             try
             {
@@ -419,7 +490,7 @@ namespace Chromatics.Helpers
         public static PaletteColorModel LoadColorMappings()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/palette.chromatics3";
+            var path = Path.Combine(enviroment, PaletteFile);
             var result = new PaletteColorModel();
 
             try
@@ -445,7 +516,7 @@ namespace Chromatics.Helpers
         public static bool CheckColorMappingsExist()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/palette.chromatics3";
+            var path = Path.Combine(enviroment, PaletteFile);
 
             if (File.Exists(path))
                 return true;
@@ -461,7 +532,7 @@ namespace Chromatics.Helpers
 
             var ext = Path.GetExtension(path);
 
-            if (ext == ".chromatics3")
+            if (ext == ".chromatics4" || ext == ".chromatics3" || ext == ".chromatics2")
             {
                 Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Color Palette..");
                 try
@@ -541,7 +612,7 @@ namespace Chromatics.Helpers
         public static void SaveEffectSettings(EffectTypesModel palette)
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/effects.chromatics3";
+            var path = Path.Combine(enviroment, EffectsFile);
 
             try
             {
@@ -568,7 +639,7 @@ namespace Chromatics.Helpers
         public static EffectTypesModel LoadEffectSettings()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/effects.chromatics3";
+            var path = Path.Combine(enviroment, EffectsFile);
             var result = new EffectTypesModel();
 
             try
@@ -594,7 +665,7 @@ namespace Chromatics.Helpers
         public static bool CheckEffectSettingsExist()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/effects.chromatics3";
+            var path = Path.Combine(enviroment, EffectsFile);
 
             if (File.Exists(path))
                 return true;
@@ -605,7 +676,7 @@ namespace Chromatics.Helpers
         public static void SaveSettings(SettingsModel settings)
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/settings.chromatics3";
+            var path = Path.Combine(enviroment, SettingsFile);
 
             try
             {
@@ -632,7 +703,7 @@ namespace Chromatics.Helpers
         public static SettingsModel LoadSettings()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/settings.chromatics3";
+            var path = Path.Combine(enviroment, SettingsFile);
             var result = new SettingsModel();
 
             try
@@ -658,7 +729,7 @@ namespace Chromatics.Helpers
         public static bool CheckSettingsExist()
         {
             var enviroment = GetConfigDirectory();
-            var path = $"{enviroment}/settings.chromatics3";
+            var path = Path.Combine(enviroment, SettingsFile);
 
             if (File.Exists(path))
                 return true;
