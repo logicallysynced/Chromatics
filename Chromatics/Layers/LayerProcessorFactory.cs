@@ -65,6 +65,7 @@ namespace Chromatics.Layers
                 BaseLayerType.ReactiveWeather => ReactiveWeatherProcessor.Instance,
                 BaseLayerType.BattleStance => BaseBattleStanceProcessor.Instance,
                 BaseLayerType.JobClasses => JobClassesProcessor.Instance,
+                BaseLayerType.ScreenCapture => ScreenCaptureProcessor.Instance,
                 _ => throw new ArgumentException("Unknown BaseLayerType")
             };
         }

@@ -1,30 +1,63 @@
 using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Chromatics.Extensions
 {
     /// <summary>
-    /// Samples the primary screen on a background thread and produces a dominant-colour
-    /// breakdown for consumers that want to drive lighting from on-screen content.
+    /// Samples the FFXIV game window on a background thread and produces a
+    /// horizontal colour breakdown for ambient base-layer lighting.
+    /// Falls back to the primary monitor when FFXIV is not running.
     /// </summary>
     public sealed class ScreenCaptureExtension : IDisposable
     {
         public event EventHandler ColorGenerated;
 
-        private const int DarkPixelLimit = 100;
-        private const int PixelSampleStride = 10;
-        private const int DefaultSegmentCount = 2;
-        private const int RefreshIntervalMs = 500;
+        // Pixels whose R, G AND B are all below this threshold are treated as
+        // near-black (UI overlays, letterboxes) and excluded from the average.
+        private const int DarkPixelLimit = 30;
+
+        // Sample every Nth pixel in each direction — balances accuracy vs speed.
+        private const int PixelSampleStride = 8;
+
+        // Number of horizontal colour bands sampled left→right across the frame.
+        public const int HorizontalSampleCount = 8;
+
+        private const int RefreshIntervalMs = 200;
+        private const string FfxivWindowClass = "FFXIVGAME";
 
         private Thread _workerThread;
         private volatile bool _isStarted;
         private volatile bool _stopRequested;
-        private ScreenColor _latestScreenColor;
+        private volatile ScreenColor _latestScreenColor;
         private bool _disposed;
+
+        // ── Win32 ──────────────────────────────────────────────────────────
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll")]
+        private static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        private static extern int GetSystemMetrics(int nIndex);
+        private const int SM_CXSCREEN = 0;
+        private const int SM_CYSCREEN = 1;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT { public int Left, Top, Right, Bottom; }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct POINT { public int X, Y; }
+
+        // ── Lifecycle ──────────────────────────────────────────────────────
 
         public void Start()
         {
@@ -45,17 +78,22 @@ namespace Chromatics.Extensions
         public void Stop()
         {
             if (!_isStarted) return;
-
             _stopRequested = true;
             _isStarted = false;
-            // Leave the worker thread to exit on its own next tick; it's a background
-            // thread so it won't block process shutdown if Dispose isn't called.
         }
 
-        public ScreenColor GetScreenColours()
+        public ScreenColor GetScreenColours() =>
+            _isStarted ? _latestScreenColor : null;
+
+        public void Dispose()
         {
-            return _isStarted ? _latestScreenColor : null;
+            if (_disposed) return;
+            _disposed = true;
+            Stop();
+            ColorGenerated = null;
         }
+
+        // ── Capture loop ───────────────────────────────────────────────────
 
         private void CaptureLoop()
         {
@@ -76,143 +114,155 @@ namespace Chromatics.Extensions
 
         private void AnalyzeOnce()
         {
-            using var screenshot = CaptureScreenshot();
-            if (screenshot == null) return;
+            var (bmp, isGameWindow) = CaptureTarget();
+            if (bmp == null) return;
 
-            var result = new ScreenColor
+            using (bmp)
             {
-                MainColor = GetAverageColor(screenshot),
-            };
-
-            int segmentWidth = Math.Max(1, screenshot.Width / DefaultSegmentCount);
-            int segmentHeight = Math.Max(1, screenshot.Height / DefaultSegmentCount);
-
-            int segmentIndex = 0;
-            for (int y = 0; y < screenshot.Height; y += segmentHeight)
-            {
-                for (int x = 0; x < screenshot.Width; x += segmentWidth)
+                var (main, columns) = SampleBitmap(bmp, HorizontalSampleCount);
+                _latestScreenColor = new ScreenColor
                 {
-                    // Clamp the segment to the screenshot so Clone doesn't throw near the edges.
-                    int width = Math.Min(segmentWidth, screenshot.Width - x);
-                    int height = Math.Min(segmentHeight, screenshot.Height - y);
-                    if (width <= 0 || height <= 0) continue;
+                    MainColor       = main,
+                    HorizontalSamples = columns,
+                    GameWindowActive  = isGameWindow,
+                };
+            }
 
-                    var segmentRect = new Rectangle(x, y, width, height);
-                    using var segment = screenshot.Clone(segmentRect, screenshot.PixelFormat);
-                    result.ScreenColors.TryAdd(segmentIndex++, GetAverageColor(segment));
+            ColorGenerated?.Invoke(this, EventArgs.Empty);
+        }
+
+        // ── Window / screen capture ────────────────────────────────────────
+
+        private (Bitmap bmp, bool isGame) CaptureTarget()
+        {
+            var hwnd = FindWindow(FfxivWindowClass, null);
+            if (hwnd != IntPtr.Zero && GetClientRect(hwnd, out var cr))
+            {
+                int w = cr.Right  - cr.Left;
+                int h = cr.Bottom - cr.Top;
+                if (w > 0 && h > 0)
+                {
+                    var origin = new POINT { X = 0, Y = 0 };
+                    ClientToScreen(hwnd, ref origin);
+                    var bmp = new Bitmap(w, h);
+                    try
+                    {
+                        using var g = Graphics.FromImage(bmp);
+                        g.CopyFromScreen(origin.X, origin.Y, 0, 0, new Size(w, h));
+                        return (bmp, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"ScreenCaptureExtension screenshot failed: {ex.Message}");
+                        bmp.Dispose();
+                    }
                 }
             }
 
-            _latestScreenColor = result;
-            ColorGenerated?.Invoke(this, new ColorGeneratedEventArgs(result));
-        }
+            // Fall back to primary monitor
+            int sw = GetSystemMetrics(SM_CXSCREEN);
+            int sh = GetSystemMetrics(SM_CYSCREEN);
+            if (sw <= 0 || sh <= 0) return (null, false);
 
-        [DllImport("user32.dll")]
-        private static extern int GetSystemMetrics(int nIndex);
-        private const int SM_CXSCREEN = 0;
-        private const int SM_CYSCREEN = 1;
-
-        private static Bitmap CaptureScreenshot()
-        {
-            int width  = GetSystemMetrics(SM_CXSCREEN);
-            int height = GetSystemMetrics(SM_CYSCREEN);
-            if (width <= 0 || height <= 0) return null;
-
-            var bmp = new Bitmap(width, height);
+            var fallback = new Bitmap(sw, sh);
             try
             {
-                using var g = Graphics.FromImage(bmp);
-                g.CopyFromScreen(0, 0, 0, 0, new System.Drawing.Size(width, height));
-                return bmp;
+                using var g = Graphics.FromImage(fallback);
+                g.CopyFromScreen(0, 0, 0, 0, new Size(sw, sh));
+                return (fallback, false);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"ScreenCaptureExtension screenshot failed: {ex.Message}");
-                bmp.Dispose();
-                return null;
+                fallback.Dispose();
+                return (null, false);
             }
         }
 
-        private static Color GetAverageColor(Bitmap picture)
-        {
-            int totalR = 0, totalG = 0, totalB = 0;
-            int brightPixels = 0, darkPixels = 0;
+        // ── Pixel sampling ─────────────────────────────────────────────────
 
-            for (int y = 0; y < picture.Height; y += PixelSampleStride)
+        // One LockBits pass over the full bitmap; computes the overall average
+        // colour AND per-column averages for the horizontal gradient in a single
+        // sweep so we only pay the lock/unlock cost once per frame.
+        private static unsafe (Color main, Color[] columns) SampleBitmap(Bitmap bmp, int columnCount)
+        {
+            var data = bmp.LockBits(
+                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
+
+            try
             {
-                for (int x = 0; x < picture.Width; x += PixelSampleStride)
+                int w           = data.Width;
+                int h           = data.Height;
+                int stride      = data.Stride;
+                int colWidth    = Math.Max(1, w / columnCount);
+
+                var colR   = new long[columnCount];
+                var colG   = new long[columnCount];
+                var colB   = new long[columnCount];
+                var colCnt = new int[columnCount];
+                long totR = 0, totG = 0, totB = 0;
+                int  totCnt = 0;
+
+                byte* scan0 = (byte*)data.Scan0;
+
+                for (int row = 0; row < h; row += PixelSampleStride)
                 {
-                    Color pixel = picture.GetPixel(x, y);
-                    if (pixel.R < DarkPixelLimit && pixel.G < DarkPixelLimit && pixel.B < DarkPixelLimit)
+                    byte* rowPtr = scan0 + row * stride;
+                    for (int col = 0; col < w; col += PixelSampleStride)
                     {
-                        darkPixels++;
-                    }
-                    else
-                    {
-                        brightPixels++;
-                        totalR += pixel.R;
-                        totalG += pixel.G;
-                        totalB += pixel.B;
+                        // Format32bppArgb layout per pixel: B G R A
+                        byte* px = rowPtr + col * 4;
+                        byte b = px[0], g = px[1], r = px[2];
+
+                        if (r < DarkPixelLimit && g < DarkPixelLimit && b < DarkPixelLimit)
+                            continue;
+
+                        int seg = Math.Min(col / colWidth, columnCount - 1);
+                        colR[seg] += r; colG[seg] += g; colB[seg] += b;
+                        colCnt[seg]++;
+                        totR += r; totG += g; totB += b;
+                        totCnt++;
                     }
                 }
-            }
 
-            if (brightPixels == 0)
+                var columns = new Color[columnCount];
+                for (int i = 0; i < columnCount; i++)
+                {
+                    int c = colCnt[i];
+                    columns[i] = c > 0
+                        ? Color.FromArgb((int)(colR[i] / c), (int)(colG[i] / c), (int)(colB[i] / c))
+                        : Color.Black;
+                }
+
+                var main = totCnt > 0
+                    ? Color.FromArgb((int)(totR / totCnt), (int)(totG / totCnt), (int)(totB / totCnt))
+                    : Color.Black;
+
+                return (main, columns);
+            }
+            finally
             {
-                return Color.Black;
+                bmp.UnlockBits(data);
             }
-
-            double avgR = (double)totalR / brightPixels;
-            double avgG = (double)totalG / brightPixels;
-            double avgB = (double)totalB / brightPixels;
-
-            // If the frame is dominated by dark pixels, scale the averaged bright colour
-            // down proportionally so the output feels "darker" rather than saturated.
-            if (brightPixels * 2 < darkPixels)
-            {
-                double ratio = (double)brightPixels / darkPixels;
-                avgR *= ratio;
-                avgG *= ratio;
-                avgB *= ratio;
-            }
-
-            return Color.FromArgb(
-                Clamp255(avgR),
-                Clamp255(avgG),
-                Clamp255(avgB));
         }
 
-        private static int Clamp255(double value)
-        {
-            if (value < 0) return 0;
-            if (value > 255) return 255;
-            return (int)value;
-        }
-
-        public void Dispose()
-        {
-            if (_disposed) return;
-            _disposed = true;
-
-            Stop();
-            // Drop handler references so subscribers can be garbage-collected.
-            ColorGenerated = null;
-        }
+        // ── Result type ────────────────────────────────────────────────────
 
         public sealed class ScreenColor
         {
+            /// <summary>Average of all non-dark pixels across the whole frame.</summary>
             public Color MainColor { get; set; }
-            public ConcurrentDictionary<int, Color> ScreenColors { get; } = new ConcurrentDictionary<int, Color>();
-        }
 
-        public sealed class ColorGeneratedEventArgs : EventArgs
-        {
-            public ScreenColor ScreenColor { get; }
+            /// <summary>
+            /// Left-to-right horizontal colour samples (length == HorizontalSampleCount).
+            /// Index 0 = left edge, last index = right edge.
+            /// </summary>
+            public Color[] HorizontalSamples { get; set; }
 
-            public ColorGeneratedEventArgs(ScreenColor screenColor)
-            {
-                ScreenColor = screenColor;
-            }
+            /// <summary>True when the source was the FFXIV window; false for the fallback monitor capture.</summary>
+            public bool GameWindowActive { get; set; }
         }
     }
 }
