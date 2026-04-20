@@ -233,7 +233,6 @@ namespace Chromatics.Core
                     _activeDevices.Add(device, false);
                 }
 
-                Debug.WriteLine($"Detaching device {device.DeviceInfo.DeviceName}");
             }
         }
 
@@ -252,7 +251,6 @@ namespace Chromatics.Core
                     _activeDevices.Add(device, true);
                 }
 
-                Debug.WriteLine($"Attaching device {device.DeviceInfo.DeviceName}");
             }
         }
 
@@ -633,10 +631,6 @@ namespace Chromatics.Core
 
             _runningEffects.Clear();
 
-            #if DEBUG
-                Debug.WriteLine($"Stopping all effects");
-            #endif
-
         }
 
         public static bool IsBaseLayerEffectRunning()
@@ -700,9 +694,6 @@ namespace Chromatics.Core
                 
                 _layergroups.Remove(targetId);
                                
-                #if DEBUG
-                    Debug.WriteLine(@"Remove Layer Requested: " + targetId);
-                #endif
             }
         }
 
@@ -725,10 +716,6 @@ namespace Chromatics.Core
             _runningEffects.Clear();
             _layergroups.Clear();
             _layergroupledcollection.Clear();
-
-#if DEBUG
-            Debug.WriteLine(@"Reset Layer Groups");
-#endif
         }
 
         // Avalonia MappingViewModel registers here when preview is active.

@@ -135,20 +135,11 @@ namespace Chromatics.Layers
         public void DisposeAll()
         {
             foreach (var processor in _baseProcessors.Values)
-            {
-                Debug.WriteLine($"Disposing: {processor.GetType().Name}");
                 processor.Dispose();
-            }
             foreach (var processor in _effectProcessors.Values)
-            {
-                Debug.WriteLine($"Disposing: {processor.GetType().Name}");
                 processor.Dispose();
-            }
             foreach (var processor in _dynamicProcessors.Values)
-            {
-                Debug.WriteLine($"Disposing: {processor.GetType().Name}");
                 processor.Dispose();
-            }
 
             _baseProcessors.Clear();
             _effectProcessors.Clear();
