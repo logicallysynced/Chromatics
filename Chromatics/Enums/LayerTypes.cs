@@ -31,7 +31,7 @@ namespace Chromatics.Enums
         BattleStance = 2,
         [LayerDisplay(Name = "Job Classes", Description = "Base layer changes colour depending on the character's current class.\nUses base layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         JobClasses = 3,
-        [LayerDisplay(Name = "Screen Capture", Description = "Ambient base layer that samples the FFXIV game window and paints a matching colour gradient across your devices.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        [LayerDisplay(Name = "Screen Capture (Beta)", Description = "Ambient base layer that samples the FFXIV game window and paints a matching colour gradient across your devices.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         ScreenCapture = 4,
     };
     public enum DynamicLayerType
