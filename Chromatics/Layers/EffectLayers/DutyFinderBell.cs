@@ -7,7 +7,6 @@ using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Chromatics.Extensions.Sharlayan;
 
 namespace Chromatics.Layers
 {
@@ -108,11 +107,13 @@ namespace Chromatics.Layers
 
             if (_memoryHandler?.Reader != null)
             {
-                DutyFinderBellExtension.CheckCache();
+                // Single snapshot per tick — DutyFinderBellPopped is `ContentsFinderQueueState == 3`.
+                var gameState = _memoryHandler.Reader.GetGameState();
+                bool isPopped = gameState.DutyFinderBellPopped;
 
-                if (DutyFinderBellExtension.IsPopped() != model.wasPopped && !model.wasDisabled)
+                if (isPopped != model.wasPopped && !model.wasDisabled)
                 {
-                    if (DutyFinderBellExtension.IsPopped())
+                    if (isPopped)
                     {
                         highlight_brush.AddDecorator(flash);
 
@@ -129,7 +130,7 @@ namespace Chromatics.Layers
                         }
                     }
 
-                    model.wasPopped = DutyFinderBellExtension.IsPopped();
+                    model.wasPopped = isPopped;
                 }
 
                 model.wasDisabled = false;

@@ -15,7 +15,6 @@ using System.Threading;
 using RGB.NET.Core;
 using Chromatics.Extensions.RGB.NET.Decorators;
 using Sharlayan.Core.Enums;
-using Chromatics.Extensions.Sharlayan;
 
 namespace Chromatics.Core
 {
@@ -372,12 +371,6 @@ namespace Chromatics.Core
                     Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
                     _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(_configuration);
 
-                    //Load Other Memory Zones
-                    DutyFinderBellExtension.RefreshData(_memoryHandler);
-                    GameStateExtension.RefreshData(_memoryHandler);
-                    WeatherExtension.RefreshData(_memoryHandler);
-                    MusicExtension.RefreshData(_memoryHandler);
-
                     gameConnected = true;
                     activeProcessId = _configuration.ProcessModel.ProcessID;
 
@@ -439,7 +432,7 @@ namespace Chromatics.Core
 
                     var runningEffects = RGBController.GetRunningEffects();
 
-                    if (getCurrentPlayer.Entity == null && chatLogCount <= 0 && !GameStateExtension.IsLoggedIn())
+                    if (getCurrentPlayer.Entity == null && chatLogCount <= 0 && !handler.Reader.GetGameState().IsLoggedIn)
                     {
                         //Game is still on Main Menu or Character Screen
                         if (!_onTitle || wasPreviewed)

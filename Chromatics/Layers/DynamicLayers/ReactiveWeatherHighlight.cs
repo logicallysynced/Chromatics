@@ -2,7 +2,6 @@
 using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
-using Chromatics.Extensions.Sharlayan;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
