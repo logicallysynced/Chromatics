@@ -83,8 +83,16 @@ namespace Chromatics.Helpers
         public static IReadOnlyList<string> MigrateLegacyChromatics3Files(string directory)
         {
             var migrated = new List<string>();
+
+            Logger.WriteConsole(Enums.LoggerTypes.System,
+                $"Checking for legacy .chromatics3 data files in: {directory}");
+
             if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.System,
+                    "Config directory does not exist — skipping migration.");
                 return migrated;
+            }
 
             var pairs = new[]
             {
@@ -94,6 +102,8 @@ namespace Chromatics.Helpers
                 (SettingsFileLegacy3, SettingsFile),
             };
 
+            int legacyFound = 0;
+
             foreach (var (legacyName, newName) in pairs)
             {
                 var legacyPath   = Path.Combine(directory, legacyName);
@@ -101,6 +111,7 @@ namespace Chromatics.Helpers
                 var migratedPath = legacyPath + ".migrated";
 
                 if (!File.Exists(legacyPath)) continue;
+                legacyFound++;
 
                 try
                 {
@@ -110,17 +121,35 @@ namespace Chromatics.Helpers
                         migrated.Add(legacyName);
                         Logger.WriteConsole(Enums.LoggerTypes.System, $"Migrated {legacyName} → {newName}.");
                     }
+                    else
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.System,
+                            $"{newName} already present — preserving existing {legacyName} as {legacyName}.migrated without overwriting.");
+                    }
 
                     if (File.Exists(migratedPath))
+                    {
                         File.Delete(legacyPath);
+                        Logger.WriteConsole(Enums.LoggerTypes.System,
+                            $"Removed duplicate {legacyName} (a {legacyName}.migrated from a prior run already exists).");
+                    }
                     else
+                    {
                         File.Move(legacyPath, migratedPath);
+                    }
                 }
                 catch (Exception ex)
                 {
                     Logger.WriteConsole(Enums.LoggerTypes.Error, $"Failed to migrate {legacyName}: {ex.Message}");
                 }
             }
+
+            if (legacyFound == 0)
+                Logger.WriteConsole(Enums.LoggerTypes.System,
+                    "No legacy .chromatics3 files found — nothing to migrate.");
+            else
+                Logger.WriteConsole(Enums.LoggerTypes.System,
+                    $"Migration check complete. {migrated.Count} file(s) migrated to .chromatics4 this run.");
 
             return migrated;
         }

@@ -26,7 +26,11 @@ namespace Chromatics.ViewModels
             _isLightTheme = Avalonia.Application.Current?.ActualThemeVariant
                             != Avalonia.Styling.ThemeVariant.Dark;
 
-            Logger.OnConsoleLogged += OnConsoleLogged;
+            // Drains the Logger's pre-subscription buffer and wires the
+            // handler in one atomic step so startup logs (e.g. the .chromatics3
+            // migration in Program.Main) show up in the console when the tab
+            // first appears.
+            Logger.AttachSubscriberAndDrain(OnConsoleLogged);
             App.ThemeVariantChanged += OnThemeVariantChanged;
         }
 
