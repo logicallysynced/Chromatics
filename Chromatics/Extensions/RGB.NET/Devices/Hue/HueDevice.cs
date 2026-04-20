@@ -1,5 +1,4 @@
 ﻿using RGB.NET.Core;
-using System.Diagnostics;
 
 namespace Chromatics.Extensions.RGB.NET.Devices.Hue;
 
@@ -12,7 +11,6 @@ public class HueDevice : AbstractRGBDevice<HueDeviceInfo>
 
     private void InitializeLayout()
     {
-        Debug.WriteLine($"Hue ADDED: {DeviceInfo.Model}");
         // Models based on https://developers.meethue.com/develop/hue-api/supported-devices/#Supported-lights
         
         Led led = DeviceInfo.Model switch

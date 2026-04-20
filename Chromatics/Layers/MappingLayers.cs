@@ -239,7 +239,6 @@ namespace Chromatics.Layers
 
             if (flag || over)
             {
-                Debug.WriteLine("Flagged for upgrade");
                 if (!empty)
                 {
                     FileOperationsHelper.CreateLayersBackup();
@@ -315,15 +314,6 @@ namespace Chromatics.Layers
             {
 
 
-                // Log layers and their versions
-#if DEBUG
-                Debug.WriteLine($"Total layers loaded: {layers.Count}");
-
-                foreach (var layer in layers)
-                {
-                    Debug.WriteLine($"Layer ID: {layer.Key}, Version: {layer.Value.layerVersion}");
-                }
-#endif
                 var migratedLayers = new Dictionary<int, Layer>();
                 var layersToMigrate = layers.Where(l => l.Value.layerVersion == "1").GroupBy(l => l.Value.deviceType);
 
@@ -338,8 +328,6 @@ namespace Chromatics.Layers
                 {
                     var deviceType = group.Key;
                     var deviceLayers = group.ToList();
-
-                    Debug.WriteLine($"Device Type: {deviceType}, Layers Count: {deviceLayers.Count}");
 
                     var availableDevices = currentDevices.Where(d => d.Value.DeviceInfo.DeviceType == deviceType).ToList();
                     if (availableDevices.Count == 0)
@@ -365,8 +353,6 @@ namespace Chromatics.Layers
                 {
                     var deviceType = group.Key;
                     var deviceLayers = group.ToList();
-
-                    Debug.WriteLine($"Device Type: {deviceType}, Layers Count: {deviceLayers.Count} with blank GUID");
 
                     var availableDevices = currentDevices.Where(d => d.Value.DeviceInfo.DeviceType == deviceType).ToList();
                     if (availableDevices.Count == 0)

@@ -95,8 +95,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         {
                             try
                             {
-                                Debug.WriteLine($"Found Light: {light.Metadata.Name}");
-
                                 // Create the device info and device objects
                                 HueDeviceInfo deviceInfo = new HueDeviceInfo(light);
                                 HueDevice device = new HueDevice(deviceInfo, new HueUpdateQueue(GetUpdateTrigger(), light, localHueApi));
