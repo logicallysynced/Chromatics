@@ -152,7 +152,7 @@ namespace Chromatics.ViewModels.Mapping
                 if (_layer.rootLayerType == LayerType.EffectLayer)
                     return TextHelper.ParseLayerHelperText(
                         "The effect layer displays effects over other layers, depending on which effects are enabled.");
-                var option = TypeOptions.FirstOrDefault(o => o.Value == LayerTypeIndex);
+                var option = TypeOptions.ElementAtOrDefault(LayerTypeIndex);
                 if (option == null || string.IsNullOrEmpty(option.Description)) return string.Empty;
 
                 // For Job Gauge types, substitute a job-specific description when in-game.
@@ -181,7 +181,7 @@ namespace Chromatics.ViewModels.Mapping
             { (Actor.Job.PLD, DynamicLayerType.JobGaugeA), "Oath Gauge (0–100). Fills in combat; spend via Sheltron and Holy Sheltron." },
             { (Actor.Job.MNK, DynamicLayerType.JobGaugeA), "Chakra Stacks (0–5). Fill via Meditation hits; spend with The Forbidden Chakra." },
             { (Actor.Job.DRG, DynamicLayerType.JobGaugeA), "Dragon Gauge (0–100). Fills during Blood of the Dragon; sustain to remain in Life of the Dragon." },
-            { (Actor.Job.BRD, DynamicLayerType.JobGaugeA), "Soul Voice (0–100). Fills during songs; spend with Apex Arrow at 80+." },
+            { (Actor.Job.BRD, DynamicLayerType.JobGaugeA), "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing." },
             { (Actor.Job.WHM, DynamicLayerType.JobGaugeA), "Healing Lilies and Blood Lily. Lilies fill over time; three lilies charge a Blood Lily for Afflatus Misery." },
             { (Actor.Job.BLM, DynamicLayerType.JobGaugeA), "Astral Fire / Umbral Ice stance timer (0–15s). Tracks the 15-second buff window; lights up on Paradox proc." },
             { (Actor.Job.SMN, DynamicLayerType.JobGaugeA), "Active summon timer. Tracks the current phase: Carbuncle, Dreadwyrm, Bahamut, or Phoenix." },
@@ -200,6 +200,7 @@ namespace Chromatics.ViewModels.Mapping
             { (Actor.Job.PCT, DynamicLayerType.JobGaugeA), "Palette Gauge (0–100). Fills via Motif combos; spend at 50+ with Holy in White or Comet in Black." },
 
             // ── Job Gauge B ──────────────────────────────────────────────────────────
+            { (Actor.Job.BRD, DynamicLayerType.JobGaugeB), "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow." },
             { (Actor.Job.PLD, DynamicLayerType.JobGaugeB), "Confiteor Combo Timer. Tracks the remaining window to execute the Confiteor blade combo chain." },
             { (Actor.Job.MNK, DynamicLayerType.JobGaugeB), "Beast Chakra Aggregate (0–6). Total OpoOpo, Raptor and Coeurl stacks accumulated for Perfect Balance." },
             { (Actor.Job.BLM, DynamicLayerType.JobGaugeB), "Astral Soul Stacks (0–6). Fill with Fire IV during Astral Fire; spend all 6 stacks with Flare Star." },

@@ -713,5 +713,7 @@
   "Mana Stacks (0–3). Fill via Enchanted Riposte → Zwerchhau → Redoublement; spend 3 with Verholy or Verflare.": "마나 중첩(0–3). 인챈티드 리포스트 → 츠베르크하우 → 르두블망으로 차오르며, 3중첩을 버홀리 또는 버플레어에 사용합니다.",
   "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used.": "카에시 준비 완료. 마지막으로 사용한 필살에 대한 카에시 후속 기술이 대기 중임을 나타냅니다.",
   "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.": "리어웨이큰 타이머. 리어웨이큰 단계의 남은 지속 시간을 추적합니다.",
-  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "드로우 유형(아스트랄 / 엄브랄). 현재 어떤 드로우 사이클 측이 활성화되어 있는지 나타냅니다."
+  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "드로우 유형(아스트랄 / 엄브랄). 현재 어떤 드로우 사이클 측이 활성화되어 있는지 나타냅니다.",
+  "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing.": "노래 타이머(0–45초). 현재 활성화된 노래의 남은 지속 시간을 추적하며, 색상은 어떤 노래가 재생 중인지 나타냅니다.",
+  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "소울 보이스(0–100). 노래가 재생되는 동안 차오르며, 80 이상일 때 에이펙스 애로우 또는 블래스트 애로우로 소모하세요."
 }

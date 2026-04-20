@@ -713,5 +713,7 @@
   "Mana Stacks (0–3). Fill via Enchanted Riposte → Zwerchhau → Redoublement; spend 3 with Verholy or Verflare.": "Charges de mana (0–3). Se remplissent via Enchanted Riposte → Zwerchhau → Redoublement ; dépensez-en 3 avec Verholy ou Verflare.",
   "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used.": "Kaeshi prêt. Indicateur qu'un enchaînement Kaeshi est en attente pour le dernier Hissatsu utilisé.",
   "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.": "Minuteur de Reawakened. Suit la durée restante de la phase Reawakened.",
-  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "Type de pioche (astral / ombral). Indique quel côté du cycle de pioche est actuellement actif."
+  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "Type de pioche (astral / ombral). Indique quel côté du cycle de pioche est actuellement actif.",
+  "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing.": "Minuteur de chant (0–45 s). Suit la durée restante du chant actif ; la couleur indique quel chant est en cours.",
+  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "Voix de l’âme (0–100). Se remplit pendant les chants ; utilisez-la à 80+ avec Flèche apogée ou Flèche explosive."
 }

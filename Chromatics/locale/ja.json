@@ -713,5 +713,7 @@
   "Mana Stacks (0–3). Fill via Enchanted Riposte → Zwerchhau → Redoublement; spend 3 with Verholy or Verflare.": "マナスタック（0～3）。エンリポスト → エンツヴェルクハウ → エンルドゥブルマンで蓄積し、3スタックをヴァルホーリーまたはヴァルフレアで消費します。",
   "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used.": "返し準備完了。最後に使用した必殺剣に対する返し派生が待機中であることを示します。",
   "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.": "リウェイクンタイマー。リウェイクン状態の残り持続時間を追跡します。",
-  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "ドロータイプ（アストラル／アンブラル）。現在どちら側のドローサイクルが有効かを示します。"
+  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "ドロータイプ（アストラル／アンブラル）。現在どちら側のドローサイクルが有効かを示します。",
+  "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing.": "ソングタイマー（0～45秒）。現在の曲の残り時間を追跡します。色は再生中の曲を示します。",
+  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "ソウルボイス（0～100）。曲の再生中に溜まり、80以上でエイペックスアローまたはブラストアローに使用します。"
 }

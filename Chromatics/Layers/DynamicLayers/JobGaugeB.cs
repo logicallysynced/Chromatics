@@ -108,7 +108,7 @@ namespace Chromatics.Layers
                     if (layer.layerModes == Enums.LayerModes.Interpolate)
                     {
                         // Interpolate implementation
-                        var currentVal_Interpolate = LinearInterpolation.Interpolate(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, 0, countKeys + jobGauge.offset);
+                        var currentVal_Interpolate = LinearInterpolation.Interpolate<double>(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, 0, countKeys + jobGauge.offset);
 
                         // Process Lighting
                         var ledGroups = new List<ListLedGroup>();
@@ -122,7 +122,7 @@ namespace Chromatics.Layers
 
                             ledGroup.Detach();
 
-                            ledGroup.Brush = i < currentVal_Interpolate ? model.highlight_brush : model.empty_brush;
+                            ledGroup.Brush = i <= currentVal_Interpolate ? model.highlight_brush : model.empty_brush;
                             ledGroups.Add(ledGroup);
                         }
 
