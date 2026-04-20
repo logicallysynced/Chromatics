@@ -61,7 +61,7 @@ namespace Chromatics.Helpers
             var stableResult = await CheckFeed(StableFeedUrl, isBeta: false);
             var betaResult   = includeBeta ? await CheckFeed(BetaFeedUrl, isBeta: true) : null;
 
-            Logger.WriteConsole(LoggerTypes.System,
+            Logger.WriteVerbose(
                 $"[Update] stable={FormatResult(stableResult)} beta={FormatResult(betaResult)} includeBeta={includeBeta} markerBeta={IsBetaChannel()}");
 
             if (stableResult != null && betaResult != null)
