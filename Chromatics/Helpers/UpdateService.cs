@@ -2,38 +2,41 @@
 using Chromatics.Core;
 using Chromatics.Enums;
 using System;
-using System.Net.Http;
-using System.Reflection;
+using System.IO;
 using System.Threading.Tasks;
 using Velopack;
 using Velopack.Sources;
 
 namespace Chromatics.Helpers
 {
-    // Carries the update info AND which channel it came from.
-    // IsBeta    — which feed URL to use for download (routing only).
+    // IsBeta     — which feed URL to use for download (routing only).
     // IsPreRelease — whether to display the update as a beta/pre-release in the UI.
-    //   These differ when a stable build is cross-published to the beta feed so that
-    //   beta channel installs (which Velopack filters by channel) can receive it.
+    //   With marker-file-based channel identity these are always equal, but the
+    //   two concepts stay separate so future schemes (e.g. pre-release suffixed
+    //   stable builds) remain expressible.
     public record UpdateResult(UpdateInfo Info, bool IsBeta, bool IsPreRelease);
 
     public static class UpdateService
     {
-        // Stable builds are served from the root update directory.
-        // Beta builds live in /beta/ so the two feeds never collide.
         private const string StableFeedUrl = "https://chromaticsffxiv.com/chromatics4/update/stable/";
         private const string BetaFeedUrl   = "https://chromaticsffxiv.com/chromatics4/update/beta/";
 
-        // Returns true when the installed package was built with --channel beta.
-        // Reads from local Velopack metadata — no network call.
-        // Returns false when not installed (dev/IDE launch) or on the stable channel.
+        // Marker file that ships inside the nupkg for real beta builds only.
+        // Stable releases (including any a beta install migrates to) never have it,
+        // so after a beta→stable migration the title drops the [BETA] suffix cleanly.
+        //
+        // Velopack's own channel metadata is ignored for identity purposes —
+        // publish.py no longer sets --channel, and the feed JSON files are aliased
+        // under every channel name so any client can fetch them regardless of what
+        // Velopack thinks its installed channel is.
+        private const string BetaMarkerFileName = "channel.beta";
+
         public static bool IsBetaChannel()
         {
             try
             {
-                var mgr = new UpdateManager(new SimpleWebSource(StableFeedUrl));
-                if (!mgr.IsInstalled) return false;
-                return string.Equals(ReadInstalledChannel(mgr), "beta", StringComparison.OrdinalIgnoreCase);
+                var markerPath = Path.Combine(AppContext.BaseDirectory, BetaMarkerFileName);
+                return File.Exists(markerPath);
             }
             catch
             {
@@ -41,13 +44,11 @@ namespace Chromatics.Helpers
             }
         }
 
-        // Checks for an update. Rules:
+        // Checks for an update.
         //   - Stable feed is always checked.
-        //   - Beta feed is checked when includeBeta is true OR when on the beta channel.
-        //     Beta channel installs must check their own feed because Velopack filters
-        //     updates by channel — a "win"-channel stable package is invisible to a
-        //     "beta"-channel install. Stable releases are cross-published to the beta
-        //     feed as beta-channel packages so this always delivers the right update.
+        //   - Beta feed is checked only when the user has opted in to beta updates.
+        //     A beta install that opts out naturally migrates to stable because
+        //     the stable feed's releases.beta.json alias lets it see stable updates.
         //   - When both feeds return a result, the higher version wins; stable wins ties.
         // Skipped entirely when not running inside a Velopack-managed directory
         // (dev/IDE launches never see a spurious update prompt).
@@ -57,23 +58,11 @@ namespace Chromatics.Helpers
             if (!probeMgr.IsInstalled)
                 return null;
 
-            bool isBeta = string.Equals(ReadInstalledChannel(probeMgr), "beta", StringComparison.OrdinalIgnoreCase);
-
             var stableResult = await CheckFeed(StableFeedUrl, isBeta: false);
-            bool checkBeta   = includeBeta || isBeta;
-            var betaResult   = checkBeta ? await CheckFeed(BetaFeedUrl, isBeta: true) : null;
+            var betaResult   = includeBeta ? await CheckFeed(BetaFeedUrl, isBeta: true) : null;
 
-            // When the beta result is a stable build cross-published as a beta-channel
-            // package (so Velopack's channel filter lets beta installs see it), stableResult
-            // will be null due to that same filter.  Detect this by checking whether the
-            // beta result's version appears in the stable feed JSON directly — if it does,
-            // the update is genuinely stable and should not be labelled pre-release.
-            if (betaResult != null && stableResult == null)
-            {
-                var ver = betaResult.Info.TargetFullRelease.Version;
-                if (await IsVersionInStableFeedAsync($"{ver.Major}.{ver.Minor}.{ver.Patch}"))
-                    betaResult = betaResult with { IsPreRelease = false };
-            }
+            Logger.WriteConsole(LoggerTypes.System,
+                $"[Update] stable={FormatResult(stableResult)} beta={FormatResult(betaResult)} includeBeta={includeBeta} markerBeta={IsBetaChannel()}");
 
             if (stableResult != null && betaResult != null)
             {
@@ -85,9 +74,9 @@ namespace Chromatics.Helpers
             return stableResult ?? betaResult;
         }
 
-        // Fetches one feed and returns null (silently) when the feed is
-        // unreachable or does not yet contain a release JSON — this is expected
-        // when the channel has never had a release published.
+        // Fetches one feed and returns null (silently) when the feed is unreachable
+        // or does not yet contain a release JSON — expected when the channel has
+        // never had a release published.
         private static async Task<UpdateResult?> CheckFeed(string feedUrl, bool isBeta)
         {
             try
@@ -102,23 +91,6 @@ namespace Chromatics.Helpers
             }
         }
 
-        // Fetches the stable releases.json directly (bypassing Velopack's channel filter)
-        // and checks whether the given version string appears in it.  Used to detect
-        // stable builds cross-published to the beta feed so they are not labelled pre-release.
-        private static async Task<bool> IsVersionInStableFeedAsync(string version)
-        {
-            try
-            {
-                using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
-                var json = await http.GetStringAsync(StableFeedUrl + "releases.json");
-                return json.Contains($"\"{version}\"", StringComparison.OrdinalIgnoreCase);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public static async Task DownloadAndApplyAsync(UpdateResult result, Action<int>? progress = null)
         {
             var feedUrl = result.IsBeta ? BetaFeedUrl : StableFeedUrl;
@@ -127,14 +99,9 @@ namespace Chromatics.Helpers
             mgr.ApplyUpdatesAndRestart(result.Info);
         }
 
-        // DefaultChannel and Locator are internal in the Velopack version we target.
-        // Read via reflection; isolated here so the rest of the class stays clean.
-        // Wrapped by callers in try/catch so any future Velopack API change is silent.
-        private static string? ReadInstalledChannel(UpdateManager mgr)
-        {
-            var prop = typeof(UpdateManager).GetProperty("DefaultChannel",
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            return prop?.GetValue(mgr) as string;
-        }
+        private static string FormatResult(UpdateResult? r) =>
+            r == null
+                ? "null"
+                : $"{r.Info.TargetFullRelease.Version} (IsBeta={r.IsBeta}, IsPreRelease={r.IsPreRelease})";
     }
 }
