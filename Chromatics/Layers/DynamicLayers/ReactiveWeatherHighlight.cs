@@ -75,9 +75,6 @@ namespace Chromatics.Layers.DynamicLayers
             var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
             var raidEffects = RGBController.GetEffectsSettings().effect_raideffects;
 
-            var weatherService = FFXIVWeatherExtensions.GetWeatherService();
-            if (weatherService == null) return;
-
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
 
@@ -127,8 +124,9 @@ namespace Chromatics.Layers.DynamicLayers
 
                     var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
-                    DutyFinderBellExtension.CheckCache();
-                    WeatherExtension.CheckCache();
+                    // Single-per-tick snapshot of game state (InInstance + current weather + name).
+                    var gameState = _memoryHandler.Reader.GetGameState();
+                    bool inInstance = gameState.InInstance;
 
                     ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
 
@@ -174,21 +172,16 @@ namespace Chromatics.Layers.DynamicLayers
 
                     if (currentZone != "???" && currentZone != "")
                     {
-                        var currentWeatherZone = WeatherExtension.WeatherId();
-                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
+                        var currentWeather = gameState.CurrentWeatherName;
+                        if (string.IsNullOrEmpty(currentWeather)) return;
 
-                        if (currentWeather == null)
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != inInstance || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
-                            currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
-                        }
-
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
-                        {
-                            SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, DutyFinderBellExtension.InInstance());
+                            SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, inInstance);
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
-                            model._inInstance = DutyFinderBellExtension.InInstance();
+                            model._inInstance = inInstance;
                             model._dutyComplete = dutyComplete;
                         }
                     }
