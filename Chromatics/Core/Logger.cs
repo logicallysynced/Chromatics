@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 
 namespace Chromatics.Core
 {
@@ -21,11 +22,24 @@ namespace Chromatics.Core
         private static readonly List<OnConsoleLoggedEventArgs> _buffer = new();
         private static readonly System.Threading.Lock _gate = new();
 
+        // Verbose log — written by both WriteConsole and WriteVerbose.
+        // WriteVerbose-only messages are suppressed from the Console tab.
+        private static string _logDirectory;
+        private static readonly System.Threading.Lock _fileLock = new();
+        private const long MaxLogBytes = 10 * 1024 * 1024; // 10 MB before rotation
+
+        public static void SetLogDirectory(string directory)
+        {
+            _logDirectory = directory;
+        }
+
         public static void WriteConsole(LoggerTypes type, string message)
         {
             var color = (Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(type).Value;
             var timestamp = DateTime.Now.ToString("MM-dd HH:mm:ss");
             var args = new OnConsoleLoggedEventArgs($"[{timestamp}] {message}", color);
+
+            AppendToVerboseLog($"[{timestamp}] [{type}] {message}");
 
             lock (_gate)
             {
@@ -34,6 +48,14 @@ namespace Chromatics.Core
                 _buffer.Add(args);
                 OnConsoleLogged(null, args);
             }
+        }
+
+        // Writes only to verbose.log — never shown in the Console tab.
+        // Use for noisy startup/migration messages and internal diagnostics.
+        public static void WriteVerbose(string message)
+        {
+            var timestamp = DateTime.Now.ToString("MM-dd HH:mm:ss");
+            AppendToVerboseLog($"[{timestamp}] [VERBOSE] {message}");
         }
 
         // Atomically replays any pre-subscription messages to the handler,
@@ -48,6 +70,25 @@ namespace Chromatics.Core
                     handler(null, e);
                 _buffer.Clear();
                 OnConsoleLogged += handler;
+            }
+        }
+
+        private static void AppendToVerboseLog(string line)
+        {
+            if (string.IsNullOrEmpty(_logDirectory)) return;
+
+            lock (_fileLock)
+            {
+                try
+                {
+                    var path = Path.Combine(_logDirectory, "verbose.log");
+
+                    if (File.Exists(path) && new FileInfo(path).Length > MaxLogBytes)
+                        File.Move(path, path + ".old", overwrite: true);
+
+                    File.AppendAllText(path, line + Environment.NewLine);
+                }
+                catch { }
             }
         }
     }

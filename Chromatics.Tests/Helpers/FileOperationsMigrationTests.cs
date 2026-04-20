@@ -106,4 +106,84 @@ public class FileOperationsMigrationTests : IDisposable
         Assert.Equal("{\"original-preserved\":true}", File.ReadAllText(Path.Combine(_tempDir, "layers.chromatics3.migrated")));
         Assert.Equal("{\"current\":true}",            File.ReadAllText(Path.Combine(_tempDir, "layers.chromatics4")));
     }
+
+    [Fact]
+    public void RelocateToAppData_MovesKnownFilesAndLeavesSourceEmpty()
+    {
+        var src = Path.Combine(_tempDir, "exe");
+        var dst = Path.Combine(_tempDir, "appdata");
+        Directory.CreateDirectory(src);
+
+        File.WriteAllText(Path.Combine(src, "layers.chromatics4"),   "L");
+        File.WriteAllText(Path.Combine(src, "palette.chromatics4"),  "P");
+        File.WriteAllText(Path.Combine(src, "effects.chromatics4"),  "E");
+        File.WriteAllText(Path.Combine(src, "settings.chromatics4"), "S");
+
+        var moved = FileOperationsHelper.MigrateExeDirDataToAppData(src, dst);
+
+        Assert.Equal(4, moved.Count);
+        Assert.True(File.Exists(Path.Combine(dst, "layers.chromatics4")));
+        Assert.Equal("L", File.ReadAllText(Path.Combine(dst, "layers.chromatics4")));
+        Assert.False(File.Exists(Path.Combine(src, "layers.chromatics4")));
+    }
+
+    [Fact]
+    public void RelocateToAppData_WhenTargetAlreadyExists_LeavesSourceUntouched()
+    {
+        var src = Path.Combine(_tempDir, "exe");
+        var dst = Path.Combine(_tempDir, "appdata");
+        Directory.CreateDirectory(src);
+        Directory.CreateDirectory(dst);
+
+        File.WriteAllText(Path.Combine(src, "settings.chromatics4"), "OLD");
+        File.WriteAllText(Path.Combine(dst, "settings.chromatics4"), "NEW");
+
+        var moved = FileOperationsHelper.MigrateExeDirDataToAppData(src, dst);
+
+        Assert.Empty(moved);
+        Assert.Equal("NEW", File.ReadAllText(Path.Combine(dst, "settings.chromatics4")));
+        Assert.Equal("OLD", File.ReadAllText(Path.Combine(src, "settings.chromatics4")));
+    }
+
+    [Fact]
+    public void RelocateToAppData_IncludesLegacyAndBackupFiles()
+    {
+        var src = Path.Combine(_tempDir, "exe");
+        var dst = Path.Combine(_tempDir, "appdata");
+        Directory.CreateDirectory(src);
+
+        File.WriteAllText(Path.Combine(src, "layers.chromatics3"),                   "legacy");
+        File.WriteAllText(Path.Combine(src, "palette.chromatics3.migrated"),         "preserved");
+        File.WriteAllText(Path.Combine(src, "backup_layers_20250101_120000.chromatics4"), "backup");
+
+        var moved = FileOperationsHelper.MigrateExeDirDataToAppData(src, dst);
+
+        Assert.Contains("layers.chromatics3", moved);
+        Assert.Contains("palette.chromatics3.migrated", moved);
+        Assert.Contains("backup_layers_20250101_120000.chromatics4", moved);
+        Assert.True(File.Exists(Path.Combine(dst, "backup_layers_20250101_120000.chromatics4")));
+    }
+
+    [Fact]
+    public void RelocateToAppData_WhenSourceEqualsTarget_IsNoOp()
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "layers.chromatics4"), "L");
+
+        var moved = FileOperationsHelper.MigrateExeDirDataToAppData(_tempDir, _tempDir);
+
+        Assert.Empty(moved);
+        Assert.True(File.Exists(Path.Combine(_tempDir, "layers.chromatics4")));
+    }
+
+    [Fact]
+    public void RelocateToAppData_WithNoKnownFiles_ReturnsEmptyList()
+    {
+        var src = Path.Combine(_tempDir, "exe");
+        var dst = Path.Combine(_tempDir, "appdata");
+        Directory.CreateDirectory(src);
+
+        var moved = FileOperationsHelper.MigrateExeDirDataToAppData(src, dst);
+
+        Assert.Empty(moved);
+    }
 }
