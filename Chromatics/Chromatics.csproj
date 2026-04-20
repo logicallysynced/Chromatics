@@ -59,7 +59,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="HidSharp" Version="2.6.4" />
     <PackageReference Include="HueApi" Version="3.2.0" />
     <PackageReference Include="HueApi.ColorConverters" Version="3.1.0" />
@@ -82,11 +81,6 @@
     <PackageReference Include="RGB.NET.HID" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Layout" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Presets" Version="3.2.0" />
-    <!-- Sanford.Multimedia.Midi is a .NET Framework package but works at
-         runtime on net10.0-windows. Suppress the NU1701 compat warning so the
-         build stays clean; if Sanford ever publishes a modernised target we
-         should drop the suppression. -->
-    <PackageReference Include="Sanford.Multimedia.Midi" Version="6.7.3" NoWarn="NU1701" />
     <Reference Include="Sharlayan">
       <HintPath>..\Build Dependencies\Sharlayan\Sharlayan.dll</HintPath>
     </Reference>

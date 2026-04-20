@@ -5,7 +5,6 @@ using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
 using RGB.NET.Core;
-using Sanford.Multimedia;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

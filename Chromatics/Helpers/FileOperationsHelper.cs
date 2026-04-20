@@ -1,7 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Layers;
 using Chromatics.Models;
-using CsvHelper;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RGB.NET.Core;
