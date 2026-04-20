@@ -715,5 +715,15 @@
   "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.": "再觉醒计时器。追踪再觉醒阶段的剩余持续时间。",
   "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "抽取类型（星极 / 灵极）。表示当前激活的是抽取循环的哪一侧。",
   "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing.": "歌曲计时器（0–45秒）。追踪当前歌曲的剩余持续时间；颜色反映当前播放的是哪首歌曲。",
-  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "灵魂之声（0–100）。在歌曲期间积累；达到80以上时可用 Apex Arrow 或 Blast Arrow 消耗。"
+  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "灵魂之声（0–100）。在歌曲期间积累；达到80以上时可用 Apex Arrow 或 Blast Arrow 消耗。",
+  "Razer": "雷蛇",
+  "Logitech": "罗技",
+  "Corsair": "海盗船",
+  "Coolermaster": "酷冷至尊",
+  "SteelSeries": "赛睿",
+  "ASUS": "华硕",
+  "MSI": "微星",
+  "Wooting": "Wooting",
+  "Novation": "Novation",
+  "OpenRGB": "OpenRGB"
 }

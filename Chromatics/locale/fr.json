@@ -715,5 +715,15 @@
   "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.": "Minuteur de Reawakened. Suit la durée restante de la phase Reawakened.",
   "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "Type de pioche (astral / ombral). Indique quel côté du cycle de pioche est actuellement actif.",
   "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing.": "Minuteur de chant (0–45 s). Suit la durée restante du chant actif ; la couleur indique quel chant est en cours.",
-  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "Voix de l’âme (0–100). Se remplit pendant les chants ; utilisez-la à 80+ avec Flèche apogée ou Flèche explosive."
+  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "Voix de l’âme (0–100). Se remplit pendant les chants ; utilisez-la à 80+ avec Flèche apogée ou Flèche explosive.",
+  "Razer": "Razer",
+  "Logitech": "Logitech",
+  "Corsair": "Corsair",
+  "Coolermaster": "Coolermaster",
+  "SteelSeries": "SteelSeries",
+  "ASUS": "ASUS",
+  "MSI": "MSI",
+  "Wooting": "Wooting",
+  "Novation": "Novation",
+  "OpenRGB": "OpenRGB"
 }
