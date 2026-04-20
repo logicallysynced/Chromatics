@@ -24,7 +24,7 @@ namespace Chromatics.Views.Dialogs
             var next = result.Info.TargetFullRelease.Version;
             VersionText.Text = $"Current: {current?.Major}.{current?.Minor}.{current?.Build}   →   New: {next.Major}.{next.Minor}.{next.Patch}";
 
-            if (result.IsBeta)
+            if (result.IsPreRelease)
             {
                 BetaBadge.IsVisible = true;
                 BetaNote.IsVisible  = true;
