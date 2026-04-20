@@ -24,7 +24,8 @@ namespace Chromatics.Extensions
         private const int PixelSampleStride = 8;
 
         // Number of horizontal colour bands sampled left→right across the frame.
-        public const int HorizontalSampleCount = 8;
+        // 16 gives roughly one sample per keyboard column on a full-size layout.
+        public const int HorizontalSampleCount = 16;
 
         private const int RefreshIntervalMs = 200;
         private const string FfxivWindowClass = "FFXIVGAME";
@@ -232,12 +233,12 @@ namespace Chromatics.Extensions
                 {
                     int c = colCnt[i];
                     columns[i] = c > 0
-                        ? Color.FromArgb((int)(colR[i] / c), (int)(colG[i] / c), (int)(colB[i] / c))
+                        ? BoostSaturation(Color.FromArgb((int)(colR[i] / c), (int)(colG[i] / c), (int)(colB[i] / c)), 2.0f)
                         : Color.Black;
                 }
 
                 var main = totCnt > 0
-                    ? Color.FromArgb((int)(totR / totCnt), (int)(totG / totCnt), (int)(totB / totCnt))
+                    ? BoostSaturation(Color.FromArgb((int)(totR / totCnt), (int)(totG / totCnt), (int)(totB / totCnt)), 2.0f)
                     : Color.Black;
 
                 return (main, columns);
@@ -246,6 +247,47 @@ namespace Chromatics.Extensions
             {
                 bmp.UnlockBits(data);
             }
+        }
+
+        // ── Colour helpers ─────────────────────────────────────────────────
+
+        // Converts RGB to HSL, multiplies S by boost (clamped to 1), returns RGB.
+        // Achromatic colours (S == 0) pass through unchanged.
+        private static Color BoostSaturation(Color color, float boost)
+        {
+            float r = color.R / 255f, g = color.G / 255f, b = color.B / 255f;
+            float max = MathF.Max(r, MathF.Max(g, b));
+            float min = MathF.Min(r, MathF.Min(g, b));
+            float delta = max - min;
+            float l = (max + min) / 2f;
+
+            if (delta < 0.001f) return color;
+
+            float s = Math.Min(1f, (l < 0.5f ? delta / (max + min) : delta / (2f - max - min)) * boost);
+
+            float h;
+            if (max == r)      h = (g - b) / delta + (g < b ? 6f : 0f);
+            else if (max == g) h = (b - r) / delta + 2f;
+            else               h = (r - g) / delta + 4f;
+            h /= 6f;
+
+            float q = l < 0.5f ? l * (1f + s) : l + s - l * s;
+            float p = 2f * l - q;
+
+            int nr = (int)(HueToRgb(p, q, h + 1f / 3f) * 255f + 0.5f);
+            int ng = (int)(HueToRgb(p, q, h)           * 255f + 0.5f);
+            int nb = (int)(HueToRgb(p, q, h - 1f / 3f) * 255f + 0.5f);
+            return Color.FromArgb(Math.Clamp(nr, 0, 255), Math.Clamp(ng, 0, 255), Math.Clamp(nb, 0, 255));
+        }
+
+        private static float HueToRgb(float p, float q, float t)
+        {
+            if (t < 0f) t += 1f;
+            if (t > 1f) t -= 1f;
+            if (t < 1f / 6f) return p + (q - p) * 6f * t;
+            if (t < 1f / 2f) return q;
+            if (t < 2f / 3f) return p + (q - p) * (2f / 3f - t) * 6f;
+            return p;
         }
 
         // ── Result type ────────────────────────────────────────────────────

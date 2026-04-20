@@ -45,6 +45,7 @@ namespace Chromatics.Layers
 
             if (!layer.Enabled)
             {
+                _screenCapture?.Stop();
                 layergroup.Brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
             }
             else
@@ -65,10 +66,8 @@ namespace Chromatics.Layers
         private static void EnsureCaptureRunning()
         {
             if (_screenCapture == null)
-            {
                 _screenCapture = new ScreenCaptureExtension();
-                _screenCapture.Start();
-            }
+            _screenCapture.Start();
         }
 
         // Builds a horizontal LinearGradient from the left-to-right column samples.
