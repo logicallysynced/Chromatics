@@ -134,7 +134,7 @@ namespace Chromatics.ViewModels.Mapping
 
             bool layersChanged = false;
 
-            foreach (var kvp in connectedDevices)
+            foreach (var kvp in connectedDevices.ToList())
             {
                 if (Devices.Any(d => d.DeviceId == kvp.Key)) continue;
 

@@ -1,8 +1,15 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.VisualTree;
+using Chromatics.Helpers;
 using Chromatics.ViewModels;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Chromatics.Views
 {
@@ -29,6 +36,20 @@ namespace Chromatics.Views
             var path = files[0].TryGetLocalPath();
             if (string.IsNullOrEmpty(path)) return;
 
+            // Validate JSON-format palette files before handing off to the importer.
+            // The legacy .chromatics XML format is self-describing and validated by
+            // the XML deserialiser inside ImportColorMappingsFromPath, so skip it here.
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            if (ext != ".chromatics")
+            {
+                var (valid, reason) = FileOperationsHelper.ValidatePaletteFile(path);
+                if (!valid)
+                {
+                    await ShowImportErrorAsync(reason);
+                    return;
+                }
+            }
+
             if (DataContext is PaletteViewModel vm)
                 vm.ImportFromPath(path);
         }
@@ -52,6 +73,44 @@ namespace Chromatics.Views
 
             if (DataContext is PaletteViewModel vm)
                 vm.ExportToPath(path);
+        }
+
+        private async Task ShowImportErrorAsync(string reason)
+        {
+            var owner = this.FindAncestorOfType<Window>();
+            if (owner == null) return;
+
+            var okButton = new Button
+            {
+                Content = "OK",
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(0, 8, 0, 0),
+            };
+
+            var dialog = new Window
+            {
+                Title = "Unable to Import Palette",
+                Width = 440,
+                SizeToContent = SizeToContent.Height,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                CanResize = false,
+                Content = new StackPanel
+                {
+                    Margin = new Thickness(24, 20, 24, 20),
+                    Children =
+                    {
+                        new TextBlock
+                        {
+                            Text = reason,
+                            TextWrapping = TextWrapping.Wrap,
+                        },
+                        okButton,
+                    }
+                }
+            };
+
+            okButton.Click += (_, _) => dialog.Close();
+            await dialog.ShowDialog(owner);
         }
 
         // Export uses only the current Chromatics-4 extension.

@@ -94,6 +94,14 @@ namespace Chromatics.Helpers
                 var dst = Path.Combine(configSubdir, Path.GetFileName(src));
                 try { File.Copy(src, dst, overwrite: true); } catch { }
             }
+
+            // Include the verbose log and its rotated predecessor if present.
+            foreach (var logName in new[] { "verbose.log", "verbose.log.old" })
+            {
+                var src = Path.Combine(configDir, logName);
+                if (!File.Exists(src)) continue;
+                try { File.Copy(src, Path.Combine(destination, logName), overwrite: true); } catch { }
+            }
         }
 
         private static bool IsInstalledBuild()

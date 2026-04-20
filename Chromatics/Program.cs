@@ -48,9 +48,17 @@ namespace Chromatics
             // probe catches the gap so devices don't fail later with a cryptic DLL error.
             RuntimePrerequisiteCheck.WarnIfMissing();
 
-            // Migrate any lingering .chromatics3 data files to their .chromatics4
-            // counterparts before the settings/layer loaders run. Idempotent —
-            // no-op on fresh installs and on launches after the first migration.
+            // Point the verbose log at the AppData directory before anything
+            // else logs — this ensures startup messages (including migrations
+            // below) are captured even if they never reach the Console tab.
+            Logger.SetLogDirectory(FileOperationsHelper.GetConfigDirectory());
+
+            // Relocate any user data files from the exe directory into
+            // %AppData%\Chromatics first — the Velopack portable updater wipes
+            // the install tree on every update, so exe-dir storage is unsafe.
+            // Then run the legacy .chromatics3 → .chromatics4 migration inside
+            // the now-canonical AppData location. Both are idempotent.
+            FileOperationsHelper.MigrateExeDirDataToAppData();
             FileOperationsHelper.MigrateLegacyChromatics3Files();
 
             AppSettings.Startup();
