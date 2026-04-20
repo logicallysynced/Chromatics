@@ -37,27 +37,31 @@ namespace Chromatics.Helpers
             }
         }
 
-        // Checks for an update. Beta installs check the beta feed exclusively.
-        // Stable installs check the stable feed, then optionally the beta feed when
-        // the user has opted in to beta updates.
-        // Both checks are skipped when not running inside a Velopack-managed directory
-        // (i.e. running directly from a build output or IDE), so dev/debug launches
-        // are never shown a spurious update prompt.
+        // Checks for an update. Rules:
+        //   - Stable is always checked, regardless of installed channel or opt-in.
+        //   - Beta feed is additionally checked when includeBeta is true.
+        //   - When both feeds have an update, the higher version wins; stable wins ties.
+        //   - This means a beta user with beta opt-out naturally migrates to stable,
+        //     and a beta user with beta opt-in still gets the newer stable if one exists.
+        // Skipped entirely when not running inside a Velopack-managed directory
+        // (dev/IDE launches never see a spurious update prompt).
         public static async Task<UpdateResult?> CheckAsync(bool includeBeta)
         {
             var probeMgr = new UpdateManager(new SimpleWebSource(StableFeedUrl));
             if (!probeMgr.IsInstalled)
                 return null;
 
-            bool isBeta = string.Equals(ReadInstalledChannel(probeMgr), "beta", StringComparison.OrdinalIgnoreCase);
+            var stableResult = await CheckFeed(StableFeedUrl, isBeta: false);
+            var betaResult   = includeBeta ? await CheckFeed(BetaFeedUrl, isBeta: true) : null;
 
-            if (isBeta)
-                return await CheckFeed(BetaFeedUrl, isBeta: true);
+            if (stableResult != null && betaResult != null)
+            {
+                var sv = stableResult.Info.TargetFullRelease.Version;
+                var bv = betaResult.Info.TargetFullRelease.Version;
+                return sv >= bv ? stableResult : betaResult;
+            }
 
-            var stable = await CheckFeed(StableFeedUrl, isBeta: false);
-            if (stable != null) return stable;
-
-            return includeBeta ? await CheckFeed(BetaFeedUrl, isBeta: true) : null;
+            return stableResult ?? betaResult;
         }
 
         // Fetches one feed and returns null (silently) when the feed is

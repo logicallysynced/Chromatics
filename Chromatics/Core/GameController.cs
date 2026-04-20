@@ -347,12 +347,6 @@ namespace Chromatics.Core
                     // handed off to Sharlayan below and kept alive for the session.
                     for (int i = 1; i < processes.Length; i++) processes[i].Dispose();
 
-                    // supported: Global, Chinese, Korean
-                    var gameRegion = GameRegion.Global;
-                    var gameLanguage = GameLanguage.English;
-
-                    // patchVersion of game, or latest
-                    var patchVersion = "latest";
                     var process = processes[0];
                     var processModel = new ProcessModel
                     {
@@ -362,10 +356,7 @@ namespace Chromatics.Core
                     _configuration = new SharlayanConfiguration
                     {
                         ProcessModel = processModel,
-                        GameLanguage = gameLanguage,
-                        GameRegion = gameRegion,
-                        PatchVersion = patchVersion,
-                        UseLocalCache = AppSettings.GetSettings().localcache
+                        GameLanguage = GameLanguage.English,
                     };
 
                     Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
