@@ -353,7 +353,24 @@ namespace Chromatics.ViewModels.Mapping
         {
             MappingLayers.RemapLedIdsForLayoutChange(from, to);
             MappingLayers.SaveMappings();
+            RebuildKeyboardVirtualDevices(to);
             RefreshLayers();
+        }
+
+        private void RebuildKeyboardVirtualDevices(KeyboardLocalization layout)
+        {
+            if (_connectedDevices == null) return;
+            for (int i = 0; i < VirtualDevices.Count; i++)
+            {
+                var vd = VirtualDevices[i];
+                if (vd.DeviceType != RGBDeviceType.Keyboard) continue;
+                if (!_connectedDevices.ContainsKey(vd.DeviceId)) continue;
+                var rebuilt = VirtualDeviceViewModel.BuildForKeyboard(vd.DeviceId, vd.DeviceName, layout);
+                rebuilt.SetPickKeyCallback(PickKey);
+                VirtualDevices[i] = rebuilt;
+            }
+            if (SelectedDevice != null)
+                SelectedVirtualDevice = VirtualDevices.FirstOrDefault(v => v.DeviceId == SelectedDevice.DeviceId);
         }
 
         // Bound to the "Add Layer" button. Currently only DynamicLayer is user-

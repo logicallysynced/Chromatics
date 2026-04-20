@@ -252,7 +252,7 @@ namespace Chromatics.Layers
 
         private void UpdateLedGroupBrush(Sharlayan.Core.ActionItem action, ListLedGroup ledGroup, Dictionary<string, Color> specialActionColors)
         {
-            if (action.Category == 49 || action.Category == 51)
+            if (action.Category == 49 || action.Category == 51 || action.Category == 56)
             {
                 if (!action.IsAvailable || !action.InRange || !action.ChargeReady || action.CoolDownPercent > 0)
                 {
