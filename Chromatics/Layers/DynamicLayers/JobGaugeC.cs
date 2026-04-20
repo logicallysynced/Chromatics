@@ -182,30 +182,6 @@ namespace Chromatics.Layers
                 case Actor.Job.MIN:
                     return null;
 
-                case Actor.Job.BRD:
-                    // Radiant Finale Coda — 3-bit bitfield (Ballad / Paeon / Minuet).
-                    // Most significant active coda wins for the single "highlight" colour;
-                    // fill width is the number of codas collected (0–3).
-                    {
-                        var coda = container.Bard.RadiantFinaleCoda;
-                        var codaCount = PopCount(coda);
-
-                        jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBRDNegative.Color);
-                        if ((coda & 0b100) != 0)
-                            jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBRDRadiantFinaleMinuet.Color);
-                        else if ((coda & 0b010) != 0)
-                            jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBRDRadiantFinalePaeon.Color);
-                        else if ((coda & 0b001) != 0)
-                            jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBRDRadiantFinaleBallad.Color);
-                        else
-                            jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBRDNegative.Color);
-
-                        jobGauge.minValue = 0;
-                        jobGauge.maxValue = 3;
-                        jobGauge.currentValue = codaCount;
-                    }
-                    break;
-
                 case Actor.Job.MNK:
                     // Nadi — two mutually-compatible flags (Lunar / Solar). When both are
                     // present the gauge lights solid Gold; single-Nadi lights its own colour.
@@ -407,15 +383,13 @@ namespace Chromatics.Layers
             return jobGauge;
         }
 
-        private static int PopCount(byte b)
+        public override void CleanupLayer(int layerID)
         {
-            int count = 0;
-            while (b != 0)
+            if (layerProcessorModel.TryGetValue(layerID, out var model))
             {
-                count += b & 1;
-                b >>= 1;
+                DetachAndClearGroups(model._localgroups);
+                layerProcessorModel.Remove(layerID);
             }
-            return count;
         }
 
         private void DetachAndClearGroups(List<ListLedGroup> groups)

@@ -713,6 +713,15 @@ namespace Chromatics.Layers
             return jobGauge;
         }
 
+        public override void CleanupLayer(int layerID)
+        {
+            if (layerProcessorModel.TryGetValue(layerID, out var model))
+            {
+                DetachAndClearGroups(model._localgroups);
+                layerProcessorModel.Remove(layerID);
+            }
+        }
+
         private void DetachAndClearGroups(List<ListLedGroup> groups)
         {
             foreach (var group in groups)

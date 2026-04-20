@@ -526,6 +526,12 @@ namespace Chromatics.Core
 
                         case LayerType.DynamicLayer:
                             var dynamicProcessor = _layerProcessorFactory.GetProcessor((DynamicLayerType)layer.layerTypeindex);
+                            if (layer.requestUpdate)
+                            {
+                                foreach (var p in _layerProcessorFactory.GetActiveDynamicProcessors())
+                                    if (p != dynamicProcessor)
+                                        p.CleanupLayer(layer.layerID);
+                            }
                             dynamicProcessor.Process(layer);
                             break;
 
