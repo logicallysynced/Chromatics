@@ -12,7 +12,13 @@ namespace Chromatics.Models
 {
     public class PaletteColorModel
     {
-        public string version { get; set; } = "1";
+        // v1 = pre-Dawntrail.
+        // v2 = Dawntrail (7.x) job-gauge additions (BRD Radiant Finale codas, BLM Paradox/Astral Soul,
+        //      DRK Living Shadow, DRG Firstminds, GNB Bloodfest, MNK Beast Chakra + Nadi,
+        //      NIN Kazematoi, PLD Confiteor, RDM Mana Stacks, SAM Kaeshi, SCH Dismissed Fairy,
+        //      AST Astral/Umbral Draw, VPR Reawakened + Serpent Combo). NIN Huton display renamed to Kazematoi.
+        public const string CurrentVersion = "2";
+        public string version { get; set; } = CurrentVersion;
 
         //Chromatics
         public ColorMapping BaseColor = new("Base Color", PaletteTypes.Chromatics, Color.DodgerBlue);
@@ -127,11 +133,20 @@ namespace Chromatics.Models
         public ColorMapping JobPLDNegative = new("PLD: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobPLDOathGauge = new("PLD: Oath Gauge", PaletteTypes.JobGauges, Color.Khaki);
         public ColorMapping JobPLDIronWill = new("PLD: Iron Will", PaletteTypes.JobGauges, Color.Orange);
+        public ColorMapping JobPLDConfiteorTimer = new("PLD: Confiteor Combo Timer", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobPLDConfiteorStep = new("PLD: Confiteor Combo Step", PaletteTypes.JobGauges, Color.Yellow);
         public ColorMapping JobMNKNegative = new("MNK: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobMNKChakra = new("MNK: Chakras", PaletteTypes.JobGauges, Color.Orange);
+        public ColorMapping JobMNKBeastChakra = new("MNK: Beast Chakra (Gauge)", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobMNKOpoOpo = new("MNK: Opo-opo Beast Chakra", PaletteTypes.JobGauges, Color.Yellow);
+        public ColorMapping JobMNKRaptor = new("MNK: Raptor Beast Chakra", PaletteTypes.JobGauges, Color.LimeGreen);
+        public ColorMapping JobMNKCoeurl = new("MNK: Coeurl Beast Chakra", PaletteTypes.JobGauges, Color.DodgerBlue);
+        public ColorMapping JobMNKNadiLunar = new("MNK: Lunar Nadi", PaletteTypes.JobGauges, Color.MediumPurple);
+        public ColorMapping JobMNKNadiSolar = new("MNK: Solar Nadi", PaletteTypes.JobGauges, Color.Gold);
         public ColorMapping JobDRGNegative = new("DRG: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobDRGBloodDragon = new("DRG: Dragon Gauge", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobDRGDragonGaze = new("DRG: Dragon Gaze", PaletteTypes.JobGauges, Color.BlueViolet);
+        public ColorMapping JobDRGFirstminds = new("DRG: Firstminds' Focus", PaletteTypes.JobGauges, Color.DeepSkyBlue);
         public ColorMapping JobBRDNegative = new("BRD: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobBRDSoulVoice = new("BRD: Soul Voice", PaletteTypes.JobGauges, Color.DodgerBlue);
         public ColorMapping JobBRDSoulVoiceThreshold = new("BRD: Soul Voice Threshold", PaletteTypes.JobGauges, Color.GhostWhite);
@@ -139,6 +154,9 @@ namespace Chromatics.Models
         public ColorMapping JobBRDBallad = new("BRD: Mage's Ballad", PaletteTypes.JobGauges, Color.Purple);
         public ColorMapping JobBRDArmys = new("BRD: Army's Paeon", PaletteTypes.JobGauges, Color.Orange);
         public ColorMapping JobBRDMinuet = new("BRD: The Wanderers' Minuet", PaletteTypes.JobGauges, Color.MediumSpringGreen);
+        public ColorMapping JobBRDRadiantFinaleBallad = new("BRD: Radiant Finale (Ballad Coda)", PaletteTypes.JobGauges, Color.Purple);
+        public ColorMapping JobBRDRadiantFinalePaeon = new("BRD: Radiant Finale (Paeon Coda)", PaletteTypes.JobGauges, Color.Orange);
+        public ColorMapping JobBRDRadiantFinaleMinuet = new("BRD: Radiant Finale (Minuet Coda)", PaletteTypes.JobGauges, Color.MediumSpringGreen);
         public ColorMapping JobWHMNegative = new("WHM: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobWHMFlowerPetal = new("WHM: Flower", PaletteTypes.JobGauges, Color.MediumVioletRed);
         public ColorMapping JobWHMFlowerCharge = new("WHM: Flower Charge", PaletteTypes.JobGauges, Color.Aqua);
@@ -147,9 +165,9 @@ namespace Chromatics.Models
         public ColorMapping JobBLMNegative = new("BLM: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobBLMAstralFire = new("BLM: Astral Fire", PaletteTypes.JobGauges, Color.OrangeRed);
         public ColorMapping JobBLMUmbralIce = new("BLM: Umbral Ice", PaletteTypes.JobGauges, Color.DeepSkyBlue);
-        public ColorMapping JobBLMEnochianCountdown = new("BLM: Enochian Countdown", PaletteTypes.JobGauges, Color.MediumPurple);
-        public ColorMapping JobBLMEnochianCharge = new("BLM: Enochian Charge", PaletteTypes.JobGauges, Color.MediumPurple);
         public ColorMapping JobBLMPolyglot = new("BLM: Polyglot", PaletteTypes.JobGauges, Color.Magenta);
+        public ColorMapping JobBLMParadox = new("BLM: Paradox Proc", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobBLMAstralSoul = new("BLM: Astral Soul (Flare Star)", PaletteTypes.JobGauges, Color.Crimson);
         public ColorMapping JobSMNNegative = new("SMN: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobSMNCarbuncleTimer = new("SMN: Carbuncle Timer", PaletteTypes.JobGauges, Color.DodgerBlue);
         public ColorMapping JobSMNDreadwyrmTimer = new("SMN: Dreadwyrm Timer", PaletteTypes.JobGauges, Color.Yellow);
@@ -162,13 +180,18 @@ namespace Chromatics.Models
         public ColorMapping JobSCHAetherflow = new("SCH: Aetherflow", PaletteTypes.JobGauges, Color.Orchid);
         public ColorMapping JobSCHFaerieGauge = new("SCH: Faerie Gauge", PaletteTypes.JobGauges, Color.MediumSpringGreen);
         public ColorMapping JobSCHSeraph = new("SCH: Summon Seraph", PaletteTypes.JobGauges, Color.DeepSkyBlue);
+        public ColorMapping JobSCHDismissedFairy = new("SCH: Fairy Dismissed", PaletteTypes.JobGauges, Color.DimGray);
         public ColorMapping JobNINNegative = new("NIN: Blank Key", PaletteTypes.JobGauges, Color.Black);
-        public ColorMapping JobNINHuton = new("NIN: Huton", PaletteTypes.JobGauges, Color.White);
+        // Legacy NIN Huton slot: Dawntrail replaced Huton with Kazematoi (same gauge-A role).
+        // Field name kept for JSON deserialisation compatibility with pre-v2 palettes; display
+        // name updated so the UI reflects the current ability.
+        public ColorMapping JobNINHuton = new("NIN: Kazematoi", PaletteTypes.JobGauges, Color.Cornsilk);
         public ColorMapping JobNINNinkiGauge = new("NIN: Ninki Gauge", PaletteTypes.JobGauges, Color.Coral);
         public ColorMapping JobDRKNegative = new("DRK: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobDRKBloodGauge = new("DRK: Blood Gauge", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobDRKGrit = new("DRK: Grit", PaletteTypes.JobGauges, Color.DeepSkyBlue);
         public ColorMapping JobDRKDarkside = new("DRK: Darkside Timer", PaletteTypes.JobGauges, Color.MediumPurple);
+        public ColorMapping JobDRKLivingShadow = new("DRK: Living Shadow Timer", PaletteTypes.JobGauges, Color.DarkMagenta);
         public ColorMapping JobASTNegative = new("AST: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobASTArrow = new("AST: Arrow Drawn", PaletteTypes.JobGauges, Color.Lime);
         public ColorMapping JobASTBalance = new("AST: Balance Drawn", PaletteTypes.JobGauges, Color.Crimson);
@@ -178,6 +201,8 @@ namespace Chromatics.Models
         public ColorMapping JobASTSpire = new("AST: Spire Drawn", PaletteTypes.JobGauges, Color.SlateBlue);
         public ColorMapping JobASTLady = new("AST: Lady of Crowns Drawn", PaletteTypes.JobGauges, Color.HotPink);
         public ColorMapping JobASTLord = new("AST: Lord of Crowns Drawn", PaletteTypes.JobGauges, Color.Magenta);
+        public ColorMapping JobASTAstralDraw = new("AST: Astral Draw", PaletteTypes.JobGauges, Color.HotPink);
+        public ColorMapping JobASTUmbralDraw = new("AST: Umbral Draw", PaletteTypes.JobGauges, Color.DarkSlateBlue);
         public ColorMapping JobMCHNegative = new("MCH: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobMCHBatteryGauge = new("MCH: Battery Gauge", PaletteTypes.JobGauges, Color.Cyan);
         public ColorMapping JobMCHHeatGauge = new("MCH: Heat Gauge", PaletteTypes.JobGauges, Color.DarkOrange);
@@ -185,15 +210,18 @@ namespace Chromatics.Models
         public ColorMapping JobSAMNegative = new("SAM: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobSAMKenki = new("SAM: Kenki Charge", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobSAMMeditation = new("SAM: Meditation Stacks", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobSAMKaeshiReady = new("SAM: Kaeshi Ready", PaletteTypes.JobGauges, Color.OrangeRed);
         public ColorMapping JobRDMNegative = new("RDM: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobRDMBlackMana = new("RDM: Black Mana", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobRDMWhiteMana = new("RDM: White Mana", PaletteTypes.JobGauges, Color.White);
+        public ColorMapping JobRDMManaStacks = new("RDM: Mana Stacks", PaletteTypes.JobGauges, Color.MediumVioletRed);
         public ColorMapping JobDNCNegative = new("DNC: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobDNCFeathers = new("DNC: Fourfold Feathers", PaletteTypes.JobGauges, Color.GreenYellow);
         public ColorMapping JobDNCEspirit = new("DNC: Espirit Gauge", PaletteTypes.JobGauges, Color.Gold);
         public ColorMapping JobGNBNegative = new("GNB: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobGNBRoyalGuard = new("GNB: Royal Guard", PaletteTypes.JobGauges, Color.OrangeRed);
         public ColorMapping JobGNBCartridge = new("GNB: Cartridge", PaletteTypes.JobGauges, Color.DeepSkyBlue);
+        public ColorMapping JobGNBBloodfestTimer = new("GNB: Bloodfest Timer", PaletteTypes.JobGauges, Color.DarkOrange);
         public ColorMapping JobSGENegative = new("SGE: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobSGEAddersgallStacks = new("SGE: Addersgall Stacks", PaletteTypes.JobGauges, Color.LightBlue);
         public ColorMapping JobSGEAdderstingStacks = new("SGE: Addersting Stacks", PaletteTypes.JobGauges, Color.MediumPurple);
@@ -207,6 +235,8 @@ namespace Chromatics.Models
         public ColorMapping JobCrafterCrafter = new("Crafter: Crafting", PaletteTypes.JobGauges, Color.DeepSkyBlue);
         public ColorMapping JobVPRVipersight = new("VPR: Vipersight Gauge", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobVPRSerpentOffering = new("VPR: Serpent Offering Gauge", PaletteTypes.JobGauges, Color.DodgerBlue);
+        public ColorMapping JobVPRReawakened = new("VPR: Reawakened Timer", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobVPRSerpentCombo = new("VPR: Serpent Combo Ready", PaletteTypes.JobGauges, Color.YellowGreen);
         public ColorMapping JobVPRNegative = new("VPR: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobPCTPalette = new("PCT: Palette Gauge", PaletteTypes.JobGauges, Color.DodgerBlue);
         public ColorMapping JobPCTLandscape = new("PCT: Canvas Landscape", PaletteTypes.JobGauges, Color.BlueViolet);
