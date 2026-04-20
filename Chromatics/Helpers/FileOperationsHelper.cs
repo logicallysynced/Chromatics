@@ -45,26 +45,116 @@ namespace Chromatics.Helpers
         internal const string EffectsFileLegacy3  = "effects.chromatics3";
         internal const string SettingsFileLegacy3 = "settings.chromatics3";
 
+        // Test-only redirect. When set (via SetConfigDirectoryOverride), every
+        // call to GetConfigDirectory returns this path instead of %AppData%.
+        // Production code must never set this — it exists so unit tests can
+        // point SaveMappings/SaveLayerMappings at a temp directory and not
+        // clobber the user's real .chromatics4 files when `dotnet test` runs.
+        private static string _configDirectoryOverride;
+
+        public static void SetConfigDirectoryOverride(string path)
+        {
+            _configDirectoryOverride = path;
+        }
+
         // Returns the directory where Chromatics user-data files (.chromatics4) live.
-        // Portable installs (ZIP, anywhere on disk) keep files next to the exe.
-        // Setup.exe installs land in %LocalAppData%\Chromatics\current\ which Velopack
-        // replaces on every update, so those installs redirect to %AppData%\Chromatics\.
+        // Always %AppData%\Chromatics\ regardless of install type (managed Setup.exe
+        // or portable ZIP). Velopack's portable updater replaces the install tree on
+        // each update, so storing data next to the exe meant portable users lost
+        // their layers/palettes/settings every time. Keeping everything in AppData
+        // survives updates, reinstalls, and roams with the Windows profile.
         public static string GetConfigDirectory()
         {
-            var exeDir = AppContext.BaseDirectory;
-            var localApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var managedRoot = Path.Combine(localApp, "Chromatics");
-
-            if (exeDir.StartsWith(managedRoot, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(_configDirectoryOverride))
             {
-                var appData = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "Chromatics");
-                Directory.CreateDirectory(appData);
-                return appData;
+                Directory.CreateDirectory(_configDirectoryOverride);
+                return _configDirectoryOverride;
             }
 
-            return exeDir;
+            var appData = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Chromatics");
+            Directory.CreateDirectory(appData);
+            return appData;
+        }
+
+        // One-shot migration of user data files from the exe directory to
+        // %AppData%\Chromatics. Covers the pre-4.0.x layout where portable installs
+        // (and in-place updates that didn't relocate) kept data next to the exe.
+        // Source files are deleted after a successful move; conflicts (where the
+        // target already exists) leave the exe-dir copy in place and log a warning.
+        // Returns the list of filenames that were relocated this run.
+        public static IReadOnlyList<string> MigrateExeDirDataToAppData()
+            => MigrateExeDirDataToAppData(AppContext.BaseDirectory, GetConfigDirectory());
+
+        public static IReadOnlyList<string> MigrateExeDirDataToAppData(string sourceDir, string targetDir)
+        {
+            var moved = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(sourceDir) || string.IsNullOrWhiteSpace(targetDir))
+                return moved;
+            if (!Directory.Exists(sourceDir))
+                return moved;
+            if (string.Equals(
+                    Path.GetFullPath(sourceDir).TrimEnd(Path.DirectorySeparatorChar),
+                    Path.GetFullPath(targetDir).TrimEnd(Path.DirectorySeparatorChar),
+                    StringComparison.OrdinalIgnoreCase))
+                return moved;
+
+            var knownFiles = new[]
+            {
+                LayersFile,   PaletteFile,   EffectsFile,   SettingsFile,
+                LayersFileLegacy3, PaletteFileLegacy3, EffectsFileLegacy3, SettingsFileLegacy3,
+                LayersFileLegacy3   + ".migrated",
+                PaletteFileLegacy3  + ".migrated",
+                EffectsFileLegacy3  + ".migrated",
+                SettingsFileLegacy3 + ".migrated",
+            };
+
+            var candidates = new List<string>(knownFiles);
+
+            try
+            {
+                candidates.AddRange(Directory.EnumerateFiles(sourceDir, "backup_layers_*.chromatics4")
+                                             .Select(Path.GetFileName));
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error,
+                    $"Failed to scan {sourceDir} for backup files: {ex.Message}");
+            }
+
+            Directory.CreateDirectory(targetDir);
+
+            foreach (var name in candidates)
+            {
+                var src = Path.Combine(sourceDir, name);
+                var dst = Path.Combine(targetDir, name);
+
+                if (!File.Exists(src)) continue;
+
+                try
+                {
+                    if (File.Exists(dst))
+                    {
+                        Logger.WriteVerbose(
+                            $"{name} already present in AppData — leaving exe-dir copy untouched.");
+                        continue;
+                    }
+
+                    File.Move(src, dst);
+                    moved.Add(name);
+                    Logger.WriteConsole(Enums.LoggerTypes.System,
+                        $"Relocated {name} from install directory to AppData.");
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error,
+                        $"Failed to relocate {name} to AppData: {ex.Message}");
+                }
+            }
+
+            return moved;
         }
 
         // One-shot migration of Chromatics-3 data files to their Chromatics-4
@@ -300,6 +390,64 @@ namespace Chromatics.Helpers
             }
 
             return ValidateLayerJson(json);
+        }
+
+        // Validates a raw JSON string as a Chromatics palette file.
+        // Returns (true, null) when valid; (false, reason) when not.
+        // Does not cover the legacy .chromatics XML format — that path is
+        // handled by the XmlSerializer branch in ImportColorMappingsFromPath.
+        public static (bool valid, string reason) ValidatePaletteJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return (false, "The file is empty.");
+
+            JToken token;
+            try { token = JToken.Parse(json); }
+            catch (JsonException) { return (false, "The file is not valid JSON."); }
+
+            if (token is not JObject obj)
+                return (false, "The file does not contain a JSON object.");
+
+            // Positive identification of layer files so we can give a specific message.
+            if (obj["schemaVersion"] != null && obj["layers"] != null)
+                return (false,
+                    "This looks like a layer mapping file, not a colour palette. " +
+                    "To import your layers, use the Import button on the Mapping tab instead.");
+
+            if (obj.Properties().Any() && obj.Properties().All(p => int.TryParse(p.Name, out _)))
+                return (false,
+                    "This looks like a legacy layer mapping file, not a colour palette. " +
+                    "To import your layers, use the Import button on the Mapping tab instead.");
+
+            // PaletteColorModel always serialises a top-level "version" field.
+            if (obj["version"] != null)
+                return (true, null);
+
+            return (false,
+                "The file does not appear to be a Chromatics colour palette. " +
+                "Please select a palette file (palette.chromatics4 or palette.chromatics3).");
+        }
+
+        // Convenience overload that reads from disk before validating.
+        public static (bool valid, string reason) ValidatePaletteFile(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return (false, "No file path specified.");
+            if (!File.Exists(filePath))
+                return (false, "File does not exist.");
+
+            string json;
+            try
+            {
+                using var sr = new StreamReader(filePath);
+                json = sr.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Could not read file: {ex.Message}");
+            }
+
+            return ValidatePaletteJson(json);
         }
 
         private static (ConcurrentDictionary<int, Layer> layers,

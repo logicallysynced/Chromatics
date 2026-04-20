@@ -206,12 +206,10 @@ namespace Chromatics.Views.Mapping
             e.DragEffects = DragDropEffects.Move;
             e.Handled = true;
 
-            // Paint an insertion indicator on the item the cursor currently
-            // sits over so the user can see *where* the drop will land
-            // without having to release first.
             if (DataContext is not MappingViewModel vm) return;
-            int targetIndex = ComputeDropIndex(e.GetPosition(LayersHost), vm.Layers.Count);
-            UpdateDropIndicators(vm, targetIndex);
+            int from = _dragSource != null ? vm.Layers.IndexOf(_dragSource) : -1;
+            int targetIndex = ComputeDropIndex(e.GetPosition(LayersHost), vm.Layers.Count, from);
+            UpdateDropIndicators(vm, targetIndex, from);
         }
 
         private void OnDrop(object sender, DragEventArgs e)
@@ -222,26 +220,50 @@ namespace Chromatics.Views.Mapping
             int from = vm.Layers.IndexOf(_dragSource);
             if (from < 0) { ClearDragIndicators(); return; }
 
-            int to = ComputeDropIndex(e.GetPosition(LayersHost), vm.Layers.Count);
+            int to = ComputeDropIndex(e.GetPosition(LayersHost), vm.Layers.Count, from);
             ClearDragIndicators();
 
             if (to < 0 || to == from) return;
 
-            vm.MoveLayer(from, to);
+            // ComputeDropIndex returns an insert-before index (drop above item i → i).
+            // ObservableCollection.Move(from, moveIdx) places the item at final position
+            // moveIdx. When dragging down (to > from), removing the source shifts every
+            // subsequent slot left by one, so "insert before original index to" becomes
+            // "insert at to-1" in the post-removal list. Dragging up needs no adjustment.
+            int moveIdx = to > from ? to - 1 : to;
+            if (moveIdx == from) return;
+
+            vm.MoveLayer(from, moveIdx);
             e.Handled = true;
         }
 
         // Set exactly one layer's IsDropTargetAbove (or IsDropTargetBelow for
-        // the last slot) and clear every other layer's flags. Cheap — the
-        // layer list is tiny (≤20 items typically).
-        private void UpdateDropIndicators(MappingViewModel vm, int targetIndex)
+        // the last slot) and clear every other layer's flags.
+        private void UpdateDropIndicators(MappingViewModel vm, int targetIndex, int from = -1)
         {
+            if (vm.Layers.Count == 0) return;
             int last = vm.Layers.Count - 1;
+
+            // Locked layers are the Effect pin (top) and Base pin (bottom).
+            bool effectAtTop  = vm.Layers[0].IsLocked;
+            bool baseAtBottom = vm.Layers[last].IsLocked;
+
             for (int i = 0; i < vm.Layers.Count; i++)
             {
                 var layer = vm.Layers[i];
-                bool above = targetIndex == i && targetIndex <= last;
-                bool below = targetIndex > last && i == last;
+
+                // Suppress the indicator when the computed slot is:
+                //   • the dragged item's own position (no-op drop)
+                //   • above the Effect pin (locked boundary — can't go there)
+                bool above = targetIndex == i
+                          && i <= last
+                          && targetIndex != from
+                          && !(i == 0 && effectAtTop);
+
+                // Suppress the "append after last" indicator when Base is pinned
+                // at the bottom — nothing can go below it.
+                bool below = targetIndex > last && i == last && !baseAtBottom;
+
                 if (layer.IsDropTargetAbove != above) layer.IsDropTargetAbove = above;
                 if (layer.IsDropTargetBelow != below) layer.IsDropTargetBelow = below;
             }
@@ -262,11 +284,16 @@ namespace Chromatics.Views.Mapping
             }
         }
 
-        // Walks the generated item containers to find the one whose vertical
-        // midpoint the cursor sits above. Above-center -> insert at that index,
-        // below-center -> after it. Falls back to the end when the cursor is
-        // past every container.
-        private int ComputeDropIndex(Point positionInHost, int itemCount)
+        // Returns an insert-before index in [0, itemCount]: cursor above item i's
+        // threshold → i (insert before i). Cursor past all thresholds → itemCount
+        // (insert after the last item). The caller converts this to the final-position
+        // index expected by ObservableCollection.Move.
+        //
+        // For items strictly above the drag source (index < from) the threshold is
+        // the item's bottom edge rather than its centre. This halves the required
+        // travel distance for moving a layer up: the drop triggers as soon as the
+        // cursor enters the bottom half of the item above, not just its midpoint.
+        private int ComputeDropIndex(Point positionInHost, int itemCount, int from = -1)
         {
             for (int i = 0; i < itemCount; i++)
             {
@@ -276,11 +303,14 @@ namespace Chromatics.Views.Mapping
                 var topLeft = container.TranslatePoint(new Point(0, 0), LayersHost);
                 if (topLeft == null) continue;
 
-                double centerY = topLeft.Value.Y + container.Bounds.Height / 2;
-                if (positionInHost.Y < centerY)
+                double threshold = (from >= 0 && i < from)
+                    ? topLeft.Value.Y + container.Bounds.Height   // bottom edge for items above source
+                    : topLeft.Value.Y + container.Bounds.Height / 2; // midpoint everywhere else
+
+                if (positionInHost.Y < threshold)
                     return i;
             }
-            return itemCount - 1;
+            return itemCount;
         }
     }
 }

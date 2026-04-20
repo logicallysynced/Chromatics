@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
-      "version": "4.0.0",
+      "version": "4.0.3",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -31,6 +31,7 @@
         },
         "frameworks": {
           "net10.0-windows7.0": {
+            "framework": "net10.0-windows7.0",
             "targetAlias": "net10.0-windows7.0",
             "projectReferences": {}
           }
@@ -49,31 +50,32 @@
       },
       "frameworks": {
         "net10.0-windows7.0": {
+          "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows7.0",
           "dependencies": {
             "Avalonia": {
               "target": "Package",
-              "version": "[11.3.14, )"
+              "version": "[12.0.1, )"
             },
             "Avalonia.Controls.ColorPicker": {
               "target": "Package",
-              "version": "[11.3.14, )"
+              "version": "[12.0.1, )"
             },
             "Avalonia.Controls.DataGrid": {
               "target": "Package",
-              "version": "[11.3.13, )"
+              "version": "[12.0.0, )"
             },
             "Avalonia.Desktop": {
               "target": "Package",
-              "version": "[11.3.14, )"
+              "version": "[12.0.1, )"
             },
             "Avalonia.Fonts.Inter": {
               "target": "Package",
-              "version": "[11.3.14, )"
+              "version": "[12.0.1, )"
             },
             "Avalonia.Themes.Fluent": {
               "target": "Package",
-              "version": "[11.3.14, )"
+              "version": "[12.0.1, )"
             },
             "CommunityToolkit.Mvvm": {
               "target": "Package",

@@ -33,13 +33,11 @@ namespace Chromatics.ViewModels
             Palette = new PaletteViewModel();
             Mapping = new MappingViewModel();
 
-            // LoadMappings + first RefreshDevices are deferred to
-            // InitializeAfterRgb(), called by MainWindow.OnOpened once
-            // RGBController.Setup finishes. Doing them here races the
-            // migration path: LoadMappings's flag=true branch used to
-            // schedule ImportMappings on a 1-second timer, which would
-            // wipe any defaults we seeded in the meantime.
-            RGBController.DeviceConnectionChanged += OnDeviceConnectionChanged;
+            // DeviceConnectionChanged subscription is deferred to InitializeAfterRgb()
+            // so that device events fired during RGBController.Setup() (which runs
+            // on a background thread) don't trigger RefreshDevices before
+            // LoadMappings has populated _layers — that would create default layers
+            // for every device on every launch, overwriting any user customisation.
 
             var version = typeof(MainWindowViewModel).Assembly.GetName().Version;
             if (version != null)
@@ -61,6 +59,10 @@ namespace Chromatics.ViewModels
             {
                 Logger.WriteConsole(LoggerTypes.System, "No layer file found. Defaults will be created per device.");
             }
+
+            // Subscribe only after LoadMappings so Setup()-era device events
+            // don't race the layer store before it's populated.
+            RGBController.DeviceConnectionChanged += OnDeviceConnectionChanged;
 
             RefreshMappingDevices();
         }
