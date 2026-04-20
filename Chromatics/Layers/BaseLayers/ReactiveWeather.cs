@@ -6,7 +6,6 @@ using Chromatics.Extensions.Sharlayan;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
-using FFXIVWeather;
 using NLog.Config;
 using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
@@ -125,9 +124,6 @@ namespace Chromatics.Layers
             var _layergroups = RGBController.GetLiveLayerGroups();
             var effectApplied = false;
 
-            var weatherService = FFXIVWeatherExtensions.GetWeatherService();
-            if (weatherService == null) return;
-
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
 
@@ -184,8 +180,12 @@ namespace Chromatics.Layers
 
                     var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
 
-                    DutyFinderBellExtension.CheckCache();
-                    WeatherExtension.CheckCache();
+                    // Single-per-tick snapshot of game state (InInstance + current weather + name).
+                    // DutyFinderBell + Weather extensions' caches are obsolete — GetGameState reads
+                    // WeatherManager.WeatherId + Conditions directly from memory and resolves the
+                    // weather name via Lumina.
+                    var gameState = _memoryHandler.Reader.GetGameState();
+                    bool inInstance = gameState.InInstance;
 
                     ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
 
@@ -232,21 +232,21 @@ namespace Chromatics.Layers
 
                     if (currentZone != "???" && currentZone != "")
                     {
-                        var currentWeatherZone = WeatherExtension.WeatherId();
-                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
+                        // Weather name comes straight from Sharlayan (WeatherManager.WeatherId →
+                        // Lumina Weather sheet). Matches the strings the SetReactiveWeather switch
+                        // expects ("Rain"/"Thunderstorms"/etc.). May be null if Lumina sqpack
+                        // isn't configured — bail the tick if so rather than running effects
+                        // with stale/unknown data.
+                        var currentWeather = gameState.CurrentWeatherName;
+                        if (string.IsNullOrEmpty(currentWeather)) return;
 
-                        if (currentWeather == null)
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != inInstance || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
                         {
-                            currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
-                        }
-
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
-                        {
-                            effectApplied = SetReactiveWeather(layer, layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, DutyFinderBellExtension.InInstance(), layer.deviceGuid);
+                            effectApplied = SetReactiveWeather(layer, layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, inInstance, layer.deviceGuid);
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
-                            model._inInstance = DutyFinderBellExtension.InInstance();
+                            model._inInstance = inInstance;
                             model._dutyComplete = dutyComplete;
 
 
