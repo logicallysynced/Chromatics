@@ -1,8 +1,10 @@
 using Chromatics.Enums;
+using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.ViewModels.Mapping;
 using RGB.NET.Core;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace Chromatics.Tests.Mapping;
@@ -252,5 +254,28 @@ public class MappingViewModelTests : IDisposable
     }
 }
 
+// Redirects FileOperationsHelper.GetConfigDirectory() to a temp path for the
+// lifetime of the test collection. Without this, SaveMappings() calls inside
+// MappingViewModel tests write to the real %AppData%\Chromatics folder —
+// clobbering the developer's actual layer/palette files whenever `dotnet test`
+// runs (e.g. triggering default-layer re-seeding on the next app launch).
+public sealed class ConfigDirectoryRedirectFixture : IDisposable
+{
+    public string TempDir { get; }
+
+    public ConfigDirectoryRedirectFixture()
+    {
+        TempDir = Path.Combine(Path.GetTempPath(), "chromatics-tests-" + Guid.NewGuid().ToString("N")[..8]);
+        Directory.CreateDirectory(TempDir);
+        FileOperationsHelper.SetConfigDirectoryOverride(TempDir);
+    }
+
+    public void Dispose()
+    {
+        FileOperationsHelper.SetConfigDirectoryOverride(null);
+        try { if (Directory.Exists(TempDir)) Directory.Delete(TempDir, recursive: true); } catch { }
+    }
+}
+
 [CollectionDefinition("MappingLayers")]
-public class MappingLayersCollection { }
+public class MappingLayersCollection : ICollectionFixture<ConfigDirectoryRedirectFixture> { }

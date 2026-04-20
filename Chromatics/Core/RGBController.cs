@@ -39,6 +39,7 @@ namespace Chromatics.Core
 
         private static List<IRGBDeviceProvider> loadedDeviceProviders = new List<IRGBDeviceProvider>();
 
+        private static readonly System.Threading.Lock _devicesLock = new();
         private static Dictionary<Guid, IRGBDevice> _devices = new Dictionary<Guid, IRGBDevice>();
 
         private static Dictionary<IRGBDevice, bool> _activeDevices = new Dictionary<IRGBDevice, bool>();
@@ -264,15 +265,6 @@ namespace Chromatics.Core
             int counter = 1;
             var guid = Helpers.DeviceHelper.GenerateDeviceGuid(device.DeviceInfo.DeviceName);
 
-            while (_devices.ContainsKey(guid))
-            {
-                //Make GUID unique if multiple devices of same type detected
-
-                var deviceName = device.DeviceInfo.DeviceName + counter;
-                guid = Helpers.DeviceHelper.GenerateDeviceGuid(deviceName);
-                counter++;
-            }
-
             if (e.Action == DevicesChangedEventArgs.DevicesChangedAction.Added)
             {
                 //Device Added
@@ -307,17 +299,22 @@ namespace Chromatics.Core
                     }
                 }
 
+                lock (_devicesLock)
+                {
+                    while (_devices.ContainsKey(guid))
+                    {
+                        var deviceName = device.DeviceInfo.DeviceName + counter;
+                        guid = Helpers.DeviceHelper.GenerateDeviceGuid(deviceName);
+                        counter++;
+                    }
+                    _devices.Add(guid, device);
+                }
+
                 #if DEBUG
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {guid}).");
                 #else
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
                 #endif
-
-                if (!_devices.ContainsKey(guid))
-                {
-                    _devices.Add(guid, device);
-                    
-                }
 
                 if (_activeDevices.ContainsKey(device))
                 {
@@ -341,9 +338,10 @@ namespace Chromatics.Core
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Lost {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
                 #endif
 
-                if (_devices.ContainsKey(guid))
+                lock (_devicesLock)
                 {
-                    _devices.Remove(guid);
+                    if (_devices.ContainsKey(guid))
+                        _devices.Remove(guid);
                 }
 
                 if (_activeDevices.ContainsKey(device))
@@ -663,7 +661,8 @@ namespace Chromatics.Core
 
         public static Dictionary<Guid, IRGBDevice> GetLiveDevices()
         {
-            return _devices;
+            lock (_devicesLock)
+                return new Dictionary<Guid, IRGBDevice>(_devices);
         }
 
         public static Dictionary<IRGBDevice, bool> GetActiveDevices()
