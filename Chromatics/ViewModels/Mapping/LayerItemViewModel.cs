@@ -165,18 +165,37 @@ namespace Chromatics.ViewModels.Mapping
         [RelayCommand] private void ReverseKeys() => _onReverseKeys?.Invoke();
         [RelayCommand] private void UndoKeys() => _onUndoKeys?.Invoke();
 
+        private static readonly DynamicLayerType[] _dynamicLayerOrder =
+        [
+            DynamicLayerType.None,
+            DynamicLayerType.Highlight,
+            DynamicLayerType.Keybinds,
+            DynamicLayerType.EnmityTracker,
+            DynamicLayerType.TargetHP,
+            DynamicLayerType.TargetCastbar,
+            DynamicLayerType.HPTracker,
+            DynamicLayerType.MPTracker,
+            DynamicLayerType.JobGaugeA,
+            DynamicLayerType.JobGaugeB,
+            DynamicLayerType.JobGaugeC,
+            DynamicLayerType.ExperienceTracker,
+            DynamicLayerType.BattleStance,
+            DynamicLayerType.Castbar,
+            DynamicLayerType.JobClassesHighlight,
+            DynamicLayerType.ReactiveWeatherHighlight,
+        ];
+
         private static IReadOnlyList<LayerTypeOption> BuildTypeOptions(LayerType layerType) => layerType switch
         {
             LayerType.BaseLayer    => BuildOptionsFor<BaseLayerType>(),
-            LayerType.DynamicLayer => BuildOptionsFor<DynamicLayerType>(),
+            LayerType.DynamicLayer => BuildOptionsFor(_dynamicLayerOrder),
             LayerType.EffectLayer  => BuildOptionsFor<EffectLayerType>(),
             _ => Array.Empty<LayerTypeOption>()
         };
 
-        private static IReadOnlyList<LayerTypeOption> BuildOptionsFor<TEnum>() where TEnum : struct, Enum
+        private static IReadOnlyList<LayerTypeOption> BuildOptionsFor<TEnum>(IEnumerable<TEnum> values) where TEnum : struct, Enum
         {
-            return Enum.GetValues<TEnum>()
-                .Select(v =>
+            return values.Select(v =>
                 {
                     var display = EnumExtensions.GetAttribute<LayerDisplay>((Enum)(object)v);
                     return new LayerTypeOption(
@@ -187,5 +206,8 @@ namespace Chromatics.ViewModels.Mapping
                 })
                 .ToList();
         }
+
+        private static IReadOnlyList<LayerTypeOption> BuildOptionsFor<TEnum>() where TEnum : struct, Enum
+            => BuildOptionsFor(Enum.GetValues<TEnum>());
     }
 }
