@@ -1,28 +1,13 @@
-﻿using Chromatics.Core;
+using Chromatics.Core;
 using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET;
-using Chromatics.Extensions.RGB.NET.Gradients;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
-using Chromatics.Models;
-using Microsoft.VisualBasic;
 using RGB.NET.Core;
 using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using Color = RGB.NET.Core.Color;
 using Size = RGB.NET.Core.Size;
 using TextureBrush = RGB.NET.Core.TextureBrush;
@@ -31,54 +16,21 @@ namespace Chromatics.Layers
 {
     public class ScreenCaptureProcessor : LayerProcessor
     {
-        private static ScreenCaptureProcessor _instance;
-        private static Dictionary<int, ScreenCaptureBaseModel> layerProcessorModel = new Dictionary<int, ScreenCaptureBaseModel>();
-        private static ScreenCaptureExtension screenCapture;
+        private static readonly ScreenCaptureProcessor _instance = new();
+        private static ScreenCaptureExtension _screenCapture;
 
-        // Private constructor to prevent direct instantiation
         private ScreenCaptureProcessor() { }
 
-        // Singleton instance access
-        public static ScreenCaptureProcessor Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new ScreenCaptureProcessor();
-                }
-                return _instance;
-            }
-        }
+        public static ScreenCaptureProcessor Instance => _instance;
 
         public override void Process(IMappingLayer layer)
         {
             if (RGBController.IsBaseLayerEffectRunning()) return;
 
-            ScreenCaptureBaseModel model;
-
-            if (!layerProcessorModel.ContainsKey(layer.layerID))
-            {
-                model = new ScreenCaptureBaseModel();
-                layerProcessorModel.Add(layer.layerID, model);
-            }
-            else
-            {
-                model = layerProcessorModel[layer.layerID];
-            }
-            
-            //Screen Capture Base Layer Implementation
-            var _colorPalette = RGBController.GetActivePalette();
-            var _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
             var _layergroups = RGBController.GetLiveLayerGroups();
-
-            //loop through all LED's and assign to device layer (Order of LEDs is not important for a base layer)
-            
-            
+            var ledArray     = GetLedArray(layer);
 
             ListLedGroup layergroup;
-            var ledArray = GetLedArray(layer);
-
             if (_layergroups.ContainsKey(layer.layerID))
             {
                 layergroup = _layergroups[layer.layerID].FirstOrDefault();
@@ -86,69 +38,78 @@ namespace Chromatics.Layers
             }
             else
             {
-                layergroup = new ListLedGroup(surface, ledArray)
-                {
-                    ZIndex = layer.zindex,
-                };
-
-                var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
+                layergroup = new ListLedGroup(surface, ledArray) { ZIndex = layer.zindex };
+                _layergroups.Add(layer.layerID, new[] { layergroup });
                 layergroup.Detach();
             }
 
             if (!layer.Enabled)
             {
                 layergroup.Brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
-
             }
             else
             {
+                EnsureCaptureRunning();
 
-                //Get screen capture data
-
-                if (screenCapture == null)
-                {
-                    screenCapture = new ScreenCaptureExtension();
-                    screenCapture.Start();
-                }
-
-                var screenColours = screenCapture.GetScreenColours();
-                if (screenColours == null) return;
-
-                if (screenColours.ScreenColors.Count == 4)
-                {
-                    var gradientTexture = new LinearGradient(new GradientStop((float)0, ColorHelper.ColorToRGBColor(screenColours.ScreenColors[0])),
-                        new GradientStop((float)0.25, ColorHelper.ColorToRGBColor(screenColours.ScreenColors[1])),
-                        new GradientStop((float)0.85, ColorHelper.ColorToRGBColor(screenColours.ScreenColors[2])),
-                        new GradientStop((float)1.0, ColorHelper.ColorToRGBColor(screenColours.ScreenColors[3])));
-
-                    layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100,100), gradientTexture));
-                }
-                else
-                {
-                    layergroup.Brush = new SolidColorBrush(ColorHelper.ColorToRGBColor(screenColours.MainColor));
-                }
-
-                
-
-                
-                
-                
+                var screenColours = _screenCapture?.GetScreenColours();
+                layergroup.Brush = screenColours != null
+                    ? BuildGradientBrush(screenColours)
+                    : new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
             }
-            
 
-            //Apply lighting
             layergroup.Attach(surface);
             _init = true;
             layer.requestUpdate = false;
-
         }
 
-        private class ScreenCaptureBaseModel
+        private static void EnsureCaptureRunning()
         {
-            public HashSet<LinearGradient> _gradientEffects { get; set; } = new HashSet<LinearGradient>();
-            public string _currentWeather { get; set; }
-            public bool layerCounted { get; set; }
+            if (_screenCapture == null)
+            {
+                _screenCapture = new ScreenCaptureExtension();
+                _screenCapture.Start();
+            }
+        }
+
+        // Builds a horizontal LinearGradient from the left-to-right column samples.
+        private static TextureBrush BuildGradientBrush(ScreenCaptureExtension.ScreenColor colours)
+        {
+            var samples = colours.HorizontalSamples;
+
+            GradientStop[] stops;
+            if (samples != null && samples.Length > 1)
+            {
+                stops = new GradientStop[samples.Length];
+                for (int i = 0; i < samples.Length; i++)
+                {
+                    float pos = (float)i / (samples.Length - 1);
+                    stops[i] = new GradientStop(pos, ColorHelper.ColorToRGBColor(samples[i]));
+                }
+            }
+            else
+            {
+                var solid = colours.MainColor != System.Drawing.Color.Empty
+                    ? ColorHelper.ColorToRGBColor(colours.MainColor)
+                    : ColorHelper.ColorToRGBColor(System.Drawing.Color.Black);
+                stops = new[]
+                {
+                    new GradientStop(0f, solid),
+                    new GradientStop(1f, solid),
+                };
+            }
+
+            return new TextureBrush(new LinearGradientTexture(new Size(100, 100), new LinearGradient(stops)));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _screenCapture?.Stop();
+                _screenCapture?.Dispose();
+                _screenCapture = null;
+            }
+            base.Dispose(disposing);
         }
     }
 }

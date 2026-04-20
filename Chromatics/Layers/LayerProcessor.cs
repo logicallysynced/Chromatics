@@ -175,6 +175,7 @@ namespace Chromatics.Layers
             { BaseLayerType.ReactiveWeather, ReactiveWeatherProcessor.Instance },
             { BaseLayerType.BattleStance, BaseBattleStanceProcessor.Instance },
             { BaseLayerType.JobClasses, JobClassesProcessor.Instance },
+            { BaseLayerType.ScreenCapture, ScreenCaptureProcessor.Instance },
         };
 
         public static Dictionary<BaseLayerType, LayerProcessor> GetProcessors()
