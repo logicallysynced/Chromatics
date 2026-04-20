@@ -164,7 +164,7 @@ namespace Chromatics.ViewModels.Mapping
                     var job = GameController.GetCurrectJob();
                     if (job != Actor.Job.Unknown &&
                         _jobGaugeDescriptions.TryGetValue((job, (DynamicLayerType)option.Value), out var jobDesc))
-                        return TextHelper.ParseLayerHelperText(jobDesc);
+                        return TextHelper.ParseLayerHelperText($"{job}: {jobDesc}");
                 }
 
                 return TextHelper.ParseLayerHelperText(option.Description);
