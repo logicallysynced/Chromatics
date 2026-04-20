@@ -713,5 +713,7 @@
   "Mana Stacks (0–3). Fill via Enchanted Riposte → Zwerchhau → Redoublement; spend 3 with Verholy or Verflare.": "Acumulaciones de Maná (0–3). Se llenan mediante Enchanted Riposte → Zwerchhau → Redoublement; gasta 3 con Verholy o Verflare.",
   "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used.": "Kaeshi listo. Indicador de que hay un seguimiento de Kaeshi en cola para el último Hissatsu usado.",
   "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.": "Temporizador de Reawakened. Rastrea la duración restante de la fase de Reawakened.",
-  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "Tipo de robo (Astral / Umbral). Indica qué lado del ciclo de robo está activo actualmente."
+  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "Tipo de robo (Astral / Umbral). Indica qué lado del ciclo de robo está activo actualmente.",
+  "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing.": "Temporizador de canción (0–45 s). Muestra la duración restante de la canción activa; el color refleja qué canción se está reproduciendo.",
+  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "Voz del alma (0–100). Se llena durante las canciones; úsala a 80+ con Apex Arrow o Blast Arrow."
 }

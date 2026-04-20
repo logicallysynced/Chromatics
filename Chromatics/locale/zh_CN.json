@@ -713,5 +713,7 @@
   "Mana Stacks (0–3). Fill via Enchanted Riposte → Zwerchhau → Redoublement; spend 3 with Verholy or Verflare.": "魔元层数（0–3）。通过附魔回刺 → Zwerchhau → Redoublement积累；3层可用于赤神圣或赤核爆。",
   "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used.": "返技就绪。表示已为上一次使用的必杀剑预备好返技追击。",
   "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.": "再觉醒计时器。追踪再觉醒阶段的剩余持续时间。",
-  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "抽取类型（星极 / 灵极）。表示当前激活的是抽取循环的哪一侧。"
+  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "抽取类型（星极 / 灵极）。表示当前激活的是抽取循环的哪一侧。",
+  "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing.": "歌曲计时器（0–45秒）。追踪当前歌曲的剩余持续时间；颜色反映当前播放的是哪首歌曲。",
+  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "灵魂之声（0–100）。在歌曲期间积累；达到80以上时可用 Apex Arrow 或 Blast Arrow 消耗。"
 }
