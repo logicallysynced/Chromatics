@@ -715,5 +715,15 @@
   "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.": "リウェイクンタイマー。リウェイクン状態の残り持続時間を追跡します。",
   "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.": "ドロータイプ（アストラル／アンブラル）。現在どちら側のドローサイクルが有効かを示します。",
   "Song Timer (0–45s). Tracks remaining duration of the active song; colour reflects which song is playing.": "ソングタイマー（0～45秒）。現在の曲の残り時間を追跡します。色は再生中の曲を示します。",
-  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "ソウルボイス（0～100）。曲の再生中に溜まり、80以上でエイペックスアローまたはブラストアローに使用します。"
+  "Soul Voice (0–100). Fills during songs; spend at 80+ with Apex Arrow or Blast Arrow.": "ソウルボイス（0～100）。曲の再生中に溜まり、80以上でエイペックスアローまたはブラストアローに使用します。",
+  "Razer": "Razer",
+  "Logitech": "Logitech",
+  "Corsair": "Corsair",
+  "Coolermaster": "Coolermaster",
+  "SteelSeries": "SteelSeries",
+  "ASUS": "ASUS",
+  "MSI": "MSI",
+  "Wooting": "Wooting",
+  "Novation": "Novation",
+  "OpenRGB": "OpenRGB"
 }
