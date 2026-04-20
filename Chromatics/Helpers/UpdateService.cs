@@ -45,35 +45,34 @@ namespace Chromatics.Helpers
         // are never shown a spurious update prompt.
         public static async Task<UpdateResult?> CheckAsync(bool includeBeta)
         {
+            var probeMgr = new UpdateManager(new SimpleWebSource(StableFeedUrl));
+            if (!probeMgr.IsInstalled)
+                return null;
+
+            bool isBeta = string.Equals(ReadInstalledChannel(probeMgr), "beta", StringComparison.OrdinalIgnoreCase);
+
+            if (isBeta)
+                return await CheckFeed(BetaFeedUrl, isBeta: true);
+
+            var stable = await CheckFeed(StableFeedUrl, isBeta: false);
+            if (stable != null) return stable;
+
+            return includeBeta ? await CheckFeed(BetaFeedUrl, isBeta: true) : null;
+        }
+
+        // Fetches one feed and returns null (silently) when the feed is
+        // unreachable or does not yet contain a release JSON — this is expected
+        // when the channel has never had a release published.
+        private static async Task<UpdateResult?> CheckFeed(string feedUrl, bool isBeta)
+        {
             try
             {
-                var probeMgr = new UpdateManager(new SimpleWebSource(StableFeedUrl));
-                if (!probeMgr.IsInstalled)
-                    return null;
-
-                bool isBeta = string.Equals(ReadInstalledChannel(probeMgr), "beta", StringComparison.OrdinalIgnoreCase);
-
-                if (isBeta)
-                {
-                    var betaMgr  = new UpdateManager(new SimpleWebSource(BetaFeedUrl));
-                    var betaInfo = await betaMgr.CheckForUpdatesAsync();
-                    return betaInfo != null ? new UpdateResult(betaInfo, IsBeta: true) : null;
-                }
-
-                var stableInfo = await probeMgr.CheckForUpdatesAsync();
-                if (stableInfo != null)
-                    return new UpdateResult(stableInfo, IsBeta: false);
-
-                if (!includeBeta)
-                    return null;
-
-                var betaMgr2  = new UpdateManager(new SimpleWebSource(BetaFeedUrl));
-                var betaInfo2 = await betaMgr2.CheckForUpdatesAsync();
-                return betaInfo2 != null ? new UpdateResult(betaInfo2, IsBeta: true) : null;
+                var mgr  = new UpdateManager(new SimpleWebSource(feedUrl));
+                var info = await mgr.CheckForUpdatesAsync();
+                return info != null ? new UpdateResult(info, isBeta) : null;
             }
-            catch (Exception ex)
+            catch
             {
-                Logger.WriteConsole(LoggerTypes.System, $"Update check failed: {ex.Message}");
                 return null;
             }
         }
