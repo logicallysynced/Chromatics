@@ -820,8 +820,8 @@ namespace Chromatics.ViewModels.Mapping
         {
             Dispatcher.UIThread.Post(() =>
             {
-                var editingLayer = Layers.FirstOrDefault(l => l.IsEditing);
-                editingLayer?.RefreshHelpText();
+                foreach (var layer in Layers)
+                    layer.RefreshHelpText();
             });
         }
     }
