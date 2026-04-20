@@ -42,7 +42,8 @@ namespace Chromatics.ViewModels
             var version = typeof(MainWindowViewModel).Assembly.GetName().Version;
             if (version != null)
             {
-                Title = $"Chromatics {version.Major}.{version.Minor}.{version.Build}";
+                var betaSuffix = UpdateService.IsBetaChannel() ? " [BETA]" : string.Empty;
+                Title = $"Chromatics {version.Major}.{version.Minor}.{version.Build}{betaSuffix}";
             }
 
             _isLightTheme = Avalonia.Application.Current?.ActualThemeVariant
