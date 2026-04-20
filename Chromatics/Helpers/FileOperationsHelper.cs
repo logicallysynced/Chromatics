@@ -742,6 +742,7 @@ namespace Chromatics.Helpers
                 {
                     using var sr = new StreamReader(path);
                     var result = JsonConvert.DeserializeObject<PaletteColorModel>(sr.ReadToEnd());
+                    NormalizePaletteDisplayNames(result);
                     Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported Color Palette from {path}.");
                     return result;
                 }
