@@ -69,6 +69,8 @@ namespace Chromatics.Layers
 
         public abstract void Process(IMappingLayer layer);
 
+        public virtual void CleanupLayer(int layerID) { }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

@@ -209,7 +209,6 @@ namespace Chromatics.ViewModels.Mapping
 
             // ── Job Gauge C ──────────────────────────────────────────────────────────
             { (Actor.Job.DRG, DynamicLayerType.JobGaugeC), "Firstminds' Focus (0–2). Fills during Life of the Dragon; spend both stacks with Dragonfire Dive or Stardiver." },
-            { (Actor.Job.BRD, DynamicLayerType.JobGaugeC), "Radiant Finale Codas. Tracks which song codas (Ballad, Paeon, Minuet) are stored for Radiant Finale." },
             { (Actor.Job.DRK, DynamicLayerType.JobGaugeC), "Living Shadow Timer. Tracks the remaining duration of the Living Shadow summon." },
             { (Actor.Job.GNB, DynamicLayerType.JobGaugeC), "Bloodfest Timer. Tracks the Bloodfest cooldown scaled to its maximum duration." },
             { (Actor.Job.MNK, DynamicLayerType.JobGaugeC), "Nadi (Lunar / Solar). Tracks which Nadi are accumulated; both are needed for Phantom Rush." },

@@ -107,6 +107,8 @@ namespace Chromatics.Layers
             };
         }
 
+        public IEnumerable<LayerProcessor> GetActiveDynamicProcessors() => _dynamicProcessors.Values;
+
         public void DisposeProcessor(BaseLayerType type)
         {
             if (_baseProcessors.ContainsKey(type))
