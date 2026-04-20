@@ -1,9 +1,11 @@
+using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Actor = Sharlayan.Core.Enums.Actor;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -152,9 +154,70 @@ namespace Chromatics.ViewModels.Mapping
                         "The effect layer displays effects over other layers, depending on which effects are enabled.");
                 var option = TypeOptions.FirstOrDefault(o => o.Value == LayerTypeIndex);
                 if (option == null || string.IsNullOrEmpty(option.Description)) return string.Empty;
+
+                // For Job Gauge types, substitute a job-specific description when in-game.
+                if (_layer.rootLayerType == LayerType.DynamicLayer &&
+                    (option.Value == (int)DynamicLayerType.JobGaugeA ||
+                     option.Value == (int)DynamicLayerType.JobGaugeB ||
+                     option.Value == (int)DynamicLayerType.JobGaugeC))
+                {
+                    var job = GameController.GetCurrectJob();
+                    if (job != Actor.Job.Unknown &&
+                        _jobGaugeDescriptions.TryGetValue((job, (DynamicLayerType)option.Value), out var jobDesc))
+                        return TextHelper.ParseLayerHelperText(jobDesc);
+                }
+
                 return TextHelper.ParseLayerHelperText(option.Description);
             }
         }
+
+        // Job-specific gauge descriptions shown on the layer-type ComboBox header when
+        // the game is attached. Falls through to the generic [LayerDisplay] Description
+        // for any job or gauge slot that has no entry.
+        private static readonly Dictionary<(Actor.Job, DynamicLayerType), string> _jobGaugeDescriptions = new()
+        {
+            // ── Job Gauge A ──────────────────────────────────────────────────────────
+            { (Actor.Job.WAR, DynamicLayerType.JobGaugeA), "Beast Gauge (0–100). Fills via combo finishers; spend at 50+ with Fell Cleave or Decimate." },
+            { (Actor.Job.PLD, DynamicLayerType.JobGaugeA), "Oath Gauge (0–100). Fills in combat; spend via Sheltron and Holy Sheltron." },
+            { (Actor.Job.MNK, DynamicLayerType.JobGaugeA), "Chakra Stacks (0–5). Fill via Meditation hits; spend with The Forbidden Chakra." },
+            { (Actor.Job.DRG, DynamicLayerType.JobGaugeA), "Dragon Gauge (0–100). Fills during Blood of the Dragon; sustain to remain in Life of the Dragon." },
+            { (Actor.Job.BRD, DynamicLayerType.JobGaugeA), "Soul Voice (0–100). Fills during songs; spend with Apex Arrow at 80+." },
+            { (Actor.Job.WHM, DynamicLayerType.JobGaugeA), "Healing Lilies and Blood Lily. Lilies fill over time; three lilies charge a Blood Lily for Afflatus Misery." },
+            { (Actor.Job.BLM, DynamicLayerType.JobGaugeA), "Astral Fire / Umbral Ice stance timer (0–15s). Tracks the 15-second buff window; lights up on Paradox proc." },
+            { (Actor.Job.SMN, DynamicLayerType.JobGaugeA), "Active summon timer. Tracks the current phase: Carbuncle, Dreadwyrm, Bahamut, or Phoenix." },
+            { (Actor.Job.SCH, DynamicLayerType.JobGaugeA), "Fairy Gauge (0–100). Fills via Dissipation and Aetherflow spends; used by Fey Union (Aetherpact)." },
+            { (Actor.Job.NIN, DynamicLayerType.JobGaugeA), "Kazematoi Stacks (0–5). Fill via En Droit; spend with Dokumori." },
+            { (Actor.Job.DRK, DynamicLayerType.JobGaugeA), "Blood Gauge (0–100). Fills via Bloodspiller combos; spend at 50+ with Bloodspiller or Quietus." },
+            { (Actor.Job.AST, DynamicLayerType.JobGaugeA), "Current Arcana. Colour matches the card currently being played." },
+            { (Actor.Job.MCH, DynamicLayerType.JobGaugeA), "Heat Gauge (0–100). Fills with weaponskills; triggers Hypercharge when full." },
+            { (Actor.Job.SAM, DynamicLayerType.JobGaugeA), "Kenki Gauge (0–100). Fills via combos; spend with Hissatsu weaponskills." },
+            { (Actor.Job.RDM, DynamicLayerType.JobGaugeA), "Black and White Mana balance (0–100 each). Both must reach 50+/80+ for enchanted melee combos." },
+            { (Actor.Job.DNC, DynamicLayerType.JobGaugeA), "Espirit Gauge (0–100). Fills via partner procs and Technical Finish; spend at 50+ with Saber Dance." },
+            { (Actor.Job.GNB, DynamicLayerType.JobGaugeA), "Powder Gauge / Cartridges (0–3). Filled by Gnashing Fang combo; spend with Burst Strike or Fated Circle." },
+            { (Actor.Job.SGE, DynamicLayerType.JobGaugeA), "Addersgall Stacks (0–3). One stack fills every 20s; spend with Druochole, Kerachole, Ixochole, or Taurochole." },
+            { (Actor.Job.RPR, DynamicLayerType.JobGaugeA), "Soul Gauge (0–100). Fills via Slice and Infernal Slice combos; spend at 50+ with Soul Scythe or Soul Slice." },
+            { (Actor.Job.VPR, DynamicLayerType.JobGaugeA), "Vipersight Gauge. Tracks the twin serpent stacks during the Reawaken phase." },
+            { (Actor.Job.PCT, DynamicLayerType.JobGaugeA), "Palette Gauge (0–100). Fills via Motif combos; spend at 50+ with Holy in White or Comet in Black." },
+
+            // ── Job Gauge B ──────────────────────────────────────────────────────────
+            { (Actor.Job.PLD, DynamicLayerType.JobGaugeB), "Confiteor Combo Timer. Tracks the remaining window to execute the Confiteor blade combo chain." },
+            { (Actor.Job.MNK, DynamicLayerType.JobGaugeB), "Beast Chakra Aggregate (0–6). Total OpoOpo, Raptor and Coeurl stacks accumulated for Perfect Balance." },
+            { (Actor.Job.BLM, DynamicLayerType.JobGaugeB), "Astral Soul Stacks (0–6). Fill with Fire IV during Astral Fire; spend all 6 stacks with Flare Star." },
+            { (Actor.Job.SCH, DynamicLayerType.JobGaugeB), "Aetherflow Stacks (0–3). Spend with Energy Drain, Lustrate, Excogitation, Indomitability, or Sacred Soil." },
+            { (Actor.Job.AST, DynamicLayerType.JobGaugeB), "Drawn Card. Colour matches the next card currently held in hand." },
+
+            // ── Job Gauge C ──────────────────────────────────────────────────────────
+            { (Actor.Job.DRG, DynamicLayerType.JobGaugeC), "Firstminds' Focus (0–2). Fills during Life of the Dragon; spend both stacks with Dragonfire Dive or Stardiver." },
+            { (Actor.Job.BRD, DynamicLayerType.JobGaugeC), "Radiant Finale Codas. Tracks which song codas (Ballad, Paeon, Minuet) are stored for Radiant Finale." },
+            { (Actor.Job.DRK, DynamicLayerType.JobGaugeC), "Living Shadow Timer. Tracks the remaining duration of the Living Shadow summon." },
+            { (Actor.Job.GNB, DynamicLayerType.JobGaugeC), "Bloodfest Timer. Tracks the Bloodfest cooldown scaled to its maximum duration." },
+            { (Actor.Job.MNK, DynamicLayerType.JobGaugeC), "Nadi (Lunar / Solar). Tracks which Nadi are accumulated; both are needed for Phantom Rush." },
+            { (Actor.Job.PLD, DynamicLayerType.JobGaugeC), "Confiteor Combo Step (0–3). Shows progress through Confiteor → Blade of Faith → Truth → Valor." },
+            { (Actor.Job.RDM, DynamicLayerType.JobGaugeC), "Mana Stacks (0–3). Fill via Enchanted Riposte → Zwerchhau → Redoublement; spend 3 with Verholy or Verflare." },
+            { (Actor.Job.SAM, DynamicLayerType.JobGaugeC), "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used." },
+            { (Actor.Job.VPR, DynamicLayerType.JobGaugeC), "Reawakened Timer. Tracks the remaining duration of the Reawakened phase." },
+            { (Actor.Job.AST, DynamicLayerType.JobGaugeC), "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active." },
+        };
 
         public void RefreshHelpText() => OnPropertyChanged(nameof(HelpText));
 

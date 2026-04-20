@@ -55,10 +55,12 @@ namespace Chromatics.Enums
         [LayerDisplay(Name = "Job Gauge A", Description = "Shows character's Job Gauge (A) across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         JobGaugeA = 8,
         [LayerDisplay(Name = "Job Gauge B", Description = "Shows character's Job Gauge (B) across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
-        JobGaugeB = 9, 
+        JobGaugeB = 9,
         [LayerDisplay(Name = "Experience Tracker", Description = "Shows character's EXP level progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         ExperienceTracker = 10,
-        [LayerDisplay(Name = "Battle Stance", Description = "Displays different colours across selected kyes depending on whether the character is engaged in battle or not.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        [LayerDisplay(Name = "Job Gauge C", Description = "Shows character's Job Gauge (C) across selected keys. Only populated for jobs with a third meaningful gauge element.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
+        JobGaugeC = 15,
+        [LayerDisplay(Name = "Battle Stance", Description = "Displays different colours across selected keys depending on whether the character is engaged in battle or not.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         BattleStance = 11,
         [LayerDisplay(Name = "Castbar", Description = "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         Castbar = 12,
