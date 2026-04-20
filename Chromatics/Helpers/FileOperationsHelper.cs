@@ -658,16 +658,62 @@ namespace Chromatics.Helpers
                     sr.Close();
                 }
 
-                if (result != null)
-                    return result;
+                if (result == null)
+                    return null;
 
-                return null;
+                var migrated   = MigratePaletteIfNeeded(result);
+                var normalized = NormalizePaletteDisplayNames(result);
+                if (migrated || normalized)
+                    SaveColorMappings(result);
+
+                return result;
             }
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Color Palette: {ex.Message}");
                 return null;
             }
+        }
+
+        // Upgrades older palette files in-place to the current schema. Fields added in later
+        // versions are auto-populated by their C# initialisers during deserialisation, so the
+        // migration only needs to (a) tag the file with the new version, and (b) drop or remap
+        // any values that no longer make sense in the new schema. Returns true if the palette
+        // was mutated and should be re-persisted.
+        private static bool MigratePaletteIfNeeded(PaletteColorModel palette)
+        {
+            if (palette.version == PaletteColorModel.CurrentVersion)
+                return false;
+
+            var from = palette.version ?? "1";
+            Logger.WriteConsole(Enums.LoggerTypes.System,
+                $"Migrating colour palette from v{from} to v{PaletteColorModel.CurrentVersion}.");
+
+            // v1 -> v2: Dawntrail job-gauge additions. Newly added ColorMapping fields come from
+            // their initialisers automatically, so there is no per-field remap required here.
+            // Future palette-schema transitions should branch on `from` and mutate the model in
+            // place before the final version bump below.
+
+            palette.version = PaletteColorModel.CurrentVersion;
+            return true;
+        }
+
+        // Corrects display names that were renamed in a later version of Chromatics.
+        // ColorMapping.Name is serialised, so stale palette files will restore old names even after
+        // the C# initialiser has been updated. This runs on every load (version-independent) so
+        // palettes that skipped migration still get corrected names.
+        private static bool NormalizePaletteDisplayNames(PaletteColorModel palette)
+        {
+            var changed = false;
+
+            // Dawntrail: NIN Huton replaced by Kazematoi in the same gauge-A slot.
+            if (palette.JobNINHuton != null && palette.JobNINHuton.Name != "NIN: Kazematoi")
+            {
+                palette.JobNINHuton.Name = "NIN: Kazematoi";
+                changed = true;
+            }
+
+            return changed;
         }
 
         public static bool CheckColorMappingsExist()
