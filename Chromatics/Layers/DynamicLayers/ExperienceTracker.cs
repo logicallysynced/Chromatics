@@ -8,7 +8,6 @@ using Sharlayan.Models.ReadResults;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using static Chromatics.Helpers.MathHelper;
 
@@ -57,10 +56,9 @@ namespace Chromatics.Layers
             // Experience Tracker Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
 
-            if (levelMap.Count <= 0)
-            {
-                GetLevelAPI();
-            }
+            // levelMap is populated lazily once the Sharlayan handler is live (see the
+            // memoryHandler check below). The old path fetched ParamGrow.csv from GitHub via
+            // HTTP; the replacement reads Lumina's ParamGrow sheet from the player's sqpack.
 
             var _layergroups = RGBController.GetLiveLayerGroups();
             var ledArray = GetLedSortedArray(layer);
@@ -87,6 +85,15 @@ namespace Chromatics.Layers
             {
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
                 if (getCurrentPlayer.Entity == null) return;
+
+                // One-time Lumina lookup for the level → EXP table. Depends on the handler
+                // being attached + GameInstallPath being resolvable — if either is missing
+                // the dict is empty and the downstream maxExp stays 0 (matches the previous
+                // "CSV not yet downloaded" behaviour).
+                if (levelMap.Count <= 0)
+                {
+                    GetLevelAPI(_memoryHandler);
+                }
 
                 var currentLvl = getCurrentPlayer.Entity.Level;
                 var currentExp = GetJobCurrentExperience(getCurrentPlayer);
@@ -344,40 +351,18 @@ namespace Chromatics.Layers
             }
         }
 
-        private void GetLevelAPI()
+        private void GetLevelAPI(Sharlayan.MemoryHandler handler)
         {
-            var _levelData = FileOperationsHelper.GetCsvData(@"https://raw.githubusercontent.com/viion/ffxiv-datamining/master/csv/ParamGrow.csv", @"ParamGrow.csv");
-
-            var delimiters = new[] { ',' };
-            using (var reader = new StreamReader(_levelData))
+            // Lumina-backed ParamGrow lookup via Sharlayan. Each row's id is the level,
+            // ExpToNext is the EXP required to reach the next level — same shape the old
+            // CSV path populated.
+            var table = handler?.Reader?.GetExpTable();
+            if (table == null || table.Count == 0) return;
+            foreach (var kvp in table)
             {
-                int lineptr = 0;
-                while (!reader.EndOfStream)
+                if (!levelMap.ContainsKey(kvp.Key))
                 {
-                    var line = reader.ReadLine();
-                    lineptr++;
-
-                    if (lineptr < 3) continue;
-
-                    if (line == null)
-                    {
-                        break;
-                    }
-
-                    var parts = line.Split(delimiters);
-
-                    // `&&` can never be true here (a string cannot be both null and
-                    // ""). The intent is to skip blank/null cells, so `||`.
-                    if (parts[0] == null || parts[0] == "") continue;
-                    if (parts[1] == null || parts[1] == "") continue;
-
-                    if (!int.TryParse(parts[0], out var id)) continue;
-                    if (!int.TryParse(parts[1], out var exp)) continue;
-
-                    if (!levelMap.ContainsKey(id))
-                    {
-                        levelMap.Add(id, exp);
-                    }
+                    levelMap.Add(kvp.Key, kvp.Value);
                 }
             }
         }

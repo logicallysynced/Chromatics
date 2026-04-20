@@ -34,8 +34,6 @@ namespace Chromatics.Views
             // keep it off the UI thread.
             Logger.WriteConsole(LoggerTypes.System, "Chromatics is starting up..");
 
-            try { await Task.Run(() => FileOperationsHelper.GetUpdatedWeatherData()); }
-            catch (Exception ex) { Logger.WriteConsole(LoggerTypes.Error, $"Weather data update failed: {ex.Message}"); }
             KeyController.Setup();
             await Task.Run(() => RGBController.Setup());
             GameController.Setup();
