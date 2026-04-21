@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
-      "version": "4.0.36",
+      "version": "4.0.40",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -80,10 +80,6 @@
             "CommunityToolkit.Mvvm": {
               "target": "Package",
               "version": "[8.4.2, )"
-            },
-            "CsvHelper": {
-              "target": "Package",
-              "version": "[33.1.0, )"
             },
             "HidSharp": {
               "target": "Package",
@@ -169,12 +165,9 @@
               "target": "Package",
               "version": "[3.2.0, )"
             },
-            "Sanford.Multimedia.Midi": {
+            "Sharlayan": {
               "target": "Package",
-              "version": "[6.7.3, )",
-              "noWarn": [
-                "NU1701"
-              ]
+              "version": "[9.0.4, )"
             },
             "System.Drawing.Common": {
               "target": "Package",

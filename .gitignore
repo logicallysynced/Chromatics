@@ -5,6 +5,10 @@
 # DESIGN_REFACTOR.md — local-only refactor notes, not committed)
 .claude/
 
+# Python bytecode cache (prebuild.py / prepareUpdate.py live at repo root)
+__pycache__/
+*.pyc
+
 # User-specific files
 *.suo
 *.user
