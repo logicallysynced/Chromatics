@@ -4,6 +4,7 @@ using Chromatics.Core;
 using Chromatics.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using DrawingColor = System.Drawing.Color;
 
 namespace Chromatics.ViewModels
@@ -76,6 +77,9 @@ namespace Chromatics.ViewModels
                 return new SolidColorBrush(Colors.White);
             return new SolidColorBrush(Color.FromArgb(raw.A, raw.R, raw.G, raw.B));
         }
+
+        public string GetAllText() =>
+            string.Join(Environment.NewLine, Entries.Select(e => e.Message));
 
         public void Dispose()
         {
