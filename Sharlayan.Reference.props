@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <SharlayanSource>NuGet</SharlayanSource>
+    <SharlayanVersion>9.0.4</SharlayanVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Sharlayan" Version="9.0.4" />
+  </ItemGroup>
+  <Target Name="SharlayanSourceBanner" BeforeTargets="Build">
+    <Message Importance="high" Text="[Sharlayan] Using $(SharlayanSource) $(SharlayanVersion)" />
+  </Target>
+</Project>
