@@ -1,4 +1,4 @@
-﻿using Chromatics.Core;
+using Chromatics.Core;
 using Chromatics.Localization;
 using RGB.NET.Core;
 using System;
@@ -19,12 +19,16 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly double fallSpeed;
         private readonly Color[] colors;
         private readonly Color baseColor;
-        private ConcurrentDictionary<int, Block> activeBlocks;
-        private double Timing;
-        private Direction fallDirection;
+        private readonly Direction fallDirection;
 
-        private static Dictionary<LedId, int[]> Grid =>
-            KeyLocalization.GetActiveGrid(AppSettings.GetSettings().keyboardLayout);
+        // Cached once in the constructor — GetActiveGrid is expensive to call per-tick.
+        private readonly Dictionary<LedId, int[]> _grid;
+        private readonly int _maxRow;
+        private readonly int _maxCol;
+
+        private ConcurrentDictionary<int, Block> activeBlocks;
+        private int _nextBlockKey;
+        private double Timing;
 
         public enum Direction
         {
@@ -36,7 +40,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         private class Block
         {
-            public int[] Position { get; set; }
+            public double PositionR { get; set; }
+            public double PositionC { get; set; }
+            // Integer grid coords derived from the float position for rendering/bounds checks.
+            public int Row => (int)Math.Floor(PositionR);
+            public int Col => (int)Math.Floor(PositionC);
             public Color Color { get; set; }
             public double SpawnTime { get; set; }
         }
@@ -48,8 +56,10 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             this.blockSize = blockSize;
             this.fallSpeed = fallSpeed;
             this.colors = colors;
-            this.baseColor = baseColor == default(Color) ? new Color(0, 0, 0) : baseColor; // Default to black if not specified
+            this.baseColor = baseColor == default(Color) ? new Color(0, 0, 0) : baseColor;
             this.fallDirection = fallDirection;
+
+            (_grid, _maxRow, _maxCol) = DeviceGridHelper.GetGrid(_ledGroup);
 
             activeBlocks = new ConcurrentDictionary<int, Block>();
             Timing = 0;
@@ -81,15 +91,15 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                 foreach (var led in ledGroup)
                 {
-                    if (Grid.TryGetValue(led.Id, out var position) && activeBlocks.Values.Any(b => b.Position.SequenceEqual(position)))
-                    {
-                        var block = activeBlocks.Values.First(b => b.Position.SequenceEqual(position));
-                        led.Color = block.Color;
-                    }
-                    else
-                    {
-                        led.Color = baseColor;
-                    }
+                    if (!_grid.TryGetValue(led.Id, out var pos)) { led.Color = baseColor; continue; }
+                    var ledRow = pos[0];
+                    var ledCol = pos[1];
+
+                    var hit = activeBlocks.Values.FirstOrDefault(b =>
+                        Math.Abs(b.Row - ledRow) < blockSize &&
+                        Math.Abs(b.Col - ledCol) < blockSize);
+
+                    led.Color = hit != null ? hit.Color : baseColor;
                 }
             }
             catch (Exception ex)
@@ -100,97 +110,63 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         private void CreateNewBlocks()
         {
-            var availableLeds = ledGroup.Where(led => Grid.ContainsKey(led.Id));
-            var selectedLeds = availableLeds.OrderBy(x => Guid.NewGuid()).Take(numberOfBlocks);
+            var needed = numberOfBlocks - activeBlocks.Count;
+            if (needed <= 0) return;
 
-            foreach (var led in selectedLeds)
+            var availableLeds = ledGroup.Where(led => _grid.ContainsKey(led.Id)).ToList();
+            var selected = availableLeds.OrderBy(_ => Guid.NewGuid()).Take(needed);
+
+            foreach (var led in selected)
             {
-                if (!Grid.TryGetValue(led.Id, out var position)) continue;
-                var colorIndex = random.Next(colors.Length);
-                var startPosition = GetStartPosition(position);
-
+                if (!_grid.TryGetValue(led.Id, out var pos)) continue;
+                var (startR, startC) = GetStartPositionF(pos);
                 var block = new Block
                 {
-                    Position = startPosition,
-                    Color = colors[colorIndex],
-                    SpawnTime = Timing
+                    PositionR  = startR,
+                    PositionC  = startC,
+                    Color      = colors[random.Next(colors.Length)],
+                    SpawnTime  = Timing,
                 };
-                activeBlocks.TryAdd(activeBlocks.Count, block);
+                activeBlocks.TryAdd(_nextBlockKey++, block);
             }
         }
 
-        private int[] GetStartPosition(int[] position)
+        private (double r, double c) GetStartPositionF(int[] position)
         {
-            switch (fallDirection)
+            return fallDirection switch
             {
-                case Direction.TopToBottom:
-                    return new int[] { -blockSize, position[1] };
-                case Direction.BottomToTop:
-                    return new int[] { Grid.Values.Max(p => p[0]) + blockSize, position[1] };
-                case Direction.LeftToRight:
-                    return new int[] { position[0], -blockSize };
-                case Direction.RightToLeft:
-                    return new int[] { position[0], Grid.Values.Max(p => p[1]) + blockSize };
-                default:
-                    return position;
-            }
+                Direction.TopToBottom => (-blockSize,              position[1]),
+                Direction.BottomToTop => (_maxRow + blockSize,     position[1]),
+                Direction.LeftToRight => (position[0],             -blockSize),
+                Direction.RightToLeft => (position[0],             _maxCol + blockSize),
+                _                     => (position[0],             position[1]),
+            };
         }
 
         private void UpdateBlocks(double deltaTime)
         {
-            var blocksToRemove = new List<int>();
+            var toRemove = new List<int>();
 
             foreach (var kvp in activeBlocks)
             {
-                var block = kvp.Value;
-
+                var b = kvp.Value;
                 switch (fallDirection)
                 {
-                    case Direction.TopToBottom:
-                        block.Position[0] += (int)(fallSpeed * deltaTime);
-                        break;
-                    case Direction.BottomToTop:
-                        block.Position[0] -= (int)(fallSpeed * deltaTime);
-                        break;
-                    case Direction.LeftToRight:
-                        block.Position[1] += (int)(fallSpeed * deltaTime);
-                        break;
-                    case Direction.RightToLeft:
-                        block.Position[1] -= (int)(fallSpeed * deltaTime);
-                        break;
+                    case Direction.TopToBottom: b.PositionR += fallSpeed * deltaTime; break;
+                    case Direction.BottomToTop: b.PositionR -= fallSpeed * deltaTime; break;
+                    case Direction.LeftToRight: b.PositionC += fallSpeed * deltaTime; break;
+                    case Direction.RightToLeft: b.PositionC -= fallSpeed * deltaTime; break;
                 }
 
-                if (IsOutOfBounds(block.Position))
-                {
-                    blocksToRemove.Add(kvp.Key);
-                }
+                if (IsOutOfBounds(b)) toRemove.Add(kvp.Key);
             }
 
-            foreach (var key in blocksToRemove)
-            {
+            foreach (var key in toRemove)
                 activeBlocks.TryRemove(key, out _);
-            }
         }
 
-        private bool IsOutOfBounds(int[] position)
-        {
-            var maxRow = Grid.Values.Max(p => p[0]);
-            var maxCol = Grid.Values.Max(p => p[1]);
-
-            return position[0] < -blockSize || position[0] > maxRow + blockSize || position[1] < -blockSize || position[1] > maxCol + blockSize;
-        }
-
-        private class IntArrayEqualityComparer : IEqualityComparer<int[]>
-        {
-            public bool Equals(int[] x, int[] y)
-            {
-                return x.SequenceEqual(y);
-            }
-
-            public int GetHashCode(int[] obj)
-            {
-                return obj.Aggregate(17, (current, value) => current * 23 + value.GetHashCode());
-            }
-        }
+        private bool IsOutOfBounds(Block b)
+            => b.PositionR < -blockSize || b.PositionR > _maxRow + blockSize
+            || b.PositionC < -blockSize || b.PositionC > _maxCol + blockSize;
     }
 }
