@@ -93,9 +93,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 if (globalStep == 0)
                 {
                     //Setup Pulse
-                    foreach (var led in Surface.Leds)
+                    foreach (var led in ledGroup)
                     {
-                        savedColors.Add(led, led.Color);
+                        savedColors[led] = led.Color;
                     }
 
                     if (deviceType == RGBDeviceType.Keyboard)
