@@ -2,11 +2,10 @@
 """
 prepareUpdate.py — Patch-day package update script.
 
-Queries NuGet for newer RGB.NET packages (pre-releases accepted). If any are
-newer than what is installed, updates the csproj(s), bumps the patch version,
-builds, runs the test suite, and stages a git commit.
-
-Sharlayan is handled separately by prebuild.py — do not add it here.
+Queries NuGet for newer RGB.NET packages (pre-releases accepted) and Sharlayan
+(stable only). If any packages are newer than what is installed, updates the
+csproj(s), bumps the patch version, builds, runs the test suite, and stages a
+git commit.
 
 Usage:
     python prepareUpdate.py [--dry-run]
@@ -49,8 +48,7 @@ RGB_NET_PACKAGES = [
     "RGB.NET.Presets",
 ]
 
-# Sharlayan is resolved per-build by prebuild.py (see Sharlayan.Reference.props)
-# so it is intentionally not managed here.
+SHARLAYAN_PACKAGE = "Sharlayan"
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -91,6 +89,16 @@ def get_package_version(csproj: Path, package_id: str) -> str | None:
         re.IGNORECASE,
     )
     return m.group(1) if m else None
+
+
+def is_local_reference(csproj: Path, package_id: str) -> bool:
+    """Return True if package_id appears as a <Reference> (local DLL) rather than a PackageReference."""
+    content = csproj.read_text(encoding="utf-8")
+    return bool(re.search(
+        rf'<Reference\s+Include="{re.escape(package_id)}"',
+        content,
+        re.IGNORECASE,
+    ))
 
 
 def bump_patch(csproj: Path) -> tuple[str, str]:
@@ -172,7 +180,27 @@ def main() -> int:
             log.info(f"  {pkg}: {installed} → {latest}  ✓")
             updates.append((pkg, installed or "?", latest, targets))
 
-    log.info("\nSharlayan is resolved per-build by prebuild.py — skipping here.")
+    log.info("\nChecking Sharlayan (stable only)…")
+    shar_targets: list[Path] = []
+    shar_installed: str | None = None
+    for csproj in ALL_CSPROJS:
+        if is_local_reference(csproj, SHARLAYAN_PACKAGE):
+            log.info(f"  {SHARLAYAN_PACKAGE}: local DLL in {csproj.name} — skipping NuGet update")
+            continue
+        ver = get_package_version(csproj, SHARLAYAN_PACKAGE)
+        if ver is not None:
+            shar_targets.append(csproj)
+            shar_installed = ver
+
+    if shar_targets:
+        shar_latest = nuget_latest(SHARLAYAN_PACKAGE, prerelease=False)
+        if shar_latest is None:
+            log.warning(f"  {SHARLAYAN_PACKAGE}: NuGet unreachable — skipping")
+        elif shar_installed == shar_latest:
+            log.info(f"  {SHARLAYAN_PACKAGE}: {shar_installed} — up to date")
+        else:
+            log.info(f"  {SHARLAYAN_PACKAGE}: {shar_installed} → {shar_latest}  ✓")
+            updates.append((SHARLAYAN_PACKAGE, shar_installed or "?", shar_latest, shar_targets))
 
     print()
     if not updates:

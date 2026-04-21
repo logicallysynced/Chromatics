@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\Sharlayan.Reference.props" Condition="Exists('..\Sharlayan.Reference.props')" />
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows7.0</TargetFramework>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.0.40.0</Version>
+    <Version>4.0.41.0</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>logicallysynced 2026</Copyright>
@@ -83,12 +81,26 @@
     <PackageReference Include="RGB.NET.HID" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Layout" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Presets" Version="3.2.0" />
+    <Reference Include="Sharlayan">
+      <HintPath>..\Build Dependencies\Sharlayan\Sharlayan.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Interop.AuraServiceLib">
       <HintPath>..\Build Dependencies\Interop.AuraServiceLib.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Sharlayan 9 is referenced as a loose DLL (not on NuGet). The transitive
+         runtime deps (FFXIVClientStructs, Lumina, etc.) must be copied to the
+         output folder for the app to run. -->
+    <None Include="..\Build Dependencies\Sharlayan\*.dll" Exclude="..\Build Dependencies\Sharlayan\Sharlayan.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
