@@ -270,6 +270,14 @@ namespace Chromatics.Layers.DynamicLayers
                             bossNames = ["Cloud of Darkness"];
                         }
                         break;
+                    case "Groovy Ring":
+                        if (effectSettings.effect_raideffects)
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5KeyHighlight.Color);
+                            raidEffectsRunning = true;
+                            bossNames = ["Cloud of Darkness"];
+                        }
+                        break;
                 }
             }
 

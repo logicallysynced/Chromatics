@@ -579,6 +579,12 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectM4Highlight3 = new("Arcadion M4 (Highlight 3)", PaletteTypes.RaidEffects, Color.White);
         public ColorMapping RaidEffectM4Highlight4 = new("Arcadion M4 (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x00ACFF));
 
+        public ColorMapping RaidEffectM5Base = new("Arcadion M5 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM5KeyHighlight = new("Arcadion M5 (Key Highlights)", PaletteTypes.RaidEffects, Color.LimeGreen);
+        public ColorMapping RaidEffectM5Highlight1 = new("Arcadion M5 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x0096FF));
+        public ColorMapping RaidEffectM5Highlight2 = new("Arcadion M5 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF32C8));
+        public ColorMapping RaidEffectM5Highlight3 = new("Arcadion M5 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFED00));
+
         public ColorMapping RaidEffectCoDBase = new("The Cloud of Darkness (Base)", PaletteTypes.RaidEffects, Color.MediumPurple);
         public ColorMapping RaidEffectCoDKeyHighlight = new("The Cloud of Darkness (Key Highlights)", PaletteTypes.RaidEffects, Color.Purple);
         public ColorMapping RaidEffectCoDHighlight1 = new("The Cloud of Darkness (Highlight 1)", PaletteTypes.RaidEffects, Color.Magenta);
