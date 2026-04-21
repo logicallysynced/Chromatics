@@ -356,7 +356,7 @@ namespace Chromatics.Layers
             {
                 switch (zone)
                 {
-                    case "Summit of Everkeep":
+                    case "Summit of Everkeep": //case "Summit of Everkeep":
                         //Raid Zone Effect
                         if (effectSettings.effect_raideffects && !raidEffectsRunning)
                         {
@@ -512,6 +512,20 @@ namespace Chromatics.Layers
 
                             masterlayer.requestUpdate = true;
                             
+                            return true;
+                        }
+                        break;
+                    case "Groovy Ring":
+                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
+                        {
+                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Base.Color);
+                            var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight3.Color) };
+                            var ripple = new BPMRippleDecorator(layer, 60, 2, 5, colors, surface, baseCol);
+
+                            SetEffect(ripple, layer, runningEffects);
+                            raidEffectsRunning = true;
+                            bossNames = ["Dancing Green"];
+
                             return true;
                         }
                         break;
