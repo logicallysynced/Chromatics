@@ -360,7 +360,23 @@ namespace Chromatics.Core
                     };
 
                     Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
-                    _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(_configuration);
+
+                    try
+                    {
+                        _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(_configuration);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Sharlayan throws Win32Exception(5) / UnauthorizedAccessException
+                        // when opening FFXIV's process memory without admin rights.
+                        // Normally AdminElevationHelper relaunches us as admin, but
+                        // that path is skipped under a debugger. Swallow and keep
+                        // trying so the UI/effects still work.
+                        if (_connectionAttempts <= 1)
+                            Logger.WriteConsole(LoggerTypes.FFXIV,
+                                $"Cannot attach to FFXIV memory: {ex.Message}. Run Chromatics as Administrator to enable game-state effects.");
+                        return;
+                    }
 
                     gameConnected = true;
                     activeProcessId = _configuration.ProcessModel.ProcessID;
