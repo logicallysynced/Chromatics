@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\Sharlayan.Reference.props" Condition="Exists('..\Sharlayan.Reference.props')" />
-
   <PropertyGroup>
     <TargetFramework>net10.0-windows7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -25,6 +23,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chromatics\Chromatics.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Sharlayan">
+      <HintPath>..\Build Dependencies\Sharlayan\Sharlayan.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
