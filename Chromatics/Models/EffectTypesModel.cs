@@ -17,6 +17,7 @@ namespace Chromatics.Models
         public bool effect_titlescreen { get; set; } = true;
         public bool effect_startupanimation { get; set; } = true;
         public bool effect_raideffects { get; set; } = true;
+        public bool effect_audiovisualizer { get; set; } = false;
 
         //Specific Effect Settings
         public bool effect_damageflash_scaledamage { get; set; } = true;

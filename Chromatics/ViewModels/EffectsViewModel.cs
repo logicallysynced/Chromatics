@@ -77,6 +77,7 @@ namespace Chromatics.ViewModels
                 "avares://Chromatics/Resources/raid.png",
                 e.effect_raideffects,
                 v => { e.effect_raideffects = v; RGBController.SaveEffectsSettings(); }));
+
         }
     }
 }

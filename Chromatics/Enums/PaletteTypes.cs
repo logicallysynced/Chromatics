@@ -38,9 +38,11 @@ namespace Chromatics.Enums
             [Display(Name = "Job Classes")]
             JobClasses = 11,
             [Display(Name = "Raid Zone Effects")]
-            RaidEffects = 12
+            RaidEffects = 12,
+            [Display(Name = "Audio Visualizer")]
+            AudioVisualizer = 13
         }
 
-        public static int TypeCount = 12;
+        public static int TypeCount = 13;
     }
 }

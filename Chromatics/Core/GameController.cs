@@ -521,6 +521,19 @@ namespace Chromatics.Core
                     {
                         case LayerType.BaseLayer:
                             var baseProcessor = _layerProcessorFactory.GetProcessor((BaseLayerType)layer.layerTypeindex);
+                            if (layer.requestUpdate)
+                            {
+                                var liveGroups = RGBController.GetLiveLayerGroups();
+                                if (liveGroups.TryGetValue(layer.layerID, out var prevBaseGroups))
+                                {
+                                    foreach (var g in prevBaseGroups)
+                                    {
+                                        g?.RemoveAllDecorators();
+                                        g?.Detach();
+                                    }
+                                    liveGroups.Remove(layer.layerID);
+                                }
+                            }
                             baseProcessor.Process(layer);
                             break;
 

@@ -33,6 +33,8 @@ namespace Chromatics.Enums
         JobClasses = 3,
         [LayerDisplay(Name = "Screen Capture (Beta)", Description = "Ambient base layer that samples the FFXIV game window and paints a matching colour gradient across your devices.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         ScreenCapture = 4,
+        [LayerDisplay(Name = "Audio Visualizer (Beta)", Description = "Spectrum analyser base layer that reacts to game audio output. Displays frequency bars across keyboard columns.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        AudioVisualizer = 5,
     };
     public enum DynamicLayerType
     {

@@ -1,4 +1,4 @@
-﻿using Chromatics.Core;
+using Chromatics.Core;
 using Chromatics.Localization;
 using RGB.NET.Core;
 using NAudio.Wave;
@@ -16,21 +16,21 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly ListLedGroup ledGroup;
         private readonly Color[] colors;
         private readonly Color baseColor;
+        private readonly Dictionary<LedId, int[]> _grid;
+        private readonly int _maxRow;
         private List<Peak> peaks;
-        private int maxRow;
-        private int columnsPerPeak = 2; // Number of columns per peak
+        private int columnsPerPeak = 2;
         private WasapiLoopbackCapture capture;
         private BufferedWaveProvider bufferedWaveProvider;
-        private const int fftLength = 1024; // NAudio FFT length
+        private const int fftLength = 1024;
         private Complex[] fftBuffer = new Complex[fftLength];
-
-        private static Dictionary<LedId, int[]> Grid =>
-            KeyLocalization.GetActiveGrid(AppSettings.GetSettings().keyboardLayout);
+        private readonly object _peakLock = new();
+        private float[] _bandPeaks = [];
 
         private class Peak
         {
-            public int CurrentHeight { get; set; }
-            public int TargetHeight { get; set; }
+            public double CurrentHeight { get; set; }
+            public double TargetHeight { get; set; }
             public int StartColumn { get; set; }
             public int EndColumn { get; set; }
         }
@@ -41,6 +41,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             this.colors = colors;
             this.baseColor = baseColor == default(Color) ? new Color(0, 0, 0) : baseColor;
 
+            int maxCol;
+            (_grid, _maxRow, maxCol) = DeviceGridHelper.GetGrid(_ledGroup);
             peaks = new List<Peak>();
 
             InitializePeaks();
@@ -49,32 +51,39 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         private void StartAudioCapture()
         {
-            capture = new WasapiLoopbackCapture();
-            capture.DataAvailable += OnDataAvailable;
-            bufferedWaveProvider = new BufferedWaveProvider(capture.WaveFormat)
+            try
             {
-                DiscardOnBufferOverflow = true
-            };
-
-            capture.StartRecording();
+                capture = new WasapiLoopbackCapture();
+                capture.DataAvailable += OnDataAvailable;
+                bufferedWaveProvider = new BufferedWaveProvider(capture.WaveFormat)
+                {
+                    DiscardOnBufferOverflow = true
+                };
+                capture.StartRecording();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"AudioVisualizerEffect: Failed to start capture: {ex.Message}");
+            }
         }
 
         private void OnDataAvailable(object sender, WaveInEventArgs e)
         {
+            if (bufferedWaveProvider == null) return;
             bufferedWaveProvider.AddSamples(e.Buffer, 0, e.BytesRecorded);
             ProcessAudioBuffer();
         }
 
         private void InitializePeaks()
         {
-            var cols = Grid.Values.Select(p => p[1]).Distinct().OrderBy(c => c).ToList();
+            var cols = _grid.Values.Select(p => p[1]).Distinct().OrderBy(c => c).ToList();
             for (int i = 0; i < cols.Count; i += columnsPerPeak)
             {
                 var startColumn = cols[i];
                 var endColumn = (i + columnsPerPeak < cols.Count) ? cols[i + columnsPerPeak - 1] : cols[cols.Count - 1];
                 peaks.Add(new Peak { CurrentHeight = 0, TargetHeight = 0, StartColumn = startColumn, EndColumn = endColumn });
             }
-            maxRow = Grid.Values.Max(p => p[0]);
+            _bandPeaks = new float[peaks.Count];
         }
 
         public override void OnAttached(IDecoratable decoratable)
@@ -88,10 +97,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             base.OnDetached(decoratable);
             peaks.Clear();
 
-            // Unsubscribe before disposing: NAudio raises DataAvailable from a background
-            // thread, and leaving the handler wired up while tearing down the capture
-            // risks touching `bufferedWaveProvider` after it's been released. Null-check
-            // in case StartAudioCapture failed (e.g. no default capture device).
             if (capture != null)
             {
                 capture.DataAvailable -= OnDataAvailable;
@@ -107,18 +112,29 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         {
             try
             {
-                if (ledGroup == null || peaks == null) return;
+                if (ledGroup == null || peaks == null || peaks.Count == 0) return;
+
+                lock (_peakLock)
+                {
+                    foreach (var peak in peaks)
+                    {
+                        if (peak.TargetHeight > peak.CurrentHeight)
+                            peak.CurrentHeight += (peak.TargetHeight - peak.CurrentHeight) * Math.Min(1.0, deltaTime * 10.0);
+                        else
+                            peak.CurrentHeight += (peak.TargetHeight - peak.CurrentHeight) * Math.Min(1.0, deltaTime * 5.0);
+                    }
+                }
 
                 foreach (var led in ledGroup)
                 {
-                    if (Grid.TryGetValue(led.Id, out var position))
+                    if (_grid.TryGetValue(led.Id, out var position))
                     {
                         var row = position[0];
                         var col = position[1];
                         var peak = peaks.FirstOrDefault(p => col >= p.StartColumn && col <= p.EndColumn);
-                        if (peak != null && row >= (maxRow - peak.CurrentHeight))
+                        if (peak != null && peak.CurrentHeight > 0.1 && row >= (_maxRow - (int)Math.Round(peak.CurrentHeight)))
                         {
-                            led.Color = GetColorForRow(row, peak.CurrentHeight);
+                            led.Color = GetColorForRow(row, (int)Math.Round(peak.CurrentHeight));
                         }
                         else
                         {
@@ -139,73 +155,91 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         private void ProcessAudioBuffer()
         {
-            var audioBytes = new byte[bufferedWaveProvider.BufferLength];
-            int bytesRead = bufferedWaveProvider.Read(audioBytes, 0, audioBytes.Length);
+            if (bufferedWaveProvider == null || peaks == null || peaks.Count == 0) return;
+
+            int available = bufferedWaveProvider.BufferedBytes;
+            if (available == 0) return;
+
+            var audioBytes = new byte[available];
+            int bytesRead = bufferedWaveProvider.Read(audioBytes, 0, available);
 
             int bytesPerSample = bufferedWaveProvider.WaveFormat.BitsPerSample / 8;
-            int sampleCount = bytesRead / bytesPerSample;
+            int channels = bufferedWaveProvider.WaveFormat.Channels;
+            int totalSamples = bytesRead / bytesPerSample;
 
-            float[] audioSamples = new float[sampleCount];
-            for (int i = 0; i < sampleCount; i++)
+            // Mix down to mono by averaging channels
+            int frameCount = totalSamples / channels;
+            float[] monoSamples = new float[frameCount];
+            for (int f = 0; f < frameCount; f++)
             {
-                audioSamples[i] = BitConverter.ToSingle(audioBytes, i * bytesPerSample);
+                float sum = 0;
+                for (int ch = 0; ch < channels; ch++)
+                    sum += BitConverter.ToSingle(audioBytes, (f * channels + ch) * bytesPerSample);
+                monoSamples[f] = sum / channels;
             }
 
-            if (audioSamples.Length < fftLength)
+            if (monoSamples.Length < fftLength)
                 return;
 
-            // Apply window function (Hamming)
             for (int i = 0; i < fftLength; i++)
             {
                 float window = 0.54f - 0.46f * (float)Math.Cos(2 * Math.PI * i / (fftLength - 1));
-                fftBuffer[i] = new Complex { X = i < audioSamples.Length ? audioSamples[i] * window : 0, Y = 0 };
+                fftBuffer[i] = new Complex { X = monoSamples[i] * window, Y = 0 };
             }
 
-            // Perform FFT
             FastFourierTransform.FFT(true, (int)Math.Log(fftLength, 2.0), fftBuffer);
 
-            float[] magnitudes = new float[fftLength / 2];
-            for (int i = 0; i < fftLength / 2; i++)
-            {
+            int usableBins = fftLength / 2;
+            float[] magnitudes = new float[usableBins];
+            for (int i = 0; i < usableBins; i++)
                 magnitudes[i] = (float)Math.Sqrt(fftBuffer[i].X * fftBuffer[i].X + fftBuffer[i].Y * fftBuffer[i].Y);
-            }
 
-            // Normalize and apply gain
-            float maxMagnitude = magnitudes.Max();
+            // Logarithmic bin distribution with per-band normalization.
+            // Each band uses average magnitude (not max) and its own running
+            // peak tracker so quiet high-frequency bands still fill the display.
+            int peakCount = peaks.Count;
+            double logMin = Math.Log(1);
+            double logMax = Math.Log(usableBins);
 
-            float gain = 5.0f; // Reduced gain factor
-            if (maxMagnitude > 0)
+            lock (_peakLock)
             {
-                for (int i = 0; i < magnitudes.Length; i++)
+                for (int p = 0; p < peakCount; p++)
                 {
-                    magnitudes[i] = (magnitudes[i] / maxMagnitude) * gain;
+                    int startBin = (int)Math.Exp(logMin + (logMax - logMin) * p / peakCount);
+                    int endBin   = (int)Math.Exp(logMin + (logMax - logMin) * (p + 1) / peakCount);
+                    startBin = Math.Max(1, Math.Min(startBin, usableBins - 1));
+                    endBin   = Math.Max(startBin + 1, Math.Min(endBin, usableBins));
+
+                    float bandSum = 0;
+                    float bandMax = 0;
+                    int count = 0;
+                    for (int b = startBin; b < endBin; b++)
+                    {
+                        bandSum += magnitudes[b];
+                        bandMax = Math.Max(bandMax, magnitudes[b]);
+                        count++;
+                    }
+
+                    float bandLevel = count > 0 ? (bandSum / count * 0.5f + bandMax * 0.5f) : 0;
+
+                    if (bandLevel > _bandPeaks[p])
+                        _bandPeaks[p] = bandLevel;
+                    else
+                        _bandPeaks[p] *= 0.97f;
+
+                    float normalizedLevel = _bandPeaks[p] > 0.001f ? bandLevel / _bandPeaks[p] : 0;
+
+                    double height = Math.Min(Math.Pow(normalizedLevel, 0.9) * _maxRow * 0.85, _maxRow);
+                    peaks[p].TargetHeight = height;
                 }
             }
-
-            // Determine peak height and clamp it
-            var calculatedPeakHeight = (int)(magnitudes.Max() * maxRow / gain);
-            calculatedPeakHeight = Math.Min(calculatedPeakHeight, maxRow); // Clamp the peak height to the max row value
-
-            foreach (var peak in peaks)
-            {
-                peak.TargetHeight = calculatedPeakHeight;
-            }
-
-            // Smoothly update current heights to target heights using linear interpolation
-            foreach (var peak in peaks)
-            {
-                peak.CurrentHeight = LinearInterpolate(peak.CurrentHeight, peak.TargetHeight, 0.05); // Adjusted smoothing factor
-            }
-        }
-
-        private int LinearInterpolate(int start, int end, double factor)
-        {
-            return (int)(start + factor * (end - start));
         }
 
         private Color GetColorForRow(int row, int peakHeight)
         {
-            var colorIndex = (int)((double)(row - (maxRow - peakHeight)) / maxRow * (colors.Length - 1));
+            if (_maxRow == 0 || colors.Length <= 1) return colors[0];
+            double normalized = (double)(row - (_maxRow - peakHeight)) / _maxRow;
+            var colorIndex = (int)(normalized * (colors.Length - 1));
             return colors[Math.Max(0, Math.Min(colorIndex, colors.Length - 1))];
         }
     }
