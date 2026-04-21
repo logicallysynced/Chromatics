@@ -27,7 +27,10 @@ namespace Chromatics
         {
             // Must be the very first call — Velopack intercepts lifecycle args
             // (--velopack-firstrun, --velopack-updated, etc.) and exits early
-            // when acting on them. Nothing else may run before this.
+            // when acting on them. Also registers the global VelopackLocator
+            // that UpdateService depends on, so this must run even under a
+            // debugger. Lifecycle args are never passed during debug sessions,
+            // so Run() just registers the locator and returns cleanly.
             VelopackApp.Build().Run();
 
             if (!ThereCanOnlyBeOne())
@@ -64,7 +67,8 @@ namespace Chromatics
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
 
-            AdminElevationHelper.CheckAndElevateIfNeeded(appSettings);
+            if (!Debugger.IsAttached)
+                AdminElevationHelper.CheckAndElevateIfNeeded(appSettings);
 
             // First-run device-provider wizard runs after Avalonia boots — see
             // App.axaml.cs / FirstRunDialog. The expansion migration is
