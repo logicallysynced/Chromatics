@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using Chromatics.ViewModels;
 using System;
@@ -14,6 +15,7 @@ namespace Chromatics.Views
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;
             DetachedFromVisualTree += OnDetached;
+            CopyAllButton.Click += OnCopyAllClicked;
         }
 
         private void OnDataContextChanged(object sender, EventArgs e)
@@ -42,12 +44,18 @@ namespace Chromatics.Views
 
         private void OnEntryAdded(object sender, EventArgs e)
         {
-            // Scroll on the UI thread — EntryAdded is raised from inside Append(),
-            // which already runs on the UI thread via Dispatcher.Post.
             Dispatcher.UIThread.Post(() =>
             {
                 ScrollHost.ScrollToEnd();
             }, DispatcherPriority.Background);
+        }
+
+        private async void OnCopyAllClicked(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (_vm == null) return;
+            var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+            if (clipboard == null) return;
+            await clipboard.SetTextAsync(_vm.GetAllText());
         }
     }
 }
