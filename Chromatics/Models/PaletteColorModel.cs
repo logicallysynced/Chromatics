@@ -590,6 +590,12 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectCoDHighlight1 = new("The Cloud of Darkness (Highlight 1)", PaletteTypes.RaidEffects, Color.Magenta);
         public ColorMapping RaidEffectCoDHighlight2 = new("The Cloud of Darkness (Highlight 2)", PaletteTypes.RaidEffects, Color.MediumPurple);
         public ColorMapping RaidEffectCoDHighlight3 = new("The Cloud of Darkness (Highlight 3)", PaletteTypes.RaidEffects, Color.Purple);
+
+        // Audio Visualizer
+        public ColorMapping AudioVisualizerBase = new("Audio Visualizer (Base)", PaletteTypes.AudioVisualizer, Color.Black);
+        public ColorMapping AudioVisualizerLow = new("Audio Visualizer (Low Freq)", PaletteTypes.AudioVisualizer, Color.FromArgb(unchecked((int)0xFF00CC00)));
+        public ColorMapping AudioVisualizerMid = new("Audio Visualizer (Mid Freq)", PaletteTypes.AudioVisualizer, Color.Yellow);
+        public ColorMapping AudioVisualizerHigh = new("Audio Visualizer (High Freq)", PaletteTypes.AudioVisualizer, Color.Red);
     }
 
     public class LegacyColorMappings

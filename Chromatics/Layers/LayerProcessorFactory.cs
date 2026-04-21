@@ -66,6 +66,7 @@ namespace Chromatics.Layers
                 BaseLayerType.BattleStance => BaseBattleStanceProcessor.Instance,
                 BaseLayerType.JobClasses => JobClassesProcessor.Instance,
                 BaseLayerType.ScreenCapture => ScreenCaptureProcessor.Instance,
+                BaseLayerType.AudioVisualizer => AudioVisualizerBaseProcessor.Instance,
                 _ => throw new ArgumentException("Unknown BaseLayerType")
             };
         }
