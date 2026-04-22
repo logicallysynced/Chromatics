@@ -128,6 +128,7 @@ namespace Chromatics.ViewModels.Mapping
                 TypeOptions = BuildTypeOptions(_layer.rootLayerType);
                 OnPropertyChanged(nameof(TypeOptions));
                 OnPropertyChanged(nameof(BadgeText));
+                OnPropertyChanged(nameof(HelpText));
             }
         }
 
@@ -164,7 +165,7 @@ namespace Chromatics.ViewModels.Mapping
             {
                 if (_layer.rootLayerType == LayerType.EffectLayer)
                     return TextHelper.ParseLayerHelperText(
-                        "The effect layer displays effects over other layers, depending on which effects are enabled.");
+                        LocService.Instance["The effect layer displays effects over other layers, depending on which effects are enabled."]);
                 var option = TypeOptions.ElementAtOrDefault(LayerTypeIndex);
                 if (option == null || string.IsNullOrEmpty(option.Description)) return string.Empty;
 
@@ -177,7 +178,7 @@ namespace Chromatics.ViewModels.Mapping
                     var job = GameController.GetCurrectJob();
                     if (job != Actor.Job.Unknown &&
                         _jobGaugeDescriptions.TryGetValue((job, (DynamicLayerType)option.Value), out var jobDesc))
-                        return TextHelper.ParseLayerHelperText($"{job}: {jobDesc}");
+                        return TextHelper.ParseLayerHelperText($"{job}: {LocService.Instance[jobDesc]}");
                 }
 
                 return TextHelper.ParseLayerHelperText(option.Description);
@@ -275,11 +276,12 @@ namespace Chromatics.ViewModels.Mapping
                 {
                     var display = EnumExtensions.GetAttribute<LayerDisplay>((Enum)(object)v);
                     var rawName = display?.Name ?? v.ToString();
+                    var rawDesc = display?.Description ?? string.Empty;
                     return new LayerTypeOption(
                         LocService.Instance[rawName],
                         Convert.ToInt32(v),
                         display?.LayerTypeCompatibility ?? new[] { LayerModes.None },
-                        display?.Description);
+                        string.IsNullOrEmpty(rawDesc) ? rawDesc : LocService.Instance[rawDesc]);
                 })
                 .ToList();
         }
