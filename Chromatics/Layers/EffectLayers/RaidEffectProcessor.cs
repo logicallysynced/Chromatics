@@ -84,27 +84,40 @@ namespace Chromatics.Layers
             var ledArray = GetLedArray(layer);
             var overlay = GetOrCreateOverlay(layer.layerID, ledArray);
 
-            // Silence (BGM=1) during an active raid effect means a dramatic pause
-            // before a phase transition. Black out only the base-layer overlay;
-            // highlight and other layers continue unaffected. Reset raidEffectsRunning
-            // so the decorator rebuilds cleanly when the music returns.
-            // Gate on lastSeenBgmId != 0 so this only fires AFTER real raid music
-            // has actually played — otherwise zone-entry / loading-screen silence
-            // would trigger blackout immediately and stay stuck in a thrash loop.
+            // Silence (BGM=1) during an active raid effect = dramatic pause before
+            // a phase transition. Black out only the base-layer overlay; highlight
+            // and other layers persist (they sit at higher ZIndex / different overlay).
+            // Gate on lastSeenBgmId != 0 so zone-entry / loading-screen silence
+            // doesn't trigger before any real raid music has played.
+            // We DON'T touch raidEffectsRunning while silenced — leaving it true keeps
+            // the zone case from rebuilding every tick. The silence→music exit below
+            // resets it once to trigger a single clean rebuild.
             if (currentBgmId == RaidEffectState.SilenceBgmId
                 && RaidEffectState.raidEffectsRunning
                 && RaidEffectState.lastSeenBgmId != 0)
             {
-                if (_gradientEffects.TryGetValue(layer.layerID, out var silenceGrads))
+                if (!RaidEffectState.silenced)
                 {
-                    foreach (var g in silenceGrads) g.RemoveAllDecorators();
-                    silenceGrads.Clear();
+                    if (_gradientEffects.TryGetValue(layer.layerID, out var silenceGrads))
+                    {
+                        foreach (var g in silenceGrads) g.RemoveAllDecorators();
+                        silenceGrads.Clear();
+                    }
+                    overlay.RemoveAllDecorators();
+                    overlay.Brush = new SolidColorBrush(new Color(0, 0, 0));
+                    RaidEffectState.silenced = true;
                 }
-                overlay.RemoveAllDecorators();
-                overlay.Brush = new SolidColorBrush(new Color(0, 0, 0));
                 overlay.Attach(surface);
-                RaidEffectState.raidEffectsRunning = false;
                 return;
+            }
+
+            // Silence → music transition: trigger a single rebuild by resetting
+            // raidEffectsRunning. Zone case will see !raidEffectsRunning on this tick
+            // and re-init the decorator with the new BGM.
+            if (RaidEffectState.silenced && currentBgmId != RaidEffectState.SilenceBgmId)
+            {
+                RaidEffectState.silenced = false;
+                RaidEffectState.raidEffectsRunning = false;
             }
 
             var runningEffects = RGBController.GetRunningEffects();

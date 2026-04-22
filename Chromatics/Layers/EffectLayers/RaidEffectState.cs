@@ -28,6 +28,12 @@ namespace Chromatics.Layers
         // blackout) from "silence on zone entry / loading screen" (no music
         // yet — keep the effect running). Reset when leaving the instance.
         public static uint lastSeenBgmId = 0;
+        // True while the base-layer raid overlay is in dramatic-pause blackout.
+        // Held independently of raidEffectsRunning so the zone case doesn't
+        // rebuild every tick during the pause; flipped off on the silence→music
+        // transition by RaidEffectProcessor, which then resets raidEffectsRunning
+        // exactly once to trigger a clean decorator rebuild.
+        public static bool silenced = false;
 
         // Per-tick state update. Called by RaidEffectProcessor before any
         // raid case fires so duty-end and out-of-instance resets stay in
@@ -47,6 +53,7 @@ namespace Chromatics.Layers
                 currentRaidBgmId = 0;
                 dutyComplete = false;
                 lastSeenBgmId = 0;
+                silenced = false;
             }
 
             if (currentBgmId != SilenceBgmId && currentBgmId != 0)
