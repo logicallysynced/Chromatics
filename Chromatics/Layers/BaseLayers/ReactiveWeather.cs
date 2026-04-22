@@ -1,4 +1,4 @@
-﻿using Chromatics.Core;
+using Chromatics.Core;
 using Chromatics.Extensions;
 using Chromatics.Extensions.RGB.NET;
 using Chromatics.Extensions.RGB.NET.Decorators;
@@ -31,17 +31,6 @@ namespace Chromatics.Layers
         private static ReactiveWeatherProcessor _instance;
         private static Dictionary<int, ReactiveWeatherBaseModel> layerProcessorModel = new Dictionary<int, ReactiveWeatherBaseModel>();
 
-        internal static bool dutyComplete = false;
-        internal static bool raidEffectsRunning = false;
-        // BGM the active raid effect was built for. When the in-game music ID
-        // changes mid-raid (phase transition), opt-in raid cases compare
-        // against this and rebuild their decorator for the new phase.
-        internal static uint currentRaidBgmId = 0;
-        // FFXIV's "Victory Fanfare" plays on duty completion. Detecting this
-        // BGM ID is faster and more reliable than scanning the chat log for
-        // boss-defeat / completion-time messages, and works for raids that
-        // never emit a 'You defeat ...' line for the final boss.
-        internal const uint VictoryBgmId = 18;
 
         private SolidColorBrush weather_brush;
         private bool _disposed = false;
@@ -154,20 +143,12 @@ namespace Chromatics.Layers
                 if (!reactiveWeatherEffects)
                 {
                     StopEffects(layergroup, model._gradientEffects);
-                    raidEffectsRunning = false;
-                    currentRaidBgmId = 0;
                 }
             }
 
-            if (model._raidEffects != raidEffects)
-            {
-                if (!raidEffects)
-                {
-                    StopEffects(layergroup, model._gradientEffects);
-                    raidEffectsRunning = false;
-                    currentRaidBgmId = 0;
-                }
-            }
+            // Raid-effect state is owned by RaidEffectProcessor / RaidEffectState
+            // now. ReactiveWeather only tracks the toggle so it can re-evaluate
+            // weather when the user changes the raid setting.
 
             if (!layer.Enabled)
             {
@@ -193,18 +174,6 @@ namespace Chromatics.Layers
                     // weather name via Lumina.
                     var gameState = _memoryHandler.Reader.GetGameState();
                     bool inInstance = gameState.InInstance;
-                    uint currentBgmId = gameState.CurrentBgmId;
-
-                    // Victory Fanfare detection — replaces the prior chat-scan path
-                    // (boss-defeat regex + bossNames list). Fires once per raid the
-                    // moment the game switches to BGM 18, regardless of whether the
-                    // duty emits 'completion time' / 'You defeat' messages.
-                    if (currentBgmId == VictoryBgmId && raidEffectsRunning)
-                    {
-                        dutyComplete = true;
-                        raidEffectsRunning = false;
-                        currentRaidBgmId = 0;
-                    }
 
                     if (currentZone != "???" && currentZone != "")
                     {
@@ -216,17 +185,13 @@ namespace Chromatics.Layers
                         var currentWeather = gameState.CurrentWeatherName;
                         if (string.IsNullOrEmpty(currentWeather)) return;
 
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != inInstance || model._dutyComplete != dutyComplete || model._currentBgmId != currentBgmId) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != inInstance) && currentWeather != "CutScene")
                         {
-                            effectApplied = SetReactiveWeather(layer, layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, inInstance, layer.deviceGuid, currentBgmId);
+                            effectApplied = SetReactiveWeather(layer, layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, inInstance, layer.deviceGuid);
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
                             model._inInstance = inInstance;
-                            model._dutyComplete = dutyComplete;
-                            model._currentBgmId = currentBgmId;
-
-
                         }
                     }
                 }
@@ -260,9 +225,6 @@ namespace Chromatics.Layers
             public bool _reactiveWeatherEffects { get; set; }
             public bool _raidEffects { get; set; }
             public bool _inInstance { get; set; }
-            public bool _dutyComplete { get; set; }
-            public uint _currentBgmId { get; set; }
-
         }
 
 
@@ -321,48 +283,85 @@ namespace Chromatics.Layers
             layer.RemoveAllDecorators();
         }
 
-        private static bool SetReactiveWeather(IMappingLayer masterlayer, ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, Guid deviceGuid, uint currentBgmId)
+        private static bool SetReactiveWeather(IMappingLayer masterlayer, ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, Guid deviceGuid)
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
             var reactiveWeatherEffects = effectSettings.effect_reactiveweather;
             var color = GetWeatherColor(weather, _colorPalette);
 
-            //Filter for zone specific special weather
-            //Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Zone: {zone}. DFC: {dutyComplete}. InInstance: {inInstance}");
+            // Raid-effect handling lives in RaidEffectProcessor now;
+            // ReactiveWeather only resolves the weather decorator/brush.
 
-            if (!inInstance && !dutyComplete)
+            switch (zone)
             {
-                switch (zone)
-                {
-                    case "Summit of Everkeep": //case "Summit of Everkeep":
-                        //Raid Zone Effect
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
+                case "Mare Lamentorum":
+                    if (weather == "Fair Skies" || weather == "Moon Dust")
+                    {
+                        if (reactiveWeatherEffects && effectSettings.weather_marelametorum_animation)
                         {
-
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepBase.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight3.Color) };
-                            //var starfield = new FastStarfieldDecorator(layer, layer.Count() / 4, 20, 80, animationCol, surface, 2.0, false, baseCol);
-                            var starfield = new BPMFastStarfieldDecorator(layer, layer.Count() / 6, 198, 80, animationCol, surface, 2.0, false, baseCol);
+                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationBase.Color);
+                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color) };
+                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 900, animationCol, surface, false, baseCol);
 
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(starfield, layer, runningEffects);
 
-                            raidEffectsRunning = true;
+                            return true;
+                        }
+                        else
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
+                        }
+                    }
+                    else if (weather == "Umbral Wind")
+                    {
+                        if (reactiveWeatherEffects && effectSettings.weather_marelametorum_umbralwind_animation)
+                        {
+                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationBase.Color);
+                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindAnimationHighlight.Color) };
+                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 800, animationCol, surface, false, baseCol);
+
+                            layer.Brush = new SolidColorBrush(baseCol);
+                            SetEffect(starfield, layer, runningEffects);
 
                             return true;
                         }
-                        break;
-                    case "Interphos":
-
-                        //Raid Zone Effect
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
+                        else
                         {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosBase.Color);
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
+                        }
+                    }
+                    break;
+                case "Ultima Thule":
+                    if (weather == "Fair Skies")
+                    {
+                        if (reactiveWeatherEffects && effectSettings.weather_ultimathule_animation)
+                        {
+                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationBase.Color);
+                            var starfieldCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight4.Color) };
 
-                            var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosHighlight1.Color);
-                            var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosHighlight2.Color);
-                            var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosHighlight3.Color);
+                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 500, starfieldCol, surface, false, baseCol);
+                            layer.Brush = new SolidColorBrush(baseCol);
+
+                            SetEffect(starfield, layer, runningEffects);
+
+                            return true;
+                        }
+                        else
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationBase.Color);
+                        }
+                    }
+                    else if (weather == "Astromagnetic Storm" && effectSettings.weather_astromagneticstorm_animation)
+                    {
+                        if (reactiveWeatherEffects)
+                        {
+                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormBase.Color);
+
+                            var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight1.Color);
+                            var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight2.Color);
+                            var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight3.Color);
 
                             var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol),
                                 new GradientStop((float)0.20, animationCol1),
@@ -372,548 +371,251 @@ namespace Chromatics.Layers
                                 new GradientStop((float)0.80, animationCol2),
                                 new GradientStop((float)0.95, animationCol3));
 
-                            var gradientMove = new MoveGradientDecorator(surface, 180, true);
+                            var gradientMove = new MoveGradientDecorator(surface, 120, true);
 
                             SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
 
                             runningEffects.Add(layer);
-                            raidEffectsRunning = true;
-
-                            return true;
-                        }
-                        break;
-                    case "Scratching Ring":
-                        //Raid Zone Effect
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Base.Color);
-
-                            var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Highlight1.Color);
-                            var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Highlight2.Color);
-                            var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Highlight3.Color);
-
-                            var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol),
-                                new GradientStop((float)0.20, animationCol1),
-                                new GradientStop((float)0.35, animationCol2),
-                                new GradientStop((float)0.50, animationCol3),
-                                new GradientStop((float)0.65, animationCol1),
-                                new GradientStop((float)0.80, animationCol2),
-                                new GradientStop((float)0.95, animationCol3));
-
-                            //var gradientMove = new MoveGradientDecorator(surface, 180, true);
-                            var gradientMove = new MoveBPMGradientDecorator(surface, 125 / 4, true);
-
-                            SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
-
-                            runningEffects.Add(layer);
-                            raidEffectsRunning = true;
-
-                            return true;
-                        }
-                        break;
-                    case "Lovely Lovering":
-                        //Raid Zone Effect
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Base.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Highlight2.Color) };
-                            var arenaLightShow = new ArenaLightShowDecorator(layer, 20, 3.0, 1.0, animationCol, surface, false, baseCol);
-
-                            layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(arenaLightShow, layer, runningEffects);
-                            raidEffectsRunning = true;
-
-                            return true;
-                        }
-                        break;
-                    case "Blasting Ring":
-                        //Raid Zone Effect
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Base.Color);
-
-                            var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Highlight1.Color);
-                            var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Highlight2.Color);
-                            var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Highlight3.Color);
-
-                            var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol),
-                                new GradientStop((float)0.20, animationCol1),
-                                new GradientStop((float)0.35, animationCol2),
-                                new GradientStop((float)0.50, animationCol3),
-                                new GradientStop((float)0.65, animationCol1),
-                                new GradientStop((float)0.80, animationCol2),
-                                new GradientStop((float)0.95, animationCol3));
-
-                            var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, 110 / 4, DiagonalDirection.TopLeftToBottomRight);
-
-                            SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
-
-                            runningEffects.Add(layer);
-                            raidEffectsRunning = true;
-
-                            return true;
-                        }
-                        break;
-                    case "The Thundering":
-                        //Raid Zone Effect
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Base.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight4.Color) };
-                            var bpmArenaLightShow = new BPMPWMDecorator(layer, 162, 1.0, animationCol, 0.10, 4, surface, false, baseCol);
-
-                            layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(bpmArenaLightShow, layer, runningEffects);
-                            raidEffectsRunning = true;
-
-                            return true;
-                        }
-                        break;
-                    case "Sphere of Naught":
-                    //case "Dalamud's Shadow":
-                        //Raid Zone Effect
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectCoDBase.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectCoDHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectCoDHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectCoDHighlight3.Color) };
-                            var arenaLightShow = new ArenaLightShowDecorator(layer, 20, 3.0, 1.0, animationCol, surface, false, baseCol);
-
-                            layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(arenaLightShow, layer, runningEffects);
-                            raidEffectsRunning = true;
-
-                            masterlayer.requestUpdate = true;
-                            
-                            return true;
-                        }
-                        break;
-                    case "Groovy Ring":
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Base.Color);
-                            var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight3.Color) };
-                            var ripple = new BPMRippleDecorator(layer, 60, 2, 5, colors, surface, baseCol);
-
-                            SetEffect(ripple, layer, runningEffects);
-                            raidEffectsRunning = true;
-
-                            return true;
-                        }
-                        break;
-                    case "Rebel Ring":
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
-                        {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Base.Color);
-                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight4.Color) };
-                        var chase = new BPMChaseDecorator(layer, 160, 5, colors, surface, baseCol);
-
-                        SetEffect(chase, layer, runningEffects);
-
-                            raidEffectsRunning = true;
-
-                            return true;
-                        }
-                        break;
-                    case "Demolition Site":
-                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
-                        {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
-                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight3.Color) };
-                        var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
-
-                        SetEffect(ripple, layer, runningEffects);
-
-                            raidEffectsRunning = true;
-
-                            return true;
-                        }
-                        break;
-                    case "Hunter's Ring":
-                    case "Hunting Ground":
-                    case "Mist":
-                    case "Limsa Lominsa Lower Decks":
-                        // Demo of BGM-based phase switching. The raid runs through several
-                        // music tracks; when the in-game BGM changes (gameState.CurrentBgmId),
-                        // we rebuild the decorator for the new phase. The effect is gated on
-                        // either the standard "not yet running" check OR the BGM having
-                        // changed since the last build, so phase transitions retrigger.
-                        if (effectSettings.effect_raideffects &&
-                            (!raidEffectsRunning || (currentBgmId != 0 && currentBgmId != currentRaidBgmId)))
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
-                            var colors = new Color[]
-                            {
-                                ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight1.Color),
-                                ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight2.Color),
-                                ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight3.Color)
-                            };
-
-                            // Replace the BGM IDs below with the actual values observed in-game
-                            // for each phase. 0 means no scene playing — leave the prior effect
-                            // alone in that case (the outer guard already filters currentBgmId == 0).
-                            switch (currentBgmId)
-                            {
-                                // Phase 3 / enrage: chase decorator instead of ripple
-                                case 186: // TODO: replace with phase-3 BGM ID
-                                {
-                                    var chase = new BPMChaseDecorator(layer, 178, 2, colors, surface, baseCol);
-                                    SetEffect(chase, layer, runningEffects);
-                                    break;
-                                }
-                                // Phase 1 / default — original effect
-                                default:
-                                {
-                                    var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
-                                    SetEffect(ripple, layer, runningEffects);
-                                    break;
-                                }
-                            }
-
-                            raidEffectsRunning = true;
-                            currentRaidBgmId = currentBgmId;
-
-                            return true;
-                        }
-                        break;
-                }
-
-                return false;
-            }
-            else
-            {
-                // Reset all raid-state when not actively in a duty so the next
-                // duty entry starts clean (previously dutyComplete was reset by
-                // the chat scanner's 'has begun' message).
-                raidEffectsRunning = false;
-                currentRaidBgmId = 0;
-                dutyComplete = false;
-
-                switch (zone)
-                {
-                    case "Mare Lamentorum":
-                        if (weather == "Fair Skies" || weather == "Moon Dust")
-                        {
-                            if (reactiveWeatherEffects && effectSettings.weather_marelametorum_animation)
-                            {
-                                var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationBase.Color);
-                                var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color) };
-                                var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 900, animationCol, surface, false, baseCol);
-
-                                layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(starfield, layer, runningEffects);
-
-                                return true;
-                            }
-                            else
-                            {
-                                color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
-                            }
-                        }
-                        else if (weather == "Umbral Wind")
-                        {
-                            if (reactiveWeatherEffects && effectSettings.weather_marelametorum_umbralwind_animation)
-                            {
-                                var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationBase.Color);
-                                var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustAnimationHighlight.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindAnimationHighlight.Color) };
-                                var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 800, animationCol, surface, false, baseCol);
-
-                                layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(starfield, layer, runningEffects);
-
-                                return true;
-                            }
-                            else
-                            {
-                                color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
-                            }
-                        }
-                        break;
-                    case "Ultima Thule":
-                        if (weather == "Fair Skies")
-                        {
-                            if (reactiveWeatherEffects && effectSettings.weather_ultimathule_animation)
-                            {
-                                var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationBase.Color);
-                                var starfieldCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight4.Color) };
-
-                                var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 500, starfieldCol, surface, false, baseCol);
-                                layer.Brush = new SolidColorBrush(baseCol);
-
-                                SetEffect(starfield, layer, runningEffects);
-
-                                return true;
-                            }
-                            else
-                            {
-                                color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationBase.Color);
-                            }
-                        }
-                        else if (weather == "Astromagnetic Storm" && effectSettings.weather_astromagneticstorm_animation)
-                        {
-                            if (reactiveWeatherEffects)
-                            {
-                                var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormBase.Color);
-
-                                var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight1.Color);
-                                var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight2.Color);
-                                var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight3.Color);
-
-                                var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol),
-                                    new GradientStop((float)0.20, animationCol1),
-                                    new GradientStop((float)0.35, animationCol2),
-                                    new GradientStop((float)0.50, animationCol3),
-                                    new GradientStop((float)0.65, animationCol1),
-                                    new GradientStop((float)0.80, animationCol2),
-                                    new GradientStop((float)0.95, animationCol3));
-
-                                var gradientMove = new MoveGradientDecorator(surface, 120, true);
-
-                                SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
-
-                                runningEffects.Add(layer);
-
-                                return true;
-                            }
-                            else
-                            {
-                                color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormBase.Color);
-                            }
-                        }
-                        else if (weather == "Umbral Wind" && effectSettings.weather_ultimathule_umbralwind_animation)
-                        {
-                            if (reactiveWeatherEffects)
-                            {
-                                //return;
-                            }
-                        }
-                        break;
-                }
-
-                //Filter for special weather
-                switch (weather)
-                {
-                    case "Rain":
-                        if (reactiveWeatherEffects && effectSettings.weather_rain_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherRainBase.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherRainAnimation.Color) };
-                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 200, animationCol, surface, false, baseCol);
-
-                            layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(starfield, layer, runningEffects);
 
                             return true;
                         }
                         else
                         {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherRainBase.Color);
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormBase.Color);
                         }
-                        break;
-                    case "Showers":
-                        if (reactiveWeatherEffects && effectSettings.weather_showers_animation)
+                    }
+                    else if (weather == "Umbral Wind" && effectSettings.weather_ultimathule_umbralwind_animation)
+                    {
+                        if (reactiveWeatherEffects)
                         {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherShowersBase.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherShowersHighlight.Color) };
-                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 100, animationCol, surface, false, baseCol);
-
-                            layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(starfield, layer, runningEffects);
-
-                            return true;
+                            //return;
                         }
-                        else
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherShowersBase.Color);
-                        }
-                        break;
-                    case "Wind":
-                        if (reactiveWeatherEffects && effectSettings.weather_wind_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherWindBase.Color);
-                            var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherWindAnimation.Color);
-
-                            var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
-                            var gradientMove = new MoveGradientDecorator(surface, 180, true);
-
-                            SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
-
-                            return true;
-                        }
-                        else
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherWindBase.Color);
-                        }
-                        break;
-                    case "Gales":
-                        if (reactiveWeatherEffects && effectSettings.weather_gales_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGalesBase.Color);
-                            var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGalesAnimation.Color);
-
-                            var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
-                            var gradientMove = new MoveGradientDecorator(surface, 220, true);
-
-                            SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
-
-                            return true;
-                        }
-                        else
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGalesBase.Color);
-                        }
-                        break;
-                    case "Dust Storms":
-                    case "Sandstorms":
-                        if (reactiveWeatherEffects && effectSettings.weather_sandstorms_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSandstormsBase.Color);
-                            var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSandstormsAnimationHighlight.Color);
-
-                            var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
-                            var gradientMove = new MoveGradientDecorator(surface, 220, false);
-
-                            SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
-
-                            return true;
-                        }
-                        break;
-                    case "Thunder":
-                    case "Thunderstorms":
-                        if (reactiveWeatherEffects && effectSettings.weather_thunder_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherThunderBase.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherThunderAnimation.Color) };
-
-                            var storms = new StrobeDecorator(layer, 10 * 1000, 100, true, animationCol, surface, false, baseCol);
-
-                            layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(storms, layer, runningEffects);
-
-                            return true;
-                        }
-                        break;
-                    case "Umbral Wind":
-                        if (reactiveWeatherEffects && effectSettings.weather_umbralwind_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindAnimationBase.Color);
-                            var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindAnimationHighlight.Color);
-
-                            var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
-                            var gradientMove = new MoveGradientDecorator(surface, 200, true);
-
-                            SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
-
-                            return true;
-                        }
-                        else
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindBase.Color);
-                        }
-                        break;
-                    case "Umbral Static":
-                        if (reactiveWeatherEffects && effectSettings.weather_umbralstatic_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralStaticAnimationBase.Color);
-                            var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralStaticAnimationHighlight.Color);
-
-                            var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.35, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
-                            var gradientMove = new MoveGradientDecorator(surface, 100, true);
-
-                            SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
-
-                            return true;
-                        }
-                        else
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralStaticBase.Color);
-                        }
-                        break;
-                    case "Snow":
-                        if (reactiveWeatherEffects && effectSettings.weather_snow_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSnowBase.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherSnowAnimationHighlight.Color) };
-                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 40, 1500, animationCol, surface, false, baseCol);
-
-                            layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(starfield, layer, runningEffects);
-
-                            return true;
-                        }
-                        else
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSnowBase.Color);
-                        }
-                        break;
-                    case "Blizzards":
-                        if (reactiveWeatherEffects && effectSettings.weather_blizzard_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBlizzardsBase.Color);
-                            var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherBilzzardsAnimationHighlight.Color) };
-                            var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 200, animationCol, surface, false, baseCol);
-
-                            layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(starfield, layer, runningEffects);
-
-                            return true;
-                        }
-                        else
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBlizzardsBase.Color);
-                        }
-                        break;
-                    case "Everlasting Light":
-                        if (reactiveWeatherEffects && effectSettings.weather_everlastinglight_animation)
-                        {
-                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherEverlastingLightBase.Color);
-                            var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherEverlastingLightAnimationHighlight.Color);
-
-                            var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.50, baseCol), new GradientStop((float)0.75, animationCol), new GradientStop((float)1, baseCol));
-
-                            var gradientMove = new MoveGradientDecorator(surface, 80, true);
-
-                            SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(50, 50), runningEffects, _gradientEffects);
-
-                            return true;
-                        }
-                        else
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherEverlastingLightBase.Color);
-                        }
-                        break;
-
-                }
-
-                //Apply Standard Lookup Weather
-
-                StopEffects(layer, _gradientEffects);
-                weather_brush.Color = color;
-                layer.Brush = weather_brush;
-
-                return false;
+                    }
+                    break;
             }
 
-            
+            //Filter for special weather
+            switch (weather)
+            {
+                case "Rain":
+                    if (reactiveWeatherEffects && effectSettings.weather_rain_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherRainBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherRainAnimation.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 200, animationCol, surface, false, baseCol);
+
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherRainBase.Color);
+                    }
+                    break;
+                case "Showers":
+                    if (reactiveWeatherEffects && effectSettings.weather_showers_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherShowersBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherShowersHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 100, animationCol, surface, false, baseCol);
+
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherShowersBase.Color);
+                    }
+                    break;
+                case "Wind":
+                    if (reactiveWeatherEffects && effectSettings.weather_wind_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherWindBase.Color);
+                        var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherWindAnimation.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
+                        var gradientMove = new MoveGradientDecorator(surface, 180, true);
+
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherWindBase.Color);
+                    }
+                    break;
+                case "Gales":
+                    if (reactiveWeatherEffects && effectSettings.weather_gales_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGalesBase.Color);
+                        var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGalesAnimation.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
+                        var gradientMove = new MoveGradientDecorator(surface, 220, true);
+
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGalesBase.Color);
+                    }
+                    break;
+                case "Dust Storms":
+                case "Sandstorms":
+                    if (reactiveWeatherEffects && effectSettings.weather_sandstorms_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSandstormsBase.Color);
+                        var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSandstormsAnimationHighlight.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
+                        var gradientMove = new MoveGradientDecorator(surface, 220, false);
+
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        return true;
+                    }
+                    break;
+                case "Thunder":
+                case "Thunderstorms":
+                    if (reactiveWeatherEffects && effectSettings.weather_thunder_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherThunderBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherThunderAnimation.Color) };
+
+                        var storms = new StrobeDecorator(layer, 10 * 1000, 100, true, animationCol, surface, false, baseCol);
+
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(storms, layer, runningEffects);
+
+                        return true;
+                    }
+                    break;
+                case "Umbral Wind":
+                    if (reactiveWeatherEffects && effectSettings.weather_umbralwind_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindAnimationBase.Color);
+                        var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindAnimationHighlight.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
+                        var gradientMove = new MoveGradientDecorator(surface, 200, true);
+
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralWindBase.Color);
+                    }
+                    break;
+                case "Umbral Static":
+                    if (reactiveWeatherEffects && effectSettings.weather_umbralstatic_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralStaticAnimationBase.Color);
+                        var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralStaticAnimationHighlight.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.35, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
+                        var gradientMove = new MoveGradientDecorator(surface, 100, true);
+
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUmbralStaticBase.Color);
+                    }
+                    break;
+                case "Snow":
+                    if (reactiveWeatherEffects && effectSettings.weather_snow_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSnowBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherSnowAnimationHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 40, 1500, animationCol, surface, false, baseCol);
+
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSnowBase.Color);
+                    }
+                    break;
+                case "Blizzards":
+                    if (reactiveWeatherEffects && effectSettings.weather_blizzard_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBlizzardsBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherBilzzardsAnimationHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 200, animationCol, surface, false, baseCol);
+
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBlizzardsBase.Color);
+                    }
+                    break;
+                case "Everlasting Light":
+                    if (reactiveWeatherEffects && effectSettings.weather_everlastinglight_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherEverlastingLightBase.Color);
+                        var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherEverlastingLightAnimationHighlight.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.50, baseCol), new GradientStop((float)0.75, animationCol), new GradientStop((float)1, baseCol));
+
+                        var gradientMove = new MoveGradientDecorator(surface, 80, true);
+
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(50, 50), runningEffects, _gradientEffects);
+
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherEverlastingLightBase.Color);
+                    }
+                    break;
+
+            }
+
+            //Apply Standard Lookup Weather
+
+            StopEffects(layer, _gradientEffects);
+            weather_brush.Color = color;
+            layer.Brush = weather_brush;
+
+            return false;
         }
 
         public static Color GetWeatherColor(string weatherType, PaletteColorModel colorPalette)
         {
-            var paletteType = typeof(PaletteColorModel);
-            var fieldName = @"Weather" + weatherType.Replace(" ", "") + @"Base";
-            var fieldInfo = paletteType.GetField(fieldName, BindingFlags.Public | BindingFlags.Instance);
+        var paletteType = typeof(PaletteColorModel);
+        var fieldName = @"Weather" + weatherType.Replace(" ", "") + @"Base";
+        var fieldInfo = paletteType.GetField(fieldName, BindingFlags.Public | BindingFlags.Instance);
 
-            if (fieldInfo == null)
-            {
-                #if DEBUG
-                    Debug.WriteLine($"Unknown Weather Color Model: {fieldName}");
-                #endif
+        if (fieldInfo == null)
+        {
+            #if DEBUG
+                Debug.WriteLine($"Unknown Weather Color Model: {fieldName}");
+            #endif
 
-                return ColorHelper.ColorToRGBColor(colorPalette.WeatherUnknownBase.Color);
-            }
+            return ColorHelper.ColorToRGBColor(colorPalette.WeatherUnknownBase.Color);
+        }
 
-            var colorMapping = (ColorMapping)fieldInfo.GetValue(colorPalette);
+        var colorMapping = (ColorMapping)fieldInfo.GetValue(colorPalette);
 
-            return ColorHelper.ColorToRGBColor(colorMapping.Color);
+        return ColorHelper.ColorToRGBColor(colorMapping.Color);
         }
 
     }

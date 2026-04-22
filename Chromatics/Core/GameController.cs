@@ -558,6 +558,11 @@ namespace Chromatics.Core
                                 }
                             }
                             baseProcessor.Process(layer);
+                            // Raid effect overlay runs on every base layer regardless of
+                            // its subtype. The processor manages its own ListLedGroup at a
+                            // higher ZIndex so it visibly overrides whichever base layer
+                            // the user has chosen when the conditions are met.
+                            Chromatics.Layers.Effects.RaidEffectProcessor.Instance.Process(layer);
                             break;
 
                         case LayerType.DynamicLayer:
@@ -580,6 +585,22 @@ namespace Chromatics.Core
                                         p.CleanupLayer(layer.layerID);
                             }
                             dynamicProcessor.Process(layer);
+                            // Raid highlight overlay runs only for highlight-class dynamic
+                            // layers so it overrides Highlight, JobClassesHighlight, and
+                            // ReactiveWeatherHighlight on the user's selected keys. Other
+                            // dynamic types (gauges, trackers, castbars) are left alone —
+                            // overlaying them would clobber meaningful gameplay data.
+                            var dynamicType = (DynamicLayerType)layer.layerTypeindex;
+                            if (dynamicType == DynamicLayerType.Highlight ||
+                                dynamicType == DynamicLayerType.JobClassesHighlight ||
+                                dynamicType == DynamicLayerType.ReactiveWeatherHighlight)
+                            {
+                                Chromatics.Layers.Effects.RaidEffectHighlightProcessor.Instance.Process(layer);
+                            }
+                            else
+                            {
+                                Chromatics.Layers.Effects.RaidEffectHighlightProcessor.Instance.CleanupLayer(layer.layerID);
+                            }
                             break;
 
                         case LayerType.EffectLayer:
