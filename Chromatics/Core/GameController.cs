@@ -562,7 +562,7 @@ namespace Chromatics.Core
                             // its subtype. The processor manages its own ListLedGroup at a
                             // higher ZIndex so it visibly overrides whichever base layer
                             // the user has chosen when the conditions are met.
-                            Chromatics.Layers.Effects.RaidEffectProcessor.Instance.Process(layer);
+                            Chromatics.Layers.RaidEffectProcessor.Instance.Process(layer);
                             break;
 
                         case LayerType.DynamicLayer:
@@ -595,11 +595,11 @@ namespace Chromatics.Core
                                 dynamicType == DynamicLayerType.JobClassesHighlight ||
                                 dynamicType == DynamicLayerType.ReactiveWeatherHighlight)
                             {
-                                Chromatics.Layers.Effects.RaidEffectHighlightProcessor.Instance.Process(layer);
+                                Chromatics.Layers.RaidEffectHighlightProcessor.Instance.Process(layer);
                             }
                             else
                             {
-                                Chromatics.Layers.Effects.RaidEffectHighlightProcessor.Instance.CleanupLayer(layer.layerID);
+                                Chromatics.Layers.RaidEffectHighlightProcessor.Instance.CleanupLayer(layer.layerID);
                             }
                             break;
 

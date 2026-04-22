@@ -1,4 +1,4 @@
-namespace Chromatics.Layers.Effects
+namespace Chromatics.Layers
 {
     // Shared raid-effect state. Lives outside ReactiveWeather processors so
     // RaidEffectProcessor / RaidEffectHighlightProcessor can run as

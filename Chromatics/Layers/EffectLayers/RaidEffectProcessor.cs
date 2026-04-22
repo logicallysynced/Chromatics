@@ -10,7 +10,7 @@ using RGB.NET.Presets.Textures.Gradients;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Chromatics.Layers.Effects
+namespace Chromatics.Layers
 {
     // Standalone raid-effect overlay for base layers. Runs once per active
     // BaseLayer (after the user-selected base processor) and creates a
