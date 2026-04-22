@@ -3,6 +3,7 @@ using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Helpers;
 using Chromatics.Layers;
+using Chromatics.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Actor = Sharlayan.Core.Enums.Actor;
@@ -59,8 +60,8 @@ namespace Chromatics.ViewModels.Mapping
         // is effectively fixed (1 for base, max for effect) and not useful.
         public string BadgeText => _layer.rootLayerType switch
         {
-            LayerType.BaseLayer   => "Base Layer",
-            LayerType.EffectLayer => "Effect Layer",
+            LayerType.BaseLayer   => LocalizationService.Instance["Base Layer"],
+            LayerType.EffectLayer => LocalizationService.Instance["Effect Layer"],
             _ => ZIndex.ToString()
         };
 
@@ -258,11 +259,13 @@ namespace Chromatics.ViewModels.Mapping
 
         private static IReadOnlyList<LayerTypeOption> BuildOptionsFor<TEnum>(IEnumerable<TEnum> values) where TEnum : struct, Enum
         {
+            var loc = LocalizationService.Instance;
             return values.Select(v =>
                 {
                     var display = EnumExtensions.GetAttribute<LayerDisplay>((Enum)(object)v);
+                    var rawName = display?.Name ?? v.ToString();
                     return new LayerTypeOption(
-                        display?.Name ?? v.ToString(),
+                        loc[rawName],
                         Convert.ToInt32(v),
                         display?.LayerTypeCompatibility ?? new[] { LayerModes.None },
                         display?.Description);
