@@ -7,8 +7,8 @@ using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Chromatics.Layers
@@ -31,17 +31,6 @@ namespace Chromatics.Layers
         private readonly Dictionary<int, HashSet<LinearGradient>> _gradientEffects = new();
         private bool _disposed;
 
-        // TEMP: state-change-throttled debug log so we can see why the silence
-        // blackout is firing on instance entry. Remove once root cause is fixed.
-        private readonly Dictionary<int, string> _lastDbg = new();
-        private void Dbg(int layerID, string tag, string zone, uint bgm)
-        {
-            var s = $"{tag} zone='{zone}' bgm={bgm} last={RaidEffectState.lastSeenBgmId} run={RaidEffectState.raidEffectsRunning} sil={RaidEffectState.silenced} done={RaidEffectState.dutyComplete}";
-            if (_lastDbg.TryGetValue(layerID, out var prev) && prev == s) return;
-            _lastDbg[layerID] = s;
-            Debug.WriteLine($"[RaidEffect:L{layerID}] {s}");
-        }
-
         // Higher than user layer ZIndexes (typically 1-10) so the raid
         // effect visibly overrides them. Lower than 1000 (CutsceneAnimation)
         // so cutscenes still take priority over gameplay raid effects.
@@ -59,15 +48,20 @@ namespace Chromatics.Layers
 
             if (!layer.Enabled || !effectSettings.effect_raideffects)
             {
-                Dbg(layer.layerID, "DETACH:disabled", "?", 0);
                 DetachOverlay(layer.layerID);
+                // Reset run state so re-enabling the toggle mid-fight triggers
+                // a fresh ApplyRaidEffect rebuild instead of seeing raidEffectsRunning=true
+                // from a prior session and skipping the zone case's init guard.
+                RaidEffectState.raidEffectsRunning = false;
+                RaidEffectState.currentRaidBgmId = 0;
+                RaidEffectState.delayedStartUntil = DateTime.MinValue;
+                RaidEffectState.pendingDelaySec = 0;
                 return;
             }
 
             var handler = GameController.GetGameData();
             if (handler?.Reader == null || !handler.Reader.CanGetActors())
             {
-                Dbg(layer.layerID, "DETACH:no-reader", "?", 0);
                 DetachOverlay(layer.layerID);
                 return;
             }
@@ -75,7 +69,6 @@ namespace Chromatics.Layers
             var player = handler.Reader.GetCurrentPlayer();
             if (player.Entity == null)
             {
-                Dbg(layer.layerID, "DETACH:no-player", "?", 0);
                 DetachOverlay(layer.layerID);
                 return;
             }
@@ -89,11 +82,8 @@ namespace Chromatics.Layers
             // device) call this same method but the result is idempotent.
             RaidEffectState.UpdateState(inInstance, currentBgmId, zone);
 
-            Dbg(layer.layerID, $"TICK inInstance={inInstance}", zone, currentBgmId);
-
             if (RaidEffectState.dutyComplete || string.IsNullOrEmpty(zone) || zone == "???")
             {
-                Dbg(layer.layerID, "DETACH:duty-or-zone", zone, currentBgmId);
                 DetachOverlay(layer.layerID);
                 return;
             }
@@ -102,66 +92,104 @@ namespace Chromatics.Layers
             var ledArray = GetLedArray(layer);
             var overlay = GetOrCreateOverlay(layer.layerID, ledArray);
 
-            // Silence (BGM=1) during an active raid effect = dramatic pause before
-            // a phase transition. Black out only the base-layer overlay; highlight
-            // and other layers persist (they sit at higher ZIndex / different overlay).
-            // Gate on lastSeenBgmId != 0 so zone-entry / loading-screen silence
-            // doesn't trigger before any real raid music has played.
-            // We DON'T touch raidEffectsRunning while silenced — leaving it true keeps
-            // the zone case from rebuilding every tick. The silence→music exit below
-            // resets it once to trigger a single clean rebuild.
-            if (currentBgmId == RaidEffectState.SilenceBgmId
+            bool hasMusic = currentBgmId != 0 && currentBgmId != RaidEffectState.SilenceBgmId;
+
+            // Phase trigger (global): mid-fight BGM dropped to silence with a raid
+            // effect already running and real music previously observed. Cut the
+            // running effect to black instantly, then hold until music returns +
+            // the configured transition delay. Reset raidEffectsRunning so the
+            // post-hold ApplyRaidEffect rebuilds the decorator fresh.
+            if (RaidEffectState.delayedStartUntil == DateTime.MinValue
                 && RaidEffectState.raidEffectsRunning
+                && !hasMusic
                 && RaidEffectState.lastSeenBgmId != 0)
             {
-                Dbg(layer.layerID, "BLACKOUT", zone, currentBgmId);
-                if (!RaidEffectState.silenced)
-                {
-                    if (_gradientEffects.TryGetValue(layer.layerID, out var silenceGrads))
-                    {
-                        foreach (var g in silenceGrads) g.RemoveAllDecorators();
-                        silenceGrads.Clear();
-                    }
-                    overlay.RemoveAllDecorators();
-                    overlay.Brush = new SolidColorBrush(new Color(0, 0, 0));
-                    RaidEffectState.silenced = true;
-                }
-                overlay.Attach(surface);
-                return;
+                RaidEffectState.delayedStartUntil = DateTime.MaxValue;
+                RaidEffectState.pendingDelaySec = RaidEffectState.GetInstanceTransitionDelay(zone);
+                RaidEffectState.raidEffectsRunning = false;
             }
 
-            // Silence → music transition: trigger a single rebuild by resetting
-            // raidEffectsRunning. Zone case will see !raidEffectsRunning on this tick
-            // and re-init the decorator with the new BGM.
-            if (RaidEffectState.silenced && currentBgmId != RaidEffectState.SilenceBgmId)
+            // Entry trigger (global): zoned into an instance with no music yet and no
+            // effect running. Cut the base layer to black instantly, then hold until
+            // music starts + the configured start delay. Fires for any instance; if
+            // ApplyRaidEffect returns false for this zone the hold expires and the
+            // normal base layer resumes.
+            if (RaidEffectState.delayedStartUntil == DateTime.MinValue
+                && inInstance
+                && !RaidEffectState.raidEffectsRunning
+                && !hasMusic)
             {
-                Dbg(layer.layerID, "EXIT-SILENCE", zone, currentBgmId);
-                RaidEffectState.silenced = false;
-                RaidEffectState.raidEffectsRunning = false;
+                RaidEffectState.delayedStartUntil = DateTime.MaxValue;
+                RaidEffectState.pendingDelaySec = RaidEffectState.GetInstanceStartDelay(zone);
+            }
+
+            // Music arrived while we were holding black indefinitely. Convert to a
+            // finite hold using the delay captured at trigger time.
+            if (RaidEffectState.delayedStartUntil == DateTime.MaxValue && hasMusic)
+            {
+                RaidEffectState.delayedStartUntil = DateTime.UtcNow.AddSeconds(RaidEffectState.pendingDelaySec);
+            }
+
+            // Hold-black gate: paint solid black, suppress the user's base layer
+            // group, but slot our overlay at the SAME ZIndex as the user's base
+            // layer (not the high RaidOverlayZIndex). That way any dynamic layers
+            // the user has stacked above the base — gauges, castbars, raid
+            // highlights, etc. — keep rendering over our black instead of being
+            // hidden by it. Only the base layer slot is blacked out.
+            if (RaidEffectState.delayedStartUntil != DateTime.MinValue
+                && (RaidEffectState.delayedStartUntil == DateTime.MaxValue
+                    || DateTime.UtcNow < RaidEffectState.delayedStartUntil))
+            {
+                overlay.RemoveAllDecorators();
+                overlay.ZIndex = layer.zindex;
+                overlay.Brush = new SolidColorBrush(new Color((byte)255, (byte)0, (byte)0, (byte)0));
+                overlay.Attach(surface);
+                SuppressBaseLayerGroups(layer.layerID);
+                return;
+            }
+            if (RaidEffectState.delayedStartUntil != DateTime.MinValue)
+            {
+                RaidEffectState.delayedStartUntil = DateTime.MinValue;
+                RaidEffectState.pendingDelaySec = 0;
+            }
+
+            // Don't apply raid effects outside an instance. During a loading-screen
+            // transition the zone name can briefly still read as the raid zone while
+            // inInstance is already false; UpdateState has reset raidEffectsRunning=false
+            // at that point, so ApplyRaidEffect would rebuild the decorator and produce
+            // a one-tick artifact of the previous raid effect before the overlay detaches.
+            if (!inInstance)
+            {
+                DetachOverlay(layer.layerID);
+                return;
             }
 
             var runningEffects = RGBController.GetRunningEffects();
 
+            overlay.ZIndex = RaidOverlayZIndex;
+
             bool applied = ApplyRaidEffect(overlay, zone, palette, currentBgmId, runningEffects, layer);
             if (applied)
             {
-                Dbg(layer.layerID, "APPLY:suppress-base", zone, currentBgmId);
-                // Decorators write LED colors directly via Update() and detach their
-                // host group inside OnAttached so the brush doesn't overpaint them.
-                // For that to be visible, NO other group can be painting these LEDs.
-                // The user's base layer group (Reactive Weather etc.) sits at a lower
-                // ZIndex and paints these same LEDs every tick — its brush would win
-                // the surface composite and hide the decorator. Detach it so the
-                // decorator's writes survive. The base processor re-attaches it next
-                // tick and we detach again; net effect per-frame is "base suppressed,
-                // decorator visible". When the raid effect ends (zone change, duty
-                // complete), DetachOverlay below stops detaching and the base layer
-                // re-attaches normally.
                 SuppressBaseLayerGroups(layer.layerID);
+
+                if (overlay.Decorators.Count > 0)
+                {
+                    // Decorator writes LEDs directly — alpha-0 keeps the device in the
+                    // surface's active set without the brush competing with the decorator.
+                    overlay.Brush = new SolidColorBrush(new Color((byte)0, (byte)0, (byte)0, (byte)0));
+                }
+                else
+                {
+                    // Gradient: decorator lives on the LinearGradient, not the overlay.
+                    // TextureBrush is already set. Render at the base layer's ZIndex so
+                    // dynamic layers paint over it — same behaviour as ReactiveWeather.
+                    overlay.ZIndex = layer.zindex;
+                }
+                overlay.Attach(surface);
             }
             else
             {
-                Dbg(layer.layerID, "APPLY:no-match-detach", zone, currentBgmId);
                 DetachOverlay(layer.layerID);
             }
         }
@@ -294,7 +322,6 @@ namespace Chromatics.Layers
 
                         var gradientMove = new MoveGradientDecorator(surface, 180, true);
                         SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
-                        runningEffects.Add(layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -318,7 +345,6 @@ namespace Chromatics.Layers
 
                         var gradientMove = new MoveBPMGradientDecorator(surface, 125 / 4, true);
                         SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
-                        runningEffects.Add(layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -356,7 +382,6 @@ namespace Chromatics.Layers
 
                         var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, 110 / 4, DiagonalDirection.TopLeftToBottomRight);
                         SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
-                        runningEffects.Add(layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -420,7 +445,6 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Demolition Site":
-                case "Containment Bay P1T6":
                     if (!RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
@@ -438,6 +462,7 @@ namespace Chromatics.Layers
                 // the effect fire in open-world for visual development.
                 case "Hunter's Ring":
                 case "Hunting Ground":
+                case "Akh Afah Amphitheatre":
                 case "Containment Bay S1T7":
                     if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
@@ -453,15 +478,16 @@ namespace Chromatics.Layers
                         switch (currentBgmId)
                         {
                             case 366: // TODO: replace with real phase-2 BGM ID
+                            case 231:
                             {
-                                var chase = new BPMChaseDecorator(layer, 178, 2, colors, surface, baseCol);
-                                SetEffect(chase, layer, runningEffects);
+                                var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
+                                SetEffect(ripple, layer, runningEffects);
                                 break;
                             }
                             default:
                             {
-                                var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
-                                SetEffect(ripple, layer, runningEffects);
+                                var chase = new BPMChaseDecorator(layer, 178, 2, colors, surface, baseCol);
+                                SetEffect(chase, layer, runningEffects);
                                 break;
                             }
                         }
