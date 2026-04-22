@@ -3,7 +3,6 @@ using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Helpers;
 using Chromatics.Layers;
-using Chromatics.Localization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Actor = Sharlayan.Core.Enums.Actor;
@@ -16,6 +15,7 @@ using System.Linq;
 using IBrush = Avalonia.Media.IBrush;
 using SolidColorBrush = Avalonia.Media.SolidColorBrush;
 using AvColor = Avalonia.Media.Color;
+using LocService = Chromatics.Localization.LocalizationService;
 
 namespace Chromatics.ViewModels.Mapping
 {
@@ -60,14 +60,14 @@ namespace Chromatics.ViewModels.Mapping
         // is effectively fixed (1 for base, max for effect) and not useful.
         public string BadgeText => _layer.rootLayerType switch
         {
-            LayerType.BaseLayer   => LocalizationService.Instance["Base Layer"],
-            LayerType.EffectLayer => LocalizationService.Instance["Effect Layer"],
+            LayerType.BaseLayer   => LocService.Instance["Base Layer"],
+            LayerType.EffectLayer => LocService.Instance["Effect Layer"],
             _ => ZIndex.ToString()
         };
 
         public Color AccentColor { get; }
         public IBrush AccentBrush { get; }
-        public IReadOnlyList<LayerTypeOption> TypeOptions { get; }
+        public IReadOnlyList<LayerTypeOption> TypeOptions { get; private set; }
         public IReadOnlyList<LayerModes> ModeOptions { get; }
 
         [ObservableProperty] private bool _isEnabled;
@@ -117,6 +117,18 @@ namespace Chromatics.ViewModels.Mapping
             _mode = layer.layerModes;
             _allowBleed = layer.allowBleed;
             _suspendCommit = false;
+
+            LocService.Instance.PropertyChanged += OnLocaleVersionChanged;
+        }
+
+        private void OnLocaleVersionChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(LocService.Version))
+            {
+                TypeOptions = BuildTypeOptions(_layer.rootLayerType);
+                OnPropertyChanged(nameof(TypeOptions));
+                OnPropertyChanged(nameof(BadgeText));
+            }
         }
 
         public Layer Model => _layer;
@@ -259,13 +271,12 @@ namespace Chromatics.ViewModels.Mapping
 
         private static IReadOnlyList<LayerTypeOption> BuildOptionsFor<TEnum>(IEnumerable<TEnum> values) where TEnum : struct, Enum
         {
-            var loc = LocalizationService.Instance;
             return values.Select(v =>
                 {
                     var display = EnumExtensions.GetAttribute<LayerDisplay>((Enum)(object)v);
                     var rawName = display?.Name ?? v.ToString();
                     return new LayerTypeOption(
-                        loc[rawName],
+                        LocService.Instance[rawName],
                         Convert.ToInt32(v),
                         display?.LayerTypeCompatibility ?? new[] { LayerModes.None },
                         display?.Description);
