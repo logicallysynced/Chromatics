@@ -6,7 +6,7 @@ using RGB.NET.Core;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Chromatics.Layers.Effects
+namespace Chromatics.Layers
 {
     // Standalone raid highlight overlay. Runs once per active dynamic
     // highlight layer (Highlight, JobClassesHighlight, ReactiveWeatherHighlight)
