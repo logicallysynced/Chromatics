@@ -809,5 +809,16 @@
     "Mana Stacks (0–3). Fill via Enchanted Riposte → Zwerchhau → Redoublement; spend 3 with Verholy or Verflare.":  "Mana Stacks (0–3). Fill via Enchanted Riposte → Zwerchhau → Redoublement; spend 3 with Verholy or Verflare.",
     "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used.":  "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used.",
     "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.":  "Reawakened Timer. Tracks the remaining duration of the Reawakened phase.",
-    "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.":  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active."
+    "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.":  "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active.",
+    "Enable/disable Razer device library. Default: Enabled":  "Enable/disable Razer device library. Default: Enabled",
+    "Enable/disable Logitech device library. Default: Enabled":  "Enable/disable Logitech device library. Default: Enabled",
+    "Enable/disable Corsair device library. Default: Enabled":  "Enable/disable Corsair device library. Default: Enabled",
+    "Enable/disable Coolermaster device library. Default: Enabled":  "Enable/disable Coolermaster device library. Default: Enabled",
+    "Enable/disable SteelSeries device library. Default: Enabled":  "Enable/disable SteelSeries device library. Default: Enabled",
+    "Enable/disable ASUS device library. Default: Enabled":  "Enable/disable ASUS device library. Default: Enabled",
+    "Enable/disable MSI device library. Default: Enabled":  "Enable/disable MSI device library. Default: Enabled",
+    "Enable/disable Wooting device library. Default: Enabled":  "Enable/disable Wooting device library. Default: Enabled",
+    "Enable/disable Novation device library. Default: Enabled":  "Enable/disable Novation device library. Default: Enabled",
+    "Enable/disable OpenRGB device library. Default: Disabled":  "Enable/disable OpenRGB device library. Default: Disabled",
+    "[BETA] Enable/disable Philips HUE device library. Default: Disabled":  "[BETA] Enable/disable Philips HUE device library. Default: Disabled"
 }

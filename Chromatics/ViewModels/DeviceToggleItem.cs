@@ -1,4 +1,6 @@
+using Chromatics.Localization;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Chromatics.ViewModels
@@ -10,11 +12,12 @@ namespace Chromatics.ViewModels
         // reverts and settings aren't flipped.
         private readonly Func<Task<bool>> _enableAsync;
         private readonly Action _disable;
+        private readonly string _tooltipKey;
         private bool _isEnabled;
         private bool _suspendCommit;
 
         public string Label { get; }
-        public string Tooltip { get; }
+        public string Tooltip => LocalizationService.Instance[_tooltipKey];
 
         public bool IsEnabled
         {
@@ -32,13 +35,21 @@ namespace Chromatics.ViewModels
             }
         }
 
-        public DeviceToggleItem(string label, string tooltip, bool initialValue, Func<Task<bool>> enableAsync, Action disable)
+        public DeviceToggleItem(string label, string tooltipKey, bool initialValue, Func<Task<bool>> enableAsync, Action disable)
         {
             Label = label;
-            Tooltip = tooltip;
+            _tooltipKey = tooltipKey;
             _isEnabled = initialValue;
             _enableAsync = enableAsync;
             _disable = disable;
+
+            LocalizationService.Instance.PropertyChanged += OnLocaleVersionChanged;
+        }
+
+        private void OnLocaleVersionChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(LocalizationService.Version))
+                OnPropertyChanged(nameof(Tooltip));
         }
 
         private async Task SetIsEnabledAsync(bool value)
