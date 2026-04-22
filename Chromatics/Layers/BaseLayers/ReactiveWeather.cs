@@ -37,6 +37,10 @@ namespace Chromatics.Layers
         internal static bool dutyComplete = false;
         internal static bool raidEffectsRunning = false;
         internal static string[] bossNames = null;
+        // BGM the active raid effect was built for. When the in-game music ID
+        // changes mid-raid (phase transition), opt-in raid cases compare
+        // against this and rebuild their decorator for the new phase.
+        internal static uint currentRaidBgmId = 0;
 
         private SolidColorBrush weather_brush;
         private bool _disposed = false;
@@ -150,6 +154,7 @@ namespace Chromatics.Layers
                 {
                     StopEffects(layergroup, model._gradientEffects);
                     raidEffectsRunning = false;
+                    currentRaidBgmId = 0;
                 }
             }
 
@@ -159,6 +164,7 @@ namespace Chromatics.Layers
                 {
                     StopEffects(layergroup, model._gradientEffects);
                     raidEffectsRunning = false;
+                    currentRaidBgmId = 0;
                 }
             }
 
@@ -186,6 +192,7 @@ namespace Chromatics.Layers
                     // weather name via Lumina.
                     var gameState = _memoryHandler.Reader.GetGameState();
                     bool inInstance = gameState.InInstance;
+                    uint currentBgmId = gameState.CurrentBgmId;
 
                     ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
 
@@ -200,6 +207,7 @@ namespace Chromatics.Layers
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
+                                currentRaidBgmId = 0;
 
                             }
                             else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
@@ -211,18 +219,21 @@ namespace Chromatics.Layers
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
+                                currentRaidBgmId = 0;
                             }
                             else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
+                                currentRaidBgmId = 0;
                             }
                             else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
                             {
                                 dutyComplete = true;
                                 raidEffectsRunning = false;
                                 bossNames = null;
+                                currentRaidBgmId = 0;
                             }
                         }
 
@@ -240,14 +251,15 @@ namespace Chromatics.Layers
                         var currentWeather = gameState.CurrentWeatherName;
                         if (string.IsNullOrEmpty(currentWeather)) return;
 
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != inInstance || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
+                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != inInstance || model._dutyComplete != dutyComplete || model._currentBgmId != currentBgmId) && currentWeather != "CutScene")
                         {
-                            effectApplied = SetReactiveWeather(layer, layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, inInstance, layer.deviceGuid);
+                            effectApplied = SetReactiveWeather(layer, layergroup, currentZone, currentWeather, weather_brush, _colorPalette, surface, ledArray, model._gradientEffects, inInstance, layer.deviceGuid, currentBgmId);
 
                             model._currentWeather = currentWeather;
                             model._currentZone = currentZone;
                             model._inInstance = inInstance;
                             model._dutyComplete = dutyComplete;
+                            model._currentBgmId = currentBgmId;
 
 
                         }
@@ -284,6 +296,7 @@ namespace Chromatics.Layers
             public bool _raidEffects { get; set; }
             public bool _inInstance { get; set; }
             public bool _dutyComplete { get; set; }
+            public uint _currentBgmId { get; set; }
 
         }
 
@@ -343,7 +356,7 @@ namespace Chromatics.Layers
             layer.RemoveAllDecorators();
         }
 
-        private static bool SetReactiveWeather(IMappingLayer masterlayer, ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, Guid deviceGuid)
+        private static bool SetReactiveWeather(IMappingLayer masterlayer, ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, Guid deviceGuid, uint currentBgmId)
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
@@ -545,6 +558,74 @@ namespace Chromatics.Layers
                             return true;
                         }
                         break;
+                    case "Demolition Site":
+                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
+                        {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
+                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight3.Color) };
+                        var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
+
+                        SetEffect(ripple, layer, runningEffects);
+
+                            raidEffectsRunning = true;
+                            bossNames = ["Brute Abombinator"];
+
+                            return true;
+                        }
+                        break;
+                    case "Hunter's Ring":
+                    case "Hunting Ground":
+                        // Demo of BGM-based phase switching. The raid runs through several
+                        // music tracks; when the in-game BGM changes (gameState.CurrentBgmId),
+                        // we rebuild the decorator for the new phase. The effect is gated on
+                        // either the standard "not yet running" check OR the BGM having
+                        // changed since the last build, so phase transitions retrigger.
+                        if (effectSettings.effect_raideffects &&
+                            (!raidEffectsRunning || (currentBgmId != 0 && currentBgmId != currentRaidBgmId)))
+                        {
+                            var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
+                            var colors = new Color[]
+                            {
+                                ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight1.Color),
+                                ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight2.Color),
+                                ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight3.Color)
+                            };
+
+                            // Replace the BGM IDs below with the actual values observed in-game
+                            // for each phase. 0 means no scene playing — leave the prior effect
+                            // alone in that case (the outer guard already filters currentBgmId == 0).
+                            switch (currentBgmId)
+                            {
+                                // Phase 2: faster ripple, denser pulses
+                                case 999u: // TODO: replace with phase-2 BGM ID
+                                {
+                                    var ripple = new BPMRippleDecorator(layer, 178, 4, 1, colors, surface, baseCol);
+                                    SetEffect(ripple, layer, runningEffects);
+                                    break;
+                                }
+                                // Phase 3 / enrage: chase decorator instead of ripple
+                                case 998u: // TODO: replace with phase-3 BGM ID
+                                {
+                                    var chase = new BPMChaseDecorator(layer, 178, 2, colors, surface, baseCol);
+                                    SetEffect(chase, layer, runningEffects);
+                                    break;
+                                }
+                                // Phase 1 / default — original effect
+                                default:
+                                {
+                                    var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
+                                    SetEffect(ripple, layer, runningEffects);
+                                    break;
+                                }
+                            }
+
+                            raidEffectsRunning = true;
+                            currentRaidBgmId = currentBgmId;
+                            bossNames = ["<Boss>"];
+
+                            return true;
+                        }
+                        break;
                 }
 
                 return false;
@@ -553,6 +634,7 @@ namespace Chromatics.Layers
             {
                 raidEffectsRunning = false;
                 bossNames = null;
+                currentRaidBgmId = 0;
 
                 switch (zone)
                 {
